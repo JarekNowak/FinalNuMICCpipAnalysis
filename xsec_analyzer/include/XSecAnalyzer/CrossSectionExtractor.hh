@@ -485,14 +485,13 @@ double CrossSectionExtractor::conversion_factor() const {
   double num_Ar = useNuMI ? num_Ar_targets_in_FV(FV, 675.1, 775.1)
                           : num_Ar_targets_in_FV(FV);
 
-  double conv_factor;
-  if (useNuMI) conv_factor = num_Ar *  integ_flux / 1e39; //removed 40 in here
-
-  //std::cout<<"useNumi is " << useNuMI << std::endl;
-
-  else conv_factor = num_Ar * integ_flux / 1e38;;
-
-std::cout<<"useNumi is " << useNuMI << std::endl;
+  // Both beams quote the cross section in units of 10^-38 cm^2 per argon
+  // nucleus, per the BNB CC1pi internal note (axis label
+  // "[10^-38 cm^2 / GeV / Ar]", target count T counted as Ar nuclei). num_Ar
+  // already counts nuclei (the per-nucleon factor of ~40 is intentionally not
+  // applied), so the only unit factor is 1e38. The NuMI branch previously used
+  // 1e39, which put NuMI results a factor of 10 below the stated convention.
+  double conv_factor = num_Ar * integ_flux / 1e38;
 
   return conv_factor;
 }

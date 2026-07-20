@@ -138,30 +138,57 @@ void Unfolder(std::string XSEC_Config, std::string SLICE_Config, std::string Out
 	const auto& uc_matrix = uc_pair.second;
 
 	SliceHistogram* Slice_unf = SliceHistogram::make_slice_histogram( *xsec.result_.unfolded_signal_, Slice, uc_matrix.get() );
-	TH1* SliceHist = Slice_unf->hist_.get();
 
-	// The dumps below used to be handed the raw, unconverted event-count
-	// vector even on the XsecUnits pass, so the "XsecUnits" text/plot files
-	// were byte-identical to the EventCountUnits ones despite their names and
-	// axis labels. Build a converted copy and dump that instead.
-	TMatrixD DumpVec( *xsec.result_.unfolded_signal_ );
+	// For the XsecUnits pass, convert from event counts to a flux-integrated
+	// differential cross section: divide each bin by (conv_factor * bin_width
+	// * other_var_width). This was previously TH1::Scale(1/conv_factor),
+	// which (a) omitted the bin-width division, so the result was a
+	// bin-INTEGRATED cross section mislabelled as differential, and (b) does
+	// not touch the SliceHistogram's covariance, leaving it in event-count
+	// units. UnfolderNuMI.C already does exactly this via transform(); this
+	// brings Unfolder.C into agreement so the two binaries no longer disagree
+	// on the same bin. transform() applies the matrix to both the histogram
+	// and its covariance.
 	if (RT == "XsecUnits") {
-	  SliceHist->Scale(1.0 / conv_factor);
-	  DumpVec *= (1.0 / conv_factor);
+	  // Width in any "other" (integrated-over) variables of this slice, so a
+	  // multi-differential slice is normalised by the full bin volume.
+	  double other_var_width = 1.;
+	  for ( const auto& ov_spec : Slice.other_vars_ ) {
+	    double high = ov_spec.high_bin_edge_;
+	    double low  = ov_spec.low_bin_edge_;
+	    if ( high != low && std::abs(high - low) < BIG_DOUBLE ) {
+	      other_var_width *= ( high - low );
+	    }
+	  }
+
+	  int num_slice_bins = Slice_unf->hist_->GetNbinsX();
+	  TMatrixD trans_mat( num_slice_bins, num_slice_bins );
+	  for ( int b = 0; b < num_slice_bins; ++b ) {
+	    double width = Slice_unf->hist_->GetBinWidth( b + 1 ) * other_var_width;
+	    trans_mat( b, b ) = 1. / ( conv_factor * width );
+	  }
+	  Slice_unf->transform( trans_mat );
 	}
+
+	TH1* SliceHist = Slice_unf->hist_.get();
 	SliceHist->Write((SliceVariableName+"_"+uc_name).c_str());
 
-	// conversion_factor() divides by 1e39 in NuMI mode and 1e38 otherwise,
-	// so the exponent in the axis title has to track useNuMI. It was
-	// hardcoded to 10^{-38}, mislabelling every NuMI result by a factor 10.
-	const std::string XsecAxisTitle = useNuMI
-	  ? "Cross Section [#times 10^{-39} cm^{2}]"
-	  : "Cross Section [#times 10^{-38} cm^{2}]";
-	const std::string DumpAxisTitle =
-	  ( RT == "XsecUnits" ) ? XsecAxisTitle : "Events";
+	// Dump the transformed per-slice histogram (not the raw full-length
+	// event-count vector, which was slice-independent and identical across
+	// the "EventCountUnits"/"XsecUnits" passes). Now the text/plot dumps
+	// match the ROOT histogram written just above.
+	int ndump = SliceHist->GetNbinsX();
+	TMatrixD DumpVec( ndump, 1 );
+	for ( int b = 0; b < ndump; ++b ) DumpVec( b, 0 ) = SliceHist->GetBinContent( b + 1 );
 
-	if (DumpToText) dump_text_column_vector( OutputDirectory+"/"+RT+"_vec_table_unfolded_signal_"+uc_name+TextExtension, DumpVec );
-	if (DumpToPlot) draw_column_vector( OutputDirectory+"/"+RT+"_vec_table_unfolded_signal_"+uc_name+PlotExtension, DumpVec, "Unfolded Signal", "Bin Number", DumpAxisTitle.c_str());
+	// Cross section is per Ar nucleus, in units of 10^-38 cm^2, differential
+	// in the slice variable (see conversion_factor()). Both beams use 10^-38.
+	const std::string DumpAxisTitle = ( RT == "XsecUnits" )
+	  ? "d#sigma/dX [#times 10^{-38} cm^{2} / Ar]"
+	  : "Events";
+
+	if (DumpToText) dump_text_column_vector( OutputDirectory+"/"+RT+"_vec_table_unfolded_signal_"+SliceVariableName+"_"+uc_name+TextExtension, DumpVec );
+	if (DumpToPlot) draw_column_vector( OutputDirectory+"/"+RT+"_vec_table_unfolded_signal_"+SliceVariableName+"_"+uc_name+PlotExtension, DumpVec, "Unfolded Signal", "Bin Number", DumpAxisTitle.c_str());
       }
 
       //======================================================================================
