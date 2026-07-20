@@ -280,10 +280,9 @@ Results are quoted in units of **10⁻³⁸ cm² / Ar**, differential in the
 observable (so 10⁻³⁸ cm² / GeV / Ar for momenta, 10⁻³⁸ cm² / rad / Ar for
 angles).
 
-> **Unresolved — see §8.1.** The code currently divides by `1e39` in NuMI
-> mode and `1e38` otherwise, and `Unfolder.C` does not divide by bin width
-> while `UnfolderNuMI.C` does. Both must be settled before any number in
-> Section 7 is meaningful.
+Both the NuMI unit factor (now `1e38`) and the bin-width division in
+`Unfolder.C` were corrected to this convention; `Unfolder` and `UnfolderNuMI`
+now agree bin-for-bin (§8.1).
 
 ### 5.1 Unfolding
 
@@ -324,19 +323,23 @@ and additional smearing matrices, for each of cos θ_μ, cos θ_π, p_μ, p_π,
 *Empty pending a real-data run.* Requires, in order: the real beam-on sample
 restored in `file_properties_numi.txt`; the full chain re-run from
 `ProcessNTuples` (the corrected momentum branches do not exist in the current
-processed files); and §8.1 resolved.
+processed files). The units/normalisation question (§8.1) is now resolved.
 
 Should contain, per observable and for the total: the unfolded cross section
 with the full uncertainty breakdown, and generator comparisons.
 
 ## 8 Open Items
 
-**8.1 Cross-section units and bin-width normalisation.** `conversion_factor()`
-divides by `1e39` in NuMI mode against `1e38` for BNB, while the BNB note
-quotes 10⁻³⁸ cm²/Ar — a factor 10 discrepancy in convention. Separately,
-`UnfolderNuMI.C` divides by bin width and `Unfolder.C` does not, so the two
-binaries disagree on the same bin. The BNB note is unambiguous that the result
-is differential and per-Ar.
+**8.1 Cross-section units and bin-width normalisation. — RESOLVED.**
+`conversion_factor()` divided by `1e39` in NuMI mode against `1e38` for BNB,
+and `Unfolder.C` omitted the bin-width division that `UnfolderNuMI.C` performs,
+so the two binaries disagreed on the same bin. Both are now fixed to the BNB
+convention (10⁻³⁸ cm²/Ar, differential): the NuMI factor is `1e38`, and
+`Unfolder.C` divides each bin by `conv_factor × bin_width × other_var_width`
+via `SliceHistogram::transform()`, which also converts the covariance.
+Verified on the costhmu NuWro config that `Unfolder` and `UnfolderNuMI` now
+agree bin-for-bin (ratio 1.0000 across all 12 bins). Relative to earlier
+output, every cross-section number is ~10× smaller and now differential.
 
 **8.2 Beamline geometry systematic.** §4.6.
 
