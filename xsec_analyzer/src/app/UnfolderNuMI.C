@@ -982,5 +982,11 @@ int main( int argc, char* argv[] ) {
   std::string OutputFileName = OutputFile.substr(OutputFile.find_last_of("/") + 1);
 
   UnfolderNuMI(XSEC_Config, SLICE_Config, OutputDirectory, OutputFileName);
+
+  // See the equivalent call in Unfolder.C: re-report any systematic category
+  // that evaluated to zero everywhere, as the last thing printed. Warning
+  // only -- the exit status stays 0 so `set -e` drivers are not aborted.
+  MCC9SystematicsCalculator::report_zeroed_categories();
+
   return 0;
 }

@@ -208,5 +208,16 @@ int main( int argc, char* argv[] ) {
   std::string OutputFileName = OutputFile.substr(OutputFile.find_last_of("/") + 1);
 
   Unfolder(XSEC_Config, SLICE_Config, OutputDirectory, OutputFileName);
+
+  // Re-report any systematic category that evaluated to zero everywhere. The
+  // individual warnings are emitted early in the run and are easily lost in
+  // the surrounding output, so surface them again here where they are the
+  // last thing printed.
+  //
+  // Deliberately still exit 0: run_unfolder.sh uses `set -e`, so a non-zero
+  // status here would abort the pipeline and amount to the hard failure this
+  // was downgraded from. This is a warning, not an error.
+  MCC9SystematicsCalculator::report_zeroed_categories();
+
   return 0;
 }

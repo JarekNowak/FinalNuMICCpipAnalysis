@@ -2,6 +2,9 @@
 
 // Standard library includes
 #include <algorithm>
+#include <iostream>
+#include <set>
+#include <string>
 
 // STV analysis includes
 #include "SystematicsCalculator.hh"
@@ -37,6 +40,14 @@ class MCC9SystematicsCalculator : public SystematicsCalculator {
 
     inline void set_syst_mode( SystMode mode )
       { syst_mode_ = mode; }
+
+    // Category cuts requested by the systematics config that matched no true
+    // bin, and so evaluated to zero everywhere. See the definitions after the
+    // class body for details.
+    static std::set< std::string >& zeroed_categories();
+
+    // End-of-job summary of the above. Returns true if anything was zeroed.
+    static bool report_zeroed_categories();
 
   protected:
 
@@ -356,22 +367,69 @@ double MCC9SystematicsCalculator::evaluate_observable( const Universe& univ,
     }
   } // true bins
 
-  // No true bin carried the requested category cut. Returning 0. here would
-  // silently drop the whole systematic from the total uncertainty, so refuse.
-  // The usual cause is a mismatch between the systematics config and the bin
-  // config: an MCFullCorrCategory entry asks for "category == N", but the bin
-  // config declares its background with a different expression (e.g. a single
-  // "!<selection>_MC_Signal" bin) or uses a different category variable name.
+  // No true bin carried the requested category cut, so reco_bin_events is
+  // still 0. and the systematic requesting it will contribute nothing to the
+  // total uncertainty. The usual cause is a mismatch between the systematics
+  // config and the bin config: an MCFullCorrCategory entry asks for
+  // "category == N", but the bin config declares its background with a
+  // different expression (e.g. a single "!<selection>_MC_Signal" bin) or uses
+  // a different category variable name.
+  //
+  // This is a warning rather than a hard error so the analysis can still run,
+  // but it must not be silent. evaluate_observable() is called once per reco
+  // bin per universe, so the message is emitted only the first time each
+  // distinct category is seen -- otherwise this would produce millions of
+  // lines. zeroed_categories() below exposes the accumulated set so callers
+  // can report it again at the end of the job, where it is actually visible.
   if ( num_matched_true_bins == 0u ) {
-    throw std::runtime_error( "MCC9SystematicsCalculator::evaluate_observable():"
-      " no true bin matches the cut \"" + category_string + "\". The systematics"
-      " config requested a per-category uncertainty, but the bin config does not"
-      " define a true bin with that cut, so the systematic would be silently"
-      " zero. Regenerate the bin config with per-category background true bins,"
-      " or remove the corresponding MCFullCorrCategory entry." );
+    auto& zeroed = MCC9SystematicsCalculator::zeroed_categories();
+    if ( zeroed.insert( category_string ).second ) {
+      std::cerr << "\n*** WARNING: no true bin matches the cut \""
+        << category_string << "\".\n"
+        << "*** The systematic that requested it evaluates to ZERO in every"
+           " bin and therefore\n"
+        << "*** contributes nothing to the total uncertainty. The reported"
+           " uncertainty is\n"
+        << "*** UNDER-ESTIMATED.\n"
+        << "*** Fix: regenerate the bin config with per-category background"
+           " true bins, or\n"
+        << "*** remove the corresponding MCFullCorrCategory entry from the"
+           " systematics config.\n\n";
+    }
   }
 
   return reco_bin_events;
+}
+
+// Accumulated set of category cuts that matched no true bin. Populated by
+// evaluate_observable() above; see report_zeroed_categories() for the
+// end-of-job summary.
+inline std::set< std::string >&
+  MCC9SystematicsCalculator::zeroed_categories()
+{
+  static std::set< std::string > the_set;
+  return the_set;
+}
+
+// Print a summary of every systematic category that silently evaluated to
+// zero. Call this at the end of a job: the per-category warnings above are
+// emitted early and are easily lost in the surrounding output. Returns true
+// if anything was zeroed, so callers can set a non-zero exit status if they
+// want to treat it as a failure.
+inline bool MCC9SystematicsCalculator::report_zeroed_categories()
+{
+  const auto& zeroed = MCC9SystematicsCalculator::zeroed_categories();
+  if ( zeroed.empty() ) return false;
+
+  std::cerr << "\n=====================================================\n"
+    << "*** SYSTEMATICS WARNING SUMMARY\n"
+    << "*** " << zeroed.size() << " requested category cut(s) matched no true"
+       " bin and contributed\n"
+    << "*** ZERO to the total uncertainty:\n";
+  for ( const auto& c : zeroed ) std::cerr << "***   \"" << c << "\"\n";
+  std::cerr << "*** The reported total uncertainty is UNDER-ESTIMATED.\n"
+    << "=====================================================\n\n";
+  return true;
 }
 
 double MCC9SystematicsCalculator::evaluate_mc_stat_covariance(
