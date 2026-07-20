@@ -632,6 +632,13 @@ if ( truemuonindex != -1 && sig_mc_n_threshold_pionpm >= 1 ) {
 }
 
 bool CC1mu1piXp::define_signal( AnalysisEvent* Event ) {
+  // Event weight for the diagnostic histograms below. These were all filled
+  // with raw counts, so the efficiency and purity printed by finalize(), and
+  // the response matrix, were untuned-CV numbers not comparable to anything
+  // the Unfolder produces (which applies this same product via UniverseMaker).
+  // Both members default to DEFAULT_WEIGHT = 1, so data and EXT are unaffected.
+  const double evt_w = Event->spline_weight_ * Event->tuned_cv_weight_;
+
 
 //TMVA stuff
 
@@ -800,17 +807,13 @@ if (isSignal) {
        // double muon_true = TrueCandidateMuonP.Mag();
         double pion_true = TrueCandidatePionP.Mag();
 
-	h_all_signal->Fill(muon_true);
-
-        h_eff_den->Fill(muon_true);
-   
+	h_all_signal->Fill(muon_true, evt_w);
+        h_eff_den->Fill(muon_true, evt_w);
          // denominator = all true signal muons
-        h_mu_eff_den->Fill(muon_true);
-        h_pi_eff_den->Fill(pion_true);
-
-	h_mu_cut0->Fill(muon_true);
-        h_pi_cut0->Fill(pion_true);
-
+        h_mu_eff_den->Fill(muon_true, evt_w);
+        h_pi_eff_den->Fill(pion_true, evt_w);
+	h_mu_cut0->Fill(muon_true, evt_w);
+        h_pi_cut0->Fill(pion_true, evt_w);
     }
 //std::cout<<"after muon index" <<std::endl;
 }
@@ -823,6 +826,13 @@ if (isSignal) {
 //std::cout <<"This is fine 6"<< std::endl;
 
 bool CC1mu1piXp::selection( AnalysisEvent* Event) {
+  // Event weight for the diagnostic histograms below. These were all filled
+  // with raw counts, so the efficiency and purity printed by finalize(), and
+  // the response matrix, were untuned-CV numbers not comparable to anything
+  // the Unfolder produces (which applies this same product via UniverseMaker).
+  // Both members default to DEFAULT_WEIGHT = 1, so data and EXT are unaffected.
+  const double evt_w = Event->spline_weight_ * Event->tuned_cv_weight_;
+
 
 //std::cout << "Selection called\n";
 
@@ -1283,8 +1293,8 @@ bool Passed =
     // ------------------------------
     if (pass_vertex) {
 
-        h_mu_cut1_vertex->Fill(muon_true);
-        h_pi_cut1_vertex->Fill(pion_true);
+        h_mu_cut1_vertex->Fill(muon_true, evt_w);
+        h_pi_cut1_vertex->Fill(pion_true, evt_w);
     }
 
     // ------------------------------
@@ -1293,8 +1303,8 @@ bool Passed =
     if (pass_vertex &&
         pass_topology) {
 
-        h_mu_cut2_topology->Fill(muon_true);
-        h_pi_cut2_topology->Fill(pion_true);
+        h_mu_cut2_topology->Fill(muon_true, evt_w);
+        h_pi_cut2_topology->Fill(pion_true, evt_w);
     }
 
     // ------------------------------
@@ -1304,8 +1314,8 @@ bool Passed =
         pass_topology &&
         pass_tracklike) {
 
-        h_mu_cut3_tracklike->Fill(muon_true);
-        h_pi_cut3_tracklike->Fill(pion_true);
+        h_mu_cut3_tracklike->Fill(muon_true, evt_w);
+        h_pi_cut3_tracklike->Fill(pion_true, evt_w);
     }
 
     // ------------------------------
@@ -1316,8 +1326,8 @@ bool Passed =
         pass_tracklike &&
         pass_pioncontained) {
 
-        h_mu_cut4_pioncontained->Fill(muon_true);
-        h_pi_cut4_pioncontained->Fill(pion_true);
+        h_mu_cut4_pioncontained->Fill(muon_true, evt_w);
+        h_pi_cut4_pioncontained->Fill(pion_true, evt_w);
     }
 
     // ------------------------------
@@ -1329,8 +1339,8 @@ bool Passed =
         pass_pioncontained &&
         pass_muongap) {
 
-        h_mu_cut5_muongap->Fill(muon_true);
-        h_pi_cut5_muongap->Fill(pion_true);
+        h_mu_cut5_muongap->Fill(muon_true, evt_w);
+        h_pi_cut5_muongap->Fill(pion_true, evt_w);
     }
 
     // ------------------------------
@@ -1343,8 +1353,8 @@ bool Passed =
         pass_muongap &&
         pass_piongap) {
 
-        h_mu_cut6_piongap->Fill(muon_true);
-        h_pi_cut6_piongap->Fill(pion_true);
+        h_mu_cut6_piongap->Fill(muon_true, evt_w);
+        h_pi_cut6_piongap->Fill(pion_true, evt_w);
     }
 
     // ------------------------------
@@ -1358,8 +1368,8 @@ bool Passed =
         pass_piongap &&
         pass_shower) {
 
-        h_mu_cut7_shower->Fill(muon_true);
-        h_pi_cut7_shower->Fill(pion_true);
+        h_mu_cut7_shower->Fill(muon_true, evt_w);
+        h_pi_cut7_shower->Fill(pion_true, evt_w);
     }
 
     // ------------------------------
@@ -1374,8 +1384,8 @@ bool Passed =
         pass_shower &&
         pass_opening) {
 
-        h_mu_cut8_opening->Fill(muon_true);
-        h_pi_cut8_opening->Fill(pion_true);
+        h_mu_cut8_opening->Fill(muon_true, evt_w);
+        h_pi_cut8_opening->Fill(pion_true, evt_w);
     }
 
     // ------------------------------
@@ -1391,8 +1401,8 @@ bool Passed =
         pass_opening &&
         pass_final) {
 
-        h_mu_cut9_final->Fill(muon_true);
-        h_pi_cut9_final->Fill(pion_true);
+        h_mu_cut9_final->Fill(muon_true, evt_w);
+        h_pi_cut9_final->Fill(pion_true, evt_w);
     }
 }
 
@@ -1404,17 +1414,16 @@ bool Passed =
 
     if (Passed) {
         //h_selected->Fill(muon_mcs); CHANGED HERE
-        h_selected->Fill(candidate_muon_mom_reco);
-        h_all_selected->Fill(candidate_muon_mom_reco);
+        h_selected->Fill(candidate_muon_mom_reco, evt_w);
+        h_all_selected->Fill(candidate_muon_mom_reco, evt_w);
        // h_all_selected->Fill(muon_mcs);
     }
 
     if (Passed && !this->is_event_mc_signal()) {
       //  h_background->Fill(muon_mcs);
 	//h_sel_bkg->Fill(muon_mcs);
-	h_background->Fill(candidate_muon_mom_reco);
-
-	h_sel_bkg->Fill(candidate_muon_mom_reco);
+	h_background->Fill(candidate_muon_mom_reco, evt_w);
+	h_sel_bkg->Fill(candidate_muon_mom_reco, evt_w);
     }
 
 
@@ -1422,16 +1431,16 @@ if (Passed && this->is_event_mc_signal()) {
 
     double muon_true = TrueCandidateMuonP.Mag();
 
-    h_eff_num->Fill(muon_true);
-    h_sel_signal->Fill(candidate_muon_mom_reco);
+    h_eff_num->Fill(muon_true, evt_w);
+    h_sel_signal->Fill(candidate_muon_mom_reco, evt_w);
     //h_sel_signal->Fill(muon_mcs); CHANGED HERE
 
 
     //double muon_true = TrueCandidateMuonP.Mag();
     double pion_true = TrueCandidatePionP.Mag();
 
-    h_mu_eff_num->Fill(muon_true);
-    h_pi_eff_num->Fill(pion_true);
+    h_mu_eff_num->Fill(muon_true, evt_w);
+    h_pi_eff_num->Fill(pion_true, evt_w);
 }
 } 
 
@@ -1485,8 +1494,7 @@ if ( Passed && this->is_event_mc_signal()) {
         // migration (truth → reco)
        // h_response_full->Fill(muon_reco, muon_true);
 //	h_response_full->Fill(muon_true, muon_true);
-        h_response_full->Fill(candidate_muon_mom_reco,muon_true);
-
+        h_response_full->Fill(candidate_muon_mom_reco,muon_true, evt_w);
     }
 
     // else: inefficiency (true but not reconstructed)
