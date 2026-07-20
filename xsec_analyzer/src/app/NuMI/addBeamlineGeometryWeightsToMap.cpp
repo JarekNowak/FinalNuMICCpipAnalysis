@@ -8,6 +8,7 @@
 #include <sstream>
 #include <vector>
 
+#include <cstdlib>
 #include "TFile.h"
 #include "TTree.h"
 #include "TH2F.h"
@@ -23,14 +24,32 @@ float checkWeight(float weight);
 int main(int argc, char *argv[]) {
 
     // parse arguments
-    if ( argc != 4 ) {
-        std::cout << "Usage: AddBeamlineGeometryWeights INPUT_FILE HORN_CURRENT_MODE OUTPUT_FILE" << std::endl;
+    if ( argc != 4 && argc != 5 ) {
+        std::cout << "Usage: AddBeamlineGeometryWeights INPUT_FILE HORN_CURRENT_MODE"
+          " OUTPUT_FILE [WEIGHTS_FILE]" << std::endl;
+        std::cout << "  WEIGHTS_FILE defaults to $NUMI_GEOMETRY_WEIGHTS, or to"
+          " NuMI_Geometry_Weights_Histograms.root in the current directory."
+          << std::endl;
+        std::cout << "  The canonical copy lives at /exp/uboone/data/users/"
+          "pgreen/NuMIFlux/NewFluxFiles/ on the Fermilab gpvms." << std::endl;
         return 1;
         }
 
         std::string input_filename( argv[1] );
         std::string horn_current_mode( argv[2] );
         std::string output_filename( argv[3] );
+
+    // The weights file used to be hardcoded as a bare relative path, so this
+    // only worked when run from a directory that happened to contain it, and
+    // the documented location was never actually consulted. Allow it to be
+    // given explicitly or via the environment, keeping the old default.
+    std::string weights_filename = "NuMI_Geometry_Weights_Histograms.root";
+    if ( argc == 5 ) {
+        weights_filename = argv[4];
+    }
+    else if ( const char* env_wf = std::getenv("NUMI_GEOMETRY_WEIGHTS") ) {
+        weights_filename = env_wf;
+    }
 
     std::cout << "Adding beamline geometry weights to file: " << input_filename << std::endl;
     if (horn_current_mode == "FHC" || horn_current_mode == "RHC") {
@@ -42,10 +61,14 @@ int main(int argc, char *argv[]) {
     }
 
     // load beamline variation histograms for chosen horn current mode
-    TFile *beamlineVariationsFile = new TFile("NuMI_Geometry_Weights_Histograms.root");
+    TFile *beamlineVariationsFile = new TFile(weights_filename.c_str());
 
     if (!beamlineVariationsFile || beamlineVariationsFile->IsZombie()) {
-        std::cerr << "Error: Could not open file 'NuMI_Geometry_Weights_Histograms.root'. Please check the file path and ensure the file exists." << std::endl;
+        std::cerr << "Error: Could not open beamline weights file '"
+          << weights_filename << "'. Pass the path as the 4th argument or set"
+          " NUMI_GEOMETRY_WEIGHTS. The canonical copy is at /exp/uboone/data/"
+          "users/pgreen/NuMIFlux/NewFluxFiles/ on the Fermilab gpvms."
+          << std::endl;
         exit(1);
     }
 
@@ -65,11 +88,27 @@ int main(int argc, char *argv[]) {
         std::string name_numu = name_numu_ss.str();
         std::string name_numubar = name_numubar_ss.str();		
 
-        // load histograms
-        h_nue.push_back(*(TH2F*)beamlineVariationsFile->Get(name_nue.c_str()));
-        h_nuebar.push_back(*(TH2F*)beamlineVariationsFile->Get(name_nuebar.c_str()));
-        h_numu.push_back(*(TH2F*)beamlineVariationsFile->Get(name_numu.c_str()));
-        h_numubar.push_back(*(TH2F*)beamlineVariationsFile->Get(name_numubar.c_str()));  
+        // load histograms. TFile::Get returns nullptr for a missing key, and
+        // these used to be dereferenced immediately -- a typo in the horn
+        // current mode, or a weights file with fewer than 20 runs, segfaulted
+        // instead of reporting the problem.
+        const std::string names[4] = { name_nue, name_nuebar, name_numu,
+          name_numubar };
+        std::vector<TH2F>* targets[4] = { &h_nue, &h_nuebar, &h_numu,
+          &h_numubar };
+
+        for (int j = 0; j < 4; j++) {
+            TH2F* h = dynamic_cast<TH2F*>(
+              beamlineVariationsFile->Get(names[j].c_str()) );
+            if (!h) {
+                std::cerr << "Error: histogram '" << names[j] << "' not found"
+                  " in '" << weights_filename << "'. Check that the horn"
+                  " current mode (" << horn_current_mode << ") is correct and"
+                  " that the file covers all 20 runs." << std::endl;
+                exit(1);
+            }
+            targets[j]->push_back(*h);
+        }
     }
 
 	beamlineVariationsFile->Close();
@@ -82,6 +121,19 @@ int main(int argc, char *argv[]) {
     
     TTree *t_nu = (TTree*)f->Get("nuselection/NeutrinoSelectionFilter");
     TTree *t_pot = (TTree*)f->Get("nuselection/SubRun");
+
+    // Both were used unchecked: SetBranchAddress on a null TTree segfaults.
+    if (!t_nu) {
+        std::cerr << "Error: tree 'nuselection/NeutrinoSelectionFilter' not"
+          " found in " << input_filename << ". Is this a raw PeLEE ntuple?"
+          << std::endl;
+        exit(1);
+    }
+    if (!t_pot) {
+        std::cerr << "Error: tree 'nuselection/SubRun' not found in "
+          << input_filename << "." << std::endl;
+        exit(1);
+    }
 
     // set input branch addresses
     // neutrino truth information
@@ -111,6 +163,15 @@ int main(int argc, char *argv[]) {
 	}
 	std::cout << std::endl;
     */
+    // GetEntry() is a no-op on an empty tree, which leaves mc_weights_map at
+    // its nullptr initialiser and segfaults on the find() below.
+    if (!mc_weights_map) {
+        std::cerr << "Error: the 'weights' branch did not populate from "
+          << input_filename << " (tree has " << t_nu->GetEntries()
+          << " entries). Cannot add beamline weights." << std::endl;
+        exit(1);
+    }
+
     auto Horn_2kA_index = mc_weights_map->find("Horn_2kA");
     if (Horn_2kA_index != mc_weights_map->end()) {
         std::cout << "Beamline geometry weights already present." << std::endl;
