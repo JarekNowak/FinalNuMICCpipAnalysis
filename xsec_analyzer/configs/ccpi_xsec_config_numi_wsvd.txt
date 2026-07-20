@@ -1,0 +1,14 @@
+# ccpi_xsec_config_numi.txt
+# CrossSectionExtractor config for the CCpi+ pmu measurement (UnfolderNuMI).
+# Points at the Run1 universe file + the CCpi systcalc config + file properties.
+#
+# UnivFile : output of run_universe_maker.sh (ccpi_pmu_bin_config.txt)
+# SystFile : ccpi_systcalc_numi.conf (stock minus orphan beamline block)
+# FPFile   : same processed-file list / POT-trigger table used everywhere
+# Unfold   : D'Agostini iterative, 4 iterations (= main analysis IBU_ITER=4)
+# Prediction: central-value MicroBooNE tune from the CV universe
+UnivFile /data/uboone/processed/ccpi_Run1_pmu_univmake.root
+SystFile configs/ccpi_systcalc_numi.conf
+FPFile configs/file_properties_numi.txt
+Unfold WienerSVD 1 second-deriv
+Prediction uBTune "MicroBooNE Tune" univ CV

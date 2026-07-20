@@ -1,0 +1,55 @@
+# file_properties_numi.txt
+# ---------------------------------------------------------------------------
+# PROCESSED ntuples (xsec-ana-*.root, carrying stv_tree + summed_pot) consumed
+# by UniverseMaker / SystematicsCalculator.  These are the ProcessNTuples
+# outputs of configs/files_to_process_numi.txt, written to /data/uboone/processed/.
+#
+# Columns:  file_name  run  file_type  [triggers  POT]
+#   (triggers + POT read only for onBNB / extBNB; see
+#    FilePropertiesManager::load_file_properties)
+#
+# Run scope: RUN 1 ONLY — reproduces the main analysis, whose effective exposure
+#   is Run1 FHC (TOTAL_DATA_POT = 3.283e20; Runs 2/4/5 carry zero data weight).
+#
+# Normalisation cross-check vs ccpi_selection.C Scale[] (verified 2026-06-10 by
+#   summing each raw file's nuselection/SubRun "pot" branch):
+#   MC   : framework = run_bnb_pot / summed_pot = 3.283e20 / 2.328201e21 = 0.14101
+#          main Scale[0] = 3.283 / 23.282 = 0.14101                       OK exact
+#   Dirt : framework = (3.283e20 / 1.673912e21) * 0.65 = 0.12748
+#          main Scale[5] = 3.283 / 16.739 = 0.19613
+#          -> framework adds a hardcoded 0.65 dirt weight (ProcessNTuples.C)
+#             that the main analysis does NOT.  Set it to 1.0 there to match.
+#   EXT  : framework = (7809962 / 3821593) * 0.98 = 2.0027
+#          main Scale[4] = 7809962 / 3821593 = 2.0436
+#          -> framework adds a 0.98 NuMI beam-occupancy factor
+#             (SystematicsCalculator.cxx ~L559) that the main analysis does NOT.
+#
+# Trigger counts (ccpi_selection.C:280): onBNB = 7809962, extBNB = 610496+3211097
+# = 3821593.  Data POT (ccpi_selection.C:271): 3.283e20 (Run1 FHC beam-on).
+# ---------------------------------------------------------------------------
+# Beam-on data (Run1 FHC) — disabled, using NuWro fake data for the generator closure:
+#/data/uboone/processed/xsec-ana-neutrinoselection_filt_run1_beamon_beamgood.root 1 onBNB 7809962 3.283e20
+# NuWro fake data (data slot for the closure test, matching the custom pipeline).
+#   POT      = 6.65042e20 (NuWro overlay's native SubRun POT).
+#   triggers = 7809962 * 6.65042/3.283 = 15820762, the beam-on-equivalent trigger
+#              count for that exposure, so EXT scales to the same 6.65042e20 (the
+#              dsigma/dx is POT-independent; this keeps the EXT subtraction
+#              consistent with the custom selection's Scale[4]=7809962/3821593).
+/data/uboone/processed/xsec-ana-numi_nuwro_overlay_pion_ntuples_run1_fhc.root 1 onBNB 15820762 6.65042e20
+# Beam-off data (Run1+Run3 combined EXT)
+/data/uboone/processed/xsec-ana-beamoff_run1Andrun3.root 1 extBNB 3821593 0
+# numu MC overlay (CV)
+/data/uboone/processed/xsec-ana-Run1_fhc_new_numi_flux_fhc_pandora_ntuple.root 1 numuMC
+# Dirt MC overlay
+/data/uboone/processed/xsec-ana-prodgenie_numi_uboone_overlay_dirt_fhc_mcc9_run1_v28_all_snapshot.root 1 dirtMC
+# Detector-variation MC (Run1 FHC)
+/data/uboone/processed/xsec-ana-numi_detvars_pion_ntuples_run1_fhc_CV_slim.root 1 detVarCV
+/data/uboone/processed/xsec-ana-numi_detvars_pion_ntuples_run1_fhc_LYDown_slim.root 1 detVarLYdown
+/data/uboone/processed/xsec-ana-numi_detvars_pion_ntuples_run1_fhc_LYRayleigh_slim.root 1 detVarLYrayl
+/data/uboone/processed/xsec-ana-numi_detvars_pion_ntuples_run1_fhc_Recombination_slim.root 1 detVarRecomb2
+/data/uboone/processed/xsec-ana-numi_detvars_pion_ntuples_run1_fhc_SCE_slim.root 1 detVarSCE
+/data/uboone/processed/xsec-ana-numi_detvars_pion_ntuples_run1_fhc_WireModThetaXZ_slim.root 1 detVarWMAngleXZ
+/data/uboone/processed/xsec-ana-numi_detvars_pion_ntuples_run1_fhc_WireModThetaYZ_slim.root 1 detVarWMAngleYZ
+/data/uboone/processed/xsec-ana-numi_detvars_pion_ntuples_run1_fhc_WireModX_slim.root 1 detVarWMX
+/data/uboone/processed/xsec-ana-numi_detvars_pion_ntuples_run1_fhc_WireModYZ_slim.root 1 detVarWMYZ
+#

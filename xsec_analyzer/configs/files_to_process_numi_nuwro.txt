@@ -1,0 +1,17 @@
+# files_to_process_numi_nuwro.txt
+# ---------------------------------------------------------------------------
+# NuWro FAKE-DATA variant of files_to_process_numi.txt.
+#
+# Only the beam-on (onBNB) entry differs from the real-data list: the NuMI FHC
+# Run1 NuWro overlay stands IN PLACE OF the beam-on data file.  Because it is an
+# MC ntuple, ProcessNTuples writes truth-level histograms alongside the reco
+# ones; SystematicsCalculator then auto-detects it as fake data ("USING FAKE
+# DATA") and builds the FakeDataMC universe from it.
+#
+# All other processed inputs (EXT, CV numu MC, dirt, detVars) are identical to
+# the real-data run and are ALREADY processed in /data/uboone/processed/ — they
+# do NOT need reprocessing.  This list therefore contains only the NuWro file.
+# ---------------------------------------------------------------------------
+
+# NuWro fake data (NuMI FHC Run1), processed as onBNB
+/data/uboone/nuwro/numi_nuwro_overlay_pion_ntuples_run1_fhc.root onBNB

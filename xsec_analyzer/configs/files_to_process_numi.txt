@@ -1,0 +1,37 @@
+# files_to_process_numi.txt
+# ---------------------------------------------------------------------------
+# RAW PeLEE ntuples (have nuselection/NeutrinoSelectionFilter + nuselection/SubRun)
+# fed to ProcessNTuples.  Columns:  file_name  file_type
+# ProcessNTuples writes one xsec-ana-<basename>.root per line into the output
+# directory (see run_process_ntuples.sh -> /data/uboone/processed/).
+#
+# All inputs live under /data/uboone (no external/ipophale paths).  Mirrors the
+# CV/data set of the main analysis (selection/ccpi_selection.C:259) and adds the
+# Run1 FHC detector-variation samples for systematics.
+#
+# file_type at THIS stage only drives ProcessNTuples' dirt weight (dirtMC->0.65)
+# and the (disabled) signal-enhancement cuts; detector variations are ordinary
+# numu overlay here and are tagged detVar* later in file_properties_numi.txt.
+# ---------------------------------------------------------------------------
+
+# Run 1 FHC beam-on and beam-off data
+# Real beam-on data (disabled — using NuWro fake data for the generator closure):
+#/data/uboone/beam_on/neutrinoselection_filt_run1_beamon_beamgood.root onBNB
+/data/uboone/nuwro/numi_nuwro_overlay_pion_ntuples_run1_fhc.root onBNB
+/data/uboone/EXT/beamoff_run1Andrun3.root extBNB
+
+# Run 1 FHC CV MC + dirt
+/data/uboone/new_numi_flux/Run1_fhc_new_numi_flux_fhc_pandora_ntuple.root numuMC
+/data/uboone/dirt/prodgenie_numi_uboone_overlay_dirt_fhc_mcc9_run1_v28_all_snapshot.root dirtMC
+
+# Run 1 FHC detector variations (processed as numuMC; tagged detVar* downstream)
+/data/uboone/detvars/numi_detvars_pion_ntuples_run1_fhc_CV_slim.root numuMC
+/data/uboone/detvars/numi_detvars_pion_ntuples_run1_fhc_LYDown_slim.root numuMC
+/data/uboone/detvars/numi_detvars_pion_ntuples_run1_fhc_LYRayleigh_slim.root numuMC
+/data/uboone/detvars/numi_detvars_pion_ntuples_run1_fhc_Recombination_slim.root numuMC
+/data/uboone/detvars/numi_detvars_pion_ntuples_run1_fhc_SCE_slim.root numuMC
+/data/uboone/detvars/numi_detvars_pion_ntuples_run1_fhc_WireModThetaXZ_slim.root numuMC
+/data/uboone/detvars/numi_detvars_pion_ntuples_run1_fhc_WireModThetaYZ_slim.root numuMC
+/data/uboone/detvars/numi_detvars_pion_ntuples_run1_fhc_WireModX_slim.root numuMC
+/data/uboone/detvars/numi_detvars_pion_ntuples_run1_fhc_WireModYZ_slim.root numuMC
+#

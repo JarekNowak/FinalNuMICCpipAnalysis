@@ -1,0 +1,13 @@
+# ccpi_xsec_config_numi_nuwro_thmupi.txt
+# NuWro FAKE-DATA closure config for the CCpi+ theta_mu-pi (opening angle)
+# measurement.  Same as ccpi_xsec_config_numi_nuwro.txt but points at the
+# thmupi universe file built by run_universe_maker.sh with
+#   BIN_CONFIG=configs/ccpi_thmupi_bin_config.txt
+#   FPM=configs/file_properties_numi_nuwro.txt
+# The thmupi observable uses branches already present in the processed stv_tree
+# (CC1mu1piXp_mu_pi_opening_angle / _true), so no reprocessing was needed.
+UnivFile /data/uboone/processed/ccpi_Run1_thmupi_nuwro_univmake.root
+SystFile configs/ccpi_systcalc_numi.conf
+FPFile configs/file_properties_numi_nuwro.txt
+Unfold WienerSVD 1 second-deriv
+Prediction uBTune "MicroBooNE Tune" univ CV

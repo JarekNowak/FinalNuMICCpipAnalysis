@@ -1,0 +1,45 @@
+# file_properties_numi_nuwro.txt
+# ---------------------------------------------------------------------------
+# NuWro FAKE-DATA variant of file_properties_numi.txt.
+#
+# Identical to file_properties_numi.txt EXCEPT the onBNB entry: the processed
+# NuMI FHC Run1 NuWro overlay (xsec-ana-numi_nuwro_overlay_pion_ntuples_run1_fhc)
+# stands in for the beam-on data.  SystematicsCalculator detects it as fake data
+# (it carries MC truth histograms) and builds the FakeDataMC universe from its
+# CV-weighted reco spectrum.
+#
+# Exposure convention (NuWro overlay's native generated POT):
+#   onBNB POT      = 6.6504e20   (summed nuselection/SubRun "pot" of the overlay)
+#   onBNB triggers = 15820704    (real-data extBNB scaling 7809962 multiplied by
+#                                 6.6504/3.283, so the EXT cosmic background is
+#                                 scaled to the fake-data exposure)
+# All MC/EXT/dirt/detVar samples are scaled to this onBNB POT, so the background
+# prediction and response matrix match the NuWro fake data.  The extracted cross
+# section is POT-independent, so this gives a high-statistics closure test: the
+# unfolded result should reproduce the NuWro truth cross section.
+#
+# To instead run at the real beam-on exposure (3.283e20, realistic stat errors),
+# the NuWro reco would need pre-scaling by 3.283/6.6504 — not done here because
+# the framework takes the fake-data histogram unscaled.
+#
+# Columns:  file_name  run  file_type  [triggers  POT]
+# ---------------------------------------------------------------------------
+# NuWro fake data (NuMI FHC Run1) IN PLACE OF beam-on data
+/data/uboone/processed/xsec-ana-numi_nuwro_overlay_pion_ntuples_run1_fhc.root 1 onBNB 15820704 6.6504e20
+# Beam-off data (Run1+Run3 combined EXT)
+/data/uboone/processed/xsec-ana-beamoff_run1Andrun3.root 1 extBNB 3821593 0
+# numu MC overlay (CV)
+/data/uboone/processed/xsec-ana-Run1_fhc_new_numi_flux_fhc_pandora_ntuple.root 1 numuMC
+# Dirt MC overlay
+/data/uboone/processed/xsec-ana-prodgenie_numi_uboone_overlay_dirt_fhc_mcc9_run1_v28_all_snapshot.root 1 dirtMC
+# Detector-variation MC (Run1 FHC)
+/data/uboone/processed/xsec-ana-numi_detvars_pion_ntuples_run1_fhc_CV_slim.root 1 detVarCV
+/data/uboone/processed/xsec-ana-numi_detvars_pion_ntuples_run1_fhc_LYDown_slim.root 1 detVarLYdown
+/data/uboone/processed/xsec-ana-numi_detvars_pion_ntuples_run1_fhc_LYRayleigh_slim.root 1 detVarLYrayl
+/data/uboone/processed/xsec-ana-numi_detvars_pion_ntuples_run1_fhc_Recombination_slim.root 1 detVarRecomb2
+/data/uboone/processed/xsec-ana-numi_detvars_pion_ntuples_run1_fhc_SCE_slim.root 1 detVarSCE
+/data/uboone/processed/xsec-ana-numi_detvars_pion_ntuples_run1_fhc_WireModThetaXZ_slim.root 1 detVarWMAngleXZ
+/data/uboone/processed/xsec-ana-numi_detvars_pion_ntuples_run1_fhc_WireModThetaYZ_slim.root 1 detVarWMAngleYZ
+/data/uboone/processed/xsec-ana-numi_detvars_pion_ntuples_run1_fhc_WireModX_slim.root 1 detVarWMX
+/data/uboone/processed/xsec-ana-numi_detvars_pion_ntuples_run1_fhc_WireModYZ_slim.root 1 detVarWMYZ
+#

@@ -1,0 +1,39 @@
+# ---------------------------------------------------------------------------
+# Build artifacts
+# ---------------------------------------------------------------------------
+*.o
+*.d
+*.so
+*.dylib
+*.pcm
+*_rdict.pcm
+
+# ---------------------------------------------------------------------------
+# Data. xsec_analyzer/Files/ alone is ~12 GB of processed ntuples; ROOT files
+# anywhere in the tree are inputs or generated results, never source.
+# ---------------------------------------------------------------------------
+xsec_analyzer/Files/
+*.root
+
+# ---------------------------------------------------------------------------
+# Generated results and figures. The macros that produce these ARE tracked;
+# the outputs are reproducible from them. Drop these two lines if you would
+# rather keep figure history in the repo.
+# ---------------------------------------------------------------------------
+xsec_analyzer/unfold_output/
+*.pdf
+*.png
+
+# ---------------------------------------------------------------------------
+# Editor / OS noise
+# ---------------------------------------------------------------------------
+*~
+*.swp
+.DS_Store
+.ipynb_checkpoints/
+
+# NOTE: deliberately NOT ignored --
+#   *.xml       TMVA weight files under booster_decision_tree/ are needed at
+#               runtime by CC1mu1piXp.
+#   *.orig      config backups; they carry the only record of some threshold
+#   *.p01bak    changes, so they are tracked until you confirm they are stale.

@@ -1,0 +1,14 @@
+# ccpi_xsec_config_numi_nuwro.txt
+# NuWro FAKE-DATA variant of ccpi_xsec_config_numi.txt.
+#
+# Same systematics, unfolding and prediction as the real-data config, but:
+#   UnivFile -> NuWro universe file (built by run_universe_maker.sh with
+#               FPM=configs/file_properties_numi_nuwro.txt)
+#   FPFile   -> configs/file_properties_numi_nuwro.txt (NuWro overlay as onBNB)
+# The "data" entering the extraction is the NuWro FakeDataMC reco spectrum, so
+# the unfolded cross section is a generator-closure test against the NuWro truth.
+UnivFile /data/uboone/processed/ccpi_Run1_pmu_nuwro_univmake.root
+SystFile configs/ccpi_systcalc_numi.conf
+FPFile configs/file_properties_numi_nuwro.txt
+Unfold WienerSVD 1 second-deriv
+Prediction uBTune "MicroBooNE Tune" univ CV
