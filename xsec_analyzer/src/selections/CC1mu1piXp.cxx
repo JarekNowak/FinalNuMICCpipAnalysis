@@ -8,7 +8,10 @@
 
 #include <TMVA/Reader.h>
 #include "TFile.h"
+#include <cstdlib>
+#include <fstream>
 #include <iostream>
+#include <sys/stat.h>
 #include "TLine.h"
 #include <TH1D.h>
 // NOTE: RooUnfold includes removed — unfolding is handled by the dedicated
@@ -367,14 +370,51 @@ void CC1mu1piXp::define_constants() {
         tmvaReader_pi->AddVariable("trk_sce_end_y_v", &trk_sce_end_y_v_tmva_pi);
         tmvaReader_pi->AddVariable("trk_sce_end_z_v", &trk_sce_end_z_v_tmva_pi);
 
-        std::string weightFileName = "/home/lar/ipophale/booster_decision_tree/dataset_MIP_BDT_no_len/weights/TMVAClassification_BDT.weights.xml";
-        tmvaReader->BookMVA("BDT",  weightFileName.c_str());
+        // BDT weight files. These were hardcoded under /home/lar/ipophale/,
+        // i.e. another user's home directory, so the selection only ran for
+        // whoever could read that path. Resolve them instead from, in order:
+        //
+        //   1. $CC1MU1PIXP_BDT_WEIGHTS_DIR, if set
+        //   2. <XSEC_ANALYZER_DIR>/../booster_decision_tree  (the in-tree copy;
+        //      verified byte-identical to the original files)
+        //   3. the original absolute path, so existing setups keep working
+        //
+        // and fail with a clear message rather than letting TMVA book an empty
+        // reader if none of them resolve.
+        auto resolve_bdt_dir = []() -> std::string {
+          if ( const char* env_dir = std::getenv("CC1MU1PIXP_BDT_WEIGHTS_DIR") ) {
+            return std::string( env_dir );
+          }
+          if ( const char* xa_dir = std::getenv("XSEC_ANALYZER_DIR") ) {
+            std::string candidate = std::string( xa_dir )
+              + "/../booster_decision_tree";
+            struct stat sb;
+            if ( stat( candidate.c_str(), &sb ) == 0 && S_ISDIR( sb.st_mode ) ) {
+              return candidate;
+            }
+          }
+          return "/home/lar/ipophale/booster_decision_tree";
+        };
 
-        std::string weightFileName_mu = "/home/lar/ipophale/booster_decision_tree/dataset_muon_BDT/weights/TMVAClassification_BDT.weights.xml";
-        tmvaReader_mu->BookMVA("BDT",  weightFileName_mu.c_str());
+        const std::string bdt_dir = resolve_bdt_dir();
 
-        std::string weightFileName_pi = "/home/lar/ipophale/booster_decision_tree/dataset_pion_BDT_no_len/weights/TMVAClassification_BDT.weights.xml";
-        tmvaReader_pi->BookMVA("BDT",  weightFileName_pi.c_str());
+        auto book_bdt = [ &bdt_dir ]( TMVA::Reader* reader,
+          const std::string& dataset )
+        {
+          std::string path = bdt_dir + "/" + dataset
+            + "/weights/TMVAClassification_BDT.weights.xml";
+          std::ifstream test( path );
+          if ( !test.good() ) {
+            throw std::runtime_error( "CC1mu1piXp: could not read BDT weight"
+              " file \"" + path + "\". Set CC1MU1PIXP_BDT_WEIGHTS_DIR to the"
+              " directory containing the dataset_* folders." );
+          }
+          reader->BookMVA( "BDT", path.c_str() );
+        };
+
+        book_bdt( tmvaReader,    "dataset_MIP_BDT_no_len" );
+        book_bdt( tmvaReader_mu, "dataset_muon_BDT" );
+        book_bdt( tmvaReader_pi, "dataset_pion_BDT_no_len" );
 
 }
 
