@@ -283,12 +283,41 @@ void MakeConfig::Print(){
     bin_num_slice.bin_map_[ ab + 1 ].insert( ab );
   }
 
-  // Add a single true bin to collect background events by inverting the
-  // signal definition for the input selection
+  // Background true bins. Two supported forms:
+  //
+  //  - Per-category: one background bin per entry in background_index, cut on
+  //    CATEGORY == N. Requires the bin scheme to set both CATEGORY and
+  //    background_index.
+  //
+  //  - Fallback (the original behaviour, and what every committed config
+  //    actually contains): a single bin collecting everything that is not
+  //    signal, by inverting the selection's signal definition.
+  //
+  // Previously only the per-category branch existed. Since BinSchemeBase
+  // default-initialises both CATEGORY and background_index to empty, and no
+  // registered bin scheme sets either, the loop body never executed and
+  // regenerating any bin config silently produced ZERO background true bins.
+  // univmake then built hist_2d_ with no background rows, every downstream
+  // background subtraction evaluated to zero, and the extracted cross section
+  // came out biased high by the entire background -- with no warning, since
+  // the resulting config file is well-formed and parses fine.
+  if ( background_index && !background_index->empty() ) {
 
-  // Using background category
-  for(const auto& bkg_idx : *background_index){
-    std::string bdef = CATEGORY + Form( " == %d", bkg_idx );
+    // A non-empty background_index with no CATEGORY would build cuts like
+    // " == 3", which TTreeFormula accepts as invalid rather than rejecting.
+    if ( CATEGORY.empty() ) {
+      throw std::runtime_error( "MakeConfig: background_index is set but"
+        " CATEGORY is empty, so background bin cuts would be malformed"
+        " (\" == N\"). Set CATEGORY in the bin scheme." );
+    }
+
+    for ( const auto& bkg_idx : *background_index ) {
+      std::string bdef = CATEGORY + Form( " == %d", bkg_idx );
+      true_bins.emplace_back( bdef, kBackgroundTrueBin, DUMMY_BLOCK_INDEX );
+    }
+  }
+  else {
+    std::string bdef = "!" + SELECTION + "_MC_Signal";
     true_bins.emplace_back( bdef, kBackgroundTrueBin, DUMMY_BLOCK_INDEX );
   }
 
