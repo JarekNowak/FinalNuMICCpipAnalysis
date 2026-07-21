@@ -1,5 +1,6 @@
 // Standard library includes
 #include <iomanip>
+#include <cctype>
 #include <iostream>
 #include <sstream>
 
@@ -593,9 +594,12 @@ void UnfolderNuMI(std::string XSEC_Config, std::string SLICE_Config, std::string
       slice_y_title += "#sigma";
       slice_y_latex_title += "\\sigma";
     }
-    slice_y_title += " [10^{-39} cm^{2}" + diff_xsec_units_denom + " / nucleon]";
-    slice_y_latex_title += "\\text{ }(10^{-39}\\text{ cm}^{2}"
-      + diff_xsec_units_denom_latex + " / \\mathrm{nucleon})$}";
+    // Units are 10^-38 cm^2 per argon nucleus (see conversion_factor()); the
+    // labels previously read 10^-39 / nucleon, from before the normalisation
+    // was fixed to the BNB-note convention.
+    slice_y_title += " [10^{-38} cm^{2}" + diff_xsec_units_denom + " / Ar]";
+    slice_y_latex_title += "\\text{ }(10^{-38}\\text{ cm}^{2}"
+      + diff_xsec_units_denom_latex + " / \\mathrm{Ar})$}";
 
     // Convert all slice histograms from true event counts to differential
     // cross-section units
@@ -851,7 +855,9 @@ void UnfolderNuMI(std::string XSEC_Config, std::string SLICE_Config, std::string
     label.SetTextAlign(12); // Set text alignment (left-aligned)
     label.SetNDC(); // Set position in normalized coordinates
     std::string labelText1( "MicroBooNE NuMI Data" );
-    std::string labelText2( "2.2#times10^{20} POT" );
+    // POT was hardcoded to 2.2e20; use the actual data POT for this run
+    // (total_pot from get_data_pot()) so the label matches the sample.
+    std::string labelText2( toLatexScientific( total_pot ) + " POT" );
     label.SetTextSize(0.045);
 
     if (sl_idx == 0 && !total_only) {
@@ -863,8 +869,24 @@ void UnfolderNuMI(std::string XSEC_Config, std::string SLICE_Config, std::string
       label.DrawLatex(0.135, 0.80, labelText2.c_str() );
     }
 
-    // write to file
-    std::string plot_name = "unfold_output/plot_slice_" + std::to_string(sl_idx) + ".pdf";
+    // write to file. Name by the slice's active variable, not just the slice
+    // index: the index alone (plot_slice_0.pdf ...) is reused across every
+    // observable, so running several observables in sequence (e.g. via
+    // run_full_chain.sh) silently overwrites all but the last. Fall back to the
+    // index if the variable name is empty.
+    std::string var_tag;
+    if ( !slice.active_var_indices_.empty() ) {
+      var_tag = sb.slice_vars_.at( slice.active_var_indices_.front() ).name_;
+      // strip characters that are awkward in a filename (spaces, ROOT latex)
+      std::string cleaned;
+      for ( char ch : var_tag ) {
+        if ( std::isalnum( static_cast<unsigned char>(ch) ) ) cleaned += ch;
+      }
+      var_tag = cleaned;
+    }
+    if ( var_tag.empty() ) var_tag = "slice";
+    std::string plot_name = "unfold_output/plot_" + var_tag + "_"
+      + std::to_string(sl_idx) + ".pdf";
     c1->SaveAs(plot_name.c_str());
 
   }
