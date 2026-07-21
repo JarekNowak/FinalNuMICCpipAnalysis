@@ -671,6 +671,15 @@ void UnfolderNuMI(std::string XSEC_Config, std::string SLICE_Config, std::string
       write_clone( "unfolded data", "h_unfolded_nuwro" );
       write_clone( "MicroBooNE Tune", "h_genie_tune" );
       write_clone( "truth", "h_fakedata_truth" );
+      // Dump every extra file-based generator prediction (A_C-smeared, xsec
+      // units) so its shape can be compared to the data outside the plot.
+      for ( const auto& gp : slice_gen_map ) {
+        if ( gp.first == "unfolded data" || gp.first == "MicroBooNE Tune"
+          || gp.first == "truth" ) continue;
+        std::string clean = gp.first;
+        for ( char& ch : clean ) if ( !std::isalnum((unsigned char)ch) ) ch = '_';
+        write_clone( gp.first.c_str(), ("h_gen_" + clean).c_str() );
+      }
       ch_file.Close();
       if ( save_dir ) save_dir->cd();
       std::cout << "[closure-dump] wrote " << ch_name << std::endl;
