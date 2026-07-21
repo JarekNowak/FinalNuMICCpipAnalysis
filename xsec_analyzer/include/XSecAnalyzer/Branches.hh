@@ -115,7 +115,16 @@ inline void set_event_branch_addresses(TTree& etree, AnalysisEvent& ev)
   set_object_input_branch_address( etree, "trk_bragg_p_v", ev.trk_bragg_p_v);
   set_object_input_branch_address( etree, "trk_bragg_mu_v", ev.trk_bragg_mu_v);
   set_object_input_branch_address( etree, "trk_bragg_mip_v", ev.trk_bragg_mip_v);
-  set_object_input_branch_address( etree, "trk_bragg_pion_v", ev.trk_bragg_pion_v);
+  // trk_bragg_pion_v is absent from some NuMI ntuples. Setting its address
+  // unconditionally made ROOT log "unknown branch -> trk_bragg_pion_v" once
+  // per event (hundreds of MB of stderr on a full run). Guard the read as the
+  // other optional branches above (swtrig, shr_pfp_id_v) already do. MyPointer
+  // default-constructs a valid empty vector, so when the branch is absent the
+  // member stays empty -- exactly what AnalysisEvent.hh documents and what the
+  // ->size() guard in CC1mu1piXp::selection() relies on. Behaviour-preserving;
+  // only the noise is removed.
+  if ( etree.GetBranch("trk_bragg_pion_v") )
+    set_object_input_branch_address( etree, "trk_bragg_pion_v", ev.trk_bragg_pion_v);
   //set_object_input_branch_address( etree, "candidate_muon_mom_mcs", ev.candidate_muon_mom_mcs);
   //set_object_input_branch_address( etree, "candidate_muon_mom_true", ev.candidate_muon_mom_true);
 
