@@ -478,7 +478,19 @@ void UnfolderNuMI(std::string XSEC_Config, std::string SLICE_Config, std::string
         " \"MicroBooNETune\" in the xsec config. The key is the quoted"
         " description field, so it must match exactly." );
     }
-    TMatrixD genie_cv_truth = genie_cv_it->second->get_prediction();
+    // Apply the additional smearing matrix A_C to every truth-space prediction
+    // before comparing to the unfolded data. Wiener-SVD unfolding returns
+    // A_C * true_signal, so a model prediction must be smeared by A_C to live
+    // in the same space; otherwise sharp truth features (e.g. the forward muon
+    // peak) are compared against a regularised measurement and the chi^2 is
+    // meaningless. This applies uniformly to the MicroBooNE Tune and to every
+    // file-based generator prediction (NuWro, ...).
+    const TMatrixD& A_C_smear = *xsec.result_.add_smear_matrix_;
+    auto apply_ac = [&A_C_smear]( const TMatrixD& truth ) {
+      return TMatrixD( A_C_smear, TMatrixD::kMult, truth );
+    };
+
+    TMatrixD genie_cv_truth = apply_ac( genie_cv_it->second->get_prediction() );
 
     for ( const auto& gen_pair : pred_map ) {
       std::cout << "Key: " << gen_pair.first << std::endl;
@@ -521,6 +533,23 @@ void UnfolderNuMI(std::string XSEC_Config, std::string SLICE_Config, std::string
       slice_gen_map[ "truth" ] = slice_truth;
     }
     slice_gen_map[ "MicroBooNE Tune" ] = slice_cv;
+
+    // Add every other prediction in the config (e.g. file-based generator
+    // predictions like NuWro, GiBUU, NEUT) to the overlay, treated exactly like
+    // the MicroBooNE Tune: same trans_mat conversion below, same chi^2 vs the
+    // unfolded data. "MicroBooNE Tune" and "Fakedata" are already handled.
+    for ( const auto& pred_pair : pred_map ) {
+      const std::string& desc = pred_pair.first;
+      // Note: the config parser strips whitespace from the quoted description
+      // (it reads char-by-char with `>>`, which skips spaces), so the CV key is
+      // "MicroBooNETune", not "MicroBooNE Tune". It is already in slice_gen_map
+      // as slice_cv; skip it (and the fake-data truth) to avoid a duplicate.
+      if ( desc == "MicroBooNETune" || desc == "Fakedata" ) continue;
+      if ( slice_gen_map.count( desc ) ) continue;
+      TMatrixD pred_truth = apply_ac( pred_pair.second->get_prediction() );
+      slice_gen_map[ desc ] = SliceHistogram::make_slice_histogram(
+        pred_truth, slice, nullptr );
+    }
 
     int var_count = 0;
     std::string diff_xsec_denom;
@@ -735,6 +764,24 @@ void UnfolderNuMI(std::string XSEC_Config, std::string SLICE_Config, std::string
       slice_truth->hist_->SetLineColor( kOrange );
       slice_truth->hist_->SetLineWidth( 5 );
       slice_truth->hist_->Draw( "hist same" );
+    }
+
+    // Draw the extra file-based generator predictions (NuWro, GiBUU, NEUT, ...)
+    // added to slice_gen_map above, each in a distinct colour/style.
+    const int gen_colors[] = { kRed + 1, kGreen + 2, kMagenta + 1, kCyan + 2 };
+    const int gen_styles[] = { 2, 7, 9, 3 };
+    int gen_i = 0;
+    for ( auto& pair : slice_gen_map ) {
+      const std::string& nm = pair.first;
+      if ( nm == "unfolded data" || nm == "MicroBooNE Tune" || nm == "truth" )
+        continue;
+      TH1* gh = pair.second->hist_.get();
+      gh->SetStats( false );
+      gh->SetLineColor( gen_colors[ gen_i % 4 ] );
+      gh->SetLineStyle( gen_styles[ gen_i % 4 ] );
+      gh->SetLineWidth( 3 );
+      gh->Draw( "hist same" );
+      ++gen_i;
     }
 
     // Print Values
