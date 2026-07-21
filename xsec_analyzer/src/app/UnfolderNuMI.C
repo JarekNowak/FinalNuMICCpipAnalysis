@@ -417,6 +417,14 @@ void UnfolderNuMI(std::string XSEC_Config, std::string SLICE_Config, std::string
   // Use a CrossSectionExtractor object to handle the systematics and unfolding
   auto extr = std::make_unique< CrossSectionExtractor >( XSEC_Config );
 
+  // Enable the fake-data closure comparison automatically when the "data"
+  // sample carries MC truth (i.e. it is a fake-data overlay). This lets the
+  // unfolded result be compared bin-by-bin to the fake data's own truth, which
+  // is the closure test proper. Was hardcoded false, so the truth curve never
+  // appeared even for fake-data runs.
+  using_fake_data = ( extr->get_syst().fake_data_universe() != nullptr );
+  std::cout << "using_fake_data = " << using_fake_data << std::endl;
+
   // get unfolded results
   auto* sb_ptr = new SliceBinning( SLICE_Config );
   auto& sb = *sb_ptr;
