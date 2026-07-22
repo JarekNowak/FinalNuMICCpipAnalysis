@@ -1,0 +1,62 @@
+&neutrino_induced
+      process_ID      = -2   ! 2:CC, -2:antiCC
+      flavor_ID       = 2        ! muon
+      nuXsectionMode  = 16       ! EXP_dSigmaMC (flux-folded)
+      nuExp           = 99       ! user-supplied flux
+      FileNameFlux    = '/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/generator_predictions/newg4/gibuu/gibuu_numubar.dat'
+      includeQE       = T
+      includeDELTA    = T
+      includeRES      = T
+      include1pi      = T
+      includeDIS      = T
+      include2p2hQE   = T
+      include2pi      = T
+      printAbsorptionXS = T
+/
+&target
+      Z=18
+      A=40
+      densitySwitch_Static=2
+      fermiMotion=.true.
+/
+&initDensity
+      densitySwitch=2
+/
+&initPauli
+      pauliSwitch=2
+/
+&input
+      eventtype=5
+      numEnsembles=4000
+      numTimeSteps=150
+      delta_T=0.2
+      fullensemble=.true.
+      localEnsemble=.true.
+      num_runs_SameEnergy=20
+      num_Energies=1
+      printParticleVectors=.false.
+      freezeRealParticles=.true.
+      LRF_equals_CALC_frame=.true.
+      path_to_input='/home/t2k/nowak/generators/gibuu/buuinput'
+      version = 2025
+/
+&width_Baryon
+      mediumSwitch=.false.
+      mediumSwitch_Delta=.false.
+      mediumSwitch_coll=.false.
+/
+&spectralFunction
+      nuclwidth=0.001
+/
+&baryonPotential
+      EQS_Type=5
+      DeltaPot=1
+/
+&insertion
+      minimumEnergy=0.005
+/
+&neutrinoAnalysis
+      outputEvents=.true.
+      include_W_dist=.false.
+      DoOutChannels=.true.
+/
