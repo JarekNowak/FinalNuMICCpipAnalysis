@@ -509,13 +509,16 @@ void UnfolderNuMI(std::string XSEC_Config, std::string SLICE_Config, std::string
 
     // If present, also use the truth information from the fake data to do the same
     SliceHistogram* slice_truth = nullptr;
-    if ( using_fake_data ) {
-      auto fake_data_truth_it = pred_map.find("Fakedata");
-      if ( fake_data_truth_it == pred_map.end() ) {
-        throw std::runtime_error( "UnfolderNuMI: no prediction named"
-          " \"Fakedata\" in the xsec config, but a fake-data closure was"
-          " requested." );
-      }
+    // The fake-data truth curve is only drawn if the config declares a
+    // "Fakedata" prediction (Prediction ... univ FakeData). using_fake_data is
+    // auto-detected from the sample, so it can be true without that line; in
+    // that case just skip the truth curve rather than aborting.
+    auto fake_data_truth_it = pred_map.find("Fakedata");
+    if ( using_fake_data && fake_data_truth_it == pred_map.end() ) {
+      std::cout << "[UnfolderNuMI] fake-data sample detected but no \"Fakedata\""
+        " prediction in the config; skipping the truth-comparison curve.\n";
+    }
+    if ( using_fake_data && fake_data_truth_it != pred_map.end() ) {
       TMatrixD fake_data_truth = fake_data_truth_it->second->get_prediction();
       TMatrixD fake_data_truth_cov(fake_data_truth.GetNrows(), fake_data_truth.GetNrows());
 
@@ -537,7 +540,7 @@ void UnfolderNuMI(std::string XSEC_Config, std::string SLICE_Config, std::string
     auto& slice_gen_map = *slice_gen_map_ptr;
 
     slice_gen_map[ "unfolded data" ] = slice_unf;
-    if ( using_fake_data ) {
+    if ( slice_truth ) {
       slice_gen_map[ "truth" ] = slice_truth;
     }
     slice_gen_map[ "MicroBooNE Tune" ] = slice_cv;
@@ -743,7 +746,7 @@ void UnfolderNuMI(std::string XSEC_Config, std::string SLICE_Config, std::string
     gStyle->SetLegendBorderSize(0);
     gStyle->SetCanvasPreferGL(0);
 
-    bool noRatioPlot = true;
+    bool noRatioPlot = false;   // draw a data/MC ratio panel below the main plot
     const auto rightMargin = 0.33;
 
     TPad* pad1 = new TPad(("pad1 slice "+std::to_string(sl_idx)).c_str(), "", 0.0, noRatioPlot ? 0.05 : 0.3, 1.0, 1.0);
@@ -776,7 +779,7 @@ void UnfolderNuMI(std::string XSEC_Config, std::string SLICE_Config, std::string
     slice_cv->hist_->SetLineStyle( 5 );
     slice_cv->hist_->Draw( "hist same" );
 
-    if ( using_fake_data ) {
+    if ( slice_truth ) {
       slice_truth->hist_->SetStats( false );
       slice_truth->hist_->SetLineColor( kOrange );
       slice_truth->hist_->SetLineWidth( 5 );
@@ -931,6 +934,85 @@ void UnfolderNuMI(std::string XSEC_Config, std::string SLICE_Config, std::string
     else {
       label.DrawLatex(0.135, 0.85, labelText1.c_str() );
       label.DrawLatex(0.135, 0.80, labelText2.c_str() );
+    }
+
+    // ---- Ratio panel: data / MC for each generator ------------------------
+    // Below the main cross-section plot, show data/prediction per bin for each
+    // generator (GENIE tune, NuWro, ...), with the data's fractional
+    // uncertainty as the error bar and a reference line at 1.
+    if ( !noRatioPlot ) {
+      // Suppress the main pad's x-axis labels/title (the ratio pad carries them)
+      slice_unf->hist_->GetXaxis()->SetLabelSize( 0 );
+      slice_unf->hist_->GetXaxis()->SetTitleSize( 0 );
+
+      c1->cd();
+      TPad* pad2 = new TPad( ("pad2_" + std::to_string(sl_idx)).c_str(), "",
+        0.0, 0.0, 1.0, 0.3 );
+      pad2->SetTopMargin( 0.03 );
+      pad2->SetBottomMargin( 0.32 );
+      pad2->SetRightMargin( rightMargin );
+      pad2->SetGridy();
+      pad2->Draw();
+      pad2->cd();
+
+      const TH1* h_data = slice_unf->hist_.get();
+      bool first = true;
+      const int rc[] = { kAzure - 7, kRed + 1, kGreen + 2, kMagenta + 1, kCyan + 2 };
+      const int rs[] = { 5, 2, 7, 9, 3 };
+      int ri = 0;
+      for ( const auto& gp : slice_gen_map ) {
+        const std::string& nm = gp.first;
+        if ( nm == "unfolded data" || nm == "truth" ) continue;
+        const TH1* h_gen = gp.second->hist_.get();
+        TH1* h_ratio = static_cast<TH1*>( h_data->Clone(
+          ("ratio_" + nm + "_" + std::to_string(sl_idx)).c_str() ) );
+        h_ratio->SetDirectory( nullptr );
+        for ( int b = 1; b <= h_ratio->GetNbinsX(); ++b ) {
+          double d = h_data->GetBinContent( b );
+          double de = h_data->GetBinError( b );
+          double g = h_gen->GetBinContent( b );
+          if ( g != 0. ) {
+            h_ratio->SetBinContent( b, d / g );
+            h_ratio->SetBinError( b, de / g );   // data uncertainty only
+          } else {
+            h_ratio->SetBinContent( b, 0. );
+            h_ratio->SetBinError( b, 0. );
+          }
+        }
+        int col = ( nm == "MicroBooNE Tune" ) ? rc[0] : rc[1 + (ri % 4)];
+        int sty = ( nm == "MicroBooNE Tune" ) ? rs[0] : rs[1 + (ri % 4)];
+        if ( nm != "MicroBooNE Tune" ) ++ri;
+        h_ratio->SetLineColor( col );
+        h_ratio->SetMarkerColor( col );
+        h_ratio->SetLineStyle( sty );
+        h_ratio->SetLineWidth( 2 );
+        h_ratio->SetMarkerStyle( 20 );
+        h_ratio->SetMarkerSize( 0.7 );
+        if ( first ) {
+          h_ratio->SetStats( false );
+          h_ratio->SetTitle( "" );
+          h_ratio->GetYaxis()->SetTitle( "Data / MC" );
+          h_ratio->GetYaxis()->SetRangeUser( 0.0, 3.0 );
+          h_ratio->GetYaxis()->SetNdivisions( 505 );
+          h_ratio->GetYaxis()->SetTitleSize( 0.12 );
+          h_ratio->GetYaxis()->SetTitleOffset( 0.35 );
+          h_ratio->GetYaxis()->SetLabelSize( 0.10 );
+          h_ratio->GetXaxis()->SetTitleSize( 0.13 );
+          h_ratio->GetXaxis()->SetTitleOffset( 1.0 );
+          h_ratio->GetXaxis()->SetLabelSize( 0.11 );
+          h_ratio->Draw( "e1" );
+          first = false;
+        } else {
+          h_ratio->Draw( "e1 same" );
+        }
+      }
+      // Reference line at 1
+      double xlo = h_data->GetXaxis()->GetXmin();
+      double xhi = h_data->GetXaxis()->GetXmax();
+      TLine* l1 = new TLine( xlo, 1.0, xhi, 1.0 );
+      l1->SetLineColor( kBlack );
+      l1->SetLineStyle( 2 );
+      l1->Draw( "same" );
     }
 
     // write to file. Name by the slice's active variable, not just the slice
