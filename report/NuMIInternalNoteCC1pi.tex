@@ -1,0 +1,353 @@
+\documentclass[11pt]{article}
+\usepackage{fontspec}
+\setmainfont{DejaVu Serif}[Scale=0.92]
+\setsansfont{DejaVu Sans}[Scale=0.92]
+\setmonofont{DejaVu Sans Mono}[Scale=0.85]
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{parskip}
+\usepackage[hidelinks]{hyperref}
+\setlength{\emergencystretch}{3em}
+\renewcommand{\arraystretch}{1.2}
+\begin{document}
+\section*{Muon Neutrino Charged Current Single Pion Cross Section on Argon using Run 1 NuMI Data}
+
+\textbf{Internal Note — Version 0.2 (DRAFT)}
+
+\vspace{0.5em}\hrule\vspace{0.5em}
+
+\begin{quote}\itshape
+\textbf{DRAFT STATUS — READ FIRST}
+
+This note mirrors the structure of the BNB CC1π internal note (\texttt{BNBInternalNoteCC1pi\_V0.91.pdf}, J. P. Detje, 4 Feb 2025) for the NuMI Run 1 FHC measurement.
+
+Sections 1–5 describe the analysis \textbf{as it is actually configured in the code today} and every number in them was read from the source or configs. Section 6 (fake-data tests) now carries \textbf{real results} from the re-run chain: the GENIE closure χ² for all five observables and the four-generator comparison on the corrected flux. Section 7 (real-data results) is \textbf{still empty} — the real beam-on sample has not been restored and the chain has not been run on data (see §2.2 and §7).
+
+The single most important change since v0.1 is the \textbf{flux-normalisation correction} (§2.4): the NuMI flux constant was \textasciitilde{}3.48× too large, which had made every extracted cross section \textasciitilde{}3.5× too small. Every number in §6 uses the corrected flux. Nothing in §7 should be quoted as a data result.
+\end{quote}
+
+\vspace{0.5em}\hrule\vspace{0.5em}
+
+\section*{1 Overview}
+
+This note describes the extraction of the νμ charged-current single charged pion cross section on argon using MicroBooNE Run 1 FHC data from the NuMI beam. It is the NuMI counterpart of the BNB analysis of the same final state, and is intended to be read alongside that note, which contains fuller descriptions of the selection variables and the boosted decision trees.
+
+The measurement is performed with the common \texttt{xsec\_analyzer} framework: event selection via the \texttt{CC1mu1piXp} selection class, universe construction via \texttt{univmake}, and unfolding via the Wiener-SVD implementation in \texttt{CrossSectionExtractor}. Section 2 describes the software and samples, Section 3 the signal definition and selection, Section 4 the uncertainty treatment, Section 5 the cross-section extraction and unfolding, Section 6 the fake-data tests, and Section 7 the results.
+
+The principal differences from the BNB analysis are:
+
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+\hline
+\textbf{} & \textbf{BNB analysis} & \textbf{This analysis} \\
+\hline
+Beam & BNB & NuMI FHC \\
+Runs & 1–5 & 1 only \\
+Flux systematic & \texttt{weight\_flux\_all} & \texttt{weight\_ppfx\_all} (PPFX) \\
+Beamline geometry systematic & n/a & NuMI-specific — \textbf{not currently included}, see §4.6 \\
+Proton multiplicity & — & Xp (any number, no threshold) \\
+Unfolding & Wiener-SVD & Wiener-SVD (D'Agostini available as a cross-check) \\
+\hline
+\end{tabularx}
+
+\section*{2 Software and Samples}
+
+\subsection*{2.1 Framework}
+
+The analysis runs entirely within \texttt{xsec\_analyzer}. The chain is:
+
+\begin{enumerate}
+\item \texttt{ProcessNTuples} — applies the \texttt{CC1mu1piXp} selection to raw PeLEE ntuples and writes \texttt{stv\_tree} output (\texttt{run\_process\_ntuples.sh}).
+\item \texttt{univmake} — builds systematic universe histograms from a bin config (\texttt{run\_universe\_maker.sh}).
+\item \texttt{Unfolder} / \texttt{UnfolderNuMI} — extracts and unfolds the cross section (\texttt{run\_unfolder.sh}).
+\end{enumerate}
+
+\subsection*{2.2 Samples}
+
+Run 1 FHC, as configured in \texttt{configs/file\_properties\_numi.txt}:
+
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+\hline
+\textbf{Sample type} & \textbf{Purpose} \\
+\hline
+\texttt{onBNB} & beam-on data (see warning below) \\
+\texttt{extBNB} & beam-off (EXT), 3 821 593 triggers \\
+\texttt{numuMC} & NuMI overlay CV \\
+\texttt{dirtMC} & dirt overlay \\
+\texttt{detVarCV} + 8 variations & detector systematics \\
+\hline
+\end{tabularx}
+
+\begin{quote}\itshape
+\textbf{The \texttt{onBNB} slot currently holds GENIE fake data.} It is the detector-variation central-value sample (a GENIE G18\_10a production), symlinked as \texttt{xsec-ana-genie\_detvarCV\_fakedata\_run1\_fhc.root} and entered with its native POT (7.631 × 10²⁰) and beam-on-equivalent triggers (18 153 256). This sample is statistically \textbf{independent} of the numuMC overlay that builds the response matrix, so it is a genuine same-generator closure rather than a trivial self-closure. It replaced the earlier NuWro overlay fake data (\texttt{xsec-ana-numi\_nuwro\_overlay\_pion\_ntuples\_run1\_fhc.root}, 6.65 × 10²⁰ POT), which carried a real cos θ\_μ \emph{shape} difference versus any standalone NuWro (§6.4).
+
+The real beam-on sample (\texttt{xsec-ana-neutrinoselection\_filt\_run1\_beamon\_beamgood.root}, 3.283 × 10²⁰ POT, 7 809 962 triggers) remains \textbf{commented out} at \texttt{configs/file\_properties\_numi.txt}. The analysis is therefore configured as a \textbf{fake-data study}, not a real-data measurement. Section 7 cannot be filled until this is swapped back and the chain re-run on data.
+\end{quote}
+
+\subsection*{2.3 Detector variation samples}
+
+Eight variations are used: \texttt{detVarLYdown}, \texttt{detVarLYrayl}, \texttt{detVarRecomb2}, \texttt{detVarSCE}, \texttt{detVarWMAngleXZ}, \texttt{detVarWMAngleYZ}, \texttt{detVarWMX}, \texttt{detVarWMYZ}.
+
+The BNB note additionally lists \texttt{detVarLYatten}; it is not present in the NuMI sample set here. Like the BNB analysis, the WireMod dE/dx variation is not used, in favour of the recombination variation.
+
+\subsection*{2.4 Corrections applied since the previous iteration}
+
+The following were found and fixed during a code review of this analysis. All of them affect the numbers a run would produce, which is why no results from before them should be carried forward:
+
+\begin{itemize}
+\item \textbf{Flux normalisation (dominant correction).} The integrated NuMI flux constant in the cross-section conversion factor was 2.372512 × 10⁻⁹ νμ/cm²/POT, taken from the superseded \texttt{uboone\_numi\_flux\_histograms.root} (which included an unphysical \textasciitilde{}25–30 MeV artifact spike). The authoritative value from the flux-file author, using the new GEANT4 flux integrated above 60 MeV, is 4.43515 × 10⁻¹⁰ (νμ) + 2.37644 × 10⁻¹⁰ (ν̄μ) = 6.81159 × 10⁻¹⁰ νμ/cm²/POT — a factor \textbf{3.48 smaller}. Because the cross section divides by the flux, the old constant made every extracted cross section \textasciitilde{}3.5× too \emph{small}. The correction was confirmed four independent ways: standalone NuWro (2.7× low) and GENIE (3.2× low) run on the old flux; the flux author's numbers (3.48×); and a GENIE closure in which the framework tune scaled by 3.48× matches a standalone GENIE on the corrected flux to 3\%. Fixed in \texttt{FiducialVolume.hh} (\texttt{integrated\_numu\_flux\_in\_FV}). The flux is the active-volume-averaged flux used as an approximation for the fiducial-volume flux — a documented \textasciitilde{}few-\% residual; no fiducial-volume correction is applied (the target count is done separately in the same conversion factor).
+\item \textbf{Muon momentum estimator.} The estimator combining range (contained) and MCS (uncontained) was computed but never written to the output tree, so the unfolding binned on MCS alone. It is now branched as \texttt{candidate\_muon\_mom\_reco} and \texttt{ccpi\_pmu\_bin\_config.txt} uses it.
+\item \textbf{Pion momentum estimator.} Reco pion momentum was a proton-hypothesis range \emph{kinetic energy} binned against a true \emph{momentum} on identical bin edges. It is now the muon-hypothesis range momentum.
+\item \textbf{Per-category systematics.} Six \texttt{MCFullCorrCategory} entries evaluated to identically zero and have been removed; see §4.6.
+\item \textbf{Background true bins.} \texttt{MakeConfig} had stopped emitting them, so any regenerated bin config would have had no background subtraction at all.
+\item \textbf{Diagnostic histograms} are now filled with the CV weight (\texttt{spline\_weight\_ × tuned\_cv\_weight\_}).
+\end{itemize}
+
+\section*{3 Signal and Selection}
+
+\subsection*{3.1 Signal definition}
+
+An event is signal if, in truth:
+
+\begin{itemize}
+\item the neutrino vertex is inside the fiducial volume: 10 < x < 246 cm, −101 < y < 101 cm, 10 < z < 986 cm;
+\item the interaction is charged-current;
+\item the neutrino is νμ (\texttt{|mc\_nu\_pdg| == 14}, see §8.3);
+\item there is exactly one muon above threshold;
+\item there is exactly one charged pion;
+\item there are no neutral pions, no kaons and no heavier mesons;
+\item any number of protons is allowed, with no momentum threshold (the "Xp" in \texttt{CC1mu1piXp});
+\end{itemize}
+
+and the event falls in the measured phase space:
+
+\begin{itemize}
+\item p\_μ > 0.15 GeV/c
+\item p\_π > 0.175 GeV/c
+\item θ\_μπ < 2.6 rad
+\end{itemize}
+
+The phase-space cuts are applied identically in \texttt{define\_signal()} and \texttt{categorize\_event()}, so signal and category assignment cannot disagree.
+
+\subsection*{3.2 Binning}
+
+Five differential observables are measured. Bin edges as configured:
+
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+\hline
+\textbf{Observable} & \textbf{Config} & \textbf{Bins (true/reco)} & \textbf{Edges} \\
+\hline
+p\_μ & \texttt{ccpi\_pmu\_bin\_config.txt} & 23/22 & 0.15, 0.20, 0.30 … 2.00, 2.30, 2.60, 3.00 GeV/c \\
+p\_π & \texttt{ccpi\_ppi\_bin\_config.txt} & 6/5 & 0.175, 0.20, 0.30, 0.40, 0.50, 1.00 GeV/c \\
+cos θ\_μ & \texttt{ccpi\_costhmu\_bin\_config.txt} & 13/12 & −1.0, −0.5, 0.0, 0.2, 0.4, 0.55, 0.65, 0.75, 0.82, 0.88, 0.93, 0.97, 1.0 \\
+cos θ\_π & \texttt{ccpi\_costhpi\_bin\_config.txt} & 13/12 & −1.0, −0.7, −0.4, −0.2, 0.0, 0.2, 0.35, 0.5, 0.65, 0.78, 0.88, 0.95, 1.0 \\
+θ\_μπ & \texttt{ccpi\_thmupi\_bin\_config.txt} & 10/9 & 0.0 … 2.513, 2.600 rad \\
+\hline
+\end{tabularx}
+
+Each true-bin count is one greater than the reco count: the extra true bin is the background bin, defined by inverting the signal definition (\texttt{!CC1mu1piXp\_MC\_Signal}). All configs are single-block with no sideband reco bins.
+
+\subsection*{3.3 Particle identification}
+
+Three BDTs are used, trained separately and applied via \texttt{TMVA::Reader}:
+
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+\hline
+\textbf{Reader} & \textbf{Weights (\texttt{booster\_decision\_tree/})} & \textbf{Role} \\
+\hline
+\texttt{tmvaReader} & \texttt{dataset\_MIP\_BDT\_no\_len} & MIP identification \\
+\texttt{tmvaReader\_mu} & \texttt{dataset\_muon\_BDT} & muon — \textbf{booked but never evaluated}, see §8.4 \\
+\texttt{tmvaReader\_pi} & \texttt{dataset\_pion\_BDT\_no\_len} & pion \\
+\hline
+\end{tabularx}
+
+Input variables: the three-plane Bragg likelihood ratios (\texttt{trk\_bragg\_p\_v}, \texttt{trk\_bragg\_mu\_v}, \texttt{trk\_bragg\_mip\_v}), the LLR PID score, the track score, track length, and the SCE-corrected track end position. The pion reader omits track length.
+
+\subsection*{3.4 Event selection cuts}
+
+Applied in order; an event passes only if all are satisfied:
+
+\begin{enumerate}
+\item software trigger
+\item reconstructed vertex in the fiducial volume
+\item topological score
+\item muon candidate is track-like
+\item pion candidate is contained
+\item muon candidate not in a detector gap
+\item pion candidate not in a detector gap
+\item shower cut
+\item muon–pion opening angle cut
+\item final track-multiplicity cut
+\end{enumerate}
+
+\subsection*{3.5 Selection efficiency and purity}
+
+\emph{To be filled from a complete \texttt{ProcessNTuples} pass.} \texttt{finalize()} prints efficiency and purity; these are now CV-weighted (§2.4) and so differ from any previously recorded values.
+
+\section*{4 Uncertainties}
+
+Configured in \texttt{configs/ccpi\_systcalc\_numi.conf}. The total is
+
+\begin{verbatim}
+total = detVar_total + flux_total + reint + xsec_total
+        + POT + numTargets + SimulationStats + DataStats
+\end{verbatim}
+
+\subsection*{4.1 Flux}
+
+PPFX hadron-production multisims via \texttt{weight\_ppfx\_all}. A 2\% fully-correlated normalisation uncertainty is applied for POT (\texttt{POT MCFullCorr 0.02}).
+
+\subsection*{4.2 Interaction}
+
+GENIE multisims (\texttt{weight\_All\_UBGenie}) plus nine unisim knobs (\texttt{AxFFCCQEshape}, \texttt{DecayAngMEC}, \texttt{NormCCCOH}, \texttt{NormNCCOH}, \texttt{RPA\_CCQE}, \texttt{ThetaDelta2NRad}, \texttt{Theta\_Delta2Npi}, \texttt{VecFFCCQEshape}, \texttt{XSecShape\_CCMEC}) and the two second-class-current form factors (\texttt{xsr\_scc\_Fa3\_SCC}, \texttt{xsr\_scc\_Fv3\_SCC}), matching the BNB treatment.
+
+\subsection*{4.3 Reinteraction}
+
+\texttt{weight\_reint\_all} multisims.
+
+\subsection*{4.4 Detector}
+
+The eight detector variation samples of §2.3, evaluated as \texttt{DV} type.
+
+\subsection*{4.5 Target}
+
+A 1\% normalisation uncertainty on the number of argon nuclei in the fiducial volume (\texttt{numTargets MCFullCorr 0.01}), as in the BNB analysis.
+
+\subsection*{4.6 Known gaps in the uncertainty budget}
+
+Two components are \textbf{not} included, and the total above is correspondingly under-estimated:
+
+\textbf{NuMI beamline geometry.} The beamline variation weights (\texttt{weight\_Horn\_2kA}, \texttt{weight\_Horn1\_x\_3mm}, \texttt{weight\_Beam\_spot\_*}, etc.) are absent from the processed ntuples. \texttt{instructions\_numi.txt} documents \texttt{AddBeamlineGeometryWeights} as the tool that injects them, but no driver script invokes it, and the required histogram file (\texttt{NuMI\_Geometry\_Weights\_Histograms.root}, canonical copy at \texttt{/exp/uboone/data/users/pgreen/NuMIFlux/NewFluxFiles/}) is not available locally. This systematic has no BNB counterpart and must be restored before the measurement is complete.
+
+\textbf{Background normalisation by category, and dirt normalisation.} Six \texttt{MCFullCorrCategory} entries were removed because they evaluated to identically zero — they matched true bins by exact string equality against \texttt{"category == N"} while the bin configs declare a single \texttt{"!CC1mu1piXp\_MC\_Signal"} background bin. Their category indices were also inherited from the NuMI CC1e analysis and did not correspond to this selection's categories. Removing them changed no number (verified: 152 histograms bit-identical). Full detail in \texttt{configs/ccpi\_systcalc\_numi.README.md}.
+
+Note the BNB uncertainty breakdown (Fig. 43–44 of that note) comprises \texttt{EXTstats, MCstats, POT, detVar\_total, flux, numTargets, reint, xsec\_total} — i.e. the same set retained here, with no per-category or dirt term.
+
+\section*{5 Cross-section Extraction}
+
+The flux-integrated differential cross section in truth bin α is obtained by subtracting background from the measured event rate, unfolding to truth space, and dividing by the integrated flux Φ, the number of argon targets T, and the bin width:
+
+\begin{verbatim}
+dσ/dx |α  =  (1 / (T · Φ · Δx_α)) · Σ_a U_αa (D_a − B_a)
+\end{verbatim}
+
+where \texttt{D\_a} is the measured rate in reco bin a, \texttt{B\_a} the estimated background, and \texttt{U\_αa} the unfolding matrix, which absorbs both the reco→truth mapping and the efficiency.
+
+Targets are counted as \textbf{argon nuclei} in the fiducial volume, so the result is per-nucleus, not per-nucleon — matching the BNB convention (\texttt{T = 1.03 × 10³⁰} nuclei there). For NuMI the fiducial volume additionally excludes the dead region 675.1 < z < 775.1 cm.
+
+Results are quoted in units of \textbf{10⁻³⁸ cm² / Ar}, differential in the observable (so 10⁻³⁸ cm² / GeV / Ar for momenta, 10⁻³⁸ cm² / rad / Ar for angles).
+
+Both the NuMI unit factor (now \texttt{1e38}) and the bin-width division in \texttt{Unfolder.C} were corrected to this convention; \texttt{Unfolder} and \texttt{UnfolderNuMI} now agree bin-for-bin (§8.1).
+
+\subsection*{5.1 Unfolding}
+
+Wiener-SVD with the filter enabled and second-derivative regularisation (\texttt{Unfold WienerSVD 1 second-deriv}), chosen over D'Agostini after a variant study — it suppresses the bin-to-bin oscillation arising from sparse Run 1 statistics. D'Agostini with 4 iterations remains available as a cross-check via \texttt{configs/ccpi\_xsec\_config\_numi\_range\_dagost.txt}.
+
+As in the BNB analysis, the unfolded result must be compared to predictions smeared by the additional smearing matrix A\_C.
+
+\section*{6 Fake-Data Tests}
+
+All results in this section use the corrected flux (§2.4) and are drawn from a full re-run of \texttt{univmake} + \texttt{Unfolder}/\texttt{UnfolderNuMI} on all five observables. Predictions are compared in the space of the unfolded result, i.e. after the additional smearing matrix A\_C is applied (§5.1).
+
+\subsection*{6.1 GENIE closure test}
+
+The fake data is the detector-variation central-value GENIE sample (§2.2), statistically independent of the numuMC overlay that builds the response matrix. Treating it as data, subtracting the scaled beam-off sample and unfolding should recover its own true signal distribution. The closure is quantified by the χ² between the unfolded result and the A\_C-smeared fake-data truth, using the full covariance:
+
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+\hline
+\textbf{Observable} & \textbf{χ² / ndf} & \textbf{p-value} \\
+\hline
+p\_μ & 7.23 / 22 & 0.999 \\
+cos θ\_μ & 4.40 / 12 & 0.975 \\
+cos θ\_π & 3.32 / 12 & 0.993 \\
+p\_π & 0.26 / 5 & 0.998 \\
+θ\_μπ & 2.26 / 9 & 0.987 \\
+\hline
+\end{tabularx}
+
+All five observables close with p > 0.97: the unfolding machinery recovers the fake-data truth. (The very high p-values reflect the large Run-1 covariance, not overfitting.) This is a cleaner closure than the NuWro overlay could provide, since data and response now share the same generator model.
+
+\subsection*{6.2 Fake-data normalisation offset}
+
+The unfolded fake data sits \textasciitilde{}1.29× above the framework GENIE tune (the numuMC CV prediction), even though both are the same GENIE G18\_10a tune. This was traced to a \textbf{flat} difference in events-per-POT between the detVar-CV sample and the numuMC overlay: the ratio is 1.293 integrated and 1.294 in the dominant catch-all true bin, i.e. present across \emph{all} event types, with the signal-bin shape agreeing within Poisson statistics. It is therefore a POT / flux bookkeeping difference from using the Run-3b detVar-CV sample as Run-1 fake data — consistent with the framework's own caveat that detVar samples exist only for Run 3b and are applied globally (\texttt{SystematicsCalculator.cxx}) — not a physics or generator difference and not a framework bug.
+
+The familiar "data ≈ 2× above the generators" then decomposes as \textbf{1.29× (fake-data normalisation) × \textasciitilde{}1.3× (A\_C smearing)}. It can be removed by entering the fake data with an effective POT of 7.63 × 10²⁰ × 1.293 = 9.87 × 10²⁰ (and rebuilding the universes); this is documented but left uncorrected in \texttt{configs/file\_properties\_numi.txt}, since it does not affect the closure and vanishes entirely once the real beam-on sample replaces the fake data.
+
+\subsection*{6.3 Generator comparison}
+
+Standalone predictions for the same signal definition and phase space were generated on the corrected "newg4" flux and overlaid on every unfolded plot. Each generator was run in the SL7 container environment:
+
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+\hline
+\textbf{Generator} & \textbf{Version / tune} & \textbf{CC1π total, cos θ\_μ integral [10⁻³⁸ cm²/Ar]} \\
+\hline
+GENIE & 3.04, tune G18\_10a\_02\_11a & 0.82 \\
+GiBUU & local release build, FSI on & 1.13 \\
+NuWro & 21.09 & 1.25 \\
+NEUT & local build, MPV-3 flux×σ sampling & 1.32 \\
+\hline
+\end{tabularx}
+
+The four span 0.82–1.32 (GENIE lowest, NEUT highest) — a healthy generator spread. Predictions are combined from νμ and ν̄μ runs with the authoritative flux fractions (Φ\_νμ = 4.43515 × 10⁻¹⁰, Φ\_ν̄μ = 2.37644 × 10⁻¹⁰) and converted to per-nucleus 10⁻³⁸ cm²/Ar (× A = 40). Two per-generator normalisation conventions had to be handled explicitly: NEUT's \texttt{Totcrs} is per \textbf{nucleon} (not per nucleus), and GiBUU's \texttt{perweight} is already in 10⁻³⁸ cm² units; getting these wrong produced 40× and 10³⁸× errors respectively before the fix.
+
+The five comparison figures (\texttt{unfold\_output/plot\_\{costhetamu,costhetapi,pmu, ppi,thetamupi\}\_0.pdf}) show, per observable: the unfolded fake data with its uncertainty, the four generators and the MicroBooNE tune (all A\_C-smeared), the fake-data truth curve, and a data/MC ratio panel.
+
+\begin{figure}[htbp]\centering
+\includegraphics[width=0.86\textwidth]{/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/xsec_analyzer/unfold_output/plot_costhetamu_0.pdf}
+\caption{Unfolded d$\sigma$/d\,cos\,$\theta_\mu$ (fake data), four generators + tune + fake-data truth, with data/MC ratio panel.}
+\end{figure}
+\begin{figure}[htbp]\centering
+\includegraphics[width=0.86\textwidth]{/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/xsec_analyzer/unfold_output/plot_pmu_0.pdf}
+\caption{Unfolded d$\sigma$/d$p_\mu$.}
+\end{figure}
+\begin{figure}[htbp]\centering
+\includegraphics[width=0.86\textwidth]{/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/xsec_analyzer/unfold_output/plot_ppi_0.pdf}
+\caption{Unfolded d$\sigma$/d$p_\pi$.}
+\end{figure}
+\begin{figure}[htbp]\centering
+\includegraphics[width=0.86\textwidth]{/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/xsec_analyzer/unfold_output/plot_costhetapi_0.pdf}
+\caption{Unfolded d$\sigma$/d\,cos\,$\theta_\pi$.}
+\end{figure}
+\begin{figure}[htbp]\centering
+\includegraphics[width=0.86\textwidth]{/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/xsec_analyzer/unfold_output/plot_thetamupi_0.pdf}
+\caption{Unfolded d$\sigma$/d$\theta_{\mu\pi}$.}
+\end{figure}
+
+\subsection*{6.4 NuWro overlay vs standalone NuWro (shape study)}
+
+The NuWro overlay previously used as fake data was compared bin-by-bin against a standalone NuWro 21.09 run on the same flux. Their cos θ\_μ distributions differ in \textbf{shape}, not just normalisation: the overlay/standalone ratio swings from 0.64 (backward) to 1.88 (mid-angle) and back to 0.65 (forward), while the integral ratio is only \textasciitilde{}1.1. The cause is \emph{not} the flux — the two samples have identical signal-weighted mean neutrino energies (1.93 vs 1.88 GeV, 3\%) — but a NuWro version/configuration difference in the muon angular distribution at fixed energy. This is why the NuWro overlay was retired in favour of the independent-GENIE fake data (§2.2), and it is a reminder that an overlay fake sample is not a clean stand-in for an external generator prediction.
+
+\section*{7 Results}
+
+\emph{Empty pending a real-data run.} The fake-data machinery is now validated end-to-end (§6): the flux normalisation is corrected, the GENIE closure passes for all five observables, and four standalone generators are overlaid. What remains before this section can carry a \textbf{data} measurement is, in order:
+
+\begin{enumerate}
+\item Restore the real beam-on sample in \texttt{file\_properties\_numi.txt} (currently the GENIE detVar-CV fake data occupies the \texttt{onBNB} slot, §2.2).
+\item Re-run the full chain from \texttt{ProcessNTuples} — the corrected momentum branches (§2.4) do not exist in the currently processed files.
+\item Restore the NuMI beamline-geometry systematic (§4.6, §8.2); the uncertainty budget is under-estimated without it.
+\end{enumerate}
+
+The units/normalisation questions (§8.1) and the flux scale (§8.5) are resolved.
+
+This section should then contain, per observable and for the total: the unfolded cross section with the full uncertainty breakdown, and the generator comparison of §6.3 against real data rather than fake data.
+
+\section*{8 Open Items}
+
+\textbf{8.1 Cross-section units and bin-width normalisation. — RESOLVED.} \texttt{conversion\_factor()} divided by \texttt{1e39} in NuMI mode against \texttt{1e38} for BNB, and \texttt{Unfolder.C} omitted the bin-width division that \texttt{UnfolderNuMI.C} performs, so the two binaries disagreed on the same bin. Both are now fixed to the BNB convention (10⁻³⁸ cm²/Ar, differential): the NuMI factor is \texttt{1e38}, and \texttt{Unfolder.C} divides each bin by \texttt{conv\_factor × bin\_width × other\_var\_width} via \texttt{SliceHistogram::transform()}, which also converts the covariance. Verified on the costhmu NuWro config that \texttt{Unfolder} and \texttt{UnfolderNuMI} now agree bin-for-bin (ratio 1.0000 across all 12 bins). Relative to earlier output, every cross-section number is \textasciitilde{}10× smaller and now differential.
+
+\textbf{8.2 Beamline geometry systematic.} §4.6.
+
+\textbf{8.3 Anti-neutrino contamination. — CONSISTENT, by construction.} The signal uses \texttt{|mc\_nu\_pdg| == 14}, admitting ν̄μ CC events into signal and the efficiency denominator (the three sibling selections use an exact comparison). With the flux fix (§2.4) the normalising flux is now the \textbf{combined} νμ + ν̄μ flux (4.43515 × 10⁻¹⁰ + 2.37644 × 10⁻¹⁰), and the standalone generators are combined with the same fractions (§6.3). Signal, flux and predictions therefore all treat νμ and ν̄μ together, so there is no longer a normalisation mismatch — the measured quantity is an effective flux-averaged νμ+ν̄μ CC1π cross section. A νμ-only measurement would instead require restricting the signal to \texttt{mc\_nu\_pdg == 14} and using the νμ-only flux; that is a definition choice, not a bug.
+
+\textbf{8.4 Unused muon BDT.} \texttt{tmvaReader\_mu} is constructed and booked but never evaluated, and its input variables are never filled — suggesting an intended muon-PID cut was dropped.
+
+\textbf{8.5 Flux normalisation. — RESOLVED.} The NuMI flux constant was \textasciitilde{}3.48× too large (§2.4), making cross sections \textasciitilde{}3.5× too small. Corrected to the flux author's authoritative value (6.81159 × 10⁻¹⁰ νμ/cm²/POT, E > 60 MeV) in \texttt{FiducialVolume.hh} and confirmed four independent ways. A residual \textasciitilde{}few-\% active-volume-vs-fiducial-volume approximation is documented in that file.
+
+\textbf{8.6 Fake-data normalisation offset. — DOCUMENTED, uncorrected.} The detVar-CV fake data sits a flat \textasciitilde{}1.29× above the numuMC GENIE tune from a Run-3b-vs-Run-1 POT/flux bookkeeping difference (§6.2). It does not affect the closure and disappears when the real beam-on sample replaces the fake data; the POT correction to remove it (effective POT 9.87 × 10²⁰) is noted in \texttt{file\_properties\_numi.txt}.
+
+\vspace{0.5em}\hrule\vspace{0.5em}
+
+\emph{Prepared as a companion to \texttt{BNBInternalNoteCC1pi\_V0.91.pdf}. Analysis code state: see git history on branch \texttt{fix/systematics-warning}. Fake-data figures: \texttt{unfold\_output/plot\_*\_0.pdf} and the per-observable closure dumps \texttt{unfold\_output/closure\_hists\_ccpi\_Run1\_*\_xsec.root}. Standalone generator predictions and their build scripts: \texttt{generator\_predictions/newg4/}.}
+
+\end{document}

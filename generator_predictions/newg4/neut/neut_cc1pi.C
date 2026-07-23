@@ -1,14 +1,20 @@
 // neut_cc1pi.C — apply the CC1mu1piXp signal to a NEUT neutvect.root and
 // produce per-nucleon dsigma/dx in the analysis binning.
 //
-// NEUT is run with EVCT-MPV 3 (events ~ flux(E)*sigma(E)), so the signal
-// fraction N_signal/N_total = sigma_signal / sigma_total. The flux-averaged
-// total cross section sigma_tot_perNuc (per nucleon, 10^-38 cm^2) is passed in
-// (read from the NEUT run output). Then dsigma/dx = sigma_tot_perNuc *
-// (count_in_bin / N_total) / binwidth.
+// NEUT is run with EVCT-MPV 3 (events ~ flux(E)*sigma_tot(E)), so:
+//   - signal fraction N_signal/N_all = sigma_signal_fluxavg / sigma_tot_fluxavg
+//   - sigma_tot_fluxavg = INT(sigma phi)/INT(phi) = 1/<1/Totcrs> (harmonic mean
+//     of the per-event total cross section over ALL events; derived from the
+//     flux*sigma sampling pdf).
+// Totcrs is per NUCLEON (in 1e-38 cm^2): verified directly from neutvect_numu.root
+// -- per-event Totcrs spans 0.001-9.67 (mean 1.71, harmonic mean 0.491), which is
+// a per-nucleon magnitude at these energies (per-Ar would be ~20-40). So the
+// flux-averaged harmonic mean IS already per-nucleon and must NOT be divided by A;
+// combine_newg4.C multiplies by A=40 to reach the per-nucleus dsigma/dx.
 //
-// Requires the NEUT class libraries (neutvect.so etc.) loaded first.
-// Run: root -l -b -q 'neut_cc1pi.C("neutvect.root", SIGMA_TOT_PERNUC_1e38, "out.root")'
+// Requires the NEUT class libraries (neutvect.so etc.) loaded first, and ACLiC
+// compilation (root 'neut_cc1pi.C+') since CINT (ROOT 5.34) can't handle this.
+// Run: root -l -b -q 'neut_cc1pi.C+("neutvect.root","out.root")'
 
 #include <vector>
 #include <cmath>
@@ -24,7 +30,7 @@ static bool is_meson(int pdg){ int a=std::abs(pdg);
   if(a==110||a==990||a==998||a==999||a==100) return false; return true; }
 static bool is_kaon(int pdg){ int a=std::abs(pdg); return a==321||a==311||pdg==310||pdg==130; }
 
-void neut_cc1pi(const char* infile, double sigma_tot_perNuc, const char* outfile){
+void neut_cc1pi(const char* infile, const char* outfile){
   TFile f(infile);
   TTree* t=(TTree*)f.Get("neuttree");
   if(!t){ printf("no neuttree in %s\n",infile); return; }
@@ -43,7 +49,9 @@ void neut_cc1pi(const char* infile, double sigma_tot_perNuc, const char* outfile
   TH1D* hth =new TH1D("thmupi","",ETH.size()-1,ETH.data());
 
   long N=t->GetEntries(); long sig=0;
+  double sum_inv_totcrs=0.;   // for the harmonic-mean flux-avg total xsec
   for(long i=0;i<N;i++){ t->GetEntry(i);
+    if(nv->Totcrs>0.) sum_inv_totcrs += 1.0/nv->Totcrs;
     // CC only: NEUT Mode |mode|<30 is CC
     if(std::abs(nv->Mode)>=30) continue;
     int nmu=0,npi=0,npi0=0,nk=0,nheavy=0; TVector3 pmu,ppi;
@@ -63,10 +71,15 @@ void neut_cc1pi(const char* infile, double sigma_tot_perNuc, const char* outfile
     if(Pmu<=0.15||Ppi<=0.175||th>=2.6) continue;
     ++sig; hpmu->Fill(Pmu);hppi->Fill(Ppi);hcmu->Fill(pmu.CosTheta());hcpi->Fill(ppi.CosTheta());hth->Fill(th);
   }
+  // flux-averaged total cross section = harmonic mean of Totcrs (per Ar, 1e-38
+  // cm^2). Per-nucleon in cm^2 for combine_newg4.C.
+  double sigma_tot_perNuc_1e38 = (sum_inv_totcrs>0.) ? (double)N/sum_inv_totcrs : 0.;
+  double sigma_tot_perNuc = sigma_tot_perNuc_1e38 * 1e-38; // Totcrs already per-nucleon
   auto norm=[&](TH1D* h){ for(int b=1;b<=h->GetNbinsX();++b){ double c=h->GetBinContent(b),w=h->GetBinWidth(b);
     h->SetBinContent(b, sigma_tot_perNuc*(c/(double)N)/w);
     h->SetBinError(b, sigma_tot_perNuc*(std::sqrt(c)/(double)N)/w); } };
   norm(hpmu);norm(hppi);norm(hcmu);norm(hcpi);norm(hth);
   TFile fo(outfile,"recreate"); hpmu->Write();hppi->Write();hcmu->Write();hcpi->Write();hth->Write(); fo.Close();
-  printf("NEUT: N=%ld CC1pi-signal=%ld (%.2f%%)  sigma_tot_perNuc=%.3e\n",N,sig,100.*sig/N,sigma_tot_perNuc);
+  printf("NEUT: N=%ld CC1pi-signal=%ld (%.2f%%)  sigma_tot_fluxavg=%.3e [1e-38/nucleon] = %.3e [1e-38/Ar]\n",
+    N,sig,100.*sig/N,sigma_tot_perNuc_1e38,sigma_tot_perNuc_1e38*40.0);
 }

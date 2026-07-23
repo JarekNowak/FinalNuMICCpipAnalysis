@@ -81,11 +81,14 @@ void gibuu_cc1pi(const char* infile, double num_runs, const char* outfile){
   finish_event();
   fclose(f);
 
-  // Normalise: per-nucleon dsigma/dx = (sum perweight)/num_runs/binwidth [1e-38 cm^2/nucleon]
+  // Normalise: per-nucleon dsigma/dx = (sum perweight)/num_runs/binwidth.
+  // perweight is in 10^-38 cm^2, but combine_newg4.C expects ABSOLUTE cm^2 (as the
+  // NuWro/NEUT predictions provide) since it divides by 1e-38 itself -- so multiply
+  // by 1e-38 here to match units. (Without this the combined result is 1e38x high.)
   auto norm=[&](TH1D* h){ for(int b=1;b<=h->GetNbinsX();++b){
     double c=h->GetBinContent(b), w=h->GetBinWidth(b);
-    h->SetBinContent(b, c/num_runs/w);
-    h->SetBinError(b, h->GetBinError(b)/num_runs/w); } };
+    h->SetBinContent(b, c/num_runs/w*1e-38);
+    h->SetBinError(b, h->GetBinError(b)/num_runs/w*1e-38); } };
   norm(hpmu);norm(hppi);norm(hcmu);norm(hcpi);norm(hth);
 
   TFile fo(outfile,"recreate");

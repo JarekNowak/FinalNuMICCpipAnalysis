@@ -49,6 +49,14 @@ int main( int argc, char* argv[] ) {
       total_sigma = total_sigma / conv_factor / other_w;
       std::cout << "slice " << sl << "  pred \"" << name << "\"  RAW total sigma = "
         << total_sigma << " [1e-38 cm^2/Ar]\n";
+      // per-bin dsigma/dx (content / conv_factor / binwidth / other_w)
+      std::cout << "  perbin[" << name << "]:";
+      for ( int b = 1; b <= nb; ++b ) {
+        double dsdx = sh->hist_->GetBinContent( b )
+          / conv_factor / ( sh->hist_->GetBinWidth( b ) * other_w );
+        std::cout << " " << dsdx;
+      }
+      std::cout << "\n";
       delete sh;
     }
   }

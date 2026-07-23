@@ -1,6 +1,6 @@
 # Muon Neutrino Charged Current Single Pion Cross Section on Argon using Run 1 NuMI Data
 
-**Internal Note — Version 0.1 (DRAFT)**
+**Internal Note — Version 0.2 (DRAFT)**
 
 ---
 
@@ -12,14 +12,16 @@
 >
 > Sections 1–5 describe the analysis **as it is actually configured in the
 > code today** and every number in them was read from the source or configs.
-> Sections 6–7 (fake-data tests and results) are **structural placeholders**.
-> No cross-section values, efficiencies, purities, χ² values or figures appear
-> anywhere in this note, because the analysis has not been re-run since the
-> corrections described in Section 2.4. Nothing here should be quoted as a
-> result.
+> Section 6 (fake-data tests) now carries **real results** from the re-run
+> chain: the GENIE closure χ² for all five observables and the four-generator
+> comparison on the corrected flux. Section 7 (real-data results) is **still
+> empty** — the real beam-on sample has not been restored and the chain has
+> not been run on data (see §2.2 and §7).
 >
-> Three things must be settled before this note can carry results at all —
-> see Section 8.
+> The single most important change since v0.1 is the **flux-normalisation
+> correction** (§2.4): the NuMI flux constant was ~3.48× too large, which had
+> made every extracted cross section ~3.5× too small. Every number in §6 uses
+> the corrected flux. Nothing in §7 should be quoted as a data result.
 
 ---
 
@@ -75,16 +77,23 @@ Run 1 FHC, as configured in `configs/file_properties_numi.txt`:
 | `dirtMC` | dirt overlay |
 | `detVarCV` + 8 variations | detector systematics |
 
-> **The `onBNB` slot currently holds NuWro fake data**
-> (`xsec-ana-numi_nuwro_overlay_pion_ntuples_run1_fhc.root`, 6.65 × 10²⁰ POT).
+> **The `onBNB` slot currently holds GENIE fake data.** It is the
+> detector-variation central-value sample (a GENIE G18_10a production),
+> symlinked as `xsec-ana-genie_detvarCV_fakedata_run1_fhc.root` and entered
+> with its native POT (7.631 × 10²⁰) and beam-on-equivalent triggers
+> (18 153 256). This sample is statistically **independent** of the numuMC
+> overlay that builds the response matrix, so it is a genuine same-generator
+> closure rather than a trivial self-closure. It replaced the earlier NuWro
+> overlay fake data (`xsec-ana-numi_nuwro_overlay_pion_ntuples_run1_fhc.root`,
+> 6.65 × 10²⁰ POT), which carried a real cos θ_μ *shape* difference versus any
+> standalone NuWro (§6.4).
+>
 > The real beam-on sample
 > (`xsec-ana-neutrinoselection_filt_run1_beamon_beamgood.root`, 3.283 × 10²⁰
-> POT, 7 809 962 triggers) is **commented out** at
-> `configs/file_properties_numi.txt:31`.
->
-> The analysis is therefore configured as a **fake-data study**, not a
-> real-data measurement. Section 7 cannot be filled until this is swapped
-> back and the chain re-run.
+> POT, 7 809 962 triggers) remains **commented out** at
+> `configs/file_properties_numi.txt`. The analysis is therefore configured as
+> a **fake-data study**, not a real-data measurement. Section 7 cannot be
+> filled until this is swapped back and the chain re-run on data.
 
 ### 2.3 Detector variation samples
 
@@ -101,6 +110,23 @@ The following were found and fixed during a code review of this analysis. All
 of them affect the numbers a run would produce, which is why no results from
 before them should be carried forward:
 
+- **Flux normalisation (dominant correction).** The integrated NuMI flux
+  constant in the cross-section conversion factor was
+  2.372512 × 10⁻⁹ νμ/cm²/POT, taken from the superseded
+  `uboone_numi_flux_histograms.root` (which included an unphysical ~25–30 MeV
+  artifact spike). The authoritative value from the flux-file author, using the
+  new GEANT4 flux integrated above 60 MeV, is
+  4.43515 × 10⁻¹⁰ (νμ) + 2.37644 × 10⁻¹⁰ (ν̄μ) = 6.81159 × 10⁻¹⁰ νμ/cm²/POT —
+  a factor **3.48 smaller**. Because the cross section divides by the flux, the
+  old constant made every extracted cross section ~3.5× too *small*. The
+  correction was confirmed four independent ways: standalone NuWro (2.7× low)
+  and GENIE (3.2× low) run on the old flux; the flux author's numbers (3.48×);
+  and a GENIE closure in which the framework tune scaled by 3.48× matches a
+  standalone GENIE on the corrected flux to 3%. Fixed in
+  `FiducialVolume.hh` (`integrated_numu_flux_in_FV`). The flux is the
+  active-volume-averaged flux used as an approximation for the fiducial-volume
+  flux — a documented ~few-% residual; no fiducial-volume correction is applied
+  (the target count is done separately in the same conversion factor).
 - **Muon momentum estimator.** The estimator combining range (contained) and
   MCS (uncontained) was computed but never written to the output tree, so the
   unfolding binned on MCS alone. It is now branched as
@@ -297,36 +323,112 @@ smeared by the additional smearing matrix A_C.
 
 ## 6 Fake-Data Tests
 
-*Structure only — no results.*
+All results in this section use the corrected flux (§2.4) and are drawn from a
+full re-run of `univmake` + `Unfolder`/`UnfolderNuMI` on all five observables.
+Predictions are compared in the space of the unfolded result, i.e. after the
+additional smearing matrix A_C is applied (§5.1).
 
 ### 6.1 GENIE closure test
 
-Treat the GENIE CV as data, add the proportionally scaled beam-off sample,
-unfold, and confirm the GENIE CV truth distribution is recovered. Driven by
-`configs/ccpi_xsec_config_numi.txt`.
+The fake data is the detector-variation central-value GENIE sample (§2.2),
+statistically independent of the numuMC overlay that builds the response
+matrix. Treating it as data, subtracting the scaled beam-off sample and
+unfolding should recover its own true signal distribution. The closure is
+quantified by the χ² between the unfolded result and the A_C-smeared fake-data
+truth, using the full covariance:
 
-### 6.2 NuWro fake-data study
+| Observable | χ² / ndf | p-value |
+|---|---|---|
+| p_μ | 7.23 / 22 | 0.999 |
+| cos θ_μ | 4.40 / 12 | 0.975 |
+| cos θ_π | 3.32 / 12 | 0.993 |
+| p_π | 0.26 / 5 | 0.998 |
+| θ_μπ | 2.26 / 9 | 0.987 |
 
-Same procedure with the NuWro overlay
-(`configs/ccpi_xsec_config_numi_nuwro.txt`, driven by
-`run_nuwro_observables.sh` across all five observables). As in the BNB
-analysis, only statistical and model uncertainties apply, since the samples
-differ only in generator model.
+All five observables close with p > 0.97: the unfolding machinery recovers the
+fake-data truth. (The very high p-values reflect the large Run-1 covariance,
+not overfitting.) This is a cleaner closure than the NuWro overlay could
+provide, since data and response now share the same generator model.
 
-*Per-observable results to be added: reco-space selection histograms, reco-
-and truth-space bin correlations, confusion matrices, unfolded cross sections
-and additional smearing matrices, for each of cos θ_μ, cos θ_π, p_μ, p_π,
-θ_μπ.*
+### 6.2 Fake-data normalisation offset
+
+The unfolded fake data sits ~1.29× above the framework GENIE tune (the numuMC
+CV prediction), even though both are the same GENIE G18_10a tune. This was
+traced to a **flat** difference in events-per-POT between the detVar-CV sample
+and the numuMC overlay: the ratio is 1.293 integrated and 1.294 in the
+dominant catch-all true bin, i.e. present across *all* event types, with the
+signal-bin shape agreeing within Poisson statistics. It is therefore a POT /
+flux bookkeeping difference from using the Run-3b detVar-CV sample as Run-1
+fake data — consistent with the framework's own caveat that detVar samples
+exist only for Run 3b and are applied globally (`SystematicsCalculator.cxx`) —
+not a physics or generator difference and not a framework bug.
+
+The familiar "data ≈ 2× above the generators" then decomposes as
+**1.29× (fake-data normalisation) × ~1.3× (A_C smearing)**. It can be removed
+by entering the fake data with an effective POT of 7.63 × 10²⁰ × 1.293 =
+9.87 × 10²⁰ (and rebuilding the universes); this is documented but left
+uncorrected in `configs/file_properties_numi.txt`, since it does not affect the
+closure and vanishes entirely once the real beam-on sample replaces the
+fake data.
+
+### 6.3 Generator comparison
+
+Standalone predictions for the same signal definition and phase space were
+generated on the corrected "newg4" flux and overlaid on every unfolded plot.
+Each generator was run in the SL7 container environment:
+
+| Generator | Version / tune | CC1π total, cos θ_μ integral [10⁻³⁸ cm²/Ar] |
+|---|---|---|
+| GENIE | 3.04, tune G18_10a_02_11a | 0.82 |
+| GiBUU | local release build, FSI on | 1.13 |
+| NuWro | 21.09 | 1.25 |
+| NEUT | local build, MPV-3 flux×σ sampling | 1.32 |
+
+The four span 0.82–1.32 (GENIE lowest, NEUT highest) — a healthy generator
+spread. Predictions are combined from νμ and ν̄μ runs with the authoritative
+flux fractions (Φ_νμ = 4.43515 × 10⁻¹⁰, Φ_ν̄μ = 2.37644 × 10⁻¹⁰) and converted
+to per-nucleus 10⁻³⁸ cm²/Ar (× A = 40). Two per-generator normalisation
+conventions had to be handled explicitly: NEUT's `Totcrs` is per **nucleon**
+(not per nucleus), and GiBUU's `perweight` is already in 10⁻³⁸ cm² units;
+getting these wrong produced 40× and 10³⁸× errors respectively before the fix.
+
+The five comparison figures (`unfold_output/plot_{costhetamu,costhetapi,pmu,
+ppi,thetamupi}_0.pdf`) show, per observable: the unfolded fake data with its
+uncertainty, the four generators and the MicroBooNE tune (all A_C-smeared), the
+fake-data truth curve, and a data/MC ratio panel.
+
+### 6.4 NuWro overlay vs standalone NuWro (shape study)
+
+The NuWro overlay previously used as fake data was compared bin-by-bin against a
+standalone NuWro 21.09 run on the same flux. Their cos θ_μ distributions differ
+in **shape**, not just normalisation: the overlay/standalone ratio swings from
+0.64 (backward) to 1.88 (mid-angle) and back to 0.65 (forward), while the
+integral ratio is only ~1.1. The cause is *not* the flux — the two samples have
+identical signal-weighted mean neutrino energies (1.93 vs 1.88 GeV, 3%) — but a
+NuWro version/configuration difference in the muon angular distribution at fixed
+energy. This is why the NuWro overlay was retired in favour of the
+independent-GENIE fake data (§2.2), and it is a reminder that an overlay fake
+sample is not a clean stand-in for an external generator prediction.
 
 ## 7 Results
 
-*Empty pending a real-data run.* Requires, in order: the real beam-on sample
-restored in `file_properties_numi.txt`; the full chain re-run from
-`ProcessNTuples` (the corrected momentum branches do not exist in the current
-processed files). The units/normalisation question (§8.1) is now resolved.
+*Empty pending a real-data run.* The fake-data machinery is now validated
+end-to-end (§6): the flux normalisation is corrected, the GENIE closure passes
+for all five observables, and four standalone generators are overlaid. What
+remains before this section can carry a **data** measurement is, in order:
 
-Should contain, per observable and for the total: the unfolded cross section
-with the full uncertainty breakdown, and generator comparisons.
+1. Restore the real beam-on sample in `file_properties_numi.txt` (currently the
+   GENIE detVar-CV fake data occupies the `onBNB` slot, §2.2).
+2. Re-run the full chain from `ProcessNTuples` — the corrected momentum branches
+   (§2.4) do not exist in the currently processed files.
+3. Restore the NuMI beamline-geometry systematic (§4.6, §8.2); the uncertainty
+   budget is under-estimated without it.
+
+The units/normalisation questions (§8.1) and the flux scale (§8.5) are resolved.
+
+This section should then contain, per observable and for the total: the
+unfolded cross section with the full uncertainty breakdown, and the
+generator comparison of §6.3 against real data rather than fake data.
 
 ## 8 Open Items
 
@@ -343,16 +445,39 @@ output, every cross-section number is ~10× smaller and now differential.
 
 **8.2 Beamline geometry systematic.** §4.6.
 
-**8.3 Anti-neutrino contamination.** The signal uses
-`|mc_nu_pdg| == 14`, admitting ν̄μ CC events into signal and the efficiency
-denominator. All three sibling selections in the framework use an exact
-comparison. If the flux normalisation is νμ-only, this biases the result.
+**8.3 Anti-neutrino contamination. — CONSISTENT, by construction.** The signal
+uses `|mc_nu_pdg| == 14`, admitting ν̄μ CC events into signal and the efficiency
+denominator (the three sibling selections use an exact comparison). With the
+flux fix (§2.4) the normalising flux is now the **combined** νμ + ν̄μ flux
+(4.43515 × 10⁻¹⁰ + 2.37644 × 10⁻¹⁰), and the standalone generators are combined
+with the same fractions (§6.3). Signal, flux and predictions therefore all
+treat νμ and ν̄μ together, so there is no longer a normalisation mismatch — the
+measured quantity is an effective flux-averaged νμ+ν̄μ CC1π cross section. A
+νμ-only measurement would instead require restricting the signal to
+`mc_nu_pdg == 14` and using the νμ-only flux; that is a definition choice, not a
+bug.
 
 **8.4 Unused muon BDT.** `tmvaReader_mu` is constructed and booked but never
 evaluated, and its input variables are never filled — suggesting an intended
 muon-PID cut was dropped.
 
+**8.5 Flux normalisation. — RESOLVED.** The NuMI flux constant was ~3.48× too
+large (§2.4), making cross sections ~3.5× too small. Corrected to the flux
+author's authoritative value (6.81159 × 10⁻¹⁰ νμ/cm²/POT, E > 60 MeV) in
+`FiducialVolume.hh` and confirmed four independent ways. A residual ~few-%
+active-volume-vs-fiducial-volume approximation is documented in that file.
+
+**8.6 Fake-data normalisation offset. — DOCUMENTED, uncorrected.** The
+detVar-CV fake data sits a flat ~1.29× above the numuMC GENIE tune from a
+Run-3b-vs-Run-1 POT/flux bookkeeping difference (§6.2). It does not affect the
+closure and disappears when the real beam-on sample replaces the fake data; the
+POT correction to remove it (effective POT 9.87 × 10²⁰) is noted in
+`file_properties_numi.txt`.
+
 ---
 
 *Prepared as a companion to `BNBInternalNoteCC1pi_V0.91.pdf`. Analysis code
-state: see git history on branch `fix/systematics-warning`.*
+state: see git history on branch `fix/systematics-warning`. Fake-data figures:
+`unfold_output/plot_*_0.pdf` and the per-observable closure dumps
+`unfold_output/closure_hists_ccpi_Run1_*_xsec.root`. Standalone generator
+predictions and their build scripts: `generator_predictions/newg4/`.*

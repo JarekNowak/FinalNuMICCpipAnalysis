@@ -27,15 +27,40 @@
 # Trigger counts (ccpi_selection.C:280): onBNB = 7809962, extBNB = 610496+3211097
 # = 3821593.  Data POT (ccpi_selection.C:271): 3.283e20 (Run1 FHC beam-on).
 # ---------------------------------------------------------------------------
-# Beam-on data (Run1 FHC) — disabled, using NuWro fake data for the generator closure:
+# Beam-on data (Run1 FHC) — disabled, using GENIE fake data for the closure test:
 #/data/uboone/processed/xsec-ana-neutrinoselection_filt_run1_beamon_beamgood.root 1 onBNB 7809962 3.283e20
-# NuWro fake data (data slot for the closure test, matching the custom pipeline).
-#   POT      = 6.65042e20 (NuWro overlay's native SubRun POT).
-#   triggers = 7809962 * 6.65042/3.283 = 15820762, the beam-on-equivalent trigger
-#              count for that exposure, so EXT scales to the same 6.65042e20 (the
-#              dsigma/dx is POT-independent; this keeps the EXT subtraction
-#              consistent with the custom selection's Scale[4]=7809962/3821593).
-/data/uboone/processed/xsec-ana-numi_nuwro_overlay_pion_ntuples_run1_fhc.root 1 onBNB 15820762 6.65042e20
+# GENIE fake data (data slot for the closure test). Uses the detector-variation
+# CENTRAL VALUE (GENIE) sample -- a GENIE production statistically INDEPENDENT of
+# the main numuMC overlay used to build the response matrix, so this is a genuine
+# same-generator closure (not a trivial self-closure), exercising the unfolding
+# machinery without generator bias. (Previously the NuWro overlay was used here,
+# which carried a real cos-theta_mu SHAPE difference vs any standalone NuWro; see
+# generator_predictions/. A symlink is used so the file's separate detVarCV role
+# does not collide on filename in FilePropertiesManager.)
+#   POT      = 7.630913e20 (detVar-CV sample's native SubRun POT).
+#   triggers = 7809962 * 7.630913/3.283 = 18153256, the beam-on-equivalent trigger
+#              count for that exposure, so EXT scales consistently (dsigma/dx is
+#              POT-independent).
+#
+# CLOSURE RESULT (all five observables, A_C-smeared truth vs unfolded):
+#   pmu  chi2=7.23/22 (p=0.999)   costhmu 4.40/12 (p=0.975)
+#   costhpi 3.32/12 (p=0.993)     ppi 0.26/5 (p=0.998)   thmupi 2.26/9 (p=0.987)
+#   -> the unfolding machinery cleanly recovers the fake-data truth.
+#
+# KNOWN NORMALISATION OFFSET (documented, NOT corrected -- user decision):
+#   The detVar-CV true signal has 1.293x MORE events/POT than the numuMC overlay
+#   (measured flat across ALL event types: catch-all true bin ratio 1.294, total
+#   1.293; signal bins scatter 0.99-1.42 around it within Poisson stats). Both are
+#   the same GENIE G18_10a tune, so the SHAPE agrees -- this is a pure POT/flux
+#   bookkeeping difference from using the Run-3b detVar-CV sample as Run-1 fake
+#   data (cf. the "detVar only for Run 3b, applied globally, TODO revisit" caveat
+#   in SystematicsCalculator.cxx ~L820). Consequence: the unfolded data points sit
+#   ~1.29x above the GENIE tune / standalone generators on the plots (times a
+#   further ~1.3x from A_C smearing -> the familiar ~2x apparent excess). This is
+#   a fake-data normalisation artifact, NOT a physics/generator difference and NOT
+#   a framework bug. To land the data on the tune, set POT=9.87e20 (=7.63e20*1.293)
+#   and rebuild the univmakes; deliberately left uncorrected here.
+/data/uboone/processed/xsec-ana-genie_detvarCV_fakedata_run1_fhc.root 1 onBNB 18153256 7.630913e20
 # Beam-off data (Run1+Run3 combined EXT)
 /data/uboone/processed/xsec-ana-beamoff_run1Andrun3.root 1 extBNB 3821593 0
 # numu MC overlay (CV)
