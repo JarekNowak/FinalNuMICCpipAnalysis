@@ -66,14 +66,25 @@ inline double integrated_numu_flux_in_FV( double pot ) {
   // See the README file in that same folder for details.
   double flux;
   if (useNuMI) {
-    // NuMI FHC numu + numubar flux. This MUST be the numu flux for the
-    // CC1mu1piXp (numu CC) measurement: the previous value (1.86152e-11) was
-    // the *nue* flux copied from the NuMICC1e analysis, ~127x too small, which
-    // inflated the extracted cross section by the same factor.
-    // 2.372512e-9 = Integral("width") of h_numu + h_numubar from
-    // flux/uboone_numi_flux_histograms.root (numu=1.476120e-9,
-    // numubar=8.963927e-10); matches the custom pipeline's FLUX_PER_POT.
-    double numu_per_cm2_per_POT = 2.372512e-9;
+    // NuMI FHC numu + numubar integrated flux (E > 60 MeV), per POT per cm^2.
+    //
+    // Authoritative value from the flux-file author (flux_newg4.root, the new
+    // GEANT4 NuMI flux): numu = 4.43515e-10, numubar = 2.37644e-10 -> combined
+    // 6.81159e-10 /POT/cm^2, for E > 60 MeV (the 60 MeV cut removes an
+    // unphysical ~25-30 MeV artifact spike).
+    //
+    // The OLD value (2.372512e-9, from the superseded uboone_numi_flux_
+    // histograms.root) was ~3.48x too large, which made every extracted cross
+    // section ~3.5x too SMALL. Confirmed four independent ways: standalone
+    // NuWro (2.7x low) and GENIE (3.2x low) on the old flux; the author's
+    // numbers (3.48x); and a GENIE closure -- the framework GENIE tune scaled
+    // by 3.48x matches a standalone GENIE on the corrected flux to 3%.
+    // See generator_predictions/ for the full cross-check.
+    //
+    // NOTE: still the active-volume-averaged flux used as an approximation for
+    // the fiducial-volume flux (a documented ~few-% residual; see the header
+    // comment above). num_Ar counts targets in the FV.
+    double numu_per_cm2_per_POT = 6.81159e-10;
     flux = pot * numu_per_cm2_per_POT;
   }
   else {
