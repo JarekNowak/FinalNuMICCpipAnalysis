@@ -183,7 +183,45 @@ Applied in order; an event passes only if all are satisfied:
 
 \subsection*{3.5 Selection efficiency and purity}
 
-\emph{To be filled from a complete \texttt{ProcessNTuples} pass.} \texttt{finalize()} prints efficiency and purity; these are now CV-weighted (§2.4) and so differ from any previously recorded values.
+The CV-weighted selection performance, measured on the numuMC overlay (cos θ\_μ binning; efficiency and purity are properties of the selection and are essentially observable-independent):
+
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+\hline
+\textbf{Quantity} & \textbf{Value} \\
+\hline
+Total selected (reco) & \textasciitilde{}3.71 × 10³ events \\
+Selected signal & \textasciitilde{}2.21 × 10³ events \\
+All true signal (denominator) & \textasciitilde{}1.42 × 10⁴ events \\
+\textbf{Purity} & \textbf{0.60} \\
+\textbf{Efficiency} & \textbf{0.16} \\
+\hline
+\end{tabularx}
+
+The selection- and unfolding-stage diagnostics produced by \texttt{UnfolderNuMI} for cos θ\_μ are shown in the figures below (the same four stages are produced for every observable):
+
+\begin{itemize}
+\item \textbf{Reco spectrum} — the selected reconstructed distribution, with the MC split into signal (CC1μ1πXp) and MC+EXT background, compared to the data (here the GENIE fake data of §2.2).
+\item \textbf{Background subtraction} — the data after subtracting the estimated background, with the MC signal overlaid; this is the input to the unfolding.
+\item \textbf{Smearceptance (response) matrix} — the reco-vs-true migration matrix that the Wiener-SVD unfolding inverts.
+\item \textbf{Efficiency} — the selection efficiency versus the true observable.
+\end{itemize}
+
+\begin{figure}[htbp]\centering
+\includegraphics[width=0.72\textwidth]{/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/xsec_analyzer/unfold_output/selection_costhmu_step1_reco_spectrum.pdf}
+\caption{Selected reco cos\,$\theta_\mu$ spectrum: data (GENIE fake data) vs MC signal + MC/EXT background.}
+\end{figure}
+\begin{figure}[htbp]\centering
+\includegraphics[width=0.72\textwidth]{/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/xsec_analyzer/unfold_output/selection_costhmu_step2_bkgd_subtraction.pdf}
+\caption{Background-subtracted reco spectrum with the MC signal overlaid (input to unfolding).}
+\end{figure}
+\begin{figure}[htbp]\centering
+\includegraphics[width=0.72\textwidth]{/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/xsec_analyzer/unfold_output/selection_costhmu_step3_smearing_matrix.pdf}
+\caption{Smearceptance (response) matrix, reco vs true cos\,$\theta_\mu$.}
+\end{figure}
+\begin{figure}[htbp]\centering
+\includegraphics[width=0.72\textwidth]{/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/xsec_analyzer/unfold_output/selection_costhmu_step4_efficiency.pdf}
+\caption{Selection efficiency vs true cos\,$\theta_\mu$.}
+\end{figure}
 
 \section*{4 Uncertainties}
 
@@ -208,7 +246,14 @@ GENIE multisims (\texttt{weight\_All\_UBGenie}) plus nine unisim knobs (\texttt{
 
 \subsection*{4.4 Detector}
 
-The eight detector variation samples of §2.3, evaluated as \texttt{DV} type.
+The eight detector variation samples of §2.3 (plus the detVar central value), evaluated as \texttt{DV} type. The figures at the end of this section overlay all nine samples for every observable, POT-scaled to the CV exposure, with the reconstructed spectrum in the upper pad and the true signal distribution in the lower pad. Two features are visible and expected:
+
+\begin{itemize}
+\item the \textbf{reco} distributions show a clear sample-to-sample spread — this is the detector systematic;
+\item the \textbf{true} distributions all lie on top of the CV — the variations re-simulate the detector response on fixed generator events, so they change the reconstruction but not the underlying truth.
+\end{itemize}
+
+The reco spread, propagated through the response matrix, is the detector contribution to the uncertainty budget. The samples are the Run-3b detVar set applied globally (§4.6).
 
 \subsection*{4.5 Target}
 
@@ -223,6 +268,27 @@ Two components are \textbf{not} included, and the total above is correspondingly
 \textbf{Background normalisation by category, and dirt normalisation.} Six \texttt{MCFullCorrCategory} entries were removed because they evaluated to identically zero — they matched true bins by exact string equality against \texttt{"category == N"} while the bin configs declare a single \texttt{"!CC1mu1piXp\_MC\_Signal"} background bin. Their category indices were also inherited from the NuMI CC1e analysis and did not correspond to this selection's categories. Removing them changed no number (verified: 152 histograms bit-identical). Full detail in \texttt{configs/ccpi\_systcalc\_numi.README.md}.
 
 Note the BNB uncertainty breakdown (Fig. 43–44 of that note) comprises \texttt{EXTstats, MCstats, POT, detVar\_total, flux, numTargets, reint, xsec\_total} — i.e. the same set retained here, with no per-category or dirt term.
+
+\begin{figure}[htbp]\centering
+\includegraphics[width=0.8\textwidth]{/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/xsec_analyzer/unfold_output/detvar_pmu.pdf}
+\caption{Detector variations, $p_\mu$: reco spectrum (top) and true signal (bottom), all nine samples POT-scaled to the CV.}
+\end{figure}
+\begin{figure}[htbp]\centering
+\includegraphics[width=0.8\textwidth]{/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/xsec_analyzer/unfold_output/detvar_ppi.pdf}
+\caption{Detector variations, $p_\pi$.}
+\end{figure}
+\begin{figure}[htbp]\centering
+\includegraphics[width=0.8\textwidth]{/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/xsec_analyzer/unfold_output/detvar_costhmu.pdf}
+\caption{Detector variations, cos\,$\theta_\mu$.}
+\end{figure}
+\begin{figure}[htbp]\centering
+\includegraphics[width=0.8\textwidth]{/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/xsec_analyzer/unfold_output/detvar_costhpi.pdf}
+\caption{Detector variations, cos\,$\theta_\pi$.}
+\end{figure}
+\begin{figure}[htbp]\centering
+\includegraphics[width=0.8\textwidth]{/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/xsec_analyzer/unfold_output/detvar_thmupi.pdf}
+\caption{Detector variations, $\theta_{\mu\pi}$.}
+\end{figure}
 
 \section*{5 Cross-section Extraction}
 
@@ -317,6 +383,35 @@ The five comparison figures (\texttt{unfold\_output/plot\_\{costhetamu,costhetap
 \subsection*{6.4 NuWro overlay vs standalone NuWro (shape study)}
 
 The NuWro overlay previously used as fake data was compared bin-by-bin against a standalone NuWro 21.09 run on the same flux. Their cos θ\_μ distributions differ in \textbf{shape}, not just normalisation: the overlay/standalone ratio swings from 0.64 (backward) to 1.88 (mid-angle) and back to 0.65 (forward), while the integral ratio is only \textasciitilde{}1.1. The cause is \emph{not} the flux — the two samples have identical signal-weighted mean neutrino energies (1.93 vs 1.88 GeV, 3\%) — but a NuWro version/configuration difference in the muon angular distribution at fixed energy. This is why the NuWro overlay was retired in favour of the independent-GENIE fake data (§2.2), and it is a reminder that an overlay fake sample is not a clean stand-in for an external generator prediction.
+
+\subsection*{6.5 Detector-variation closure and the total cross section}
+
+Each of the eight detector variations was used in turn as the fake data — a full \texttt{univmake} rebuild with that variation in the \texttt{onBNB} slot (not a histogram swap, which was found to leave the measured reco unchanged), so the unfolded result genuinely responds to each variation. The total cross section (cos θ\_μ integral) and the closure χ² are:
+
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+\hline
+\textbf{Variation} & \textbf{Unfolded σ} & \textbf{True σ (raw)} & \textbf{Closure χ²/12 (p)} \\
+\hline
+CV (ref) & 1.289 & 0.975 & 4.40 (0.975) \\
+LY Down & 1.267 & 0.964 & 4.29 (0.978) \\
+LY Rayleigh & 1.280 & 0.972 & 4.07 (0.982) \\
+Recombination & 1.215 & 0.969 & 4.28 (0.978) \\
+SCE & 1.284 & 0.974 & 3.95 (0.984) \\
+WireMod θXZ & 1.293 & 0.978 & 3.33 (0.993) \\
+WireMod θYZ & 1.317 & 0.976 & 5.03 (0.957) \\
+WireMod X & 1.283 & 0.972 & 3.88 (0.985) \\
+WireMod YZ & 1.222 & 0.971 & 3.32 (0.993) \\
+\hline
+\end{tabularx}
+
+(σ in 10⁻³⁸ cm²/Ar.) Two results:
+
+\begin{itemize}
+\item \textbf{Every variation closes within uncertainty} (χ²/12 ≤ 5.0, p = 0.96–0.99): the unfolding recovers each variation's truth as pseudo-data.
+\item \textbf{Detector systematic on the total.} The \emph{unfolded} total spans 1.215–1.317, a \textbf{\textasciitilde{}±4 \%} spread, while the \emph{true} total barely moves (0.964–0.978, ±0.7 \%) — as expected, since detector variations change reco, not truth. The extra spread in the unfolded total is the detector-response mismatch (the CV response applied to varied reco) and is a direct estimate of the detector contribution to the total-cross-section uncertainty.
+\end{itemize}
+
+The constant \textasciitilde{}1.3× ratio of unfolded to \emph{raw} true total is the Wiener-SVD additional-smearing matrix A\_C (§5.1): the unfolded estimator lives in A\_C-smeared space, so its central value sits above the raw truth by this fixed factor, which cancels in the closure χ². Per-variation plots are in \texttt{unfold\_output/dv\_rebuild/}.
 
 \section*{7 Results}
 

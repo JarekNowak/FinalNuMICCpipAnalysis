@@ -215,9 +215,30 @@ Applied in order; an event passes only if all are satisfied:
 
 ### 3.5 Selection efficiency and purity
 
-*To be filled from a complete `ProcessNTuples` pass.* `finalize()` prints
-efficiency and purity; these are now CV-weighted (§2.4) and so differ from any
-previously recorded values.
+The CV-weighted selection performance, measured on the numuMC overlay (cos θ_μ
+binning; efficiency and purity are properties of the selection and are
+essentially observable-independent):
+
+| Quantity | Value |
+|---|---|
+| Total selected (reco) | ~3.71 × 10³ events |
+| Selected signal | ~2.21 × 10³ events |
+| All true signal (denominator) | ~1.42 × 10⁴ events |
+| **Purity** | **0.60** |
+| **Efficiency** | **0.16** |
+
+The selection- and unfolding-stage diagnostics produced by `UnfolderNuMI` for
+cos θ_μ are shown in the figures below (the same four stages are produced for
+every observable):
+
+- **Reco spectrum** — the selected reconstructed distribution, with the MC split
+  into signal (CC1μ1πXp) and MC+EXT background, compared to the data (here the
+  GENIE fake data of §2.2).
+- **Background subtraction** — the data after subtracting the estimated
+  background, with the MC signal overlaid; this is the input to the unfolding.
+- **Smearceptance (response) matrix** — the reco-vs-true migration matrix that
+  the Wiener-SVD unfolding inverts.
+- **Efficiency** — the selection efficiency versus the true observable.
 
 ## 4 Uncertainties
 
@@ -247,7 +268,21 @@ the two second-class-current form factors (`xsr_scc_Fa3_SCC`,
 
 ### 4.4 Detector
 
-The eight detector variation samples of §2.3, evaluated as `DV` type.
+The eight detector variation samples of §2.3 (plus the detVar central value),
+evaluated as `DV` type. The figures at the end of this section overlay all nine
+samples for every observable, POT-scaled to the CV exposure, with the
+reconstructed spectrum in the upper pad and the true signal distribution in the
+lower pad. Two features are visible and expected:
+
+- the **reco** distributions show a clear sample-to-sample spread — this is the
+  detector systematic;
+- the **true** distributions all lie on top of the CV — the variations
+  re-simulate the detector response on fixed generator events, so they change
+  the reconstruction but not the underlying truth.
+
+The reco spread, propagated through the response matrix, is the detector
+contribution to the uncertainty budget. The samples are the Run-3b detVar set
+applied globally (§4.6).
 
 ### 4.5 Target
 
@@ -409,6 +444,43 @@ NuWro version/configuration difference in the muon angular distribution at fixed
 energy. This is why the NuWro overlay was retired in favour of the
 independent-GENIE fake data (§2.2), and it is a reminder that an overlay fake
 sample is not a clean stand-in for an external generator prediction.
+
+### 6.5 Detector-variation closure and the total cross section
+
+Each of the eight detector variations was used in turn as the fake data — a full
+`univmake` rebuild with that variation in the `onBNB` slot (not a histogram
+swap, which was found to leave the measured reco unchanged), so the unfolded
+result genuinely responds to each variation. The total cross section (cos θ_μ
+integral) and the closure χ² are:
+
+| Variation | Unfolded σ | True σ (raw) | Closure χ²/12 (p) |
+|---|---|---|---|
+| CV (ref) | 1.289 | 0.975 | 4.40 (0.975) |
+| LY Down | 1.267 | 0.964 | 4.29 (0.978) |
+| LY Rayleigh | 1.280 | 0.972 | 4.07 (0.982) |
+| Recombination | 1.215 | 0.969 | 4.28 (0.978) |
+| SCE | 1.284 | 0.974 | 3.95 (0.984) |
+| WireMod θXZ | 1.293 | 0.978 | 3.33 (0.993) |
+| WireMod θYZ | 1.317 | 0.976 | 5.03 (0.957) |
+| WireMod X | 1.283 | 0.972 | 3.88 (0.985) |
+| WireMod YZ | 1.222 | 0.971 | 3.32 (0.993) |
+
+(σ in 10⁻³⁸ cm²/Ar.) Two results:
+
+- **Every variation closes within uncertainty** (χ²/12 ≤ 5.0, p = 0.96–0.99):
+  the unfolding recovers each variation's truth as pseudo-data.
+- **Detector systematic on the total.** The *unfolded* total spans 1.215–1.317,
+  a **~±4 %** spread, while the *true* total barely moves (0.964–0.978, ±0.7 %) —
+  as expected, since detector variations change reco, not truth. The extra
+  spread in the unfolded total is the detector-response mismatch (the CV
+  response applied to varied reco) and is a direct estimate of the detector
+  contribution to the total-cross-section uncertainty.
+
+The constant ~1.3× ratio of unfolded to *raw* true total is the Wiener-SVD
+additional-smearing matrix A_C (§5.1): the unfolded estimator lives in
+A_C-smeared space, so its central value sits above the raw truth by this fixed
+factor, which cancels in the closure χ². Per-variation plots are in
+`unfold_output/dv_rebuild/`.
 
 ## 7 Results
 

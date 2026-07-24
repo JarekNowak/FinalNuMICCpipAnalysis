@@ -1,0 +1,80 @@
+# file_properties_numi.txt
+# ---------------------------------------------------------------------------
+# PROCESSED ntuples (xsec-ana-*.root, carrying stv_tree + summed_pot) consumed
+# by UniverseMaker / SystematicsCalculator.  These are the ProcessNTuples
+# outputs of configs/files_to_process_numi.txt, written to /data/uboone/processed/.
+#
+# Columns:  file_name  run  file_type  [triggers  POT]
+#   (triggers + POT read only for onBNB / extBNB; see
+#    FilePropertiesManager::load_file_properties)
+#
+# Run scope: RUN 1 ONLY — reproduces the main analysis, whose effective exposure
+#   is Run1 FHC (TOTAL_DATA_POT = 3.283e20; Runs 2/4/5 carry zero data weight).
+#
+# Normalisation cross-check vs ccpi_selection.C Scale[] (verified 2026-06-10 by
+#   summing each raw file's nuselection/SubRun "pot" branch):
+#   MC   : framework = run_bnb_pot / summed_pot = 3.283e20 / 2.328201e21 = 0.14101
+#          main Scale[0] = 3.283 / 23.282 = 0.14101                       OK exact
+#   Dirt : framework = (3.283e20 / 1.673912e21) * 0.65 = 0.12748
+#          main Scale[5] = 3.283 / 16.739 = 0.19613
+#          -> framework adds a hardcoded 0.65 dirt weight (ProcessNTuples.C)
+#             that the main analysis does NOT.  Set it to 1.0 there to match.
+#   EXT  : framework = (7809962 / 3821593) * 0.98 = 2.0027
+#          main Scale[4] = 7809962 / 3821593 = 2.0436
+#          -> framework adds a 0.98 NuMI beam-occupancy factor
+#             (SystematicsCalculator.cxx ~L559) that the main analysis does NOT.
+#
+# Trigger counts (ccpi_selection.C:280): onBNB = 7809962, extBNB = 610496+3211097
+# = 3821593.  Data POT (ccpi_selection.C:271): 3.283e20 (Run1 FHC beam-on).
+# ---------------------------------------------------------------------------
+# Beam-on data (Run1 FHC) — disabled, using GENIE fake data for the closure test:
+#/data/uboone/processed/xsec-ana-neutrinoselection_filt_run1_beamon_beamgood.root 1 onBNB 7809962 3.283e20
+# GENIE fake data (data slot for the closure test). Uses the detector-variation
+# CENTRAL VALUE (GENIE) sample -- a GENIE production statistically INDEPENDENT of
+# the main numuMC overlay used to build the response matrix, so this is a genuine
+# same-generator closure (not a trivial self-closure), exercising the unfolding
+# machinery without generator bias. (Previously the NuWro overlay was used here,
+# which carried a real cos-theta_mu SHAPE difference vs any standalone NuWro; see
+# generator_predictions/. A symlink is used so the file's separate detVarCV role
+# does not collide on filename in FilePropertiesManager.)
+#   POT      = 7.630913e20 (detVar-CV sample's native SubRun POT).
+#   triggers = 7809962 * 7.630913/3.283 = 18153256, the beam-on-equivalent trigger
+#              count for that exposure, so EXT scales consistently (dsigma/dx is
+#              POT-independent).
+#
+# CLOSURE RESULT (all five observables, A_C-smeared truth vs unfolded):
+#   pmu  chi2=7.23/22 (p=0.999)   costhmu 4.40/12 (p=0.975)
+#   costhpi 3.32/12 (p=0.993)     ppi 0.26/5 (p=0.998)   thmupi 2.26/9 (p=0.987)
+#   -> the unfolding machinery cleanly recovers the fake-data truth.
+#
+# KNOWN NORMALISATION OFFSET (documented, NOT corrected -- user decision):
+#   The detVar-CV true signal has 1.293x MORE events/POT than the numuMC overlay
+#   (measured flat across ALL event types: catch-all true bin ratio 1.294, total
+#   1.293; signal bins scatter 0.99-1.42 around it within Poisson stats). Both are
+#   the same GENIE G18_10a tune, so the SHAPE agrees -- this is a pure POT/flux
+#   bookkeeping difference from using the Run-3b detVar-CV sample as Run-1 fake
+#   data (cf. the "detVar only for Run 3b, applied globally, TODO revisit" caveat
+#   in SystematicsCalculator.cxx ~L820). Consequence: the unfolded data points sit
+#   ~1.29x above the GENIE tune / standalone generators on the plots (times a
+#   further ~1.3x from A_C smearing -> the familiar ~2x apparent excess). This is
+#   a fake-data normalisation artifact, NOT a physics/generator difference and NOT
+#   a framework bug. To land the data on the tune, set POT=9.87e20 (=7.63e20*1.293)
+#   and rebuild the univmakes; deliberately left uncorrected here.
+/data/uboone/processed/xsec-ana-genie_dvWireModX_fakedata_run1_fhc.root 1 onBNB 18081378 7.600698e20
+# Beam-off data (Run1+Run3 combined EXT)
+/data/uboone/processed/xsec-ana-beamoff_run1Andrun3.root 1 extBNB 3821593 0
+# numu MC overlay (CV)
+/data/uboone/processed/xsec-ana-Run1_fhc_new_numi_flux_fhc_pandora_ntuple.root 1 numuMC
+# Dirt MC overlay
+/data/uboone/processed/xsec-ana-prodgenie_numi_uboone_overlay_dirt_fhc_mcc9_run1_v28_all_snapshot.root 1 dirtMC
+# Detector-variation MC (Run1 FHC)
+/data/uboone/processed/xsec-ana-numi_detvars_pion_ntuples_run1_fhc_CV_slim.root 1 detVarCV
+/data/uboone/processed/xsec-ana-numi_detvars_pion_ntuples_run1_fhc_LYDown_slim.root 1 detVarLYdown
+/data/uboone/processed/xsec-ana-numi_detvars_pion_ntuples_run1_fhc_LYRayleigh_slim.root 1 detVarLYrayl
+/data/uboone/processed/xsec-ana-numi_detvars_pion_ntuples_run1_fhc_Recombination_slim.root 1 detVarRecomb2
+/data/uboone/processed/xsec-ana-numi_detvars_pion_ntuples_run1_fhc_SCE_slim.root 1 detVarSCE
+/data/uboone/processed/xsec-ana-numi_detvars_pion_ntuples_run1_fhc_WireModThetaXZ_slim.root 1 detVarWMAngleXZ
+/data/uboone/processed/xsec-ana-numi_detvars_pion_ntuples_run1_fhc_WireModThetaYZ_slim.root 1 detVarWMAngleYZ
+/data/uboone/processed/xsec-ana-numi_detvars_pion_ntuples_run1_fhc_WireModX_slim.root 1 detVarWMX
+/data/uboone/processed/xsec-ana-numi_detvars_pion_ntuples_run1_fhc_WireModYZ_slim.root 1 detVarWMYZ
+#

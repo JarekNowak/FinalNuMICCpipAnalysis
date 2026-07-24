@@ -13,6 +13,19 @@ FIGS=[("plot_costhetamu_0.pdf", r"Unfolded d$\sigma$/d\,cos\,$\theta_\mu$ (fake 
       ("plot_costhetapi_0.pdf",r"Unfolded d$\sigma$/d\,cos\,$\theta_\pi$."),
       ("plot_thetamupi_0.pdf", r"Unfolded d$\sigma$/d$\theta_{\mu\pi}$.")]
 
+# Selection- and unfolding-stage diagnostics (cos theta_mu), embedded at end of §3.
+SELFIGS=[("selection_costhmu_step1_reco_spectrum.pdf", r"Selected reco cos\,$\theta_\mu$ spectrum: data (GENIE fake data) vs MC signal + MC/EXT background."),
+         ("selection_costhmu_step2_bkgd_subtraction.pdf", r"Background-subtracted reco spectrum with the MC signal overlaid (input to unfolding)."),
+         ("selection_costhmu_step3_smearing_matrix.pdf", r"Smearceptance (response) matrix, reco vs true cos\,$\theta_\mu$."),
+         ("selection_costhmu_step4_efficiency.pdf", r"Selection efficiency vs true cos\,$\theta_\mu$.")]
+
+# Detector-variation overlays (reco top, true bottom), one per observable, at end of §4.
+DVFIGS=[("detvar_pmu.pdf",     r"Detector variations, $p_\mu$: reco spectrum (top) and true signal (bottom), all nine samples POT-scaled to the CV."),
+        ("detvar_ppi.pdf",     r"Detector variations, $p_\pi$."),
+        ("detvar_costhmu.pdf", r"Detector variations, cos\,$\theta_\mu$."),
+        ("detvar_costhpi.pdf", r"Detector variations, cos\,$\theta_\pi$."),
+        ("detvar_thmupi.pdf",  r"Detector variations, $\theta_{\mu\pi}$.")]
+
 def esc(s):
     # escape LaTeX specials in normal text (Unicode kept as-is)
     s=s.replace('\\',r'\textbackslash{}')
@@ -43,11 +56,11 @@ def inline(s):
     s=re.sub('\x00(\d+)\x00',unstash,s)
     return s
 
-def figures_block():
+def figures_block(figset=FIGS,width=0.86):
     out=[]
-    for fn,cap in FIGS:
+    for fn,cap in figset:
         out.append(r'\begin{figure}[htbp]\centering')
-        out.append(rf'\includegraphics[width=0.86\textwidth]{{{FIGDIR}/{fn}}}')
+        out.append(rf'\includegraphics[width={width}\textwidth]{{{FIGDIR}/{fn}}}')
         out.append(rf'\caption{{{cap}}}')
         out.append(r'\end{figure}')
     return "\n".join(out)
@@ -75,9 +88,15 @@ while i<n:
         flush_para(para); para=[]
         lvl=len(m.group(1)); txt=inline(m.group(2))
         cmd={1:'section',2:'section',3:'subsection'}[lvl]
-        # emit figures right before section 6.4
+        # emit comparison figures right before section 6.4
         if m.group(2).strip().startswith('6.4'):
             body.append(figures_block()); body.append('')
+        # emit selection/stage figures at the end of section 3 (before "4 ...")
+        if re.match(r'^4\s',m.group(2).strip()):
+            body.append(figures_block(SELFIGS,0.72)); body.append('')
+        # emit detector-variation overlays at the end of section 4 (before "5 ...")
+        if re.match(r'^5\s',m.group(2).strip()):
+            body.append(figures_block(DVFIGS,0.80)); body.append('')
         body.append(rf'\{cmd}*{{{txt}}}'); body.append('')
         i+=1; continue
     # horizontal rule

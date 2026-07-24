@@ -834,6 +834,14 @@ void UnfolderNuMI(std::string XSEC_Config, std::string SLICE_Config, std::string
     }
 
     TLegend *lg = new TLegend(1 - rightMargin + 0.02, 0.09, 1 - 0.02, 0.93);
+    // With ~7 entries (data + up to 4 standalone generators + tune + fake-data
+    // truth), most of them two-line #splitline{name}{chi2}, TLegend's auto text
+    // sizing assumes few entries and makes the two lines of each entry overlap.
+    // Pin an explicit small text size and a tighter symbol margin so all entries
+    // fit without overlapping.
+    lg->SetTextSize( 0.026 );
+    lg->SetMargin( 0.16 );
+    lg->SetEntrySeparation( 0.4 );
 
     // Add in generator predictions
     // loop through generators
@@ -890,8 +898,7 @@ void UnfolderNuMI(std::string XSEC_Config, std::string SLICE_Config, std::string
 
       std::string name_clean = name;
 
-      if (name_clean == "truth") name_clean = "NuWro Truth";
-      //if (name_clean == "truth") name_clean = "Truth";
+      if (name_clean == "truth") name_clean = "Fake-data truth";
       if (name_clean == "MicroBooNE Tune") name_clean = "GENIE 3.0.6 G18 #muB"; // _10a_02_11a
       //if (label == "unfolded data") label = "Unfolded Fake Data";
       if (name_clean == "unfolded data") name_clean = "Unfolded Data";
