@@ -899,6 +899,8 @@ bool CC1mu1piXp::selection( AnalysisEvent* Event) {
 
 // std::cout<<" Selection D "<< std::endl;
 
+    // Highest muon-BDT score seen so far, for the BNB-style muon-candidate choice.
+    double best_muon_bdt_score = -1e30;
 
     for (size_t i_pfp = 0; i_pfp < Event->track_length_->size(); i_pfp++) {
 
@@ -924,24 +926,39 @@ bool CC1mu1piXp::selection( AnalysisEvent* Event) {
 	      trk_sce_end_z_v_tmva = Event->track_endz_->at(i_pfp);
 	      tmvaOutput_mip = tmvaReader->EvaluateMVA("BDT");
 
+	      // Muon BDT: previously booked (dataset_muon_BDT) but never evaluated.
+	      // Activated here (BNB-style) to choose the muon candidate by the
+	      // highest muon-BDT score instead of by longest track length. The muon
+	      // BDT already includes track length among its input features.
+	      trk_bragg_p_v_tmva_mu = Event->trk_bragg_p_v->at(i_pfp);
+	      trk_bragg_mu_v_tmva_mu = Event->trk_bragg_mu_v->at(i_pfp);
+	      trk_bragg_mip_v_tmva_mu = Event->trk_bragg_mip_v->at(i_pfp);
+	      trk_llr_pid_score_v_tmva_mu = Event->track_llr_pid_score_->at(i_pfp);
+	      trk_score_v_tmva_mu = Event->pfp_track_score_->at(i_pfp);
+	      trk_len_v_tmva_mu = Event->track_length_->at(i_pfp);
+	      trk_sce_end_x_v_tmva_mu = Event->track_endx_->at(i_pfp);
+	      trk_sce_end_y_v_tmva_mu = Event->track_endy_->at(i_pfp);
+	      trk_sce_end_z_v_tmva_mu = Event->track_endz_->at(i_pfp);
+	      double muon_bdt_score = tmvaReader_mu->EvaluateMVA("BDT");
+
 	// std::cout<<"CandidateMuonIndex2 is "<< CandidateMuonIndex << std::endl;
 
 
-	if((Event->track_llr_pid_score_->at(i_pfp) > 0.2) && ( Event->track_length_->at(i_pfp) > 10) 
+	if((Event->track_llr_pid_score_->at(i_pfp) > 0.2) && ( Event->track_length_->at(i_pfp) > 10)
 	    && ( Event->pfp_track_score_->at(i_pfp) > 0.8) && (nu_to_track_dist_ia.Mag() <= 4)&&  (tmvaOutput_mip >= -0.1) ){
 	//	if ( Event->pfp_reco_pdg_->at(i_pfp) == MUON ) {
       			sel_muoncandidate_tracklike_ = true;
     			//}
 		// std::cout<<"CandidateMuonIndex3 is "<< CandidateMuonIndex << std::endl;
 
-		// Pick the LONGEST qualifying muon candidate (matches the custom
-		// selection ccpi_selection.C, which tracks best_muon_len). Previously
-		// only the first qualifying track was kept.
+		// Pick the muon candidate with the HIGHEST muon-BDT score (BNB-style,
+		// dataset_muon_BDT). Was previously the longest qualifying track.
 		if(CandidateMuonIndex == -1
-		   || (Event->track_length_->at(i_pfp) > Event->track_length_->at(CandidateMuonIndex))){
+		   || (muon_bdt_score > best_muon_bdt_score)){
 			CandidateMuonIndex = i_pfp;
+			best_muon_bdt_score = muon_bdt_score;
 		}
-	} 
+	}
 	//std::cout<<"CandidateMuonIndex5 is "<< CandidateMuonIndex <<std::endl;
  }
  }

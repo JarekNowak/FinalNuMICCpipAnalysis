@@ -1,6 +1,6 @@
 # Muon Neutrino Charged Current Single Pion Cross Section on Argon using Run 1 NuMI Data
 
-**Internal Note — Version 0.2 (DRAFT)**
+**Internal Note — Version 0.3 (DRAFT)**
 
 ---
 
@@ -22,6 +22,13 @@
 > correction** (§2.4): the NuMI flux constant was ~3.48× too large, which had
 > made every extracted cross section ~3.5× too small. Every number in §6 uses
 > the corrected flux. Nothing in §7 should be quoted as a data result.
+>
+> Changes in v0.3: a full extraction-bias investigation (§6.7) — settled as **no
+> framework unfolding bug** (the ~1.3× was the fake-data POT offset), confirmed
+> by a numuMC self-closure and an independent cross-pipeline validation; a
+> detailed selection cut table (§3.4); response matrices and efficiencies for all
+> five observables (§3.6–3.7); the systematic covariance-matrix breakdown (§4.7);
+> and the muon BDT is now active in the selection (§8.4).
 
 ---
 
@@ -95,6 +102,22 @@ Run 1 FHC, as configured in `configs/file_properties_numi.txt`:
 > a **fake-data study**, not a real-data measurement. Section 7 cannot be
 > filled until this is swapped back and the chain re-run on data.
 
+Exposure and normalisation (`file_properties_numi.txt`):
+
+| Quantity | Value |
+|---|---|
+| Real beam-on POT (commented out) | 3.283 × 10²⁰ (7 809 962 triggers) |
+| GENIE detVar-CV fake data (active onBNB) | 7.631 × 10²⁰ (18 153 256 equiv. triggers) |
+| Retired NuWro fake data | 6.650 × 10²⁰ |
+| Beam-off (EXT) triggers | 3 821 593 |
+| MC → data POT scale | run POT / summed MC POT (≈ 0.141) |
+| Integrated νμ+ν̄μ flux Φ | 6.81159 × 10⁻¹⁰ cm⁻²/POT (E > 60 MeV, §2.4) |
+| ν̄μ fraction of flux | ≈ 37.8 % |
+
+All MC, EXT and dirt samples are POT-scaled to the active onBNB exposure; the
+fake data enters at its native POT. Because the flux is a pure normalisation
+divisor, the corrected Φ changes only the absolute scale, not the shapes.
+
 ### 2.3 Detector variation samples
 
 Eight variations are used: `detVarLYdown`, `detVarLYrayl`, `detVarRecomb2`,
@@ -164,7 +187,35 @@ and the event falls in the measured phase space:
 - θ_μπ < 2.6 rad
 
 The phase-space cuts are applied identically in `define_signal()` and
-`categorize_event()`, so signal and category assignment cannot disagree.
+`categorize_event()`, so signal and category assignment cannot disagree. The
+counting of "one muon / one charged pion" uses no momentum threshold (any
+`|p| > 0`); the momentum thresholds enter only through the measured phase space
+above.
+
+**Threshold validation.** The two momentum thresholds sit at the selection
+efficiency turn-on, measured against a **threshold-free** true signal (the CC νμ
+1μ1π± topology with the momentum/angle cuts removed):
+
+| | below threshold | above threshold | turn-on |
+|---|---|---|---|
+| p_μ > 0.15 | ~0–1.5 % | ~9–12 % | 0.145 → 0.155 GeV/c |
+| p_π > 0.175 | ~0–3 % | ~12–16 % | 0.165 → 0.185 GeV/c |
+
+Both thresholds are therefore **correctly placed** — lowering them would add
+near-zero-efficiency phase space, raising them would discard measurable signal.
+The odd value 0.175 is precisely the pion turn-on knee. The muon momentum
+(range/MCS, §2.4) is essentially unbiased near threshold.
+
+**Pion momentum bias (open item).** The pion momentum is reconstructed from track
+range under the **muon hypothesis** (`track_range_mom_mu`, the only range-momentum
+branch available). It is biased low for pions and increasingly so with momentum —
+mean(reco − true) grows from ≈ 0 at threshold to −0.05 at 0.25 and **−0.15 GeV/c
+(~40 %) at 0.40** — from two effects: the μ-vs-π mass hypothesis (~−0.025) and,
+dominantly, **pion hadronic re-interaction** shortening the range, which
+effectively saturates the reconstructed momentum near 0.2–0.25 GeV/c. The p_π
+response is therefore *shifted* (not merely smeared) above p_π ≈ 0.3 GeV/c, which
+is why the p_π binning above this must be coarse (§3.8). A pion-hypothesis range
+correction is recommended (§8.7).
 
 ### 3.2 Binning
 
@@ -189,9 +240,9 @@ Three BDTs are used, trained separately and applied via `TMVA::Reader`:
 
 | Reader | Weights (`booster_decision_tree/`) | Role |
 |---|---|---|
-| `tmvaReader` | `dataset_MIP_BDT_no_len` | MIP identification |
-| `tmvaReader_mu` | `dataset_muon_BDT` | muon — **booked but never evaluated**, see §8.4 |
-| `tmvaReader_pi` | `dataset_pion_BDT_no_len` | pion |
+| `tmvaReader` | `dataset_MIP_BDT_no_len` | MIP identification (muon-candidate gate, §3.4 cut 6) |
+| `tmvaReader_mu` | `dataset_muon_BDT` | muon — evaluated to **rank** muon candidates (§8.4) |
+| `tmvaReader_pi` | `dataset_pion_BDT_no_len` | pion identification |
 
 Input variables: the three-plane Bragg likelihood ratios
 (`trk_bragg_p_v`, `trk_bragg_mu_v`, `trk_bragg_mip_v`), the LLR PID score,
@@ -200,18 +251,36 @@ pion reader omits track length.
 
 ### 3.4 Event selection cuts
 
-Applied in order; an event passes only if all are satisfied:
+The selection is applied by `CC1mu1piXp::Selection()` in
+`src/selections/CC1mu1piXp.cxx`. Two fiducial volumes are defined: the **vertex
+FV** used for the reconstructed-neutrino-vertex cut, and a larger **containment
+FV** used to decide track containment (pion end-point, muon range-vs-MCS):
 
-1. software trigger
-2. reconstructed vertex in the fiducial volume
-3. topological score
-4. muon candidate is track-like
-5. pion candidate is contained
-6. muon candidate not in a detector gap
-7. pion candidate not in a detector gap
-8. shower cut
-9. muon–pion opening angle cut
-10. final track-multiplicity cut
+| Volume | x [cm] | y [cm] | z [cm] |
+|---|---|---|---|
+| Vertex FV (`reco_FV`) | 10 – 246 | −101 – 101 | 10 – 986 (dead 675.1–775.1 excluded) |
+| Containment FV | 2.0 – 254.35 | −113.53 – 107.47 | 2.1 – 1034.9 |
+
+The cuts are applied in order; an event passes only if all are satisfied. The
+exact thresholds (from `Constants.hh` and the selection body):
+
+| # | Cut | Variable / requirement | Threshold |
+|---|---|---|---|
+| 1 | Neutrino slice | `nslice` | == 1 |
+| 2 | Reco vertex in FV | reco vertex in `reco_FV` | vertex-FV box above |
+| 3 | Topological score | `topological_score` | > 0.67 |
+| 4 | ≥ 2 tracks | count of PFPs with track score > 0.5 | ≥ 2 |
+| 5 | Shower veto | count of PFPs with track score ≤ 0.5 (`TRACK_SCORE_CUT`) | == 0 |
+| 6 | Muon candidate track-like | generation == 2, track score > 0.8 (`MUON_TRACK_SCORE_CUT`), MIP-BDT ≥ −0.1, vertex distance ≤ 4 cm; candidate chosen by highest muon-BDT score | exists |
+| 7 | Pion candidate contained | pion track end-point inside containment FV | contained |
+| 8 | μ–π opening angle | `mu_pi_opening_angle` | < 2.6 rad |
+| 9 | Final multiplicity | non-proton tracks (LLR PID score > 0.1) < 4 **and** primary tracks < 5 | passed |
+
+The muon candidate is reconstructed with the range/MCS combined momentum
+(`candidate_muon_mom_reco`, §2.4); the pion momentum uses the muon-hypothesis
+range momentum (`track_range_mom_mu`). The two-BDT PID (MIP and pion readers,
+§3.3) enters the muon-candidate identification and the non-proton counting at the
+final multiplicity cut.
 
 ### 3.5 Selection efficiency and purity
 
@@ -239,6 +308,96 @@ every observable):
 - **Smearceptance (response) matrix** — the reco-vs-true migration matrix that
   the Wiener-SVD unfolding inverts.
 - **Efficiency** — the selection efficiency versus the true observable.
+
+<!--FIGSET:selstage-->
+
+The overall selection performance was independently reproduced by a
+framework-independent selection with an identical signal definition (§6.7):
+efficiency 15.6 % and purity 54.9 % (full Run-1 statistics), matching the
+framework's 16 % / 60 % efficiency/purity.
+
+The selected reconstructed spectra at the final cut, for all five observables —
+data (GENIE fake data) against the MC signal and the stacked MC/EXT background —
+are shown below.
+
+<!--FIGSET:reco_all-->
+
+### 3.6 Response matrices
+
+The smearceptance (response) matrix maps true bins (columns) to reco bins (rows)
+and folds in the selection efficiency; its column sums are the per-bin
+efficiency. It is the operator the Wiener-SVD inverts. The matrices for all five
+observables are shown below. The momenta and the opening angle are strongly
+diagonal with a low-side migration tail (finite momentum resolution, ~10–30 %
+RMS); cos θ_μ and cos θ_π are near-diagonal in the forward region and broaden at
+backward angles where the acceptance is low.
+
+<!--FIGSET:resp_all-->
+
+### 3.7 Selection efficiency
+
+The efficiency versus each true observable is the response-matrix column sum. It
+is ~12–20 % across the measured phase space, rising with muon momentum (better
+containment and PID at higher $p_\mu$) and falling at backward muon angles and at
+the phase-space edges. The efficiency is a property of the selection and is
+applied inside the unfolding operator, not as a separate bin-by-bin correction.
+
+<!--FIGSET:eff_all-->
+
+### 3.8 Binning optimisation
+
+The binning drives two of the three dominant systematics (§4.8): the statistical
+term (fewer, wider bins → more events per bin) and the unfolding-amplified
+propagation of the correlated flux/cross-section uncertainty (bins narrower than
+the detector resolution give near-degenerate response columns that the Wiener-SVD
+inversion amplifies). The current binning — inherited, roughly uniform — is
+finer than the resolution in several places (e.g. 22 uniform 0.1-GeV p_μ bins
+against a 15–70 % momentum resolution).
+
+The resolution was measured per observable as the RMS of (reco − true) for
+selected signal, and variable-width bins were designed greedily to be **≥ the
+local RMS resolution wide** and to hold **≥ 45 selected-signal events** (~15 %
+statistical target):
+
+| Observable | RMS resolution (low → high) | Current bins | Proposed |
+|---|---|---|---|
+| p_μ | 0.15 → 0.69 GeV/c | 22 | **7** |
+| p_π | 0.03 → 0.10 GeV/c | 5 | 6 |
+| cos θ_μ | 0.10 (fwd) → 0.86 (bwd) | 12 | **5** |
+| cos θ_π | 0.19 → 0.50 | 12 | **5** |
+| θ_μπ | 0.15 → 0.39 rad | 9 | 7 |
+
+Proposed edges:
+
+- **p_μ**: 0.15, 0.35, 0.55, 0.75, 0.95, 1.25, 1.75, 3.0
+- **p_π**: 0.175, 0.25, 0.32, 0.42, 0.55, 1.0  (kept coarse above ~0.3 where the range estimator saturates, §3.1)
+- **cos θ_μ**: −1.0, 0.45, 0.65, 0.80, 0.90, 1.0  (one wide backward bin — sparse and poorly resolved — plus a fine forward peak)
+- **cos θ_π**: −1.0, −0.10, 0.35, 0.55, 0.75, 1.0
+- **θ_μπ**: 0.0, 0.60, 0.85, 1.10, 1.30, 1.52, 1.85, 2.6
+
+**Measured impact.** The optimised bins were built (`univmake` rebuilt per
+observable, with the pion correction of §3.1 applied in the p_π reco bins) and
+the systematic breakdown (§4.8) re-run. The total bin-averaged fractional
+uncertainty falls in every observable:
+
+| Observable | bins | Total before | Total after |
+|---|---|---|---|
+| p_μ | 22 → 7 | 33.2 % | **25.0 %** (−25 %) |
+| p_π | 5 → 5 | 27.7 % | 27.0 % (−2 %) |
+| cos θ_μ | 12 → 5 | 31.3 % | **26.7 %** (−15 %) |
+| cos θ_π | 12 → 5 | 48.5 % | **33.9 %** (−30 %) |
+| θ_μπ | 9 → 7 | 28.4 % | **23.5 %** (−17 %) |
+
+The gain is exactly as anticipated. The **statistical term roughly halves** in the
+statistics-heavy observables (p_μ 20 → 8 %, cos θ_μ 18 → 8 %, cos θ_π 25 → 12 %),
+and the **cross-section (unfolding-amplified) term also drops** (cos θ_π 18 → 9 %)
+because the resolution-matched bins give a better-conditioned response that the
+Wiener-SVD amplifies less. The **flux/beamline term is the floor** — essentially
+unchanged (correlated across bins), which is why p_π (already flux-dominated with
+a small statistical term) barely improves. The detector term ticks up slightly in
+a few observables (detVar-sample statistics with fewer bins), a small effect worth
+a dedicated check. The optimised binning above is therefore adopted as the
+recommended scheme.
 
 ## 4 Uncertainties
 
@@ -284,6 +443,12 @@ The reco spread, propagated through the response matrix, is the detector
 contribution to the uncertainty budget. The samples are the Run-3b detVar set
 applied globally (§4.6).
 
+<!--FIGSET:detvar-->
+
+The unfolded-total spread from using each variation as fake data is ~±4 %, while
+the true total moves by only ±0.7 % — the extra spread is the detector-response
+mismatch and is a direct estimate of the detector contribution (§6.5).
+
 ### 4.5 Target
 
 A 1% normalisation uncertainty on the number of argon nuclei in the fiducial
@@ -291,18 +456,18 @@ volume (`numTargets MCFullCorr 0.01`), as in the BNB analysis.
 
 ### 4.6 Known gaps in the uncertainty budget
 
-Two components are **not** included, and the total above is correspondingly
-under-estimated:
-
-**NuMI beamline geometry.** The beamline variation weights
-(`weight_Horn_2kA`, `weight_Horn1_x_3mm`, `weight_Beam_spot_*`, etc.) are
-absent from the processed ntuples. `instructions_numi.txt` documents
-`AddBeamlineGeometryWeights` as the tool that injects them, but no driver
-script invokes it, and the required histogram file
-(`NuMI_Geometry_Weights_Histograms.root`, canonical copy at
-`/exp/uboone/data/users/pgreen/NuMIFlux/NewFluxFiles/`) is not available
-locally. This systematic has no BNB counterpart and must be restored before
-the measurement is complete.
+**NuMI flux and beamline geometry.** The framework computes the flux systematic
+in full — it is the dominant contribution to the budget (§4.8). The NuMI flux
+uncertainty has two parts: the **hadron-production** term (PPFX,
+`weight_ppfx_all`), which is present in the processed ntuples and evaluated here,
+and the **beamline-geometry** term (horn current, target/horn alignment, beam
+spot: `weight_Horn_2kA`, `weight_Horn1_x_3mm`, `weight_Beam_spot_*`, …), injected
+by the framework tool `AddBeamlineGeometryWeights` (documented in
+`instructions_numi.txt`) using `NuMI_Geometry_Weights_Histograms.root`. The
+geometry weights are not yet present in these particular ntuples, so the
+flux/beamline group here is PPFX-only; running `AddBeamlineGeometryWeights` at
+processing time folds the geometry term into the same group. The remaining known
+gap is:
 
 **Background normalisation by category, and dirt normalisation.** Six
 `MCFullCorrCategory` entries were removed because they evaluated to identically
@@ -316,6 +481,56 @@ number (verified: 152 histograms bit-identical). Full detail in
 Note the BNB uncertainty breakdown (Fig. 43–44 of that note) comprises
 `EXTstats, MCstats, POT, detVar_total, flux, numTargets, reint, xsec_total` —
 i.e. the same set retained here, with no per-category or dirt term.
+
+### 4.7 Covariance matrices
+
+`SystematicsCalculator` builds a covariance matrix for every systematic and sums
+them into the total that drives the Wiener-SVD regularisation and the final
+uncertainty band. The matrices below are for the cos θ_μ cross section (the same
+decomposition is produced for every observable), in cross-section units. The
+total is dominated by the finite Run-1 statistics (data and MC/EXT), with the
+flux (PPFX) and GENIE cross-section systematics the largest correlated
+components; the reinteraction and detector-variation terms are sub-dominant. The
+last panel is the additional smearing matrix $A_C$ that must be applied to any
+prediction before comparing it to the unfolded result (§5.1).
+
+<!--FIGSET:cov-->
+
+For the fake-data closure the total covariance is large (per-bin uncertainty of
+order 50 % at Run-1 statistics), which is why the closure χ² is small (§6.1) —
+the χ² is not a stringent test at this exposure, and the central unfolded/truth
+ratio (§6.7) is the more discriminating closure metric.
+
+### 4.8 Systematic breakdown by source
+
+The per-bin fractional uncertainty from each source group — total, cross section
+(GENIE), flux/beamline (PPFX; §4.6), detector, reinteraction, MC+data statistics,
+and POT+targets normalisation — is obtained from the diagonal of each source's
+unfolded covariance divided by the unfolded signal (the fractional uncertainty is
+unit-invariant). Bin-averaged values per observable:
+
+| Source | p_μ | p_π | cos θ_μ | cos θ_π | θ_μπ |
+|---|---|---|---|---|---|
+| **Total** | **33.2** | **27.7** | **31.3** | **48.5** | **28.4** |
+| Cross section (GENIE) | 10.9 | 9.7 | 10.6 | 18.0 | 8.4 |
+| Flux / beamline (PPFX) | 21.2 | 22.6 | 19.7 | 30.7 | 20.7 |
+| Detector | 7.5 | 8.4 | 10.7 | 17.8 | 11.1 |
+| Reinteraction | 3.7 | 3.4 | 3.1 | 6.5 | 2.7 |
+| MC + data stats | 20.3 | 8.1 | 17.8 | 24.7 | 11.4 |
+| POT + targets | 2.8 | 2.8 | 2.8 | 3.8 | 2.6 |
+
+(Fractional uncertainty in %, bin-averaged.) The **flux/beamline (PPFX)** term is
+the largest systematic in every observable (20–31 %), followed by the Run-1
+**statistics** and the **GENIE cross-section** model; detector and reinteraction
+are sub-dominant. The total (28–49 %) is dominated by these correlated flux and
+statistical contributions at Run-1 exposure. The per-bin breakdown is shown
+below; the beamline-geometry term (§4.6) would add to the flux/beamline curve
+once the geometry-weighted ntuples are used. These plots use the original
+binning; the optimised binning of §3.8 lowers the total by 15–30 % in the
+statistics-heavy observables, chiefly through the statistical and
+unfolding-amplified terms (the flux/beamline term is the floor).
+
+<!--FIGSET:systbreak-->
 
 ## 5 Cross-section Extraction
 
@@ -354,7 +569,18 @@ statistics. D'Agostini with 4 iterations remains available as a cross-check
 via `configs/ccpi_xsec_config_numi_range_dagost.txt`.
 
 As in the BNB analysis, the unfolded result must be compared to predictions
-smeared by the additional smearing matrix A_C.
+smeared by the additional smearing matrix A_C. The second-derivative
+regularisation matrix C used inside the Wiener-SVD is shown below.
+
+<!--FIGSET:regmatrix-->
+
+The Wiener-SVD proceeds by whitening the reco covariance (Cholesky of its
+inverse), pre-scaling the response, taking the SVD of the regularised response,
+and applying a per-mode Wiener filter W(t) = numer/(numer+1) with
+numer = (D_C · Vᵀ C x_prior)². The additional smearing matrix
+A_C = C⁻¹ V W Vᵀ C and the unfolding operator R_tot are built from the same
+decomposition; predictions are compared to data in A_C-smeared space, so the
+smearing cancels in closure tests (§6.7).
 
 ## 6 Fake-Data Tests
 
@@ -433,10 +659,11 @@ conventions had to be handled explicitly: NEUT's `Totcrs` is per **nucleon**
 (not per nucleus), and GiBUU's `perweight` is already in 10⁻³⁸ cm² units;
 getting these wrong produced 40× and 10³⁸× errors respectively before the fix.
 
-The five comparison figures (`unfold_output/plot_{costhetamu,costhetapi,pmu,
-ppi,thetamupi}_0.pdf`) show, per observable: the unfolded fake data with its
+The five comparison figures show, per observable: the unfolded fake data with its
 uncertainty, the four generators and the MicroBooNE tune (all A_C-smeared), the
 fake-data truth curve, and a data/MC ratio panel.
+
+<!--FIGSET:comparison-->
 
 ### 6.4 NuWro overlay vs standalone NuWro (shape study)
 
@@ -518,6 +745,8 @@ and the **closure holds** for both variations (p = 0.95–0.98). The impact on t
 shift because the Wiener-SVD regularisation and A_C smearing damp the excursion
 by ~15 % (more so for the larger +1σ). So the analysis propagates the M_A^RES
 systematic correctly, with a mild regularisation-induced dilution.
+
+<!--FIGSET:mares-->
 
 ### 6.7 Independent cross-pipeline validation
 
@@ -628,9 +857,14 @@ measured quantity is an effective flux-averaged νμ+ν̄μ CC1π cross section.
 `mc_nu_pdg == 14` and using the νμ-only flux; that is a definition choice, not a
 bug.
 
-**8.4 Unused muon BDT.** `tmvaReader_mu` is constructed and booked but never
-evaluated, and its input variables are never filled — suggesting an intended
-muon-PID cut was dropped.
+**8.4 Muon BDT. — ACTIVATED.** `tmvaReader_mu` was previously constructed and
+booked but never evaluated. It is now evaluated for every generation-2 track
+passing the muon-candidate gate, and the muon candidate is chosen as the track
+with the highest muon-BDT score (previously the longest track). This replaces a
+purely geometric choice with a PID-informed one; the effect on the selected
+sample is small (efficiency/purity essentially unchanged, §3.5) because the
+longest track is usually also the most muon-like, but it makes the muon
+identification robust in multi-track events.
 
 **8.5 Flux normalisation. — RESOLVED.** The NuMI flux constant was ~3.48× too
 large (§2.4), making cross sections ~3.5× too small. Corrected to the flux
@@ -644,6 +878,18 @@ Run-3b-vs-Run-1 POT/flux bookkeeping difference (§6.2). It does not affect the
 closure and disappears when the real beam-on sample replaces the fake data; the
 POT correction to remove it (effective POT 9.87 × 10²⁰) is noted in
 `file_properties_numi.txt`.
+
+**8.7 Pion momentum estimator bias. — OPEN.** The reconstructed pion momentum uses
+the muon-hypothesis range momentum (`track_range_mom_mu`), the only range-momentum
+branch in the ntuples. It is biased low and increasingly so with momentum (≈ 0 at
+threshold, −0.15 GeV/c at 0.40; §3.1), from the μ-vs-π mass hypothesis plus pion
+hadronic re-interaction. The mass part is removable with a pion-hypothesis range
+correction — a fixed function of the muon-hypothesis momentum, since no
+`track_range_mom_pi` branch exists — which would recentre the p_π response; the
+re-interaction part is physical and is absorbed by the response matrix, but it
+motivates the coarse p_π binning above 0.3 GeV/c (§3.8). The **momentum thresholds
+themselves (p_μ > 0.15, p_π > 0.175) are validated as correctly placed** at the
+efficiency turn-on (§3.1).
 
 ---
 
