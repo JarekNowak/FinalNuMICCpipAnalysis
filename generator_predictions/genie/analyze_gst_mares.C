@@ -27,11 +27,11 @@ void analyze_gst_mares(const char* gstfile, const char* wfile,
     if((a/100)%10==0)return false; if(a>=901&&a<=930)return false;
     if(a==110||a==990||a==998||a==999||a==100)return false; return true;};
   auto is_kaon=[](int pdg){int a=abs(pdg); return a==321||a==311||pdg==310||pdg==130;};
-  std::vector<double> EPMU={0.15,0.20,0.30,0.40,0.50,0.60,0.70,0.80,0.90,1.00,1.10,1.20,1.30,1.40,1.50,1.60,1.70,1.80,1.90,2.00,2.30,2.60,3.00};
-  std::vector<double> EPPI={0.175,0.20,0.30,0.40,0.50,1.00};
-  std::vector<double> ECMU={-1.0,-0.5,0.0,0.2,0.4,0.55,0.65,0.75,0.82,0.88,0.93,0.97,1.0};
-  std::vector<double> ECPI={-1.0,-0.7,-0.4,-0.2,0.0,0.2,0.35,0.5,0.65,0.78,0.88,0.95,1.0};
-  std::vector<double> ETH={0.0,0.314,0.628,0.942,1.257,1.571,1.885,2.199,2.513,2.6};
+  std::vector<double> EPMU={0.150,0.350,0.550,0.750,0.950,1.250,1.750,3.000};
+  std::vector<double> EPPI={0.175,0.250,0.320,0.420,0.550,1.000};
+  std::vector<double> ECMU={-1.0,0.45,0.65,0.80,0.90,1.0};
+  std::vector<double> ECPI={-1.0,-0.10,0.35,0.55,0.75,1.0};
+  std::vector<double> ETH={0.0,0.60,0.85,1.10,1.30,1.52,1.85,2.60};
   const char* vn[5]={"pmu","ppi","costhmu","costhpi","thmupi"};
   std::vector< std::vector<double> > edges={EPMU,EPPI,ECMU,ECPI,ETH};
   // [variation 0=nom,1=minus,2=plus][observable]

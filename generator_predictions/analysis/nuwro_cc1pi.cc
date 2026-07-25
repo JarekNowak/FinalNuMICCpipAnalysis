@@ -65,16 +65,11 @@ static bool is_kaon(int pdg) {
 }
 
 // Analysis binning (true-signal edges from configs/ccpi_*_bin_config.txt).
-static const std::vector<double> EDGES_PMU = {
-  0.15,0.20,0.30,0.40,0.50,0.60,0.70,0.80,0.90,1.00,1.10,1.20,1.30,1.40,
-  1.50,1.60,1.70,1.80,1.90,2.00,2.30,2.60,3.00 };
-static const std::vector<double> EDGES_PPI = { 0.175,0.20,0.30,0.40,0.50,1.00 };
-static const std::vector<double> EDGES_COSTHMU = {
-  -1.0,-0.5,0.0,0.2,0.4,0.55,0.65,0.75,0.82,0.88,0.93,0.97,1.0 };
-static const std::vector<double> EDGES_COSTHPI = {
-  -1.0,-0.7,-0.4,-0.2,0.0,0.2,0.35,0.5,0.65,0.78,0.88,0.95,1.0 };
-static const std::vector<double> EDGES_THMUPI = {
-  0.0,0.314,0.628,0.942,1.257,1.571,1.885,2.199,2.513,2.6 };
+static const std::vector<double> EDGES_PMU = {0.150,0.350,0.550,0.750,0.950,1.250,1.750,3.000};
+static const std::vector<double> EDGES_PPI = {0.175,0.250,0.320,0.420,0.550,1.000};
+static const std::vector<double> EDGES_COSTHMU = {-1.0,0.45,0.65,0.80,0.90,1.0};
+static const std::vector<double> EDGES_COSTHPI = {-1.0,-0.10,0.35,0.55,0.75,1.0};
+static const std::vector<double> EDGES_THMUPI = {0.0,0.60,0.85,1.10,1.30,1.52,1.85,2.60};
 
 static TH1D* make_hist(const char* name, const std::vector<double>& e) {
   return new TH1D(name, name, (int)e.size() - 1, e.data());
