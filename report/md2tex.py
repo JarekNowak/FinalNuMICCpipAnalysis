@@ -26,6 +26,9 @@ DVFIGS=[("detvar_pmu.pdf",     r"Detector variations, $p_\mu$: reco spectrum (to
         ("detvar_costhpi.pdf", r"Detector variations, cos\,$\theta_\pi$."),
         ("detvar_thmupi.pdf",  r"Detector variations, $\theta_{\mu\pi}$.")]
 
+# M_A^RES +/-sigma band, embedded in section 6.6.
+MARESFIG=[("mares_band_costhmu.pdf", r"M$_A^{\mathrm{RES}}\pm1\sigma$ band on the GENIE CC1$\pi$ cos\,$\theta_\mu$ cross section (nominal black; $+1\sigma$ red, $-1\sigma$ blue). The band is asymmetric and Q$^2$-dependent (largest at backward angles).")]
+
 def esc(s):
     # escape LaTeX specials in normal text (Unicode kept as-is)
     s=s.replace('\\',r'\textbackslash{}')
@@ -97,6 +100,9 @@ while i<n:
         # emit detector-variation overlays at the end of section 4 (before "5 ...")
         if re.match(r'^5\s',m.group(2).strip()):
             body.append(figures_block(DVFIGS,0.80)); body.append('')
+        # emit the M_A^RES band at the end of section 6 (before "7 ...")
+        if re.match(r'^7\s',m.group(2).strip()):
+            body.append(figures_block(MARESFIG,0.68)); body.append('')
         body.append(rf'\{cmd}*{{{txt}}}'); body.append('')
         i+=1; continue
     # horizontal rule

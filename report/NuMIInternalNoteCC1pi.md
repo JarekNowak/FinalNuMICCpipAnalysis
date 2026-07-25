@@ -482,6 +482,37 @@ A_C-smeared space, so its central value sits above the raw truth by this fixed
 factor, which cancels in the closure χ². Per-variation plots are in
 `unfold_output/dv_rebuild/`.
 
+### 6.6 Cross-section model excursions (M_A)
+
+The sensitivity to the axial mass was probed in three steps.
+
+**CCQE axial (AxFFCCQEshape) ±σ — negligible.** The framework already computes
+this unisim; its effect on the CC1π signal is **±0.08 %** (total), ≤0.5 % per
+bin. Expected: CC1π is resonance-dominated, so the CCQE axial form factor barely
+touches it. This is *not* the relevant axial mass for this channel.
+
+**Resonance axial mass M_A^RES ±σ (prediction).** The standalone GENIE events
+were reweighted with `grwght1p -s MaCCRES` at ±1σ. The effect on the CC1π
+prediction is large and **asymmetric**: **−5.9 % at −1σ, +32.5 % at +1σ**
+(consistent across all five observables). The asymmetry is intrinsic to GENIE's
+RES reweighting (the −1σ weights are bounded 0–1.15 while +1σ has a tail to
+~2.8). The shift is **Q²-dependent**: strongest at backward/high-angle muons
+(+58 % at +1σ, cos θ_μ ≈ −1) and weakest forward (+17 %, cos θ_μ → 1), because
+backward muons carry higher Q² where the axial form factor's M_A dependence is
+strongest. The ±σ band is shown in the figure below. M_A^RES is the **dominant
+single-parameter cross-section systematic** for this measurement.
+
+**M_A^RES ±σ through the full unfolding.** M_A^RES-shifted pseudo-data was built
+by reweighting the fake data's true signal by the per-true-bin factor f(t) and
+its measured reco by the migration-propagated g(r) = Σ_t mig(t,r) f(t) / Σ_t
+mig(t,r), then unfolded with the nominal response. The reweighted **truth**
+shifts by −6.5 % / +33.3 % (matching the prediction, confirming the reweight),
+and the **closure holds** for both variations (p = 0.95–0.98). The impact on the
+**unfolded total** is **−5.5 % / +28.2 %** — slightly smaller than the truth
+shift because the Wiener-SVD regularisation and A_C smearing damp the excursion
+by ~15 % (more so for the larger +1σ). So the analysis propagates the M_A^RES
+systematic correctly, with a mild regularisation-induced dilution.
+
 ## 7 Results
 
 *Empty pending a real-data run.* The fake-data machinery is now validated
