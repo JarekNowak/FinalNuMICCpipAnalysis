@@ -609,27 +609,27 @@ NEUT & local build, MPV-3 flux×σ sampling & 1.32 \\
 
 The four span 0.82–1.32 (GENIE lowest, NEUT highest) — a healthy generator spread. Predictions are combined from νμ and ν̄μ runs with the authoritative flux fractions (Φ\_νμ = 4.43515 × 10⁻¹⁰, Φ\_ν̄μ = 2.37644 × 10⁻¹⁰) and converted to per-nucleus 10⁻³⁸ cm²/Ar (× A = 40). Two per-generator normalisation conventions had to be handled explicitly: NEUT's \texttt{Totcrs} is per \textbf{nucleon} (not per nucleus), and GiBUU's \texttt{perweight} is already in 10⁻³⁸ cm² units; getting these wrong produced 40× and 10³⁸× errors respectively before the fix.
 
-The five comparison figures show, per observable: the unfolded fake data with its uncertainty, the standalone generators and the MicroBooNE tune (all A\_C-smeared), the fake-data truth curve, and a data/MC ratio panel. The figures below are on the \textbf{optimised binning} (§3.8): GENIE and GiBUU have been re-histogrammed from their event files at the new edges (integrals unchanged, e.g. GENIE cos θ\_μ 0.82), while NEUT and NuWro are pending re-run in their original generator environments (the SLC6 NEUT class libraries and the FNAL/cvmfs NuWro build are not available in the current session; their event files remain on disk for a straightforward re-histogram). The pion momentum correction (§3.1) applies only to the measured reco spectrum, not to these truth-level generator predictions.
+The five comparison figures show, per observable: the unfolded fake data with its uncertainty, the standalone generators and the MicroBooNE tune (all A\_C-smeared), the fake-data truth curve, and a data/MC ratio panel. The figures below are on the \textbf{optimised binning} (§3.8): \textbf{all four generators} have been re-histogrammed from their event files at the new edges, integrals unchanged (cos θ\_μ: GENIE 0.82, GiBUU 1.13, NuWro 1.25, NEUT 1.32). GENIE and GiBUU are ROOT-native; NEUT and NuWro were re-run inside the SL7 container (\texttt{fnal-wn-sl7}: ROOT 5.34 for the NEUT \texttt{neutclass} libraries, the cvmfs NuWro v21.09 build for the NuWro reader). The pion momentum correction (§3.1) applies only to the measured reco spectrum, not to these truth-level generator predictions.
 
 \begin{figure}[htbp]\centering
 \includegraphics[width=0.84\textwidth]{/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/xsec_analyzer/unfold_output/plot_pmu_0.pdf}
-\caption{Unfolded d$\sigma$/d$p_\mu$ (fake data) on the \emph{optimised} binning (\S3.8): GENIE and GiBUU $+$ MicroBooNE tune $+$ fake-data truth (all $A_C$-smeared), with data/MC ratio panel. NEUT and NuWro are pending re-run in their generator environments.}
+\caption{Unfolded d$\sigma$/d$p_\mu$ (fake data) on the \emph{optimised} binning (\S3.8): four generators (GENIE, GiBUU, NuWro, NEUT) $+$ MicroBooNE tune $+$ fake-data truth (all $A_C$-smeared), with data/MC ratio panel.}
 \end{figure}
 \begin{figure}[htbp]\centering
 \includegraphics[width=0.84\textwidth]{/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/xsec_analyzer/unfold_output/plot_ppi_0.pdf}
-\caption{Unfolded d$\sigma$/d$p_\pi$ (optimised binning).}
+\caption{Unfolded d$\sigma$/d$p_\pi$ (optimised binning, four generators).}
 \end{figure}
 \begin{figure}[htbp]\centering
 \includegraphics[width=0.84\textwidth]{/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/xsec_analyzer/unfold_output/plot_costhetamu_0.pdf}
-\caption{Unfolded d$\sigma$/dcos\,$\theta_\mu$ (optimised binning).}
+\caption{Unfolded d$\sigma$/dcos\,$\theta_\mu$ (optimised binning, four generators).}
 \end{figure}
 \begin{figure}[htbp]\centering
 \includegraphics[width=0.84\textwidth]{/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/xsec_analyzer/unfold_output/plot_costhetapi_0.pdf}
-\caption{Unfolded d$\sigma$/dcos\,$\theta_\pi$ (optimised binning).}
+\caption{Unfolded d$\sigma$/dcos\,$\theta_\pi$ (optimised binning, four generators).}
 \end{figure}
 \begin{figure}[htbp]\centering
 \includegraphics[width=0.84\textwidth]{/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/xsec_analyzer/unfold_output/plot_thetamupi_0.pdf}
-\caption{Unfolded d$\sigma$/d$\theta_{\mu\pi}$ (optimised binning).}
+\caption{Unfolded d$\sigma$/d$\theta_{\mu\pi}$ (optimised binning, four generators).}
 \end{figure}
 
 \subsection*{6.4 NuWro overlay vs standalone NuWro (shape study)}

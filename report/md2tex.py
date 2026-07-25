@@ -28,8 +28,8 @@ COVFIGS=[("XsecUnits_mat_table_cov_total.pdf",       r"Total covariance (systema
 
 FIGSETS = {
  "comparison": ([ (f"plot_{CMP[o]}_0.pdf",
-        (r"Unfolded d$\sigma$/d"+OLAB[o]+r" (fake data) on the \emph{optimised} binning (\S3.8): GENIE and GiBUU $+$ MicroBooNE tune $+$ fake-data truth (all $A_C$-smeared), with data/MC ratio panel. NEUT and NuWro are pending re-run in their generator environments."
-         if o=="pmu" else r"Unfolded d$\sigma$/d"+OLAB[o]+r" (optimised binning).")) for o in OBS], 0.84),
+        (r"Unfolded d$\sigma$/d"+OLAB[o]+r" (fake data) on the \emph{optimised} binning (\S3.8): four generators (GENIE, GiBUU, NuWro, NEUT) $+$ MicroBooNE tune $+$ fake-data truth (all $A_C$-smeared), with data/MC ratio panel."
+         if o=="pmu" else r"Unfolded d$\sigma$/d"+OLAB[o]+r" (optimised binning, four generators).")) for o in OBS], 0.84),
  "selstage":   (sel("step1_reco_spectrum",  r"Selected reco {o} spectrum: data (GENIE fake data) vs MC signal $+$ MC/EXT background.")[2:3]
               + sel("step2_bkgd_subtraction",r"Background-subtracted {o} reco spectrum with MC signal overlaid (unfolding input).")[2:3]
               + sel("step3_smearing_matrix", r"Smearceptance (response) matrix, reco vs true {o}.")[2:3]

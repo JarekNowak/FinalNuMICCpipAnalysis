@@ -662,13 +662,13 @@ getting these wrong produced 40× and 10³⁸× errors respectively before the f
 The five comparison figures show, per observable: the unfolded fake data with its
 uncertainty, the standalone generators and the MicroBooNE tune (all A_C-smeared),
 the fake-data truth curve, and a data/MC ratio panel. The figures below are on the
-**optimised binning** (§3.8): GENIE and GiBUU have been re-histogrammed from their
-event files at the new edges (integrals unchanged, e.g. GENIE cos θ_μ 0.82), while
-NEUT and NuWro are pending re-run in their original generator environments (the
-SLC6 NEUT class libraries and the FNAL/cvmfs NuWro build are not available in the
-current session; their event files remain on disk for a straightforward
-re-histogram). The pion momentum correction (§3.1) applies only to the measured
-reco spectrum, not to these truth-level generator predictions.
+**optimised binning** (§3.8): **all four generators** have been re-histogrammed
+from their event files at the new edges, integrals unchanged (cos θ_μ: GENIE 0.82,
+GiBUU 1.13, NuWro 1.25, NEUT 1.32). GENIE and GiBUU are ROOT-native; NEUT and NuWro
+were re-run inside the SL7 container (`fnal-wn-sl7`: ROOT 5.34 for the NEUT
+`neutclass` libraries, the cvmfs NuWro v21.09 build for the NuWro reader). The pion
+momentum correction (§3.1) applies only to the measured reco spectrum, not to these
+truth-level generator predictions.
 
 <!--FIGSET:comparison-->
 
