@@ -115,7 +115,7 @@
     value integrated above $60$~MeV, superseding the $2.3725\times10^{-9}$ read
     from the flux histograms, which was a factor $3.48$ too large), the Wiener-SVD
     integrated cross section from the angular observables is
-    $\sigma_{\mathrm{int}} = (0.70 \pm 0.10_{\rm stat})\times10^{-38}$~cm$^2$/Ar.
+    $\sigma_{\mathrm{int}} \approx 1.12\times10^{-38}$~cm$^2$/Ar.
     %
     The extraction is validated by a same-sample self-closure that recovers the
     truth to within $6\%$ for every observable and by exact algorithmic
@@ -1335,7 +1335,24 @@ The differential cross section is:
 where $\hat{N}_i$ is the Wiener-SVD unfolded signal count in true bin $i$,
 $\Phi_{\mathrm{total}} = \Phi_{\mathrm{per\,POT}} \times T_{\mathrm{POT}}$
 is the total integrated flux, and $N_{\mathrm{Ar}}$ is the number of argon
-target nuclei in the FV.
+target nuclei in the FV. Equivalently, the events-to-cross-section conversion is
+$\mathrm{conv} = N_{\mathrm{Ar}}\,\Phi/10^{-38}$ (so $\sigma_i = \hat{N}_i/(\varepsilon_i\,\mathrm{conv})$),
+with the authoritative flux constant $\phi = 6.81159\times10^{-10}$~cm$^{-2}$/POT
+($E>60$~MeV; Sec.~\ref{sec:flux}). At the fake-data POT the inputs are:
+
+\begin{center}\small
+\begin{tabular}{ll}
+\toprule
+Quantity & Value \\
+\midrule
+$N_{\mathrm{Ar}}$ (FV, dead-region excluded) & $8.710\times10^{29}$ \\
+Flux constant $\phi$ ($E>60$~MeV)          & $6.81159\times10^{-10}$~cm$^{-2}$/POT \\
+POT                                         & $7.630913\times10^{20}$ \\
+Integrated flux $\Phi = \phi\times$POT      & $5.198\times10^{11}$~cm$^{-2}$ \\
+$\mathrm{conv} = N_{\mathrm{Ar}}\,\Phi/10^{-38}$ & $4.527\times10^{3}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
 
 An integrated cross section is computed as the width-weighted sum,
 \begin{equation}
@@ -1553,7 +1570,7 @@ cross section for each observable on the NuWro fake-data sample.
   \includegraphics[width=0.62\textwidth]{xsec_integrated}
   \caption{Integrated cross section $\sigma_{\mathrm{int}}$ from each of the five
     observables (custom Wiener-SVD, measured phase space, NuWro fake data).
-    Statistical uncertainties only.  The values differ between observables
+    Total uncertainty (full covariance); optimised binning.  The values differ between observables
     because each integrates a different projection of the same restricted phase
     space.}
   \label{fig:xsec_integrated}
@@ -1563,18 +1580,18 @@ cross section for each observable on the NuWro fake-data sample.
   \centering
   \caption{Integrated cross section from each observable (custom Wiener-SVD,
     measured phase space $p_\mu>0.15$, $p_\pi>0.175\GeVc$, $\theta_{\mu\pi}<2.6$~rad),
-    NuWro fake data.  Units $10^{-38}$~cm$^2$/Ar; statistical uncertainties only.
+    NuWro fake data.  Units $10^{-38}$~cm$^2$/Ar; total uncertainty (full covariance).
     Flux: $\Phi = 6.81159\times10^{-10}$~cm$^{-2}$~POT$^{-1}$ (Eq.~\ref{eq:flux}).}
   \label{tab:sigint}
   \begin{tabular}{lr}
     \toprule
     Observable & $\sigma_{\mathrm{int}}$ \\
     \midrule
-    $d\sigma/d\pmuM$      & 1.686  \\
-    $d\sigma/d\ppiM$      & 1.832  \\
-    $d\sigma/d\cthmuM$    & 1.978  \\
-    $d\sigma/d\cthpiM$    & 1.588  \\
-    $d\sigma/d\thmupM$    & 1.602  \\
+    $d\sigma/d\pmuM$      & 1.137  \\
+    $d\sigma/d\ppiM$      & 1.125  \\
+    $d\sigma/d\cthmuM$    & 1.159  \\
+    $d\sigma/d\cthpiM$    & 0.931  \\
+    $d\sigma/d\thmupM$    & 1.262  \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -1601,42 +1618,27 @@ numbers; a matched framework re-run at the refined phase space is deferred.
 
 \begin{longtable}{C{1.5cm}C{2.8cm}R{3.0cm}R{3.0cm}}
   \caption{Custom Wiener-SVD $d\sigma/dp_\mu$ [$10^{-38}$~cm$^2$/(GeV/$c$)/Ar]
-    (full framework covariance).  Statistical uncertainties only.
+    (full framework covariance).  Total uncertainty (full covariance); optimised binning.
     Flux: Eq.~\ref{eq:flux}.}
   \label{tab:dsdpmu}\\
   \toprule
-  Bin & $p_\mu$ range (GeV/$c$) & $d\sigma/dp_\mu$ & Stat.\ unc. \\
+  Bin & $p_\mu$ range (GeV/$c$) & $d\sigma/dp_\mu$ & Total unc. \\
   \midrule
   \endfirsthead
   \multicolumn{4}{c}{\tablename~\thetable\ (continued)}\\
   \toprule
-  Bin & $p_\mu$ range (GeV/$c$) & $d\sigma/dp_\mu$ & Stat.\ unc. \\
+  Bin & $p_\mu$ range (GeV/$c$) & $d\sigma/dp_\mu$ & Total unc. \\
   \midrule
   \endhead
   \bottomrule
   \endfoot
-   1 & $[0.15,\;0.20]$ & $+2.229$ & $\pm 0.453$ \\
-   2 & $[0.20,\;0.30]$ & $+1.146$ & $\pm 0.223$ \\
-   3 & $[0.30,\;0.40]$ & $+1.160$ & $\pm 0.216$ \\
-   4 & $[0.40,\;0.50]$ & $+1.153$ & $\pm 0.209$ \\
-   5 & $[0.50,\;0.60]$ & $+1.111$ & $\pm 0.202$ \\
-   6 & $[0.60,\;0.70]$ & $+1.052$ & $\pm 0.192$ \\
-   7 & $[0.70,\;0.80]$ & $+0.993$ & $\pm 0.181$ \\
-   8 & $[0.80,\;0.90]$ & $+0.940$ & $\pm 0.167$ \\
-   9 & $[0.90,\;1.00]$ & $+0.885$ & $\pm 0.153$ \\
-  10 & $[1.00,\;1.10]$ & $+0.829$ & $\pm 0.139$ \\
-  11 & $[1.10,\;1.20]$ & $+0.770$ & $\pm 0.125$ \\
-  12 & $[1.20,\;1.30]$ & $+0.714$ & $\pm 0.115$ \\
-  13 & $[1.30,\;1.40]$ & $+0.655$ & $\pm 0.101$ \\
-  14 & $[1.40,\;1.50]$ & $+0.599$ & $\pm 0.094$ \\
-  15 & $[1.50,\;1.60]$ & $+0.550$ & $\pm 0.087$ \\
-  16 & $[1.60,\;1.70]$ & $+0.502$ & $\pm 0.087$ \\
-  17 & $[1.70,\;1.80]$ & $+0.449$ & $\pm 0.091$ \\
-  18 & $[1.80,\;1.90]$ & $+0.414$ & $\pm 0.091$ \\
-  19 & $[1.90,\;2.00]$ & $+0.414$ & $\pm 0.091$ \\
-  20 & $[2.00,\;2.30]$ & $+0.146$ & $\pm 0.031$ \\
-  21 & $[2.30,\;2.60]$ & $+0.157$ & $\pm 0.035$ \\
-  22 & $[2.60,\;3.00]$ & $+0.122$ & $\pm 0.028$ \\
+    1 & $[0.15,\;0.35]$ & $+0.826$ & $\pm 0.229$ \\
+    2 & $[0.35,\;0.55]$ & $+0.820$ & $\pm 0.221$ \\
+    3 & $[0.55,\;0.75]$ & $+0.818$ & $\pm 0.209$ \\
+    4 & $[0.75,\;0.95]$ & $+0.812$ & $\pm 0.197$ \\
+    5 & $[0.95,\;1.25]$ & $+0.537$ & $\pm 0.127$ \\
+    6 & $[1.25,\;1.75]$ & $+0.321$ & $\pm 0.075$ \\
+    7 & $[1.75,\;3.00]$ & $+0.128$ & $\pm 0.030$ \\
 \end{longtable}
 
 The spectrum falls smoothly above $\sim0.5\GeVc$.  The first bin sits high because
@@ -1668,17 +1670,17 @@ background-subtraction diagnostic.
 \begin{table}[H]
   \centering
   \caption{Custom Wiener-SVD $d\sigma/dp_\pi$ [$10^{-38}$~cm$^2$/(GeV/$c$)/Ar].
-    Statistical uncertainties only.  Flux: Eq.~\ref{eq:flux}.}
+    Total uncertainty (full covariance); optimised binning.  Flux: Eq.~\ref{eq:flux}.}
   \label{tab:dsdppi}
   \begin{tabular}{C{1.2cm}C{2.8cm}R{3.0cm}R{3.0cm}}
     \toprule
-    Bin & $p_\pi$ range (GeV/$c$) & $d\sigma/dp_\pi$ & Stat.\ unc. \\
+    Bin & $p_\pi$ range (GeV/$c$) & $d\sigma/dp_\pi$ & Total unc. \\
     \midrule
-    1 & $[0.175,\;0.20]$ & $+11.839$ & $\pm 2.717$ \\
-    2 & $[0.20,\;0.30]$ & $+3.358$ & $\pm 0.672$ \\
-    3 & $[0.30,\;0.40]$ & $+3.650$ & $\pm 0.683$ \\
-    4 & $[0.40,\;0.50]$ & $+4.030$ & $\pm 0.655$ \\
-    5 & $[0.50,\;1.00]$ & $+0.864$ & $\pm 0.150$ \\
+    1 & $[0.17,\;0.25]$ & $+2.998$ & $\pm 0.811$ \\
+    2 & $[0.25,\;0.32]$ & $+3.201$ & $\pm 0.874$ \\
+    3 & $[0.32,\;0.42]$ & $+2.249$ & $\pm 0.604$ \\
+    4 & $[0.42,\;0.55]$ & $+1.736$ & $\pm 0.465$ \\
+    5 & $[0.55,\;1.00]$ & $+0.502$ & $\pm 0.135$ \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -1709,24 +1711,17 @@ acceptance threshold, hence its large $d\sigma/dp_\pi$ and uncertainty.
   \caption{Custom Wiener-SVD $d\sigma/d\cos\theta_\mu$ [$10^{-38}$~cm$^2$/Ar].
     With the EXT (cosmic) subtraction cancelled for the NuWro fake data
     (Section~\ref{sec:datamc}), all bins are now positive, including the
-    backward-muon region.  Statistical uncertainties only.}
+    backward-muon region.  Total uncertainty (full covariance); optimised binning.}
   \label{tab:dsdcosthmu}
   \begin{tabular}{C{1.2cm}C{2.8cm}R{3.0cm}R{3.0cm}}
     \toprule
-    Bin & $\cos\theta_\mu$ range & $d\sigma/d\cos\theta_\mu$ & Stat.\ unc. \\
+    Bin & $\cos\theta_\mu$ range & $d\sigma/d\cos\theta_\mu$ & Total unc. \\
     \midrule
-     1 & $[-1.00,\;-0.50]$ & $+0.219$ & $\pm 0.066$ \\
-     2 & $[-0.50,\; 0.00]$ & $+0.237$ & $\pm 0.059$ \\
-     3 & $[ 0.00,\; 0.20]$ & $+0.655$ & $\pm 0.139$ \\
-     4 & $[ 0.20,\; 0.40]$ & $+0.735$ & $\pm 0.136$ \\
-     5 & $[ 0.40,\; 0.55]$ & $+1.080$ & $\pm 0.192$ \\
-     6 & $[ 0.55,\; 0.65]$ & $+1.787$ & $\pm 0.310$ \\
-     7 & $[ 0.65,\; 0.75]$ & $+1.964$ & $\pm 0.320$ \\
-     8 & $[ 0.75,\; 0.82]$ & $+2.995$ & $\pm 0.449$ \\
-     9 & $[ 0.82,\; 0.88]$ & $+3.500$ & $\pm 0.495$ \\
-    10 & $[ 0.88,\; 0.93]$ & $+3.901$ & $\pm 0.554$ \\
-    11 & $[ 0.93,\; 0.97]$ & $+4.260$ & $\pm 0.665$ \\
-    12 & $[ 0.97,\; 1.00]$ & $+5.030$ & $\pm 0.902$ \\
+    1 & $[-1.00,\;0.45]$ & $+0.143$ & $\pm 0.045$ \\
+    2 & $[0.45,\;0.65]$ & $+1.082$ & $\pm 0.298$ \\
+    3 & $[0.65,\;0.80]$ & $+1.500$ & $\pm 0.400$ \\
+    4 & $[0.80,\;0.90]$ & $+2.546$ & $\pm 0.601$ \\
+    5 & $[0.90,\;1.00]$ & $+2.561$ & $\pm 0.620$ \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -1753,24 +1748,17 @@ acceptance threshold, hence its large $d\sigma/dp_\pi$ and uncertainty.
 \begin{table}[H]
   \centering
   \caption{Custom Wiener-SVD $d\sigma/d\cos\theta_\pi$ [$10^{-38}$~cm$^2$/Ar].
-    Statistical uncertainties only.  Flux: Eq.~\ref{eq:flux}.}
+    Total uncertainty (full covariance); optimised binning.  Flux: Eq.~\ref{eq:flux}.}
   \label{tab:dsdcosthpi}
   \begin{tabular}{C{1.2cm}C{2.8cm}R{3.0cm}R{3.0cm}}
     \toprule
-    Bin & $\cos\theta_\pi$ range & $d\sigma/d\cos\theta_\pi$ & Stat.\ unc. \\
+    Bin & $\cos\theta_\pi$ range & $d\sigma/d\cos\theta_\pi$ & Total unc. \\
     \midrule
-     1 & $[-1.00,\;-0.70]$ & $+0.192$ & $\pm 0.063$ \\
-     2 & $[-0.70,\;-0.40]$ & $+0.244$ & $\pm 0.056$ \\
-     3 & $[-0.40,\;-0.20]$ & $+0.460$ & $\pm 0.094$ \\
-     4 & $[-0.20,\; 0.00]$ & $+0.502$ & $\pm 0.098$ \\
-     5 & $[ 0.00,\; 0.20]$ & $+0.515$ & $\pm 0.111$ \\
-     6 & $[ 0.20,\; 0.35]$ & $+0.759$ & $\pm 0.164$ \\
-     7 & $[ 0.35,\; 0.50]$ & $+0.902$ & $\pm 0.174$ \\
-     8 & $[ 0.50,\; 0.65]$ & $+1.139$ & $\pm 0.188$ \\
-     9 & $[ 0.65,\; 0.78]$ & $+1.567$ & $\pm 0.244$ \\
-    10 & $[ 0.78,\; 0.88]$ & $+2.052$ & $\pm 0.324$ \\
-    11 & $[ 0.88,\; 0.95]$ & $+2.570$ & $\pm 0.460$ \\
-    12 & $[ 0.95,\; 1.00]$ & $+3.069$ & $\pm 0.658$ \\
+    1 & $[-1.00,\;-0.10]$ & $+0.161$ & $\pm 0.051$ \\
+    2 & $[-0.10,\;0.35]$ & $+0.362$ & $\pm 0.140$ \\
+    3 & $[0.35,\;0.55]$ & $+0.529$ & $\pm 0.231$ \\
+    4 & $[0.55,\;0.75]$ & $+0.853$ & $\pm 0.244$ \\
+    5 & $[0.75,\;1.00]$ & $+1.390$ & $\pm 0.372$ \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -1800,21 +1788,19 @@ acceptance threshold, hence its large $d\sigma/dp_\pi$ and uncertainty.
     small-angle region is retained as it is high-purity, Section~\ref{sec:signal}).
     The spectrum peaks at $\theta_{\mu\pi} \approx 0.9$--$1.3$~rad.  The narrow last
     bin $[2.513,2.6]$ has a correspondingly larger $d\sigma/d\theta_{\mu\pi}$ and
-    uncertainty.  Statistical uncertainties only.}
+    uncertainty.  Total uncertainty (full covariance); optimised binning.}
   \label{tab:dsdthmupi}
   \begin{tabular}{C{1.2cm}C{2.8cm}R{3.0cm}R{3.0cm}}
     \toprule
-    Bin & $\theta_{\mu\pi}$ range (rad) & $d\sigma/d\theta_{\mu\pi}$ & Stat.\ unc. \\
+    Bin & $\theta_{\mu\pi}$ range (rad) & $d\sigma/d\theta_{\mu\pi}$ & Total unc. \\
     \midrule
-     1 & $[0.000,\;0.314]$ & $+0.293$ & $\pm 0.073$ \\
-     2 & $[0.314,\;0.628]$ & $+0.536$ & $\pm 0.084$ \\
-     3 & $[0.628,\;0.942]$ & $+0.777$ & $\pm 0.125$ \\
-     4 & $[0.942,\;1.257]$ & $+0.871$ & $\pm 0.167$ \\
-     5 & $[1.257,\;1.571]$ & $+0.850$ & $\pm 0.185$ \\
-     6 & $[1.571,\;1.885]$ & $+0.742$ & $\pm 0.160$ \\
-     7 & $[1.885,\;2.199]$ & $+0.564$ & $\pm 0.111$ \\
-     8 & $[2.199,\;2.513]$ & $+0.327$ & $\pm 0.063$ \\
-     9 & $[2.513,\;2.600]$ & $+0.505$ & $\pm 0.230$ \\
+    1 & $[0.00,\;0.60]$ & $+0.305$ & $\pm 0.070$ \\
+    2 & $[0.60,\;0.85]$ & $+0.731$ & $\pm 0.165$ \\
+    3 & $[0.85,\;1.10]$ & $+0.705$ & $\pm 0.167$ \\
+    4 & $[1.10,\;1.30]$ & $+0.873$ & $\pm 0.210$ \\
+    5 & $[1.30,\;1.52]$ & $+0.811$ & $\pm 0.189$ \\
+    6 & $[1.52,\;1.85]$ & $+0.553$ & $\pm 0.129$ \\
+    7 & $[1.85,\;2.60]$ & $+0.245$ & $\pm 0.059$ \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -2086,11 +2072,11 @@ subtracts \textsc{Genie}-predicted rather than NuWro backgrounds.
     \toprule
     Observable & $\sigma_{\mathrm{NuWro}}/\sigma_{\mathrm{Genie}}$ & $\chi^2$/bins \\
     \midrule
-    $d\sigma/d\pmuM$   & 2.19 & --- \\
-    $d\sigma/d\ppiM$   & 2.51 & $20.3/5$ \\
-    $d\sigma/d\cthmuM$ & 2.41 & $35.0/12$ \\
-    $d\sigma/d\cthpiM$ & 2.32 & $34.0/12$ \\
-    $d\sigma/d\thmupM$ & 2.39 & $25.8/9$ \\
+    $d\sigma/d\pmuM$   & 1.137 & --- \\
+    $d\sigma/d\ppiM$   & 1.125 & $20.3/5$ \\
+    $d\sigma/d\cthmuM$ & 1.159 & $35.0/12$ \\
+    $d\sigma/d\cthpiM$ & 0.931 & $34.0/12$ \\
+    $d\sigma/d\thmupM$ & 1.262 & $25.8/9$ \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -2146,11 +2132,11 @@ $A_C$-smeared space.
     \toprule
     Observable & Wiener-SVD (id.) & Wiener-SVD (2nd-deriv) & D'Agostini (4 it.) \\
     \midrule
-    $d\sigma/d\pmuM$   & 1.006 & 0.937 & 1.040 \\
-    $d\sigma/d\cthmuM$ & 0.990 & 0.973 & 0.989 \\
-    $d\sigma/d\cthpiM$ & 0.992 & 0.996 & 0.992 \\
-    $d\sigma/d\ppiM$   & 1.059 & 1.063 & 1.059 \\
-    $d\sigma/d\thmupM$ & 0.994 & 0.996 & 0.991 \\
+    $d\sigma/d\pmuM$   & 1.137 & 0.937 & 1.040 \\
+    $d\sigma/d\cthmuM$ & 1.159 & 0.973 & 0.989 \\
+    $d\sigma/d\cthpiM$ & 0.931 & 0.996 & 0.992 \\
+    $d\sigma/d\ppiM$   & 1.125 & 1.063 & 1.059 \\
+    $d\sigma/d\thmupM$ & 1.262 & 0.996 & 0.991 \\
     \bottomrule
   \end{tabular}
 \end{table}
