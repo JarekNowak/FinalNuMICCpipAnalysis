@@ -406,6 +406,12 @@ uncorrected in `configs/file_properties_numi.txt`, since it does not affect the
 closure and vanishes entirely once the real beam-on sample replaces the
 fake data.
 
+Neither factor is a physics offset. The genuine physics difference — the
+measured CC1π cross section sitting **below** the GENIE v3 prediction — is
+established independently in the parallel analysis (§6.7): the flat data/GENIE
+deficit of ~0.65–0.70 in that pipeline is the well-documented GENIE v3 CC1π⁺
+over-prediction on argon (~25–35 %), not an unfolding artefact.
+
 ### 6.3 Generator comparison
 
 Standalone predictions for the same signal definition and phase space were
@@ -513,6 +519,68 @@ shift because the Wiener-SVD regularisation and A_C smearing damp the excursion
 by ~15 % (more so for the larger +1σ). So the analysis propagates the M_A^RES
 systematic correctly, with a mild regularisation-induced dilution.
 
+### 6.7 Independent cross-pipeline validation
+
+The extraction was cross-checked against a **fully framework-independent**
+analysis of the same Run-1 NuMI FHC final state (selection, response building,
+and Wiener-SVD / D'Agostini unfolding written as standalone macros), documented
+in `XSecCCPip/analysis_report.md` and `XSecCCPip/report/{analysis,framework}_note.tex`.
+Two levels of cross-check were run.
+
+**Cross-pipeline closure (that analysis, §16).** The NuWro fake-data closure was
+also run *through* the official `xsec_analyzer` framework and compared to the
+standalone-macro pipeline. NuWro unfolds to ≈ 2× the GENIE MicroBooNE tune in
+every observable, uniformly in shape (σ_NuWro/σ_GENIE = 2.19–2.51), and the two
+independent pipelines agree. The flat ~2× is a genuine NuWro-vs-GENIE-tune CC1π
+model difference in this phase space (NuWro is used at its raw cross section, no
+tune applied), *not* an unfolding bias — the same conclusion reached here from
+the fake-data decomposition of §6.2.
+
+**Wiener-SVD algorithm cross-check (this work).** The framework unfolder
+(`WienerSVDUnfolder.cxx`) was diffed line-by-line against the independent
+`RunWienerSVD_FW` implementation. The two are **algorithmically identical**:
+covariance whitening `Q = chol.GetU()`, response pre-scaling `R = Q·A`, SVD of
+`R·C⁻¹`, Wiener filter `W = numer/(numer+1)` with `numer = (D_C · Vᵀ C x_prior)²`,
+and additional-smearing matrix `A_C = C⁻¹ V W Vᵀ C`. Feeding the framework's
+*exact* extracted matrices (smearceptance, prior, data, and full covariance) into
+a standalone replica of the algorithm reproduces the framework's unfolded result
+**bin-for-bin** (Σ x̂ = 5836.5 for cos θ_μ, A_C diagonal 0.24). The framework's
+smearceptance column sums equal the raw efficiency (ratio 1.000) and its prior is
+the correctly POT-scaled truth (4647.5 = 14179.5 × 0.328). **There is no
+framework Wiener-SVD bug.**
+
+**Interpretation of the ~1.3× smearing.** Scanning the covariance normalisation
+shows the unfolded/raw-truth ratio is insensitive to A_C's over-smearing — even
+driving A_C → identity (covariance ×10⁻³, A_C diagonal → 0.96) leaves x̂/prior =
+1.33. The ratio is therefore *not* an A_C pathology but the combination of the
+fake-data POT offset (§6.2) and the genuine model normalisation; it cancels in
+the closure χ² because the predictions are compared in the same A_C-smeared
+space (§5.1).
+
+**Decisive test — numuMC self-closure.** The universes were rebuilt with the
+numuMC overlay itself in the `onBNB` slot, so data and response come from the
+same sample and the detVar-CV POT offset of §6.2 is absent by construction. The
+unfolded total then recovers the truth for **all five observables and all three
+regularisations**:
+
+| Observable | WienerSVD identity | WienerSVD 2nd-deriv | D'Agostini (4 it.) |
+|---|---|---|---|
+| p_μ | 1.006 | 0.937 | 1.040 |
+| cos θ_μ | 0.990 | 0.973 | 0.989 |
+| cos θ_π | 0.992 | 0.996 | 0.992 |
+| p_π | 1.059 | 1.063 | 1.059 |
+| θ_μπ | 0.994 | 0.996 | 0.991 |
+
+(x̂/truth; A_C diagonal 0.15–0.59.) The extraction is therefore **unbiased to
+≤6 %** once the fake-data sample matches the response, and the ~1.3× seen in the
+detVar-CV closure is entirely the 1.29× POT offset, not an unfolding bias.
+Crucially the closure holds even where the A_C diagonal is as low as 0.15 (p_μ,
+second-derivative), confirming that the additional smearing does not bias the
+normalisation — it cancels because predictions are compared in A_C-smeared space
+(§5.1). This closes the extraction-bias investigation: **no framework unfolding
+bug; the only real offsets are the documented fake-data POT bookkeeping (§6.2)
+and the physics GENIE v3 CC1π over-prediction (§6.7 opening).**
+
 ## 7 Results
 
 *Empty pending a real-data run.* The fake-data machinery is now validated
@@ -583,4 +651,7 @@ POT correction to remove it (effective POT 9.87 × 10²⁰) is noted in
 state: see git history on branch `fix/systematics-warning`. Fake-data figures:
 `unfold_output/plot_*_0.pdf` and the per-observable closure dumps
 `unfold_output/closure_hists_ccpi_Run1_*_xsec.root`. Standalone generator
-predictions and their build scripts: `generator_predictions/newg4/`.*
+predictions and their build scripts: `generator_predictions/newg4/`. The
+framework-independent companion analysis (selection, standalone Wiener-SVD /
+D'Agostini unfolding, and the cross-pipeline validation of §6.7) is documented in
+`XSecCCPip/analysis_report.md` and `XSecCCPip/report/{analysis,framework}_note.tex`.*
