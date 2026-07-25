@@ -1569,7 +1569,7 @@ cross section for each observable on the NuWro fake-data sample.
   \centering
   \includegraphics[width=0.62\textwidth]{xsec_integrated}
   \caption{Integrated cross section $\sigma_{\mathrm{int}}$ from each of the five
-    observables (custom Wiener-SVD, measured phase space, NuWro fake data).
+    observables (framework Wiener-SVD, optimised binning, GENIE detVar-CV fake data).
     Total uncertainty (full covariance); optimised binning.  The values differ between observables
     because each integrates a different projection of the same restricted phase
     space.}
@@ -1578,9 +1578,10 @@ cross section for each observable on the NuWro fake-data sample.
 
 \begin{table}[H]
   \centering
-  \caption{Integrated cross section from each observable (custom Wiener-SVD,
-    measured phase space $p_\mu>0.15$, $p_\pi>0.175\GeVc$, $\theta_{\mu\pi}<2.6$~rad),
-    NuWro fake data.  Units $10^{-38}$~cm$^2$/Ar; total uncertainty (full covariance).
+  \caption{Integrated cross section from each observable (framework Wiener-SVD,
+    optimised binning, measured phase space $p_\mu>0.15$, $p_\pi>0.175\GeVc$,
+    $\theta_{\mu\pi}<2.6$~rad), GENIE detVar-CV fake data.  Units $10^{-38}$~cm$^2$/Ar;
+    total uncertainty (full covariance).
     Flux: $\Phi = 6.81159\times10^{-10}$~cm$^{-2}$~POT$^{-1}$ (Eq.~\ref{eq:flux}).}
   \label{tab:sigint}
   \begin{tabular}{lr}
@@ -1605,19 +1606,19 @@ the two fully independent pipelines agreed to $\le2.1\%$ on every observable
 ($p_\mu$ 1.016, $p_\pi$ 0.979, $\cos\theta_\mu$ 0.987, $\cos\theta_\pi$ 1.004,
 $\theta_{\mu\pi}$ 1.001).  That established the
 correctness of the selection, response, background subtraction, and unfolding.
-The present results then refine the \emph{measured phase space} (custom pipeline)
-to $p_\mu>0.15$, $p_\pi>0.175\GeVc$, $\theta_{\mu\pi}<2.6$~rad, chosen from
-the efficiency turn-on curves; this flattens the efficiency from $12.1\%$ to
-$15.6\%$ at $\sim$55\% purity (the $2.6$~rad cut rejects the large-angle cosmic
-background; no lower opening-angle cut is used, as the small-angle region is
-high-purity).  The integrated values are correspondingly lower (smaller phase
-space) and are no longer directly comparable to the framework's full-$0.1\GeVc$
-numbers; a matched framework re-run at the refined phase space is deferred.
+The results reported below are the \textsc{XSecAnalyzer} framework extraction at
+the \emph{measured phase space} ($p_\mu>0.15$, $p_\pi>0.175\GeVc$,
+$\theta_{\mu\pi}<2.6$~rad, chosen from the efficiency turn-on curves,
+Sec.~\ref{sec:binopt}) on the resolution-optimised binning; the efficiency
+flattens from $12.1\%$ to $15.6\%$ at $\sim$55\% purity (the $2.6$~rad cut rejects
+the large-angle cosmic background; no lower opening-angle cut is used, as the
+small-angle region is high-purity). The fully independent custom pipeline
+reproduces the framework and now serves as the cross-check (Sec.~\ref{sec:extrbias}).
 
 \subsection{Differential cross section: \boldmath $d\sigma/d\pmuM$}
 
 \begin{longtable}{C{1.5cm}C{2.8cm}R{3.0cm}R{3.0cm}}
-  \caption{Custom Wiener-SVD $d\sigma/dp_\mu$ [$10^{-38}$~cm$^2$/(GeV/$c$)/Ar]
+  \caption{Framework Wiener-SVD $d\sigma/dp_\mu$ [$10^{-38}$~cm$^2$/(GeV/$c$)/Ar]
     (full framework covariance).  Total uncertainty (full covariance); optimised binning.
     Flux: Eq.~\ref{eq:flux}.}
   \label{tab:dsdpmu}\\
@@ -1652,7 +1653,7 @@ background-subtraction diagnostic.
   \centering
   \begin{subfigure}[b]{0.48\textwidth}
     \includegraphics[width=\textwidth]{fw_xsec_pmu}
-    \caption{$d\sigma/dp_\mu$ (custom, measured phase space).}
+    \caption{$d\sigma/dp_\mu$ (framework, optimised binning).}
   \end{subfigure}
   \hfill
   \begin{subfigure}[b]{0.48\textwidth}
@@ -1669,7 +1670,7 @@ background-subtraction diagnostic.
 
 \begin{table}[H]
   \centering
-  \caption{Custom Wiener-SVD $d\sigma/dp_\pi$ [$10^{-38}$~cm$^2$/(GeV/$c$)/Ar].
+  \caption{Framework Wiener-SVD $d\sigma/dp_\pi$ [$10^{-38}$~cm$^2$/(GeV/$c$)/Ar].
     Total uncertainty (full covariance); optimised binning.  Flux: Eq.~\ref{eq:flux}.}
   \label{tab:dsdppi}
   \begin{tabular}{C{1.2cm}C{2.8cm}R{3.0cm}R{3.0cm}}
@@ -1693,7 +1694,7 @@ acceptance threshold, hence its large $d\sigma/dp_\pi$ and uncertainty.
   \centering
   \begin{subfigure}[b]{0.48\textwidth}
     \includegraphics[width=\textwidth]{fw_xsec_ppi}
-    \caption{$d\sigma/dp_\pi$ (custom, measured phase space).}
+    \caption{$d\sigma/dp_\pi$ (framework, optimised binning).}
   \end{subfigure}
   \hfill
   \begin{subfigure}[b]{0.48\textwidth}
@@ -1708,7 +1709,7 @@ acceptance threshold, hence its large $d\sigma/dp_\pi$ and uncertainty.
 
 \begin{table}[H]
   \centering
-  \caption{Custom Wiener-SVD $d\sigma/d\cos\theta_\mu$ [$10^{-38}$~cm$^2$/Ar].
+  \caption{Framework Wiener-SVD $d\sigma/d\cos\theta_\mu$ [$10^{-38}$~cm$^2$/Ar].
     With the EXT (cosmic) subtraction cancelled for the NuWro fake data
     (Section~\ref{sec:datamc}), all bins are now positive, including the
     backward-muon region.  Total uncertainty (full covariance); optimised binning.}
@@ -1730,15 +1731,14 @@ acceptance threshold, hence its large $d\sigma/dp_\pi$ and uncertainty.
   \centering
   \begin{subfigure}[b]{0.48\textwidth}
     \includegraphics[width=\textwidth]{fw_xsec_costhmu}
-    \caption{$d\sigma/d\cos\theta_\mu$ (custom, measured phase space).}
+    \caption{$d\sigma/d\cos\theta_\mu$ (framework, optimised binning).}
   \end{subfigure}
   \hfill
   \begin{subfigure}[b]{0.48\textwidth}
     \includegraphics[width=\textwidth]{fw_bkgsub_costhmu}
     \caption{Background-subtraction check for $\cos\theta_\mu$.}
   \end{subfigure}
-  \caption{Muon polar angle $d\sigma/d\cos\theta_\mu$ (custom, measured phase
-    space) and the background-subtraction diagnostic.  The spectrum rises steeply
+  \caption{Muon polar angle $d\sigma/d\cos\theta_\mu$ (framework, optimised binning) and the background-subtraction diagnostic.  The spectrum rises steeply
     toward forward angles.}
   \label{fig:xsec_costhmu}
 \end{figure}
@@ -1747,7 +1747,7 @@ acceptance threshold, hence its large $d\sigma/dp_\pi$ and uncertainty.
 
 \begin{table}[H]
   \centering
-  \caption{Custom Wiener-SVD $d\sigma/d\cos\theta_\pi$ [$10^{-38}$~cm$^2$/Ar].
+  \caption{Framework Wiener-SVD $d\sigma/d\cos\theta_\pi$ [$10^{-38}$~cm$^2$/Ar].
     Total uncertainty (full covariance); optimised binning.  Flux: Eq.~\ref{eq:flux}.}
   \label{tab:dsdcosthpi}
   \begin{tabular}{C{1.2cm}C{2.8cm}R{3.0cm}R{3.0cm}}
@@ -1767,15 +1767,14 @@ acceptance threshold, hence its large $d\sigma/dp_\pi$ and uncertainty.
   \centering
   \begin{subfigure}[b]{0.48\textwidth}
     \includegraphics[width=\textwidth]{fw_xsec_costhpi}
-    \caption{$d\sigma/d\cos\theta_\pi$ (custom, measured phase space).}
+    \caption{$d\sigma/d\cos\theta_\pi$ (framework, optimised binning).}
   \end{subfigure}
   \hfill
   \begin{subfigure}[b]{0.48\textwidth}
     \includegraphics[width=\textwidth]{fw_bkgsub_costhpi}
     \caption{Background-subtraction check for $\cos\theta_\pi$.}
   \end{subfigure}
-  \caption{Pion polar angle $d\sigma/d\cos\theta_\pi$ (custom, measured phase
-    space) and the background-subtraction diagnostic.}
+  \caption{Pion polar angle $d\sigma/d\cos\theta_\pi$ (framework, optimised binning) and the background-subtraction diagnostic.}
   \label{fig:xsec_costhpi}
 \end{figure}
 
@@ -1783,7 +1782,7 @@ acceptance threshold, hence its large $d\sigma/dp_\pi$ and uncertainty.
 
 \begin{table}[H]
   \centering
-  \caption{Custom Wiener-SVD $d\sigma/d\theta_{\mu\pi}$ [$10^{-38}$~cm$^2$/rad/Ar],
+  \caption{Framework Wiener-SVD $d\sigma/d\theta_{\mu\pi}$ [$10^{-38}$~cm$^2$/rad/Ar],
     in the measured range $\theta_{\mu\pi}<2.6$~rad (9 bins; no lower cut --- the
     small-angle region is retained as it is high-purity, Section~\ref{sec:signal}).
     The spectrum peaks at $\theta_{\mu\pi} \approx 0.9$--$1.3$~rad.  The narrow last
@@ -1809,7 +1808,7 @@ acceptance threshold, hence its large $d\sigma/dp_\pi$ and uncertainty.
   \centering
   \begin{subfigure}[b]{0.48\textwidth}
     \includegraphics[width=\textwidth]{fw_xsec_thmupi}
-    \caption{$d\sigma/d\theta_{\mu\pi}$ (custom, measured phase space).}
+    \caption{$d\sigma/d\theta_{\mu\pi}$ (framework, optimised binning).}
   \end{subfigure}
   \hfill
   \begin{subfigure}[b]{0.48\textwidth}
@@ -1825,14 +1824,14 @@ acceptance threshold, hence its large $d\sigma/dp_\pi$ and uncertainty.
 \label{sec:datamc}
 % =============================================================================
 
-The cross sections reported here use the shared NuWro fake-data sample, which
-lets the custom pipeline be validated end-to-end against the official
-XSecAnalyzer framework.  Reaching the $\le2\%$ agreement of
-Table~\ref{tab:sigint} required three normalisation/method corrections, each
-established by direct comparison of the two pipelines' intermediate quantities.
-With these in place the selection, response, background, and unfolding are all
-demonstrably consistent; the small residual ($\le2.1\%$) is dominated by the
-approximation in importing the covariance (below).
+The reported cross sections are the \textsc{XSecAnalyzer} framework extraction
+(GENIE detVar-CV fake data). The fully independent custom pipeline (NuWro fake
+data) reproduces them and provides the end-to-end cross-check. Reaching the
+$\le2\%$ cross-pipeline agreement required three normalisation/method corrections
+\emph{to the custom code}, each established by direct comparison of the two
+pipelines' intermediate quantities; with these in place the selection, response,
+background, and unfolding are demonstrably consistent between the two, the small
+residual ($\le2.1\%$) dominated by the covariance-import approximation (below).
 
 \subsection{Unfolding covariance ($\sim26\%$ effect)}
 
@@ -1999,15 +1998,16 @@ Section~\ref{sec:nuwroclosure} is driven separately
 (\texttt{xsec\_analyzer/run\_nuwro\_observables.sh}).
 
 % =============================================================================
-\section{NuWro Fake-Data Closure: Official XSecAnalyzer Cross-Check}
+\section{NuWro Fake-Data Closure and Cross-Pipeline Validation}
 \label{sec:nuwroclosure}
 % =============================================================================
 
-As an independent validation of the unfolding chain, the full measurement was
-repeated inside the official MicroBooNE \textsc{XSecAnalyzer} framework
+As a generator-model closure and an independent cross-check of the extraction,
+the \textsc{XSecAnalyzer} framework used throughout this note was additionally run
 (\texttt{ProcessNTuples}~$\rightarrow$~\texttt{UniverseMaker}~$\rightarrow$~%
-\texttt{Unfolder}), using a NuWro overlay as \emph{fake data} in place of the
-beam-on sample.  The NuWro reconstructed spectrum is unfolded with the
+\texttt{Unfolder}) with a NuWro overlay as \emph{fake data} in place of the GENIE
+detVar-CV sample of the main results.  The NuWro reconstructed spectrum is
+unfolded with the
 \textsc{Genie} detector response, efficiency, and \textsc{Genie}-predicted
 background subtraction, then compared to the \textsc{Genie} MicroBooNE-tune
 prediction.  If the unfolding is unbiased, the ratio reflects the genuine
@@ -2017,7 +2017,7 @@ Extending the framework beyond $\pmuM$ required six additional output branches i
 the \texttt{CC1mu1piXp} selection (reconstructed and true pion momentum, muon
 $\cos\theta$, and pion $\cos\theta$); the reconstructed pion momentum uses the
 proton-hypothesis range kinetic energy (\texttt{trk\_energy\_proton\_v}), matching
-the primary pipeline.  The true $\thmupM$ opening angle, previously written as
+the custom pipeline.  The true $\thmupM$ opening angle, previously written as
 all-zeros, was also corrected, and all fourteen samples were re-processed.
 
 \begin{table}[H]
@@ -2102,7 +2102,7 @@ Wiener-SVD bias}.
 
 \paragraph{Algorithm equivalence.}  The framework unfolder
 (\texttt{WienerSVDUnfolder.cxx}) was compared line-by-line with the independent
-\texttt{RunWienerSVD\_FW} implementation used for the primary pipeline. The two
+\texttt{RunWienerSVD\_FW} implementation used for the custom pipeline. The two
 are algorithmically identical: covariance whitening $Q=\mathrm{chol}(V^{-1})$,
 response pre-scaling $R=QA$, the SVD of $RC^{-1}$, the per-mode Wiener filter
 $W_t=\eta_t/(\eta_t+1)$ with $\eta_t=(D_C\,V_C^{\mathsf T}Cx_{\rm prior})_t^2$,
