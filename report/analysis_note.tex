@@ -2226,11 +2226,17 @@ POT + targets          & 2.4  & 2.8  & 2.5  & 3.0  & 2.3 \\
 \end{tabular}
 \end{center}
 
-\noindent The flux/beamline (PPFX) term is the largest systematic in every
-observable. The beamline-geometry sub-component (horn current, target/horn
-alignment) is computed by the framework's \texttt{AddBeamlineGeometryWeights} and
-folds into this group once the geometry-weighted ntuples are used. The per-bin
-breakdowns are shown in Fig.~\ref{fig:systbreak}.
+\noindent The flux term above is the PPFX hadron-production component. The
+beamline-geometry sub-component (horn current, target/horn alignment, beam spot)
+is a separate part of the NuMI flux uncertainty: the 12 geometry-variation weights
+(\texttt{Horn\_2kA}, \texttt{Horn1/2\_x/y\_3mm}, \texttt{Beam\_spot\_*},
+\texttt{Beam\_shift\_*}, \texttt{Horns\_*\_water}, \texttt{Target\_z\_7mm}) were
+injected into the numuMC via \texttt{AddBeamlineGeometryWeights} and are present in
+the processed ntuple, but building their universes currently triggers a
+segmentation fault in the framework's covariance computation for the two-sided
+unisim variations; the beamline-geometry term is therefore \emph{not yet included}
+here and is pending that framework fix. It is expected to be sub-dominant relative
+to the PPFX term. The per-bin breakdowns are shown in Fig.~\ref{fig:systbreak}.
 
 \begin{figure}[H]\centering
   \includegraphics[width=0.31\textwidth]{fw_systbreak_pmu}\hfill

@@ -29,7 +29,8 @@ int main( int argc, char* argv[] ) {
   std::vector<Src> srcs = {
     { "Total",          { "total" },                       kBlack,     3 },
     { "Cross section",  { "xsec_total" },                  kRed+1,     2 },
-    { "Flux / beamline",{ "flux_total" },                  kBlue+1,    2 },
+    { "Flux (PPFX)",    { "flux" },                        kBlue+1,    2 },
+    { "Beamline geom.", { "flux_beamline" },               kCyan+2,    2 },
     { "Detector",       { "detVar_total" },                kGreen+2,   2 },
     { "Reinteraction",  { "reint" },                       kMagenta+1, 2 },
     { "MC + data stats",{ "SimulationStats", "DataStats" },kOrange+7,  2 },
