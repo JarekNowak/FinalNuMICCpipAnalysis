@@ -2215,28 +2215,30 @@ fractional uncertainty from each source group (on the optimised binning) is:
 \toprule
 Source & $p_\mu$ & $p_\pi$ & $\cos\theta_\mu$ & $\cos\theta_\pi$ & $\theta_{\mu\pi}$ \\
 \midrule
-\textbf{Total}         & 25.0 & 27.0 & 26.7 & 33.9 & 23.5 \\
-Cross section (GENIE)  & 8.4  & 8.4  & 8.6  & 9.4  & 7.7 \\
-Flux / beamline (PPFX) & 19.8 & 22.4 & 19.8 & 25.5 & 17.5 \\
-Detector               & 9.2  & 9.9  & 12.6 & 15.0 & 9.7 \\
-Reinteraction          & 2.5  & 2.6  & 2.9  & 3.5  & 2.2 \\
-MC + data stats        & 7.9  & 6.3  & 8.4  & 12.2 & 8.8 \\
-POT + targets          & 2.4  & 2.8  & 2.5  & 3.0  & 2.3 \\
+\textbf{Total}         & 27.2 & 28.3 & 28.8 & 33.8 & 25.1 \\
+Cross section (GENIE)  & 8.6  & 8.5  & 9.1  & 9.5  & 8.1 \\
+Flux --- PPFX          & 21.8 & 23.6 & 20.7 & 25.4 & 18.7 \\
+Flux --- beamline geom.& 2.3  & 2.2  & 2.3  & 3.3  & 1.6 \\
+Detector               & 9.6  & 10.2 & 14.0 & 14.6 & 10.5 \\
+Reinteraction          & 3.2  & 2.6  & 3.4  & 3.4  & 2.5 \\
+MC + data stats        & 8.6  & 6.5  & 9.4  & 11.9 & 9.3 \\
+POT + targets          & 2.7  & 2.9  & 2.7  & 3.0  & 2.4 \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-\noindent The flux term above is the PPFX hadron-production component. The
-beamline-geometry sub-component (horn current, target/horn alignment, beam spot)
-is a separate part of the NuMI flux uncertainty: the 12 geometry-variation weights
+\noindent The NuMI flux uncertainty has two parts, listed separately above: the
+PPFX hadron-production term (the dominant systematic, 19--26\%) and the
+beamline-geometry term. The latter is built from the 12 geometry-variation weights
 (\texttt{Horn\_2kA}, \texttt{Horn1/2\_x/y\_3mm}, \texttt{Beam\_spot\_*},
-\texttt{Beam\_shift\_*}, \texttt{Horns\_*\_water}, \texttt{Target\_z\_7mm}) were
-injected into the numuMC via \texttt{AddBeamlineGeometryWeights} and are present in
-the processed ntuple, but building their universes currently triggers a
-segmentation fault in the framework's covariance computation for the two-sided
-unisim variations; the beamline-geometry term is therefore \emph{not yet included}
-here and is pending that framework fix. It is expected to be sub-dominant relative
-to the PPFX term. The per-bin breakdowns are shown in Fig.~\ref{fig:systbreak}.
+\texttt{Beam\_shift\_*}, \texttt{Horns\_*\_water}, \texttt{Target\_z\_7mm})
+injected into the numuMC overlay via \texttt{AddBeamlineGeometryWeights}, summed in
+quadrature as two-sided unisim variations. It is sub-dominant, $1.6$--$3.3\%$
+across the observables. (Building it required a framework fix: the covariance
+code dereferenced a null histogram when a systematic --- here the beamline weights,
+present in the numuMC but not the dirt overlay --- was absent from some MC sample;
+it now falls back to that sample's central value, i.e.\ unit weight.) The per-bin
+breakdowns are shown in Fig.~\ref{fig:systbreak}.
 
 \begin{figure}[H]\centering
   \includegraphics[width=0.31\textwidth]{fw_systbreak_pmu}\hfill
