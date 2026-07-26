@@ -2211,6 +2211,9 @@ The framework builds a covariance matrix for every systematic; the bin-averaged
 fractional uncertainty from each source group (on the optimised binning) is:
 
 \begin{center}\small
+\captionof{table}{Bin-averaged fractional systematic uncertainty (\%) by source
+  group on the optimised binning.}
+\label{tab:systbreak}
 \begin{tabular}{lccccc}
 \toprule
 Source & $p_\mu$ & $p_\pi$ & $\cos\theta_\mu$ & $\cos\theta_\pi$ & $\theta_{\mu\pi}$ \\
@@ -2249,6 +2252,61 @@ breakdowns are shown in Fig.~\ref{fig:systbreak}.
     reinteraction (magenta), MC$+$data stats (orange), POT$+$targets (grey).}
   \label{fig:systbreak}
 \end{figure}
+
+\subsection{Anatomy of the flux term: genuine flux vs.\ unfolding amplification}
+\label{sec:fluxanatomy}
+
+The flux (PPFX) term dominates the budget, and at $17$--$26\%$ it is larger than
+the $\sim\!17\%$ normalisation uncertainty usually quoted for the NuMI flux. It is
+therefore worth asking how much of it is the flux model itself and how much is
+statistical amplification introduced by the unfolding. To separate the two we
+evaluate the flux covariance at two stages --- on the reconstructed spectrum
+(before unfolding) and on the unfolded result --- and, at each stage, both
+integrated (the fully correlated, normalisation-like number, from the sum of all
+covariance elements) and bin-averaged (the mean of the diagonal fractional errors,
+i.e.\ the number quoted in Table~\ref{tab:systbreak} and Fig.~\ref{fig:systbreak}).
+
+\begin{center}
+\captionof{table}{Flux (PPFX) fractional uncertainty before and after unfolding.
+  The reconstructed-level value is $\sim\!17\%$ and flat across observables --- the
+  genuine flux-normalisation uncertainty. The unfolded value is that same $\sim\!17\%$
+  amplified by the Wiener--SVD propagation through the finite-statistics response;
+  the amplification tracks the data$+$MC statistical quality of each observable.}
+\label{tab:fluxanatomy}
+\begin{tabular}{lccccc}
+\toprule
+ & $p_\mu$ & $p_\pi$ & $\cos\theta_\mu$ & $\cos\theta_\pi$ & $\theta_{\mu\pi}$ \\
+\midrule
+Flux, reco (integrated / norm) & 16.9 & 17.0 & 16.7 & 16.7 & 16.7 \\
+Flux, reco (bin-averaged)      & 17.7 & 16.4 & 16.6 & 17.0 & 17.0 \\
+\midrule
+Flux, unfolded (bin-averaged)  & 19.8 & 22.4 & 19.8 & 25.5 & 17.5 \\
+Amplification factor           & 1.12 & 1.37 & 1.20 & 1.49 & 1.03 \\
+Excess from unfolding (abs.)   & +2.1 & +6.0 & +3.2 & +8.5 & +0.5 \\
+\midrule
+Data$+$MC stats (unfolded)     & 7.9  & 6.3  & 8.4  & 12.2 & 8.8 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent Three points follow. First, the \emph{genuine} flux uncertainty is
+$\sim\!17\%$ and identical for all five observables, as expected for a
+normalisation term. Second, it is not itself contaminated by Monte Carlo
+statistics: at reco level the integrated (correlated) and bin-averaged (diagonal)
+numbers agree to better than a percent, whereas statistical noise leaking into the
+covariance would inflate the diagonal well above the correlated norm. This is
+expected --- the $\sim\!600$ PPFX universes reweight the \emph{same} events, so
+there is no independent per-universe statistical scatter. Third, the elevated
+unfolded values are the $\sim\!17\%$ flux \emph{amplified} by the Wiener--SVD
+propagation $A_C M\,V_\text{flux}\,M^\top A_C^\top$ through the finite-statistics
+Run-1 response. It is at this step, not in the flux multisim, that the response
+statistics transfer into the flux term: the amplification is largest exactly where
+the statistics are thinnest ($\cos\theta_\pi$: stat.\ $12.2\%$, amplification
+$1.49\times$, $+8.5\%$) and negligible where the response is well conditioned
+($\theta_{\mu\pi}$: $1.03\times$, $+0.5\%$). The lever for reducing the flux term is
+therefore the response conditioning (more overlay statistics, or the observable's
+binning and regularisation strength), not the flux model; $\cos\theta_\pi$ --- the
+noisiest observable across the entire budget --- is where it would matter most.
 
 % =============================================================================
 \section{Summary}
