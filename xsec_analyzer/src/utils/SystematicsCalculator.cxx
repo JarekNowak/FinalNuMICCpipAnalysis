@@ -962,6 +962,30 @@ void SystematicsCalculator::build_universes( TDirectoryFile& root_tdir ) {
               auto h_true2d = get_object_unique_ptr< TH2D >(
                 (hist_name_prefix + "_true2d"), *subdir );
 
+              // Some reweightable systematics are not present in every
+              // reweightable-MC sample. In particular the NuMI beamline-geometry
+              // weights (weight_Horn_2kA, weight_Beam_spot_*, ...) are injected
+              // only into the numuMC overlay, not the dirt overlay. For a file
+              // that lacks the current universe, get_object_unique_ptr returns
+              // null and the unchecked h->Scale() below dereferences it
+              // (segfault). Fall back to the file's central-value ("unweighted")
+              // histograms, i.e. treat the weight as unity for that sample --
+              // physically correct, since that sample carries no variation for
+              // this systematic.
+              if ( !h_2d ) {
+                h_reco   = get_object_unique_ptr< TH1D >( "unweighted_0_reco",   *subdir );
+                h_true   = get_object_unique_ptr< TH1D >( "unweighted_0_true",   *subdir );
+                h_2d     = get_object_unique_ptr< TH2D >( "unweighted_0_2d",     *subdir );
+                h_categ  = get_object_unique_ptr< TH2D >( "unweighted_0_categ",  *subdir );
+                h_reco2d = get_object_unique_ptr< TH2D >( "unweighted_0_reco2d", *subdir );
+                h_true2d = get_object_unique_ptr< TH2D >( "unweighted_0_true2d", *subdir );
+              }
+              if ( !h_reco || !h_true || !h_2d || !h_categ || !h_reco2d || !h_true2d ) {
+                throw std::runtime_error( "Missing histograms for universe "
+                  + hist_name_prefix + " (and no unweighted fallback) in file "
+                  + file_name );
+              }
+
               // Scale these histograms to the appropriate BNB data POT for
               // the current run
               h_reco->Scale( rw_scale_factor );
