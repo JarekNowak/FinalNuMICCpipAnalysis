@@ -835,6 +835,43 @@ that left near-dead efficiency bins at low momentum and at the large-angle
 extreme.  The phase space above raises the efficiency from $12.1\%$ to $15.6\%$ at
 $\sim$55\% purity --- see Section~\ref{sec:cutflow}.)
 
+\paragraph{Pion threshold and the sibling $\nu_e$ measurement.}
+The companion MicroBooNE NuMI $\nu_e\,\mathrm{CC}\,1\pi$ analysis defines its pion
+signal by kinetic energy, $\mathrm{KE}_\pi>40$~MeV, equivalent to
+$p_\pi>0.113\GeVc$. Our $p_\pi>0.175\GeVc$ ($\mathrm{KE}_\pi>84$~MeV) is
+therefore a higher threshold. Lowering it toward the $\nu_e$ value is possible ---
+the signal definition is a truth-level choice and the unfolding maps reco to truth
+--- but the pion momentum reconstruction (track range under the muon hypothesis,
+mass-corrected) degrades rapidly below $0.175\GeVc$:
+
+\begin{center}\small
+\captionof{table}{Pion momentum reconstruction versus true $p_\pi$ (correctly
+  reconstructed signal pions, Run~1). Below the $0.175\GeVc$ threshold the bias
+  and resolution blow up and the reconstructed fraction halves.}
+\label{tab:pithresh}
+\begin{tabular}{lccc}
+\toprule
+True $p_\pi$ [\GeVc] & Bias $\langle(p^{\mathrm{reco}}-p^{\mathrm{true}})/p^{\mathrm{true}}\rangle$ & RMS resolution & Reco fraction \\
+\midrule
+$0.080$--$0.113$ & $+131\%$ & $73\%$ & $3.4\%$ \\
+$0.113$--$0.150$ & $+66\%$  & $56\%$ & $3.4\%$ \\
+$0.150$--$0.175$ & $+30\%$  & $51\%$ & $4.3\%$ \\
+$\mathbf{0.175}$--$\mathbf{0.250}$ (threshold) & $\mathbf{-8\%}$ & $\mathbf{31\%}$ & $\mathbf{10.0\%}$ \\
+$0.250$--$0.400$ & $-30\%$  & $21\%$ & $10.4\%$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent At the threshold the resolution is $31\%$; in the $[0.113,0.175]\GeVc$
+region it is $51$--$56\%$ with a $+30$--$66\%$ bias and only $\sim\!3$--$4\%$
+reconstructability. Extending the measurement to the $\nu_e$ threshold would thus
+add bins carrying large, strongly model-dependent unfolding systematics. For
+consistency with the $\nu_e$ measurement the threshold could be lowered to
+$0.113\GeVc$ with the $[0.113,0.175]\GeVc$ region kept in a single coarse bin to
+contain those systematics, or both phase spaces reported; this is a
+systematics-versus-cross-analysis-consistency trade rather than a reconstruction
+limitation.
+
 % =============================================================================
 \section{Fiducial Volume}
 \label{sec:fv}
@@ -2307,6 +2344,68 @@ $1.49\times$, $+8.5\%$) and negligible where the response is well conditioned
 therefore the response conditioning (more overlay statistics, or the observable's
 binning and regularisation strength), not the flux model; $\cos\theta_\pi$ --- the
 noisiest observable across the entire budget --- is where it would matter most.
+
+\subsection{Multi-run overlay and a resonance-model closure}
+\label{sec:multirun}
+
+Two facts frame what more statistics can and cannot do for the flux term. First,
+the flux \emph{systematic} is a normalisation-and-shape model uncertainty and is
+therefore POT-independent: adding data or overlay does not change it. Second,
+Section~\ref{sec:fluxanatomy} showed that the elevated \emph{unfolded} flux is that
+$\sim\!17\%$ model uncertainty amplified by the Wiener--SVD propagation through a
+statistically-limited response, and that at Run-1 exposure the limitation is the
+\emph{data} statistics, not the overlay. Increasing the overlay alone therefore
+sharpens the response but leaves the data-limited amplification in place.
+
+To study a genuine multi-run configuration we combine the FHC overlays for
+Runs~1, 2 and~4 (with \texttt{Run4}$=$\texttt{Run4c}$+$\texttt{Run4d} counted once;
+Run~5 excluded pending a corrected bookkeeping POT), $2.32\times10^{6}$ unique
+events, normalised to the $\nu_e$-convention FHC data POT
+$6.626\times10^{20}$ (Section~\ref{sec:nueconsistency}). Because CC$\pi^+$ is
+resonance-dominated, robustness to the resonant axial mass is tested with
+Poisson-thrown fake data reweighted to $M_A^\mathrm{RES}=1.12\pm0.22$~GeV
+($\pm1\sigma$; axial dipole ratio in the true interaction $Q^2$, a
+$+8.1\%/-7.2\%$ rate distortion). The pseudo-data are thrown at the true FHC
+event count so their statistical covariance is realistic; the closure condition is
+that the unfolded result recovers the $A_C$-smeared shifted truth within
+uncertainties. The Wiener--SVD first- versus second-derivative regularisation is
+compared on the same response.
+%% M_A^RES CLOSURE + first/second-derivative flux table TO BE FILLED from run_mares_v3.sh
+
+\subsection{Consistency with the sibling $\nu_e\,\mathrm{CC}\,1\pi$ measurement}
+\label{sec:nueconsistency}
+
+This analysis is one of a pair of MicroBooNE NuMI CC single-charged-pion
+measurements; the companion $\nu_e\,\mathrm{CC}\,1\pi$ analysis shares the same
+cross-section-extraction framework, beam and reconstruction. A cross-check against
+its internal note confirms consistency on the essential conventions and identifies
+the differences that a combined NuMI CC$\pi$ programme should reconcile.
+
+\emph{Consistent by construction.} Both use the Wiener--SVD extraction framework;
+the updated NuMI flux with the fixed geometry bug and Geant~v4.10.4; the same
+signal topology (exactly one $\pi^\pm$, zero $\pi^0$ or heavier mesons, any number
+of protons, charged current); and the same systematic suite --- PPFX flux
+hadronic universes plus the \emph{same 12 beamline-geometry unisims}, the
+600-universe GENIE cross-section multisim with unisims, the Geant4 reinteraction
+reweighting, the standard detector-variation set, and $2\%$ / $1\%$ / $100\%$
+POT / target / dirt normalisation uncertainties. The FHC beam-on data POT per run
+agrees exactly (Run~2 $1.268$, Run~4 $2.075\times10^{20}$).
+
+\emph{Differences reconciled or flagged.} (i)~\textbf{Run-1 POT:} we adopt the
+$\nu_e$ convention, Run~1 FHC $=3.283\times10^{20}$ (standard trigger; the
+open-trigger era is treated separately), giving a total FHC exposure of
+$8.857\times10^{20}$ over Runs~1--5. (ii)~\textbf{Run~4:} the \texttt{Run4} overlay
+is identical to \texttt{Run4c}$+$\texttt{Run4d} combined (same $859{,}368$ events
+and $2.834\times10^{21}$ POT); only one may be used to avoid double counting.
+(iii)~\textbf{Pion threshold:} $\nu_e$ uses $\mathrm{KE}_\pi>40$~MeV
+($p_\pi>0.113\GeVc$) versus our $p_\pi>0.175\GeVc$
+(Table~\ref{tab:pithresh}). (iv)~\textbf{Opening-angle cut:} $\nu_e$ excludes
+$\theta_{e\pi}>170^\circ$ (a shower-specific back-to-back misreconstruction),
+whereas our muon-track topology uses $\theta_{\mu\pi}<2.6$~rad ($149^\circ$).
+(v)~\textbf{Regularisation:} the $\nu_e$ analysis smooths on the first derivative,
+this analysis on the second (Section~\ref{sec:multirun}). (vi)~\textbf{Scope:}
+$\nu_e$ covers Runs~1--5 in both FHC and RHC; the present measurement is FHC, with
+RHC a natural extension.
 
 % =============================================================================
 \section{Summary}
