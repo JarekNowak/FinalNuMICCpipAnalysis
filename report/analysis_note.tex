@@ -872,6 +872,41 @@ contain those systematics, or both phase spaces reported; this is a
 systematics-versus-cross-analysis-consistency trade rather than a reconstruction
 limitation.
 
+\paragraph{The low-momentum bin, added.} We have implemented this extension for
+$p_\pi$: a $[0.113,0.175]\GeVc$ bin is prepended to the pion-momentum binning,
+lowering the measured phase space to the $\nu_e$ threshold. The truth-level signal
+below $0.175\GeVc$ is recovered from the stored signal-component branches (the
+reconstruction reproduces \texttt{MC\_Signal} above $0.175\GeVc$ to $0.4\%$, the
+residual being the unstored kaon veto); $3323$ true signal events populate the new
+bin. Its selection efficiency is $2.2\%$ --- an order of magnitude below the
+$15$--$17\%$ of the standard bins (Table~\ref{tab:pithresh_eff}), as anticipated
+from the reconstruction turn-on. Despite this, the Wiener--SVD extraction remains
+well behaved with the bin included: the $M_A^\mathrm{RES}$ fake-data closure gives
+$\chi^2/\mathrm{ndf}=1.41/6$ ($p=0.97$) and the flux term is unchanged
+($17\%$ reco, $18.4\%$ unfolded, amplification $1.08\times$). The bin therefore
+adds to the measurement, at the price of a large per-bin uncertainty driven by the
+low efficiency; the file-based generator predictions must be regenerated on the
+six-bin scheme to complete the comparison.
+
+\begin{center}\small
+\captionof{table}{Selection efficiency per true $p_\pi$ bin with the low-momentum
+  bin added. The new $[0.113,0.175]\GeVc$ bin sits at $2.2\%$, an order of
+  magnitude below the standard bins.}
+\label{tab:pithresh_eff}
+\begin{tabular}{lccc}
+\toprule
+True $p_\pi$ [\GeVc] & $N_\mathrm{true}$ & $N_\mathrm{reco}$ & Efficiency \\
+\midrule
+$\mathbf{0.113}$--$\mathbf{0.175}$ (new) & 3323 & 74 & $\mathbf{2.2\%}$ \\
+$0.175$--$0.250$ & 3368 & 526 & $15.6\%$ \\
+$0.250$--$0.320$ & 2190 & 367 & $16.8\%$ \\
+$0.320$--$0.420$ & 2831 & 479 & $16.9\%$ \\
+$0.420$--$0.550$ & 2499 & 410 & $16.4\%$ \\
+$0.550$--$1.000$ & 2933 & 429 & $14.6\%$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
 % =============================================================================
 \section{Fiducial Volume}
 \label{sec:fv}
