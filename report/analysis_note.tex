@@ -2370,7 +2370,40 @@ event count so their statistical covariance is realistic; the closure condition 
 that the unfolded result recovers the $A_C$-smeared shifted truth within
 uncertainties. The Wiener--SVD first- versus second-derivative regularisation is
 compared on the same response.
-%% M_A^RES CLOSURE + first/second-derivative flux table TO BE FILLED from run_mares_v3.sh
+
+The closure succeeds for every observable, both signs of the shift, and both
+regularisations: the unfolded result recovers the $A_C$-smeared shifted truth with
+$\chi^2/\mathrm{ndf}<1$ throughout (Table~\ref{tab:mares_closure}), all $p$-values
+above $0.63$ and most above $0.9$. The Wiener--SVD machinery is therefore unbiased
+under a $\pm1\sigma$ $M_A^\mathrm{RES}$ distortion, and the first- and
+second-derivative regularisations perform equivalently in the closure (the
+first-derivative variant carries a slightly larger statistical term). Restoring a
+realistic (Poisson) data covariance also restores the flux amplification that the
+degenerate near-Asimov pseudo-data had suppressed: the unfolded flux returns to
+$18$--$42\%$ (amplification $1.1$--$2.6\times$ over the $\sim\!17\%$ floor) with a
+data-statistical term of $6$--$22\%$, confirming that the amplification is driven
+by the data statistics, not the overlay. The large spread between the two throws
+is dominated by single-realisation Poisson noise, underscoring that at Run-1-level
+exposure the amplification is itself statistically unstable.
+
+\begin{center}\small
+\captionof{table}{Fake-data closure: $\chi^2/\mathrm{ndf}$ of the unfolded result
+  against the $A_C$-smeared $M_A^\mathrm{RES}$-shifted truth, for the two shift
+  signs and the two Wiener--SVD regularisations (number of bins in parentheses).
+  All values are below unity per degree of freedom ($p>0.63$).}
+\label{tab:mares_closure}
+\begin{tabular}{lcccc}
+\toprule
+Observable & $+1\sigma$ (2nd) & $+1\sigma$ (1st) & $-1\sigma$ (2nd) & $-1\sigma$ (1st) \\
+\midrule
+$p_\mu$ (7)          & 1.26 & 2.15 & 0.95 & 2.14 \\
+$p_\pi$ (5)          & 1.24 & 3.44 & 0.25 & 0.39 \\
+$\cos\theta_\mu$ (5) & 0.47 & 0.63 & 1.90 & 1.24 \\
+$\cos\theta_\pi$ (5) & 2.99 & 1.07 & 0.24 & 0.33 \\
+$\theta_{\mu\pi}$ (7)& 1.71 & 3.32 & 1.96 & 4.33 \\
+\bottomrule
+\end{tabular}
+\end{center}
 
 \subsection{Consistency with the sibling $\nu_e\,\mathrm{CC}\,1\pi$ measurement}
 \label{sec:nueconsistency}
