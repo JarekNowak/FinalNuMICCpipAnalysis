@@ -2414,12 +2414,42 @@ under a $\pm1\sigma$ $M_A^\mathrm{RES}$ distortion, and the first- and
 second-derivative regularisations perform equivalently in the closure (the
 first-derivative variant carries a slightly larger statistical term). Restoring a
 realistic (Poisson) data covariance also restores the flux amplification that the
-degenerate near-Asimov pseudo-data had suppressed: the unfolded flux returns to
-$18$--$42\%$ (amplification $1.1$--$2.6\times$ over the $\sim\!17\%$ floor) with a
-data-statistical term of $6$--$22\%$, confirming that the amplification is driven
-by the data statistics, not the overlay. The large spread between the two throws
-is dominated by single-realisation Poisson noise, underscoring that at Run-1-level
-exposure the amplification is itself statistically unstable.
+degenerate near-Asimov pseudo-data had suppressed.
+
+To separate the mean amplification from single-realisation noise, we throw $15$
+independent Poisson pseudo-datasets (central value only, no $M_A^\mathrm{RES}$
+shift, at the same $6.626\times10^{20}$ FHC exposure) and unfold each
+(Table~\ref{tab:amp_throws}). Averaged over throws, the unfolded flux stabilises at
+$24.7$--$27.1\%$, a mean amplification of $1.44$--$1.63\times$ over the
+$\sim\!17\%$ floor, with a data-statistical term of $8$--$13\%$. This confirms that
+the amplification is driven by the data statistics, not the overlay, and is
+consistent with the Run-1 result of Section~\ref{sec:fluxanatomy}. The
+throw-to-throw scatter is small for the momenta ($p_\mu$, $p_\pi$: $\pm0.06$--$0.08\times$,
+flux $\pm1.1$--$1.4\%$) but grows for the angular observables, and is largest for
+$\theta_{\mu\pi}$, whose amplification spans $1.27$--$2.02\times$ (flux
+$21.4$--$34.2\%$) across the $15$ throws. At Run-1-level exposure the amplification
+is therefore well defined in the mean but individually unstable, most so for
+$\theta_{\mu\pi}$ and $\cos\theta_\pi$ --- a direct consequence of the sparse,
+data-limited response.
+
+\begin{center}\small
+\captionof{table}{Flux amplification averaged over $15$ independent Poisson-thrown
+  pseudo-datasets at the FHC data POT: mean $\pm$ standard deviation and
+  min--max range over throws, for the unfolded flux (bin-averaged) and the
+  amplification relative to the $\sim\!17\%$ reco-level floor.}
+\label{tab:amp_throws}
+\begin{tabular}{lcccc}
+\toprule
+Observable & Amplification (mean$\pm$sd) & Amp.\ range & Unfolded flux & Flux range \\
+\midrule
+$p_\mu$          & $1.44\pm0.08\times$ & $[1.27,1.60]$ & $24.7\pm1.4\%$ & $[21.9,27.5]$ \\
+$p_\pi$          & $1.52\pm0.06\times$ & $[1.40,1.65]$ & $26.2\pm1.1\%$ & $[24.0,28.4]$ \\
+$\cos\theta_\mu$ & $1.60\pm0.14\times$ & $[1.41,1.85]$ & $26.8\pm2.3\%$ & $[23.7,31.1]$ \\
+$\cos\theta_\pi$ & $1.63\pm0.11\times$ & $[1.45,1.89]$ & $27.1\pm1.9\%$ & $[24.1,31.6]$ \\
+$\theta_{\mu\pi}$& $1.58\pm0.21\times$ & $[1.27,2.02]$ & $26.7\pm3.6\%$ & $[21.4,34.2]$ \\
+\bottomrule
+\end{tabular}
+\end{center}
 
 \begin{center}\small
 \captionof{table}{Fake-data closure: $\chi^2/\mathrm{ndf}$ of the unfolded result
