@@ -2541,6 +2541,20 @@ $\nu_e$ analysis. The generator predictions are re-averaged to the RHC flux
 composition; a combined FHC$+$RHC measurement would use the POT-weighted flux
 $\Phi_\mathrm{tot}=6.663\times10^{-10}$ ($42.7\%$ $\bar\nu_\mu$).
 
+A first joint FHC$+$RHC unfolding (combined $8$-file response, $2.9\times10^{6}$
+events) has been run. The central extraction is sound --- the fake-data closure
+passes for every observable ($\chi^2/\mathrm{ndf}<1$, $p>0.28$) --- but the joint
+\emph{flux systematic} is not yet correct: the combined unfolded flux covariance
+is ill-defined (negative integrated normalisation, vanishing per-bin term),
+whereas the standalone FHC and RHC flux systematics are both well behaved. The
+cause is the treatment of the PPFX universes across horn modes: the two beams
+carry statistically independent flux throws, so the naive per-universe summing
+that is correct within a horn mode mis-estimates the cross-horn covariance, and
+the mixed FHC$+$RHC response is more weakly conditioned. A correct combined result
+therefore requires a horn-mode-aware flux-universe combination (block-correlated
+or independently-thrown covariances), which is the outstanding item for the joint
+measurement.
+
 The standalone RHC extraction closes cleanly for every observable
 (Table~\ref{tab:rhc}): the $A_C$-smeared truth is recovered with
 $\chi^2/\mathrm{ndf}<1$ and $p>0.91$ throughout. Two features stand out. First, the
