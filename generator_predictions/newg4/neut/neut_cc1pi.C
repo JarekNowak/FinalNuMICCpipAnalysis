@@ -38,7 +38,7 @@ void neut_cc1pi(const char* infile, const char* outfile){
   t->SetBranchAddress("vectorbranch",&nv);
 
   std::vector<double> EPMU={0.150,0.350,0.550,0.750,0.950,1.250,1.750,3.000};
-  std::vector<double> EPPI={0.175,0.250,0.320,0.420,0.550,1.000};
+  std::vector<double> EPPI={0.113,0.175,0.250,0.320,0.420,0.550,1.000};
   std::vector<double> ECMU={-1.0,0.45,0.65,0.80,0.90,1.0};
   std::vector<double> ECPI={-1.0,-0.10,0.35,0.55,0.75,1.0};
   std::vector<double> ETH={0.0,0.60,0.85,1.10,1.30,1.52,1.85,2.60};
@@ -68,8 +68,9 @@ void neut_cc1pi(const char* infile, const char* outfile){
     }
     if(nmu!=1||npi!=1||npi0!=0||nk!=0||nheavy!=0) continue;
     double Pmu=pmu.Mag(),Ppi=ppi.Mag(),th=pmu.Angle(ppi);
-    if(Pmu<=0.15||Ppi<=0.175||th>=2.6) continue;
-    ++sig; hpmu->Fill(Pmu);hppi->Fill(Ppi);hcmu->Fill(pmu.CosTheta());hcpi->Fill(ppi.CosTheta());hth->Fill(th);
+    if(Pmu<=0.15||Ppi<=0.113||th>=2.6) continue;      // ppi relaxed to 0.113 (low bin)
+    ++sig; hppi->Fill(Ppi);                            // ppi extends to 0.113
+    if(Ppi>0.175){ hpmu->Fill(Pmu);hcmu->Fill(pmu.CosTheta());hcpi->Fill(ppi.CosTheta());hth->Fill(th); } // others: standard 0.175
   }
   // flux-averaged total cross section = harmonic mean of Totcrs (per Ar, 1e-38
   // cm^2). Per-nucleon in cm^2 for combine_newg4.C.

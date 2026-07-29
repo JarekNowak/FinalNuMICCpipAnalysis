@@ -66,7 +66,7 @@ static bool is_kaon(int pdg) {
 
 // Analysis binning (true-signal edges from configs/ccpi_*_bin_config.txt).
 static const std::vector<double> EDGES_PMU = {0.150,0.350,0.550,0.750,0.950,1.250,1.750,3.000};
-static const std::vector<double> EDGES_PPI = {0.175,0.250,0.320,0.420,0.550,1.000};
+static const std::vector<double> EDGES_PPI = {0.113,0.175,0.250,0.320,0.420,0.550,1.000};
 static const std::vector<double> EDGES_COSTHMU = {-1.0,0.45,0.65,0.80,0.90,1.0};
 static const std::vector<double> EDGES_COSTHPI = {-1.0,-0.10,0.35,0.55,0.75,1.0};
 static const std::vector<double> EDGES_THMUPI = {0.0,0.60,0.85,1.10,1.30,1.52,1.85,2.60};
@@ -122,15 +122,17 @@ int main(int argc, char** argv) {
     double ppi = p_pi.Mag();
     double theta = p_mu.Angle(p_pi);
 
-    // Phase-space cuts
-    if (pmu <= 0.15 || ppi <= 0.175 || theta >= 2.6) continue;
+    // Phase-space cuts (ppi relaxed to 0.113 for the low bin; others standard 0.175)
+    if (pmu <= 0.15 || ppi <= 0.113 || theta >= 2.6) continue;
 
     ++n_signal;
-    h_pmu->Fill(pmu);
-    h_ppi->Fill(ppi);
-    h_costhmu->Fill(p_mu.CosTheta());
-    h_costhpi->Fill(p_pi.CosTheta());
-    h_thmupi->Fill(theta);
+    h_ppi->Fill(ppi);                    // ppi extends to 0.113
+    if (ppi > 0.175) {                   // other observables: standard 0.175 phase space
+      h_pmu->Fill(pmu);
+      h_costhmu->Fill(p_mu.CosTheta());
+      h_costhpi->Fill(p_pi.CosTheta());
+      h_thmupi->Fill(theta);
+    }
   }
 
   // Normalise each histogram to the per-nucleon dsigma/dx [cm^2 / nucleon / x].
