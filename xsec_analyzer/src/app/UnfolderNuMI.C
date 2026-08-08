@@ -664,6 +664,25 @@ void UnfolderNuMI(std::string XSEC_Config, std::string SLICE_Config, std::string
       slice_h->transform( trans_mat );
     }
 
+    // SYSTDUMP: integrated cross section + bin-averaged fractional uncertainty per
+    // systematic category (in cross-section space), for the physical slice only.
+    if ( sl_idx == 0 && !sh_cov_map.empty() ) {
+      TH1* href = sh_cov_map.begin()->second->hist_.get();
+      int nb = href->GetNbinsX();
+      double sig = 0.;
+      for ( int b = 1; b <= nb; ++b ) sig += href->GetBinContent(b) * href->GetBinWidth(b);
+      std::cout << "[SYSTDUMP] sigma_int " << sig << std::endl;
+      for ( auto& p : sh_cov_map ) {
+        TH1* hc = p.second->hist_.get();
+        double s = 0.; int m = 0;
+        for ( int b = 1; b <= nb; ++b ) {
+          double v = hc->GetBinContent(b);
+          if ( v > 0. ) { s += hc->GetBinError(b) / v; ++m; }
+        }
+        std::cout << "[SYSTDUMP] " << p.first << ' ' << ( m ? 100.*s/m : 0. ) << std::endl;
+      }
+    }
+
     // Dump the final differential-cross-section curves for the physical slice
     // (sl_idx 0) to a sidecar ROOT file so a clean, native multi-observable
     // closure montage can be drawn without rasterising the PDF canvases.

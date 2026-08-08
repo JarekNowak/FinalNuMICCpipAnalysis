@@ -1482,6 +1482,30 @@ individual background components.
   \label{fig:reco_spectra}
 \end{figure}
 
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{fw_reco_rhc_pmu}\caption{$p_\mu$}\end{subfigure}\hfill
+  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{fw_reco_rhc_ppi}\caption{$p_\pi$}\end{subfigure}\hfill
+  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{fw_reco_rhc_costhmu}\caption{$\cos\theta_\mu$}\end{subfigure}\\[6pt]
+  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{fw_reco_rhc_costhpi}\caption{$\cos\theta_\pi$}\end{subfigure}\hfill
+  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{fw_reco_rhc_thmupi}\caption{$\theta_{\mu\pi}$}\end{subfigure}
+  \caption{Reconstructed-space spectra, RHC full exposure (Runs~1$+$2$+$3$+$4a$+$4b$+$4c);
+    same components as Fig.~\ref{fig:reco_spectra}.}
+  \label{fig:reco_spectra_rhc}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{fw_reco_comb_pmu}\caption{$p_\mu$}\end{subfigure}\hfill
+  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{fw_reco_comb_ppi}\caption{$p_\pi$}\end{subfigure}\hfill
+  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{fw_reco_comb_costhmu}\caption{$\cos\theta_\mu$}\end{subfigure}\\[6pt]
+  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{fw_reco_comb_costhpi}\caption{$\cos\theta_\pi$}\end{subfigure}\hfill
+  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{fw_reco_comb_thmupi}\caption{$\theta_{\mu\pi}$}\end{subfigure}
+  \caption{Reconstructed-space spectra, combined FHC$+$RHC (per-mode normalised);
+    same components as Fig.~\ref{fig:reco_spectra}.}
+  \label{fig:reco_spectra_comb}
+\end{figure}
+
 Figure~\ref{fig:response} shows the response matrices (normalised per true bin)
 for the five observables.  The diagonal dominance confirms that migration effects
 are modest for the angular observables; $p_\mu$ shows slightly larger migrations
@@ -1785,13 +1809,109 @@ $\theta_{\mu\pi}$& $15.9\%$ & $26.6\%$ & $1.67\times$ & $1.13/7$ ($p=0.99$) \\
 \end{figure}
 
 \begin{figure}[H]\centering
+  \includegraphics[width=0.98\textwidth]{dsigma_RHCFULL}
+  \caption{Standalone RHC ($\bar\nu_\mu$-dominant) differential cross sections on the
+    current Poisson-thrown fake data, with the RHC-flux-averaged generator
+    predictions. Same layout as Fig.~\ref{fig:dsigma_current}.}
+  \label{fig:dsigma_rhc}
+\end{figure}
+
+\begin{figure}[H]\centering
   \includegraphics[width=0.98\textwidth]{dsigma_COMB}
   \caption{Combined FHC$+$RHC ($\nu_\mu+\bar\nu_\mu$) differential cross sections on
     the current per-mode-normalised fake data, with the fluence-weighted combined
-    generator predictions. The standalone RHC result (\texttt{dsigma\_RHCFULL}) is
-    obtained identically.}
+    generator predictions.}
   \label{fig:dsigma_comb}
 \end{figure}
+
+\begin{center}\small
+\captionof{table}{Integrated cross section $\sigma_\mathrm{int}$ over the measured
+  phase space, for each observable and configuration (current fake data,
+  $10^{-38}$~cm$^2$/Ar). The value differs between observables because each
+  integrates a different projection of the same restricted phase space.}
+\label{tab:sigint_all}
+\begin{tabular}{lccc}
+\toprule
+Observable & FHC & RHC & Combined \\
+\midrule
+$p_\mu$          & $0.946$ & $0.597$ & $0.815$ \\
+$p_\pi$          & $0.978$ & $0.802$ & $0.872$ \\
+$\cos\theta_\mu$ & $0.864$ & $0.654$ & $0.787$ \\
+$\cos\theta_\pi$ & $0.675$ & $0.583$ & $0.694$ \\
+$\theta_{\mu\pi}$& $0.835$ & $0.931$ & $0.663$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The systematic breakdown by source (bin-averaged fractional uncertainty in cross-section
+space) is given for all three configurations in Tables~\ref{tab:systbreak_fhc}--%
+\ref{tab:systbreak_comb}. The flux (PPFX) term dominates throughout, followed by the
+detector variations; the data-statistical term reflects the fake-data POT of each
+configuration. The RHC detector term is the largest single-configuration entry, driven
+by the $\cos\theta$ observables at the current statistics.
+
+\begin{center}\scriptsize
+\captionof{table}{FHC (\{Run~1,2,4,5\}) systematic breakdown by source, bin-averaged
+  fractional uncertainty (\%).}
+\label{tab:systbreak_fhc}
+\begin{tabular}{lccccc}
+\toprule
+Source & $p_\mu$ & $p_\pi$ & $\cos\theta_\mu$ & $\cos\theta_\pi$ & $\theta_{\mu\pi}$ \\
+\midrule
+\textbf{Total}        & 30.4 & 31.7 & 35.2 & 43.2 & 34.1 \\
+Cross section (GENIE) & 8.3  & 8.1  & 7.1  & 10.3 & 8.4 \\
+Flux (PPFX)           & 23.9 & 23.9 & 23.9 & 28.1 & 24.6 \\
+Detector              & 13.3 & 16.0 & 21.4 & 25.6 & 18.0 \\
+Reinteraction         & 3.2  & 4.6  & 2.9  & 4.4  & 3.2 \\
+MC stat               & 2.5  & 2.3  & 2.9  & 4.0  & 3.2 \\
+EXT stat              & 3.7  & 3.8  & 5.0  & 7.8  & 4.2 \\
+Data stat             & 8.0  & 7.6  & 9.7  & 13.0 & 10.4 \\
+POT $+$ targets       & 2.8  & 3.0  & 3.0  & 3.5  & 3.0 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{center}\scriptsize
+\captionof{table}{RHC (\{Run~1,2,3,4a,4b,4c\}) systematic breakdown by source,
+  bin-averaged fractional uncertainty (\%).}
+\label{tab:systbreak_rhc}
+\begin{tabular}{lccccc}
+\toprule
+Source & $p_\mu$ & $p_\pi$ & $\cos\theta_\mu$ & $\cos\theta_\pi$ & $\theta_{\mu\pi}$ \\
+\midrule
+\textbf{Total}        & 37.4 & 30.7 & 41.1 & 46.9 & 25.0 \\
+Cross section (GENIE) & 10.1 & 8.4  & 9.4  & 11.0 & 7.3 \\
+Flux (PPFX)           & 27.5 & 23.6 & 26.5 & 29.6 & 19.5 \\
+Detector              & 18.2 & 14.2 & 25.0 & 30.4 & 8.8 \\
+Reinteraction         & 3.9  & 2.8  & 3.5  & 4.6  & 2.3 \\
+MC stat               & 3.0  & 2.1  & 3.3  & 3.1  & 2.3 \\
+EXT stat              & 6.8  & 5.2  & 8.9  & 8.2  & 5.1 \\
+Data stat             & 11.0 & 7.9  & 12.3 & 11.2 & 8.4 \\
+POT $+$ targets       & 3.8  & 3.3  & 3.6  & 4.1  & 2.7 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{center}\scriptsize
+\captionof{table}{Combined FHC$+$RHC systematic breakdown by source, bin-averaged
+  fractional uncertainty (\%).}
+\label{tab:systbreak_comb}
+\begin{tabular}{lccccc}
+\toprule
+Source & $p_\mu$ & $p_\pi$ & $\cos\theta_\mu$ & $\cos\theta_\pi$ & $\theta_{\mu\pi}$ \\
+\midrule
+\textbf{Total}        & 29.8 & 31.8 & 35.2 & 37.7 & 35.4 \\
+Cross section (GENIE) & 8.2  & 8.5  & 8.1  & 9.1  & 11.2 \\
+Flux (PPFX)           & 22.5 & 23.9 & 25.0 & 25.2 & 26.6 \\
+Detector              & 14.5 & 16.0 & 19.4 & 23.1 & 13.6 \\
+Reinteraction         & 3.2  & 4.6  & 3.2  & 3.8  & 3.2 \\
+MC stat               & 1.9  & 2.0  & 2.6  & 2.2  & 3.3 \\
+EXT stat              & 5.7  & 4.3  & 7.5  & 7.0  & 8.6 \\
+Data stat             & 6.7  & 6.7  & 8.9  & 7.7  & 11.3 \\
+POT $+$ targets       & 2.8  & 3.2  & 3.3  & 3.3  & 3.4 \\
+\bottomrule
+\end{tabular}
+\end{center}
 
 % =============================================================================
 
