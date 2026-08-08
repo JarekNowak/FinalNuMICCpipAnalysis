@@ -1446,7 +1446,9 @@ bool Passed =
 }
 
   // ---- per-observable RECO cut-flow (ALL events; mirrors the cumulative cuts) ----
-  {
+  // Guard against the non-finite (inf/nan) event weights present in a small number
+  // of overlay events (they otherwise poison the histogram integral).
+  if ( std::isfinite(evt_w) ) {
     bool mu_ok = (CandidateMuonIndex != -1);
     bool pi_ok = (CandidatePionIndex != -1);
     double cf_rv[5] = { candidate_muon_mom_reco, candidate_pion_mom_reco,
@@ -1467,7 +1469,7 @@ bool Passed =
     for (int c = 0; c < 10; ++c)
       if (cf_pass[c])
         for (int o = 0; o < 5; ++o)
-          if (cf_ok[o]) h_cf[o][c]->Fill(cf_rv[o], evt_w);
+          if (cf_ok[o] && std::isfinite(cf_rv[o])) h_cf[o][c]->Fill(cf_rv[o], evt_w);
   }
 
 
