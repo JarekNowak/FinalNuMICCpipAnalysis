@@ -1635,7 +1635,652 @@ Seven additional methods are run in parallel:
 \end{table}
 
 % =============================================================================
-\section{Results}
+\section{Full-exposure results: FHC, RHC, and combined}
+\label{sec:rhc}
+
+This is the primary result of the analysis: the CC$1\mu1\pi^\pm$ cross section
+extracted over the full available exposure in forward horn current (FHC), reverse
+horn current (RHC), and their combination, all on Poisson-thrown central-value fake
+data (the single-run Run-1 extraction of Sec.~\ref{sec:legacyresults} is retained as
+a cross-check). The FHC measurement uses Runs~1, 2, 4 and 5 ($\nu_e$-matched data POT
+$8.857\times10^{20}$); RHC uses Runs~1, 2, 3, 4a, 4b, 4c ($1.108\times10^{21}$); the
+combined measurement uses all fourteen overlay files at the joint POT
+$1.994\times10^{21}$. All three close cleanly against the $A_C$-smeared truth for
+every observable (Tables~\ref{tab:fhc}--\ref{tab:comb}); the differential results are
+shown in Figs.~\ref{fig:dsigma_current}--\ref{fig:dsigma_comb}.
+
+\begin{center}\small
+\captionof{table}{Full-exposure FHC (\{Run~1,2,4,5\}, data POT $8.857\times10^{20}$,
+  native Run-4 FHC detector variations): reco-level and unfolded flux systematic,
+  unfolding amplification, and fake-data closure $\chi^2/\mathrm{ndf}$ (with
+  $p$-value).}
+\label{tab:fhc}
+\begin{tabular}{lcccc}
+\toprule
+Observable & Flux (reco) & Flux (unfolded) & Amplification & Closure $\chi^2/\mathrm{ndf}$ \\
+\midrule
+$p_\mu$          & $17.1\%$ & $23.9\%$ & $1.40\times$ & $1.73/7$ ($p=0.97$) \\
+$p_\pi$          & $16.9\%$ & $23.9\%$ & $1.41\times$ & $0.75/5$ ($p=0.98$) \\
+$\cos\theta_\mu$ & $16.7\%$ & $23.9\%$ & $1.43\times$ & $0.54/5$ ($p=0.99$) \\
+$\cos\theta_\pi$ & $16.6\%$ & $28.1\%$ & $1.69\times$ & $1.75/5$ ($p=0.88$) \\
+$\theta_{\mu\pi}$& $16.8\%$ & $24.6\%$ & $1.46\times$ & $1.15/7$ ($p=0.99$) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+We extend the measurement to the reverse-horn-current beam as both a
+standalone measurement and a combined $\nu_\mu+\bar\nu_\mu$ result.
+The RHC \emph{flux} is $\bar\nu_\mu$-dominant ($54.6\%$ $\bar\nu_\mu$, versus FHC's
+$35\%$), with authoritative $>\!60$~MeV integrals
+$\Phi_{\nu_\mu}^\mathrm{RHC}=2.923\times10^{-10}$,
+$\Phi_{\bar\nu_\mu}^\mathrm{RHC}=3.523\times10^{-10}$, total
+$6.446\times10^{-10}~\mathrm{cm}^{-2}\mathrm{POT}^{-1}$ (the FHC-convention
+computation reproduces the authoritative FHC values exactly). The \emph{measured
+event rate}, however, remains $\nu_\mu$-dominant ($76\%$ $\nu_\mu$, $20\%$
+$\bar\nu_\mu$) because the $\nu_\mu$ cross section is $\sim\!2$--$3\times$ larger
+than the $\bar\nu_\mu$ one. The RHC overlays (Runs~1, 2, 3, 4a, 4b, 4c) are all
+verified as genuine $\nu_\mu$ overlays and processed --- $4.05\times10^{6}$ events,
+combined MC POT $1.546\times10^{22}$, mutually consistent
+($2.62\times10^{-16}$ events/POT) with the PPFX weights --- covering the full RHC
+exposure (Run~3, the largest period at $5.52\times10^{21}$~MC~POT / $1.44\times10^{6}$
+events, was added last). Native Run-4 RHC detector-variation samples (the standard
+eight-knob set: light-yield down/Rayleigh, recombination, space charge, and the four
+wire-modification variations) are now used for the RHC detector systematic, verified
+as genuine $\nu_\mu$ overlays with a uniform $3.80\times10^{-16}$ events/POT across
+all knobs; they replace the Run-1 FHC stand-in used previously. Native RHC dirt is
+still taken from FHC. The standalone result below uses Poisson-thrown central-value
+fake data at the $\nu_e$-matched RHC data POT $1.108\times10^{21}$. The generator
+predictions are re-averaged to the RHC flux composition; the combined FHC$+$RHC
+predictions are the fluence-weighted combination of the two horn modes
+($0.458$~FHC $/\,0.542$~RHC, each mode weighted by $\Phi_\mathrm{tot}\times$POT).
+
+The combined FHC$+$RHC measurement uses the summed $14$-file response over the full
+exposure ($5.6\times10^{6}$ events, combined data POT
+$D_\mathrm{comb}=1.994\times10^{21}=D_\mathrm{FHC}+D_\mathrm{RHC}$), with each horn
+mode normalised to its \emph{own} data exposure. This is a genuine subtlety: the
+detector-variation covariance is absolute (POT-scaled reco counts), so a single POT
+scale applied to all files would weight the modes by their Monte-Carlo POT
+($0.62{:}1$ FHC${:}$RHC) rather than by data exposure ($0.80{:}1$). Each mode's
+numuMC and detVar samples therefore carry a per-mode \texttt{summed\_pot}
+(FHC $2.158\times10^{22}$, RHC $2.782\times10^{22}$, $=S_\mathrm{mode}\times
+D_\mathrm{comb}/D_\mathrm{mode}$) so the framework's $D_\mathrm{comb}/$\texttt{summed\_pot}
+scaling reduces to $D_\mathrm{FHC}/S_\mathrm{FHC}$ and $D_\mathrm{RHC}/S_\mathrm{RHC}$;
+the fake data is Poisson-thrown with the matching per-mode rate.
+
+Contrary to an earlier concern, the joint \emph{flux systematic} is correct as
+built. All fourteen numuMC files carry the \emph{same} $600$ PPFX multisim
+universes, which the universe maker accumulates index-matched across both horn
+modes in a single chain, so universe $u$ is the same hadron-production draw in FHC
+and RHC. Per-universe summing therefore propagates one parameter draw through both
+beam configurations and lets each mode's flux response set the result, capturing the
+physical (not unit) cross-horn correlation automatically --- this is the rigorously
+correct multisim treatment, superior to any hand-built block covariance. The joint
+result was in fact blocked by a different, purely technical issue: a framework guard
+that forbade a second detector-variation file of the same type (needed to carry
+Run-4 FHC \emph{and} Run-4 RHC as \texttt{detVarCV}). That guard now accumulates the
+per-mode detVar samples exactly as it already did for the alternate-CV samples,
+matching its own in-code TODO. With both in place the combined closure passes for
+every observable (Table~\ref{tab:comb}), with an unfolded flux systematic of
+$22$--$27\%$ that sits between the standalone FHC and RHC values, as expected for the
+fluence-weighted mix.
+
+The standalone RHC extraction (native Run-4 RHC detector variations) closes cleanly
+for every observable (Table~\ref{tab:rhc}): the $A_C$-smeared truth is recovered with
+$\chi^2/\mathrm{ndf}<0.3$ and $p>0.94$ throughout. Two features stand out. First, the
+reco-level flux systematic is $\sim\!15\%$, genuinely below the FHC $\sim\!17\%$
+floor --- the $\bar\nu_\mu$-dominant flux carries a smaller PPFX hadron-production
+uncertainty. Second, the unfolding amplification ($1.29$--$1.99\times$) mirrors
+FHC, so the unfolded flux term ($19.5$--$28\%$) is comparable, again data-statistics
+limited.
+
+\begin{center}\small
+\captionof{table}{Standalone RHC ($\bar\nu_\mu$-dominant) extraction, full exposure
+  $1.108\times10^{21}$ with native Run-4 RHC detector variations: reco-level and
+  unfolded flux systematic, unfolding amplification, and fake-data closure
+  $\chi^2/\mathrm{ndf}$ (with $p$-value).}
+\label{tab:rhc}
+\begin{tabular}{lcccc}
+\toprule
+Observable & Flux (reco) & Flux (unfolded) & Amplification & Closure $\chi^2/\mathrm{ndf}$ \\
+\midrule
+$p_\mu$          & $15.4\%$ & $27.5\%$ & $1.78\times$ & $1.37/7$ ($p=0.99$) \\
+$p_\pi$          & $15.8\%$ & $23.6\%$ & $1.49\times$ & $0.21/5$ ($p=1.00$) \\
+$\cos\theta_\mu$ & $15.0\%$ & $26.5\%$ & $1.76\times$ & $0.43/5$ ($p=0.99$) \\
+$\cos\theta_\pi$ & $14.9\%$ & $29.6\%$ & $1.99\times$ & $1.23/5$ ($p=0.94$) \\
+$\theta_{\mu\pi}$& $15.1\%$ & $19.5\%$ & $1.29\times$ & $0.72/7$ ($p=1.00$) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{center}\small
+\captionof{table}{Combined FHC$+$RHC ($\nu_\mu+\bar\nu_\mu$) extraction over the full
+  joint exposure $D_\mathrm{comb}=1.994\times10^{21}$, per-mode normalised, with
+  native Run-4 FHC$+$RHC detector variations (accumulated per mode): reco-level and
+  unfolded flux systematic, unfolding amplification, and fake-data closure
+  $\chi^2/\mathrm{ndf}$ (with $p$-value). The unfolded flux term ($22$--$27\%$) lies
+  between the standalone FHC and RHC values.}
+\label{tab:comb}
+\begin{tabular}{lcccc}
+\toprule
+Observable & Flux (reco) & Flux (unfolded) & Amplification & Closure $\chi^2/\mathrm{ndf}$ \\
+\midrule
+$p_\mu$          & $16.2\%$ & $22.5\%$ & $1.39\times$ & $0.58/7$ ($p=1.00$) \\
+$p_\pi$          & $16.3\%$ & $23.9\%$ & $1.47\times$ & $1.27/5$ ($p=0.94$) \\
+$\cos\theta_\mu$ & $15.8\%$ & $25.0\%$ & $1.58\times$ & $0.28/5$ ($p=1.00$) \\
+$\cos\theta_\pi$ & $15.7\%$ & $25.2\%$ & $1.61\times$ & $1.41/5$ ($p=0.92$) \\
+$\theta_{\mu\pi}$& $15.9\%$ & $26.6\%$ & $1.67\times$ & $1.13/7$ ($p=0.99$) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{figure}[H]\centering
+  \includegraphics[width=0.98\textwidth]{dsigma_FHC5}
+  \caption{Differential cross sections $d\sigma/dx$ for all five observables on the
+    current Poisson-thrown central-value fake data, FHC full exposure: unfolded fake
+    data (black points), $A_C$-smeared fake-data truth (grey dashed), the MicroBooNE
+    tune (black solid), and the four generator predictions (GENIE, GiBUU, NEUT,
+    NuWro). The unfolded points recover the injected truth for every observable, the
+    same closure summarised in Tables~\ref{tab:rhc}--\ref{tab:comb}.}
+  \label{fig:dsigma_current}
+\end{figure}
+
+\begin{figure}[H]\centering
+  \includegraphics[width=0.98\textwidth]{dsigma_COMB}
+  \caption{Combined FHC$+$RHC ($\nu_\mu+\bar\nu_\mu$) differential cross sections on
+    the current per-mode-normalised fake data, with the fluence-weighted combined
+    generator predictions. The standalone RHC result (\texttt{dsigma\_RHCFULL}) is
+    obtained identically.}
+  \label{fig:dsigma_comb}
+\end{figure}
+
+% =============================================================================
+
+\section{Systematic Uncertainties}
+\label{sec:systematics}
+% =============================================================================
+
+Full systematic uncertainty propagation has not yet been performed.
+Table~\ref{tab:systematics} lists the sources and their estimated impacts.
+
+\begin{table}[H]
+  \centering
+  \caption{Systematic uncertainty sources.
+    ``Not quantified'' means the branch is readable but propagation code
+    has not been written.}
+  \label{tab:systematics}
+  \begin{tabular}{L{4.0cm} L{4.0cm} l}
+    \toprule
+    Source & Branch / method & Impact \\
+    \midrule
+    Flux (PPFX multisims)         & \texttt{weightsFlux}  & $\sim10$--$15\%$ norm. \\
+    GENIE cross sections          & \texttt{weightsGenie} & $\sim20$--$30\%$ (model) \\
+    Hadron re-interaction         & \texttt{weightsReint} & $\sim5$--$10\%$ \\
+    Detector response             & Dedicated samples     & $\sim5$--$15\%$ \\
+    EXT normalisation             & Trigger-count ratio   & $\sim3$--$5\%$ \\
+    POT counting                  & Beam toroids          & $\sim2\%$ \\
+    Flux integral (absolute)      & PPFX integral         & Blocks absolute $\sigma$ \\
+    \midrule
+    Statistical (427 data events) & ---                   & $\sim5\%$ on $\sigma_{\mathrm{int}}$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+% =============================================================================
+\section{Known Issues and Required Follow-up}
+\label{sec:issues}
+% =============================================================================
+
+\begin{table}[H]
+  \centering
+  \caption{Outstanding issues and their impact on the final result.}
+  \label{tab:issues}
+  \small
+  \begin{tabular}{L{4.5cm} L{2.5cm} L{5.0cm}}
+    \toprule
+    Issue & Status & Impact \\
+    \midrule
+    \texttt{FLUX\_PER\_POT} confirmed
+      & \textbf{Resolved}
+      & $\Phi = 6.81159\times10^{-10}$~cm$^{-2}$~POT$^{-1}$ from NuMI flux histograms \\[4pt]
+    Unfolding covariance (stat-only $\to$ full)
+      & \textbf{Resolved}
+      & Framework \texttt{PredTotal}$+$data Poisson imported; removed $\sim26\%$ bias \\[4pt]
+    EXT subtraction on NuWro fake data
+      & \textbf{Resolved}
+      & Cancelled via \texttt{fake\_data\_ext\_cancel}; re-enable for real data \\[4pt]
+    $\theta_{\mu\pi}$ binning (10 vs 9, C4)
+      & \textbf{Resolved}
+      & Custom aligned to framework 9-bin scheme \\[4pt]
+    Multisim systematics not propagated (custom)
+      & Not started
+      & Imported from framework for the covariance; full custom propagation pending \\[4pt]
+    Negative tail bins
+      & \textbf{Resolved}
+      & All bins now positive after EXT cancellation; no longer present \\[4pt]
+    Runs~2, 4, 5 beam-on files not available
+      & Data files needed
+      & $\times5.4$ exposure increase for the real-data measurement \\[4pt]
+    Generator comparisons (GENIE, NuWro)
+      & Blocked by missing AVX on compute nodes
+      & NEUT comparison runnable locally \\[4pt]
+    CRT veto branches (\texttt{crthitpe}, \texttt{crtveto})
+      & Dead (all-zero in NuMI ntuples)
+      & Replaced by \texttt{bdt\_cosmic} (disabled at default 0.0) \\[4pt]
+    Official XSecAnalyzer NuWro closure
+      & \textbf{Done} (all 5 obs)
+      & Cross-validates the unfolding; NuWro $\approx 2\times$ GENIE (Sec.~\ref{sec:nuwroclosure}) \\[4pt]
+    Native RHC detector variations
+      & \textbf{Resolved}
+      & Run-4 RHC detVar (8 knobs) now used; replaces the Run-1 FHC stand-in (Sec.~\ref{sec:rhc}) \\[4pt]
+    Run-5 FHC detVar Recomb2/SCE
+      & \textbf{Resolved}
+      & Were intrinsic-$\nu_e$ overlays (0\% $\nu_\mu$); Run-4 FHC used as the stand-in for those two knobs \\[4pt]
+    Combined FHC$+$RHC joint flux systematic
+      & \textbf{Resolved}
+      & Per-universe summing over the shared 600 PPFX universes is correct; the block was a detVar duplicate-file guard, now fixed to accumulate (Sec.~\ref{sec:rhc}) \\[4pt]
+    Combined per-mode normalisation
+      & \textbf{Resolved}
+      & Per-mode \texttt{summed\_pot} so each horn scales to its own data exposure, not MC POT (Sec.~\ref{sec:rhc}) \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+% =============================================================================
+\section{Analysis Pipeline}
+\label{sec:pipeline}
+% =============================================================================
+
+The primary measurement is produced by a single driver, \texttt{run\_analysis.sh},
+which chains the selection, the per-observable cross-section extraction, and the
+comparison/diagnostic stages:
+
+\begin{verbatim}
+selection/ccpi_selection.C   ->  histograms.root + unfolding_inputs.root
+                                  | (5 observables x 8 methods)
+xsec/ccpi_xsec.C(obs,method) ->  xsec_{obs}_{method}.root  (40 files)
+xsec/compare_unfolding.C     ->  compare_plots/
+xsec/compare_generators.C    ->  gen_compare/
+selection/event_display.C    ->  event_displays/
+\end{verbatim}
+
+Each output file is validated for freshness and non-zero content after the step
+that produces it.  The official-framework cross-check of
+Section~\ref{sec:nuwroclosure} is driven separately
+(\texttt{xsec\_analyzer/run\_nuwro\_observables.sh}).
+
+% =============================================================================
+\section{Binning Optimisation, Systematic Breakdown, and Threshold Validation}
+\label{sec:binopt}
+% =============================================================================
+
+The reconstructed spectra, response matrices, efficiencies, and differential
+cross sections shown throughout this note are the \textsc{XSecAnalyzer} framework
+outputs on the \emph{optimised} binning defined here; the four-generator
+comparisons of Fig.~\ref{fig:nuwro_closure} onward likewise use it.
+
+\subsection{Momentum-threshold validation}
+The two signal-definition momentum thresholds sit at the selection efficiency
+turn-on, measured against a threshold-free true signal (the CC $\nu_\mu$
+$1\mu1\pi^\pm$ topology with the momentum/angle cuts removed):
+
+\begin{center}\small
+\begin{tabular}{lccc}
+\toprule
+Threshold & below & above & turn-on \\
+\midrule
+$p_\mu > 0.15$~GeV/c  & $\sim$0--1.5\% & $\sim$9--12\%  & 0.145$\to$0.155 \\
+$p_\pi > 0.175$~GeV/c & $\sim$0--3\%   & $\sim$12--16\% & 0.165$\to$0.185 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent Both are correctly placed --- lowering them would add near-zero-efficiency
+phase space, raising them would discard measurable signal. The reconstructed pion
+momentum (muon-hypothesis range) is biased low and increasingly so with momentum
+(mean reco$-$true $\approx0$ at threshold, $-0.15$~GeV/c at 0.40) from the
+$\mu$-vs-$\pi$ mass hypothesis plus pion re-interaction; a pion-hypothesis mass
+correction is applied to the $p_\pi$ reco bins.
+
+\subsection{Binning optimisation}
+Bins were designed to be at least the local RMS detector resolution wide (so the
+response stays well conditioned and the Wiener-SVD does not amplify the correlated
+flux/cross-section uncertainty) and to hold $\geq45$ selected-signal events
+(statistical floor). This lowers the total fractional uncertainty in every
+observable, chiefly through the statistical and unfolding-amplified terms; the
+flux/beamline term is correlated across bins and sets a floor:
+
+\begin{center}\small
+\begin{tabular}{lccc}
+\toprule
+Observable & bins & Total before & Total after \\
+\midrule
+$p_\mu$          & 22$\to$7 & 33.2\% & \textbf{25.0\%} \\
+$p_\pi$          & 5$\to$5  & 27.7\% & 27.0\% \\
+$\cos\theta_\mu$ & 12$\to$5 & 31.3\% & \textbf{26.7\%} \\
+$\cos\theta_\pi$ & 12$\to$5 & 48.5\% & \textbf{33.9\%} \\
+$\theta_{\mu\pi}$& 9$\to$7  & 28.4\% & \textbf{23.5\%} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Systematic breakdown by source}
+The framework builds a covariance matrix for every systematic; the bin-averaged
+fractional uncertainty from each source group (on the optimised binning) is:
+
+\begin{center}\small
+\captionof{table}{Bin-averaged fractional systematic uncertainty (\%) by source
+  group on the optimised binning.}
+\label{tab:systbreak}
+\begin{tabular}{lccccc}
+\toprule
+Source & $p_\mu$ & $p_\pi$ & $\cos\theta_\mu$ & $\cos\theta_\pi$ & $\theta_{\mu\pi}$ \\
+\midrule
+\textbf{Total}         & 27.2 & 28.3 & 28.8 & 33.8 & 25.1 \\
+Cross section (GENIE)  & 8.6  & 8.5  & 9.1  & 9.5  & 8.1 \\
+Flux --- PPFX          & 21.8 & 23.6 & 20.7 & 25.4 & 18.7 \\
+Flux --- beamline geom.& 2.3  & 2.2  & 2.3  & 3.3  & 1.6 \\
+Detector               & 9.6  & 10.2 & 14.0 & 14.6 & 10.5 \\
+Reinteraction          & 3.2  & 2.6  & 3.4  & 3.4  & 2.5 \\
+MC + data stats        & 8.6  & 6.5  & 9.4  & 11.9 & 9.3 \\
+POT + targets          & 2.7  & 2.9  & 2.7  & 3.0  & 2.4 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent The NuMI flux uncertainty has two parts, listed separately above: the
+PPFX hadron-production term (the dominant systematic, 19--26\%) and the
+beamline-geometry term. The latter is built from the 12 geometry-variation weights
+(\texttt{Horn\_2kA}, \texttt{Horn1/2\_x/y\_3mm}, \texttt{Beam\_spot\_*},
+\texttt{Beam\_shift\_*}, \texttt{Horns\_*\_water}, \texttt{Target\_z\_7mm})
+injected into the numuMC overlay via \texttt{AddBeamlineGeometryWeights}, summed in
+quadrature as two-sided unisim variations. It is sub-dominant, $1.6$--$3.3\%$
+across the observables. (Building it required a framework fix: the covariance
+code dereferenced a null histogram when a systematic --- here the beamline weights,
+present in the numuMC but not the dirt overlay --- was absent from some MC sample;
+it now falls back to that sample's central value, i.e.\ unit weight.) The per-bin
+breakdowns are shown in Fig.~\ref{fig:systbreak}.
+
+\begin{figure}[H]\centering
+  \includegraphics[width=0.31\textwidth]{fw_systbreak_pmu}\hfill
+  \includegraphics[width=0.31\textwidth]{fw_systbreak_costhmu}\hfill
+  \includegraphics[width=0.31\textwidth]{fw_systbreak_costhpi}
+  \caption{Fractional systematic uncertainty by source (optimised binning): total
+    (black), cross section (red), flux/beamline (blue), detector (green),
+    reinteraction (magenta), MC$+$data stats (orange), POT$+$targets (grey).}
+  \label{fig:systbreak}
+\end{figure}
+
+\subsection{Anatomy of the flux term: genuine flux vs.\ unfolding amplification}
+\label{sec:fluxanatomy}
+
+The flux (PPFX) term dominates the budget, and at $17$--$26\%$ it is larger than
+the $\sim\!17\%$ normalisation uncertainty usually quoted for the NuMI flux. It is
+therefore worth asking how much of it is the flux model itself and how much is
+statistical amplification introduced by the unfolding. To separate the two we
+evaluate the flux covariance at two stages --- on the reconstructed spectrum
+(before unfolding) and on the unfolded result --- and, at each stage, both
+integrated (the fully correlated, normalisation-like number, from the sum of all
+covariance elements) and bin-averaged (the mean of the diagonal fractional errors,
+i.e.\ the number quoted in Table~\ref{tab:systbreak} and Fig.~\ref{fig:systbreak}).
+
+\begin{center}
+\captionof{table}{Flux (PPFX) fractional uncertainty before and after unfolding.
+  The reconstructed-level value is $\sim\!17\%$ and flat across observables --- the
+  genuine flux-normalisation uncertainty. The unfolded value is that same $\sim\!17\%$
+  amplified by the Wiener--SVD propagation through the finite-statistics response;
+  the amplification tracks the data$+$MC statistical quality of each observable.}
+\label{tab:fluxanatomy}
+\begin{tabular}{lccccc}
+\toprule
+ & $p_\mu$ & $p_\pi$ & $\cos\theta_\mu$ & $\cos\theta_\pi$ & $\theta_{\mu\pi}$ \\
+\midrule
+Flux, reco (integrated / norm) & 16.9 & 17.0 & 16.7 & 16.7 & 16.7 \\
+Flux, reco (bin-averaged)      & 17.7 & 16.4 & 16.6 & 17.0 & 17.0 \\
+\midrule
+Flux, unfolded (bin-averaged)  & 19.8 & 22.4 & 19.8 & 25.5 & 17.5 \\
+Amplification factor           & 1.12 & 1.37 & 1.20 & 1.49 & 1.03 \\
+Excess from unfolding (abs.)   & +2.1 & +6.0 & +3.2 & +8.5 & +0.5 \\
+\midrule
+Data$+$MC stats (unfolded)     & 7.9  & 6.3  & 8.4  & 12.2 & 8.8 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent Three points follow. First, the \emph{genuine} flux uncertainty is
+$\sim\!17\%$ and identical for all five observables, as expected for a
+normalisation term. Second, it is not itself contaminated by Monte Carlo
+statistics: at reco level the integrated (correlated) and bin-averaged (diagonal)
+numbers agree to better than a percent, whereas statistical noise leaking into the
+covariance would inflate the diagonal well above the correlated norm. This is
+expected --- the $\sim\!600$ PPFX universes reweight the \emph{same} events, so
+there is no independent per-universe statistical scatter. Third, the elevated
+unfolded values are the $\sim\!17\%$ flux \emph{amplified} by the Wiener--SVD
+propagation $A_C M\,V_\text{flux}\,M^\top A_C^\top$ through the finite-statistics
+Run-1 response. It is at this step, not in the flux multisim, that the response
+statistics transfer into the flux term: the amplification is largest exactly where
+the statistics are thinnest ($\cos\theta_\pi$: stat.\ $12.2\%$, amplification
+$1.49\times$, $+8.5\%$) and negligible where the response is well conditioned
+($\theta_{\mu\pi}$: $1.03\times$, $+0.5\%$). The lever for reducing the flux term is
+therefore the response conditioning (more overlay statistics, or the observable's
+binning and regularisation strength), not the flux model; $\cos\theta_\pi$ --- the
+noisiest observable across the entire budget --- is where it would matter most.
+
+\subsection{Multi-run overlay and a resonance-model closure}
+\label{sec:multirun}
+
+Two facts frame what more statistics can and cannot do for the flux term. First,
+the flux \emph{systematic} is a normalisation-and-shape model uncertainty and is
+therefore POT-independent: adding data or overlay does not change it. Second,
+Section~\ref{sec:fluxanatomy} showed that the elevated \emph{unfolded} flux is that
+$\sim\!17\%$ model uncertainty amplified by the Wiener--SVD propagation through a
+statistically-limited response, and that at Run-1 exposure the limitation is the
+\emph{data} statistics, not the overlay. Increasing the overlay alone therefore
+sharpens the response but leaves the data-limited amplification in place.
+
+To study a genuine multi-run configuration we combine the FHC overlays for
+Runs~1, 2 and~4 (with \texttt{Run4}$=$\texttt{Run4c}$+$\texttt{Run4d} counted once;
+the file first distributed as ``Run~5 FHC'' was set aside on inspection, being in
+fact an intrinsic-$\nu_e$ overlay --- $86\%$ $\nu_e$, $14\%$ $\bar\nu_e$, no
+$\nu_\mu$ events, hence the large $\nu_e$-enriched POT-equivalent and no $\nu_\mu$
+signal; the genuine Run~5 $\nu_\mu$ overlay, a \texttt{reweightedPPFX} sample, was
+subsequently located and is used for the extended set below),
+$2.32\times10^{6}$ unique events, normalised to the $\nu_e$-convention FHC data POT
+$6.626\times10^{20}$ (Section~\ref{sec:nueconsistency}). Because CC$\pi^+$ is
+resonance-dominated, robustness to the resonant axial mass is tested with
+Poisson-thrown fake data reweighted to $M_A^\mathrm{RES}=1.12\pm0.22$~GeV
+($\pm1\sigma$; axial dipole ratio in the true interaction $Q^2$, a
+$+8.1\%/-7.2\%$ rate distortion). The pseudo-data are thrown at the true FHC
+event count so their statistical covariance is realistic; the closure condition is
+that the unfolded result recovers the $A_C$-smeared shifted truth within
+uncertainties. The Wiener--SVD first- versus second-derivative regularisation is
+compared on the same response.
+
+The closure succeeds for every observable, both signs of the shift, and both
+regularisations: the unfolded result recovers the $A_C$-smeared shifted truth with
+$\chi^2/\mathrm{ndf}<1$ throughout (Table~\ref{tab:mares_closure}), all $p$-values
+above $0.63$ and most above $0.9$. The Wiener--SVD machinery is therefore unbiased
+under a $\pm1\sigma$ $M_A^\mathrm{RES}$ distortion, and the first- and
+second-derivative regularisations perform equivalently in the closure (the
+first-derivative variant carries a slightly larger statistical term). Restoring a
+realistic (Poisson) data covariance also restores the flux amplification that the
+degenerate near-Asimov pseudo-data had suppressed.
+
+To separate the mean amplification from single-realisation noise, we throw $15$
+independent Poisson pseudo-datasets (central value only, no $M_A^\mathrm{RES}$
+shift, at the same $6.626\times10^{20}$ FHC exposure) and unfold each
+(Table~\ref{tab:amp_throws}). Averaged over throws, the unfolded flux stabilises at
+$24.7$--$27.1\%$, a mean amplification of $1.44$--$1.63\times$ over the
+$\sim\!17\%$ floor, with a data-statistical term of $8$--$13\%$. This confirms that
+the amplification is driven by the data statistics, not the overlay, and is
+consistent with the Run-1 result of Section~\ref{sec:fluxanatomy}. The
+throw-to-throw scatter is small for the momenta ($p_\mu$, $p_\pi$: $\pm0.06$--$0.08\times$,
+flux $\pm1.1$--$1.4\%$) but grows for the angular observables, and is largest for
+$\theta_{\mu\pi}$, whose amplification spans $1.27$--$2.02\times$ (flux
+$21.4$--$34.2\%$) across the $15$ throws. At Run-1-level exposure the amplification
+is therefore well defined in the mean but individually unstable, most so for
+$\theta_{\mu\pi}$ and $\cos\theta_\pi$ --- a direct consequence of the sparse,
+data-limited response.
+
+\begin{center}\small
+\captionof{table}{Flux amplification averaged over $15$ independent Poisson-thrown
+  pseudo-datasets at the FHC data POT: mean $\pm$ standard deviation and
+  min--max range over throws, for the unfolded flux (bin-averaged) and the
+  amplification relative to the $\sim\!17\%$ reco-level floor.}
+\label{tab:amp_throws}
+\begin{tabular}{lcccc}
+\toprule
+Observable & Amplification (mean$\pm$sd) & Amp.\ range & Unfolded flux & Flux range \\
+\midrule
+$p_\mu$          & $1.44\pm0.08\times$ & $[1.27,1.60]$ & $24.7\pm1.4\%$ & $[21.9,27.5]$ \\
+$p_\pi$          & $1.52\pm0.06\times$ & $[1.40,1.65]$ & $26.2\pm1.1\%$ & $[24.0,28.4]$ \\
+$\cos\theta_\mu$ & $1.60\pm0.14\times$ & $[1.41,1.85]$ & $26.8\pm2.3\%$ & $[23.7,31.1]$ \\
+$\cos\theta_\pi$ & $1.63\pm0.11\times$ & $[1.45,1.89]$ & $27.1\pm1.9\%$ & $[24.1,31.6]$ \\
+$\theta_{\mu\pi}$& $1.58\pm0.21\times$ & $[1.27,2.02]$ & $26.7\pm3.6\%$ & $[21.4,34.2]$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{center}\small
+\captionof{table}{Fake-data closure: $\chi^2/\mathrm{ndf}$ of the unfolded result
+  against the $A_C$-smeared $M_A^\mathrm{RES}$-shifted truth, for the two shift
+  signs and the two Wiener--SVD regularisations (number of bins in parentheses).
+  All values are below unity per degree of freedom ($p>0.63$).}
+\label{tab:mares_closure}
+\begin{tabular}{lcccc}
+\toprule
+Observable & $+1\sigma$ (2nd) & $+1\sigma$ (1st) & $-1\sigma$ (2nd) & $-1\sigma$ (1st) \\
+\midrule
+$p_\mu$ (7)          & 1.26 & 2.15 & 0.95 & 2.14 \\
+$p_\pi$ (5)          & 1.24 & 3.44 & 0.25 & 0.39 \\
+$\cos\theta_\mu$ (5) & 0.47 & 0.63 & 1.90 & 1.24 \\
+$\cos\theta_\pi$ (5) & 2.99 & 1.07 & 0.24 & 0.33 \\
+$\theta_{\mu\pi}$ (7)& 1.71 & 3.32 & 1.96 & 4.33 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Adding the genuine Run~5 $\nu_\mu$ overlay extends the set to
+$\{$Run~1, 2, 4, 5$\}$ --- $2.87\times10^{6}$ events ($+24\%$), combined MC POT
+$8.549\times10^{21}$, at the full $\nu_e$-matched FHC data POT
+$8.857\times10^{20}$. The extraction closes for every observable
+($\chi^2/\mathrm{ndf}<1$, $p>0.92$) and the flux term ($22$--$29\%$ unfolded,
+amplification $1.29$--$1.72\times$) is statistically consistent with the
+$\{$Run~1, 2, 4$\}$ throws above: the extra $24\%$ of overlay does not move the
+data-limited amplification, as expected, but the measurement now spans the
+complete FHC exposure.
+
+\subsection{Consistency with the sibling $\nu_e\,\mathrm{CC}\,1\pi$ measurement}
+\label{sec:nueconsistency}
+
+This analysis is one of a pair of MicroBooNE NuMI CC single-charged-pion
+measurements; the companion $\nu_e\,\mathrm{CC}\,1\pi$ analysis shares the same
+cross-section-extraction framework, beam and reconstruction. A cross-check against
+its internal note confirms consistency on the essential conventions and identifies
+the differences that a combined NuMI CC$\pi$ programme should reconcile.
+
+\emph{Consistent by construction.} Both use the Wiener--SVD extraction framework;
+the updated NuMI flux with the fixed geometry bug and Geant~v4.10.4; the same
+signal topology (exactly one $\pi^\pm$, zero $\pi^0$ or heavier mesons, any number
+of protons, charged current); and the same systematic suite --- PPFX flux
+hadronic universes plus the \emph{same 12 beamline-geometry unisims}, the
+600-universe GENIE cross-section multisim with unisims, the Geant4 reinteraction
+reweighting, the standard detector-variation set, and $2\%$ / $1\%$ / $100\%$
+POT / target / dirt normalisation uncertainties. The FHC beam-on data POT per run
+agrees exactly (Run~2 $1.268$, Run~4 $2.075\times10^{20}$).
+
+\emph{Differences reconciled or flagged.} (i)~\textbf{Run-1 POT:} we adopt the
+$\nu_e$ convention, Run~1 FHC $=3.283\times10^{20}$ (standard trigger; the
+open-trigger era is treated separately), giving a total FHC exposure of
+$8.857\times10^{20}$ over Runs~1--5. (ii)~\textbf{Run~4:} the \texttt{Run4} overlay
+is identical to \texttt{Run4c}$+$\texttt{Run4d} combined (same $859{,}368$ events
+and $2.834\times10^{21}$ POT); only one may be used to avoid double counting.
+(iii)~\textbf{Pion threshold:} $\nu_e$ uses $\mathrm{KE}_\pi>40$~MeV
+($p_\pi>0.113\GeVc$) versus our $p_\pi>0.175\GeVc$
+(Table~\ref{tab:pithresh}). (iv)~\textbf{Opening-angle cut:} $\nu_e$ excludes
+$\theta_{e\pi}>170^\circ$ (a shower-specific back-to-back misreconstruction),
+whereas our muon-track topology uses $\theta_{\mu\pi}<2.6$~rad ($149^\circ$).
+(v)~\textbf{Regularisation:} the $\nu_e$ analysis smooths on the first derivative,
+this analysis on the second (Section~\ref{sec:multirun}). (vi)~\textbf{Scope:}
+$\nu_e$ covers Runs~1--5 in both FHC and RHC; the present measurement is FHC, with
+RHC a natural extension.
+
+\section{Summary}
+\label{sec:summary}
+% =============================================================================
+
+We have presented a simultaneous measurement of five CC$\pi^+$ differential cross
+sections on argon using $3.283\times10^{20}$~POT of MicroBooNE NuMI FHC Run~1 data,
+the first such multi-observable measurement in the MicroBooNE NuMI dataset.
+
+\paragraph{Selection.}
+The event selection achieves a signal purity of 57.2\% and an efficiency of
+12.1--12.6\% at the final cut, selecting 427 beam-on data events against a total
+background prediction of 243.  The data/prediction ratio of 0.752 is consistent
+with the known GENIE~v3 over-prediction of CC$\pi^+$ production documented in
+MiniBooNE~\cite{miniboone_ccpi}, MINERvA~\cite{minerva_ccpi},
+T2K~\cite{t2k_ccpip}, and the MicroBooNE BNB measurement~\cite{genieccpi}.
+
+\paragraph{Cross-section results, framework validation, and phase space.}
+Differential cross sections are extracted via a framework-consistent Wiener-SVD
+unfolder using a confirmed integrated $\nu_\mu + \bar{\nu}_\mu$ flux of
+$\Phi = 6.81159\times10^{-10}$~cm$^{-2}$~POT$^{-1}$ ($\bar{\nu}_\mu$ fraction
+$37.8\%$).  At a common \emph{reference} phase space ($p_\mu,p_\pi>0.1\GeVc$, reco
+$\thmupM<2.6$~rad), the custom pipeline was validated against the fully
+independent official XSecAnalyzer framework to $\le2\%$ on every observable
+($d\sigma/d\pmuM$: 1.016, $d\sigma/d\ppiM$: 0.979, $d\sigma/d\cthmuM$: 0.987,
+$d\sigma/d\cthpiM$: 1.004, $d\sigma/d\thmupM$: 1.001) after three corrections
+(Section~\ref{sec:datamc}): importing the full systematic covariance into the
+Wiener filter (a stat-only covariance over-corrects by $\sim26\%$), cancelling the
+EXT subtraction for the pure-MC fake data ($\sim3.7\%$), and matched binning; the
+two pipelines were also shown to select identical events (1914 vs 1913.6 NuWro
+events at the final cut).  The final results (Table~\ref{tab:sigint}) then refine
+the \emph{measured phase space} to $p_\mu>0.15$, $p_\pi>0.175\GeVc$,
+$\theta_{\mu\pi}<2.6$~rad, chosen from the efficiency turn-on curves so the
+selection efficiency is flat at $\sim$13--20\% (Section~\ref{sec:signal}): the
+momentum thresholds remove the $\sim$5\% low-momentum bins and the $2.6$~rad cut
+rejects the cosmic-dominated large-angle region.  No lower opening-angle cut is
+applied, since the small-angle region is high-purity.  This raises the efficiency
+from $12.1\%$ to $15.6\%$ at $\sim$55\% purity.  The integrated values are
+correspondingly smaller and, being a different phase space, are not directly
+comparable to the framework's full-$0.1\GeVc$ numbers.
+
+\paragraph{Context in the experimental landscape.}
+The measured $\sigma_{\mathrm{int}}$ corresponds to $\approx 0.65$--$0.70$ times
+the GENIE~v3 prediction, consistent with generator over-predictions of
+20--35\% seen by all prior experiments (Section~\ref{sec:prev_meas}).  This
+measurement provides:
+\begin{itemize}[noitemsep]
+  \item The first CC$\pi^+$ differential cross sections from the MicroBooNE
+    NuMI (off-axis) dataset, complementing the existing BNB-beam
+    result~\cite{genieccpi} from the same detector.
+  \item Constraints at lower neutrino energies ($E_\nu \sim 0.1$--$0.5$~GeV)
+    than the previous NuMI CC$\pi^+$ results (ArgoNEUT~\cite{argoneut_ccpi} at
+    $\langle E_\nu \rangle \approx 9.6$~GeV, MINERvA~\cite{minerva_ccpi} at
+    $\langle E_\nu \rangle \approx 3.6$~GeV).
+  \item A measurement on an argon target at the kinematic regime most relevant
+    to the planned DUNE~\cite{dune} oscillation analysis, which operates at a
+    similar beam energy with a LArTPC far detector.
+  \item Sensitivity to the $\bar{\nu}_\mu$ contribution ($\approx 38\%$) in
+    CC$\pi^+$ production on argon, previously unmeasured.
+\end{itemize}
+
+\paragraph{Required for publication.}
+Native systematic propagation in the custom pipeline (flux, cross-section, and
+detector-response multisims --- currently imported from the framework for the
+unfolding covariance) and inclusion of Runs~2, 4, and~5 beam-on data
+($\approx 5.4\times$ additional exposure) are needed before a real-data result can
+be published.  With the EXT cancellation and full covariance in place the unfolded
+spectra are everywhere positive and stable; the remaining $\le2\%$ residual against
+the framework is dominated by the covariance-import approximation
+(Section~\ref{sec:datamc}).  A comparison with NEUT and GiBUU predictions is also
+planned.
+
+% =============================================================================
+\appendix
+
+% ===== APPENDIX: legacy / cross-check material moved here =====
+\section{Legacy single-run (Run~1) result}
+\label{sec:legacyresults}
 \label{sec:results}
 % =============================================================================
 
@@ -1992,120 +2637,7 @@ the NuMI ntuples
 and the NuWro overlay's CV weights are sentinel ($-1$) values clamped to unity.
 
 % =============================================================================
-\section{Systematic Uncertainties}
-\label{sec:systematics}
-% =============================================================================
 
-Full systematic uncertainty propagation has not yet been performed.
-Table~\ref{tab:systematics} lists the sources and their estimated impacts.
-
-\begin{table}[H]
-  \centering
-  \caption{Systematic uncertainty sources.
-    ``Not quantified'' means the branch is readable but propagation code
-    has not been written.}
-  \label{tab:systematics}
-  \begin{tabular}{L{4.0cm} L{4.0cm} l}
-    \toprule
-    Source & Branch / method & Impact \\
-    \midrule
-    Flux (PPFX multisims)         & \texttt{weightsFlux}  & $\sim10$--$15\%$ norm. \\
-    GENIE cross sections          & \texttt{weightsGenie} & $\sim20$--$30\%$ (model) \\
-    Hadron re-interaction         & \texttt{weightsReint} & $\sim5$--$10\%$ \\
-    Detector response             & Dedicated samples     & $\sim5$--$15\%$ \\
-    EXT normalisation             & Trigger-count ratio   & $\sim3$--$5\%$ \\
-    POT counting                  & Beam toroids          & $\sim2\%$ \\
-    Flux integral (absolute)      & PPFX integral         & Blocks absolute $\sigma$ \\
-    \midrule
-    Statistical (427 data events) & ---                   & $\sim5\%$ on $\sigma_{\mathrm{int}}$ \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-% =============================================================================
-\section{Known Issues and Required Follow-up}
-\label{sec:issues}
-% =============================================================================
-
-\begin{table}[H]
-  \centering
-  \caption{Outstanding issues and their impact on the final result.}
-  \label{tab:issues}
-  \small
-  \begin{tabular}{L{4.5cm} L{2.5cm} L{5.0cm}}
-    \toprule
-    Issue & Status & Impact \\
-    \midrule
-    \texttt{FLUX\_PER\_POT} confirmed
-      & \textbf{Resolved}
-      & $\Phi = 6.81159\times10^{-10}$~cm$^{-2}$~POT$^{-1}$ from NuMI flux histograms \\[4pt]
-    Unfolding covariance (stat-only $\to$ full)
-      & \textbf{Resolved}
-      & Framework \texttt{PredTotal}$+$data Poisson imported; removed $\sim26\%$ bias \\[4pt]
-    EXT subtraction on NuWro fake data
-      & \textbf{Resolved}
-      & Cancelled via \texttt{fake\_data\_ext\_cancel}; re-enable for real data \\[4pt]
-    $\theta_{\mu\pi}$ binning (10 vs 9, C4)
-      & \textbf{Resolved}
-      & Custom aligned to framework 9-bin scheme \\[4pt]
-    Multisim systematics not propagated (custom)
-      & Not started
-      & Imported from framework for the covariance; full custom propagation pending \\[4pt]
-    Negative tail bins
-      & \textbf{Resolved}
-      & All bins now positive after EXT cancellation; no longer present \\[4pt]
-    Runs~2, 4, 5 beam-on files not available
-      & Data files needed
-      & $\times5.4$ exposure increase for the real-data measurement \\[4pt]
-    Generator comparisons (GENIE, NuWro)
-      & Blocked by missing AVX on compute nodes
-      & NEUT comparison runnable locally \\[4pt]
-    CRT veto branches (\texttt{crthitpe}, \texttt{crtveto})
-      & Dead (all-zero in NuMI ntuples)
-      & Replaced by \texttt{bdt\_cosmic} (disabled at default 0.0) \\[4pt]
-    Official XSecAnalyzer NuWro closure
-      & \textbf{Done} (all 5 obs)
-      & Cross-validates the unfolding; NuWro $\approx 2\times$ GENIE (Sec.~\ref{sec:nuwroclosure}) \\[4pt]
-    Native RHC detector variations
-      & \textbf{Resolved}
-      & Run-4 RHC detVar (8 knobs) now used; replaces the Run-1 FHC stand-in (Sec.~\ref{sec:rhc}) \\[4pt]
-    Run-5 FHC detVar Recomb2/SCE
-      & \textbf{Resolved}
-      & Were intrinsic-$\nu_e$ overlays (0\% $\nu_\mu$); Run-4 FHC used as the stand-in for those two knobs \\[4pt]
-    Combined FHC$+$RHC joint flux systematic
-      & \textbf{Resolved}
-      & Per-universe summing over the shared 600 PPFX universes is correct; the block was a detVar duplicate-file guard, now fixed to accumulate (Sec.~\ref{sec:rhc}) \\[4pt]
-    Combined per-mode normalisation
-      & \textbf{Resolved}
-      & Per-mode \texttt{summed\_pot} so each horn scales to its own data exposure, not MC POT (Sec.~\ref{sec:rhc}) \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-% =============================================================================
-\section{Analysis Pipeline}
-\label{sec:pipeline}
-% =============================================================================
-
-The primary measurement is produced by a single driver, \texttt{run\_analysis.sh},
-which chains the selection, the per-observable cross-section extraction, and the
-comparison/diagnostic stages:
-
-\begin{verbatim}
-selection/ccpi_selection.C   ->  histograms.root + unfolding_inputs.root
-                                  | (5 observables x 8 methods)
-xsec/ccpi_xsec.C(obs,method) ->  xsec_{obs}_{method}.root  (40 files)
-xsec/compare_unfolding.C     ->  compare_plots/
-xsec/compare_generators.C    ->  gen_compare/
-selection/event_display.C    ->  event_displays/
-\end{verbatim}
-
-Each output file is validated for freshness and non-zero content after the step
-that produces it.  The official-framework cross-check of
-Section~\ref{sec:nuwroclosure} is driven separately
-(\texttt{xsec\_analyzer/run\_nuwro\_observables.sh}).
-
-% =============================================================================
 \section{NuWro Fake-Data Closure and Cross-Pipeline Validation}
 \label{sec:nuwroclosure}
 % =============================================================================
@@ -2265,503 +2797,7 @@ statistics---the central $\hat{x}/x_{\rm true}$ ratio is the more discriminating
 metric and is what establishes the result above.
 
 % =============================================================================
-\section{Binning Optimisation, Systematic Breakdown, and Threshold Validation}
-\label{sec:binopt}
-% =============================================================================
 
-The reconstructed spectra, response matrices, efficiencies, and differential
-cross sections shown throughout this note are the \textsc{XSecAnalyzer} framework
-outputs on the \emph{optimised} binning defined here; the four-generator
-comparisons of Fig.~\ref{fig:nuwro_closure} onward likewise use it.
-
-\subsection{Momentum-threshold validation}
-The two signal-definition momentum thresholds sit at the selection efficiency
-turn-on, measured against a threshold-free true signal (the CC $\nu_\mu$
-$1\mu1\pi^\pm$ topology with the momentum/angle cuts removed):
-
-\begin{center}\small
-\begin{tabular}{lccc}
-\toprule
-Threshold & below & above & turn-on \\
-\midrule
-$p_\mu > 0.15$~GeV/c  & $\sim$0--1.5\% & $\sim$9--12\%  & 0.145$\to$0.155 \\
-$p_\pi > 0.175$~GeV/c & $\sim$0--3\%   & $\sim$12--16\% & 0.165$\to$0.185 \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\noindent Both are correctly placed --- lowering them would add near-zero-efficiency
-phase space, raising them would discard measurable signal. The reconstructed pion
-momentum (muon-hypothesis range) is biased low and increasingly so with momentum
-(mean reco$-$true $\approx0$ at threshold, $-0.15$~GeV/c at 0.40) from the
-$\mu$-vs-$\pi$ mass hypothesis plus pion re-interaction; a pion-hypothesis mass
-correction is applied to the $p_\pi$ reco bins.
-
-\subsection{Binning optimisation}
-Bins were designed to be at least the local RMS detector resolution wide (so the
-response stays well conditioned and the Wiener-SVD does not amplify the correlated
-flux/cross-section uncertainty) and to hold $\geq45$ selected-signal events
-(statistical floor). This lowers the total fractional uncertainty in every
-observable, chiefly through the statistical and unfolding-amplified terms; the
-flux/beamline term is correlated across bins and sets a floor:
-
-\begin{center}\small
-\begin{tabular}{lccc}
-\toprule
-Observable & bins & Total before & Total after \\
-\midrule
-$p_\mu$          & 22$\to$7 & 33.2\% & \textbf{25.0\%} \\
-$p_\pi$          & 5$\to$5  & 27.7\% & 27.0\% \\
-$\cos\theta_\mu$ & 12$\to$5 & 31.3\% & \textbf{26.7\%} \\
-$\cos\theta_\pi$ & 12$\to$5 & 48.5\% & \textbf{33.9\%} \\
-$\theta_{\mu\pi}$& 9$\to$7  & 28.4\% & \textbf{23.5\%} \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\subsection{Systematic breakdown by source}
-The framework builds a covariance matrix for every systematic; the bin-averaged
-fractional uncertainty from each source group (on the optimised binning) is:
-
-\begin{center}\small
-\captionof{table}{Bin-averaged fractional systematic uncertainty (\%) by source
-  group on the optimised binning.}
-\label{tab:systbreak}
-\begin{tabular}{lccccc}
-\toprule
-Source & $p_\mu$ & $p_\pi$ & $\cos\theta_\mu$ & $\cos\theta_\pi$ & $\theta_{\mu\pi}$ \\
-\midrule
-\textbf{Total}         & 27.2 & 28.3 & 28.8 & 33.8 & 25.1 \\
-Cross section (GENIE)  & 8.6  & 8.5  & 9.1  & 9.5  & 8.1 \\
-Flux --- PPFX          & 21.8 & 23.6 & 20.7 & 25.4 & 18.7 \\
-Flux --- beamline geom.& 2.3  & 2.2  & 2.3  & 3.3  & 1.6 \\
-Detector               & 9.6  & 10.2 & 14.0 & 14.6 & 10.5 \\
-Reinteraction          & 3.2  & 2.6  & 3.4  & 3.4  & 2.5 \\
-MC + data stats        & 8.6  & 6.5  & 9.4  & 11.9 & 9.3 \\
-POT + targets          & 2.7  & 2.9  & 2.7  & 3.0  & 2.4 \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\noindent The NuMI flux uncertainty has two parts, listed separately above: the
-PPFX hadron-production term (the dominant systematic, 19--26\%) and the
-beamline-geometry term. The latter is built from the 12 geometry-variation weights
-(\texttt{Horn\_2kA}, \texttt{Horn1/2\_x/y\_3mm}, \texttt{Beam\_spot\_*},
-\texttt{Beam\_shift\_*}, \texttt{Horns\_*\_water}, \texttt{Target\_z\_7mm})
-injected into the numuMC overlay via \texttt{AddBeamlineGeometryWeights}, summed in
-quadrature as two-sided unisim variations. It is sub-dominant, $1.6$--$3.3\%$
-across the observables. (Building it required a framework fix: the covariance
-code dereferenced a null histogram when a systematic --- here the beamline weights,
-present in the numuMC but not the dirt overlay --- was absent from some MC sample;
-it now falls back to that sample's central value, i.e.\ unit weight.) The per-bin
-breakdowns are shown in Fig.~\ref{fig:systbreak}.
-
-\begin{figure}[H]\centering
-  \includegraphics[width=0.31\textwidth]{fw_systbreak_pmu}\hfill
-  \includegraphics[width=0.31\textwidth]{fw_systbreak_costhmu}\hfill
-  \includegraphics[width=0.31\textwidth]{fw_systbreak_costhpi}
-  \caption{Fractional systematic uncertainty by source (optimised binning): total
-    (black), cross section (red), flux/beamline (blue), detector (green),
-    reinteraction (magenta), MC$+$data stats (orange), POT$+$targets (grey).}
-  \label{fig:systbreak}
-\end{figure}
-
-\subsection{Anatomy of the flux term: genuine flux vs.\ unfolding amplification}
-\label{sec:fluxanatomy}
-
-The flux (PPFX) term dominates the budget, and at $17$--$26\%$ it is larger than
-the $\sim\!17\%$ normalisation uncertainty usually quoted for the NuMI flux. It is
-therefore worth asking how much of it is the flux model itself and how much is
-statistical amplification introduced by the unfolding. To separate the two we
-evaluate the flux covariance at two stages --- on the reconstructed spectrum
-(before unfolding) and on the unfolded result --- and, at each stage, both
-integrated (the fully correlated, normalisation-like number, from the sum of all
-covariance elements) and bin-averaged (the mean of the diagonal fractional errors,
-i.e.\ the number quoted in Table~\ref{tab:systbreak} and Fig.~\ref{fig:systbreak}).
-
-\begin{center}
-\captionof{table}{Flux (PPFX) fractional uncertainty before and after unfolding.
-  The reconstructed-level value is $\sim\!17\%$ and flat across observables --- the
-  genuine flux-normalisation uncertainty. The unfolded value is that same $\sim\!17\%$
-  amplified by the Wiener--SVD propagation through the finite-statistics response;
-  the amplification tracks the data$+$MC statistical quality of each observable.}
-\label{tab:fluxanatomy}
-\begin{tabular}{lccccc}
-\toprule
- & $p_\mu$ & $p_\pi$ & $\cos\theta_\mu$ & $\cos\theta_\pi$ & $\theta_{\mu\pi}$ \\
-\midrule
-Flux, reco (integrated / norm) & 16.9 & 17.0 & 16.7 & 16.7 & 16.7 \\
-Flux, reco (bin-averaged)      & 17.7 & 16.4 & 16.6 & 17.0 & 17.0 \\
-\midrule
-Flux, unfolded (bin-averaged)  & 19.8 & 22.4 & 19.8 & 25.5 & 17.5 \\
-Amplification factor           & 1.12 & 1.37 & 1.20 & 1.49 & 1.03 \\
-Excess from unfolding (abs.)   & +2.1 & +6.0 & +3.2 & +8.5 & +0.5 \\
-\midrule
-Data$+$MC stats (unfolded)     & 7.9  & 6.3  & 8.4  & 12.2 & 8.8 \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\noindent Three points follow. First, the \emph{genuine} flux uncertainty is
-$\sim\!17\%$ and identical for all five observables, as expected for a
-normalisation term. Second, it is not itself contaminated by Monte Carlo
-statistics: at reco level the integrated (correlated) and bin-averaged (diagonal)
-numbers agree to better than a percent, whereas statistical noise leaking into the
-covariance would inflate the diagonal well above the correlated norm. This is
-expected --- the $\sim\!600$ PPFX universes reweight the \emph{same} events, so
-there is no independent per-universe statistical scatter. Third, the elevated
-unfolded values are the $\sim\!17\%$ flux \emph{amplified} by the Wiener--SVD
-propagation $A_C M\,V_\text{flux}\,M^\top A_C^\top$ through the finite-statistics
-Run-1 response. It is at this step, not in the flux multisim, that the response
-statistics transfer into the flux term: the amplification is largest exactly where
-the statistics are thinnest ($\cos\theta_\pi$: stat.\ $12.2\%$, amplification
-$1.49\times$, $+8.5\%$) and negligible where the response is well conditioned
-($\theta_{\mu\pi}$: $1.03\times$, $+0.5\%$). The lever for reducing the flux term is
-therefore the response conditioning (more overlay statistics, or the observable's
-binning and regularisation strength), not the flux model; $\cos\theta_\pi$ --- the
-noisiest observable across the entire budget --- is where it would matter most.
-
-\subsection{Multi-run overlay and a resonance-model closure}
-\label{sec:multirun}
-
-Two facts frame what more statistics can and cannot do for the flux term. First,
-the flux \emph{systematic} is a normalisation-and-shape model uncertainty and is
-therefore POT-independent: adding data or overlay does not change it. Second,
-Section~\ref{sec:fluxanatomy} showed that the elevated \emph{unfolded} flux is that
-$\sim\!17\%$ model uncertainty amplified by the Wiener--SVD propagation through a
-statistically-limited response, and that at Run-1 exposure the limitation is the
-\emph{data} statistics, not the overlay. Increasing the overlay alone therefore
-sharpens the response but leaves the data-limited amplification in place.
-
-To study a genuine multi-run configuration we combine the FHC overlays for
-Runs~1, 2 and~4 (with \texttt{Run4}$=$\texttt{Run4c}$+$\texttt{Run4d} counted once;
-the file first distributed as ``Run~5 FHC'' was set aside on inspection, being in
-fact an intrinsic-$\nu_e$ overlay --- $86\%$ $\nu_e$, $14\%$ $\bar\nu_e$, no
-$\nu_\mu$ events, hence the large $\nu_e$-enriched POT-equivalent and no $\nu_\mu$
-signal; the genuine Run~5 $\nu_\mu$ overlay, a \texttt{reweightedPPFX} sample, was
-subsequently located and is used for the extended set below),
-$2.32\times10^{6}$ unique events, normalised to the $\nu_e$-convention FHC data POT
-$6.626\times10^{20}$ (Section~\ref{sec:nueconsistency}). Because CC$\pi^+$ is
-resonance-dominated, robustness to the resonant axial mass is tested with
-Poisson-thrown fake data reweighted to $M_A^\mathrm{RES}=1.12\pm0.22$~GeV
-($\pm1\sigma$; axial dipole ratio in the true interaction $Q^2$, a
-$+8.1\%/-7.2\%$ rate distortion). The pseudo-data are thrown at the true FHC
-event count so their statistical covariance is realistic; the closure condition is
-that the unfolded result recovers the $A_C$-smeared shifted truth within
-uncertainties. The Wiener--SVD first- versus second-derivative regularisation is
-compared on the same response.
-
-The closure succeeds for every observable, both signs of the shift, and both
-regularisations: the unfolded result recovers the $A_C$-smeared shifted truth with
-$\chi^2/\mathrm{ndf}<1$ throughout (Table~\ref{tab:mares_closure}), all $p$-values
-above $0.63$ and most above $0.9$. The Wiener--SVD machinery is therefore unbiased
-under a $\pm1\sigma$ $M_A^\mathrm{RES}$ distortion, and the first- and
-second-derivative regularisations perform equivalently in the closure (the
-first-derivative variant carries a slightly larger statistical term). Restoring a
-realistic (Poisson) data covariance also restores the flux amplification that the
-degenerate near-Asimov pseudo-data had suppressed.
-
-To separate the mean amplification from single-realisation noise, we throw $15$
-independent Poisson pseudo-datasets (central value only, no $M_A^\mathrm{RES}$
-shift, at the same $6.626\times10^{20}$ FHC exposure) and unfold each
-(Table~\ref{tab:amp_throws}). Averaged over throws, the unfolded flux stabilises at
-$24.7$--$27.1\%$, a mean amplification of $1.44$--$1.63\times$ over the
-$\sim\!17\%$ floor, with a data-statistical term of $8$--$13\%$. This confirms that
-the amplification is driven by the data statistics, not the overlay, and is
-consistent with the Run-1 result of Section~\ref{sec:fluxanatomy}. The
-throw-to-throw scatter is small for the momenta ($p_\mu$, $p_\pi$: $\pm0.06$--$0.08\times$,
-flux $\pm1.1$--$1.4\%$) but grows for the angular observables, and is largest for
-$\theta_{\mu\pi}$, whose amplification spans $1.27$--$2.02\times$ (flux
-$21.4$--$34.2\%$) across the $15$ throws. At Run-1-level exposure the amplification
-is therefore well defined in the mean but individually unstable, most so for
-$\theta_{\mu\pi}$ and $\cos\theta_\pi$ --- a direct consequence of the sparse,
-data-limited response.
-
-\begin{center}\small
-\captionof{table}{Flux amplification averaged over $15$ independent Poisson-thrown
-  pseudo-datasets at the FHC data POT: mean $\pm$ standard deviation and
-  min--max range over throws, for the unfolded flux (bin-averaged) and the
-  amplification relative to the $\sim\!17\%$ reco-level floor.}
-\label{tab:amp_throws}
-\begin{tabular}{lcccc}
-\toprule
-Observable & Amplification (mean$\pm$sd) & Amp.\ range & Unfolded flux & Flux range \\
-\midrule
-$p_\mu$          & $1.44\pm0.08\times$ & $[1.27,1.60]$ & $24.7\pm1.4\%$ & $[21.9,27.5]$ \\
-$p_\pi$          & $1.52\pm0.06\times$ & $[1.40,1.65]$ & $26.2\pm1.1\%$ & $[24.0,28.4]$ \\
-$\cos\theta_\mu$ & $1.60\pm0.14\times$ & $[1.41,1.85]$ & $26.8\pm2.3\%$ & $[23.7,31.1]$ \\
-$\cos\theta_\pi$ & $1.63\pm0.11\times$ & $[1.45,1.89]$ & $27.1\pm1.9\%$ & $[24.1,31.6]$ \\
-$\theta_{\mu\pi}$& $1.58\pm0.21\times$ & $[1.27,2.02]$ & $26.7\pm3.6\%$ & $[21.4,34.2]$ \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\begin{center}\small
-\captionof{table}{Fake-data closure: $\chi^2/\mathrm{ndf}$ of the unfolded result
-  against the $A_C$-smeared $M_A^\mathrm{RES}$-shifted truth, for the two shift
-  signs and the two Wiener--SVD regularisations (number of bins in parentheses).
-  All values are below unity per degree of freedom ($p>0.63$).}
-\label{tab:mares_closure}
-\begin{tabular}{lcccc}
-\toprule
-Observable & $+1\sigma$ (2nd) & $+1\sigma$ (1st) & $-1\sigma$ (2nd) & $-1\sigma$ (1st) \\
-\midrule
-$p_\mu$ (7)          & 1.26 & 2.15 & 0.95 & 2.14 \\
-$p_\pi$ (5)          & 1.24 & 3.44 & 0.25 & 0.39 \\
-$\cos\theta_\mu$ (5) & 0.47 & 0.63 & 1.90 & 1.24 \\
-$\cos\theta_\pi$ (5) & 2.99 & 1.07 & 0.24 & 0.33 \\
-$\theta_{\mu\pi}$ (7)& 1.71 & 3.32 & 1.96 & 4.33 \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-Adding the genuine Run~5 $\nu_\mu$ overlay extends the set to
-$\{$Run~1, 2, 4, 5$\}$ --- $2.87\times10^{6}$ events ($+24\%$), combined MC POT
-$8.549\times10^{21}$, at the full $\nu_e$-matched FHC data POT
-$8.857\times10^{20}$. The extraction closes for every observable
-($\chi^2/\mathrm{ndf}<1$, $p>0.92$) and the flux term ($22$--$29\%$ unfolded,
-amplification $1.29$--$1.72\times$) is statistically consistent with the
-$\{$Run~1, 2, 4$\}$ throws above: the extra $24\%$ of overlay does not move the
-data-limited amplification, as expected, but the measurement now spans the
-complete FHC exposure.
-
-\subsection{Consistency with the sibling $\nu_e\,\mathrm{CC}\,1\pi$ measurement}
-\label{sec:nueconsistency}
-
-This analysis is one of a pair of MicroBooNE NuMI CC single-charged-pion
-measurements; the companion $\nu_e\,\mathrm{CC}\,1\pi$ analysis shares the same
-cross-section-extraction framework, beam and reconstruction. A cross-check against
-its internal note confirms consistency on the essential conventions and identifies
-the differences that a combined NuMI CC$\pi$ programme should reconcile.
-
-\emph{Consistent by construction.} Both use the Wiener--SVD extraction framework;
-the updated NuMI flux with the fixed geometry bug and Geant~v4.10.4; the same
-signal topology (exactly one $\pi^\pm$, zero $\pi^0$ or heavier mesons, any number
-of protons, charged current); and the same systematic suite --- PPFX flux
-hadronic universes plus the \emph{same 12 beamline-geometry unisims}, the
-600-universe GENIE cross-section multisim with unisims, the Geant4 reinteraction
-reweighting, the standard detector-variation set, and $2\%$ / $1\%$ / $100\%$
-POT / target / dirt normalisation uncertainties. The FHC beam-on data POT per run
-agrees exactly (Run~2 $1.268$, Run~4 $2.075\times10^{20}$).
-
-\emph{Differences reconciled or flagged.} (i)~\textbf{Run-1 POT:} we adopt the
-$\nu_e$ convention, Run~1 FHC $=3.283\times10^{20}$ (standard trigger; the
-open-trigger era is treated separately), giving a total FHC exposure of
-$8.857\times10^{20}$ over Runs~1--5. (ii)~\textbf{Run~4:} the \texttt{Run4} overlay
-is identical to \texttt{Run4c}$+$\texttt{Run4d} combined (same $859{,}368$ events
-and $2.834\times10^{21}$ POT); only one may be used to avoid double counting.
-(iii)~\textbf{Pion threshold:} $\nu_e$ uses $\mathrm{KE}_\pi>40$~MeV
-($p_\pi>0.113\GeVc$) versus our $p_\pi>0.175\GeVc$
-(Table~\ref{tab:pithresh}). (iv)~\textbf{Opening-angle cut:} $\nu_e$ excludes
-$\theta_{e\pi}>170^\circ$ (a shower-specific back-to-back misreconstruction),
-whereas our muon-track topology uses $\theta_{\mu\pi}<2.6$~rad ($149^\circ$).
-(v)~\textbf{Regularisation:} the $\nu_e$ analysis smooths on the first derivative,
-this analysis on the second (Section~\ref{sec:multirun}). (vi)~\textbf{Scope:}
-$\nu_e$ covers Runs~1--5 in both FHC and RHC; the present measurement is FHC, with
-RHC a natural extension.
-
-\subsection{Reverse-horn-current (RHC) expansion}
-\label{sec:rhc}
-
-We have begun extending the measurement to the reverse-horn-current beam as both a
-standalone measurement and, ultimately, a combined $\nu_\mu+\bar\nu_\mu$ result.
-The RHC \emph{flux} is $\bar\nu_\mu$-dominant ($54.6\%$ $\bar\nu_\mu$, versus FHC's
-$35\%$), with authoritative $>\!60$~MeV integrals
-$\Phi_{\nu_\mu}^\mathrm{RHC}=2.923\times10^{-10}$,
-$\Phi_{\bar\nu_\mu}^\mathrm{RHC}=3.523\times10^{-10}$, total
-$6.446\times10^{-10}~\mathrm{cm}^{-2}\mathrm{POT}^{-1}$ (the FHC-convention
-computation reproduces the authoritative FHC values exactly). The \emph{measured
-event rate}, however, remains $\nu_\mu$-dominant ($76\%$ $\nu_\mu$, $20\%$
-$\bar\nu_\mu$) because the $\nu_\mu$ cross section is $\sim\!2$--$3\times$ larger
-than the $\bar\nu_\mu$ one. The RHC overlays (Runs~1, 2, 3, 4a, 4b, 4c) are all
-verified as genuine $\nu_\mu$ overlays and processed --- $4.05\times10^{6}$ events,
-combined MC POT $1.546\times10^{22}$, mutually consistent
-($2.62\times10^{-16}$ events/POT) with the PPFX weights --- covering the full RHC
-exposure (Run~3, the largest period at $5.52\times10^{21}$~MC~POT / $1.44\times10^{6}$
-events, was added last). Native Run-4 RHC detector-variation samples (the standard
-eight-knob set: light-yield down/Rayleigh, recombination, space charge, and the four
-wire-modification variations) are now used for the RHC detector systematic, verified
-as genuine $\nu_\mu$ overlays with a uniform $3.80\times10^{-16}$ events/POT across
-all knobs; they replace the Run-1 FHC stand-in used previously. Native RHC dirt is
-still taken from FHC. The standalone result below uses Poisson-thrown central-value
-fake data at the $\nu_e$-matched RHC data POT $1.108\times10^{21}$. The generator
-predictions are re-averaged to the RHC flux composition; the combined FHC$+$RHC
-predictions are the fluence-weighted combination of the two horn modes
-($0.458$~FHC $/\,0.542$~RHC, each mode weighted by $\Phi_\mathrm{tot}\times$POT).
-
-The combined FHC$+$RHC measurement uses the summed $14$-file response over the full
-exposure ($5.6\times10^{6}$ events, combined data POT
-$D_\mathrm{comb}=1.994\times10^{21}=D_\mathrm{FHC}+D_\mathrm{RHC}$), with each horn
-mode normalised to its \emph{own} data exposure. This is a genuine subtlety: the
-detector-variation covariance is absolute (POT-scaled reco counts), so a single POT
-scale applied to all files would weight the modes by their Monte-Carlo POT
-($0.62{:}1$ FHC${:}$RHC) rather than by data exposure ($0.80{:}1$). Each mode's
-numuMC and detVar samples therefore carry a per-mode \texttt{summed\_pot}
-(FHC $2.158\times10^{22}$, RHC $2.782\times10^{22}$, $=S_\mathrm{mode}\times
-D_\mathrm{comb}/D_\mathrm{mode}$) so the framework's $D_\mathrm{comb}/$\texttt{summed\_pot}
-scaling reduces to $D_\mathrm{FHC}/S_\mathrm{FHC}$ and $D_\mathrm{RHC}/S_\mathrm{RHC}$;
-the fake data is Poisson-thrown with the matching per-mode rate.
-
-Contrary to an earlier concern, the joint \emph{flux systematic} is correct as
-built. All fourteen numuMC files carry the \emph{same} $600$ PPFX multisim
-universes, which the universe maker accumulates index-matched across both horn
-modes in a single chain, so universe $u$ is the same hadron-production draw in FHC
-and RHC. Per-universe summing therefore propagates one parameter draw through both
-beam configurations and lets each mode's flux response set the result, capturing the
-physical (not unit) cross-horn correlation automatically --- this is the rigorously
-correct multisim treatment, superior to any hand-built block covariance. The joint
-result was in fact blocked by a different, purely technical issue: a framework guard
-that forbade a second detector-variation file of the same type (needed to carry
-Run-4 FHC \emph{and} Run-4 RHC as \texttt{detVarCV}). That guard now accumulates the
-per-mode detVar samples exactly as it already did for the alternate-CV samples,
-matching its own in-code TODO. With both in place the combined closure passes for
-every observable (Table~\ref{tab:comb}), with an unfolded flux systematic of
-$22$--$27\%$ that sits between the standalone FHC and RHC values, as expected for the
-fluence-weighted mix.
-
-The standalone RHC extraction (native Run-4 RHC detector variations) closes cleanly
-for every observable (Table~\ref{tab:rhc}): the $A_C$-smeared truth is recovered with
-$\chi^2/\mathrm{ndf}<0.3$ and $p>0.94$ throughout. Two features stand out. First, the
-reco-level flux systematic is $\sim\!15\%$, genuinely below the FHC $\sim\!17\%$
-floor --- the $\bar\nu_\mu$-dominant flux carries a smaller PPFX hadron-production
-uncertainty. Second, the unfolding amplification ($1.29$--$1.99\times$) mirrors
-FHC, so the unfolded flux term ($19.5$--$28\%$) is comparable, again data-statistics
-limited.
-
-\begin{center}\small
-\captionof{table}{Standalone RHC ($\bar\nu_\mu$-dominant) extraction, full exposure
-  $1.108\times10^{21}$ with native Run-4 RHC detector variations: reco-level and
-  unfolded flux systematic, unfolding amplification, and fake-data closure
-  $\chi^2/\mathrm{ndf}$ (with $p$-value).}
-\label{tab:rhc}
-\begin{tabular}{lcccc}
-\toprule
-Observable & Flux (reco) & Flux (unfolded) & Amplification & Closure $\chi^2/\mathrm{ndf}$ \\
-\midrule
-$p_\mu$          & $15.4\%$ & $27.5\%$ & $1.78\times$ & $1.37/7$ ($p=0.99$) \\
-$p_\pi$          & $15.8\%$ & $23.6\%$ & $1.49\times$ & $0.21/5$ ($p=1.00$) \\
-$\cos\theta_\mu$ & $15.0\%$ & $26.5\%$ & $1.76\times$ & $0.43/5$ ($p=0.99$) \\
-$\cos\theta_\pi$ & $14.9\%$ & $29.6\%$ & $1.99\times$ & $1.23/5$ ($p=0.94$) \\
-$\theta_{\mu\pi}$& $15.1\%$ & $19.5\%$ & $1.29\times$ & $0.72/7$ ($p=1.00$) \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\begin{center}\small
-\captionof{table}{Combined FHC$+$RHC ($\nu_\mu+\bar\nu_\mu$) extraction over the full
-  joint exposure $D_\mathrm{comb}=1.994\times10^{21}$, per-mode normalised, with
-  native Run-4 FHC$+$RHC detector variations (accumulated per mode): reco-level and
-  unfolded flux systematic, unfolding amplification, and fake-data closure
-  $\chi^2/\mathrm{ndf}$ (with $p$-value). The unfolded flux term ($22$--$27\%$) lies
-  between the standalone FHC and RHC values.}
-\label{tab:comb}
-\begin{tabular}{lcccc}
-\toprule
-Observable & Flux (reco) & Flux (unfolded) & Amplification & Closure $\chi^2/\mathrm{ndf}$ \\
-\midrule
-$p_\mu$          & $16.2\%$ & $22.5\%$ & $1.39\times$ & $0.58/7$ ($p=1.00$) \\
-$p_\pi$          & $16.3\%$ & $23.9\%$ & $1.47\times$ & $1.27/5$ ($p=0.94$) \\
-$\cos\theta_\mu$ & $15.8\%$ & $25.0\%$ & $1.58\times$ & $0.28/5$ ($p=1.00$) \\
-$\cos\theta_\pi$ & $15.7\%$ & $25.2\%$ & $1.61\times$ & $1.41/5$ ($p=0.92$) \\
-$\theta_{\mu\pi}$& $15.9\%$ & $26.6\%$ & $1.67\times$ & $1.13/7$ ($p=0.99$) \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\begin{figure}[H]\centering
-  \includegraphics[width=0.98\textwidth]{dsigma_FHC5}
-  \caption{Differential cross sections $d\sigma/dx$ for all five observables on the
-    current Poisson-thrown central-value fake data, FHC full exposure: unfolded fake
-    data (black points), $A_C$-smeared fake-data truth (grey dashed), the MicroBooNE
-    tune (black solid), and the four generator predictions (GENIE, GiBUU, NEUT,
-    NuWro). The unfolded points recover the injected truth for every observable, the
-    same closure summarised in Tables~\ref{tab:rhc}--\ref{tab:comb}.}
-  \label{fig:dsigma_current}
-\end{figure}
-
-\begin{figure}[H]\centering
-  \includegraphics[width=0.98\textwidth]{dsigma_COMB}
-  \caption{Combined FHC$+$RHC ($\nu_\mu+\bar\nu_\mu$) differential cross sections on
-    the current per-mode-normalised fake data, with the fluence-weighted combined
-    generator predictions. The standalone RHC result (\texttt{dsigma\_RHCFULL}) is
-    obtained identically.}
-  \label{fig:dsigma_comb}
-\end{figure}
-
-% =============================================================================
-\section{Summary}
-\label{sec:summary}
-% =============================================================================
-
-We have presented a simultaneous measurement of five CC$\pi^+$ differential cross
-sections on argon using $3.283\times10^{20}$~POT of MicroBooNE NuMI FHC Run~1 data,
-the first such multi-observable measurement in the MicroBooNE NuMI dataset.
-
-\paragraph{Selection.}
-The event selection achieves a signal purity of 57.2\% and an efficiency of
-12.1--12.6\% at the final cut, selecting 427 beam-on data events against a total
-background prediction of 243.  The data/prediction ratio of 0.752 is consistent
-with the known GENIE~v3 over-prediction of CC$\pi^+$ production documented in
-MiniBooNE~\cite{miniboone_ccpi}, MINERvA~\cite{minerva_ccpi},
-T2K~\cite{t2k_ccpip}, and the MicroBooNE BNB measurement~\cite{genieccpi}.
-
-\paragraph{Cross-section results, framework validation, and phase space.}
-Differential cross sections are extracted via a framework-consistent Wiener-SVD
-unfolder using a confirmed integrated $\nu_\mu + \bar{\nu}_\mu$ flux of
-$\Phi = 6.81159\times10^{-10}$~cm$^{-2}$~POT$^{-1}$ ($\bar{\nu}_\mu$ fraction
-$37.8\%$).  At a common \emph{reference} phase space ($p_\mu,p_\pi>0.1\GeVc$, reco
-$\thmupM<2.6$~rad), the custom pipeline was validated against the fully
-independent official XSecAnalyzer framework to $\le2\%$ on every observable
-($d\sigma/d\pmuM$: 1.016, $d\sigma/d\ppiM$: 0.979, $d\sigma/d\cthmuM$: 0.987,
-$d\sigma/d\cthpiM$: 1.004, $d\sigma/d\thmupM$: 1.001) after three corrections
-(Section~\ref{sec:datamc}): importing the full systematic covariance into the
-Wiener filter (a stat-only covariance over-corrects by $\sim26\%$), cancelling the
-EXT subtraction for the pure-MC fake data ($\sim3.7\%$), and matched binning; the
-two pipelines were also shown to select identical events (1914 vs 1913.6 NuWro
-events at the final cut).  The final results (Table~\ref{tab:sigint}) then refine
-the \emph{measured phase space} to $p_\mu>0.15$, $p_\pi>0.175\GeVc$,
-$\theta_{\mu\pi}<2.6$~rad, chosen from the efficiency turn-on curves so the
-selection efficiency is flat at $\sim$13--20\% (Section~\ref{sec:signal}): the
-momentum thresholds remove the $\sim$5\% low-momentum bins and the $2.6$~rad cut
-rejects the cosmic-dominated large-angle region.  No lower opening-angle cut is
-applied, since the small-angle region is high-purity.  This raises the efficiency
-from $12.1\%$ to $15.6\%$ at $\sim$55\% purity.  The integrated values are
-correspondingly smaller and, being a different phase space, are not directly
-comparable to the framework's full-$0.1\GeVc$ numbers.
-
-\paragraph{Context in the experimental landscape.}
-The measured $\sigma_{\mathrm{int}}$ corresponds to $\approx 0.65$--$0.70$ times
-the GENIE~v3 prediction, consistent with generator over-predictions of
-20--35\% seen by all prior experiments (Section~\ref{sec:prev_meas}).  This
-measurement provides:
-\begin{itemize}[noitemsep]
-  \item The first CC$\pi^+$ differential cross sections from the MicroBooNE
-    NuMI (off-axis) dataset, complementing the existing BNB-beam
-    result~\cite{genieccpi} from the same detector.
-  \item Constraints at lower neutrino energies ($E_\nu \sim 0.1$--$0.5$~GeV)
-    than the previous NuMI CC$\pi^+$ results (ArgoNEUT~\cite{argoneut_ccpi} at
-    $\langle E_\nu \rangle \approx 9.6$~GeV, MINERvA~\cite{minerva_ccpi} at
-    $\langle E_\nu \rangle \approx 3.6$~GeV).
-  \item A measurement on an argon target at the kinematic regime most relevant
-    to the planned DUNE~\cite{dune} oscillation analysis, which operates at a
-    similar beam energy with a LArTPC far detector.
-  \item Sensitivity to the $\bar{\nu}_\mu$ contribution ($\approx 38\%$) in
-    CC$\pi^+$ production on argon, previously unmeasured.
-\end{itemize}
-
-\paragraph{Required for publication.}
-Native systematic propagation in the custom pipeline (flux, cross-section, and
-detector-response multisims --- currently imported from the framework for the
-unfolding covariance) and inclusion of Runs~2, 4, and~5 beam-on data
-($\approx 5.4\times$ additional exposure) are needed before a real-data result can
-be published.  With the EXT cancellation and full covariance in place the unfolded
-spectra are everywhere positive and stable; the remaining $\le2\%$ residual against
-the framework is dominated by the covariance-import approximation
-(Section~\ref{sec:datamc}).  A comparison with NEUT and GiBUU predictions is also
-planned.
-
-% =============================================================================
-\appendix
 % =============================================================================
 
 \section{Observable Binning}
