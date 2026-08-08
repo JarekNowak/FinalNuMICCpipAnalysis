@@ -1473,10 +1473,14 @@ individual background components.
     \caption{$\theta_{\mu\pi}$}
   \end{subfigure}
   \caption{Reconstructed-space spectra at the final cut for all five
-    observables.  NuWro fake data (black points), stacked signal (blue), beam
-    background (orange), dirt (green), and EXT (grey).  NuWro carries roughly
-    twice the GENIE-predicted signal, consistent with the generator spread in
-    CC$\pi^+$ production.}
+    observables: fake data (black points), stacked signal (blue), beam
+    background (orange), dirt (green), and EXT (grey).  The factor $\sim\!2$ by
+    which the fake data exceeds the GENIE tune is a pure POT/flux \emph{bookkeeping}
+    offset --- the detector-variation central-value fake data carries $1.29\times$
+    more signal events/POT than the numuMC overlay, amplified by the $\sim\!1.3\times$
+    $A_C$ smearing (Sec.~\ref{sec:datamc}) --- \emph{not} a physics or generator
+    difference. (Figure to be regenerated with the current Poisson-thrown
+    central-value fake data used for the multi-run results.)}
   \label{fig:reco_spectra}
 \end{figure}
 
@@ -1936,8 +1940,10 @@ five observables to $\le2\%$ of the framework.
 
 \subsection{EXT (cosmic) subtraction for fake data}
 
-The NuWro fake-data sample is pure Monte Carlo and contains \emph{no} beam-off
-(cosmic) contamination, so the EXT sample must not be net-subtracted from it.
+Every fake-data sample used here (the detVar central-value throw for the main
+result, the Poisson-thrown central value for the multi-run results, and the NuWro
+cross-check) is pure Monte Carlo and contains \emph{no} beam-off (cosmic)
+contamination, so the EXT sample must not be net-subtracted from it.
 The framework handles this by \emph{adding} the EXT histogram to the fake-data
 spectrum, so the EXT term cancels in
 $\text{data}_{\text{signal}} = (\text{data}+\text{EXT}) - (\text{MC bkg}+\text{EXT}+\text{dirt})$.
@@ -1972,8 +1978,19 @@ and the full pipeline rerun; the result was byte-identical.  All MC events
 passing the topological cut already carry \texttt{swtrig == 1}: the $\sim13\%$ of
 raw MC events failing \texttt{swtrig} also fail the topological cut.
 The cut has been retained for formal correctness but contributes nothing to the
-current normalisation.  Likewise, adding the GENIE spline weight to the central-value
-weight was a verified no-op: \texttt{weightSpline} $\equiv 1$ in the NuMI ntuples
+current normalisation.
+
+\medskip\noindent\textbf{Detector variations.}  The detector systematic in
+Table~\ref{tab:systbreak} ($9.6$--$14.6\%$) was built from the Run-1 FHC detector
+variations applied globally.  The multi-run FHC, RHC, and combined results instead
+use \emph{native} Run-4 detector variations per horn mode (the standard eight-knob
+set), with the combined result accumulating the Run-4 FHC \emph{and} Run-4 RHC detVar
+samples --- each scaled to its own mode's data exposure --- which the framework now
+supports via multi-file detVar summing.  (The Run-5 FHC Recomb2 and SCE detVar
+productions turned out to be intrinsic-$\nu_e$ overlays with zero $\nu_\mu$ content;
+the Run-4 FHC knobs stand in for those two.)  Likewise, adding the GENIE spline weight
+to the central-value weight was a verified no-op: \texttt{weightSpline} $\equiv 1$ in
+the NuMI ntuples
 and the NuWro overlay's CV weights are sentinel ($-1$) values clamped to unity.
 
 % =============================================================================
@@ -2050,7 +2067,19 @@ Table~\ref{tab:systematics} lists the sources and their estimated impacts.
       & Replaced by \texttt{bdt\_cosmic} (disabled at default 0.0) \\[4pt]
     Official XSecAnalyzer NuWro closure
       & \textbf{Done} (all 5 obs)
-      & Cross-validates the unfolding; NuWro $\approx 2\times$ GENIE (Sec.~\ref{sec:nuwroclosure}) \\
+      & Cross-validates the unfolding; NuWro $\approx 2\times$ GENIE (Sec.~\ref{sec:nuwroclosure}) \\[4pt]
+    Native RHC detector variations
+      & \textbf{Resolved}
+      & Run-4 RHC detVar (8 knobs) now used; replaces the Run-1 FHC stand-in (Sec.~\ref{sec:rhc}) \\[4pt]
+    Run-5 FHC detVar Recomb2/SCE
+      & \textbf{Resolved}
+      & Were intrinsic-$\nu_e$ overlays (0\% $\nu_\mu$); Run-4 FHC used as the stand-in for those two knobs \\[4pt]
+    Combined FHC$+$RHC joint flux systematic
+      & \textbf{Resolved}
+      & Per-universe summing over the shared 600 PPFX universes is correct; the block was a detVar duplicate-file guard, now fixed to accumulate (Sec.~\ref{sec:rhc}) \\[4pt]
+    Combined per-mode normalisation
+      & \textbf{Resolved}
+      & Per-mode \texttt{summed\_pot} so each horn scales to its own data exposure, not MC POT (Sec.~\ref{sec:rhc}) \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -2122,13 +2151,18 @@ all-zeros, was also corrected, and all fourteen samples were re-processed.
 
 The NuWro fake data unfolds to approximately twice the \textsc{Genie} MicroBooNE
 tune in every observable, uniformly in shape
-(Fig.~\ref{fig:nuwro_closure}, Table~\ref{tab:nuwroclosure}).  This
-\emph{reproduces} the primary-pipeline finding (Section~\ref{sec:datamc}),
-cross-validating both unfolding chains.  The flat $\sim2\times$ offset is a
-genuine NuWro-versus-\textsc{Genie}-tune CC$\pi^+$ model difference in this NuMI
-FHC phase space: NuWro is used at its raw cross section (its \texttt{weightTune}
-and \texttt{ppfx\_cv} branches are unset and default to unity, so no \textsc{Genie}
-tune is applied to the fake data).  A caveat is that part of the excess may be
+(Fig.~\ref{fig:nuwro_closure}, Table~\ref{tab:nuwroclosure}); the two independent
+unfolding chains recover the same ratio, cross-validating both. The flat
+$\sim2\times$ offset here is a genuine NuWro-versus-\textsc{Genie}-tune CC$\pi^+$
+model difference in this NuMI FHC phase space: NuWro is used at its raw cross
+section (its \texttt{weightTune} and \texttt{ppfx\_cv} branches are unset and
+default to unity, so no \textsc{Genie} tune is applied to the fake data). This must
+\emph{not} be conflated with the apparent $\sim\!2\times$ seen in the primary
+GENIE-detVar-CV result: the two coincide in magnitude but not in cause --- the
+primary-result excess is a POT/flux \emph{bookkeeping} offset from using the
+detVar-CV sample as fake data ($1.29\times$ more signal events/POT, times the $A_C$
+smearing; Sec.~\ref{sec:datamc}), whereas the NuWro-closure excess is a real
+generator difference. A caveat on the latter is that part of the excess may be
 NuWro's larger \emph{background} being attributed to signal, since the procedure
 subtracts \textsc{Genie}-predicted rather than NuWro backgrounds.
 
@@ -2546,53 +2580,92 @@ verified as genuine $\nu_\mu$ overlays and processed --- $4.05\times10^{6}$ even
 combined MC POT $1.546\times10^{22}$, mutually consistent
 ($2.62\times10^{-16}$ events/POT) with the PPFX weights --- covering the full RHC
 exposure (Run~3, the largest period at $5.52\times10^{21}$~MC~POT / $1.44\times10^{6}$
-events, was added last). Native RHC dirt and detector-variation samples are not yet
-available, so the standalone result below uses fake data at the $\nu_e$-matched RHC
-data POT $1.108\times10^{21}$ with the FHC detector variations as a stand-in,
-following the $\nu_e$ analysis. The generator predictions are re-averaged to the RHC flux
-composition; a combined FHC$+$RHC measurement would use the POT-weighted flux
-$\Phi_\mathrm{tot}=6.663\times10^{-10}$ ($42.7\%$ $\bar\nu_\mu$).
+events, was added last). Native Run-4 RHC detector-variation samples (the standard
+eight-knob set: light-yield down/Rayleigh, recombination, space charge, and the four
+wire-modification variations) are now used for the RHC detector systematic, verified
+as genuine $\nu_\mu$ overlays with a uniform $3.80\times10^{-16}$ events/POT across
+all knobs; they replace the Run-1 FHC stand-in used previously. Native RHC dirt is
+still taken from FHC. The standalone result below uses Poisson-thrown central-value
+fake data at the $\nu_e$-matched RHC data POT $1.108\times10^{21}$. The generator
+predictions are re-averaged to the RHC flux composition; the combined FHC$+$RHC
+predictions are the fluence-weighted combination of the two horn modes
+($0.458$~FHC $/\,0.542$~RHC, each mode weighted by $\Phi_\mathrm{tot}\times$POT).
 
-A first joint FHC$+$RHC unfolding (combined $8$-file response, $2.9\times10^{6}$
-events) has been run. The central extraction is sound --- the fake-data closure
-passes for every observable ($\chi^2/\mathrm{ndf}<1$, $p>0.28$) --- but the joint
-\emph{flux systematic} is not yet correct: the combined unfolded flux covariance
-is ill-defined (negative integrated normalisation, vanishing per-bin term),
-whereas the standalone FHC and RHC flux systematics are both well behaved. The
-cause is the treatment of the PPFX universes across horn modes: the two beams
-carry statistically independent flux throws, so the naive per-universe summing
-that is correct within a horn mode mis-estimates the cross-horn covariance, and
-the mixed FHC$+$RHC response is more weakly conditioned. A correct combined result
-therefore requires a horn-mode-aware flux-universe combination (block-correlated
-or independently-thrown covariances), which is the outstanding item for the joint
-measurement.
+The combined FHC$+$RHC measurement uses the summed $14$-file response over the full
+exposure ($5.6\times10^{6}$ events, combined data POT
+$D_\mathrm{comb}=1.994\times10^{21}=D_\mathrm{FHC}+D_\mathrm{RHC}$), with each horn
+mode normalised to its \emph{own} data exposure. This is a genuine subtlety: the
+detector-variation covariance is absolute (POT-scaled reco counts), so a single POT
+scale applied to all files would weight the modes by their Monte-Carlo POT
+($0.62{:}1$ FHC${:}$RHC) rather than by data exposure ($0.80{:}1$). Each mode's
+numuMC and detVar samples therefore carry a per-mode \texttt{summed\_pot}
+(FHC $2.158\times10^{22}$, RHC $2.782\times10^{22}$, $=S_\mathrm{mode}\times
+D_\mathrm{comb}/D_\mathrm{mode}$) so the framework's $D_\mathrm{comb}/$\texttt{summed\_pot}
+scaling reduces to $D_\mathrm{FHC}/S_\mathrm{FHC}$ and $D_\mathrm{RHC}/S_\mathrm{RHC}$;
+the fake data is Poisson-thrown with the matching per-mode rate.
 
-The standalone RHC extraction closes cleanly for every observable
-(Table~\ref{tab:rhc}): the $A_C$-smeared truth is recovered with
-$\chi^2/\mathrm{ndf}<1$ and $p>0.91$ throughout. Two features stand out. First, the
+Contrary to an earlier concern, the joint \emph{flux systematic} is correct as
+built. All fourteen numuMC files carry the \emph{same} $600$ PPFX multisim
+universes, which the universe maker accumulates index-matched across both horn
+modes in a single chain, so universe $u$ is the same hadron-production draw in FHC
+and RHC. Per-universe summing therefore propagates one parameter draw through both
+beam configurations and lets each mode's flux response set the result, capturing the
+physical (not unit) cross-horn correlation automatically --- this is the rigorously
+correct multisim treatment, superior to any hand-built block covariance. The joint
+result was in fact blocked by a different, purely technical issue: a framework guard
+that forbade a second detector-variation file of the same type (needed to carry
+Run-4 FHC \emph{and} Run-4 RHC as \texttt{detVarCV}). That guard now accumulates the
+per-mode detVar samples exactly as it already did for the alternate-CV samples,
+matching its own in-code TODO. With both in place the combined closure passes for
+every observable (Table~\ref{tab:comb}), with an unfolded flux systematic of
+$22$--$27\%$ that sits between the standalone FHC and RHC values, as expected for the
+fluence-weighted mix.
+
+The standalone RHC extraction (native Run-4 RHC detector variations) closes cleanly
+for every observable (Table~\ref{tab:rhc}): the $A_C$-smeared truth is recovered with
+$\chi^2/\mathrm{ndf}<0.3$ and $p>0.94$ throughout. Two features stand out. First, the
 reco-level flux systematic is $\sim\!15\%$, genuinely below the FHC $\sim\!17\%$
 floor --- the $\bar\nu_\mu$-dominant flux carries a smaller PPFX hadron-production
-uncertainty. Second, the unfolding amplification ($1.48$--$1.74\times$) mirrors
-FHC, so the unfolded flux term ($23$--$26\%$) is comparable, again data-statistics
-limited. The combined FHC$+$RHC measurement is the natural next step, either as a
-joint unfolding over the summed response and flux or as a flux-weighted combination
-of the two horn-mode results.
+uncertainty. Second, the unfolding amplification ($1.29$--$1.99\times$) mirrors
+FHC, so the unfolded flux term ($19.5$--$28\%$) is comparable, again data-statistics
+limited.
 
 \begin{center}\small
-\captionof{table}{Standalone RHC ($\bar\nu_\mu$-dominant) extraction: reco-level
-  and unfolded flux systematic, unfolding amplification, and fake-data closure
-  $\chi^2/\mathrm{ndf}$ (with $p$-value). FHC detector variations used as a
-  stand-in pending native RHC samples.}
+\captionof{table}{Standalone RHC ($\bar\nu_\mu$-dominant) extraction, full exposure
+  $1.108\times10^{21}$ with native Run-4 RHC detector variations: reco-level and
+  unfolded flux systematic, unfolding amplification, and fake-data closure
+  $\chi^2/\mathrm{ndf}$ (with $p$-value).}
 \label{tab:rhc}
 \begin{tabular}{lcccc}
 \toprule
 Observable & Flux (reco) & Flux (unfolded) & Amplification & Closure $\chi^2/\mathrm{ndf}$ \\
 \midrule
-$p_\mu$          & $15.4\%$ & $21.8\%$ & $1.41\times$ & $0.67/7$ ($p=1.00$) \\
-$p_\pi$          & $15.8\%$ & $25.4\%$ & $1.61\times$ & $0.18/5$ ($p=1.00$) \\
-$\cos\theta_\mu$ & $15.0\%$ & $26.4\%$ & $1.76\times$ & $0.46/5$ ($p=0.99$) \\
-$\cos\theta_\pi$ & $14.9\%$ & $28.0\%$ & $1.88\times$ & $2.06/5$ ($p=0.84$) \\
-$\theta_{\mu\pi}$& $15.1\%$ & $26.9\%$ & $1.78\times$ & $0.48/7$ ($p=1.00$) \\
+$p_\mu$          & $15.4\%$ & $27.5\%$ & $1.78\times$ & $1.37/7$ ($p=0.99$) \\
+$p_\pi$          & $15.8\%$ & $23.6\%$ & $1.49\times$ & $0.21/5$ ($p=1.00$) \\
+$\cos\theta_\mu$ & $15.0\%$ & $26.5\%$ & $1.76\times$ & $0.43/5$ ($p=0.99$) \\
+$\cos\theta_\pi$ & $14.9\%$ & $29.6\%$ & $1.99\times$ & $1.23/5$ ($p=0.94$) \\
+$\theta_{\mu\pi}$& $15.1\%$ & $19.5\%$ & $1.29\times$ & $0.72/7$ ($p=1.00$) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{center}\small
+\captionof{table}{Combined FHC$+$RHC ($\nu_\mu+\bar\nu_\mu$) extraction over the full
+  joint exposure $D_\mathrm{comb}=1.994\times10^{21}$, per-mode normalised, with
+  native Run-4 FHC$+$RHC detector variations (accumulated per mode): reco-level and
+  unfolded flux systematic, unfolding amplification, and fake-data closure
+  $\chi^2/\mathrm{ndf}$ (with $p$-value). The unfolded flux term ($22$--$27\%$) lies
+  between the standalone FHC and RHC values.}
+\label{tab:comb}
+\begin{tabular}{lcccc}
+\toprule
+Observable & Flux (reco) & Flux (unfolded) & Amplification & Closure $\chi^2/\mathrm{ndf}$ \\
+\midrule
+$p_\mu$          & $16.2\%$ & $22.5\%$ & $1.39\times$ & $0.58/7$ ($p=1.00$) \\
+$p_\pi$          & $16.3\%$ & $23.9\%$ & $1.47\times$ & $1.27/5$ ($p=0.94$) \\
+$\cos\theta_\mu$ & $15.8\%$ & $25.0\%$ & $1.58\times$ & $0.28/5$ ($p=1.00$) \\
+$\cos\theta_\pi$ & $15.7\%$ & $25.2\%$ & $1.61\times$ & $1.41/5$ ($p=0.92$) \\
+$\theta_{\mu\pi}$& $15.9\%$ & $26.6\%$ & $1.67\times$ & $1.13/7$ ($p=0.99$) \\
 \bottomrule
 \end{tabular}
 \end{center}
