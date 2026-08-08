@@ -767,16 +767,19 @@ void SystematicsCalculator::build_universes( TDirectoryFile& root_tdir ) {
           // on the same footing below
           Universe* temp_univ_ptr = nullptr;
 
-          // Check whether a prior altCV Universe exists in the map
+          // Check whether a prior altCV / detVar Universe exists in the map
           bool prior_altCV = alt_cv_universes_.count( type ) > 0;
+          bool prior_detVar = detvar_universes_.count( type ) > 0;
 
-          // Right now, we're assuming there's just one detVar ntuple file
-          // per universe. If this assumption is violated, our scaling will
-          // be screwed up. Prevent this from happening by throwing an
-          // exception when a duplicate is encountered.
-          // TODO: revisit this when you have detVar samples for all runs
-          if ( is_detVar && detvar_universes_.count(type) ) {
-            throw std::runtime_error( "Duplicate detVar ntuple file!" );
+          // Multiple detVar ntuple files of the same type are now ACCUMULATED
+          // (POT-scaled and summed) exactly like the multi-file altCV samples.
+          // This lets a combined measurement carry per-mode detVar files (e.g.
+          // Run4 FHC + Run4 RHC as detVarCV): each file's summed_pot is set so
+          // that total_bnb_pot/file_pot scales it to its own mode's data exposure
+          // (D_FHC/native, D_RHC/native), and the sum is the combined detVar.
+          // (Was previously a hard error; see the TODO that anticipated this.)
+          if ( is_detVar && prior_detVar ) {
+            temp_univ_ptr = detvar_universes_.at( type ).get();
           }
           // For the alternate CV sample, if a previous universe already
           // exists in the map, then get access to it via a pointer
@@ -847,11 +850,12 @@ void SystematicsCalculator::build_universes( TDirectoryFile& root_tdir ) {
           set_stats_and_dir( *temp_univ_ptr );
 
           // If one wasn't present before, then move the finished Universe
-          // object into the map
-          if ( is_detVar ) {
+          // object into the map (for a prior detVar/altCV we accumulated into
+          // the existing entry in place above, so nothing to move here)
+          if ( is_detVar && !prior_detVar ) {
             detvar_universes_[ type ].reset( temp_univ.release() );
           }
-          else if ( !prior_altCV ) { // is_altCV
+          else if ( is_altCV && !prior_altCV ) {
             alt_cv_universes_[ type ].reset( temp_univ.release() );
           }
 

@@ -1,0 +1,58 @@
+# file_properties_numi_comb.txt  —  COMBINED FHC+RHC (full exposure)
+# ---------------------------------------------------------------------------
+# Combined nu_mu+nubar_mu CC1mu1pi measurement over the joint FHC+RHC exposure.
+#   D_FHC = 8.857e20, D_RHC = 1.1082e21  ->  D_comb = 1.99390e21
+#   MC: FHC 4 files (S_FHC=9.585254e21) + RHC 10 files (S_RHC=1.546330e22)
+#
+# PER-MODE summed_pot (set by build_comb_clean.sh right before univmake): each
+# mode is scaled to its OWN data exposure so the FHC:RHC event mix matches DATA
+# (0.80:1), not MC POT (0.62:1). A single summed_pot would mis-weight the modes.
+#   FHC numuMC summed_pot = S_FHC * D_comb/D_FHC = 2.157846e22  (-> scale D_FHC/S_FHC)
+#   RHC numuMC summed_pot = S_RHC * D_comb/D_RHC = 2.782194e22  (-> scale D_RHC/S_RHC)
+#   FHC detVar summed_pot = native * D_comb/D_FHC (x2.25121)
+#   RHC detVar summed_pot = native * D_comb/D_RHC (x1.79922)
+# Combined flux systematic is correct as-is (600 shared PPFX universes, index-
+# matched across both modes in one UniverseMaker chain).
+# ---------------------------------------------------------------------------
+# Beam-on data (blinded) — disabled; combined Poisson-CV fake data for the closure:
+#/data/uboone/processed/xsec-ana-<run1_beamon>.root 1 onBNB ...
+/data/uboone/processed/xsec-ana-fakedata_CV_comb_full.root 1 onBNB 47420000 1.99390e21
+# Beam-off data (Run1+Run3 combined EXT; cosmic, mode-independent)
+/data/uboone/processed/xsec-ana-beamoff_run1Andrun3.root 1 extBNB 3821593 0
+# numu MC overlay (CV) — FHC {Run1,2,4,5} + RHC {Run1,2,3(aa-ae),4a,4b,4c} = 14 files
+/data/uboone/processed/xsec-ana-Run1_fhc_new_numi_flux_fhc_pandora_ntuple.root 1 numuMC
+/data/uboone/processed/xsec-ana-Run2_fhc_new_numi_flux_fhc_pandora_ntuple.root 1 numuMC
+/data/uboone/processed/xsec-ana-Run4_fhc_new_numi_flux_fhc_pandora_ntuple.root 1 numuMC
+/data/uboone/processed/xsec-ana-reweightedPPFX_numi_nu_overlay_pion_ntuples_run5_fhc.root 1 numuMC
+/data/uboone/processed/xsec-ana-Run1_rhc_new_numi_flux_rhc_pandora_ntuple.root 1 numuMC
+/data/uboone/processed/xsec-ana-Run2_rhc_new_numi_flux_rhc_pandora_ntuple.root 1 numuMC
+/data/uboone/processed/xsec-ana-Run4a_rhc_new_numi_flux_rhc_pandora_ntuple.root 1 numuMC
+/data/uboone/processed/xsec-ana-Run4b_rhc_new_numi_flux_rhc_pandora_ntuple.root 1 numuMC
+/data/uboone/processed/xsec-ana-Run4c_rhc_new_numi_flux_rhc_pandora_ntuple.root 1 numuMC
+/data/uboone/processed/xsec-ana-Run3_rhc_new_numi_flux_rhc_pandora_ntuple_aa.root 1 numuMC
+/data/uboone/processed/xsec-ana-Run3_rhc_new_numi_flux_rhc_pandora_ntuple_ab.root 1 numuMC
+/data/uboone/processed/xsec-ana-Run3_rhc_new_numi_flux_rhc_pandora_ntuple_ac.root 1 numuMC
+/data/uboone/processed/xsec-ana-Run3_rhc_new_numi_flux_rhc_pandora_ntuple_ad.root 1 numuMC
+/data/uboone/processed/xsec-ana-Run3_rhc_new_numi_flux_rhc_pandora_ntuple_ae.root 1 numuMC
+# Dirt MC overlay
+/data/uboone/processed/xsec-ana-prodgenie_numi_uboone_overlay_dirt_fhc_mcc9_run1_v28_all_snapshot.root 1 dirtMC
+# Detector-variation MC — Run4 FHC + Run4 RHC native (per-mode summed_pot, see header)
+/data/uboone/processed/xsec-ana-detvar_run4fhc_CV.root 1 detVarCV
+/data/uboone/processed/xsec-ana-detvar_run4fhc_LYdown.root 1 detVarLYdown
+/data/uboone/processed/xsec-ana-detvar_run4fhc_LYrayl.root 1 detVarLYrayl
+/data/uboone/processed/xsec-ana-detvar_run4fhc_Recomb2.root 1 detVarRecomb2
+/data/uboone/processed/xsec-ana-detvar_run4fhc_SCE.root 1 detVarSCE
+/data/uboone/processed/xsec-ana-detvar_run4fhc_WMAngleXZ.root 1 detVarWMAngleXZ
+/data/uboone/processed/xsec-ana-detvar_run4fhc_WMAngleYZ.root 1 detVarWMAngleYZ
+/data/uboone/processed/xsec-ana-detvar_run4fhc_WMX.root 1 detVarWMX
+/data/uboone/processed/xsec-ana-detvar_run4fhc_WMYZ.root 1 detVarWMYZ
+/data/uboone/processed/xsec-ana-detvar_run4rhc_CV.root 1 detVarCV
+/data/uboone/processed/xsec-ana-detvar_run4rhc_LYdown.root 1 detVarLYdown
+/data/uboone/processed/xsec-ana-detvar_run4rhc_LYrayl.root 1 detVarLYrayl
+/data/uboone/processed/xsec-ana-detvar_run4rhc_Recomb2.root 1 detVarRecomb2
+/data/uboone/processed/xsec-ana-detvar_run4rhc_SCE.root 1 detVarSCE
+/data/uboone/processed/xsec-ana-detvar_run4rhc_WMAngleXZ.root 1 detVarWMAngleXZ
+/data/uboone/processed/xsec-ana-detvar_run4rhc_WMAngleYZ.root 1 detVarWMAngleYZ
+/data/uboone/processed/xsec-ana-detvar_run4rhc_WMX.root 1 detVarWMX
+/data/uboone/processed/xsec-ana-detvar_run4rhc_WMYZ.root 1 detVarWMYZ
+#

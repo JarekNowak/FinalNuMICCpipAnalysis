@@ -251,6 +251,11 @@ TH1D* h_pi_cut7_shower;
 TH1D* h_pi_cut8_opening;
 TH1D* h_pi_cut9_final;
 
+  // Per-cut RECO cut-flow, all 5 observables x 10 stages, ALL events (signal+bkg).
+  // obs index: 0=pmu 1=ppi 2=costhmu 3=costhpi 4=thmupi ; per-run breakdown comes
+  // from processing each run file separately.
+  TH1D* h_cf[5][10];
+
   STVCalcType CalcType;
   TF1* fPP;
 

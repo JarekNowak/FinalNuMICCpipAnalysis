@@ -325,6 +325,28 @@ new TH1D(
 
 h_pi_cut9_final->Sumw2();
 
+// Per-cut RECO cut-flow histograms: 5 observables x 10 stages, all events.
+{
+  const char* cf_obs[5]   = {"pmu","ppi","costhmu","costhpi","thmupi"};
+  const char* cf_xttl[5]  = {"p_{#mu}^{reco} [GeV/c]","p_{#pi}^{reco} [GeV/c]",
+                             "cos#theta_{#mu}^{reco}","cos#theta_{#pi}^{reco}",
+                             "#theta_{#mu#pi}^{reco} [rad]"};
+  const char* cf_stage[10]= {"cut0_none","cut1_vertex","cut2_topology","cut3_tracklike",
+                             "cut4_pioncontained","cut5_muongap","cut6_piongap",
+                             "cut7_shower","cut8_opening","cut9_final"};
+  for (int o = 0; o < 5; ++o) {
+    for (int c = 0; c < 10; ++c) {
+      TString hn  = Form("h_cf_%s_%s", cf_obs[o], cf_stage[c]);
+      TString ttl = Form("%s;%s;Events", cf_stage[c], cf_xttl[o]);
+      if      (o == 0) h_cf[o][c] = new TH1D(hn, ttl, 20, bins_mu_shifted);
+      else if (o == 1) h_cf[o][c] = new TH1D(hn, ttl, 20, bins_pi_shifted);
+      else if (o == 2 || o == 3) h_cf[o][c] = new TH1D(hn, ttl, 20, -1.0, 1.0);
+      else             h_cf[o][c] = new TH1D(hn, ttl, 20, 0.0, 3.15);
+      h_cf[o][c]->Sumw2();
+    }
+  }
+}
+
 
 }
 
@@ -1423,6 +1445,31 @@ bool Passed =
     }
 }
 
+  // ---- per-observable RECO cut-flow (ALL events; mirrors the cumulative cuts) ----
+  {
+    bool mu_ok = (CandidateMuonIndex != -1);
+    bool pi_ok = (CandidatePionIndex != -1);
+    double cf_rv[5] = { candidate_muon_mom_reco, candidate_pion_mom_reco,
+                        candidate_muon_costh_reco, candidate_pion_costh_reco,
+                        mu_pi_opening_angle };
+    bool cf_ok[5] = { mu_ok, pi_ok, mu_ok, pi_ok, (mu_ok && pi_ok) };
+    bool cf_pass[10];
+    cf_pass[0] = true;
+    cf_pass[1] = cf_pass[0] && pass_vertex;
+    cf_pass[2] = cf_pass[1] && pass_topology;
+    cf_pass[3] = cf_pass[2] && pass_tracklike;
+    cf_pass[4] = cf_pass[3] && pass_pioncontained;
+    cf_pass[5] = cf_pass[4] && pass_muongap;
+    cf_pass[6] = cf_pass[5] && pass_piongap;
+    cf_pass[7] = cf_pass[6] && pass_shower;
+    cf_pass[8] = cf_pass[7] && pass_opening;
+    cf_pass[9] = cf_pass[8] && pass_final;
+    for (int c = 0; c < 10; ++c)
+      if (cf_pass[c])
+        for (int o = 0; o < 5; ++o)
+          if (cf_ok[o]) h_cf[o][c]->Fill(cf_rv[o], evt_w);
+  }
+
 
   if(CandidateMuonIndex != -1){
  
@@ -1625,6 +1672,11 @@ h_mu_cut6_piongap->Write();
 h_mu_cut7_shower->Write();
 h_mu_cut8_opening->Write();
 h_mu_cut9_final->Write();
+
+// Per-cut RECO cut-flow histograms (5 obs x 10 stages)
+for (int o = 0; o < 5; ++o)
+  for (int c = 0; c < 10; ++c)
+    if (h_cf[o][c]) h_cf[o][c]->Write();
 
 eff_vertex->Write();
 eff_topology->Write();
