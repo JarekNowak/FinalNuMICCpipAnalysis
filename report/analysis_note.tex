@@ -1472,15 +1472,13 @@ individual background components.
     \includegraphics[width=\textwidth]{fw_reco_thmupi}
     \caption{$\theta_{\mu\pi}$}
   \end{subfigure}
-  \caption{Reconstructed-space spectra at the final cut for all five
-    observables: fake data (black points), stacked signal (blue), beam
-    background (orange), dirt (green), and EXT (grey).  The factor $\sim\!2$ by
-    which the fake data exceeds the GENIE tune is a pure POT/flux \emph{bookkeeping}
-    offset --- the detector-variation central-value fake data carries $1.29\times$
-    more signal events/POT than the numuMC overlay, amplified by the $\sim\!1.3\times$
-    $A_C$ smearing (Sec.~\ref{sec:datamc}) --- \emph{not} a physics or generator
-    difference. (Figure to be regenerated with the current Poisson-thrown
-    central-value fake data used for the multi-run results.)}
+  \caption{Reconstructed-space spectra at the final cut for all five observables,
+    FHC full exposure (Runs~1$+$2$+$4$+$5): Poisson-thrown central-value fake data
+    (black points), stacked signal (blue), beam background (orange), dirt (green),
+    and EXT (grey).  The fake data is drawn from the central-value Monte Carlo and so
+    agrees with the stacked prediction by construction (a reco-level self-closure);
+    the differential results and their closure against the $A_C$-smeared truth are
+    shown in Fig.~\ref{fig:dsigma_current}.}
   \label{fig:reco_spectra}
 \end{figure}
 
@@ -2669,6 +2667,26 @@ $\theta_{\mu\pi}$& $15.9\%$ & $26.6\%$ & $1.67\times$ & $1.13/7$ ($p=0.99$) \\
 \bottomrule
 \end{tabular}
 \end{center}
+
+\begin{figure}[H]\centering
+  \includegraphics[width=0.98\textwidth]{dsigma_FHC5}
+  \caption{Differential cross sections $d\sigma/dx$ for all five observables on the
+    current Poisson-thrown central-value fake data, FHC full exposure: unfolded fake
+    data (black points), $A_C$-smeared fake-data truth (grey dashed), the MicroBooNE
+    tune (black solid), and the four generator predictions (GENIE, GiBUU, NEUT,
+    NuWro). The unfolded points recover the injected truth for every observable, the
+    same closure summarised in Tables~\ref{tab:rhc}--\ref{tab:comb}.}
+  \label{fig:dsigma_current}
+\end{figure}
+
+\begin{figure}[H]\centering
+  \includegraphics[width=0.98\textwidth]{dsigma_COMB}
+  \caption{Combined FHC$+$RHC ($\nu_\mu+\bar\nu_\mu$) differential cross sections on
+    the current per-mode-normalised fake data, with the fluence-weighted combined
+    generator predictions. The standalone RHC result (\texttt{dsigma\_RHCFULL}) is
+    obtained identically.}
+  \label{fig:dsigma_comb}
+\end{figure}
 
 % =============================================================================
 \section{Summary}
