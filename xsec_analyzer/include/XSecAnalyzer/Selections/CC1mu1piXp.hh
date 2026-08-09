@@ -261,6 +261,15 @@ TH1D* h_pi_cut9_final;
   TH1D* h_cutflow_tot;
   TH1D* h_cutflow_sig;
 
+  // Selection diagnostics, split [0]=signal [1]=background:
+  //  - N-1 (all cuts except the plotted one) for the two event-level cuts;
+  //  - final-cut candidate distributions (muon/pion LLR PID and track length);
+  //  - background decomposition by event category. Data/EXT come from those files.
+  TH1D* h_nm1_topo[2];  TH1D* h_nm1_oa[2];
+  TH1D* h_fin_mupid[2]; TH1D* h_fin_pipid[2];
+  TH1D* h_fin_mulen[2]; TH1D* h_fin_pilen[2];
+  TH1D* h_bkgcat;
+
   STVCalcType CalcType;
   TF1* fPP;
 

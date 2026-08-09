@@ -354,6 +354,24 @@ h_cutflow_sig = new TH1D("h_cutflow_sig", "cut-flow signal;cut stage;events", 10
 h_cutflow_tot->Sumw2();
 h_cutflow_sig->Sumw2();
 
+// Selection-diagnostic histograms (signal [0] / background [1])
+{
+  const char* sb[2] = {"sig","bkg"};
+  for (int k = 0; k < 2; ++k) {
+    h_nm1_topo[k]  = new TH1D(Form("h_nm1_topo_%s",sb[k]),  ";topological score;events", 50, 0, 1);
+    h_nm1_oa[k]    = new TH1D(Form("h_nm1_oa_%s",sb[k]),    ";#theta_{#mu#pi} [rad];events", 40, 0, 3.15);
+    h_fin_mupid[k] = new TH1D(Form("h_fin_mupid_%s",sb[k]), ";muon LLR PID;events", 40, -1, 1);
+    h_fin_pipid[k] = new TH1D(Form("h_fin_pipid_%s",sb[k]), ";pion LLR PID;events", 40, -1, 1);
+    h_fin_mulen[k] = new TH1D(Form("h_fin_mulen_%s",sb[k]), ";muon length [cm];events", 50, 0, 300);
+    h_fin_pilen[k] = new TH1D(Form("h_fin_pilen_%s",sb[k]), ";pion length [cm];events", 50, 0, 200);
+    h_nm1_topo[k]->Sumw2(); h_nm1_oa[k]->Sumw2();
+    h_fin_mupid[k]->Sumw2(); h_fin_pipid[k]->Sumw2();
+    h_fin_mulen[k]->Sumw2(); h_fin_pilen[k]->Sumw2();
+  }
+  h_bkgcat = new TH1D("h_bkgcat", ";event category;events", 30, 0, 30);
+  h_bkgcat->Sumw2();
+}
+
 
 }
 
@@ -1482,6 +1500,31 @@ bool Passed =
       for (int o = 0; o < 5; ++o)
         if (cf_ok[o] && std::isfinite(cf_rv[o])) h_cf[o][c]->Fill(cf_rv[o], evt_w);
     }
+
+    // ---- selection diagnostics (N-1 event-level, final-cut candidate dists, bkg cat) ----
+    int cf_k = cf_is_sig ? 0 : 1;
+    auto mu_llr = [&](){ return (mu_ok && CandidateMuonIndex < (int)Event->track_llr_pid_score_->size())
+      ? Event->track_llr_pid_score_->at(CandidateMuonIndex) : -2.; };
+    auto mu_len = [&](){ return (mu_ok && CandidateMuonIndex < (int)Event->track_length_->size())
+      ? Event->track_length_->at(CandidateMuonIndex) : -1.; };
+    auto pi_llr = [&](){ return (pi_ok && CandidatePionIndex < (int)Event->track_llr_pid_score_->size())
+      ? Event->track_llr_pid_score_->at(CandidatePionIndex) : -2.; };
+    auto pi_len = [&](){ return (pi_ok && CandidatePionIndex < (int)Event->track_length_->size())
+      ? Event->track_length_->at(CandidatePionIndex) : -1.; };
+    // N-1 topology: all cuts except topology (candidates present)
+    if (mu_ok && pi_ok && pass_vertex && pass_tracklike && pass_pioncontained
+        && pass_muongap && pass_piongap && pass_shower && pass_opening && pass_final)
+      h_nm1_topo[cf_k]->Fill(Event->topological_score_, evt_w);
+    // N-1 opening angle: all cuts except opening
+    if (mu_ok && pi_ok && pass_vertex && pass_topology && pass_tracklike && pass_pioncontained
+        && pass_muongap && pass_piongap && pass_shower && pass_final)
+      h_nm1_oa[cf_k]->Fill(mu_pi_opening_angle, evt_w);
+    // final-cut candidate distributions + background decomposition
+    if (cf_pass[9]) {
+      if (mu_ok) { h_fin_mupid[cf_k]->Fill(mu_llr(), evt_w); h_fin_mulen[cf_k]->Fill(mu_len(), evt_w); }
+      if (pi_ok) { h_fin_pipid[cf_k]->Fill(pi_llr(), evt_w); h_fin_pilen[cf_k]->Fill(pi_len(), evt_w); }
+      h_bkgcat->Fill(this->categorize_event(Event), evt_w);
+    }
   }
 
 
@@ -1695,6 +1738,17 @@ for (int o = 0; o < 5; ++o)
 // Cut-flow yield counters (total + signal per stage)
 if (h_cutflow_tot) h_cutflow_tot->Write();
 if (h_cutflow_sig) h_cutflow_sig->Write();
+
+// Selection-diagnostic histograms
+for (int k = 0; k < 2; ++k) {
+  if (h_nm1_topo[k])  h_nm1_topo[k]->Write();
+  if (h_nm1_oa[k])    h_nm1_oa[k]->Write();
+  if (h_fin_mupid[k]) h_fin_mupid[k]->Write();
+  if (h_fin_pipid[k]) h_fin_pipid[k]->Write();
+  if (h_fin_mulen[k]) h_fin_mulen[k]->Write();
+  if (h_fin_pilen[k]) h_fin_pilen[k]->Write();
+}
+if (h_bkgcat) h_bkgcat->Write();
 
 eff_vertex->Write();
 eff_topology->Write();
