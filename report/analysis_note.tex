@@ -978,10 +978,42 @@ to require that the pion candidate track endpoint is contained:
 \label{sec:selection}
 % =============================================================================
 
-The event selection is implemented in \texttt{selection/ccpi\_selection.C}
-and comprises 11 sequential cuts.  Two TMVA Boosted Decision Trees (BDTs) are
-evaluated per reconstructed track: a MIP-vs-stopping BDT (\texttt{bdt\_mip}) and
-a pion-vs-proton BDT (\texttt{bdt\_pi}).
+The event selection is implemented in the framework selection class
+\texttt{src/selections/CC1mu1piXp.cxx} (which produces the response matrices and
+spectra for all results in this note); the standalone \texttt{selection/ccpi\_selection.C}
+pipeline used for the cross-pipeline validation of Appendix~\ref{sec:nuwroclosure}
+implements the byte-identical cut sequence. The selection comprises 11 sequential
+cuts.
+
+\subsection{BDT-based particle identification}
+\label{sec:bdt}
+
+Three gradient-boosted decision trees (TMVA), trained on the MicroBooNE overlay MC,
+supply the calorimetric particle identification used in the muon- and pion-candidate
+cuts. All three share a common set of per-track inputs: the three Bragg-peak $dE/dx$
+likelihoods under the proton, muon and MIP hypotheses
+(\texttt{trk\_bragg\_\{p,mu,mip\}\_v}), the log-likelihood-ratio PID score
+(\texttt{trk\_llr\_pid\_score\_v}), the Pandora track-vs-shower score
+(\texttt{trk\_score\_v}), and the space-charge-corrected track end-point coordinates
+(\texttt{trk\_sce\_end\_\{x,y,z\}\_v}):
+\begin{itemize}\itemsep2pt
+  \item \textbf{MIP BDT} (\texttt{bdt\_mip}; weights \texttt{dataset\_MIP\_BDT\_no\_len}):
+    separates minimum-ionising tracks (muons, pions) from stopping protons. Both the
+    muon and the pion candidate are required to have $\texttt{bdt\_mip} > -0.1$
+    (Cuts~4--5).
+  \item \textbf{Pion BDT} (\texttt{bdt\_pi}; weights \texttt{dataset\_pion\_BDT\_no\_len}):
+    a dedicated pion-versus-proton discriminant applied to the pion candidate,
+    $\texttt{bdt\_pi} > -0.1$ (Cut~5).
+  \item \textbf{Muon BDT} (weights \texttt{dataset\_muon\_BDT}): the same inputs plus the
+    track length (\texttt{trk\_len\_v}). Rather than a threshold, it \emph{ranks} the
+    muon-candidate tracks --- the highest-scoring track is chosen as the muon.
+\end{itemize}
+The two candidate-PID BDTs deliberately omit track length so the score does not bias
+the momentum spectra. The weight files are resolved from
+\texttt{\$CC1MU1PIXP\_BDT\_WEIGHTS\_DIR}, falling back to the in-tree
+\texttt{booster\_decision\_tree/} copy. A fourth score, \texttt{bdt\_cosmic}, is
+available for cosmic rejection but is disabled by default (no benefit in an A/B test;
+the Pandora topological score already provides the cosmic rejection at Cut~3).
 
 \subsection{Cut definitions}
 
