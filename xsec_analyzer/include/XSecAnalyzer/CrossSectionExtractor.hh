@@ -184,6 +184,11 @@ class CrossSectionExtractor {
     // values are PredictedTrueEvents objects
     std::map< std::string, std::unique_ptr< PredictedTrueEvents > > pred_map_;
 
+    // Integrated numu+numubar flux per POT (cm^-2), config-driven via the
+    // "Flux <value>" line so each horn mode uses its own normalisation. Default
+    // is the FHC new-G4 value (E > 60 MeV); RHC and combined configs override it.
+    double flux_per_pot_ = 6.81159e-10;
+
     // Unfolder object used to correct cross-section measurements for
     // inefficiency and bin migrations
     std::unique_ptr< Unfolder > unfolder_;
@@ -247,6 +252,11 @@ CrossSectionExtractor::CrossSectionExtractor(
       // Get the name of the ROOT file containing the pre-calculated
       // Universe histograms
       iss >> univ_file_name;
+    }
+    else if ( first_word == "Flux" ) {
+      // Per-configuration integrated numu+numubar flux per POT (cm^-2). Lets
+      // FHC / RHC / combined each use their own absolute normalisation.
+      iss >> flux_per_pot_;
     }
     else if ( first_word == "Unfold" ) {
       // Get the string indicating which unfolding method should be used
@@ -474,7 +484,11 @@ CrossSectionResult CrossSectionExtractor::get_unfolded_events() {
 
 double CrossSectionExtractor::conversion_factor() const {
   double total_pot = syst_->total_bnb_data_pot_;
-  double integ_flux = integrated_numu_flux_in_FV( total_pot );
+  // NuMI: use the per-configuration flux from the "Flux" config line (default is
+  // the FHC value, identical to integrated_numu_flux_in_FV for FHC). BNB keeps
+  // the original active-volume approximation.
+  double integ_flux = useNuMI ? ( total_pot * flux_per_pot_ )
+                              : integrated_numu_flux_in_FV( total_pot );
 
   FiducialVolume FV = {FV_X_MIN, FV_X_MAX, FV_Y_MIN, FV_Y_MAX, FV_Z_MIN, FV_Z_MAX};
 
