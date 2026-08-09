@@ -273,9 +273,9 @@ void make_analysis_step_plots( const SystematicsCalculator& syst,
       h_bkg->SetBinContent( r + 1, ( *bkgd_mc )( r, 0 ) );
     }
 
-    h_bkg->SetFillColor( kGray + 1 );
+    h_bkg->SetFillColor( TColor::GetColor("#E69F00") ); // Okabe-Ito orange (colorblind-safe)
     h_bkg->SetLineColor( kGray + 2 );
-    h_sig->SetFillColor( kAzure - 7 );
+    h_sig->SetFillColor( TColor::GetColor("#0072B2") ); // Okabe-Ito blue
     h_sig->SetLineColor( kAzure - 3 );
     h_data->SetMarkerStyle( kFullCircle );
     h_data->SetMarkerSize( 0.7 );
@@ -807,7 +807,7 @@ void UnfolderNuMI(std::string XSEC_Config, std::string SLICE_Config, std::string
 
     // Draw the extra file-based generator predictions (NuWro, GiBUU, NEUT, ...)
     // added to slice_gen_map above, each in a distinct colour/style.
-    const int gen_colors[] = { kRed + 1, kGreen + 2, kMagenta + 1, kCyan + 2 };
+    const int gen_colors[] = { TColor::GetColor("#0072B2"), TColor::GetColor("#009E73"), TColor::GetColor("#CC79A7"), TColor::GetColor("#D55E00") }; // Okabe-Ito
     const int gen_styles[] = { 2, 7, 9, 3 };
     int gen_i = 0;
     for ( auto& pair : slice_gen_map ) {
@@ -983,7 +983,7 @@ void UnfolderNuMI(std::string XSEC_Config, std::string SLICE_Config, std::string
 
       const TH1* h_data = slice_unf->hist_.get();
       bool first = true;
-      const int rc[] = { kAzure - 7, kRed + 1, kGreen + 2, kMagenta + 1, kCyan + 2 };
+      const int rc[] = { TColor::GetColor("#0072B2"), TColor::GetColor("#009E73"), TColor::GetColor("#CC79A7"), TColor::GetColor("#D55E00"), TColor::GetColor("#E69F00") }; // Okabe-Ito
       const int rs[] = { 5, 2, 7, 9, 3 };
       int ri = 0;
       for ( const auto& gp : slice_gen_map ) {
