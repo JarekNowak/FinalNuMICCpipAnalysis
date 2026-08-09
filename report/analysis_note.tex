@@ -687,9 +687,15 @@ exposure.
   \centering
   \caption{Run-period exposure accounting (final, full FHC$+$RHC). ``MC POT'' is each
     period's native simulated exposure; ``Data POT'' is the $\nu_e$-matched exposure
-    to which the (blind) fake data is scaled; Scale $=$ Data POT$/$MC POT (the
-    combined measurement scales each mode separately rather than with a single
-    factor). Run~5 uses the reweighted-PPFX $\nu_\mu$ overlay.}
+    to which the (blind) fake data is scaled. The runs of a given horn mode are
+    \emph{pooled} into a single sample: every file of the mode is scaled by the
+    \emph{same} factor, Scale $=$ (mode Data POT)$/$(mode \emph{total} MC POT), rather
+    than each file being scaled by its own POT (which would over-count). A run with
+    larger POT already contributes proportionally more events, so this single-factor
+    pooling weights each run by its statistics and yields the correct rate. The
+    combined measurement applies the FHC factor ($0.0924$) to the FHC files and the
+    RHC factor ($0.0717$) to the RHC files. Run~5 uses the reweighted-PPFX $\nu_\mu$
+    overlay.}
   \label{tab:pot}
   \begin{tabular}{lccc}
     \toprule
