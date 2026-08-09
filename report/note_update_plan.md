@@ -130,3 +130,43 @@ explicitly as a historical binning scan (result — the 2.6 rad cut — still st
 - Flux Phi=6.81159e-10 cm^-2 POT^-1 (FHC) — still correct.
 - Wiener-SVD, optimised binning, phase-space cuts — unchanged.
 - NuWro cross-pipeline closure as a VALIDATION exercise — legitimate, keep labelled.
+
+# ============================================================
+# ALL TABLES & FIGURES FOR ALL THREE CONFIGS (FHC / RHC / combined)
+# ============================================================
+
+## DONE (results, 3 configs each)
+- tab:fhc / tab:rhc / tab:comb (flux, amp, closure)
+- tab:sigint_all (integrated sigma, 3 cols)
+- tab:systbreak_fhc / _rhc / _comb (systematic breakdown)
+- fig:dsigma_current / _rhc / _comb (differential xsec)
+- fig:reco_spectra / _rhc / _comb (reco spectra)
+
+## CONFIG-INDEPENDENT (one version is correct for all)
+- tab:pot (updated, full FHC+RHC), tab:samples (updated)
+- tab:mupid / tab:pipid (selection thresholds), fig:evdisp
+
+## TO DO -- selection diagnostics, need selection-stored histos + reprocess
+All currently FHC Run-1 only. Require the extended selection + a reprocess of
+numuMC + EXT + dirt for each config, then POT-weighted aggregation.
+  1. fig:cutflow (Fig 1) + tab:cutflow (Table 7)  -- cut-flow yields
+       -> h_cutflow_tot / h_cutflow_sig counters ADDED (commit 561d5aa);
+          macros/cutflow_yields.C written.
+  2. fig:nm1_key + fig:nm1_tracks -- N-1 distributions (6 vars:
+       TopologicalScore, MuonPID, PionPID, MuPiOpeningangle, MuonTrackLength,
+       PionTrackLength), stacked by category. -> instrument selection.
+  3. fig:final_mu / _pi / _topo -- final-cut data/MC distributions per category.
+  4. tab:bkgcomp -- background decomposition at the final cut.
+  5. tab:phasespace -- efficiency/purity in the measured phase space.
+  6. fig:pid_proton, tab:pithresh(_eff) -- verify / regenerate per config.
+
+## EXECUTION (one coordinated pass)
+When the FHC binning re-run finishes (reprocessing unblocks):
+  a. Finish instrumenting CC1mu1piXp with the N-1 / final-cut / bkg-category /
+     efficiency histograms (per EventCategory) alongside the cut-flow counters.
+  b. Rebuild; reprocess ALL file types (numuMC + EXT + dirt) with the new binning
+     AND the full instrumentation; extend binning to RHC + combined.
+  c. Aggregate per config (POT-weighted) -> all diagnostic tables/figures x3.
+BLIND nuance: data == pred by construction (fake data), so the "Data" column /
+points equal the MC prediction; present as the MC-prediction breakdown until
+unblinding.
