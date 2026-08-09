@@ -81,7 +81,7 @@
   \vspace{0.5cm}
   {\normalsize Draft 1.0 --- 2026-06-09\par}
   \vspace{1.5cm}
-  {\large Ishanne Pophale, Jaros\l{}aw Nowak\par}
+  {\large Ishanne Pophale, Jarek Nowak\par}
   \vspace{0.5cm}
   {\normalsize\textit{Lancaster University}\par}
   \vspace{2cm}
@@ -772,27 +772,25 @@ Table~\ref{tab:samples} summarises the input samples.
 
 \begin{table}[H]
   \centering
-  \caption{Input data and MC samples.  EXT = beam-off (external trigger) data.
-    Scale factors convert MC to equivalent beam-on POT (Run~1 only).}
+  \caption{Input samples (final, full FHC$+$RHC). ``$n$'' is the number of overlay
+    files; ``MC POT'' is the summed native simulated exposure ($\times10^{20}$). The
+    blind Poisson-thrown fake data stands in for the (unused) beam-on data; the
+    detector variations use the native Run-4 FHC and RHC samples. The per-file lists
+    and POT/trigger values are in the \texttt{configs/file\_properties\_numi\_*}
+    tables.}
   \label{tab:samples}
   \small
-  \begin{tabular}{L{2.8cm} L{7.0cm} r r}
+  \begin{tabular}{@{}l l c r@{}}
     \toprule
-    Sample & File & MC POT & Scale \\
+    Sample & Composition & $n$ & MC POT \\
     \midrule
-    MC overlay (R1) & \texttt{Run1\_fhc\_new\_numi\_flux\_fhc\_pandora\_ntuple.root}
-                    & $23.28\times10^{20}$ & 0.141 \\[3pt]
-    MC overlay (R2) & \texttt{Run2\_fhc\_new\_numi\_flux\_fhc\_pandora\_ntuple.root}
-                    & $24.93\times10^{20}$ & 0 \\[3pt]
-    MC overlay (R4) & \texttt{Run4\_fhc\_new\_numi\_flux\_fhc\_pandora\_ntuple.root}
-                    & $28.34\times10^{20}$ & 0 \\[3pt]
-    MC overlay (R5) & \texttt{Run5\_fhc\_new\_numi\_flux\_fhc\_pandora\_ntuple.root}
-                    & $63.15\times10^{20}$ & 0 \\[3pt]
-    EXT beam-off    & \texttt{beamoff\_run1Andrun3.root}  & ---       & 2.044 \\[3pt]
-    Dirt MC         & \texttt{prodgenie\_numi\_uboone\_overlay\_dirt\_fhc\ldots.root}
-                    & $16.74\times10^{20}$ & 0.196 \\[3pt]
-    Beam-on data    & \texttt{neutrinoselection\_filt\_run1\_beamon\_beamgood.root}
-                    & ---       & 1 \\
+    $\nu_\mu$ overlay (FHC) & Runs 1, 2, 4 (pandora) $+$ Run 5 (reweighted-PPFX) & 4 & $95.85$ \\
+    $\nu_\mu$ overlay (RHC) & Runs 1, 2, 3, 4a, 4b, 4c (pandora)                & 10 & $154.63$ \\
+    Dirt MC                & GENIE NuMI dirt overlay (Run 1)                    & 1 & $16.74$ \\
+    EXT (beam-off)         & cosmic data, per run, horn-mode-independent        & 7 & --- \\
+    Detector variations    & Run-4 FHC $+$ Run-4 RHC, CV $+$ 8 knobs each       & 18 & --- \\
+    Fake data (blind)      & Poisson-thrown central value, per configuration    & --- & --- \\
+    Beam-on data           & blinded --- not used until unblinding              & --- & --- \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -800,9 +798,11 @@ Table~\ref{tab:samples} summarises the input samples.
 \paragraph{Event weights.}
 Each MC event is weighted by
 \begin{equation}
-  w = \text{Scale}[\text{run}] \times w_{\mathrm{PPFX}} \times w_{\mathrm{tune}},
+  w = \text{Scale}[\text{mode}] \times w_{\mathrm{PPFX}} \times w_{\mathrm{tune}},
 \end{equation}
-where $w_{\mathrm{PPFX}}$ is the PPFX central-value flux correction
+where $\text{Scale}[\text{mode}]$ is the single per-mode POT factor of
+Table~\ref{tab:pot} (all files of a horn mode pooled), $w_{\mathrm{PPFX}}$ is the
+PPFX central-value flux correction
 (\texttt{ppfx\_cv}) and $w_{\mathrm{tune}}$ is the GENIE/GEANT4 reweighting
 correction (\texttt{weightTune}).  Events with non-finite, zero, or unphysically
 large weights ($w > 30$) are assigned unit weight.
