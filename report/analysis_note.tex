@@ -676,31 +676,50 @@ analysis ntuples.
 
 \subsection{Data exposure}
 
-Only Run~1 beam-on data are used in the present analysis.  Beam-on files for
-Runs~2, 4, and~5 are not yet available; the corresponding MC overlay samples are
-present but carry zero data-POT weight.
+The analysis is \emph{blind}: the real beam-on data are not used. Each configuration
+is extracted on Poisson-thrown central-value fake data scaled to the corresponding
+$\nu_e$-matched data POT (Table~\ref{tab:pot}). The FHC measurement uses the full FHC
+exposure (Runs~1, 2, 4 and~5); RHC uses Runs~1, 2, 3, 4a, 4b and~4c; the combined
+measurement uses all fourteen overlay files, each horn mode scaled to its own data
+exposure.
 
 \begin{table}[H]
   \centering
-  \caption{Run-period POT accounting.  Only Run~1 contributes to this analysis.}
+  \caption{Run-period exposure accounting (final, full FHC$+$RHC). ``MC POT'' is each
+    period's native simulated exposure; ``Data POT'' is the $\nu_e$-matched exposure
+    to which the (blind) fake data is scaled; Scale $=$ Data POT$/$MC POT (the
+    combined measurement scales each mode separately rather than with a single
+    factor). Run~5 uses the reweighted-PPFX $\nu_\mu$ overlay.}
   \label{tab:pot}
   \begin{tabular}{lccc}
     \toprule
-    Run period & Beam-on POT ($\times10^{20}$) & MC POT ($\times10^{20}$) & Scale \\
+    Run period & MC POT ($\times10^{20}$) & Data POT ($\times10^{20}$) & Scale \\
     \midrule
-    Run~1 (FHC) & \textbf{3.283} & 23.282 & 0.141 \\
-    Run~2 (FHC) & 0 (not used)   & 24.934 & 0 \\
-    Run~4 (FHC) & 0 (not used)   & 28.335 & 0 \\
-    Run~5 (FHC) & 0 (not used)   & 63.145 & 0 \\
+    Run~1 (FHC)  & 23.282 & & \\
+    Run~2 (FHC)  & 24.934 & & \\
+    Run~4 (FHC)  & 28.335 & & \\
+    Run~5 (FHC)  & 19.300 & & \\
+    \textbf{FHC total} & \textbf{95.85} & \textbf{8.857} & 0.0924 \\
     \midrule
-    \textbf{Total} & \textbf{3.283} & & \\
+    Run~1 (RHC)  &  8.997 & & \\
+    Run~2 (RHC)  & 57.865 & & \\
+    Run~3 (RHC)  & 55.185 & & \\
+    Run~4a (RHC) &  7.283 & & \\
+    Run~4b (RHC) & 23.798 & & \\
+    Run~4c (RHC) &  1.505 & & \\
+    \textbf{RHC total} & \textbf{154.63} & \textbf{11.082} & 0.0717 \\
+    \midrule
+    \textbf{Combined (FHC$+$RHC)} & \textbf{250.49} & \textbf{19.939} & (per mode) \\
     \bottomrule
   \end{tabular}
 \end{table}
 
-Including Runs~2+4+5 would increase the exposure by $\approx 5.4\times$
-($\sim$8.857$\times10^{20}$~POT total), which would substantially reduce the
-statistical uncertainty in the high-momentum tail.
+The full exposure is a $\approx 2.7\times$ increase over the single-run Run-1 FHC
+baseline ($3.283\times10^{20}$; Appendix~\ref{sec:legacyresults}) in FHC alone, and
+$\approx 6\times$ combined, substantially reducing the data-statistical term
+(Tables~\ref{tab:systbreak_fhc}--\ref{tab:systbreak_comb}). When the analysis is
+unblinded, the real beam-on POT (and gate counts) replace the $\nu_e$-matched values
+above.
 
 \subsection{Integrated flux}
 \label{sec:flux_status}
