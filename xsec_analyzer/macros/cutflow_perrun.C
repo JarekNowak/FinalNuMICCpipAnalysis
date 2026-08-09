@@ -29,7 +29,11 @@ void cutflow_perrun(const char* mode = "fhc") {
   const char* stage[10]= {"cut0_none","cut1_vertex","cut2_topology","cut3_tracklike",
                           "cut4_pioncontained","cut5_muongap","cut6_piongap",
                           "cut7_shower","cut8_opening","cut9_final"};
-  int col[8] = {kBlack,kRed+1,kBlue+1,kGreen+2,kMagenta+1,kOrange+7,kCyan+2,kGray+2};
+  // Okabe-Ito colorblind-safe palette (8 distinct hues for the per-run stack)
+  int col[8] = { TColor::GetColor("#0072B2"), TColor::GetColor("#E69F00"),
+                 TColor::GetColor("#009E73"), TColor::GetColor("#CC79A7"),
+                 TColor::GetColor("#56B4E9"), TColor::GetColor("#D55E00"),
+                 TColor::GetColor("#F0E442"), TColor::GetColor("#999999") };
   gStyle->SetOptStat(0);
 
   for (int o = 0; o < 5; ++o) {

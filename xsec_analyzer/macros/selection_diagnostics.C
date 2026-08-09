@@ -29,7 +29,7 @@ void selection_diagnostics(const char* mode="fhc") {
       if(a){ if(!hs){hs=(TH1D*)a->Clone("hs");hs->SetDirectory(0);hs->Reset();} hs->Add(a,s.scale);}
       if(b){ if(!hb){hb=(TH1D*)b->Clone("hb");hb->SetDirectory(0);hb->Reset();} hb->Add(b,s.scale);} f->Close(); }
     if(!hs)return;
-    hs->SetFillColor(kBlue-7); hb->SetFillColor(kOrange+1);
+    hs->SetFillColor(TColor::GetColor("#0072B2")); hb->SetFillColor(TColor::GetColor("#E69F00")); // Okabe-Ito
     THStack st("st",Form("%s (%s);%s;events",base,mode,xt)); st.Add(hb); st.Add(hs);
     TCanvas c("c","",800,600); st.Draw("hist");
     TLine ln(thr,0,thr,hs->GetMaximum()*1.1); ln.SetLineStyle(2); ln.SetLineWidth(2); ln.Draw();

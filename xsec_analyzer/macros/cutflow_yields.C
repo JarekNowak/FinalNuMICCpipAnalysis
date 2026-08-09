@@ -49,7 +49,9 @@ void cutflow_yields(const char* mode="fhc") {
   TH1D* hs=new TH1D("hs_sig",Form("%s cut-flow;;events",mode),10,0,10);
   TH1D* hb=new TH1D("hb_bkg","",10,0,10), *he=new TH1D("he_ext","",10,0,10), *hd=new TH1D("hd_dirt","",10,0,10);
   for(int c=0;c<10;c++){ hs->SetBinContent(c+1,sig[c]); hb->SetBinContent(c+1,tot[c]-sig[c]); he->SetBinContent(c+1,ex[c]); hd->SetBinContent(c+1,dt[c]); hs->GetXaxis()->SetBinLabel(c+1,stage[c]); }
-  hs->SetFillColor(kBlue-7); hb->SetFillColor(kOrange+1); he->SetFillColor(kGray+1); hd->SetFillColor(kGreen+2);
+  // Okabe-Ito colorblind-safe fills: signal blue, bkg orange, EXT grey, dirt green
+  hs->SetFillColor(TColor::GetColor("#0072B2")); hb->SetFillColor(TColor::GetColor("#E69F00"));
+  he->SetFillColor(TColor::GetColor("#999999")); hd->SetFillColor(TColor::GetColor("#009E73"));
   THStack* st=new THStack("cf",Form("%s cut-flow;;events",mode)); st->Add(hd); st->Add(he); st->Add(hb); st->Add(hs);
   TCanvas c1("c1","",1000,600); c1.SetLogy(); c1.SetBottomMargin(0.22); st->Draw("hist"); st->GetXaxis()->LabelsOption("v");
   TLegend lg(0.7,0.72,0.88,0.88); lg.AddEntry(hs,"Signal","f"); lg.AddEntry(hb,"Bkg","f"); lg.AddEntry(he,"EXT","f"); lg.AddEntry(hd,"Dirt","f"); lg.Draw();

@@ -11,7 +11,11 @@ void dsigma_current(const char* cfg = "FHC5", const char* gtag = "newg4") {
   const char* obsX[5]   = {"p_{#mu} [GeV/c]","p_{#pi} [GeV/c]","cos#theta_{#mu}",
                            "cos#theta_{#pi}","#theta_{#mu#pi} [rad]"};
   const char* gens[4]   = {"genie","gibuu","neut","nuwro"};
-  int gcol[4]           = {kRed+1, kGreen+2, kMagenta+1, kBlue+1};
+  // Okabe-Ito colorblind-safe palette + distinct line styles (redundant encoding,
+  // so the four generators are separable in grayscale and for all colour-vision types)
+  int gcol[4]   = { TColor::GetColor("#0072B2"), TColor::GetColor("#009E73"),
+                    TColor::GetColor("#CC79A7"), TColor::GetColor("#D55E00") }; // blue,green,purple,vermillion
+  int gstyle[4] = { 1, 2, 7, 9 };
   gStyle->SetOptStat(0);
   TCanvas c(Form("ds_%s",cfg), "", 1600, 900);
   c.Divide(3, 2);
@@ -41,7 +45,7 @@ void dsigma_current(const char* cfg = "FHC5", const char* gtag = "newg4") {
       if (hfte && hfte->GetNbinsX()==hunf->GetNbinsX()) {
         TH1D* hg = (TH1D*)hunf->Clone(Form("g_%s_%d_%d",cfg,o,g)); hg->SetDirectory(0); hg->Reset();
         for (int b=1;b<=hg->GetNbinsX();++b) hg->SetBinContent(b, hfte->GetBinContent(b)/hg->GetBinWidth(b));
-        hg->SetLineColor(gcol[g]); hg->SetLineWidth(2); hg->SetMarkerSize(0); hg->Draw("hist same");
+        hg->SetLineColor(gcol[g]); hg->SetLineStyle(gstyle[g]); hg->SetLineWidth(2); hg->SetMarkerSize(0); hg->Draw("hist same");
         lg->AddEntry(hg, gens[g], "l"); keep.push_back(hg);
       }
       fg->Close();
