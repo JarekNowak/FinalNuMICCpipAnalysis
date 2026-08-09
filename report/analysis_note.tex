@@ -653,26 +653,49 @@ separation (Section~\ref{sec:selection}).
 \label{sec:flux}
 % =============================================================================
 
-\subsection{NuMI Forward Horn Current beam}
+\subsection{NuMI beam and flux composition}
 
 The NuMI beam is produced by 120~GeV protons from the Fermilab Main Injector
-striking a graphite target.  Charged secondary hadrons are focused by two magnetic
-horns; in Forward Horn Current (FHC) mode the horns select positive pions and
-kaons, producing a beam with predominantly $\nu_\mu$ content at the \uboone{}
-site.  \uboone{} is located approximately 110~mrad off-axis from the NuMI beam
-axis, reducing the peak neutrino energy to the 0.5--2.5~GeV range and narrowing
-the energy spectrum.
+striking a graphite target. Charged secondary hadrons are focused by two magnetic
+horns whose polarity selects the sign of the focused mesons. In Forward Horn
+Current (FHC) mode the horns focus positive pions and kaons, giving a beam with
+predominantly $\nu_\mu$ content; in Reverse Horn Current (RHC) mode the polarity
+is reversed to focus negatives, giving a predominantly $\bar{\nu}_\mu$ beam.
+\uboone{} is located approximately 110~mrad off-axis from the NuMI beam axis,
+reducing the peak neutrino energy to the 0.5--2.5~GeV range and narrowing the
+energy spectrum. Because \uboone{} sits off-axis and at comparatively low energy,
+the horn sign-selection is imperfect and both modes carry a sizeable wrong-sign
+component --- most notably RHC, whose wrong-sign $\nu_\mu$ fraction is large.
 
-At the \uboone{} site the NuMI FHC flux composition is approximately:
-\begin{itemize}[noitemsep]
-  \item $\nu_\mu$: $\sim62\%$
-  \item $\bar{\nu}_\mu$: $\sim38\%$
-  \item $\nu_e / \bar{\nu}_e$: remainder
-\end{itemize}
+The flux composition at the \uboone{} site is taken from the new-G4 central-value
+flux histograms (\texttt{flux\_newg4.root}), integrated over $E_\nu > 0.1$~GeV to
+exclude an unphysical sub-threshold pile-up near $E_\nu = 0$ (below the reaction
+threshold and irrelevant to the measurement):
+
+\begin{table}[H]
+  \centering
+  \caption{NuMI flux composition at the \uboone{} site by neutrino type, for the FHC
+    and RHC horn modes (new-G4 central-value flux \texttt{flux\_newg4.root},
+    integrated over $E_\nu>0.1$~GeV). FHC is $\nu_\mu$-dominant; RHC is
+    $\bar{\nu}_\mu$-dominant with a large wrong-sign $\nu_\mu$ fraction. The signal
+    is charge-blind ($|\nu_\mathrm{pdg}|=14$), so both $\nu_\mu$ and $\bar{\nu}_\mu$
+    contribute in either mode.}
+  \label{tab:fluxcomp}
+  \begin{tabular}{lcccc}
+    \toprule
+    Horn mode & $\nu_\mu$ & $\bar{\nu}_\mu$ & $\nu_e$ & $\bar{\nu}_e$ \\
+    \midrule
+    FHC & $63.4\%$ & $33.7\%$ & $1.9\%$ & $1.0\%$ \\
+    RHC & $42.0\%$ & $55.2\%$ & $1.5\%$ & $1.3\%$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
 
 Flux corrections from the Package to Predict the FluX (PPFX)~\cite{ppfx} are
 applied per event via the central-value weight \texttt{ppfx\_cv} stored in the
-analysis ntuples.
+analysis ntuples. (The absolute flux normalisation used for the cross-section in
+Sec.~\ref{sec:flux_status} is still taken from the previous flux histograms; moving
+that normalisation onto the new-G4 flux is a separate, tracked update.)
 
 \subsection{Data exposure}
 
