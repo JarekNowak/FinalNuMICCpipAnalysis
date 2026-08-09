@@ -256,6 +256,11 @@ TH1D* h_pi_cut9_final;
   // from processing each run file separately.
   TH1D* h_cf[5][10];
 
+  // Cut-flow YIELDS: total and signal weighted event counts per cut stage (10 bins),
+  // ALL events (for signal/bkg/EXT/dirt cut-flow tables and stacked yield plots).
+  TH1D* h_cutflow_tot;
+  TH1D* h_cutflow_sig;
+
   STVCalcType CalcType;
   TF1* fPP;
 

@@ -347,6 +347,13 @@ h_pi_cut9_final->Sumw2();
   }
 }
 
+// Cut-flow yield counters (10 stages: 0=none,1=vertex,2=topology,3=tracklike,
+// 4=pioncontained,5=muongap,6=piongap,7=shower,8=opening,9=final)
+h_cutflow_tot = new TH1D("h_cutflow_tot", "cut-flow total;cut stage;events", 10, 0, 10);
+h_cutflow_sig = new TH1D("h_cutflow_sig", "cut-flow signal;cut stage;events", 10, 0, 10);
+h_cutflow_tot->Sumw2();
+h_cutflow_sig->Sumw2();
+
 
 }
 
@@ -1466,10 +1473,15 @@ bool Passed =
     cf_pass[7] = cf_pass[6] && pass_shower;
     cf_pass[8] = cf_pass[7] && pass_opening;
     cf_pass[9] = cf_pass[8] && pass_final;
-    for (int c = 0; c < 10; ++c)
-      if (cf_pass[c])
-        for (int o = 0; o < 5; ++o)
-          if (cf_ok[o] && std::isfinite(cf_rv[o])) h_cf[o][c]->Fill(cf_rv[o], evt_w);
+    bool cf_is_sig = this->is_event_mc_signal();
+    for (int c = 0; c < 10; ++c) {
+      if (!cf_pass[c]) continue;
+      // cut-flow yields (all events; signal split for the bkg = tot - sig)
+      h_cutflow_tot->Fill(c, evt_w);
+      if (cf_is_sig) h_cutflow_sig->Fill(c, evt_w);
+      for (int o = 0; o < 5; ++o)
+        if (cf_ok[o] && std::isfinite(cf_rv[o])) h_cf[o][c]->Fill(cf_rv[o], evt_w);
+    }
   }
 
 
@@ -1679,6 +1691,10 @@ h_mu_cut9_final->Write();
 for (int o = 0; o < 5; ++o)
   for (int c = 0; c < 10; ++c)
     if (h_cf[o][c]) h_cf[o][c]->Write();
+
+// Cut-flow yield counters (total + signal per stage)
+if (h_cutflow_tot) h_cutflow_tot->Write();
+if (h_cutflow_sig) h_cutflow_sig->Write();
 
 eff_vertex->Write();
 eff_topology->Write();
