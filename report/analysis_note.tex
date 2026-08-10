@@ -751,7 +751,7 @@ exposure.
 \end{table}
 
 The full exposure is a $\approx 2.7\times$ increase over the single-run Run-1 FHC
-baseline ($3.283\times10^{20}$; Appendix~\ref{sec:legacyresults}) in FHC alone, and
+baseline ($3.283\times10^{20}$) in FHC alone, and
 $\approx 6\times$ combined, substantially reducing the data-statistical term
 (Tables~\ref{tab:systbreak_fhc}--\ref{tab:systbreak_comb}). When the analysis is
 unblinded, the real beam-on POT (and gate counts) replace the $\nu_e$-matched values
@@ -1172,20 +1172,9 @@ is computed from reconstructed track directions.
 \label{sec:cutflow}
 % =============================================================================
 
-Table~\ref{tab:cutflow} lists POT-weighted event yields at each cut stage
-for Run~1 ($3.283\times10^{20}$~POT).
-Figure~\ref{fig:cutflow} shows the evolution of data and MC yields through
-all eleven cuts.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.72\textwidth]{cutflow}
-  \caption{Cut-flow yields for data (black points) and MC prediction
-    (stacked: signal blue, backgrounds by category, EXT grey).
-    The data/MC ratio at the final cut is 0.752. (Run-1 reference; the
-    full-exposure per-configuration version is Fig.~\ref{fig:cutflow_all}.)}
-  \label{fig:cutflow}
-\end{figure}
+Figure~\ref{fig:cutflow_all} shows the full-exposure cut-flow yields for all
+three configurations, and Table~\ref{tab:cutflow} gives the detailed per-category
+breakdown (Run-1 reference, $3.283\times10^{20}$~POT).
 
 \begin{figure}[H]
   \centering
@@ -1195,9 +1184,8 @@ all eleven cuts.
   \caption{Cut-flow yields at \emph{full exposure} for FHC, RHC and combined
     (log scale; MC-prediction stack: signal blue, background orange, EXT grey,
     dirt green; colourblind-safe Okabe-Ito), signal and background POT-scaled per
-    mode. Data is blind, so this shows the MC-prediction stack; the Run-1
-    single-configuration cut-flow (Fig.~\ref{fig:cutflow}) is retained for the
-    detailed per-category breakdown.}
+    mode. Data is blind, so this shows the MC-prediction stack; the detailed
+    per-category breakdown is in Table~\ref{tab:cutflow}.}
   \label{fig:cutflow_all}
 \end{figure}
 
@@ -1782,8 +1770,7 @@ physical or acceptance effect.
 This is the primary result of the analysis: the CC$1\mu1\pi^\pm$ cross section
 extracted over the full available exposure in forward horn current (FHC), reverse
 horn current (RHC), and their combination, all on Poisson-thrown central-value fake
-data (the single-run Run-1 extraction of Sec.~\ref{sec:legacyresults} is retained as
-a cross-check). The FHC measurement uses Runs~1, 2, 4 and 5 ($\nu_e$-matched data POT
+data. The FHC measurement uses Runs~1, 2, 4 and 5 ($\nu_e$-matched data POT
 $8.857\times10^{20}$); RHC uses Runs~1, 2, 3, 4a, 4b, 4c ($1.108\times10^{21}$); the
 combined measurement uses all fourteen overlay files at the joint POT
 $1.994\times10^{21}$. All three close cleanly against the $A_C$-smeared truth for
@@ -2477,7 +2464,7 @@ $d\sigma/d\cthpiM$: 1.004, $d\sigma/d\thmupM$: 1.001) after three corrections
 Wiener filter (a stat-only covariance over-corrects by $\sim26\%$), cancelling the
 EXT subtraction for the pure-MC fake data ($\sim3.7\%$), and matched binning; the
 two pipelines were also shown to select identical events (1914 vs 1913.6 NuWro
-events at the final cut).  The final results (Table~\ref{tab:sigint}) then refine
+events at the final cut).  The final results (Table~\ref{tab:sigint_all}) then refine
 the \emph{measured phase space} to $p_\mu>0.15$, $p_\pi>0.175\GeVc$,
 $\theta_{\mu\pi}<2.6$~rad, chosen from the efficiency turn-on curves so the
 selection efficiency is flat at $\sim$13--20\% (Section~\ref{sec:signal}): the
@@ -2521,275 +2508,6 @@ planned.
 
 % =============================================================================
 \appendix
-
-% ===== APPENDIX: legacy / cross-check material moved here =====
-\section{Legacy single-run (Run~1) result}
-\label{sec:legacyresults}
-\label{sec:results}
-% =============================================================================
-
-\subsection{Integrated cross section}
-
-The cross sections below are reported in the \emph{measured phase space}
-$p_\mu>0.15\GeVc$, $p_\pi>0.175\GeVc$, $\theta_{\mu\pi}<2.6$~rad
-(Section~\ref{sec:signal}), extracted with the framework-consistent Wiener-SVD
-unfolder using the imported systematic covariance (Section~\ref{sec:datamc}).
-Figure~\ref{fig:xsec_integrated} and Table~\ref{tab:sigint} give the integrated
-cross section for each observable on the NuWro fake-data sample.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.62\textwidth]{xsec_integrated}
-  \caption{Integrated cross section $\sigma_{\mathrm{int}}$ from each of the five
-    observables (framework Wiener-SVD, optimised binning, GENIE detVar-CV fake data).
-    Total uncertainty (full covariance); optimised binning.  The values differ between observables
-    because each integrates a different projection of the same restricted phase
-    space.}
-  \label{fig:xsec_integrated}
-\end{figure}
-
-\begin{table}[H]
-  \centering
-  \caption{Integrated cross section from each observable (framework Wiener-SVD,
-    optimised binning, measured phase space $p_\mu>0.15$, $p_\pi>0.175\GeVc$,
-    $\theta_{\mu\pi}<2.6$~rad), GENIE detVar-CV fake data.  Units $10^{-38}$~cm$^2$/Ar;
-    total uncertainty (full covariance).
-    Flux: $\Phi = 6.81159\times10^{-10}$~cm$^{-2}$~POT$^{-1}$ (Table~\ref{tab:flux}).}
-  \label{tab:sigint}
-  \begin{tabular}{lr}
-    \toprule
-    Observable & $\sigma_{\mathrm{int}}$ \\
-    \midrule
-    $d\sigma/d\pmuM$      & 1.137  \\
-    $d\sigma/d\ppiM$      & 1.125  \\
-    $d\sigma/d\cthmuM$    & 1.159  \\
-    $d\sigma/d\cthpiM$    & 0.931  \\
-    $d\sigma/d\thmupM$    & 1.262  \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-\paragraph{Relation to the framework cross-check.}  Before the signal-definition
-refinement, the custom and official XSecAnalyzer pipelines were validated against
-each other at a common \emph{reference} phase space ($p_\mu,p_\pi>0.1\GeVc$, full
-opening angle with the reco $\thmupM<2.6$~rad cut in place): with the imported
-systematic covariance, the EXT cancellation for fake data, and matched binning,
-the two fully independent pipelines agreed to $\le2.1\%$ on every observable
-($p_\mu$ 1.016, $p_\pi$ 0.979, $\cos\theta_\mu$ 0.987, $\cos\theta_\pi$ 1.004,
-$\theta_{\mu\pi}$ 1.001).  That established the
-correctness of the selection, response, background subtraction, and unfolding.
-The results reported below are the \textsc{XSecAnalyzer} framework extraction at
-the \emph{measured phase space} ($p_\mu>0.15$, $p_\pi>0.175\GeVc$,
-$\theta_{\mu\pi}<2.6$~rad, chosen from the efficiency turn-on curves,
-Sec.~\ref{sec:binopt}) on the resolution-optimised binning; the efficiency
-flattens from $12.1\%$ to $15.6\%$ at $\sim$55\% purity (the $2.6$~rad cut rejects
-the large-angle cosmic background; no lower opening-angle cut is used, as the
-small-angle region is high-purity). The fully independent custom pipeline
-reproduces the framework and now serves as the cross-check (Sec.~\ref{sec:extrbias}).
-
-\subsection{Differential cross section: \boldmath $d\sigma/d\pmuM$}
-
-\begin{longtable}{C{1.5cm}C{2.8cm}R{3.0cm}R{3.0cm}}
-  \caption{Framework Wiener-SVD $d\sigma/dp_\mu$ [$10^{-38}$~cm$^2$/(GeV/$c$)/Ar]
-    (full framework covariance).  Total uncertainty (full covariance); optimised binning.
-    Flux: Table~\ref{tab:flux}.}
-  \label{tab:dsdpmu}\\
-  \toprule
-  Bin & $p_\mu$ range (GeV/$c$) & $d\sigma/dp_\mu$ & Total unc. \\
-  \midrule
-  \endfirsthead
-  \multicolumn{4}{c}{\tablename~\thetable\ (continued)}\\
-  \toprule
-  Bin & $p_\mu$ range (GeV/$c$) & $d\sigma/dp_\mu$ & Total unc. \\
-  \midrule
-  \endhead
-  \bottomrule
-  \endfoot
-    1 & $[0.15,\;0.35]$ & $+0.826$ & $\pm 0.229$ \\
-    2 & $[0.35,\;0.55]$ & $+0.820$ & $\pm 0.221$ \\
-    3 & $[0.55,\;0.75]$ & $+0.818$ & $\pm 0.209$ \\
-    4 & $[0.75,\;0.95]$ & $+0.812$ & $\pm 0.197$ \\
-    5 & $[0.95,\;1.25]$ & $+0.537$ & $\pm 0.127$ \\
-    6 & $[1.25,\;1.75]$ & $+0.321$ & $\pm 0.075$ \\
-    7 & $[1.75,\;3.00]$ & $+0.128$ & $\pm 0.030$ \\
-\end{longtable}
-
-The spectrum falls smoothly above $\sim0.5\GeVc$.  The first bin sits high because
-it is narrow ($0.05\GeVc$) and near the acceptance edge.  The broad bins at
-$p_\mu > 2\GeVc$ reduce statistical fluctuations in the sparse high-momentum tail.
-
-Figure~\ref{fig:xsec_pmu} shows the custom $d\sigma/dp_\mu$ and the
-background-subtraction diagnostic.
-
-\begin{figure}[H]
-  \centering
-  \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{fw_xsec_pmu}
-    \caption{$d\sigma/dp_\mu$ (framework, optimised binning).}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{fw_bkgsub_pmu}
-    \caption{Background-subtraction check: data$+$EXT (black), signal MC (blue),
-      total background prediction (red), and bkg-subtracted data (green).}
-  \end{subfigure}
-  \caption{Muon momentum $d\sigma/dp_\mu$ and the background-subtraction
-    diagnostic.}
-  \label{fig:xsec_pmu}
-\end{figure}
-
-\subsection{Differential cross section: \boldmath $d\sigma/d\ppiM$}
-
-\begin{table}[H]
-  \centering
-  \caption{Framework Wiener-SVD $d\sigma/dp_\pi$ [$10^{-38}$~cm$^2$/(GeV/$c$)/Ar].
-    Total uncertainty (full covariance); optimised binning.  Flux: Table~\ref{tab:flux}.}
-  \label{tab:dsdppi}
-  \begin{tabular}{C{1.2cm}C{2.8cm}R{3.0cm}R{3.0cm}}
-    \toprule
-    Bin & $p_\pi$ range (GeV/$c$) & $d\sigma/dp_\pi$ & Total unc. \\
-    \midrule
-    1 & $[0.17,\;0.25]$ & $+2.998$ & $\pm 0.811$ \\
-    2 & $[0.25,\;0.32]$ & $+3.201$ & $\pm 0.874$ \\
-    3 & $[0.32,\;0.42]$ & $+2.249$ & $\pm 0.604$ \\
-    4 & $[0.42,\;0.55]$ & $+1.736$ & $\pm 0.465$ \\
-    5 & $[0.55,\;1.00]$ & $+0.502$ & $\pm 0.135$ \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-The spectrum is broad across $p_\pi \lesssim 0.5\GeVc$, consistent with pions
-from $\Delta(1232)$ decays.  The first bin is a narrow $0.025\GeVc$ sliver at the
-acceptance threshold, hence its large $d\sigma/dp_\pi$ and uncertainty.
-
-\begin{figure}[H]
-  \centering
-  \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{fw_xsec_ppi}
-    \caption{$d\sigma/dp_\pi$ (framework, optimised binning).}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{fw_bkgsub_ppi}
-    \caption{Background-subtraction check for $p_\pi$.}
-  \end{subfigure}
-  \caption{Pion momentum $d\sigma/dp_\pi$ unfolding diagnostics.}
-  \label{fig:xsec_ppi}
-\end{figure}
-
-\subsection{Differential cross section: \boldmath $d\sigma/d\cthmuM$}
-
-\begin{table}[H]
-  \centering
-  \caption{Framework Wiener-SVD $d\sigma/d\cos\theta_\mu$ [$10^{-38}$~cm$^2$/Ar].
-    With the EXT (cosmic) subtraction cancelled for the NuWro fake data
-    (Section~\ref{sec:datamc}), all bins are now positive, including the
-    backward-muon region.  Total uncertainty (full covariance); optimised binning.}
-  \label{tab:dsdcosthmu}
-  \begin{tabular}{C{1.2cm}C{2.8cm}R{3.0cm}R{3.0cm}}
-    \toprule
-    Bin & $\cos\theta_\mu$ range & $d\sigma/d\cos\theta_\mu$ & Total unc. \\
-    \midrule
-    1 & $[-1.00,\;0.45]$ & $+0.143$ & $\pm 0.045$ \\
-    2 & $[0.45,\;0.65]$ & $+1.082$ & $\pm 0.298$ \\
-    3 & $[0.65,\;0.80]$ & $+1.500$ & $\pm 0.400$ \\
-    4 & $[0.80,\;0.90]$ & $+2.546$ & $\pm 0.601$ \\
-    5 & $[0.90,\;1.00]$ & $+2.561$ & $\pm 0.620$ \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-\begin{figure}[H]
-  \centering
-  \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{fw_xsec_costhmu}
-    \caption{$d\sigma/d\cos\theta_\mu$ (framework, optimised binning).}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{fw_bkgsub_costhmu}
-    \caption{Background-subtraction check for $\cos\theta_\mu$.}
-  \end{subfigure}
-  \caption{Muon polar angle $d\sigma/d\cos\theta_\mu$ (framework, optimised binning) and the background-subtraction diagnostic.  The spectrum rises steeply
-    toward forward angles.}
-  \label{fig:xsec_costhmu}
-\end{figure}
-
-\subsection{Differential cross section: \boldmath $d\sigma/d\cthpiM$}
-
-\begin{table}[H]
-  \centering
-  \caption{Framework Wiener-SVD $d\sigma/d\cos\theta_\pi$ [$10^{-38}$~cm$^2$/Ar].
-    Total uncertainty (full covariance); optimised binning.  Flux: Table~\ref{tab:flux}.}
-  \label{tab:dsdcosthpi}
-  \begin{tabular}{C{1.2cm}C{2.8cm}R{3.0cm}R{3.0cm}}
-    \toprule
-    Bin & $\cos\theta_\pi$ range & $d\sigma/d\cos\theta_\pi$ & Total unc. \\
-    \midrule
-    1 & $[-1.00,\;-0.10]$ & $+0.161$ & $\pm 0.051$ \\
-    2 & $[-0.10,\;0.35]$ & $+0.362$ & $\pm 0.140$ \\
-    3 & $[0.35,\;0.55]$ & $+0.529$ & $\pm 0.231$ \\
-    4 & $[0.55,\;0.75]$ & $+0.853$ & $\pm 0.244$ \\
-    5 & $[0.75,\;1.00]$ & $+1.390$ & $\pm 0.372$ \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-\begin{figure}[H]
-  \centering
-  \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{fw_xsec_costhpi}
-    \caption{$d\sigma/d\cos\theta_\pi$ (framework, optimised binning).}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{fw_bkgsub_costhpi}
-    \caption{Background-subtraction check for $\cos\theta_\pi$.}
-  \end{subfigure}
-  \caption{Pion polar angle $d\sigma/d\cos\theta_\pi$ (framework, optimised binning) and the background-subtraction diagnostic.}
-  \label{fig:xsec_costhpi}
-\end{figure}
-
-\subsection{Differential cross section: \boldmath $d\sigma/d\thmupM$}
-
-\begin{table}[H]
-  \centering
-  \caption{Framework Wiener-SVD $d\sigma/d\theta_{\mu\pi}$ [$10^{-38}$~cm$^2$/rad/Ar],
-    in the measured range $\theta_{\mu\pi}<2.6$~rad (9 bins; no lower cut --- the
-    small-angle region is retained as it is high-purity, Section~\ref{sec:signal}).
-    The spectrum peaks at $\theta_{\mu\pi} \approx 0.9$--$1.3$~rad.  The narrow last
-    bin $[2.513,2.6]$ has a correspondingly larger $d\sigma/d\theta_{\mu\pi}$ and
-    uncertainty.  Total uncertainty (full covariance); optimised binning.}
-  \label{tab:dsdthmupi}
-  \begin{tabular}{C{1.2cm}C{2.8cm}R{3.0cm}R{3.0cm}}
-    \toprule
-    Bin & $\theta_{\mu\pi}$ range (rad) & $d\sigma/d\theta_{\mu\pi}$ & Total unc. \\
-    \midrule
-    1 & $[0.00,\;0.60]$ & $+0.305$ & $\pm 0.070$ \\
-    2 & $[0.60,\;0.85]$ & $+0.731$ & $\pm 0.165$ \\
-    3 & $[0.85,\;1.10]$ & $+0.705$ & $\pm 0.167$ \\
-    4 & $[1.10,\;1.30]$ & $+0.873$ & $\pm 0.210$ \\
-    5 & $[1.30,\;1.52]$ & $+0.811$ & $\pm 0.189$ \\
-    6 & $[1.52,\;1.85]$ & $+0.553$ & $\pm 0.129$ \\
-    7 & $[1.85,\;2.60]$ & $+0.245$ & $\pm 0.059$ \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-\begin{figure}[H]
-  \centering
-  \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{fw_xsec_thmupi}
-    \caption{$d\sigma/d\theta_{\mu\pi}$ (framework, optimised binning).}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{fw_bkgsub_thmupi}
-    \caption{Background-subtraction check for $\theta_{\mu\pi}$.}
-  \end{subfigure}
-  \caption{Opening angle $d\sigma/d\theta_{\mu\pi}$ unfolding diagnostics.}
-  \label{fig:xsec_thmupi}
-\end{figure}
 
 % =============================================================================
 \section{Data/MC Normalisation}
