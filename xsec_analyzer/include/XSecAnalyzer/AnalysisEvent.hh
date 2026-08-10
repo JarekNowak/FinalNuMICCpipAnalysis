@@ -19,6 +19,14 @@ public:
   float topological_score_ = BOGUS;
   float cosmic_impact_parameter_ = BOGUS;
 
+  // Cosmic taggers (flash-matching + CRT), passed through from the PeLEE ntuple
+  // for cosmic (EXT) background rejection studies. Defaults are fail-open.
+  int crtveto_ = 0;
+  float crthitpe_ = BOGUS;
+  float nu_flashmatch_score_ = BOGUS;
+  float best_cosmic_flashmatch_score_ = BOGUS;
+  float bdt_cosmic_ = BOGUS;
+
   // Variables needed for nue CC selection
   float contained_fraction_ = BOGUS;
   

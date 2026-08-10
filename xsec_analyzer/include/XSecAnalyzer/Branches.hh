@@ -33,6 +33,14 @@ inline void set_event_branch_addresses(TTree& etree, AnalysisEvent& ev)
   // containment fraction
   SetBranchAddress(etree, "contained_fraction", &ev.contained_fraction_ );
 
+  // Cosmic taggers (flash-matching + CRT). Hooked only if the branch exists so
+  // input files without them keep the fail-open defaults.
+  if ( etree.GetBranch("crtveto") ) SetBranchAddress(etree, "crtveto", &ev.crtveto_ );
+  if ( etree.GetBranch("crthitpe") ) SetBranchAddress(etree, "crthitpe", &ev.crthitpe_ );
+  if ( etree.GetBranch("nu_flashmatch_score") ) SetBranchAddress(etree, "nu_flashmatch_score", &ev.nu_flashmatch_score_ );
+  if ( etree.GetBranch("best_cosmic_flashmatch_score") ) SetBranchAddress(etree, "best_cosmic_flashmatch_score", &ev.best_cosmic_flashmatch_score_ );
+  if ( etree.GetBranch("bdt_cosmic") ) SetBranchAddress(etree, "bdt_cosmic", &ev.bdt_cosmic_ );
+
   // Reconstructed neutrino vertex position (with corrections for
   // space charge applied)
   SetBranchAddress(etree, "reco_nu_vtx_sce_x", &ev.nu_vx_ );
@@ -329,6 +337,18 @@ inline void set_event_output_branch_addresses(TTree& out_tree, AnalysisEvent& ev
   // contained fraction
   set_output_branch_address( out_tree, "contained_fraction",
     &ev.contained_fraction_, create, "contained_fraction/F" );
+
+  // Cosmic taggers (flash-matching + CRT), copied through for EXT rejection
+  set_output_branch_address( out_tree, "crtveto",
+    &ev.crtveto_, create, "crtveto/I" );
+  set_output_branch_address( out_tree, "crthitpe",
+    &ev.crthitpe_, create, "crthitpe/F" );
+  set_output_branch_address( out_tree, "nu_flashmatch_score",
+    &ev.nu_flashmatch_score_, create, "nu_flashmatch_score/F" );
+  set_output_branch_address( out_tree, "best_cosmic_flashmatch_score",
+    &ev.best_cosmic_flashmatch_score_, create, "best_cosmic_flashmatch_score/F" );
+  set_output_branch_address( out_tree, "bdt_cosmic",
+    &ev.bdt_cosmic_, create, "bdt_cosmic/F" );
 
   // Reconstructed neutrino vertex position
   set_output_branch_address( out_tree, "reco_nu_vtx_sce_x",
