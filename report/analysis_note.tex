@@ -67,6 +67,10 @@
 \newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
 
+% Let TeX stretch spacing on hard-to-break lines (long \texttt paths/code) to keep
+% text out of the margin.
+\emergencystretch=3em
+
 % ─────────────────────────────────────────────────────────────────────────────
 \begin{document}
 
@@ -2684,7 +2688,7 @@ and the NuWro overlay's CV weights are sentinel ($-1$) values clamped to unity.
 
 As a generator-model closure and an independent cross-check of the extraction,
 the \textsc{XSecAnalyzer} framework used throughout this note was additionally run
-(\texttt{ProcessNTuples}~$\rightarrow$~\texttt{UniverseMaker}~$\rightarrow$~%
+(\texttt{ProcessNTuples} $\rightarrow$ \texttt{UniverseMaker} $\rightarrow$
 \texttt{Unfolder}) with a NuWro overlay as \emph{fake data} in place of the GENIE
 detVar-CV sample of the main results.  The NuWro reconstructed spectrum is
 unfolded with the
