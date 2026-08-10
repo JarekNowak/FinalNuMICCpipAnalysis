@@ -93,7 +93,7 @@
     We present a measurement of $\nu_\mu + \bar{\nu}_\mu$ charged-current single
     charged-pion ($\mathrm{CC}\pi^+$) differential cross sections on argon-40 using
     the full \uboone{} NuMI exposure, in three configurations: forward horn current
-    (FHC; Runs~1, 2, 4, 5; $8.857\times10^{20}$ $\nu_e$-matched protons on target,
+    (FHC; Runs~1, 2, 4, 5; $8.857\times10^{20}$ protons on target,
     POT), reverse horn current (RHC; Runs~1, 2, 3, 4a, 4b, 4c;
     $1.108\times10^{21}$~POT), and their combination ($1.994\times10^{21}$~POT).
     The analysis is blind: results are extracted on Poisson-thrown central-value
@@ -715,7 +715,7 @@ that normalisation onto the new-G4 flux is a separate, tracked update.)
 
 The analysis is \emph{blind}: the real beam-on data are not used. Each configuration
 is extracted on Poisson-thrown central-value fake data scaled to the corresponding
-$\nu_e$-matched data POT (Table~\ref{tab:pot}). The FHC measurement uses the full FHC
+data POT (Table~\ref{tab:pot}). The FHC measurement uses the full FHC
 exposure (Runs~1, 2, 4 and~5); RHC uses Runs~1, 2, 3, 4a, 4b and~4c; the combined
 measurement uses all fourteen overlay files, each horn mode scaled to its own data
 exposure.
@@ -723,7 +723,7 @@ exposure.
 \begin{table}[H]
   \centering
   \caption{Run-period exposure accounting (final, full FHC$+$RHC). ``MC POT'' is each
-    period's native simulated exposure; ``Data POT'' is the $\nu_e$-matched exposure
+    period's native simulated exposure; ``Data POT'' is the exposure
     to which the (blind) fake data is scaled. The runs of a given horn mode are
     \emph{pooled} into a single sample: every file of the mode is scaled by the
     \emph{same} factor, Scale $=$ (mode Data POT)$/$(mode \emph{total} MC POT), rather
@@ -760,7 +760,7 @@ exposure.
 The full exposure substantially reduces the data-statistical term
 (Tables~\ref{tab:systbreak_fhc}--\ref{tab:systbreak_comb}), leaving the
 measurement flux- and detector-systematic limited. When the analysis is
-unblinded, the real beam-on POT (and gate counts) replace the $\nu_e$-matched values
+unblinded, the real beam-on POT (and gate counts) replace the data-POT values
 above.
 
 \subsection{Integrated flux}
@@ -1854,7 +1854,7 @@ physical or acceptance effect.
 This is the primary result of the analysis: the CC$1\mu1\pi^\pm$ cross section
 extracted over the full available exposure in forward horn current (FHC), reverse
 horn current (RHC), and their combination, all on Poisson-thrown central-value fake
-data. The FHC measurement uses Runs~1, 2, 4 and 5 ($\nu_e$-matched data POT
+data. The FHC measurement uses Runs~1, 2, 4 and 5 (data POT
 $8.857\times10^{20}$); RHC uses Runs~1, 2, 3, 4a, 4b, 4c ($1.108\times10^{21}$); the
 combined measurement uses all fourteen overlay files at the joint POT
 $1.994\times10^{21}$. All three close cleanly against the $A_C$-smeared truth for
@@ -1901,7 +1901,7 @@ wire-modification variations) are now used for the RHC detector systematic, veri
 as genuine $\nu_\mu$ overlays with a uniform $3.80\times10^{-16}$ events/POT across
 all knobs; they replace the Run-1 FHC stand-in used previously. Native RHC dirt is
 still taken from FHC. The standalone result below uses Poisson-thrown central-value
-fake data at the $\nu_e$-matched RHC data POT $1.108\times10^{21}$. The generator
+fake data at the RHC data POT $1.108\times10^{21}$. The generator
 predictions are re-averaged to the RHC flux composition; the combined FHC$+$RHC
 predictions are the fluence-weighted combination of the two horn modes
 ($0.458$~FHC $/\,0.542$~RHC, each mode weighted by $\Phi_\mathrm{tot}\times$POT).
@@ -2403,7 +2403,7 @@ fact an intrinsic-$\nu_e$ overlay --- $86\%$ $\nu_e$, $14\%$ $\bar\nu_e$, no
 $\nu_\mu$ events, hence the large $\nu_e$-enriched POT-equivalent and no $\nu_\mu$
 signal; the genuine Run~5 $\nu_\mu$ overlay, a \texttt{reweightedPPFX} sample, was
 subsequently located and is used for the extended set below),
-$2.32\times10^{6}$ unique events, normalised to the $\nu_e$-convention FHC data POT
+$2.32\times10^{6}$ unique events, normalised to the FHC data POT
 $6.626\times10^{20}$ (Section~\ref{sec:nueconsistency}). Because CC$\pi^+$ is
 resonance-dominated, robustness to the resonant axial mass is tested with
 Poisson-thrown fake data reweighted to $M_A^\mathrm{RES}=1.12\pm0.22$~GeV
@@ -2480,7 +2480,7 @@ $\theta_{\mu\pi}$ (7)& 1.71 & 3.32 & 1.96 & 4.33 \\
 
 Adding the genuine Run~5 $\nu_\mu$ overlay extends the set to
 $\{$Run~1, 2, 4, 5$\}$ --- $2.87\times10^{6}$ events ($+24\%$), combined MC POT
-$8.549\times10^{21}$, at the full $\nu_e$-matched FHC data POT
+$8.549\times10^{21}$, at the full FHC data POT
 $8.857\times10^{20}$. The extraction closes for every observable
 ($\chi^2/\mathrm{ndf}<1$, $p>0.92$) and the flux term ($22$--$29\%$ unfolded,
 amplification $1.29$--$1.72\times$) is statistically consistent with the
@@ -2507,8 +2507,9 @@ reweighting, the standard detector-variation set, and $2\%$ / $1\%$ / $100\%$
 POT / target / dirt normalisation uncertainties. The FHC beam-on data POT per run
 agrees exactly (Run~2 $1.268$, Run~4 $2.075\times10^{20}$).
 
-\emph{Differences reconciled or flagged.} (i)~\textbf{Run-1 POT:} we adopt the
-$\nu_e$ convention, Run~1 FHC $=3.283\times10^{20}$ (standard trigger; the
+\emph{Differences reconciled or flagged.} (i)~\textbf{POT accounting:} the
+good-POT is the same beam data for the $\nu_e$ and $\nu_\mu$ analyses, so the
+exposures are identical; Run~1 FHC $=3.283\times10^{20}$ (standard trigger; the
 open-trigger era is treated separately), giving a total FHC exposure of
 $8.857\times10^{20}$ over Runs~1--5. (ii)~\textbf{Run~4:} the \texttt{Run4} overlay
 is identical to \texttt{Run4c}$+$\texttt{Run4d} combined (same $859{,}368$ events
