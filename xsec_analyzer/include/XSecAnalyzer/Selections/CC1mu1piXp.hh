@@ -73,6 +73,16 @@ protected:
   bool shower_cut;
   bool opening_angle_cut;
   bool CandidateMuonTrackEndContainment;
+  // Background-control sidebands (signal-depleted; each inverts one signal cut so
+  // real data can validate/constrain the MC background before unblinding):
+  //  sb_cc0pi  : muon selection, 0 charged pions (CC0pi / QE / 2p2h)
+  //  sb_multipi: muon selection, >=2 charged pions (CCNpi / DIS)
+  //  sb_pi0    : muon selection with a shower present, shower veto failed (CC1pi0 / NCpi0)
+  //  sb_cosmic : full signal selection but opening angle theta_mupi > 2.6 (EXT cosmics)
+  bool sb_cc0pi_;
+  bool sb_multipi_;
+  bool sb_pi0_;
+  bool sb_cosmic_;
   int sig_truevertex_fv = 0;
   int sig_ccnc = 0;
   int sig_numu = 0;

@@ -1335,6 +1335,20 @@ bool Passed =
     pass_opening &&
     pass_final;
 
+  // --- background-control sidebands (signal-depleted; see CC1mu1piXp.hh) ---
+  // Common preselection: software trigger, contained vertex, topology, muon track.
+  bool sb_pre = pass_swtrig && pass_vertex && pass_topology && pass_tracklike;
+  //  CC0pi: muon selection, zero charged-pion candidates, shower veto passed.
+  sb_cc0pi_   = sb_pre && pass_shower && pass_final && ( pion_number == 0 );
+  //  Multi-pi: two or more charged-pion candidates.
+  sb_multipi_ = sb_pre && pass_final && ( pion_number >= 2 );
+  //  Pi0/shower: a reco shower is present and the shower veto FAILED (pi0-like).
+  sb_pi0_     = sb_pre && !pass_shower && ( nPrimaryShowers >= 1 );
+  //  Cosmic: the full signal selection but with the opening angle inverted
+  //  (theta_mupi > 2.6 rad), the EXT-cosmic--dominated region.
+  sb_cosmic_  = sb_pre && pass_pioncontained && pass_muongap && pass_piongap
+                && pass_shower && pass_final && !pass_opening;
+
   // std::cout<<"This is Passed " << Passed <<std::endl;
   //
   //std::cout<<"Exiting selection" <<std::endl;
@@ -2171,6 +2185,11 @@ void CC1mu1piXp::define_output_branches() {
   set_branch( &CandidatePionIndex, "CandidatePionIndex" );
   set_branch( &sel_MCVertexInFV, "sel_MCVertexInFV" );
   set_branch( &sig_recovertex_in_fv_, "sig_recovertex_in_fv_" );
+  // background-control sideband flags (signal-depleted regions)
+  set_branch( &sb_cc0pi_,   "sb_cc0pi" );
+  set_branch( &sb_multipi_, "sb_multipi" );
+  set_branch( &sb_pi0_,     "sb_pi0" );
+  set_branch( &sb_cosmic_,  "sb_cosmic" );
   set_branch( &candidate_muon_mom_mcs, "candidate_muon_mom_mcs");
   set_branch( &candidate_muon_mom_true, "candidate_muon_mom_true");
   set_branch( &candidate_muon_mom_range, "candidate_muon_mom_range");
@@ -2224,6 +2243,7 @@ void CC1mu1piXp::reset() {
   sig_mc_n_kaons = BOGUS_INDEX;
   sel_muoncandidate_tracklike_ = false;
   sel_pioncandidate_tracklike_ = false;
+  sb_cc0pi_ = false; sb_multipi_ = false; sb_pi0_ = false; sb_cosmic_ = false;
   //CandidateMuonIndex = BOGUS_INDEX;
   //CandidatePionIndex = BOGUS_INDEX;
   pion_number = 0;
