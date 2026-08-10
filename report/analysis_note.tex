@@ -2064,6 +2064,61 @@ $\theta_{\mu\pi}$& $0.932$ & $0.832$ & $0.741$ \\
 \end{tabular}
 \end{center}
 
+\subsection{Total flux-averaged cross section (cut-and-count)}
+\label{sec:total_xsec}
+As a check independent of the unfolding, the total flux-averaged cross section is
+also extracted directly from the selected event counts,
+\begin{equation}
+  \sigma = \frac{N_\mathrm{sel} - N_\mathrm{bkg}}{\epsilon \, \Phi \, N_\mathrm{Ar}},
+  \label{eq:countxsec}
+\end{equation}
+where $N_\mathrm{sel}$ is the number of selected events, $N_\mathrm{bkg}$ the predicted
+background ($\nu$-background $+$ EXT $+$ dirt), $\epsilon = N^{\mathrm{sig}}_\mathrm{sel}/
+N^{\mathrm{sig}}_\mathrm{gen}$ the selection efficiency in the measured phase space
+($\simeq 17.5\%$ for all configurations), $\Phi$ the integrated flux
+($\Phi = \text{POT}\times\Phi_\mathrm{POT}$, Table~\ref{tab:flux}) and
+$N_\mathrm{Ar} = 8.71\times10^{29}$ the number of argon nuclei in the fiducial volume
+(the dead $z$ region removed), giving the same normalisation
+$N_\mathrm{Ar}\,\Phi/10^{38}$ used for the differential result. This uses no matrix
+inversion; by avoiding the Wiener--SVD additional smearing it recovers the true
+(un-suppressed) total, consistent with the D'Agostini cross-check
+(Sec.~\ref{sec:crosschecks}) and lying above the smearing-suppressed
+$\sigma_\mathrm{int}$ of Table~\ref{tab:sigint_all}, most visibly for RHC. The
+uncertainty is the quadrature of the systematic breakdown
+(Tables~\ref{tab:systbreak_fhc}--\ref{tab:systbreak_comb}, flux-dominated) and the
+cut-and-count data-statistical term $\sqrt{N_\mathrm{sel}}/(N_\mathrm{sel}-N_\mathrm{bkg})$,
+which is smaller ($3$--$4\%$) than the unfolded data-statistical term because no
+regularisation amplifies it.
+
+Table~\ref{tab:total_xsec} compares the result with the four generator predictions,
+each flux-averaged over the corresponding beam. Because the analysis is blind the
+``measurement'' is here the central-value overlay (the MicroBooNE tune) that the fake
+data is thrown from; at unblinding $N_\mathrm{sel}$ becomes the real beam-on count.
+It agrees with all four generators within $\sim1\sigma$: standalone GENIE sits about
+$1\sigma$ low, while GiBUU, NEUT and NuWro lie within half a sigma. RHC and the
+combined total carry the larger uncertainty, driven by the RHC detector systematic.
+
+\begin{table}[H]
+  \centering
+  \caption{Total flux-averaged cross section from the cut-and-count method
+    (Eq.~\ref{eq:countxsec}; $10^{-38}$~cm$^2$/Ar), compared with the flux-averaged
+    generator predictions. The measurement uncertainty is the systematic breakdown
+    (flux/detector/cross-section/reinteraction, Tables~\ref{tab:systbreak_fhc}--%
+    \ref{tab:systbreak_comb}) $\oplus$ cut-and-count data statistics. Values in
+    parentheses give each generator's deviation from the measurement in units of the
+    measurement uncertainty.}
+  \label{tab:total_xsec}
+  \begin{tabular}{lccccc}
+    \toprule
+    Config & Measurement & GENIE & GiBUU & NEUT & NuWro \\
+    \midrule
+    FHC      & $1.06 \pm 0.27$ & $0.79\,(1.0\sigma)$ & $1.08\,(0.1\sigma)$ & $1.26\,(0.8\sigma)$ & $1.20\,(0.5\sigma)$ \\
+    RHC      & $0.98 \pm 0.35$ & $0.63\,(1.0\sigma)$ & $0.89\,(0.3\sigma)$ & $1.04\,(0.2\sigma)$ & $0.98\,(0.0\sigma)$ \\
+    Combined & $1.02 \pm 0.30$ & $0.70\,(1.1\sigma)$ & $0.97\,(0.1\sigma)$ & $1.15\,(0.4\sigma)$ & $1.08\,(0.2\sigma)$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
 The systematic breakdown by source (bin-averaged fractional uncertainty in cross-section
 space) is given for all three configurations in Tables~\ref{tab:systbreak_fhc}--%
 \ref{tab:systbreak_comb}. The flux (PPFX) term dominates throughout, followed by the
