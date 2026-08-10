@@ -81,7 +81,7 @@
   Single Pion Production Differential Cross Sections on Argon
   with the MicroBooNE Detector in the NuMI Beam\par}
   \vspace{0.8cm}
-  {\large Analysis Note --- Run~1\par}
+  {\large Analysis Note --- Full FHC, RHC, and Combined Exposure\par}
   \vspace{0.5cm}
   {\normalsize Draft 1.0 --- 2026-06-09\par}
   \vspace{1.5cm}
@@ -92,43 +92,45 @@
   \begin{abstract}
     We present a measurement of $\nu_\mu + \bar{\nu}_\mu$ charged-current single
     charged-pion ($\mathrm{CC}\pi^+$) differential cross sections on argon-40 using
-    $3.283\times10^{20}$ protons on target (POT) of \uboone{} data collected in the NuMI
-    Forward Horn Current (FHC) beam during Run~1.
+    the full \uboone{} NuMI exposure, in three configurations: forward horn current
+    (FHC; Runs~1, 2, 4, 5; $8.857\times10^{20}$ $\nu_e$-matched protons on target,
+    POT), reverse horn current (RHC; Runs~1, 2, 3, 4a, 4b, 4c;
+    $1.108\times10^{21}$~POT), and their combination ($1.994\times10^{21}$~POT).
+    The analysis is blind: results are extracted on Poisson-thrown central-value
+    fake data.
     %
     Events are selected requiring a reconstructed muon candidate track and exactly
     one contained pion candidate track emerging from a fiducial neutrino vertex,
     with zero reconstructed electromagnetic showers and a muon--pion opening angle
-    less than 2.6~rad.
+    less than 2.6~rad. In the measured phase space the selection achieves
+    $\approx\!55\%$ signal purity and $\approx\!15\%$ efficiency
+    (Table~\ref{tab:phasespace}).
     %
-    In the measured phase space the selection achieves a signal purity of
-    $54.9\%$ and an efficiency of $15.6\%$ (full Run-1 statistics); the
-    lower-threshold reference phase space used for selection development gives
-    $57.2\%$ and $12.1$--$12.6\%$ (Table~\ref{tab:phasespace}).
+    Differential cross sections are extracted for each configuration via Wiener-SVD
+    unfolding in five kinematic variables: muon momentum~$\pmuM$, pion
+    momentum~$\ppiM$, muon polar angle~$\cthmuM$, pion polar angle~$\cthpiM$, and
+    the muon--pion opening angle~$\thmupM$.
     %
-    Differential cross sections are extracted via Wiener-SVD unfolding in five
-    kinematic variables: muon momentum~$\pmuM$, pion momentum~$\ppiM$, muon polar
-    angle~$\cthmuM$, pion polar angle~$\cthpiM$, and the muon--pion opening
-    angle~$\thmupM$.
+    Each configuration is normalised with its own integrated $\nu_\mu+\bar\nu_\mu$
+    flux (FHC $6.81159$, RHC $6.44646$, combined $6.60865\times10^{-10}$~cm$^{-2}$
+    POT$^{-1}$; new-G4 GEANT4 values above $60$~MeV, Sec.~\ref{sec:flux}); the RHC
+    value is lower because its beam is $\bar\nu_\mu$-dominant. The resulting
+    Wiener-SVD integrated cross sections are of order
+    $0.7$--$1.0\times10^{-38}$~cm$^2$/Ar (Table~\ref{tab:sigint_all}), with RHC
+    below FHC as expected for the softer, antineutrino-rich beam.
     %
-    The observed data yield is approximately $0.75\times$ the GENIE~v3 MC prediction,
-    consistent with the known over-prediction of $\mathrm{CC}\pi^+$ production in
-    current neutrino interaction generators.
-    %
-    Using the confirmed integrated $\nu_\mu + \bar{\nu}_\mu$ flux of
-    $6.81159\times10^{-10}$~cm$^{-2}$~POT$^{-1}$ (the flux-file author's GEANT4
-    value integrated above $60$~MeV, superseding the $2.3725\times10^{-9}$ read
-    from the flux histograms, which was a factor $3.48$ too large), the Wiener-SVD
-    integrated cross section from the angular observables is
-    $\sigma_{\mathrm{int}} \approx 1.12\times10^{-38}$~cm$^2$/Ar.
+    The observed yield is $\approx\!0.75\times$ the GENIE~v3 prediction, consistent
+    with the known over-prediction of $\mathrm{CC}\pi^+$ production in current
+    neutrino interaction generators.
     %
     The extraction is validated by a same-sample self-closure that recovers the
-    truth to within $6\%$ for every observable and by exact algorithmic
-    equivalence with the official \textsc{XSecAnalyzer} framework unfolder
-    (Sec.~\ref{sec:extrbias}), confirming that the fake-data offsets are POT
-    bookkeeping and genuine model differences, not unfolding bias. All
-    differential results, figures, and systematics use the \textsc{XSecAnalyzer}
-    framework extraction on the resolution-optimised binning of
-    Sec.~\ref{sec:binopt}; this is the single consolidated analysis note.
+    truth to within $\approx\!6\%$ for every observable, and cross-checked against
+    the D'Agostini iterative-Bayesian method: its flat, iteration-stable integral
+    (a consistent $\sim\!20\%$ above Wiener-SVD) confirms that the
+    observable-to-observable spread of the Wiener-SVD integrated cross sections is
+    the additional-smearing matrix $A_C$, not a physical or acceptance effect
+    (Sec.~\ref{sec:crosschecks}). All results use the \textsc{XSecAnalyzer}
+    framework on the resolution-optimised binning of Sec.~\ref{sec:binopt}.
   \end{abstract}
   \vfill
   \tableofcontents
@@ -157,8 +159,9 @@ differences for individual kinematic variables.
 Fermilab that operated from 2015--2021, providing the world's highest-statistics
 $\nu_\mu$-on-argon dataset below $5$~GeV during its NuMI running period.
 This note presents a simultaneous measurement of five differential cross sections
-in the CC$\pi^+$ channel using Run~1 NuMI FHC data, employing Pandora pattern
-recognition~\cite{pandora} and Wiener-SVD unfolding~\cite{wienervsd}.
+in the CC$\pi^+$ channel using the full NuMI exposure in FHC, RHC, and combined
+configurations, employing Pandora pattern recognition~\cite{pandora} and
+Wiener-SVD unfolding~\cite{wienervsd}.
 
 % =============================================================================
 % ===== DEV: sections "Theoretical Background" and "Detector" hidden for
@@ -754,10 +757,9 @@ exposure.
   \end{tabular}
 \end{table}
 
-The full exposure is a $\approx 2.7\times$ increase over the single-run Run-1 FHC
-baseline ($3.283\times10^{20}$) in FHC alone, and
-$\approx 6\times$ combined, substantially reducing the data-statistical term
-(Tables~\ref{tab:systbreak_fhc}--\ref{tab:systbreak_comb}). When the analysis is
+The full exposure substantially reduces the data-statistical term
+(Tables~\ref{tab:systbreak_fhc}--\ref{tab:systbreak_comb}), leaving the
+measurement flux- and detector-systematic limited. When the analysis is
 unblinded, the real beam-on POT (and gate counts) replace the $\nu_e$-matched values
 above.
 
@@ -932,7 +934,7 @@ mass-corrected) degrades rapidly below $0.175\GeVc$:
 
 \begin{center}\small
 \captionof{table}{Pion momentum reconstruction versus true $p_\pi$ (correctly
-  reconstructed signal pions, Run~1). Below the $0.175\GeVc$ threshold the bias
+  reconstructed signal pions). Below the $0.175\GeVc$ threshold the bias
   and resolution blow up and the reconstructed fraction halves.}
 \label{tab:pithresh}
 \begin{tabular}{lccc}
@@ -1255,7 +1257,7 @@ detailed per-category, per-cut breakdown for each.
   \item \textbf{Signal purity: 57.2\%}
   \item \textbf{Signal efficiency: 12.1--12.6\%}
   \item \textbf{Measured phase space (reported result): efficiency $15.6\%$,
-    purity $54.9\%$} at full Run-1 statistics (selected signal 311.9, generated
+    purity $54.9\%$} (reference phase-space study: selected signal 311.9, generated
     1999, background 253.7; Table~\ref{tab:phasespace})
 \end{itemize}
 
@@ -2386,8 +2388,8 @@ the flux \emph{systematic} is a normalisation-and-shape model uncertainty and is
 therefore POT-independent: adding data or overlay does not change it. Second,
 Section~\ref{sec:fluxanatomy} showed that the elevated \emph{unfolded} flux is that
 $\sim\!17\%$ model uncertainty amplified by the Wiener--SVD propagation through a
-statistically-limited response, and that at Run-1 exposure the limitation is the
-\emph{data} statistics, not the overlay. Increasing the overlay alone therefore
+statistically-limited response, and that the limitation is the \emph{data}
+statistics, not the overlay. Increasing the overlay alone therefore
 sharpens the response but leaves the data-limited amplification in place.
 
 To study a genuine multi-run configuration we combine the FHC overlays for
@@ -2514,30 +2516,34 @@ $\theta_{e\pi}>170^\circ$ (a shower-specific back-to-back misreconstruction),
 whereas our muon-track topology uses $\theta_{\mu\pi}<2.6$~rad ($149^\circ$).
 (v)~\textbf{Regularisation:} the $\nu_e$ analysis smooths on the first derivative,
 this analysis on the second (Section~\ref{sec:multirun}). (vi)~\textbf{Scope:}
-$\nu_e$ covers Runs~1--5 in both FHC and RHC; the present measurement is FHC, with
-RHC a natural extension.
+both analyses cover Runs~1--5 in FHC and RHC; the present measurement reports FHC,
+RHC, and their combination.
 
 \section{Summary}
 \label{sec:summary}
 % =============================================================================
 
 We have presented a simultaneous measurement of five CC$\pi^+$ differential cross
-sections on argon using $3.283\times10^{20}$~POT of MicroBooNE NuMI FHC Run~1 data,
-the first such multi-observable measurement in the MicroBooNE NuMI dataset.
+sections on argon using the full MicroBooNE NuMI exposure in three configurations
+--- FHC ($8.857\times10^{20}$~POT), RHC ($1.108\times10^{21}$~POT), and their
+combination ($1.994\times10^{21}$~POT) --- the first such multi-observable
+measurement in the MicroBooNE NuMI dataset.
 
 \paragraph{Selection.}
-The event selection achieves a signal purity of 57.2\% and an efficiency of
-12.1--12.6\% at the final cut, selecting 427 beam-on data events against a total
-background prediction of 243.  The data/prediction ratio of 0.752 is consistent
-with the known GENIE~v3 over-prediction of CC$\pi^+$ production documented in
+The event selection achieves a signal purity of $\approx\!55\%$ and a flat
+efficiency of $\sim\!13$--$20\%$ in the measured phase space (reference phase space:
+$57.2\%$ purity, $12.1$--$12.6\%$ efficiency; Table~\ref{tab:phasespace}), identical
+across the three configurations since the selection is the same. The blind
+data/prediction ratio of $\approx\!0.75$ is consistent with the known GENIE~v3
+over-prediction of CC$\pi^+$ production documented in
 MiniBooNE~\cite{miniboone_ccpi}, MINERvA~\cite{minerva_ccpi},
 T2K~\cite{t2k_ccpip}, and the MicroBooNE BNB CC$\pi^+$ measurement~\cite{uboone_bnb2026_ccpi}.
 
 \paragraph{Cross-section results, framework validation, and phase space.}
 Differential cross sections are extracted via a framework-consistent Wiener-SVD
-unfolder using a confirmed integrated $\nu_\mu + \bar{\nu}_\mu$ flux of
-$\Phi = 6.81159\times10^{-10}$~cm$^{-2}$~POT$^{-1}$ ($\bar{\nu}_\mu$ fraction
-$37.8\%$).  At a common \emph{reference} phase space ($p_\mu,p_\pi>0.1\GeVc$, reco
+unfolder using each configuration's own integrated $\nu_\mu + \bar{\nu}_\mu$ flux
+(FHC $\Phi = 6.81159\times10^{-10}$~cm$^{-2}$~POT$^{-1}$, $\bar{\nu}_\mu$ fraction
+$34.9\%$; RHC and combined in Sec.~\ref{sec:flux}).  At a common \emph{reference} phase space ($p_\mu,p_\pi>0.1\GeVc$, reco
 $\thmupM<2.6$~rad), the custom pipeline was validated against the fully
 independent official XSecAnalyzer framework to $\le2\%$ on every observable
 ($d\sigma/d\pmuM$: 1.016, $d\sigma/d\ppiM$: 0.979, $d\sigma/d\cthmuM$: 0.987,
