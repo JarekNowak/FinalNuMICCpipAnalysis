@@ -1749,6 +1749,7 @@ true bin; the quoted numbers are the overall mean (bias) and RMS (resolution).
 \end{figure}
 
 \subsection{Cross-check methods}
+\label{sec:crosschecks}
 
 Seven additional methods are run in parallel:
 
@@ -1768,6 +1769,40 @@ Seven additional methods are run in parallel:
     \texttt{roo\_svd}      & RooUnfoldSvd \\
     \texttt{roo\_invert}   & RooUnfoldInvert (direct matrix inversion) \\
     \texttt{roo\_binbybin} & RooUnfoldBinByBin \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The D'Agostini iterative-Bayesian method provides the principal quantitative
+cross-check of the Wiener-SVD result. Because it does not apply the Wiener-SVD
+additional-smearing matrix $A_C$, its unfolded total is free of the
+(non-norm-preserving) $A_C$ suppression and is stable against the iteration count.
+Table~\ref{tab:dagostini} compares the two integrated totals for all three
+configurations: the D'Agostini result sits a consistent $\sim$24\% above the
+Wiener-SVD total (equivalently, $A_C$ suppresses the quoted Wiener-SVD integral by
+$\sim$19\%), and it varies by $<1\%$ across 1, 2 and 4 iterations. For FHC the
+D'Agostini per-observable truth is flat to $1\%$ ($1.111$--$1.122$), directly
+confirming that the observable-to-observable spread in the Wiener-SVD integrated
+cross sections (Table~\ref{tab:sigint_all}) is the $A_C$ smearing rather than a
+physical or acceptance effect.
+
+\begin{table}[H]
+  \centering
+  \caption{Wiener-SVD vs.\ D'Agostini (iterative Bayesian, 4~iterations) integrated
+    cross section, averaged over the five observables (fake-data truth,
+    $10^{-38}$~cm$^2$/Ar). D'Agostini carries no $A_C$ smearing; its $\sim$24\%
+    higher total is consistent across configurations and stable to $<1\%$ over
+    1/2/4 iterations. The FHC D'Agostini per-observable truth is additionally flat
+    to $1\%$.}
+  \label{tab:dagostini}
+  \begin{tabular}{lcccc}
+    \toprule
+    Config & $\langle\sigma\rangle_\mathrm{WSVD}$ & $\langle\sigma\rangle_\mathrm{DAg}$
+      & DAg/WSVD & DAg 1$\to$4~iter \\
+    \midrule
+    FHC      & $0.91$ & $1.12$ & $1.23$ & $<1\%$ \\
+    RHC      & $0.75$ & $0.93$ & $1.24$ & $<1\%$ \\
+    Combined & $0.80$ & $1.00$ & $1.25$ & $<1\%$ \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -1939,20 +1974,24 @@ $\theta_{\mu\pi}$& $15.9\%$ & $26.6\%$ & $1.67\times$ & $1.13/7$ ($p=0.99$) \\
 \end{figure}
 
 \begin{center}\small
-\captionof{table}{Integrated cross section $\sigma_\mathrm{int}$ over the measured
-  phase space, for each observable and configuration (current fake data,
-  $10^{-38}$~cm$^2$/Ar). The value differs between observables because each
-  integrates a different projection of the same restricted phase space.}
+\captionof{table}{Integrated (unfolded) cross section $\sigma_\mathrm{int}$ over the
+  measured phase space, for each observable and configuration (current fake data,
+  coarsened $\cos\theta_\pi/\theta_{\mu\pi}$ binning, per-configuration flux;
+  $10^{-38}$~cm$^2$/Ar). The value differs between observables because the Wiener-SVD
+  additional-smearing $A_C$ is not norm-preserving; the D'Agostini cross-check
+  (Sec.~\ref{sec:crosschecks}) recovers a flatter, $\sim$20\% higher total, confirming
+  the spread is a smearing effect. RHC sits below FHC because the RHC beam is
+  $\bar\nu_\mu$-dominant (lower flux-averaged cross section).}
 \label{tab:sigint_all}
 \begin{tabular}{lccc}
 \toprule
 Observable & FHC & RHC & Combined \\
 \midrule
-$p_\mu$          & $0.946$ & $0.597$ & $0.815$ \\
-$p_\pi$          & $0.978$ & $0.802$ & $0.872$ \\
-$\cos\theta_\mu$ & $0.864$ & $0.654$ & $0.787$ \\
-$\cos\theta_\pi$ & $0.675$ & $0.583$ & $0.694$ \\
-$\theta_{\mu\pi}$& $0.835$ & $0.931$ & $0.663$ \\
+$p_\mu$          & $1.014$ & $0.630$ & $0.840$ \\
+$p_\pi$          & $0.925$ & $0.848$ & $0.899$ \\
+$\cos\theta_\mu$ & $0.900$ & $0.691$ & $0.811$ \\
+$\cos\theta_\pi$ & $0.876$ & $0.702$ & $0.788$ \\
+$\theta_{\mu\pi}$& $0.932$ & $0.832$ & $0.741$ \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -1972,15 +2011,15 @@ by the $\cos\theta$ observables at the current statistics.
 \toprule
 Source & $p_\mu$ & $p_\pi$ & $\cos\theta_\mu$ & $\cos\theta_\pi$ & $\theta_{\mu\pi}$ \\
 \midrule
-\textbf{Total}        & 30.4 & 31.7 & 35.2 & 43.2 & 34.1 \\
-Cross section (GENIE) & 8.3  & 8.1  & 7.1  & 10.3 & 8.4 \\
-Flux (PPFX)           & 23.9 & 23.9 & 23.9 & 28.1 & 24.6 \\
-Detector              & 13.3 & 16.0 & 21.4 & 25.6 & 18.0 \\
-Reinteraction         & 3.2  & 4.6  & 2.9  & 4.4  & 3.2 \\
-MC stat               & 2.5  & 2.3  & 2.9  & 4.0  & 3.2 \\
-EXT stat              & 3.7  & 3.8  & 5.0  & 7.8  & 4.2 \\
-Data stat             & 8.0  & 7.6  & 9.7  & 13.0 & 10.4 \\
-POT $+$ targets       & 2.8  & 3.0  & 3.0  & 3.5  & 3.0 \\
+\textbf{Total}        & 26.6 & 33.4 & 29.9 & 33.1 & 28.2 \\
+Cross section (GENIE) & 7.3  & 8.9  & 7.3  & 9.1  & 8.8 \\
+Flux (PPFX)           & 22.6 & 27.0 & 23.5 & 27.7 & 22.3 \\
+Detector              & 6.7  & 10.0 & 10.3 & 10.0 & 7.5 \\
+Reinteraction         & 3.3  & 4.1  & 3.0  & 4.2  & 3.4 \\
+MC stat               & 2.3  & 3.2  & 3.1  & 2.4  & 3.2 \\
+EXT stat              & 4.3  & 5.7  & 6.0  & 5.2  & 4.1 \\
+Data stat             & 7.4  & 10.8 & 10.4 & 8.0  & 10.7 \\
+POT $+$ targets       & 2.7  & 3.5  & 3.0  & 3.5  & 2.8 \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -1993,15 +2032,15 @@ POT $+$ targets       & 2.8  & 3.0  & 3.0  & 3.5  & 3.0 \\
 \toprule
 Source & $p_\mu$ & $p_\pi$ & $\cos\theta_\mu$ & $\cos\theta_\pi$ & $\theta_{\mu\pi}$ \\
 \midrule
-\textbf{Total}        & 37.4 & 30.7 & 41.1 & 46.9 & 25.0 \\
-Cross section (GENIE) & 10.1 & 8.4  & 9.4  & 11.0 & 7.3 \\
-Flux (PPFX)           & 27.5 & 23.6 & 26.5 & 29.6 & 19.5 \\
-Detector              & 18.2 & 14.2 & 25.0 & 30.4 & 8.8 \\
-Reinteraction         & 3.9  & 2.8  & 3.5  & 4.6  & 2.3 \\
-MC stat               & 3.0  & 2.1  & 3.3  & 3.1  & 2.3 \\
-EXT stat              & 6.8  & 5.2  & 8.9  & 8.2  & 5.1 \\
-Data stat             & 11.0 & 7.9  & 12.3 & 11.2 & 8.4 \\
-POT $+$ targets       & 3.8  & 3.3  & 3.6  & 4.1  & 2.7 \\
+\textbf{Total}        & 37.4 & 30.7 & 41.1 & 41.3 & 29.5 \\
+Cross section (GENIE) & 10.1 & 8.4  & 9.4  & 10.2 & 7.7 \\
+Flux (PPFX)           & 27.5 & 23.6 & 26.5 & 28.5 & 20.4 \\
+Detector              & 18.2 & 14.2 & 25.0 & 24.7 & 15.4 \\
+Reinteraction         & 3.9  & 2.8  & 3.5  & 4.4  & 2.7 \\
+MC stat               & 3.0  & 2.1  & 3.3  & 2.2  & 2.5 \\
+EXT stat              & 6.8  & 5.2  & 8.9  & 6.2  & 5.9 \\
+Data stat             & 11.0 & 7.9  & 12.3 & 8.1  & 9.6 \\
+POT $+$ targets       & 3.8  & 3.3  & 3.6  & 3.9  & 2.8 \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -2014,15 +2053,15 @@ POT $+$ targets       & 3.8  & 3.3  & 3.6  & 4.1  & 2.7 \\
 \toprule
 Source & $p_\mu$ & $p_\pi$ & $\cos\theta_\mu$ & $\cos\theta_\pi$ & $\theta_{\mu\pi}$ \\
 \midrule
-\textbf{Total}        & 29.8 & 31.8 & 35.2 & 37.7 & 35.4 \\
-Cross section (GENIE) & 8.2  & 8.5  & 8.1  & 9.1  & 11.2 \\
-Flux (PPFX)           & 22.5 & 23.9 & 25.0 & 25.2 & 26.6 \\
-Detector              & 14.5 & 16.0 & 19.4 & 23.1 & 13.6 \\
-Reinteraction         & 3.2  & 4.6  & 3.2  & 3.8  & 3.2 \\
-MC stat               & 1.9  & 2.0  & 2.6  & 2.2  & 3.3 \\
-EXT stat              & 5.7  & 4.3  & 7.5  & 7.0  & 8.6 \\
-Data stat             & 6.7  & 6.7  & 8.9  & 7.7  & 11.3 \\
-POT $+$ targets       & 2.8  & 3.2  & 3.3  & 3.3  & 3.4 \\
+\textbf{Total}        & 29.8 & 31.8 & 35.2 & 37.3 & 35.7 \\
+Cross section (GENIE) & 8.2  & 8.5  & 8.1  & 9.1  & 9.0 \\
+Flux (PPFX)           & 22.5 & 23.9 & 25.0 & 27.0 & 26.0 \\
+Detector              & 14.5 & 16.0 & 19.4 & 21.7 & 18.4 \\
+Reinteraction         & 3.2  & 4.6  & 3.2  & 4.1  & 3.6 \\
+MC stat               & 1.9  & 2.0  & 2.6  & 1.6  & 2.5 \\
+EXT stat              & 5.7  & 4.3  & 7.5  & 5.4  & 7.7 \\
+Data stat             & 6.7  & 6.7  & 8.9  & 5.5  & 8.9 \\
+POT $+$ targets       & 2.8  & 3.2  & 3.3  & 3.6  & 3.4 \\
 \bottomrule
 \end{tabular}
 \end{center}
