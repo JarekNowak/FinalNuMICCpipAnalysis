@@ -1488,6 +1488,59 @@ efficiency vector $\varepsilon_j = \sum_i A_{ij}$ is the ratio of selected
 (\texttt{h\_smear\_sel}) to generated (\texttt{h\_true\_gen}) signal events per
 true bin.
 
+\subsection{Regularised unfolding: the bias--variance trade-off}
+\label{sec:unfmethods}
+
+Unfolding inverts the folding relation $\vec{m} = A\,\vec{s} + \vec{b}$ to estimate the
+true signal spectrum $\vec{s}$ from the measured $\vec{m}$. The naive inverse
+$A^{-1}(\vec{m}-\vec{b})$ is unbiased but useless: bin migration makes $A$ nearly
+singular, so its inverse amplifies statistical fluctuations into large, anticorrelated
+bin-to-bin oscillations. Every practical method therefore \emph{regularises} --- trading
+a small, controlled bias for a large reduction in variance. This analysis uses two
+complementary methods (a fuller pedagogical treatment is given in the companion note
+\texttt{report/unfolding\_note.tex}).
+
+\paragraph{Wiener-SVD (primary).} Diagonalising the response with an SVD, each mode $k$
+is weighted by the Wiener filter $W_k=\sigma_k^2/(\sigma_k^2+N_k)$ --- the
+minimum-mean-squared-error weighting, $\simeq 1$ for well-measured modes and $\to 0$ for
+noise-dominated ones --- so no regularisation strength is tuned by hand. The price is a
+\emph{known} linear bias: the unfolded data estimates not $\vec{s}$ but the smeared
+spectrum $A_C\vec{s}$, where the additional-smearing matrix $A_C$ is published so that
+every theory prediction is smeared by the same $A_C$ before comparison.
+
+\paragraph{D'Agostini iterative Bayesian (cross-check).} Bayes' theorem inverts the
+migration, $P(C_j|E_i)=R_{ij}\pi_j/\sum_l R_{il}\pi_l$, and the unfolded estimate is
+$\hat{s}_j=\varepsilon_j^{-1}\sum_i P(C_j|E_i)(m_i-b_i)$. The MC prior $\pi_j$ is updated
+with the result and iterated; the \emph{number of iterations} is the regularisation knob
+(few $\Rightarrow$ prior-biased, many $\Rightarrow$ noisy). It carries no $A_C$, so its
+integral is essentially unbiased and theory is compared raw.
+
+\begin{table}[H]\centering\small
+\caption{Trade-offs of the two unfolding methods. Neither is ``more correct''; they make
+  complementary choices about how to trade bias for variance and how to expose the
+  residual bias.}
+\label{tab:unfcompare}
+\begin{tabular}{lll}
+\toprule
+ & \textbf{Wiener-SVD} & \textbf{D'Agostini (iter.\ Bayes)} \\
+\midrule
+Regularisation    & Wiener filter (automatic, from S/N) & Iteration count $n$ (chosen) \\
+Residual bias     & Explicit $A_C$, published           & Implicit; set by early stopping \\
+Result integral   & Suppressed, observable-dependent    & Essentially unbiased (physical) \\
+Theory comparison & Smear theory by $A_C$               & Raw theory \\
+Positivity        & Not guaranteed                      & Guaranteed \\
+Uncertainties     & Closed-form, linear                 & Correlated across iters.; needs care \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Wiener-SVD is the primary result --- for its objective regularisation and its explicit,
+reportable bias $A_C$; D'Agostini serves as the quantitative cross-check
+(Sec.~\ref{sec:crosschecks}), where its flat, iteration-stable integral, a consistent
+$\sim20\%$ above Wiener-SVD, confirms that the observable-to-observable spread of the
+Wiener-SVD integrated cross sections (Table~\ref{tab:sigint_all}) is the $A_C$ smearing
+rather than a physical or acceptance effect.
+
 \subsection{Wiener-SVD unfolding}
 
 The primary method is Wiener-SVD~\cite{wienervsd}, implemented in
