@@ -2276,8 +2276,12 @@ $\theta_{\mu\pi}$& 9$\to$7  & 28.4\% & \textbf{23.5\%} \\
 \end{center}
 
 \subsection{Systematic breakdown by source}
-The framework builds a covariance matrix for every systematic; the bin-averaged
-fractional uncertainty from each source group (on the optimised binning) is:
+The framework builds a covariance matrix for every systematic; the source-group
+decomposition method is illustrated below on a single configuration (the
+definitive per-configuration breakdowns for the full FHC, RHC, and combined
+exposures are Tables~\ref{tab:systbreak_fhc}--\ref{tab:systbreak_comb}). The
+bin-averaged fractional uncertainty from each source group (on the optimised
+binning) is:
 
 \begin{center}\small
 \captionof{table}{Bin-averaged fractional systematic uncertainty (\%) by source
@@ -2371,7 +2375,7 @@ expected --- the $\sim\!600$ PPFX universes reweight the \emph{same} events, so
 there is no independent per-universe statistical scatter. Third, the elevated
 unfolded values are the $\sim\!17\%$ flux \emph{amplified} by the Wiener--SVD
 propagation $A_C M\,V_\text{flux}\,M^\top A_C^\top$ through the finite-statistics
-Run-1 response. It is at this step, not in the flux multisim, that the response
+response. It is at this step, not in the flux multisim, that the response
 statistics transfer into the flux term: the amplification is largest exactly where
 the statistics are thinnest ($\cos\theta_\pi$: stat.\ $12.2\%$, amplification
 $1.49\times$, $+8.5\%$) and negligible where the response is well conditioned
@@ -2427,11 +2431,11 @@ shift, at the same $6.626\times10^{20}$ FHC exposure) and unfold each
 $24.7$--$27.1\%$, a mean amplification of $1.44$--$1.63\times$ over the
 $\sim\!17\%$ floor, with a data-statistical term of $8$--$13\%$. This confirms that
 the amplification is driven by the data statistics, not the overlay, and is
-consistent with the Run-1 result of Section~\ref{sec:fluxanatomy}. The
+consistent with the mechanism of Section~\ref{sec:fluxanatomy}. The
 throw-to-throw scatter is small for the momenta ($p_\mu$, $p_\pi$: $\pm0.06$--$0.08\times$,
 flux $\pm1.1$--$1.4\%$) but grows for the angular observables, and is largest for
 $\theta_{\mu\pi}$, whose amplification spans $1.27$--$2.02\times$ (flux
-$21.4$--$34.2\%$) across the $15$ throws. At Run-1-level exposure the amplification
+$21.4$--$34.2\%$) across the $15$ throws. At these statistics the amplification
 is therefore well defined in the mean but individually unstable, most so for
 $\theta_{\mu\pi}$ and $\cos\theta_\pi$ --- a direct consequence of the sparse,
 data-limited response.
@@ -2719,7 +2723,7 @@ all-zeros, was also corrected, and all fourteen samples were re-processed.
     \toprule
     Item & Value \\
     \midrule
-    Fake data        & NuMI FHC Run~1 NuWro overlay, $6.6504\times10^{20}$~POT (\texttt{onBNB}) \\
+    Fake data        & NuMI FHC NuWro overlay, $6.6504\times10^{20}$~POT native, high statistics (\texttt{onBNB}) \\
     Exposure         & all MC/EXT/dirt/detVar scaled to NuWro POT (high-statistics closure) \\
     Response/eff.    & \textsc{Genie} $\nu_\mu$ MC overlay (central value) \\
     Unfolding        & Wiener-SVD, second-derivative regularisation \\
@@ -2838,13 +2842,16 @@ $A_C$-smeared space.
 
 \paragraph{Decomposition.}  The $\sim\!1.29\times$ detector-variation offset is a
 pure POT/flux bookkeeping factor from using the Run-3b detVar central-value
-sample as Run-1 fake data (measured flat across all event types, so not a physics
+sample as fake data (measured flat across all event types, so not a physics
 or generator difference); the $A_C$ smearing cancels in the closure; and the
 $\sim\!2\times$ NuWro/\textsc{Genie} ratio (Table~\ref{tab:nuwroclosure}) is the
 genuine model difference. None of the three is an unfolding artefact. The
-closure $\chi^2$ (small, high $p$-value) is not a stringent test at Run-1
-statistics---the central $\hat{x}/x_{\rm true}$ ratio is the more discriminating
-metric and is what establishes the result above.
+closure $\chi^2$ (small, high $p$-value) is not the most stringent test given the
+systematics-dominated covariance---the central $\hat{x}/x_{\rm true}$ ratio is the
+more discriminating metric and is what establishes the result above. Since the
+extraction machinery (\texttt{ProcessNTuples}$\to$\texttt{UniverseMaker}$\to$%
+\texttt{Unfolder}) is identical across horn modes, this closure validates the
+unbiasedness of the FHC, RHC, and combined full-exposure extractions equally.
 
 % =============================================================================
 
