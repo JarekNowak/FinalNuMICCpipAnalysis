@@ -1182,8 +1182,23 @@ all eleven cuts.
   \includegraphics[width=0.72\textwidth]{cutflow}
   \caption{Cut-flow yields for data (black points) and MC prediction
     (stacked: signal blue, backgrounds by category, EXT grey).
-    The data/MC ratio at the final cut is 0.752.}
+    The data/MC ratio at the final cut is 0.752. (Run-1 reference; the
+    full-exposure per-configuration version is Fig.~\ref{fig:cutflow_all}.)}
   \label{fig:cutflow}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{cutflow_yields_fhc}\caption{FHC.}\end{subfigure}\hfill
+  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{cutflow_yields_rhc}\caption{RHC.}\end{subfigure}\hfill
+  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{cutflow_yields_comb}\caption{Combined.}\end{subfigure}
+  \caption{Cut-flow yields at \emph{full exposure} for FHC, RHC and combined
+    (log scale; MC-prediction stack: signal blue, background orange, EXT grey,
+    dirt green; colourblind-safe Okabe-Ito), signal and background POT-scaled per
+    mode. Data is blind, so this shows the MC-prediction stack; the Run-1
+    single-configuration cut-flow (Fig.~\ref{fig:cutflow}) is retained for the
+    detailed per-category breakdown.}
+  \label{fig:cutflow_all}
 \end{figure}
 
 \begin{table}[H]
@@ -1267,53 +1282,28 @@ selected signal without improving purity, which is why no lower cut is used.
 
 \subsection{Key N$-$1 distributions}
 
-Figure~\ref{fig:nm1_key} shows the N$-$1 (all cuts except the one under
-study) distributions for the four most discriminating variables.  The arrows
-indicate the applied threshold.
+Figure~\ref{fig:nm1_key} shows the N$-$1 distributions (all cuts applied except
+the one under study) for the two cuts instrumented per event --- the topological
+score (Cut~3) and the $\mu$--$\pi$ opening angle (Cut~9) --- for all three
+configurations. The shapes are consistent across horn modes, as expected since
+the selection is identical; RHC and combined simply carry the larger exposure.
+Signal (blue) and background (orange) are stacked and the dashed line marks the
+applied threshold. The remaining cut variables are shown at the final cut in
+Sec.~\ref{sec:finalcut}.
 
 \begin{figure}[H]
   \centering
-  \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{nm1_topo}
-    \caption{Topological score (Cut~3).}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{nm1_mupid}
-    \caption{Muon LLR PID (Cut~4).}
-  \end{subfigure}\\[6pt]
-  \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{nm1_pipid}
-    \caption{Pion LLR PID (Cut~5).}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{nm1_oa}
-    \caption{$\mu$--$\pi$ opening angle (Cut~9).}
-  \end{subfigure}
-  \caption{N$-$1 distributions for four key selection cuts.
-    Data (black points), stacked MC truth categories, and EXT (grey).
-    Arrows indicate the applied cut threshold.}
+  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{nm1_topo_fhc}\caption{Topo.\ score, FHC.}\end{subfigure}\hfill
+  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{nm1_topo_rhc}\caption{Topo.\ score, RHC.}\end{subfigure}\hfill
+  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{nm1_topo_comb}\caption{Topo.\ score, comb.}\end{subfigure}\\[6pt]
+  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{nm1_oa_fhc}\caption{Opening angle, FHC.}\end{subfigure}\hfill
+  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{nm1_oa_rhc}\caption{Opening angle, RHC.}\end{subfigure}\hfill
+  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{nm1_oa_comb}\caption{Opening angle, comb.}\end{subfigure}
+  \caption{N$-$1 distributions for the topological score (Cut~3, top) and
+    $\mu$--$\pi$ opening angle (Cut~9, bottom), for FHC, RHC and combined.
+    Signal (blue) and background (orange) stacked; dashed line = applied
+    threshold. Colourblind-safe Okabe-Ito palette.}
   \label{fig:nm1_key}
-\end{figure}
-
-Figure~\ref{fig:nm1_tracks} shows the N$-$1 distributions for the track-length
-cuts on both candidates.
-
-\begin{figure}[H]
-  \centering
-  \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{nm1_mulen}
-    \caption{Muon candidate track length.}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{nm1_pilen}
-    \caption{Pion candidate track length.}
-  \end{subfigure}
-  \caption{N$-$1 track-length distributions.  Muon threshold: $>10$~cm
-    (Cut~4); pion threshold: $>20$~cm (Cut~5).}
-  \label{fig:nm1_tracks}
 \end{figure}
 
 \subsection{Pion proton-rejection variables}
@@ -1342,58 +1332,36 @@ protons at the final cut stage, used to tune the working-point thresholds.
 \end{figure}
 
 \subsection{Final-cut data/MC distributions}
+\label{sec:finalcut}
 
-Figures~\ref{fig:final_mu} and~\ref{fig:final_pi} show the data/MC
-comparison for key variables at the final selection cut (Cut~10).
+Figures~\ref{fig:final_mu} and~\ref{fig:final_pi} show the candidate-level
+distributions at the final selection cut for the four instrumented PID and
+track-length variables, for all three configurations. Signal (blue) and
+background (orange) are stacked (colourblind-safe Okabe-Ito palette).
 
 \begin{figure}[H]
   \centering
-  \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{final_mumom}
-    \caption{Muon range/MCS momentum.}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{final_mucosth}
-    \caption{Muon $\cos\theta$.}
-  \end{subfigure}\\[6pt]
-  \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{final_mulen}
-    \caption{Muon track length.}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{final_mupid}
-    \caption{Muon LLR PID.}
-  \end{subfigure}
-  \caption{Data/MC comparison for muon-candidate variables at the final cut.
-    Bottom panels show data/MC ratio.  The overall data/MC = 0.75 deficit
-    is visible; the shape in $\cos\theta_\mu$ shows larger deficit at
-    backward angles (residual cosmic contamination).}
+  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{final_mupid_fhc}\caption{Muon LLR PID, FHC.}\end{subfigure}\hfill
+  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{final_mupid_rhc}\caption{Muon LLR PID, RHC.}\end{subfigure}\hfill
+  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{final_mupid_comb}\caption{Muon LLR PID, comb.}\end{subfigure}\\[6pt]
+  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{final_mulen_fhc}\caption{Muon length, FHC.}\end{subfigure}\hfill
+  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{final_mulen_rhc}\caption{Muon length, RHC.}\end{subfigure}\hfill
+  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{final_mulen_comb}\caption{Muon length, comb.}\end{subfigure}
+  \caption{Muon-candidate LLR PID (top) and track length (bottom) at the final
+    cut, for FHC, RHC and combined. Signal (blue) / background (orange) stacked.}
   \label{fig:final_mu}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-  \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{final_pimom}
-    \caption{Pion range momentum.}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{final_picosth}
-    \caption{Pion $\cos\theta$.}
-  \end{subfigure}\\[6pt]
-  \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{final_pilen}
-    \caption{Pion track length.}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{final_pipid}
-    \caption{Pion LLR PID.}
-  \end{subfigure}
-  \caption{Data/MC comparison for pion-candidate variables at the final cut.}
+  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{final_pipid_fhc}\caption{Pion LLR PID, FHC.}\end{subfigure}\hfill
+  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{final_pipid_rhc}\caption{Pion LLR PID, RHC.}\end{subfigure}\hfill
+  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{final_pipid_comb}\caption{Pion LLR PID, comb.}\end{subfigure}\\[6pt]
+  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{final_pilen_fhc}\caption{Pion length, FHC.}\end{subfigure}\hfill
+  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{final_pilen_rhc}\caption{Pion length, RHC.}\end{subfigure}\hfill
+  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{final_pilen_comb}\caption{Pion length, comb.}\end{subfigure}
+  \caption{Pion-candidate LLR PID (top) and track length (bottom) at the final
+    cut, for FHC, RHC and combined. Signal (blue) / background (orange) stacked.}
   \label{fig:final_pi}
 \end{figure}
 
