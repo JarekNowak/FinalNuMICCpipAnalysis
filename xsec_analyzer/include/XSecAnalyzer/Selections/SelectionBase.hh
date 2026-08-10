@@ -167,6 +167,10 @@ protected:
 
 protected:
 
+  // Allow a derived selection (e.g. CC1mu1pi1p inheriting CC1mu1piXp) to rename
+  // itself so its output branches use the derived name as prefix.
+  inline void set_selection_name( const std::string& n ) { selection_name_ = n; }
+
   std::map< int, std::pair< std::string, int > > categ_map_;
 
 private:

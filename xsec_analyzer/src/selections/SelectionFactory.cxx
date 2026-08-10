@@ -7,6 +7,7 @@
 #include "XSecAnalyzer/Selections/DummySelection.hh"
 #include "XSecAnalyzer/Selections/SelectionFactory.hh"
 #include "XSecAnalyzer/Selections/CC1mu1piXp.hh"
+#include "XSecAnalyzer/Selections/CC1mu1pi1p.hh"
 
 
 SelectionFactory::SelectionFactory() {
@@ -33,6 +34,9 @@ SelectionBase* SelectionFactory::CreateSelection(
   }
 else if ( selection_name == "CC1mu1piXp" ) {
     sel = new CC1mu1piXp;
+  }
+  else if ( selection_name == "CC1mu1pi1p" ) {
+    sel = new CC1mu1pi1p;
   }
 
   else {

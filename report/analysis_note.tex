@@ -714,45 +714,48 @@ that normalisation onto the new-G4 flux is a separate, tracked update.)
 \subsection{Data exposure}
 
 The analysis is \emph{blind}: the real beam-on data are not used. Each configuration
-is extracted on Poisson-thrown central-value fake data scaled to the corresponding
-data POT (Table~\ref{tab:pot}). The FHC measurement uses the full FHC
-exposure (Runs~1, 2, 4 and~5); RHC uses Runs~1, 2, 3, 4a, 4b and~4c; the combined
-measurement uses all fourteen overlay files, each horn mode scaled to its own data
-exposure.
+is extracted on Poisson-thrown central-value fake data, generated and scaled
+\emph{per run} to that run's data POT (Table~\ref{tab:pot}). The FHC measurement uses
+the full FHC exposure (Runs~1, 2, 4 and~5); RHC uses Runs~1, 2, 3, 4a, 4b and~4c; the
+combined measurement uses all fourteen overlay files. Every run is normalised
+independently to its own data exposure, so the prediction carries the data-POT mixture
+of run periods and the framework is ready for real per-run beam-on data (each fake-data
+sample is a drop-in replacement for its beam-on counterpart).
 
 \begin{table}[H]
   \centering
   \caption{Run-period exposure accounting (final, full FHC$+$RHC). ``MC POT'' is each
-    period's native simulated exposure; ``Data POT'' is the exposure
-    to which the (blind) fake data is scaled. The runs of a given horn mode are
-    \emph{pooled} into a single sample: every file of the mode is scaled by the
-    \emph{same} factor, Scale $=$ (mode Data POT)$/$(mode \emph{total} MC POT), rather
-    than each file being scaled by its own POT (which would over-count). A run with
-    larger POT already contributes proportionally more events, so this single-factor
-    pooling weights each run by its statistics and yields the correct rate. The
-    combined measurement applies the FHC factor ($0.0924$) to the FHC files and the
-    RHC factor ($0.0717$) to the RHC files. Run~5 uses the reweighted-PPFX $\nu_\mu$
-    overlay.}
+    period's native simulated exposure; ``Data POT'' is the per-run exposure to which
+    the (blind, per-run) fake data is scaled. \emph{Each run is normalised
+    independently} by its own factor, Scale $=$ (run Data POT)$/$(run MC POT), so the
+    prediction is the data-POT--weighted mixture of run periods --- the normalisation a
+    real per-run beam-on dataset produces. This replaces an earlier single per-mode
+    pooling factor: because the per-run MC/data POT ratios vary by up to a factor of
+    three (Scale ranges $0.051$--$0.141$ within FHC alone), a single factor would weight
+    the runs by their MC statistics rather than by the data exposure. The RHC Run~4 row
+    sums the 4a/4b/4c sub-files and Run~3 sums aa--ae; sub-files sharing a run's data POT
+    are scaled by the group MC total so they pool within that run. The combined
+    measurement applies each run's own factor. Run~5 uses the reweighted-PPFX $\nu_\mu$
+    overlay. The scheme is validated by the FHC closure (unfolded vs.\ smeared truth
+    $\chi^2 = 1.6/7$, $p = 0.98$).}
   \label{tab:pot}
   \begin{tabular}{lccc}
     \toprule
     Run period & MC POT ($\times10^{20}$) & Data POT ($\times10^{20}$) & Scale \\
     \midrule
-    Run~1 (FHC)  & 23.282 & & \\
-    Run~2 (FHC)  & 24.934 & & \\
-    Run~4 (FHC)  & 28.335 & & \\
-    Run~5 (FHC)  & 19.300 & & \\
-    \textbf{FHC total} & \textbf{95.85} & \textbf{8.857} & 0.0924 \\
+    Run~1 (FHC)  & 23.282 &  3.283 & 0.1410 \\
+    Run~2 (FHC)  & 24.934 &  1.268 & 0.0509 \\
+    Run~4 (FHC)  & 28.335 &  2.075 & 0.0732 \\
+    Run~5 (FHC)  & 19.300 &  2.231 & 0.1156 \\
+    \textbf{FHC total} & \textbf{95.85} & \textbf{8.857} & \emph{per run} \\
     \midrule
-    Run~1 (RHC)  &  8.997 & & \\
-    Run~2 (RHC)  & 57.865 & & \\
-    Run~3 (RHC)  & 55.185 & & \\
-    Run~4a (RHC) &  7.283 & & \\
-    Run~4b (RHC) & 23.798 & & \\
-    Run~4c (RHC) &  1.505 & & \\
-    \textbf{RHC total} & \textbf{154.63} & \textbf{11.082} & 0.0717 \\
+    Run~1 (RHC)      &  8.997 & 0.605 & 0.0673 \\
+    Run~2 (RHC)      & 57.865 & 2.591 & 0.0448 \\
+    Run~3 (RHC, aa--ae) & 55.185 & 5.003 & 0.0907 \\
+    Run~4 (RHC, 4a--4c) & 32.586 & 2.883 & 0.0885 \\
+    \textbf{RHC total} & \textbf{154.63} & \textbf{11.082} & \emph{per run} \\
     \midrule
-    \textbf{Combined (FHC$+$RHC)} & \textbf{250.49} & \textbf{19.939} & (per mode) \\
+    \textbf{Combined (FHC$+$RHC)} & \textbf{250.49} & \textbf{19.939} & \emph{per run} \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -856,22 +859,36 @@ Table~\ref{tab:samples} summarises the input samples.
 \paragraph{Event weights.}
 Each MC event is weighted by
 \begin{equation}
-  w = \text{Scale}[\text{mode}] \times w_{\mathrm{PPFX}} \times w_{\mathrm{tune}},
+  w = \text{Scale}[\text{run}] \times w_{\mathrm{PPFX}} \times w_{\mathrm{tune}},
 \end{equation}
-where $\text{Scale}[\text{mode}]$ is the single per-mode POT factor of
-Table~\ref{tab:pot} (all files of a horn mode pooled), $w_{\mathrm{PPFX}}$ is the
-PPFX central-value flux correction
+where $\text{Scale}[\text{run}] = (\text{run Data POT})/(\text{run MC POT})$ is the
+\emph{per-run} POT factor of Table~\ref{tab:pot}: each run period is scaled
+independently to its own data exposure, so the prediction reproduces the data-POT
+mixture of runs rather than the MC-statistics mixture (see the caption of
+Table~\ref{tab:pot}). Operationally this is exactly what the framework does natively
+--- each overlay file carries its run's data POT via a matching per-run beam-on
+(here, per-run fake-data) sample, and is scaled by $\text{run\_bnb\_pot}/\text{summed\_pot}$.
+$w_{\mathrm{PPFX}}$ is the PPFX central-value flux correction
 (\texttt{ppfx\_cv}) and $w_{\mathrm{tune}}$ is the GENIE/GEANT4 reweighting
 correction (\texttt{weightTune}).  Events with non-finite, zero, or unphysically
-large weights ($w > 30$) are assigned unit weight.
+large weights ($w > 30$) are assigned unit weight. At unblinding the per-run
+fake-data samples are replaced by the corresponding per-run beam-on files (same runs,
+same POT), so the normalisation is already correct.
 
 \paragraph{EXT scaling.}
-The beam-off cosmics sample is scaled by the ratio of beam-on to beam-off trigger
-counts:
+The same combined beam-off (cosmics) sample is attached to every run and scaled by
+that run's beam-on/beam-off trigger ratio, $\text{bnb\_trigs}[\text{run}]/\text{ext\_gates}$.
+Because the beam-on/beam-off ratio is run-independent, the per-run contributions sum to
+the mode-total scale; for the full FHC exposure,
 \begin{equation}
-  \text{Scale}_{\mathrm{EXT}} = \frac{7\,809\,962}{610\,496 + 3\,211\,097} = 2.044.
+  \text{Scale}_{\mathrm{EXT}}^{\mathrm{FHC}}
+  = \frac{\sum_{\text{run}} \text{bnb\_trigs}[\text{run}]}{\text{ext\_gates}}
+  = \frac{22\,667\,109}{3\,821\,593} = 5.93 .
 \end{equation}
-The uncertainty on this ratio is a leading systematic on the EXT background.
+(The framework requires each run carrying a beam-on sample to carry a beam-off sample as
+well; the single beam-off file is therefore attached per run through symlinks so that
+run bookkeeping is complete without duplicating the data.) The uncertainty on this ratio
+is a leading systematic on the EXT background.
 
 \paragraph{Software trigger.}
 Data and EXT files are pre-filtered to require the software trigger
