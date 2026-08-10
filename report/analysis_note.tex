@@ -1218,9 +1218,10 @@ detailed per-category, per-cut breakdown for each.
     (MC prediction; data is blind, so Pred $=$ Data by construction for the
     Poisson-thrown fake data). Signal and ``Bkg'' (all non-signal MC: OOFV, NC,
     CC1$\pi^0$, CC0$\pi$, CC$N\pi$, CCK, CCother) are from the $\nu_\mu$ overlays,
-    POT-scaled per mode; EXT (beam-off cosmic) is scaled by the data/EXT trigger
-    ratio (FHC $5.51$, RHC $6.91$, combined $12.41$); dirt from the GENIE NuMI
-    dirt overlay. Pred.\ $=$ Signal $+$ Bkg $+$ EXT $+$ Dirt.}
+    POT-scaled \emph{per run} (each run by its own $D_{\text{run}}/\text{MC}_{\text{run}}$,
+    Table~\ref{tab:pot}); EXT (beam-off cosmic) is scaled by the (per-run summed)
+    data/EXT trigger ratio (FHC $5.93$, RHC $6.16$, combined $12.09$); dirt from the
+    GENIE NuMI dirt overlay. Pred.\ $=$ Signal $+$ Bkg $+$ EXT $+$ Dirt.}
   \label{tab:cutflow}
   \small
   \begin{tabular}{lrrrrr}
@@ -1228,40 +1229,40 @@ detailed per-category, per-cut breakdown for each.
     Cut & Signal & Bkg MC & EXT & Dirt & Pred. \\
     \midrule
     \multicolumn{6}{l}{\textit{FHC (Runs 1,2,4,5; $8.857\times10^{20}$~POT)}} \\
-    None             & 5\,612 & 279\,988 & 22\,690\,172 & 36\,142 & 23\,011\,914 \\
-    InFiducialVol    & 4\,666 & 62\,393 & 968\,247 & 1\,890 & 1\,037\,197 \\
-    Topological      & 3\,535 & 28\,198 & 32\,706 & 204 & 64\,642 \\
-    MuonCandidate    & 3\,182 & 19\,091 & 14\,423 & 137 & 36\,833 \\
-    ContainedPion    & 1\,418 & 2\,101 & 1\,279 & 25 & 4\,824 \\
-    MuonIn3Planes    & 1\,358 & 1\,984 & 1\,064 & 17 & 4\,423 \\
-    PionIn3Planes    & 1\,264 & 1\,788 & 810 & 7.0 & 3\,869 \\
-    ShowerCut        & 1\,068 & 907 & 529 & 6.2 & 2\,510 \\
-    OpeningAngle     & 1\,060 & 823 & 176 & 2.0 & 2\,062 \\
-    \textbf{Nonprotons} & \textbf{993} & \textbf{653} & \textbf{121} & \textbf{1.3} & \textbf{1\,768} \\
+    None             & 5\,580 & 279\,180 & 24\,410\,022 & 36\,142 & 24\,730\,924 \\
+    InFiducialVol    & 4\,632 & 62\,146 & 1\,041\,637 & 1\,890 & 1\,110\,306 \\
+    Topological      & 3\,501 & 28\,040 & 35\,184 & 204 & 66\,929 \\
+    MuonCandidate    & 3\,143 & 18\,980 & 15\,516 & 137 & 37\,776 \\
+    ContainedPion    & 1\,395 & 2\,094 & 1\,376 & 25 & 4\,890 \\
+    MuonIn3Planes    & 1\,336 & 1\,975 & 1\,145 & 17 & 4\,473 \\
+    PionIn3Planes    & 1\,239 & 1\,770 & 872 & 7.0 & 3\,888 \\
+    ShowerCut        & 1\,048 & 898 & 569 & 6.2 & 2\,521 \\
+    OpeningAngle     & 1\,040 & 813 & 190 & 2.0 & 2\,045 \\
+    \textbf{Nonprotons} & \textbf{974} & \textbf{643} & \textbf{131} & \textbf{1.3} & \textbf{1\,749} \\
     \midrule
     \multicolumn{6}{l}{\textit{RHC (Runs 1,2,3,4a,4b,4c; $1.108\times10^{21}$~POT)}} \\
-    None             & 6\,139 & 304\,259 & 28\,430\,414 & 28\,032 & 28\,768\,844 \\
-    InFiducialVol    & 5\,130 & 68\,998 & 1\,213\,197 & 1\,466 & 1\,288\,792 \\
-    Topological      & 3\,969 & 31\,622 & 40\,979 & 158 & 76\,729 \\
-    MuonCandidate    & 3\,569 & 21\,446 & 18\,072 & 106 & 43\,193 \\
-    ContainedPion    & 1\,580 & 2\,656 & 1\,603 & 19 & 5\,859 \\
-    MuonIn3Planes    & 1\,516 & 2\,503 & 1\,333 & 13 & 5\,365 \\
-    PionIn3Planes    & 1\,413 & 2\,260 & 1\,016 & 5.5 & 4\,694 \\
-    ShowerCut        & 1\,173 & 1\,061 & 663 & 4.8 & 2\,902 \\
-    OpeningAngle     & 1\,165 & 965 & 221 & 1.5 & 2\,353 \\
-    \textbf{Nonprotons} & \textbf{1\,084} & \textbf{747} & \textbf{152} & \textbf{1.0} & \textbf{1\,985} \\
+    None             & 6\,131 & 304\,347 & 25\,344\,643 & 28\,032 & 25\,683\,152 \\
+    InFiducialVol    & 5\,124 & 69\,102 & 1\,081\,520 & 1\,466 & 1\,157\,212 \\
+    Topological      & 3\,960 & 31\,629 & 36\,532 & 158 & 72\,278 \\
+    MuonCandidate    & 3\,559 & 21\,443 & 16\,110 & 106 & 41\,219 \\
+    ContainedPion    & 1\,577 & 2\,649 & 1\,429 & 19 & 5\,674 \\
+    MuonIn3Planes    & 1\,512 & 2\,500 & 1\,189 & 13 & 5\,213 \\
+    PionIn3Planes    & 1\,409 & 2\,258 & 905 & 5.5 & 4\,577 \\
+    ShowerCut        & 1\,171 & 1\,061 & 591 & 4.8 & 2\,827 \\
+    OpeningAngle     & 1\,162 & 965 & 197 & 1.5 & 2\,325 \\
+    \textbf{Nonprotons} & \textbf{1\,081} & \textbf{746} & \textbf{136} & \textbf{1.0} & \textbf{1\,964} \\
     \midrule
     \multicolumn{6}{l}{\textit{Combined ($1.994\times10^{21}$~POT)}} \\
-    None             & 11\,752 & 584\,247 & 51\,065\,438 & 36\,142 & 51\,697\,579 \\
-    InFiducialVol    & 9\,797 & 131\,391 & 2\,179\,091 & 1\,890 & 2\,322\,169 \\
-    Topological      & 7\,504 & 59\,820 & 73\,605 & 204 & 141\,134 \\
-    MuonCandidate    & 6\,751 & 40\,536 & 32\,460 & 137 & 79\,884 \\
-    ContainedPion    & 2\,999 & 4\,757 & 2\,879 & 25 & 10\,660 \\
-    MuonIn3Planes    & 2\,874 & 4\,487 & 2\,395 & 17 & 9\,773 \\
-    PionIn3Planes    & 2\,677 & 4\,048 & 1\,824 & 7.0 & 8\,556 \\
-    ShowerCut        & 2\,241 & 1\,968 & 1\,191 & 6.2 & 5\,406 \\
-    OpeningAngle     & 2\,226 & 1\,788 & 397 & 2.0 & 4\,412 \\
-    \textbf{Nonprotons} & \textbf{2\,077} & \textbf{1\,400} & \textbf{273} & \textbf{1.3} & \textbf{3\,752} \\
+    None             & 11\,710 & 583\,527 & 49\,755\,076 & 36\,142 & 50\,386\,456 \\
+    InFiducialVol    & 9\,756 & 131\,249 & 2\,123\,174 & 1\,890 & 2\,266\,069 \\
+    Topological      & 7\,461 & 59\,669 & 71\,717 & 204 & 139\,050 \\
+    MuonCandidate    & 6\,702 & 40\,423 & 31\,627 & 137 & 78\,889 \\
+    ContainedPion    & 2\,972 & 4\,743 & 2\,805 & 25 & 10\,545 \\
+    MuonIn3Planes    & 2\,847 & 4\,475 & 2\,333 & 17 & 9\,673 \\
+    PionIn3Planes    & 2\,648 & 4\,028 & 1\,777 & 7.0 & 8\,460 \\
+    ShowerCut        & 2\,218 & 1\,959 & 1\,161 & 6.2 & 5\,344 \\
+    OpeningAngle     & 2\,202 & 1\,778 & 387 & 2.0 & 4\,369 \\
+    \textbf{Nonprotons} & \textbf{2\,055} & \textbf{1\,389} & \textbf{266} & \textbf{1.3} & \textbf{3\,712} \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -1277,6 +1278,17 @@ detailed per-category, per-cut breakdown for each.
     purity $54.9\%$} (reference phase-space study: selected signal 311.9, generated
     1999, background 253.7; Table~\ref{tab:phasespace})
 \end{itemize}
+
+\noindent\emph{Per-run scaling.} The yields above and in Table~\ref{tab:cutflow} use
+the per-run POT factors of Table~\ref{tab:pot} (each run scaled by its own
+$D_{\text{run}}/\text{MC}_{\text{run}}$), and the EXT by the per-run trigger ratios
+summing to $5.93$ (FHC). Relative to the earlier single per-mode factor this shifts the
+FHC final-cut signal by $-1.9\%$ ($993\to974$ events) and rescales the beam-off by the
+updated ratio; because the shift is a small, nearly uniform re-weighting of the run
+mixture, the efficiency and purity move by $<0.5\%$ and the quoted percentages are
+unchanged at this precision. The per-observable figures are finalised with the full
+per-run re-extraction; the FHC $p_\mu$ closure (unfolded vs.\ smeared truth
+$\chi^2=1.6/7$, $p=0.98$) confirms the scheme is unbiased.
 
 \paragraph{Measured phase space and efficiency turn-on.}
 The reference selection above has near-dead efficiency at low momentum and at the

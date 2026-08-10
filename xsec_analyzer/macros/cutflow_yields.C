@@ -13,24 +13,27 @@ void cutflow_yields(const char* mode="fhc") {
   const char* P="/data/uboone/processed/";
   const char* stage[10]={"None","InFiducialVol","Topological","MuonCandidate",
     "ContainedPion","MuonIn3Planes","PionIn3Planes","ShowerCut","OpeningAngle","Nonprotons"};
-  // ---- per-config numuMC files + per-mode POT scale (Data/SummedMC) ----
+  // ---- per-config numuMC files + PER-RUN POT scale D_run/MC_run (Table tab:pot) ----
   std::vector<Src> mc, ext, dirt;
-  double sc_fhc=0.092402, sc_rhc=0.071666;             // pooled per-mode scales
-  auto fhcMC=[&](){ for(auto r:{"Run1_fhc_new_numi_flux_fhc_pandora_ntuple",
+  auto fhcMC=[&](){
+    const char* rn[4]={"Run1_fhc_new_numi_flux_fhc_pandora_ntuple",
       "Run2_fhc_new_numi_flux_fhc_pandora_ntuple","Run4_fhc_new_numi_flux_fhc_pandora_ntuple",
-      "reweightedPPFX_numi_nu_overlay_pion_ntuples_run5_fhc"})
-      mc.push_back({std::string(P)+"xsec-ana-"+r+".root", sc_fhc}); };
-  auto rhcMC=[&](){ for(auto r:{"Run1_rhc","Run2_rhc","Run4a_rhc","Run4b_rhc","Run4c_rhc"})
-      mc.push_back({std::string(P)+"xsec-ana-"+r+"_new_numi_flux_rhc_pandora_ntuple.root", sc_rhc});
-      for(auto s:{"aa","ab","ac","ad","ae"})
-      mc.push_back({std::string(P)+"xsec-ana-Run3_rhc_new_numi_flux_rhc_pandora_ntuple_"+std::string(s)+".root", sc_rhc}); };
+      "reweightedPPFX_numi_nu_overlay_pion_ntuples_run5_fhc"};
+    double sc[4]={0.14101,0.05085,0.07323,0.11560};   // Run1,2,4,5
+    for(int i=0;i<4;i++) mc.push_back({std::string(P)+"xsec-ana-"+rn[i]+".root", sc[i]}); };
+  auto rhcMC=[&](){
+    const char* rn[5]={"Run1_rhc","Run2_rhc","Run4a_rhc","Run4b_rhc","Run4c_rhc"};
+    double sc[5]={0.06728,0.04478,0.08847,0.08847,0.08847}; // Run1,2,4a,4b,4c (4a/b/c share Run4 scale)
+    for(int i=0;i<5;i++) mc.push_back({std::string(P)+"xsec-ana-"+rn[i]+"_new_numi_flux_rhc_pandora_ntuple.root", sc[i]});
+    for(auto s:{"aa","ab","ac","ad","ae"})   // Run3 sub-files share the Run3 group scale
+      mc.push_back({std::string(P)+"xsec-ana-Run3_rhc_new_numi_flux_rhc_pandora_ntuple_"+std::string(s)+".root", 0.09066}); };
   if(std::string(mode)=="fhc") fhcMC();
   else if(std::string(mode)=="rhc") rhcMC();
   else { fhcMC(); rhcMC(); }
-  // EXT (beam-off cosmic, mode-independent file) scaled by data/EXT trigger ratio:
-  //   FHC 21070000/3821593, RHC 26400000/3821593, comb 47420000/3821593.
-  double sc_ext = (std::string(mode)=="fhc") ? 5.5134
-                : (std::string(mode)=="rhc") ? 6.9082 : 12.4082;
+  // EXT (beam-off cosmic) scaled by the (per-run summed) beam-on/beam-off trigger ratio:
+  //   FHC 22667109/3821593=5.93, RHC 23534937/3821593=6.16, comb 46202046/3821593=12.09.
+  double sc_ext = (std::string(mode)=="fhc") ? 5.9313
+                : (std::string(mode)=="rhc") ? 6.1584 : 12.0898;
   ext.push_back({std::string(P)+"xsec-ana-beamoff_run1Andrun3.root", sc_ext});
   // Dirt: per-mode POT scale x dirt normalisation weight (0.65).
   double sc_dirt = (std::string(mode)=="rhc") ? 0.071666*0.65 : 0.092402*0.65;
