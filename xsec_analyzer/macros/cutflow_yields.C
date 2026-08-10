@@ -27,9 +27,13 @@ void cutflow_yields(const char* mode="fhc") {
   if(std::string(mode)=="fhc") fhcMC();
   else if(std::string(mode)=="rhc") rhcMC();
   else { fhcMC(); rhcMC(); }
-  // EXT + dirt: scale factors are placeholders to be set from the final trigger
-  // accounting; left here so the driver is complete once the per-run EXT is wired.
-  double sc_dirt = (std::string(mode)=="rhc") ? 0.0717*0.65 : 0.0924*0.65;
+  // EXT (beam-off cosmic, mode-independent file) scaled by data/EXT trigger ratio:
+  //   FHC 21070000/3821593, RHC 26400000/3821593, comb 47420000/3821593.
+  double sc_ext = (std::string(mode)=="fhc") ? 5.5134
+                : (std::string(mode)=="rhc") ? 6.9082 : 12.4082;
+  ext.push_back({std::string(P)+"xsec-ana-beamoff_run1Andrun3.root", sc_ext});
+  // Dirt: per-mode POT scale x dirt normalisation weight (0.65).
+  double sc_dirt = (std::string(mode)=="rhc") ? 0.071666*0.65 : 0.092402*0.65;
   dirt.push_back({std::string(P)+"xsec-ana-prodgenie_numi_uboone_overlay_dirt_fhc_mcc9_run1_v28_all_snapshot.root", sc_dirt});
 
   double sig[10]={0}, tot[10]={0}, ex[10]={0}, dt[10]={0};
