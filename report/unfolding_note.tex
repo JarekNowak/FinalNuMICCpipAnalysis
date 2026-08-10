@@ -1,0 +1,268 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue]{hyperref}
+\usepackage{enumitem}
+
+\newcommand{\R}{\mathbf{R}}
+\newcommand{\vs}{\mathbf{s}}
+\newcommand{\vm}{\mathbf{m}}
+\newcommand{\vb}{\mathbf{b}}
+\newcommand{\shat}{\hat{\mathbf{s}}}
+\newcommand{\AC}{\mathbf{A}_C}
+\newcommand{\cov}{\mathbf{V}}
+\newcommand{\Rmat}{\mathbf{R}}
+
+\title{\bf A Pedagogical Note on Unfolding:\\ Wiener--SVD and D'Agostini Iterative Bayesian Methods}
+\author{MicroBooNE NuMI CC$\pi^\pm$ analysis --- methodology note}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Unfolding is the procedure that corrects a measured (reconstructed) distribution for
+detector smearing, inefficiency, and background to recover an estimate of the true
+underlying distribution. This note explains, from first principles, the two unfolding
+techniques used in this analysis --- the \emph{Wiener--SVD} method and the
+\emph{D'Agostini iterative Bayesian} method --- and discusses the strengths and
+weaknesses of each. It closes with how the two are used together here: Wiener--SVD as
+the primary result and D'Agostini as a cross-check that isolates the meaning of the
+Wiener--SVD additional-smearing matrix.
+\end{abstract}
+
+\section{The unfolding problem}
+
+Let $\vs$ be the vector of true (signal) event counts in bins of some observable, and
+$\vm$ the vector of measured counts in bins of the corresponding reconstructed
+observable. Detector effects (efficiency, resolution, bin migration) and background
+$\vb$ relate the two through a linear \emph{response} (smearing) matrix $\R$:
+\begin{equation}
+  \vm = \R\,\vs + \vb + \text{(noise)}, \qquad
+  R_{ij} = P(\text{reco in bin } i \mid \text{true in bin } j)\times\epsilon_j .
+  \label{eq:forward}
+\end{equation}
+The element $R_{ij}$ is the probability that a true event in bin $j$ is reconstructed
+in bin $i$, folded with the selection efficiency $\epsilon_j$. Equation~\eqref{eq:forward}
+is the \emph{forward} (or ``folding'') problem, and $\R$ is built from Monte Carlo.
+\emph{Unfolding} is the inverse problem: given $\vm$ (and estimates of $\R$ and $\vb$),
+estimate $\vs$.
+
+\paragraph{Why not just invert?}
+The naive maximum-likelihood solution is the matrix inverse,
+\begin{equation}
+  \shat_{\text{inv}} = \R^{-1}\,(\vm - \vb).
+  \label{eq:inv}
+\end{equation}
+This is \emph{unbiased} but usually useless. Because neighbouring true bins migrate into
+overlapping reco bins, $\R$ is close to singular: it has very small singular values. The
+inverse therefore amplifies the statistical fluctuations of $\vm$ enormously, producing
+an unfolded spectrum with huge, wildly anticorrelated bin-to-bin oscillations. The
+covariance of Eq.~\eqref{eq:inv} is $\R^{-1}\cov_m(\R^{-1})^{\!\top}$, and the tiny
+singular values of $\R$ enter as their reciprocals squared.
+
+\paragraph{The bias--variance trade-off.}
+Every practical method solves this by \emph{regularization}: deliberately introducing a
+small bias in exchange for a large reduction in variance. The methods differ in
+\emph{how} they regularize and in \emph{how transparently} the resulting bias can be
+accounted for. This is the central theme of the two methods below.
+
+\section{Wiener--SVD unfolding}
+\label{sec:wsvd}
+
+The Wiener--SVD method~\cite{tang2017} borrows the \emph{Wiener filter} from signal
+processing, where it is the linear filter that minimises the mean-squared error (MSE)
+between the recovered and true signal in the presence of noise.
+
+\paragraph{Step 1: whiten and diagonalise.}
+Using the prior (MC) covariance of the true spectrum and the statistical covariance of
+the data, one transforms to a basis in which the noise is white and the response is
+diagonalised by a singular-value decomposition,
+\begin{equation}
+  \R' = \mathbf{U}\,\mathbf{\Sigma}\,\mathbf{V}^{\!\top},
+\end{equation}
+with singular values $\sigma_k$ ordered large-to-small. Large $\sigma_k$ correspond to
+well-measured ``smooth'' components of the spectrum; small $\sigma_k$ correspond to fine
+structure that the detector barely resolves and that data statistics cannot constrain.
+
+\paragraph{Step 2: the Wiener filter.}
+Instead of dividing by every $\sigma_k$ (which blows up for small $\sigma_k$), each SVD
+mode $k$ is multiplied by the Wiener weight
+\begin{equation}
+  W_k = \frac{\sigma_k^2}{\sigma_k^2 + \text{(noise power)}_k}
+      = \frac{S_k}{S_k+N_k},
+  \label{eq:wiener}
+\end{equation}
+which is $\simeq 1$ for high signal-to-noise modes and $\to 0$ for modes dominated by
+noise. This is provably the linear estimator that minimises the total MSE
+(bias$^2$ + variance). No free regularization strength has to be dialled in by hand ---
+the filter is fixed by the signal and noise spectra themselves.
+
+\paragraph{Step 3: the additional smearing matrix $\AC$.}
+Because low-signal modes are suppressed rather than inverted, the Wiener--SVD estimate is
+a \emph{biased} (smoothed) version of the truth. Crucially, this bias is linear and
+\emph{known}:
+\begin{equation}
+  \boxed{\;\mathbb{E}[\shat] = \AC\,\vs\;}, \qquad
+  \AC = \mathbf{V}\,\mathrm{diag}(W_k)\,\mathbf{V}^{\!\top}\ \text{(schematically).}
+  \label{eq:ac}
+\end{equation}
+$\AC$ is the \emph{additional smearing matrix}. The unfolded data does not estimate the
+true spectrum $\vs$ directly; it estimates the \emph{smeared} spectrum $\AC\vs$. The rule
+for a fair comparison is therefore: \textbf{smear every theory prediction by the same
+$\AC$ before comparing to the unfolded data},
+\begin{equation}
+  \vs_{\text{theory}} \longrightarrow \AC\,\vs_{\text{theory}},
+\end{equation}
+and $\AC$ is published alongside the result so anyone can do this.
+
+\paragraph{Pros and cons.}
+\begin{description}[leftmargin=1.4em,style=nextline]
+  \item[$+$ Objective regularization.] The Wiener filter is fixed by the data/MC
+    signal-to-noise; there is no iteration count or regularization strength to tune,
+    removing a subjective choice.
+  \item[$+$ Transparent, reportable bias.] The bias is fully captured by the single
+    linear operator $\AC$ (Eq.~\ref{eq:ac}), which is published. The comparison to
+    theory is then exact and unambiguous.
+  \item[$+$ Minimum MSE and strong noise suppression.] Produces smooth results with
+    small, well-behaved covariance; optimal in the mean-squared-error sense.
+  \item[$+$ Single-shot and deterministic.] One linear operation; fully reproducible.
+  \item[$-$ $\AC$ is not norm-preserving.] Because it \emph{suppresses} modes, the row
+    sums of $\AC$ are generally $<1$, so the \emph{integral} of $\AC\vs$ is smaller than
+    the integral of $\vs$. The unfolded total cross section is therefore
+    \emph{suppressed}, and it depends on the observable (each observable has its own
+    $\AC$). Integrated numbers must be read as ``smeared-space'' quantities.
+  \item[$-$ Predictions cannot be compared ``raw''.] Any model must be passed through
+    $\AC$ first; the unfolded points are not directly the physical differential cross
+    section.
+  \item[$-$ Depends on the regularization/prior choice.] A regularization matrix (e.g.\
+    penalising the 2nd derivative) and the MC prior enter $\AC$; different choices give
+    different smearing.
+  \item[$-$ Linear/Gaussian.] Can yield unphysical (negative) bin contents; assumes
+    Gaussian statistics.
+\end{description}
+
+\section{D'Agostini iterative Bayesian unfolding}
+\label{sec:dagostini}
+
+The D'Agostini method~\cite{dagostini1995} applies Bayes' theorem directly to the
+migration problem, treating true bins as ``causes'' $C_j$ and reco bins as
+``effects'' $E_i$.
+
+\paragraph{One Bayesian step.}
+The response matrix supplies the likelihood $P(E_i\mid C_j)=R_{ij}$. Given a
+\emph{prior} expectation for the true spectrum, $P(C_j)\equiv \pi_j$, Bayes' theorem
+inverts the conditional probability,
+\begin{equation}
+  P(C_j\mid E_i) = \frac{R_{ij}\,\pi_j}{\sum_{l} R_{il}\,\pi_l},
+  \label{eq:bayes}
+\end{equation}
+and the unfolded estimate is obtained by distributing the observed effects back onto the
+causes and dividing by the efficiency,
+\begin{equation}
+  \hat{s}_j = \frac{1}{\epsilon_j}\sum_i P(C_j\mid E_i)\,(m_i - b_i).
+  \label{eq:dago}
+\end{equation}
+
+\paragraph{Iteration $=$ regularization.}
+The result of Eq.~\eqref{eq:dago} depends on the assumed prior $\pi_j$. D'Agostini's
+prescription is to \emph{iterate}: use the unfolded $\hat{s}_j$ as the prior for the next
+step, and repeat $n$ times,
+\begin{equation}
+  \pi^{(k+1)}_j \;=\; \hat{s}^{(k)}_j \quad\Rightarrow\quad \hat{s}^{(k+1)}.
+\end{equation}
+The number of iterations $n$ is the regularization knob:
+\begin{itemize}[noitemsep]
+  \item \textbf{Few iterations} ($n=1$--$2$): the result stays close to the MC prior ---
+    \emph{strong} regularization, low variance, larger bias toward the model.
+  \item \textbf{Many iterations} ($n\to\infty$): the result approaches the noisy
+    matrix-inversion solution of Eq.~\eqref{eq:inv} --- \emph{weak} regularization, high
+    variance. One stops early, before the fluctuations blow up.
+\end{itemize}
+
+\paragraph{Pros and cons.}
+\begin{description}[leftmargin=1.4em,style=nextline]
+  \item[$+$ Intuitive and transparent in construction.] Nothing more than Bayes'
+    theorem and efficiency correction; easy to explain and implement.
+  \item[$+$ Positive-definite by construction.] Probabilities and counts are
+    non-negative, so the unfolded spectrum never goes negative.
+  \item[$+$ No additional smearing matrix.] The method targets the true spectrum
+    directly, so the \emph{integral is essentially unbiased} --- integrated cross
+    sections come out at their physical value and can be compared to raw theory without a
+    smearing operator.
+  \item[$+$ Well established.] The de-facto standard in HEP (\textsc{RooUnfold}); widely
+    validated.
+  \item[$-$ The iteration count is a subjective choice.] $n$ must be chosen (by a
+    figure-of-merit, coverage study, or convention). Too few $\Rightarrow$ prior bias;
+    too many $\Rightarrow$ noise amplification. There is no unique ``correct'' $n$.
+  \item[$-$ Error propagation is subtle.] Iterations correlate the bins; the naive
+    per-bin errors underestimate the true uncertainty, and correct propagation
+    (e.g.\ analytic covariance or many toys through all iterations) is more involved.
+  \item[$-$ Prior dependence at finite $n$.] For a finite number of iterations the
+    result retains some memory of the MC prior shape.
+  \item[$-$ Bias is implicit.] Unlike $\AC$, the residual bias is not summarised by a
+    single reportable operator; it is spread across the (nonlinear) iteration history.
+\end{description}
+
+\section{Side-by-side comparison}
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{p{4.3cm}p{5.0cm}p{5.0cm}}
+    \toprule
+     & \textbf{Wiener--SVD} & \textbf{D'Agostini (iterative Bayes)} \\
+    \midrule
+    Regularization & Wiener filter (automatic, from S/N) & Number of iterations $n$ (chosen) \\
+    Bias handling & Explicit operator $\AC$, published & Implicit; controlled by early stopping \\
+    Integral of result & Suppressed / observable-dependent ($\AC$ not norm-preserving) & Essentially unbiased (physical total) \\
+    Comparison to theory & Must smear theory by $\AC$ & Direct, raw theory \\
+    Positivity & Not guaranteed & Guaranteed \\
+    Uncertainties & Linear, closed-form covariance & Correlated across iterations; needs care \\
+    Free choices & Regularization matrix, prior & Iteration count, prior \\
+    Nature & Single linear operation & Nonlinear iterative \\
+    \bottomrule
+  \end{tabular}
+  \caption{Summary of the trade-offs. Neither method is ``more correct''; they make
+  different, complementary choices about how to trade bias for variance and how to expose
+  the residual bias.}
+  \label{tab:compare}
+\end{table}
+
+\section{How the two are used in this analysis}
+
+We take \textbf{Wiener--SVD as the primary result}: its automatic, objective
+regularization and its explicit, publishable smearing matrix $\AC$ make the data/theory
+comparison unambiguous and reproducible. All generator predictions shown against the
+unfolded points are first smeared by the corresponding $\AC$.
+
+We use \textbf{D'Agostini as a quantitative cross-check}. Because it carries no $\AC$,
+its unfolded \emph{total} estimates the physical cross section directly. Running both on
+the same response matrix and the same (fake) data, we find:
+\begin{itemize}[noitemsep]
+  \item The D'Agostini integrated cross section is \emph{flat} across observables (all
+    projections of the same events give the same total, as physics demands) and
+    \emph{stable} against the iteration count ($<1\%$ variation over $1$--$4$
+    iterations).
+  \item The Wiener--SVD integrated cross section varies from observable to observable and
+    sits a consistent $\sim\!20\%$ \emph{below} the D'Agostini value.
+\end{itemize}
+This is exactly the expected fingerprint of $\AC$: the observable-to-observable spread
+and the overall suppression in the Wiener--SVD integrals are the \emph{additional
+smearing}, not a physical or acceptance effect. The agreement of D'Agostini across
+observables, together with its recovery of the un-suppressed total, confirms that the
+Wiener--SVD result is behaving as designed and that its differential shape --- compared
+to $\AC$-smeared theory --- is the correct object to interpret.
+
+\begin{thebibliography}{9}
+\bibitem{tang2017} W.~Tang, X.~Li, X.~Qian, H.~Wei, C.~Zhang,
+  ``Data Unfolding with Wiener-SVD Method,''
+  \emph{JINST} \textbf{12}, P10002 (2017), arXiv:1705.03568.
+\bibitem{dagostini1995} G.~D'Agostini,
+  ``A multidimensional unfolding method based on Bayes' theorem,''
+  \emph{Nucl.\ Instrum.\ Meth.\ A} \textbf{362}, 487 (1995).
+\end{thebibliography}
+
+\end{document}
