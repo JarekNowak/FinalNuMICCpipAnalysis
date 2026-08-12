@@ -35,10 +35,11 @@ void dsigma_ccpi1p(const char* cfg = "FHC5") {
     // Generator FTE overlays (flat-index, content = dsigma/dx * binwidth). Only the
     // event-level generators (GENIE gst, GiBUU) have proton-tagged W/TKI predictions;
     // NuWro needs its container to reprocess and NEUT provides no event kinematics.
-    const char* gens[2]={"genie","gibuu"}; int gcol[2]={TColor::GetColor("#0072B2"),TColor::GetColor("#009E73")};
-    int gsty[2]={1,2}; const char* glab[2]={"GENIE","GiBUU"};
+    const char* gens[4]={"genie","gibuu","neut","nuwro"};
+    int gcol[4]={TColor::GetColor("#0072B2"),TColor::GetColor("#009E73"),TColor::GetColor("#CC79A7"),TColor::GetColor("#D55E00")};
+    int gsty[4]={1,2,7,9}; const char* glab[4]={"GENIE","GiBUU","NEUT","NuWro"};
     std::vector<TH1D*> gh; std::vector<int> gi;
-    for (int g=0;g<2;++g){
+    for (int g=0;g<4;++g){
       TFile* fg=TFile::Open(Form("../generator_predictions/newg4/%s_wtki_fte.root",gens[g]));
       if(!fg||fg->IsZombie()) continue;
       TH1D* hfte=(TH1D*)fg->Get(Form("%s_fte",obs[o]));
