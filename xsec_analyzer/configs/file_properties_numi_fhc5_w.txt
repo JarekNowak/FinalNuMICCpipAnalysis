@@ -1,0 +1,50 @@
+# file_properties_numi_fhc5.txt   — PER-RUN (real-data-ready) FHC configuration
+# ---------------------------------------------------------------------------
+# Columns:  file_name  run  file_type  [triggers  POT]   (trigs+POT: onBNB/extBNB only)
+#
+# PER-RUN NORMALISATION (replaces the old single per-mode pooling factor).
+#   The framework scales each numuMC file by  run_bnb_pot[run] / summed_pot  (native)
+#   (SystematicsCalculator.cxx:924).  By giving each run its OWN onBNB data POT and
+#   assigning each overlay to its real run, every run is scaled by its own
+#   D_run / MC_POT_run — the data-POT-weighted mixture that a real per-run beam-on
+#   dataset produces.  At unblinding, swap each fakedata_fhc_run<i> line for its
+#   beam-on counterpart (same run, same POT) — the normalisation is already correct.
+#
+#   Run  D_run(1e20)  MC_POT(1e20)  scale=D/MC
+#    1     3.283        23.282        0.14101
+#    2     1.268        24.934        0.05085
+#    4     2.075        28.335        0.07323
+#    5     2.231        19.300        0.11560   (reweighted-PPFX numu overlay)
+#   sum    8.857        95.851       (old single factor was 0.0924)
+#
+# onBNB: per-run fake data (Poisson throw of each run's CV at D_run/MC_POT_run,
+#   macros/throw_perrun_fhc.C).  Column 4 = per-run beam-on trigger count (feeds the
+#   EXT scale run_bnb_trigs/ext_trigs); column 5 = per-run data POT (feeds the
+#   numuMC scale run_bnb_pot/summed_pot).  Run 1 FHC uses the open-trigger exposure.
+/data/uboone/processed/w/xsec-ana-fakedata_fhc_run1.root 1 onBNB 9846635 3.283e20
+/data/uboone/processed/w/xsec-ana-fakedata_fhc_run2.root 2 onBNB 3535129 1.268e20
+/data/uboone/processed/w/xsec-ana-fakedata_fhc_run4.root 4 onBNB 4131149 2.075e20
+/data/uboone/processed/w/xsec-ana-fakedata_fhc_run5.root 5 onBNB 5154196 2.231e20
+# EXT: the SAME combined beam-off (Run1+Run3b merged, 3821593 gates) attached to
+#   every run via symlinks (distinct names -> distinct univmake subdirs, same data).
+#   The framework requires each run with an onBNB to also have an extBNB.  Since the
+#   beam-on/beam-off ratio is run-independent, each run scales the beam-off by
+#   bnb_trigs[run]/3821593 and the sum over runs = 22667109/3821593 = 5.93, i.e. the
+#   correct single combined EXT prediction.
+/data/uboone/processed/w/xsec-ana-beamoff_fhc_run1.root 1 extBNB 3821593 0
+/data/uboone/processed/w/xsec-ana-beamoff_fhc_run2.root 2 extBNB 3821593 0
+/data/uboone/processed/w/xsec-ana-beamoff_fhc_run4.root 4 extBNB 3821593 0
+/data/uboone/processed/w/xsec-ana-beamoff_fhc_run5.root 5 extBNB 3821593 0
+# numu MC overlay (CV) — NATIVE summed_pot, each on its REAL run -> per-run scaling
+/data/uboone/processed/w/xsec-ana-Run1_fhc_new_numi_flux_fhc_pandora_ntuple.root 1 numuMC
+/data/uboone/processed/w/xsec-ana-Run2_fhc_new_numi_flux_fhc_pandora_ntuple.root 2 numuMC
+/data/uboone/processed/w/xsec-ana-Run4_fhc_new_numi_flux_fhc_pandora_ntuple.root 4 numuMC
+/data/uboone/processed/w/xsec-ana-reweightedPPFX_numi_nu_overlay_pion_ntuples_run5_fhc.root 5 numuMC
+# Dirt MC overlay (Run1 sample used for the whole FHC exposure).  summed_pot is set
+#   to 6.2046e20 so that D_run1/summed_pot = D_FHC_total/dirt_native, i.e. the Run1
+#   dirt is scaled to the FULL FHC exposure (8.857e20), not just Run1.  MUST be
+#   re-applied (macros re-setpot) after any dirt reprocess, which resets it to native.
+/data/uboone/processed/w/xsec-ana-prodgenie_numi_uboone_overlay_dirt_fhc_mcc9_run1_v28_all_snapshot.root 1 dirtMC
+# Detector-variation MC (Run4 FHC native — scaled by total_bnb_data_pot/file_pot,
+#   run-independent in the framework, so the run column is immaterial here).
+#
