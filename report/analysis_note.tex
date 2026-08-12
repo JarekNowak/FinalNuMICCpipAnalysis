@@ -1221,48 +1221,48 @@ detailed per-category, per-cut breakdown for each.
     POT-scaled \emph{per run} (each run by its own $D_{\text{run}}/\text{MC}_{\text{run}}$,
     Table~\ref{tab:pot}); EXT (beam-off cosmic) is scaled by the (per-run summed)
     data/EXT trigger ratio (FHC $5.93$, RHC $6.16$, combined $12.09$); dirt from the
-    GENIE NuMI dirt overlay. Pred.\ $=$ Signal $+$ Bkg $+$ EXT $+$ Dirt.}
+    GENIE NuMI dirt overlay. Pred.\ $=$ Signal $+$ Bkg $+$ EXT $+$ Dirt. Eff.\ is the cumulative signal efficiency relative to the generated signal (the None stage, where all true signal is counted); Pur.\ $=$ Signal/Pred.}
   \label{tab:cutflow}
   \small
-  \begin{tabular}{lrrrrr}
+  \begin{tabular}{lrrrrrrr}
     \toprule
-    Cut & Signal & Bkg MC & EXT & Dirt & Pred. \\
+    Cut & Signal & Bkg MC & EXT & Dirt & Pred. & Eff. [\%] & Pur. [\%] \\
     \midrule
-    \multicolumn{6}{l}{\textit{FHC (Runs 1,2,4,5; $8.857\times10^{20}$~POT)}} \\
-    None             & 5\,580 & 279\,180 & 24\,410\,022 & 36\,142 & 24\,730\,924 \\
-    InFiducialVol    & 4\,632 & 62\,146 & 1\,041\,637 & 1\,890 & 1\,110\,306 \\
-    Topological      & 3\,501 & 28\,040 & 35\,184 & 204 & 66\,929 \\
-    MuonCandidate    & 3\,143 & 18\,980 & 15\,516 & 137 & 37\,776 \\
-    ContainedPion    & 1\,395 & 2\,094 & 1\,376 & 25 & 4\,890 \\
-    MuonIn3Planes    & 1\,336 & 1\,975 & 1\,145 & 17 & 4\,473 \\
-    PionIn3Planes    & 1\,239 & 1\,770 & 872 & 7.0 & 3\,888 \\
-    ShowerCut        & 1\,048 & 898 & 569 & 6.2 & 2\,521 \\
-    OpeningAngle     & 1\,040 & 813 & 190 & 2.0 & 2\,045 \\
-    \textbf{Nonprotons} & \textbf{974} & \textbf{643} & \textbf{131} & \textbf{1.3} & \textbf{1\,749} \\
+    \multicolumn{8}{l}{\textit{FHC (Runs 1,2,4,5; $8.857\times10^{20}$~POT)}} \\
+    None             & 5\,580 & 279\,180 & 24\,410\,022 & 36\,142 & 24\,730\,924 & 100.0 & 0.02 \\
+    InFiducialVol    & 4\,632 & 62\,146 & 1\,041\,637 & 1\,890 & 1\,110\,306 & 83.0 & 0.42 \\
+    Topological      & 3\,501 & 28\,040 & 35\,184 & 204 & 66\,929 & 62.7 & 5.2 \\
+    MuonCandidate    & 3\,143 & 18\,980 & 15\,516 & 137 & 37\,776 & 56.3 & 8.3 \\
+    ContainedPion    & 1\,395 & 2\,094 & 1\,376 & 25 & 4\,890 & 25.0 & 28.5 \\
+    MuonIn3Planes    & 1\,336 & 1\,975 & 1\,145 & 17 & 4\,473 & 23.9 & 29.9 \\
+    PionIn3Planes    & 1\,239 & 1\,770 & 872 & 7.0 & 3\,888 & 22.2 & 31.9 \\
+    ShowerCut        & 1\,048 & 898 & 569 & 6.2 & 2\,521 & 18.8 & 41.6 \\
+    OpeningAngle     & 1\,040 & 813 & 190 & 2.0 & 2\,045 & 18.6 & 50.9 \\
+    \textbf{Nonprotons} & \textbf{974} & \textbf{643} & \textbf{131} & \textbf{1.3} & \textbf{1\,749} & \textbf{17.5} & \textbf{55.7} \\
     \midrule
-    \multicolumn{6}{l}{\textit{RHC (Runs 1,2,3,4a,4b,4c; $1.108\times10^{21}$~POT)}} \\
-    None             & 6\,131 & 304\,347 & 25\,344\,643 & 28\,032 & 25\,683\,152 \\
-    InFiducialVol    & 5\,124 & 69\,102 & 1\,081\,520 & 1\,466 & 1\,157\,212 \\
-    Topological      & 3\,960 & 31\,629 & 36\,532 & 158 & 72\,278 \\
-    MuonCandidate    & 3\,559 & 21\,443 & 16\,110 & 106 & 41\,219 \\
-    ContainedPion    & 1\,577 & 2\,649 & 1\,429 & 19 & 5\,674 \\
-    MuonIn3Planes    & 1\,512 & 2\,500 & 1\,189 & 13 & 5\,213 \\
-    PionIn3Planes    & 1\,409 & 2\,258 & 905 & 5.5 & 4\,577 \\
-    ShowerCut        & 1\,171 & 1\,061 & 591 & 4.8 & 2\,827 \\
-    OpeningAngle     & 1\,162 & 965 & 197 & 1.5 & 2\,325 \\
-    \textbf{Nonprotons} & \textbf{1\,081} & \textbf{746} & \textbf{136} & \textbf{1.0} & \textbf{1\,964} \\
+    \multicolumn{8}{l}{\textit{RHC (Runs 1,2,3,4a,4b,4c; $1.108\times10^{21}$~POT)}} \\
+    None             & 6\,131 & 304\,347 & 25\,344\,643 & 28\,032 & 25\,683\,152 & 100.0 & 0.02 \\
+    InFiducialVol    & 5\,124 & 69\,102 & 1\,081\,520 & 1\,466 & 1\,157\,212 & 83.6 & 0.44 \\
+    Topological      & 3\,960 & 31\,629 & 36\,532 & 158 & 72\,278 & 64.6 & 5.5 \\
+    MuonCandidate    & 3\,559 & 21\,443 & 16\,110 & 106 & 41\,219 & 58.0 & 8.6 \\
+    ContainedPion    & 1\,577 & 2\,649 & 1\,429 & 19 & 5\,674 & 25.7 & 27.8 \\
+    MuonIn3Planes    & 1\,512 & 2\,500 & 1\,189 & 13 & 5\,213 & 24.7 & 29.0 \\
+    PionIn3Planes    & 1\,409 & 2\,258 & 905 & 5.5 & 4\,577 & 23.0 & 30.8 \\
+    ShowerCut        & 1\,171 & 1\,061 & 591 & 4.8 & 2\,827 & 19.1 & 41.4 \\
+    OpeningAngle     & 1\,162 & 965 & 197 & 1.5 & 2\,325 & 19.0 & 50.0 \\
+    \textbf{Nonprotons} & \textbf{1\,081} & \textbf{746} & \textbf{136} & \textbf{1.0} & \textbf{1\,964} & \textbf{17.6} & \textbf{55.0} \\
     \midrule
-    \multicolumn{6}{l}{\textit{Combined ($1.994\times10^{21}$~POT)}} \\
-    None             & 11\,710 & 583\,527 & 49\,755\,076 & 36\,142 & 50\,386\,456 \\
-    InFiducialVol    & 9\,756 & 131\,249 & 2\,123\,174 & 1\,890 & 2\,266\,069 \\
-    Topological      & 7\,461 & 59\,669 & 71\,717 & 204 & 139\,050 \\
-    MuonCandidate    & 6\,702 & 40\,423 & 31\,627 & 137 & 78\,889 \\
-    ContainedPion    & 2\,972 & 4\,743 & 2\,805 & 25 & 10\,545 \\
-    MuonIn3Planes    & 2\,847 & 4\,475 & 2\,333 & 17 & 9\,673 \\
-    PionIn3Planes    & 2\,648 & 4\,028 & 1\,777 & 7.0 & 8\,460 \\
-    ShowerCut        & 2\,218 & 1\,959 & 1\,161 & 6.2 & 5\,344 \\
-    OpeningAngle     & 2\,202 & 1\,778 & 387 & 2.0 & 4\,369 \\
-    \textbf{Nonprotons} & \textbf{2\,055} & \textbf{1\,389} & \textbf{266} & \textbf{1.3} & \textbf{3\,712} \\
+    \multicolumn{8}{l}{\textit{Combined ($1.994\times10^{21}$~POT)}} \\
+    None             & 11\,710 & 583\,527 & 49\,755\,076 & 36\,142 & 50\,386\,456 & 100.0 & 0.02 \\
+    InFiducialVol    & 9\,756 & 131\,249 & 2\,123\,174 & 1\,890 & 2\,266\,069 & 83.3 & 0.43 \\
+    Topological      & 7\,461 & 59\,669 & 71\,717 & 204 & 139\,050 & 63.7 & 5.4 \\
+    MuonCandidate    & 6\,702 & 40\,423 & 31\,627 & 137 & 78\,889 & 57.2 & 8.5 \\
+    ContainedPion    & 2\,972 & 4\,743 & 2\,805 & 25 & 10\,545 & 25.4 & 28.2 \\
+    MuonIn3Planes    & 2\,847 & 4\,475 & 2\,333 & 17 & 9\,673 & 24.3 & 29.4 \\
+    PionIn3Planes    & 2\,648 & 4\,028 & 1\,777 & 7.0 & 8\,460 & 22.6 & 31.3 \\
+    ShowerCut        & 2\,218 & 1\,959 & 1\,161 & 6.2 & 5\,344 & 18.9 & 41.5 \\
+    OpeningAngle     & 2\,202 & 1\,778 & 387 & 2.0 & 4\,369 & 18.8 & 50.4 \\
+    \textbf{Nonprotons} & \textbf{2\,055} & \textbf{1\,389} & \textbf{266} & \textbf{1.3} & \textbf{3\,712} & \textbf{17.5} & \textbf{55.4} \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -2298,51 +2298,51 @@ $33\%$ at the inclusive final cut (Nonprotons) to $48\%$ in the proton-tagged sa
     inherited inclusive selection with the proton-tagged signal definition; the final
     IdentProton stage adds the leading-proton identification. Signal/Bkg from the
     $\nu_\mu$ overlays POT-scaled per run, EXT by the data/EXT trigger ratio, dirt from
-    the GENIE NuMI dirt overlay. Pred.\ $=$ Signal $+$ Bkg $+$ EXT $+$ Dirt.}
+    the GENIE NuMI dirt overlay. Pred.\ $=$ Signal $+$ Bkg $+$ EXT $+$ Dirt. Eff.\ is the cumulative signal efficiency relative to the generated signal (the None stage, where all true signal is counted); Pur.\ $=$ Signal/Pred.}
   \label{tab:cutflow_1p}
   \small
-  \begin{tabular}{lrrrrr}
+  \begin{tabular}{lrrrrrrr}
     \toprule
-    Cut & Signal & Bkg MC & EXT & Dirt & Pred. \\
+    Cut & Signal & Bkg MC & EXT & Dirt & Pred. & Eff. [\%] & Pur. [\%] \\
     \midrule
-    \multicolumn{6}{l}{\textit{FHC (Runs 1,2,4,5; $8.857\times10^{20}$~POT)}} \\
-    None             & 3\,387 & 281\,372 & 24\,410\,022 & 36\,142 & 24\,730\,924 \\
-    InFiducialVol    & 2\,835 & 63\,944 & 1\,041\,637 & 1\,890 & 1\,110\,306 \\
-    Topological      & 2\,238 & 29\,303 & 35\,185 & 204 & 66\,929 \\
-    MuonCandidate    & 2\,031 & 20\,092 & 15\,516 & 137 & 37\,776 \\
-    ContainedPion    & 852 & 2\,637 & 1\,376 & 25 & 4\,890 \\
-    MuonIn3Planes    & 812 & 2\,499 & 1\,145 & 17 & 4\,473 \\
-    PionIn3Planes    & 754 & 2\,255 & 872 & 7.0 & 3\,888 \\
-    ShowerCut        & 632 & 1\,313 & 569 & 6.2 & 2\,521 \\
-    OpeningAngle     & 628 & 1\,226 & 190 & 2.0 & 2\,045 \\
-    Nonprotons       & 568 & 1\,049 & 131 & 1.3 & 1\,749 \\
-    \textbf{IdentProton} & \textbf{401} & \textbf{373} & \textbf{53} & \textbf{0.4} & \textbf{828} \\
+    \multicolumn{8}{l}{\textit{FHC (Runs 1,2,4,5; $8.857\times10^{20}$~POT)}} \\
+    None             & 3\,387 & 281\,372 & 24\,410\,022 & 36\,142 & 24\,730\,924 & 100.0 & 0.01 \\
+    InFiducialVol    & 2\,834 & 63\,944 & 1\,041\,637 & 1\,890 & 1\,110\,306 & 83.7 & 0.26 \\
+    Topological      & 2\,238 & 29\,303 & 35\,184 & 204 & 66\,929 & 66.1 & 3.3 \\
+    MuonCandidate    & 2\,031 & 20\,092 & 15\,516 & 137 & 37\,776 & 60.0 & 5.4 \\
+    ContainedPion    & 852 & 2\,637 & 1\,376 & 25 & 4\,890 & 25.2 & 17.4 \\
+    MuonIn3Planes    & 812 & 2\,499 & 1\,145 & 17 & 4\,473 & 24.0 & 18.2 \\
+    PionIn3Planes    & 754 & 2\,255 & 872 & 7.0 & 3\,888 & 22.3 & 19.4 \\
+    ShowerCut        & 632 & 1\,313 & 569 & 6.2 & 2\,521 & 18.7 & 25.1 \\
+    OpeningAngle     & 628 & 1\,226 & 190 & 2.0 & 2\,045 & 18.5 & 30.7 \\
+    Nonprotons       & 568 & 1\,049 & 130 & 1.3 & 1\,749 & 16.8 & 32.5 \\
+    \textbf{IdentProton} & \textbf{401} & \textbf{373} & \textbf{53} & \textbf{0.4} & \textbf{828} & \textbf{11.8} & \textbf{48.4} \\
     \midrule
-    \multicolumn{6}{l}{\textit{RHC (Runs 1,2,3,4a,4b,4c; $1.108\times10^{21}$~POT)}} \\
-    None             & 3\,638 & 306\,840 & 25\,344\,643 & 28\,032 & 25\,683\,152 \\
-    InFiducialVol    & 3\,064 & 71\,162 & 1\,081\,520 & 1\,466 & 1\,157\,212 \\
-    Topological      & 2\,455 & 33\,134 & 36\,532 & 158 & 72\,278 \\
-    MuonCandidate    & 2\,234 & 22\,769 & 16\,110 & 106 & 41\,219 \\
-    ContainedPion    & 935 & 3\,291 & 1\,429 & 19 & 5\,674 \\
-    MuonIn3Planes    & 892 & 3\,119 & 1\,189 & 13 & 5\,213 \\
-    PionIn3Planes    & 831 & 2\,835 & 905 & 5.5 & 4\,577 \\
-    ShowerCut        & 687 & 1\,544 & 591 & 4.8 & 2\,827 \\
-    OpeningAngle     & 683 & 1\,444 & 197 & 1.5 & 2\,325 \\
-    Nonprotons       & 611 & 1\,217 & 136 & 1.0 & 1\,964 \\
-    \textbf{IdentProton} & \textbf{436} & \textbf{443} & \textbf{55} & \textbf{0.3} & \textbf{934} \\
+    \multicolumn{8}{l}{\textit{RHC (Runs 1,2,3,4a,4b,4c; $1.108\times10^{21}$~POT)}} \\
+    None             & 3\,638 & 306\,840 & 25\,344\,643 & 28\,032 & 25\,683\,152 & 100.0 & 0.01 \\
+    InFiducialVol    & 3\,064 & 71\,162 & 1\,081\,520 & 1\,466 & 1\,157\,212 & 84.2 & 0.26 \\
+    Topological      & 2\,455 & 33\,134 & 36\,532 & 158 & 72\,278 & 67.5 & 3.4 \\
+    MuonCandidate    & 2\,234 & 22\,769 & 16\,110 & 106 & 41\,219 & 61.4 & 5.4 \\
+    ContainedPion    & 935 & 3\,291 & 1\,429 & 19 & 5\,674 & 25.7 & 16.5 \\
+    MuonIn3Planes    & 892 & 3\,119 & 1\,189 & 13 & 5\,213 & 24.5 & 17.1 \\
+    PionIn3Planes    & 831 & 2\,835 & 905 & 5.5 & 4\,577 & 22.9 & 18.2 \\
+    ShowerCut        & 687 & 1\,544 & 591 & 4.8 & 2\,827 & 18.9 & 24.3 \\
+    OpeningAngle     & 683 & 1\,444 & 197 & 1.5 & 2\,325 & 18.8 & 29.4 \\
+    Nonprotons       & 611 & 1\,217 & 136 & 1.0 & 1\,964 & 16.8 & 31.1 \\
+    \textbf{IdentProton} & \textbf{436} & \textbf{443} & \textbf{55} & \textbf{0.3} & \textbf{934} & \textbf{12.0} & \textbf{46.6} \\
     \midrule
-    \multicolumn{6}{l}{\textit{Combined ($1.994\times10^{21}$~POT)}} \\
-    None             & 7\,025 & 588\,212 & 49\,755\,076 & 36\,142 & 50\,386\,456 \\
-    InFiducialVol    & 5\,898 & 135\,106 & 2\,123\,174 & 1\,890 & 2\,266\,069 \\
-    Topological      & 4\,693 & 62\,436 & 71\,717 & 204 & 139\,050 \\
-    MuonCandidate    & 4\,265 & 42\,860 & 31\,627 & 137 & 78\,889 \\
-    ContainedPion    & 1\,787 & 5\,929 & 2\,805 & 25 & 10\,545 \\
-    MuonIn3Planes    & 1\,704 & 5\,618 & 2\,333 & 17 & 9\,673 \\
-    PionIn3Planes    & 1\,585 & 5\,091 & 1\,777 & 7.0 & 8\,460 \\
-    ShowerCut        & 1\,320 & 2\,857 & 1\,161 & 6.2 & 5\,344 \\
-    OpeningAngle     & 1\,311 & 2\,670 & 387 & 2.0 & 4\,369 \\
-    Nonprotons       & 1\,179 & 2\,266 & 266 & 1.3 & 3\,712 \\
-    \textbf{IdentProton} & \textbf{837} & \textbf{816} & \textbf{109} & \textbf{0.4} & \textbf{1\,762} \\
+    \multicolumn{8}{l}{\textit{Combined ($1.994\times10^{21}$~POT)}} \\
+    None             & 7\,025 & 588\,212 & 49\,755\,076 & 36\,142 & 50\,386\,456 & 100.0 & 0.01 \\
+    InFiducialVol    & 5\,898 & 135\,106 & 2\,123\,174 & 1\,890 & 2\,266\,069 & 84.0 & 0.26 \\
+    Topological      & 4\,693 & 62\,436 & 71\,717 & 204 & 139\,050 & 66.8 & 3.4 \\
+    MuonCandidate    & 4\,265 & 42\,860 & 31\,627 & 137 & 78\,889 & 60.7 & 5.4 \\
+    ContainedPion    & 1\,787 & 5\,928 & 2\,805 & 25 & 10\,545 & 25.4 & 16.9 \\
+    MuonIn3Planes    & 1\,704 & 5\,618 & 2\,333 & 17 & 9\,672 & 24.3 & 17.6 \\
+    PionIn3Planes    & 1\,585 & 5\,091 & 1\,777 & 7.0 & 8\,460 & 22.6 & 18.7 \\
+    ShowerCut        & 1\,320 & 2\,857 & 1\,161 & 6.2 & 5\,344 & 18.8 & 24.7 \\
+    OpeningAngle     & 1\,310 & 2\,670 & 387 & 2.0 & 4\,369 & 18.7 & 30.0 \\
+    Nonprotons       & 1\,179 & 2\,266 & 266 & 1.3 & 3\,712 & 16.8 & 31.8 \\
+    \textbf{IdentProton} & \textbf{837} & \textbf{816} & \textbf{109} & \textbf{0.4} & \textbf{1\,762} & \textbf{11.9} & \textbf{47.5} \\
     \bottomrule
   \end{tabular}
 \end{table}
