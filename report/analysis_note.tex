@@ -2279,6 +2279,61 @@ the proton-hypothesis range-based kinetic energy. Given the reduced statistics o
 proton-tagged sample, each observable is measured in four bins, set from the true-signal
 distributions (Table~\ref{tab:wtki_binning}).
 
+\subsubsection*{Reconstruction from input quantities}
+\label{sec:wtki_reco}
+All six observables are built from the three candidate tracks (muon, charged pion,
+proton) using only reconstructed quantities stored in the input ntuples: the track
+direction cosines $\hat n=(\texttt{track\_dirx},\texttt{track\_diry},\texttt{track\_dirz})$,
+the muon-hypothesis range and multiple-scattering momenta (\texttt{track\_range\_mom\_mu},
+\texttt{track\_mcs\_mom\_mu}) and the proton-hypothesis calorimetric kinetic energy
+(\texttt{track\_kinetic\_energy\_p}).
+
+\emph{Candidate three-momenta.} The muon momentum magnitude is range-based when the muon
+track ends inside the fiducial volume, $p_\mu=\texttt{track\_range\_mom\_mu}[\mu]$, and
+multiple-Coulomb-scattering based otherwise, $p_\mu=\texttt{track\_mcs\_mom\_mu}[\mu]$.
+The charged pion, being minimum-ionising, is assigned the muon-hypothesis range momentum
+$p_\pi=\texttt{track\_range\_mom\_mu}[\pi]$. The proton momentum follows from its
+calorimetric kinetic energy under the proton hypothesis,
+$p_p=\sqrt{T_p^2+2m_pT_p}$ with $T_p=\texttt{track\_kinetic\_energy\_p}[p]$. Each
+three-momentum is $\vec p_i=p_i\,\hat n_i$, and the energies are
+$E_\mu=\sqrt{p_\mu^2+m_\mu^2}$, $E_\pi=\sqrt{p_\pi^2+m_\pi^2}$, $E_p=T_p+m_p$
+(masses $m_\mu=105.7$, $m_\pi=139.6$, $m_p=938.3$~MeV).
+
+\emph{Directly measured mass $W_{\pi p}$.} The invariant mass of the pion--proton
+four-vector sum, using no neutrino-direction assumption:
+\[
+  W_{\pi p}=\sqrt{(E_\pi+E_p)^2-|\vec p_\pi+\vec p_p|^2}.
+\]
+
+\emph{Transverse kinematic imbalance.} The TKI observables treat the muon against the
+visible hadronic system $\vec p_\mathrm{had}=\vec p_\pi+\vec p_p$,
+$E_\mathrm{had}=E_\pi+E_p$. With the components transverse to the beam ($\hat z$) written
+$\vec p_T^{\,\mu}$ and $\vec p_T^{\,\mathrm{had}}$,
+\[
+  \delta p_T=|\vec p_T^{\,\mu}+\vec p_T^{\,\mathrm{had}}|,\quad
+  \delta\alpha_T=\arccos\frac{-\vec p_T^{\,\mu}\!\cdot(\vec p_T^{\,\mu}+\vec p_T^{\,\mathrm{had}})}{|\vec p_T^{\,\mu}|\,\delta p_T},\quad
+  \delta\phi_T=\arccos\frac{-\vec p_T^{\,\mu}\!\cdot\vec p_T^{\,\mathrm{had}}}{|\vec p_T^{\,\mu}|\,|\vec p_T^{\,\mathrm{had}}|},
+\]
+both angles in degrees folded onto $[0,180]$. For a stationary nucleon with no
+final-state interactions $\delta p_T\to0$; Fermi motion broadens it and FSI drive
+$\delta\alpha_T\to180^\circ$.
+
+\emph{Calorimetric mass $W_\mathrm{had}$ and struck-nucleon momentum $p_n$.} The
+calorimetric available energy is $E_\mathrm{cal}=E_\mu+(E_\mathrm{had}-m_p)+E_b$ with the
+argon removal energy $E_b=24.78$~MeV, giving the momentum transfer
+$Q^2=-\big[(0,0,E_\mathrm{cal},E_\mathrm{cal})-p^\mu\big]^2$ and
+\[
+  W_\mathrm{had}=\sqrt{m_p^2+2m_p(E_\mathrm{cal}-E_\mu)-Q^2}
+\]
+(returned as $0$ where reconstruction fluctuations make the argument negative). The
+inferred initial-state nucleon momentum combines the transverse imbalance with a
+longitudinal component $p_L$ from energy--momentum balance,
+$p_n=\sqrt{\delta p_T^2+p_L^2}$. The transverse-imbalance and calorimetric quantities are
+evaluated with the framework STV tool (\texttt{STVTools::CalculateSTVs}, option~1); it was
+formulated for a single-proton hadronic system and is applied here to the summed $(\pi p)$
+system with the proton rest mass, an approximation adequate for the leading-order
+kinematics.
+
 \begin{table}[H]
   \centering
   \caption{Binning of the proton-tagged observables (four bins each), chosen from the
