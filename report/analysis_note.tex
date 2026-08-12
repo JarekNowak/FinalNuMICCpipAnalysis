@@ -2474,13 +2474,20 @@ The RHC and combined measurements are in production and will be added here.
   \end{tabular}
 \end{table}
 
-Figure~\ref{fig:dsigma_ccpi1p_fhc} shows the six FHC differential cross sections. The
-unfolded fake data (points) track the $A_C$-smeared truth (dashed) within the enlarged
-unfolding uncertainties and sit systematically above the MicroBooNE tune (blue) by the
-$A_C$ normalisation factor. External generator predictions (GENIE, GiBUU, NEUT, NuWro)
-are not yet available for these observables --- they require processing generator-level
-events through the proton-tagged selection and TKI construction --- and will be overlaid
-once produced.
+Figure~\ref{fig:dsigma_ccpi1p_fhc} shows the six FHC differential cross sections,
+overlaid with the GENIE and GiBUU predictions for the same proton-tagged phase space.
+The generator predictions are built at truth level from the generator-level final state
+(GENIE gst events, GiBUU \texttt{FinalEvents}) by applying the inclusive signal plus a
+leading true proton above $0.3$~GeV/$c$ and evaluating the six observables with the same
+formulas as the selection (\S\ref{sec:wtki_reco}), then combining the $\nu_\mu$ and
+$\bar\nu_\mu$ samples over the FHC flux to a per-argon cross section. The two available
+generators bracket the data: GiBUU predicts a larger integrated proton-tagged cross
+section ($0.74$) than GENIE ($0.50\times10^{-38}$~cm$^2$/Ar), with the data in between,
+and they differ most in the low-$\delta p_T$ / high-$p_n$ region sensitive to the proton
+kinematics and final-state interactions. NuWro and NEUT are not overlaid: NuWro requires
+reprocessing its event output inside its own container, and NEUT provides only tabulated
+inclusive cross sections with no event-level kinematics. As throughout, the unfolded fake
+data sit above the $A_C$-smeared truth by the Wiener-SVD normalisation factor.
 
 \begin{figure}[H]
   \centering
@@ -2489,10 +2496,11 @@ once produced.
     the $\pi p$ invariant mass $W_{\pi p}$, the calorimetric hadronic mass
     $W_\mathrm{had}$, and the four transverse-kinematic-imbalance observables
     $\delta p_T$, $\delta\alpha_T$, $\delta\phi_T$ and $p_n$. Unfolded fake data
-    (black points) are compared to the $A_C$-smeared fake-data truth (grey dashed) and
-    the MicroBooNE tune (blue). $W_{\pi p}$ falls from the $\Delta(1232)$ threshold
-    region; $\delta\alpha_T$ rises toward $180^\circ$, the signature of final-state
-    interactions.}
+    (black points) are compared to the $A_C$-smeared fake-data truth (grey dashed), the
+    MicroBooNE tune (black), and the GENIE (blue) and GiBUU (green dashed) predictions
+    built for the same proton-tagged phase space. $W_{\pi p}$ falls from the
+    $\Delta(1232)$ threshold region; $\delta\alpha_T$ rises toward $180^\circ$, the
+    signature of final-state interactions.}
   \label{fig:dsigma_ccpi1p_fhc}
 \end{figure}
 
