@@ -2266,6 +2266,87 @@ selection efficiency of $11.5\%$ and a purity of $52\%$ (versus $17.5\%$ and $\s
 for the inclusive selection); the proton tag trades signal statistics for a fully
 reconstructed hadronic final state.
 
+\subsection{Selection performance and cut-flow}
+\label{sec:wtki_cutflow}
+The full-exposure cut-flow of the proton-tagged subsample is the inherited
+$\mathrm{CC}\,1\mu1\pi Xp$ sequence followed by the leading-proton identification
+(``IdentProton''), which defines the subsample. Table~\ref{tab:cutflow_1p} gives the
+per-category, per-cut breakdown for the three beam configurations and
+Figure~\ref{fig:cutflow_1p} the corresponding stacks; both use the same per-run POT
+scaling as the inclusive cut-flow (Table~\ref{tab:cutflow}), and ``signal'' here is the
+proton-tagged signal (inclusive signal plus a true proton above $0.3$~GeV/$c$). The
+proton-identification cut is the key discriminator: at FHC it rejects $\sim\!64\%$ of the
+neutrino background while retaining $\sim\!71\%$ of the signal, lifting the purity from
+$33\%$ at the inclusive final cut (Nonprotons) to $48\%$ in the proton-tagged sample.
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{cutflow_yields_1p_fhc}\caption{FHC.}\end{subfigure}\hfill
+  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{cutflow_yields_1p_rhc}\caption{RHC.}\end{subfigure}\hfill
+  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{cutflow_yields_1p_comb}\caption{Combined.}\end{subfigure}
+  \caption{Proton-tagged (\texttt{CC1mu1pi1p}) cut-flow yields at full exposure (log
+    scale; MC-prediction stack, Okabe-Ito: signal blue, background orange, EXT grey,
+    dirt green). The last stage, IdentProton, is the leading-proton identification that
+    defines the subsample.}
+  \label{fig:cutflow_1p}
+\end{figure}
+
+\begin{table}[H]
+  \centering
+  \caption{Proton-tagged (\texttt{CC1mu1pi1p}) cut-flow yields at full exposure for
+    FHC, RHC and combined (MC prediction; data blind). Stages None--Nonprotons are the
+    inherited inclusive selection with the proton-tagged signal definition; the final
+    IdentProton stage adds the leading-proton identification. Signal/Bkg from the
+    $\nu_\mu$ overlays POT-scaled per run, EXT by the data/EXT trigger ratio, dirt from
+    the GENIE NuMI dirt overlay. Pred.\ $=$ Signal $+$ Bkg $+$ EXT $+$ Dirt.}
+  \label{tab:cutflow_1p}
+  \small
+  \begin{tabular}{lrrrrr}
+    \toprule
+    Cut & Signal & Bkg MC & EXT & Dirt & Pred. \\
+    \midrule
+    \multicolumn{6}{l}{\textit{FHC (Runs 1,2,4,5; $8.857\times10^{20}$~POT)}} \\
+    None             & 3\,387 & 281\,372 & 24\,410\,022 & 36\,142 & 24\,730\,924 \\
+    InFiducialVol    & 2\,835 & 63\,944 & 1\,041\,637 & 1\,890 & 1\,110\,306 \\
+    Topological      & 2\,238 & 29\,303 & 35\,185 & 204 & 66\,929 \\
+    MuonCandidate    & 2\,031 & 20\,092 & 15\,516 & 137 & 37\,776 \\
+    ContainedPion    & 852 & 2\,637 & 1\,376 & 25 & 4\,890 \\
+    MuonIn3Planes    & 812 & 2\,499 & 1\,145 & 17 & 4\,473 \\
+    PionIn3Planes    & 754 & 2\,255 & 872 & 7.0 & 3\,888 \\
+    ShowerCut        & 632 & 1\,313 & 569 & 6.2 & 2\,521 \\
+    OpeningAngle     & 628 & 1\,226 & 190 & 2.0 & 2\,045 \\
+    Nonprotons       & 568 & 1\,049 & 131 & 1.3 & 1\,749 \\
+    \textbf{IdentProton} & \textbf{401} & \textbf{373} & \textbf{53} & \textbf{0.4} & \textbf{828} \\
+    \midrule
+    \multicolumn{6}{l}{\textit{RHC (Runs 1,2,3,4a,4b,4c; $1.108\times10^{21}$~POT)}} \\
+    None             & 3\,638 & 306\,840 & 25\,344\,643 & 28\,032 & 25\,683\,152 \\
+    InFiducialVol    & 3\,064 & 71\,162 & 1\,081\,520 & 1\,466 & 1\,157\,212 \\
+    Topological      & 2\,455 & 33\,134 & 36\,532 & 158 & 72\,278 \\
+    MuonCandidate    & 2\,234 & 22\,769 & 16\,110 & 106 & 41\,219 \\
+    ContainedPion    & 935 & 3\,291 & 1\,429 & 19 & 5\,674 \\
+    MuonIn3Planes    & 892 & 3\,119 & 1\,189 & 13 & 5\,213 \\
+    PionIn3Planes    & 831 & 2\,835 & 905 & 5.5 & 4\,577 \\
+    ShowerCut        & 687 & 1\,544 & 591 & 4.8 & 2\,827 \\
+    OpeningAngle     & 683 & 1\,444 & 197 & 1.5 & 2\,325 \\
+    Nonprotons       & 611 & 1\,217 & 136 & 1.0 & 1\,964 \\
+    \textbf{IdentProton} & \textbf{436} & \textbf{443} & \textbf{55} & \textbf{0.3} & \textbf{934} \\
+    \midrule
+    \multicolumn{6}{l}{\textit{Combined ($1.994\times10^{21}$~POT)}} \\
+    None             & 7\,025 & 588\,212 & 49\,755\,076 & 36\,142 & 50\,386\,456 \\
+    InFiducialVol    & 5\,898 & 135\,106 & 2\,123\,174 & 1\,890 & 2\,266\,069 \\
+    Topological      & 4\,693 & 62\,436 & 71\,717 & 204 & 139\,050 \\
+    MuonCandidate    & 4\,265 & 42\,860 & 31\,627 & 137 & 78\,889 \\
+    ContainedPion    & 1\,787 & 5\,929 & 2\,805 & 25 & 10\,545 \\
+    MuonIn3Planes    & 1\,704 & 5\,618 & 2\,333 & 17 & 9\,673 \\
+    PionIn3Planes    & 1\,585 & 5\,091 & 1\,777 & 7.0 & 8\,460 \\
+    ShowerCut        & 1\,320 & 2\,857 & 1\,161 & 6.2 & 5\,344 \\
+    OpeningAngle     & 1\,311 & 2\,670 & 387 & 2.0 & 4\,369 \\
+    Nonprotons       & 1\,179 & 2\,266 & 266 & 1.3 & 3\,712 \\
+    \textbf{IdentProton} & \textbf{837} & \textbf{816} & \textbf{109} & \textbf{0.4} & \textbf{1\,762} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
 Six differential observables are measured. The two hadronic-mass variables are the
 \emph{directly measured} $\pi p$ invariant mass,
 $W_{\pi p}=\big[(E_\pi+E_p)^2-(\vec p_\pi+\vec p_p)^2\big]^{1/2}$, which makes no
