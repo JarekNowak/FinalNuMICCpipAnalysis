@@ -109,6 +109,11 @@ int selected_signal_counter = 0;
   int CandidatePionIndex;
   int truemuonindex;
   int pion_number;
+  // diagnostic pion counters: same as pion_number but dropping the containment
+  // requirement / the LLR>0.1 cut, to separate their effect on the multi-pion eff.
+  int pion_number_noContain_ = 0;
+  int pion_number_noLLR_ = 0;
+  int pion_number_looseTS_ = 0;
   int shower_index;
   int nPrimaryShowers;
   int nPrimaryTracks;

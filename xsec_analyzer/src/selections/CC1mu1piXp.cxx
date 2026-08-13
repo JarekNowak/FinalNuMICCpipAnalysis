@@ -1130,7 +1130,11 @@ for (size_t i_pfp_2 = 0; i_pfp_2 < Event->track_length_->size(); i_pfp_2++) {
          PionTrackEndX, PionTrackEndY, PionTrackEndZ );
 
 
-	 if((Event->pfp_generation_->at(i_pfp_2) ==2)&&(Event->pfp_track_score_->at(i_pfp_2) >= 0.5)
+	 // NOTE: the track/shower pre-selection is loosened here to >=0.3 so the effect
+	 // of the nominal >=0.5 cut can be measured; pion_number re-imposes >=0.5 below
+	 // (via ts05) so the selection is unchanged, and pion_number_looseTS counts the
+	 // >=0.3 variant.
+	 if((Event->pfp_generation_->at(i_pfp_2) ==2)&&(Event->pfp_track_score_->at(i_pfp_2) >= 0.3)
               && (Event->track_llr_pid_score_->at(i_pfp_2) > -1) && (Event->track_llr_pid_score_->at(i_pfp_2) < 2)
               && (Event->trk_bragg_p_v->at(i_pfp_2)  > 0) && (Event->trk_bragg_p_v->at(i_pfp_2)  < 500)
                && (Event->trk_bragg_mu_v->at(i_pfp_2) > 0) && (Event->trk_bragg_mu_v->at(i_pfp_2) < 500)
@@ -1161,18 +1165,25 @@ for (size_t i_pfp_2 = 0; i_pfp_2 < Event->track_length_->size(); i_pfp_2++) {
               trk_sce_end_z_v_tmva_pi = Event->track_endz_->at(i_pfp_2);
               tmvaOutput_pi= tmvaReader_pi->EvaluateMVA("BDT");
 
-	      if((!CandidatePionTrackEndContainment_1)) continue;
-
 	// Proton rejection on the pion candidate (matches custom selection):
 	// require trk_bragg_pion >= 0.08. Fail-open (1.0) if the branch is absent.
 	double bragg_pi = 1.0;
 	if ( i_pfp_2 < Event->trk_bragg_pion_v->size() )
 	  bragg_pi = Event->trk_bragg_pion_v->at(i_pfp_2);
 
-	if((Event->track_llr_pid_score_->at(i_pfp_2) > 0.1) && (nu_to_track_dist_ib.Mag() <= 4) && ( Event->track_length_->at(i_pfp_2) > 20)
-          && (tmvaOutput    > -0.1)
-          && (tmvaOutput_pi > -0.1)
-          && (bragg_pi >= 0.08)){
+	// Decompose the pion identification so the multi-pion efficiency loss can be
+	// attributed to containment vs the LLR PID. pion_number keeps its original
+	// meaning (track-end contained AND full PID: LLR>0.1 + TMVA + Bragg + length +
+	// vertex distance); the two extra counters drop the containment or the LLR.
+	bool ts05 = Event->pfp_track_score_->at(i_pfp_2) >= 0.5;  // nominal track-score cut
+	bool pi_contained = CandidatePionTrackEndContainment_1;
+	bool pi_pid_noLLR = (nu_to_track_dist_ib.Mag() <= 4) && ( Event->track_length_->at(i_pfp_2) > 20)
+	  && (tmvaOutput > -0.1) && (tmvaOutput_pi > -0.1) && (bragg_pi >= 0.08);
+	bool pi_pid_full  = pi_pid_noLLR && (Event->track_llr_pid_score_->at(i_pfp_2) > 0.1);
+	if ( pi_pid_full && ts05 ) pion_number_noContain_++;              // full PID, containment ignored
+	if ( pi_contained && pi_pid_noLLR && ts05 ) pion_number_noLLR_++; // contained, LLR dropped
+	if ( pi_contained && pi_pid_full ) pion_number_looseTS_++;        // track_score >= 0.3 (loosened)
+	if ( pi_contained && pi_pid_full && ts05 ){
                      // && (tmvaOutput    > -0.1)
   
 
@@ -2194,6 +2205,10 @@ void CC1mu1piXp::define_output_branches() {
   set_branch( &sb_multipi_, "sb_multipi" );
   set_branch( &sb_pi0_,     "sb_pi0" );
   set_branch( &sb_cosmic_,  "sb_cosmic" );
+  set_branch( &pion_number,             "pion_number_reco" );
+  set_branch( &pion_number_noContain_,  "pion_number_noContain" );
+  set_branch( &pion_number_noLLR_,      "pion_number_noLLR" );
+  set_branch( &pion_number_looseTS_,   "pion_number_looseTS" );
   set_branch( &candidate_muon_mom_mcs, "candidate_muon_mom_mcs");
   set_branch( &candidate_muon_mom_true, "candidate_muon_mom_true");
   set_branch( &candidate_muon_mom_range, "candidate_muon_mom_range");
@@ -2251,6 +2266,9 @@ void CC1mu1piXp::reset() {
   //CandidateMuonIndex = BOGUS_INDEX;
   //CandidatePionIndex = BOGUS_INDEX;
   pion_number = 0;
+  pion_number_noContain_ = 0;
+  pion_number_noLLR_ = 0;
+  pion_number_looseTS_ = 0;
   sel_pion_contained = false;
   muon_in_gap = false;
   pion_in_gap = false;
