@@ -755,8 +755,10 @@ bool CC1mu1piXp::define_signal( AnalysisEvent* Event ) {
     else if ( std::abs(pdg) == PI_PLUS && ParticleMomentum > 0.0 ) { //changed from 0.07 to 0.1
       sig_mc_n_threshold_pionpm++;
       TrueCandidatePionP.SetXYZ(Event->mc_nu_daughter_px_->at(p),Event->mc_nu_daughter_py_->at(p),Event->mc_nu_daughter_pz_->at(p));
-
-
+      // track the hardest / softest true charged-pion momentum (efficiency-threshold study)
+      if ( ParticleMomentum > mc_pionpm_lead_mom_ ) mc_pionpm_lead_mom_ = ParticleMomentum;
+      if ( mc_pionpm_min_mom_ < 0.0 || ParticleMomentum < mc_pionpm_min_mom_ )
+        mc_pionpm_min_mom_ = ParticleMomentum;
     }
 
     else if ( (std::abs(pdg) == 321) || (pdg == 310) || (pdg == 130) || (pdg == 311)){
@@ -2230,6 +2232,8 @@ void CC1mu1piXp::define_output_branches() {
   set_branch( &pion_number_noContain_,  "pion_number_noContain" );
   set_branch( &pion_number_noLLR_,      "pion_number_noLLR" );
   set_branch( &pion_number_looseTS_,   "pion_number_looseTS" );
+  set_branch( &mc_pionpm_lead_mom_,    "mc_pionpm_lead_mom" );
+  set_branch( &mc_pionpm_min_mom_,     "mc_pionpm_min_mom" );
   set_branch( &candidate_muon_mom_mcs, "candidate_muon_mom_mcs");
   set_branch( &candidate_muon_mom_true, "candidate_muon_mom_true");
   set_branch( &candidate_muon_mom_range, "candidate_muon_mom_range");
@@ -2292,6 +2296,8 @@ void CC1mu1piXp::reset() {
   pion_number_looseTS_ = 0;
   n_contained_pion_ = 0;
   n_uncontained_pion_ = 0;
+  mc_pionpm_lead_mom_ = -1.0;
+  mc_pionpm_min_mom_  = -1.0;
   sel_pion_contained = false;
   muon_in_gap = false;
   pion_in_gap = false;

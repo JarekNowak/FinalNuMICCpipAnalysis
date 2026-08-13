@@ -141,6 +141,11 @@ int selected_signal_counter = 0;
   // per-event tallies feeding pion_number under the max_uncontained_pions() budget
   int n_contained_pion_ = 0;
   int n_uncontained_pion_ = 0;
+  // Truth diagnostics for the multi-pion efficiency-vs-threshold study: the leading
+  // (hardest) and minimum (softest) true charged-pion momenta in the event [GeV/c].
+  // For a true N-pion signal event the softest pion sets the reconstructability floor.
+  double mc_pionpm_lead_mom_ = -1.0;
+  double mc_pionpm_min_mom_  = -1.0;
   int shower_index;
   int nPrimaryShowers;
   int nPrimaryTracks;
