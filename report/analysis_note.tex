@@ -2049,7 +2049,14 @@ $\theta_{\mu\pi}$& $15.9\%$ & $26.0\%$ & $1.64\times$ & $0.43/5$ ($p=0.99$) \\
   additional-smearing $A_C$ is not norm-preserving; the D'Agostini cross-check
   (Sec.~\ref{sec:crosschecks}) recovers a flatter, $\sim$20\% higher total, confirming
   the spread is a smearing effect. RHC generally sits at or below FHC because the RHC
-  beam is $\bar\nu_\mu$-dominant (lower flux-averaged cross section).}
+  beam is $\bar\nu_\mu$-dominant (lower flux-averaged cross section).
+  \textbf{Caveat (under revision):} the RHC and Combined columns are affected by a
+  per-run POT normalization bug that over-counted the multi-file RHC runs (Run~3 split
+  across 5 ntuple files, Run~4 across 3), inflating the simulated background and biasing
+  the extracted RHC/Combined cross sections low. The bug has been fixed (per-(run,sample)
+  MC POT normalization); these columns are being recomputed. The FHC column is unaffected
+  (one MC file per run). Consequently the ``RHC below FHC'' statement above is provisional
+  until the corrected numbers are available.}
 \label{tab:sigint_all}
 \begin{tabular}{lccc}
 \toprule
@@ -2517,96 +2524,6 @@ factor.
     signature of final-state interactions.}
   \label{fig:dsigma_ccpi1p_fhc}
 \end{figure}
-
-% =============================================================================
-
-\subsection{Multi-pion subselections (\texttt{CC1mu2pi}, \texttt{CC1mu3pi})}
-\label{sec:multipion}
-
-Two further subselections extend the analysis to higher charged-pion multiplicities:
-$\nu_\mu\,\mathrm{CC}$ with exactly two (\texttt{CC1mu2pi}) or three (\texttt{CC1mu3pi})
-charged pions and any number of protons. Both inherit the full inclusive selection,
-signal definition and observables from \texttt{CC1mu1piXp}; the charged-pion multiplicity
-required by the signal definition and the reco topology is promoted to a virtual so the
-derived value ($N=2,3$) takes effect inside the inherited methods.
-
-Naively re-using the single-pion identification gives a prohibitively low efficiency
-($4.2\%$ for $2\pi$, $0.8\%$ for $3\pi$), because that identification was tuned for the
-$1\pi$ topology: a tight $4$~cm vertex window and TMVA/Bragg/length cuts optimised to
-reject protons around a \emph{single} pion. Following the dedicated MicroBooNE multi-pion
-study,\footnote{T.\ Mahmud, MSc by Research thesis (\texttt{CC3}$\pi^+$ selection),
-Lancaster University; multi-pion analyzer implementation by L.\ Gu.} the multi-pion
-selections loosen the pion identification through
-five overridable parameters (the inclusive defaults are unchanged, so
-Section~\ref{sec:selection} is byte-for-byte identical): the vertex-to-track window is
-opened from $4$ to $9.5$~cm; the pion candidate requires only the log-likelihood-ratio
-PID ($>0.1$) on top of the common track-score/generation preselection, dropping the
-$1\pi$ TMVA/Bragg/length cuts; up to one pion per event is allowed to be uncontained
-(the ``maximum uncontainment $=1$'' tolerance); and the two $1\pi$-topology cuts --- the
-$\mu$--$\pi$ opening angle (a single-pair cosmic-rejection cut, meaningless with several
-pions) and the shower veto (the multi-pion signal is inclusive of extra electromagnetic
-activity) --- are not applied. This raises the efficiency to $15.5\%$ ($2\pi$) and
-$6.1\%$ ($3\pi$), a factor of $\sim\!4$ and $\sim\!8$ respectively; the number of selected
-signal events on the Run-1 FHC $\nu_\mu$ overlay grows from $\sim\!110$ to $580$ ($2\pi$)
-and from $\sim\!1$ to $40$ ($3\pi$), the latter turning $3\pi$ from a non-measurement into
-a viable flux-averaged total cross section. A per-pion true-momentum threshold of
-$0.10\GeVc$ (the pion tracking turn-on) is applied to all $N$ pions in the signal
-definition; the dedicated multi-pion note documents the threshold study.
-
-Table~\ref{tab:cutflow_multipi} gives the cut-flow. The dominant loss is at the
-$N$-pion identification stage (MuonCandidate$\rightarrow$ContainedPions: $61\%\!\to\!21\%$
-for $2\pi$, $60\%\!\to\!8\%$ for $3\pi$): reconstructing $N$ pion-like tracks is the
-efficiency ceiling, not the downstream topology or quality cuts, which are gentle. The
-selections retain the inherited muon-quality, wire-gap, track-multiplicity and
-software-trigger requirements that the leaner thesis cut list omits, so they sit below
-the thesis efficiencies ($37\%$, $31\%$) at correspondingly higher intrinsic purity. Note
-that this cut-flow is the $\nu_\mu$ overlay only (Run-1 FHC): beam-off cosmics and dirt
-are not included, so the quoted purity is an MC-intrinsic upper bound and will fall once
-the EXT sample --- the dominant background at these multiplicities --- is folded in.
-
-\begin{table}[H]
-  \centering
-  \caption{Multi-pion cut-flow yields (Run-1 FHC $\nu_\mu$ overlay, POT-weighted; beam-off
-    and dirt not included). Stages follow the inherited inclusive selection with the
-    multi-pion pion identification (Section~\ref{sec:multipion}); the shower veto and
-    opening-angle cut are not applied. ``Total'' is signal $+$ MC background; Eff.\ is the
-    cumulative signal efficiency relative to the generated signal (None stage); Pur.\ $=$
-    Signal/Total (MC-intrinsic --- an upper bound; the real-sample purity is lower once
-    EXT cosmics are included).}
-  \label{tab:cutflow_multipi}
-  \small
-  \begin{tabular}{lrrrrr}
-    \toprule
-    Cut & Total & Signal & Bkg MC & Eff. [\%] & Pur. [\%] \\
-    \midrule
-    \multicolumn{6}{l}{\textit{\texttt{CC1mu2pi} --- exactly 2 charged pions}} \\
-    None            & 759\,496 & 3\,746 & 755\,750 & 100.0 & 0.5 \\
-    InFiducialVol   & 177\,783 & 3\,145 & 174\,639 & 83.9 & 1.8 \\
-    Topological     & 83\,662 & 2\,565 & 81\,097 & 68.5 & 3.1 \\
-    MuonCandidate   & 58\,791 & 2\,273 & 56\,518 & 60.7 & 3.9 \\
-    ContainedPions  & 3\,372 & 781 & 2\,591 & 20.9 & 23.2 \\
-    MuonIn3Planes   & 3\,181 & 737 & 2\,444 & 19.7 & 23.2 \\
-    PionIn3Planes   & 2\,786 & 652 & 2\,134 & 17.4 & 23.4 \\
-    \textbf{Final}  & \textbf{2\,500} & \textbf{579} & \textbf{1\,921} & \textbf{15.5} & \textbf{23.2} \\
-    \midrule
-    \multicolumn{6}{l}{\textit{\texttt{CC1mu3pi} --- exactly 3 charged pions}} \\
-    None            & 759\,496 & 656 & 758\,840 & 100.0 & 0.09 \\
-    InFiducialVol   & 177\,783 & 558 & 177\,225 & 85.0 & 0.3 \\
-    Topological     & 83\,662 & 457 & 83\,205 & 69.6 & 0.5 \\
-    MuonCandidate   & 58\,791 & 393 & 58\,398 & 59.9 & 0.7 \\
-    ContainedPions  & 447 & 53 & 394 & 8.1 & 11.8 \\
-    MuonIn3Planes   & 415 & 50 & 365 & 7.6 & 12.0 \\
-    PionIn3Planes   & 384 & 47 & 337 & 7.2 & 12.2 \\
-    \textbf{Final}  & \textbf{344} & \textbf{40} & \textbf{304} & \textbf{6.1} & \textbf{11.6} \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-Feasibility: with $\sim\!580$ selected signal events at full exposure the $2\pi$ channel
-can support a flux-averaged total cross section and possibly a coarse ($2$--$3$ bin)
-differential; the $3\pi$ channel ($\sim\!40$ events) is a total-cross-section
-measurement. A dedicated background treatment (EXT cosmics dominate) and the extension to
-the remaining runs and RHC are left as follow-up.
 
 % =============================================================================
 

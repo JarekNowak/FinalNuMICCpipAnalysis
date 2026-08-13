@@ -163,6 +163,20 @@ std::cout<<"We do get in here but something goes wrong "<<std::endl;
 
 
 
+  // Setting XSEC_FORCE_REBUILD forces the POT-summed universes to be recomputed
+  // from the per-file histograms rather than loaded from the cached "total_..."
+  // subfolder. Needed after a change to the POT normalization (build_universes),
+  // since otherwise a stale cache built by the old code would be silently reused.
+  bool force_rebuild = ( std::getenv("XSEC_FORCE_REBUILD") != nullptr );
+  if ( total_subdir && force_rebuild ) {
+    std::cout << "XSEC_FORCE_REBUILD set: discarding cached universes \""
+      << total_subfolder_name << "\" and rebuilding.\n";
+    // Delete the stale cache key (in memory; persisted only if the file is
+    // writable and later written). The rebuild below uses the correct scaling.
+    root_tdir->Delete( ( total_subfolder_name + ";*" ).c_str() );
+    total_subdir = nullptr;
+  }
+
   if ( !total_subdir ) {
 
     // We couldn't find the pre-computed POT-summed universe histograms,
@@ -451,6 +465,32 @@ void SystematicsCalculator::build_universes( TDirectoryFile& root_tdir ) {
     total_bnb_data_pot_ += pair.second;
 
 	//std::cout<<"sys test 11.5 "<<std::endl;
+  }
+
+  // Per-(run, sample type) simulated POT. When a single run is split across
+  // multiple MC ntuple files of the SAME sample (e.g. RHC Run3 aa-ae, Run4
+  // a/b/c), each file must be normalized by the run's data POT divided by the
+  // *summed* MC POT of all files of that sample in that run. Scaling each file
+  // individually by run_data_POT/file_POT instead over-counts the run by the
+  // number of sub-files (an N-fold over-prediction of the MC), which inflates
+  // the subtracted background above the data and drives the unfolded cross
+  // section negative. For runs with a single MC file per sample (e.g. every FHC
+  // run) this map entry equals that file's POT, so the normalization is
+  // unchanged. Keyed by sample type so distinct samples (numu overlay vs dirt)
+  // are never lumped together.
+  std::map< int, std::map< NFT, double > > run_type_mc_pot;
+  for ( const auto& rt_pair : fpm.ntuple_file_map() ) {
+    int rr = rt_pair.first;
+    for ( const auto& tf_pair : rt_pair.second ) {
+      const auto& tt = tf_pair.first;
+      if ( !ntuple_type_is_mc( tt ) ) continue;
+      for ( const std::string& fn : tf_pair.second ) {
+        TFile tmp_pot_file( fn.c_str(), "read" );
+        TParameter<float>* tmp_pot = nullptr;
+        tmp_pot_file.GetObject( "summed_pot", tmp_pot );
+        if ( tmp_pot ) run_type_mc_pot[ rr ][ tt ] += tmp_pot->GetVal();
+      }
+    }
   }
 
   // Loop through the ntuple files for the various run / ntuple file type
@@ -815,9 +855,11 @@ void SystematicsCalculator::build_universes( TDirectoryFile& root_tdir ) {
           double temp_scale_factor = 1.;
           if ( is_altCV ) {
             // AltCV ntuple files are available for all runs, so scale
-            // each individually to the BNB data POT for the current run
+            // each individually to the BNB data POT for the current run.
+            // Normalize by the run-summed MC POT for this sample (see
+            // run_type_mc_pot) so multi-file runs are not over-counted.
             double temp_run_pot = run_to_bnb_pot_map.at( run );
-            temp_scale_factor = temp_run_pot / file_pot;
+            temp_scale_factor = temp_run_pot / run_type_mc_pot.at( run ).at( type );
           }
           else {
             // Scale all detVar universe histograms from the simulated POT to
@@ -920,9 +962,13 @@ void SystematicsCalculator::build_universes( TDirectoryFile& root_tdir ) {
 
 
           // For reweightable MC ntuple files, scale the histograms for
-          // each universe to the BNB data POT for the current run
+          // each universe to the BNB data POT for the current run. Normalize by
+          // the summed MC POT of ALL files of this sample in this run (not the
+          // individual file POT) so that runs split across multiple ntuple files
+          // are not over-counted; see run_type_mc_pot above.
           double run_bnb_pot = run_to_bnb_pot_map.at( run );
-          double rw_scale_factor = run_bnb_pot / file_pot;
+          double run_mc_pot = run_type_mc_pot.at( run ).at( type );
+          double rw_scale_factor = run_bnb_pot / run_mc_pot;
 
           // Iterate over the reweighting universes, retrieve the
           // histograms for each, and add their POT-scaled contributions
