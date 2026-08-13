@@ -36,14 +36,15 @@ namespace wtki {
     o.pn=std::sqrt(pt*pt+pL*pL);
     return o;
   }
-  // 4-bin analysis edges (match ccpi1p_*_bin_config.txt; first/last bins open -> clamp)
+  // 3-bin analysis edges (match ccpi1p_*_bin_config.txt; coarsened for the low-stat
+  // proton-tagged unfolding; first/last bins open -> clamp)
   inline std::vector<double> edges(const std::string& k){
-    if(k=="Wpipr")  return {1.08,1.20,1.32,1.50,2.00};
-    if(k=="Whad")   return {0.0,1.00,1.20,1.40,1.90};
-    if(k=="dpt")    return {0.0,0.45,0.70,1.00,1.60};
-    if(k=="dalphat")return {0.,90.,130.,160.,180.};
-    if(k=="dphit")  return {0.,50.,85.,125.,180.};
-    if(k=="pn")     return {0.0,0.55,0.80,1.10,1.70};
+    if(k=="Wpipr")  return {1.08,1.24,1.45,2.00};
+    if(k=="Whad")   return {0.0,1.10,1.40,1.90};
+    if(k=="dpt")    return {0.0,0.55,0.90,1.60};
+    if(k=="dalphat")return {0.,110.,155.,180.};
+    if(k=="dphit")  return {0.,70.,120.,180.};
+    if(k=="pn")     return {0.0,0.65,0.95,1.70};
     return {};
   }
   inline double clamp(double v,const std::vector<double>& e){
