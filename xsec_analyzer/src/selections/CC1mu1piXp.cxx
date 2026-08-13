@@ -518,8 +518,8 @@ if ( std::abs(Event->mc_nu_pdg_) == ELECTRON_NEUTRINO ) {
 // true-vertex-in-FV and heavy-meson veto terms so this kNumuCC_sig category
 // agrees with is_event_mc_signal().
 bool Is_CC1mu1piXp_event = sig_truevertex_in_fv_ && sig_ccnc_ && sig_is_numu_ && sig_one_muon_above_thresh_ && sig_one_charged_pion_
-&& sig_no_pions_  && sig_no_kaons_ && sig_no_heavy_mesons_ && TrueCandidateMuonP.Mag() > 0.15 && TrueCandidatePionP.Mag() > 0.175
-&& TrueCandidateMuonP.Angle( TrueCandidatePionP ) < 2.6;  // measured phase space: pmu>0.15, ppi>0.175 GeV/c, theta_mupi<2.6 rad
+&& sig_no_pions_  && sig_no_kaons_ && sig_no_heavy_mesons_ && TrueCandidateMuonP.Mag() > 0.15 && mc_pionpm_min_mom_ > signal_pion_mom_threshold()
+&& TrueCandidateMuonP.Angle( TrueCandidatePionP ) < 2.6;  // measured phase space: pmu>0.15, all N pions>threshold, theta_mupi(leading)<2.6 rad
 
 if (std::abs(Event->mc_nu_pdg_) == MUON_NEUTRINO) {
         // signal events
@@ -752,11 +752,18 @@ bool CC1mu1piXp::define_signal( AnalysisEvent* Event ) {
     else if ( pdg == PI_ZERO ) {
       sig_mc_n_threshold_pion0++;
     }
-    else if ( std::abs(pdg) == PI_PLUS && ParticleMomentum > 0.0 ) { //changed from 0.07 to 0.1
+    else if ( std::abs(pdg) == PI_PLUS && ParticleMomentum > 0.0 ) {
       sig_mc_n_threshold_pionpm++;
-      TrueCandidatePionP.SetXYZ(Event->mc_nu_daughter_px_->at(p),Event->mc_nu_daughter_py_->at(p),Event->mc_nu_daughter_pz_->at(p));
-      // track the hardest / softest true charged-pion momentum (efficiency-threshold study)
-      if ( ParticleMomentum > mc_pionpm_lead_mom_ ) mc_pionpm_lead_mom_ = ParticleMomentum;
+      // The LEADING (hardest) charged pion defines the candidate used for the
+      // opening-angle cut and the true observables. Previously this was assigned the
+      // LAST pion in the loop, which is ill-defined for N>1 (it applied the momentum /
+      // angle cuts to an arbitrary pion). For N=1 the leading pion is the only pion,
+      // so the single-pion signal is unchanged.
+      if ( ParticleMomentum > mc_pionpm_lead_mom_ ) {
+        mc_pionpm_lead_mom_ = ParticleMomentum;
+        TrueCandidatePionP.SetXYZ(Event->mc_nu_daughter_px_->at(p),Event->mc_nu_daughter_py_->at(p),Event->mc_nu_daughter_pz_->at(p));
+      }
+      // softest charged pion sets the per-pion threshold (all N pions above threshold)
       if ( mc_pionpm_min_mom_ < 0.0 || ParticleMomentum < mc_pionpm_min_mom_ )
         mc_pionpm_min_mom_ = ParticleMomentum;
     }
@@ -815,9 +822,13 @@ bool CC1mu1piXp::define_signal( AnalysisEvent* Event ) {
 
 
 
+  // Per-pion momentum threshold: require the SOFTEST of the N true charged pions to
+  // exceed signal_pion_mom_threshold() (so ALL N pions are above threshold), and take
+  // the opening angle to the LEADING pion (TrueCandidatePionP). For N=1 both reduce to
+  // the previous single-pion cut (softest==leading==the only pion, threshold 0.175).
   bool isSignal =  sig_truevertex_in_fv_  && sig_ccnc_ && sig_is_numu_ && sig_one_muon_above_thresh_ && sig_one_charged_pion_
-     && sig_no_pions_  && sig_no_kaons_ && TrueCandidateMuonP.Mag() > 0.15 && TrueCandidatePionP.Mag() > 0.175
-     && TrueCandidateMuonP.Angle( TrueCandidatePionP ) < 2.6 && sig_no_heavy_mesons_; // measured phase space (pmu>0.15, ppi>0.175, theta_mupi<2.6)
+     && sig_no_pions_  && sig_no_kaons_ && TrueCandidateMuonP.Mag() > 0.15 && mc_pionpm_min_mom_ > signal_pion_mom_threshold()
+     && TrueCandidateMuonP.Angle( TrueCandidatePionP ) < 2.6 && sig_no_heavy_mesons_; // measured phase space (pmu>0.15, all N pi>thr, theta_mupi<2.6)
      // && sig_mc_n_threshold_pionpm
 
      //

@@ -21,4 +21,6 @@ class CC1mu2pi : public CC1mu1piXp {
   int    max_uncontained_pions()  const override { return 1; }
   bool   apply_opening_angle_cut() const override { return false; }
   bool   apply_shower_veto()       const override { return false; }
+  // per-pion threshold on all N pions: 0.10 GeV/c (pion tracking turn-on)
+  double signal_pion_mom_threshold() const override { return 0.10; }
 };

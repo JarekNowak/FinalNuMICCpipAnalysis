@@ -60,6 +60,12 @@ protected:
   // these to false. Inclusive keeps both (Passed unchanged).
   virtual bool   apply_opening_angle_cut() const { return true; }
   virtual bool   apply_shower_veto() const { return true; }
+  // Per-pion true-momentum threshold applied to ALL N signal pions (via the softest
+  // one). The single-pion measured phase space uses 0.175 GeV/c; the multi-pion
+  // channels adopt 0.10 GeV/c (the pion tracking turn-on) -- see the threshold study
+  // in the multi-pion note. For N=1 the softest pion is the only pion, so this
+  // reproduces the single-pion signal exactly.
+  virtual double signal_pion_mom_threshold() const { return 0.175; }
 
   TMVA::Reader * tmvaReader;
   TMVA::Reader * tmvaReader_mu;
