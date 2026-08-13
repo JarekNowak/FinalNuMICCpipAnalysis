@@ -31,6 +31,12 @@ public:
 // muon/pion/proton candidate indices, momenta and signal flags computed here.
 protected:
 
+  // Number of charged pions the signal requires. Default is the inclusive 1;
+  // the CC1mu2pi / CC1mu3pi multi-pion subselections override this to 2 / 3.
+  // Used in define_signal() via dynamic dispatch, so the derived value takes
+  // effect even inside the inherited base method.
+  virtual int required_charged_pions() const { return 1; }
+
   TMVA::Reader * tmvaReader;
   TMVA::Reader * tmvaReader_mu;
   TMVA::Reader * tmvaReader_pi;

@@ -8,6 +8,8 @@
 #include "XSecAnalyzer/Selections/SelectionFactory.hh"
 #include "XSecAnalyzer/Selections/CC1mu1piXp.hh"
 #include "XSecAnalyzer/Selections/CC1mu1pi1p.hh"
+#include "XSecAnalyzer/Selections/CC1mu2pi.hh"
+#include "XSecAnalyzer/Selections/CC1mu3pi.hh"
 
 
 SelectionFactory::SelectionFactory() {
@@ -37,6 +39,12 @@ else if ( selection_name == "CC1mu1piXp" ) {
   }
   else if ( selection_name == "CC1mu1pi1p" ) {
     sel = new CC1mu1pi1p;
+  }
+  else if ( selection_name == "CC1mu2pi" ) {
+    sel = new CC1mu2pi;
+  }
+  else if ( selection_name == "CC1mu3pi" ) {
+    sel = new CC1mu3pi;
   }
 
   else {

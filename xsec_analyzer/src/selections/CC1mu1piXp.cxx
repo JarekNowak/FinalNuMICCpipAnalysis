@@ -802,7 +802,7 @@ bool CC1mu1piXp::define_signal( AnalysisEvent* Event ) {
   sig_one_proton_above_thresh_ = ( sig_mc_n_threshold_proton > 0 ); //the name is misleading here we are saying any number of protons are allowed
   sig_no_pions_ =  (sig_mc_n_threshold_pion0 == 0);   //Misleading, has 1 pion
    // && (sig_mc_n_threshold_pionpm == 1) );
-  sig_one_charged_pion_ =(sig_mc_n_threshold_pionpm == 1); 
+  sig_one_charged_pion_ =(sig_mc_n_threshold_pionpm == required_charged_pions());
   sig_no_heavy_mesons_ = ( sig_mc_n_heaviermeson == 0 );
   sig_no_kaons_ = (sig_mc_n_kaons ==0);
 
