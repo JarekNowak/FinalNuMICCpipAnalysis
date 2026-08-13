@@ -1213,7 +1213,7 @@ if(CandidatePionIndex != -1){
         bool CandidatePionTrackEndContainment = point_inside_FV( this->containment_FV(),
         PionTrackEndX, PionTrackEndY, PionTrackEndZ );
 
-	if((CandidatePionTrackEndContainment) && (pion_number ==1)){
+	if((CandidatePionTrackEndContainment) && (pion_number == required_charged_pions())){
 		sel_pion_contained = true;
 	}
 }
@@ -1312,7 +1312,11 @@ bool pass_muongap       = muon_in_gap;
 bool pass_piongap       = pion_in_gap;
 bool pass_shower        = shower_cut;
 bool pass_opening       = opening_angle_cut;
-bool pass_final         = (nonproton < 4 && nPrimaryTracks < 5);
+// Track-multiplicity cut. For the inclusive selection (required_charged_pions()==1)
+// this is exactly (nonproton<4 && nPrimaryTracks<5); it relaxes by one per extra
+// required pion so the CC1mu2pi/CC1mu3pi multi-pion topologies are not rejected.
+bool pass_final         = (nonproton < required_charged_pions() + 3
+                           && nPrimaryTracks < required_charged_pions() + 4);
 // Software-trigger requirement (matches custom selection). MC overlay is not
 // pre-filtered on swtrig, so without this the MC is over-normalised relative
 // to data/EXT. Defaults to pass when the branch is absent. This affects only
