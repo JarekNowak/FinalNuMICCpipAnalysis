@@ -1183,7 +1183,21 @@ for (size_t i_pfp_2 = 0; i_pfp_2 < Event->track_length_->size(); i_pfp_2++) {
 	if ( pi_pid_full && ts05 ) pion_number_noContain_++;              // full PID, containment ignored
 	if ( pi_contained && pi_pid_noLLR && ts05 ) pion_number_noLLR_++; // contained, LLR dropped
 	if ( pi_contained && pi_pid_full ) pion_number_looseTS_++;        // track_score >= 0.3 (loosened)
-	if ( pi_contained && pi_pid_full && ts05 ){
+
+	// ---- actual pion identification (virtual-tunable; see CC1mu1piXp.hh) ----------
+	// Strict single-pion cuts (length + TMVA + Bragg) reject protons in the 1-pion
+	// topology; loose_pion_id() (multi-pion) drops them and only keeps LLR>0.1.
+	bool pi_pid_strict = ( Event->track_length_->at(i_pfp_2) > 20)
+	  && (tmvaOutput > -0.1) && (tmvaOutput_pi > -0.1) && (bragg_pi >= 0.08);
+	bool pi_pid = (nu_to_track_dist_ib.Mag() <= pion_vtx_distance_cut())
+	  && (Event->track_llr_pid_score_->at(i_pfp_2) > 0.1)
+	  && ( loose_pion_id() || pi_pid_strict );
+	// uncontained PID pions are tallied here; up to max_uncontained_pions() of them
+	// are folded into pion_number after the loop.
+	if ( ts05 && pi_pid && !pi_contained ) ++n_uncontained_pion_;
+	// Inclusive defaults (dist<=4, strict PID) make the next line identical to the
+	// old "pi_contained && pi_pid_full && ts05" condition.
+	if ( ts05 && pi_pid && pi_contained ){
                      // && (tmvaOutput    > -0.1)
   
 
@@ -1192,7 +1206,7 @@ for (size_t i_pfp_2 = 0; i_pfp_2 < Event->track_length_->size(); i_pfp_2++) {
 	//		sel_pioncandidate_tracklike_ = true;
 
 	//	}
-		pion_number++;
+		++n_contained_pion_;
 		// Pick the HIGHEST-LLR qualifying pion candidate (matches the custom
 		// selection ccpi_selection.C). The previous code assigned
 		// CandidatePionIndex=i_pfp_2 unconditionally and then compared the track
@@ -1209,6 +1223,10 @@ for (size_t i_pfp_2 = 0; i_pfp_2 < Event->track_length_->size(); i_pfp_2++) {
 
 }
 
+// Fold the contained pions with up to max_uncontained_pions() uncontained ones (the
+// "maximum uncontainment" tolerance). Inclusive: max_uncontained_pions()==0, so
+// pion_number == n_contained_pion_ == the old count.
+pion_number = n_contained_pion_ + std::min( n_uncontained_pion_, max_uncontained_pions() );
 
 // std::cout<<"This is fine 9" << std::endl;
 
@@ -1346,8 +1364,8 @@ bool Passed =
     pass_pioncontained &&
     pass_muongap &&
     pass_piongap &&
-    pass_shower &&
-    pass_opening &&
+    ( apply_shower_veto()        ? pass_shower  : true ) &&
+    ( apply_opening_angle_cut()  ? pass_opening : true ) &&
     pass_final;
 
   // --- background-control sidebands (signal-depleted; see CC1mu1piXp.hh) ---
@@ -1490,8 +1508,8 @@ bool Passed =
         pass_pioncontained &&
         pass_muongap &&
         pass_piongap &&
-        pass_shower &&
-        pass_opening &&
+        ( apply_shower_veto()       ? pass_shower  : true ) &&
+        ( apply_opening_angle_cut() ? pass_opening : true ) &&
         pass_final) {
 
         h_mu_cut9_final->Fill(muon_true, evt_w);
@@ -1517,8 +1535,11 @@ bool Passed =
     cf_pass[4] = cf_pass[3] && pass_pioncontained;
     cf_pass[5] = cf_pass[4] && pass_muongap;
     cf_pass[6] = cf_pass[5] && pass_piongap;
-    cf_pass[7] = cf_pass[6] && pass_shower;
-    cf_pass[8] = cf_pass[7] && pass_opening;
+    // Gate the shower / opening-angle stages by the same virtuals used in Passed,
+    // so the multi-pion cut-flow (which drops both) ends on the real selection and
+    // bin 9 matches the Selected branch. Inclusive keeps both (unchanged).
+    cf_pass[7] = cf_pass[6] && ( apply_shower_veto()       ? pass_shower  : true );
+    cf_pass[8] = cf_pass[7] && ( apply_opening_angle_cut() ? pass_opening : true );
     cf_pass[9] = cf_pass[8] && pass_final;
     bool cf_is_sig = this->is_event_mc_signal();
     for (int c = 0; c < 10; ++c) {
@@ -2269,6 +2290,8 @@ void CC1mu1piXp::reset() {
   pion_number_noContain_ = 0;
   pion_number_noLLR_ = 0;
   pion_number_looseTS_ = 0;
+  n_contained_pion_ = 0;
+  n_uncontained_pion_ = 0;
   sel_pion_contained = false;
   muon_in_gap = false;
   pion_in_gap = false;

@@ -37,6 +37,30 @@ protected:
   // effect even inside the inherited base method.
   virtual int required_charged_pions() const { return 1; }
 
+  // Multi-pion tuning (CC1mu2pi / CC1mu3pi override these; inclusive keeps the
+  // defaults so its selection is byte-for-byte unchanged). These reproduce the
+  // dedicated multi-pion study (I. Pophale MSc, CC3pi+):
+  //  - pion_vtx_distance_cut(): vertex-to-track window for a pion candidate. The
+  //    single-pion analysis uses 4 cm; the multi-pion study opens it to 9.5 cm to
+  //    recover pions from secondary scatters / slightly displaced starts.
+  //  - loose_pion_id(): when true, a pion candidate needs only LLR>0.1 (+ the
+  //    common track-score/vertex/generation pre-selection), dropping the
+  //    single-pion TMVA/Bragg/length cuts that were tuned for proton rejection in
+  //    the 1-pion topology and heavily suppress the multi-pion efficiency.
+  //  - max_uncontained_pions(): number of PID pions allowed to be uncontained and
+  //    still counted (the "maximum uncontainment = 1" tolerance). Inclusive = 0,
+  //    i.e. every counted pion must be contained -> identical to the old logic.
+  virtual double pion_vtx_distance_cut() const { return 4.0; }
+  virtual bool   loose_pion_id() const { return false; }
+  virtual int    max_uncontained_pions() const { return 0; }
+  // The mu-pi opening-angle cut and the shower (pi0) veto are 1-pion-topology cuts
+  // (cosmic rejection via a single mu-pi pair; EM veto). The dedicated multi-pion
+  // study drops both -- its signal is inclusive of extra EM activity and the single
+  // opening angle is meaningless with several pions -- so CC1mu2pi/3pi override
+  // these to false. Inclusive keeps both (Passed unchanged).
+  virtual bool   apply_opening_angle_cut() const { return true; }
+  virtual bool   apply_shower_veto() const { return true; }
+
   TMVA::Reader * tmvaReader;
   TMVA::Reader * tmvaReader_mu;
   TMVA::Reader * tmvaReader_pi;
@@ -114,6 +138,9 @@ int selected_signal_counter = 0;
   int pion_number_noContain_ = 0;
   int pion_number_noLLR_ = 0;
   int pion_number_looseTS_ = 0;
+  // per-event tallies feeding pion_number under the max_uncontained_pions() budget
+  int n_contained_pion_ = 0;
+  int n_uncontained_pion_ = 0;
   int shower_index;
   int nPrimaryShowers;
   int nPrimaryTracks;

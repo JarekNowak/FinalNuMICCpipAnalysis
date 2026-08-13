@@ -13,4 +13,12 @@ class CC1mu3pi : public CC1mu1piXp {
   bool selection( AnalysisEvent* event ) override;
  protected:
   int required_charged_pions() const override { return 3; }
+  // Multi-pion tuning matching the dedicated CC-Npi study (I. Pophale MSc):
+  // wider pion vertex window, looser pion ID (LLR only), tolerate one uncontained
+  // pion, and drop the 1-pion opening-angle / shower cuts. See CC1mu1piXp.hh.
+  double pion_vtx_distance_cut()  const override { return 9.5; }
+  bool   loose_pion_id()          const override { return true; }
+  int    max_uncontained_pions()  const override { return 1; }
+  bool   apply_opening_angle_cut() const override { return false; }
+  bool   apply_shower_veto()       const override { return false; }
 };
