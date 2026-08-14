@@ -24,4 +24,5 @@ class CC1mu3pi : public CC1mu1piXp {
   bool   apply_wire_gap_cuts()     const override { return false; }
   // per-pion threshold on all N pions: 0.10 GeV/c (pion tracking turn-on)
   double signal_pion_mom_threshold() const override { return 0.10; }
+  bool   use_pion_bdt()            const override { return true; }
 };

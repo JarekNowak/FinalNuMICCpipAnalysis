@@ -66,6 +66,12 @@ protected:
   // overridable so their efficiency/purity trade-off can be tuned. Inclusive keeps
   // them (Passed unchanged).
   virtual bool   apply_wire_gap_cuts() const { return true; }
+  // Dedicated multi-pion pion-ID BDT (pion vs muon/proton/other, ROC 0.81). When
+  // use_pion_bdt() is true (multi-pion), a pion candidate must have BDT score above
+  // pion_bdt_cut() instead of the loose LLR>0.1 cut; this rejects ~60% of non-pions at
+  // the same pion efficiency, cleaning up the exact-N-pion count. Inclusive: false.
+  virtual bool   use_pion_bdt() const { return false; }
+  virtual double pion_bdt_cut() const { return -0.2; }
   // Per-pion true-momentum threshold applied to ALL N signal pions (via the softest
   // one). The single-pion measured phase space uses 0.175 GeV/c; the multi-pion
   // channels adopt 0.10 GeV/c (the pion tracking turn-on) -- see the threshold study
@@ -76,6 +82,12 @@ protected:
   TMVA::Reader * tmvaReader;
   TMVA::Reader * tmvaReader_mu;
   TMVA::Reader * tmvaReader_pi;
+  // dedicated multi-pion pion-ID BDT reader + its 8 input features (order MUST match
+  // the training DataLoader in booster_decision_tree/mp_pion_bdt/train_bdt.C)
+  TMVA::Reader * tmvaReader_mppi = nullptr;
+  float mppi_llr, mppi_bragg_p, mppi_bragg_mu, mppi_bragg_mip, mppi_bragg_pion,
+        mppi_trk_score, mppi_length, mppi_dist;
+  float mppi_output = 0.f;
 
   bool sel_nslice_eq_1_;
   bool sel_nshower_eq_0_;
