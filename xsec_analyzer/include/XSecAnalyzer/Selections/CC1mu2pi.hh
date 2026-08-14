@@ -26,4 +26,6 @@ class CC1mu2pi : public CC1mu1piXp {
   double signal_pion_mom_threshold() const override { return 0.10; }
   // dedicated pion-ID BDT replaces the loose LLR cut (ROC 0.81)
   bool   use_pion_bdt()            const override { return true; }
+  // momentum-specialized BDTs: tighter soft cut to protect the exact-N purity
+  bool   use_split_pion_bdt()      const override { return true; }
 };

@@ -421,14 +421,18 @@ void CC1mu1piXp::define_constants() {
         // as the training DataLoader (llr, bragg_p, bragg_mu, bragg_mip, bragg_pion,
         // trk_score, length, dist) in booster_decision_tree/mp_pion_bdt/train_bdt.C
         tmvaReader_mppi = new TMVA::Reader();
-        tmvaReader_mppi->AddVariable("llr",        &mppi_llr);
-        tmvaReader_mppi->AddVariable("bragg_p",    &mppi_bragg_p);
-        tmvaReader_mppi->AddVariable("bragg_mu",   &mppi_bragg_mu);
-        tmvaReader_mppi->AddVariable("bragg_mip",  &mppi_bragg_mip);
-        tmvaReader_mppi->AddVariable("bragg_pion", &mppi_bragg_pion);
-        tmvaReader_mppi->AddVariable("trk_score",  &mppi_trk_score);
-        tmvaReader_mppi->AddVariable("length",     &mppi_length);
-        tmvaReader_mppi->AddVariable("dist",       &mppi_dist);
+        // all three multi-pion readers share the same feature buffers (evaluated one at
+        // a time per candidate) and the same variable order.
+        auto add_mppi_vars = []( TMVA::Reader* r, float* v[8] ){
+          const char* names[8] = {"llr","bragg_p","bragg_mu","bragg_mip","bragg_pion",
+                                   "trk_score","length","dist"};
+          for ( int i = 0; i < 8; ++i ) r->AddVariable( names[i], v[i] );
+        };
+        float* mppi_vars[8] = { &mppi_llr, &mppi_bragg_p, &mppi_bragg_mu, &mppi_bragg_mip,
+                                &mppi_bragg_pion, &mppi_trk_score, &mppi_length, &mppi_dist };
+        add_mppi_vars( tmvaReader_mppi, mppi_vars );
+        tmvaReader_mppi_soft = new TMVA::Reader();  add_mppi_vars( tmvaReader_mppi_soft, mppi_vars );
+        tmvaReader_mppi_hard = new TMVA::Reader();  add_mppi_vars( tmvaReader_mppi_hard, mppi_vars );
 
         // BDT weight files. These were hardcoded under /home/lar/ipophale/,
         // i.e. another user's home directory, so the selection only ran for
@@ -475,7 +479,9 @@ void CC1mu1piXp::define_constants() {
         book_bdt( tmvaReader,    "dataset_MIP_BDT_no_len" );
         book_bdt( tmvaReader_mu, "dataset_muon_BDT" );
         book_bdt( tmvaReader_pi, "dataset_pion_BDT_no_len" );
-        book_bdt( tmvaReader_mppi, "mp_pion_bdt" );
+        book_bdt( tmvaReader_mppi,      "mp_pion_bdt" );
+        book_bdt( tmvaReader_mppi_soft, "mp_pion_bdt_soft" );
+        book_bdt( tmvaReader_mppi_hard, "mp_pion_bdt_hard" );
 
 }
 
@@ -1195,17 +1201,28 @@ for (size_t i_pfp_2 = 0; i_pfp_2 < Event->track_length_->size(); i_pfp_2++) {
               trk_sce_end_z_v_tmva_pi = Event->track_endz_->at(i_pfp_2);
               tmvaOutput_pi= tmvaReader_pi->EvaluateMVA("BDT");
 
-              // dedicated multi-pion pion-ID BDT inputs (features/order match training)
-              mppi_llr        = Event->track_llr_pid_score_->at(i_pfp_2);
-              mppi_bragg_p    = Event->trk_bragg_p_v->at(i_pfp_2);
-              mppi_bragg_mu   = Event->trk_bragg_mu_v->at(i_pfp_2);
-              mppi_bragg_mip  = Event->trk_bragg_mip_v->at(i_pfp_2);
-              mppi_bragg_pion = ( i_pfp_2 < Event->trk_bragg_pion_v->size() )
-                                ? Event->trk_bragg_pion_v->at(i_pfp_2) : 1.0f;
-              mppi_trk_score  = Event->pfp_track_score_->at(i_pfp_2);
-              mppi_length     = Event->track_length_->at(i_pfp_2);
-              mppi_dist       = nu_to_track_dist_ib.Mag();
-              mppi_output     = tmvaReader_mppi->EvaluateMVA("BDT");
+              // dedicated multi-pion pion-ID BDT (only when in use; features/order match
+              // training). Split mode picks the soft/hard reader + working point by length.
+              if ( use_pion_bdt() ) {
+                mppi_llr        = Event->track_llr_pid_score_->at(i_pfp_2);
+                mppi_bragg_p    = Event->trk_bragg_p_v->at(i_pfp_2);
+                mppi_bragg_mu   = Event->trk_bragg_mu_v->at(i_pfp_2);
+                mppi_bragg_mip  = Event->trk_bragg_mip_v->at(i_pfp_2);
+                mppi_bragg_pion = ( i_pfp_2 < Event->trk_bragg_pion_v->size() )
+                                  ? Event->trk_bragg_pion_v->at(i_pfp_2) : 1.0f;
+                mppi_trk_score  = Event->pfp_track_score_->at(i_pfp_2);
+                mppi_length     = Event->track_length_->at(i_pfp_2);
+                mppi_dist       = nu_to_track_dist_ib.Mag();
+                if ( use_split_pion_bdt() ) {
+                  bool is_soft  = ( mppi_length < pion_bdt_soft_length() );
+                  mppi_output   = is_soft ? tmvaReader_mppi_soft->EvaluateMVA("BDT")
+                                          : tmvaReader_mppi_hard->EvaluateMVA("BDT");
+                  mppi_cut      = is_soft ? pion_bdt_cut_soft() : pion_bdt_cut_hard();
+                } else {
+                  mppi_output   = tmvaReader_mppi->EvaluateMVA("BDT");
+                  mppi_cut      = pion_bdt_cut();
+                }
+              }
 
 	// Proton rejection on the pion candidate (matches custom selection):
 	// require trk_bragg_pion >= 0.08. Fail-open (1.0) if the branch is absent.
@@ -1233,7 +1250,7 @@ for (size_t i_pfp_2 = 0; i_pfp_2 < Event->track_length_->size(); i_pfp_2++) {
 	bool pi_pid_strict = ( Event->track_length_->at(i_pfp_2) > 20)
 	  && (tmvaOutput > -0.1) && (tmvaOutput_pi > -0.1) && (bragg_pi >= 0.08);
 	bool pi_pid_core = use_pion_bdt()
-	  ? ( mppi_output > pion_bdt_cut() )
+	  ? ( mppi_output > mppi_cut )
 	  : ( (Event->track_llr_pid_score_->at(i_pfp_2) > 0.1) && ( loose_pion_id() || pi_pid_strict ) );
 	bool pi_pid = (nu_to_track_dist_ib.Mag() <= pion_vtx_distance_cut()) && pi_pid_core;
 	// uncontained PID pions are tallied here; up to max_uncontained_pions() of them

@@ -1,6 +1,7 @@
 #pragma once
 
 // ROOT includes
+#include <cstdlib>
 #include "TF1.h"
 #include <TMVA/Reader.h>
 #include <TH1D.h>
@@ -70,8 +71,19 @@ protected:
   // use_pion_bdt() is true (multi-pion), a pion candidate must have BDT score above
   // pion_bdt_cut() instead of the loose LLR>0.1 cut; this rejects ~60% of non-pions at
   // the same pion efficiency, cleaning up the exact-N-pion count. Inclusive: false.
-  virtual bool   use_pion_bdt() const { return false; }
+  // Base default is env-gated so the inclusive selection can be reprocessed WITH the
+  // BDT as a study (set CC1MU1PIXP_USE_PION_BDT) without changing its default (off).
+  // CC1mu2pi/3pi override to always-on.
+  virtual bool   use_pion_bdt() const { return std::getenv("CC1MU1PIXP_USE_PION_BDT") != nullptr; }
   virtual double pion_bdt_cut() const { return -0.2; }
+  // Momentum-specialized pion-ID BDTs: soft (track length < pion_bdt_soft_length()) is
+  // the hard-to-ID short-track regime, hard is longer tracks. When use_split_pion_bdt()
+  // the soft/hard BDT is applied per candidate with its own working point -- typically a
+  // TIGHTER soft cut, since soft protons fake pions and hurt the exact-N purity.
+  virtual bool   use_split_pion_bdt() const { return false; }
+  virtual double pion_bdt_soft_length() const { return 20.0; }
+  virtual double pion_bdt_cut_soft() const { return 0.10; }
+  virtual double pion_bdt_cut_hard() const { return -0.20; }
   // Per-pion true-momentum threshold applied to ALL N signal pions (via the softest
   // one). The single-pion measured phase space uses 0.175 GeV/c; the multi-pion
   // channels adopt 0.10 GeV/c (the pion tracking turn-on) -- see the threshold study
@@ -85,9 +97,13 @@ protected:
   // dedicated multi-pion pion-ID BDT reader + its 8 input features (order MUST match
   // the training DataLoader in booster_decision_tree/mp_pion_bdt/train_bdt.C)
   TMVA::Reader * tmvaReader_mppi = nullptr;
+  // momentum-specialized readers (share the same 8 features/order as tmvaReader_mppi)
+  TMVA::Reader * tmvaReader_mppi_soft = nullptr;
+  TMVA::Reader * tmvaReader_mppi_hard = nullptr;
   float mppi_llr, mppi_bragg_p, mppi_bragg_mu, mppi_bragg_mip, mppi_bragg_pion,
         mppi_trk_score, mppi_length, mppi_dist;
-  float mppi_output = 0.f;
+  float mppi_output = 0.f;   // BDT score of the current candidate (single or split)
+  float mppi_cut = -999.f;   // effective BDT threshold for the current candidate
 
   bool sel_nslice_eq_1_;
   bool sel_nshower_eq_0_;
