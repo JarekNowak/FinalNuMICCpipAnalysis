@@ -127,7 +127,7 @@
     The extraction is validated by a same-sample self-closure that recovers the
     truth to within $\approx\!6\%$ for every observable, and cross-checked against
     the D'Agostini iterative-Bayesian method: its flat, iteration-stable integral
-    (a consistent $\sim\!20\%$ above Wiener-SVD) confirms that the
+    ($\sim\!20$--$40\%$ above Wiener-SVD, config-dependent) confirms that the
     observable-to-observable spread of the Wiener-SVD integrated cross sections is
     the additional-smearing matrix $A_C$, not a physical or acceptance effect
     (Sec.~\ref{sec:crosschecks}). All results use the \textsc{XSecAnalyzer}
@@ -1572,8 +1572,8 @@ Uncertainties     & Closed-form, linear                 & Correlated across iter
 
 Wiener-SVD is the primary result --- for its objective regularisation and its explicit,
 reportable bias $A_C$; D'Agostini serves as the quantitative cross-check
-(Sec.~\ref{sec:crosschecks}), where its flat, iteration-stable integral, a consistent
-$\sim20\%$ above Wiener-SVD, confirms that the observable-to-observable spread of the
+(Sec.~\ref{sec:crosschecks}), where its flat, iteration-stable integral,
+$\sim20$--$40\%$ above Wiener-SVD (config-dependent), confirms that the observable-to-observable spread of the
 Wiener-SVD integrated cross sections (Table~\ref{tab:sigint_all}) is the $A_C$ smearing
 rather than a physical or acceptance effect.
 
@@ -1848,9 +1848,11 @@ cross-check of the Wiener-SVD result. Because it does not apply the Wiener-SVD
 additional-smearing matrix $A_C$, its unfolded total is free of the
 (non-norm-preserving) $A_C$ suppression and is stable against the iteration count.
 Table~\ref{tab:dagostini} compares the two integrated totals for all three
-configurations: the D'Agostini result sits a consistent $\sim$24\% above the
-Wiener-SVD total (equivalently, $A_C$ suppresses the quoted Wiener-SVD integral by
-$\sim$19\%), and it varies by $<1\%$ across 1, 2 and 4 iterations. For FHC the
+configurations: the D'Agostini result sits above the Wiener-SVD total by
+$\sim$23\% (FHC) and $\sim$37--38\% (RHC, Combined) --- equivalently $A_C$ suppresses
+the quoted Wiener-SVD integral by $\sim$19\% (FHC) and $\sim$27\% (RHC/Combined), the
+larger suppression reflecting the coarser RHC/combined smearing --- and it varies by
+$<1\%$ across 1, 2 and 4 iterations. For FHC the
 D'Agostini per-observable truth is flat to $1\%$ ($1.111$--$1.122$), directly
 confirming that the observable-to-observable spread in the Wiener-SVD integrated
 cross sections (Table~\ref{tab:sigint_all}) is the $A_C$ smearing rather than a
@@ -1871,8 +1873,8 @@ physical or acceptance effect.
       & DAg/WSVD & DAg 1$\to$4~iter \\
     \midrule
     FHC      & $0.91$ & $1.12$ & $1.23$ & $<1\%$ \\
-    RHC      & $0.75$ & $0.93$ & $1.24$ & $<1\%$ \\
-    Combined & $0.80$ & $1.00$ & $1.25$ & $<1\%$ \\
+    RHC      & $1.02$ & $1.39$ & $1.37$ & $<1\%$ \\
+    Combined & $0.94$ & $1.30$ & $1.38$ & $<1\%$ \\
     \bottomrule
   \end{tabular}
 \end{table}
