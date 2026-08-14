@@ -1155,6 +1155,9 @@ for (size_t i_pfp_2 = 0; i_pfp_2 < Event->track_length_->size(); i_pfp_2++) {
                && (Event->track_length_->at(i_pfp_2) < 1e6) && (Event->track_length_->at(i_pfp_2) > 0)&& (i_pfp_2 != CandidateMuonIndex)
                ){
 
+              // reconstruction-ceiling pool: a valid 2nd-gen track candidate (pre-PID)
+              ++n_track_pool_;
+
               trk_bragg_p_v_tmva = Event->trk_bragg_p_v->at(i_pfp_2);
               trk_bragg_mu_v_tmva = Event->trk_bragg_mu_v->at(i_pfp_2);
               trk_bragg_mip_v_tmva = Event->trk_bragg_mip_v->at(i_pfp_2);
@@ -2243,6 +2246,7 @@ void CC1mu1piXp::define_output_branches() {
   set_branch( &pion_number_noContain_,  "pion_number_noContain" );
   set_branch( &pion_number_noLLR_,      "pion_number_noLLR" );
   set_branch( &pion_number_looseTS_,   "pion_number_looseTS" );
+  set_branch( &n_track_pool_,          "n_track_pool" );
   set_branch( &mc_pionpm_lead_mom_,    "mc_pionpm_lead_mom" );
   set_branch( &mc_pionpm_min_mom_,     "mc_pionpm_min_mom" );
   set_branch( &candidate_muon_mom_mcs, "candidate_muon_mom_mcs");
@@ -2307,6 +2311,7 @@ void CC1mu1piXp::reset() {
   pion_number_looseTS_ = 0;
   n_contained_pion_ = 0;
   n_uncontained_pion_ = 0;
+  n_track_pool_ = 0;
   mc_pionpm_lead_mom_ = -1.0;
   mc_pionpm_min_mom_  = -1.0;
   sel_pion_contained = false;

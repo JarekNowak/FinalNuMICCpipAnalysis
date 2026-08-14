@@ -153,6 +153,11 @@ int selected_signal_counter = 0;
   // per-event tallies feeding pion_number under the max_uncontained_pions() budget
   int n_contained_pion_ = 0;
   int n_uncontained_pion_ = 0;
+  // Reconstruction-ceiling diagnostic: number of 2nd-generation track-like PFPs from
+  // the vertex (track_score>=0.3, valid PID vars, not the muon) BEFORE any pion PID.
+  // For a true N-pion event, needing n_track_pool>=N is the maximum efficiency any
+  // pion identification could reach; the gap to pion_number is the PID/containment loss.
+  int n_track_pool_ = 0;
   // Truth diagnostics for the multi-pion efficiency-vs-threshold study: the leading
   // (hardest) and minimum (softest) true charged-pion momenta in the event [GeV/c].
   // For a true N-pion signal event the softest pion sets the reconstructability floor.
