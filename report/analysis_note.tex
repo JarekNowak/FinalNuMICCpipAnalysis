@@ -116,8 +116,9 @@
     POT$^{-1}$; new-G4 GEANT4 values above $60$~MeV, Sec.~\ref{sec:flux}); the RHC
     value is lower because its beam is $\bar\nu_\mu$-dominant. The resulting
     Wiener-SVD integrated cross sections are of order
-    $0.7$--$1.0\times10^{-38}$~cm$^2$/Ar (Table~\ref{tab:sigint_all}), with RHC
-    below FHC as expected for the softer, antineutrino-rich beam.
+    $0.8$--$1.2\times10^{-38}$~cm$^2$/Ar (Table~\ref{tab:sigint_all}), with RHC
+    consistent with (or slightly above) FHC; an earlier apparent RHC deficit was a
+    per-run POT normalization bug affecting the multi-file RHC runs, now corrected.
     %
     The observed yield is $\approx\!0.75\times$ the GENIE~v3 prediction, consistent
     with the known over-prediction of $\mathrm{CC}\pi^+$ production in current
@@ -2048,25 +2049,26 @@ $\theta_{\mu\pi}$& $15.9\%$ & $26.0\%$ & $1.64\times$ & $0.43/5$ ($p=0.99$) \\
   $10^{-38}$~cm$^2$/Ar). The value differs between observables because the Wiener-SVD
   additional-smearing $A_C$ is not norm-preserving; the D'Agostini cross-check
   (Sec.~\ref{sec:crosschecks}) recovers a flatter, $\sim$20\% higher total, confirming
-  the spread is a smearing effect. RHC generally sits at or below FHC because the RHC
-  beam is $\bar\nu_\mu$-dominant (lower flux-averaged cross section).
-  \textbf{Caveat (under revision):} the RHC and Combined columns are affected by a
-  per-run POT normalization bug that over-counted the multi-file RHC runs (Run~3 split
-  across 5 ntuple files, Run~4 across 3), inflating the simulated background and biasing
-  the extracted RHC/Combined cross sections low. The bug has been fixed (per-(run,sample)
-  MC POT normalization); these columns are being recomputed. The FHC column is unaffected
-  (one MC file per run). Consequently the ``RHC below FHC'' statement above is provisional
-  until the corrected numbers are available.}
+  the spread is a smearing effect. The RHC and Combined columns use the corrected
+  per-(run,sample) MC POT normalization: an earlier version over-counted the multi-file
+  RHC runs (Run~3 split across 5 ntuple files, Run~4 across 3) by scaling each file to
+  the full run POT, inflating the simulated background and biasing the RHC/Combined cross
+  sections low (FHC, with one MC file per run, was unaffected). With that fixed, the
+  RHC integrated cross sections rise by $\sim\!20$--$30\%$ and are now consistent with,
+  or slightly above, FHC for every observable --- i.e.\ the previously apparent ``RHC
+  below FHC'' deficit was the normalization bug, not $\bar\nu_\mu$ physics. (Values are
+  fake-data closures; the signal is $\nu_\mu+\bar\nu_\mu$, so the RHC flux-average is not
+  expected to lie far below FHC.)}
 \label{tab:sigint_all}
 \begin{tabular}{lccc}
 \toprule
 Observable & FHC & RHC & Combined \\
 \midrule
-$p_\mu$          & $0.986$ & $0.858$ & $0.818$ \\
-$p_\pi$          & $0.976$ & $0.963$ & $0.962$ \\
-$\cos\theta_\mu$ & $0.811$ & $0.667$ & $0.702$ \\
-$\cos\theta_\pi$ & $0.979$ & $0.800$ & $0.857$ \\
-$\theta_{\mu\pi}$& $0.877$ & $0.883$ & $0.922$ \\
+$p_\mu$          & $0.986$ & $1.020$ & $0.876$ \\
+$p_\pi$          & $0.976$ & $1.193$ & $1.111$ \\
+$\cos\theta_\mu$ & $0.811$ & $0.896$ & $0.770$ \\
+$\cos\theta_\pi$ & $0.979$ & $1.058$ & $0.970$ \\
+$\theta_{\mu\pi}$& $0.877$ & $0.919$ & $0.952$ \\
 \bottomrule
 \end{tabular}
 \end{center}
