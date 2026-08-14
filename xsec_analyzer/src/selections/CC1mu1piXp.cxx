@@ -1375,8 +1375,8 @@ bool Passed =
     pass_topology &&
     pass_tracklike &&
     pass_pioncontained &&
-    pass_muongap &&
-    pass_piongap &&
+    ( apply_wire_gap_cuts()      ? pass_muongap : true ) &&
+    ( apply_wire_gap_cuts()      ? pass_piongap : true ) &&
     ( apply_shower_veto()        ? pass_shower  : true ) &&
     ( apply_opening_angle_cut()  ? pass_opening : true ) &&
     pass_final;
@@ -1546,8 +1546,8 @@ bool Passed =
     cf_pass[2] = cf_pass[1] && pass_topology;
     cf_pass[3] = cf_pass[2] && pass_tracklike;
     cf_pass[4] = cf_pass[3] && pass_pioncontained;
-    cf_pass[5] = cf_pass[4] && pass_muongap;
-    cf_pass[6] = cf_pass[5] && pass_piongap;
+    cf_pass[5] = cf_pass[4] && ( apply_wire_gap_cuts() ? pass_muongap : true );
+    cf_pass[6] = cf_pass[5] && ( apply_wire_gap_cuts() ? pass_piongap : true );
     // Gate the shower / opening-angle stages by the same virtuals used in Passed,
     // so the multi-pion cut-flow (which drops both) ends on the real selection and
     // bin 9 matches the Selected branch. Inclusive keeps both (unchanged).

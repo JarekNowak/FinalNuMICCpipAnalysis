@@ -60,6 +60,12 @@ protected:
   // these to false. Inclusive keeps both (Passed unchanged).
   virtual bool   apply_opening_angle_cut() const { return true; }
   virtual bool   apply_shower_veto() const { return true; }
+  // The muon/pion wire-gap (3-plane) requirements are quality cuts that reject a
+  // sizeable fraction of genuine multi-pion events (the extra tracks raise the
+  // chance one lands in a dead region). The multi-pion selections make them
+  // overridable so their efficiency/purity trade-off can be tuned. Inclusive keeps
+  // them (Passed unchanged).
+  virtual bool   apply_wire_gap_cuts() const { return true; }
   // Per-pion true-momentum threshold applied to ALL N signal pions (via the softest
   // one). The single-pion measured phase space uses 0.175 GeV/c; the multi-pion
   // channels adopt 0.10 GeV/c (the pion tracking turn-on) -- see the threshold study
