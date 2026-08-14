@@ -84,6 +84,13 @@ protected:
   virtual double pion_bdt_soft_length() const { return 20.0; }
   virtual double pion_bdt_cut_soft() const { return 0.10; }
   virtual double pion_bdt_cut_hard() const { return -0.20; }
+  // Mix the BDT with explicit Bragg/MIP cuts. The background study shows ~31% of the
+  // counted background pions are mis-ID'd protons (vs 10% in signal); an explicit pion-
+  // Bragg cut on top of the BDT rejects the ambiguous protons the loose BDT lets through.
+  // Muon cuts are NOT used (muon fraction is equal in signal and background).
+  virtual bool   require_bragg_with_bdt() const { return false; }
+  virtual double bragg_pion_cut()         const { return 0.08; }
+  virtual bool   require_mip_with_bdt()   const { return false; }
   // Per-pion true-momentum threshold applied to ALL N signal pions (via the softest
   // one). The single-pion measured phase space uses 0.175 GeV/c; the multi-pion
   // channels adopt 0.10 GeV/c (the pion tracking turn-on) -- see the threshold study
@@ -186,6 +193,14 @@ int selected_signal_counter = 0;
   // For a true N-pion event, needing n_track_pool>=N is the maximum efficiency any
   // pion identification could reach; the gap to pion_number is the PID/containment loss.
   int n_track_pool_ = 0;
+  // Background-source diagnostic: true PDG (backtracked) of the pion candidates the
+  // selection COUNTS as pions. In background events this reveals whether the extra
+  // "pion" is a mis-ID'd proton/muon (a PID failure) or a genuine soft pion below the
+  // signal threshold that reconstructs (a threshold/migration effect).
+  int n_reco_pion_truepi_ = 0;
+  int n_reco_pion_proton_ = 0;
+  int n_reco_pion_muon_   = 0;
+  int n_reco_pion_other_  = 0;
   // Truth diagnostics for the multi-pion efficiency-vs-threshold study: the leading
   // (hardest) and minimum (softest) true charged-pion momenta in the event [GeV/c].
   // For a true N-pion signal event the softest pion sets the reconstructability floor.

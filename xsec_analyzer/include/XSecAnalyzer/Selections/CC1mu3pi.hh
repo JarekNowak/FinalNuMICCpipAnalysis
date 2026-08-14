@@ -25,5 +25,7 @@ class CC1mu3pi : public CC1mu1piXp {
   // per-pion threshold on all N pions: 0.10 GeV/c (pion tracking turn-on)
   double signal_pion_mom_threshold() const override { return 0.10; }
   bool   use_pion_bdt()            const override { return true; }
-  bool   use_split_pion_bdt()      const override { return true; }
+  // 3pi keeps the SINGLE BDT (the split's tight soft cut costs 3pi efficiency, since
+  // 3pi events genuinely have soft pions).
+  bool   use_split_pion_bdt()      const override { return false; }
 };

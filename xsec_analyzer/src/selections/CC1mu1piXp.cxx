@@ -1249,10 +1249,24 @@ for (size_t i_pfp_2 = 0; i_pfp_2 < Event->track_length_->size(); i_pfp_2++) {
 	// use_pion_bdt() (multi-pion) replaces the LLR cut with the dedicated pion-ID BDT.
 	bool pi_pid_strict = ( Event->track_length_->at(i_pfp_2) > 20)
 	  && (tmvaOutput > -0.1) && (tmvaOutput_pi > -0.1) && (bragg_pi >= 0.08);
-	bool pi_pid_core = use_pion_bdt()
-	  ? ( mppi_output > mppi_cut )
-	  : ( (Event->track_llr_pid_score_->at(i_pfp_2) > 0.1) && ( loose_pion_id() || pi_pid_strict ) );
+	bool pi_pid_core;
+	if ( use_pion_bdt() ) {
+	  bool bdt_pass  = ( mppi_output > mppi_cut );
+	  bool bragg_ok  = !require_bragg_with_bdt() || ( bragg_pi >= bragg_pion_cut() );  // proton rejection
+	  bool mip_ok    = !require_mip_with_bdt()   || ( tmvaOutput > -0.1 );
+	  pi_pid_core = bdt_pass && bragg_ok && mip_ok;
+	} else {
+	  pi_pid_core = (Event->track_llr_pid_score_->at(i_pfp_2) > 0.1) && ( loose_pion_id() || pi_pid_strict );
+	}
 	bool pi_pid = (nu_to_track_dist_ib.Mag() <= pion_vtx_distance_cut()) && pi_pid_core;
+	// background-source diagnostic: true identity of each counted pion candidate
+	if ( ts05 && pi_pid ) {
+	  int tp = ( i_pfp_2 < Event->pfp_true_pdg_->size() ) ? Event->pfp_true_pdg_->at(i_pfp_2) : 0;
+	  if      ( std::abs(tp) == 211 )  ++n_reco_pion_truepi_;
+	  else if ( tp == 2212 )           ++n_reco_pion_proton_;
+	  else if ( std::abs(tp) == 13 )   ++n_reco_pion_muon_;
+	  else                             ++n_reco_pion_other_;
+	}
 	// uncontained PID pions are tallied here; up to max_uncontained_pions() of them
 	// are folded into pion_number after the loop.
 	if ( ts05 && pi_pid && !pi_contained ) ++n_uncontained_pion_;
@@ -2292,6 +2306,10 @@ void CC1mu1piXp::define_output_branches() {
   set_branch( &pion_number_noLLR_,      "pion_number_noLLR" );
   set_branch( &pion_number_looseTS_,   "pion_number_looseTS" );
   set_branch( &n_track_pool_,          "n_track_pool" );
+  set_branch( &n_reco_pion_truepi_,    "n_reco_pion_truepi" );
+  set_branch( &n_reco_pion_proton_,    "n_reco_pion_proton" );
+  set_branch( &n_reco_pion_muon_,      "n_reco_pion_muon" );
+  set_branch( &n_reco_pion_other_,     "n_reco_pion_other" );
   set_branch( &mc_pionpm_lead_mom_,    "mc_pionpm_lead_mom" );
   set_branch( &mc_pionpm_min_mom_,     "mc_pionpm_min_mom" );
   set_branch( &candidate_muon_mom_mcs, "candidate_muon_mom_mcs");
@@ -2357,6 +2375,7 @@ void CC1mu1piXp::reset() {
   n_contained_pion_ = 0;
   n_uncontained_pion_ = 0;
   n_track_pool_ = 0;
+  n_reco_pion_truepi_ = 0; n_reco_pion_proton_ = 0; n_reco_pion_muon_ = 0; n_reco_pion_other_ = 0;
   mc_pionpm_lead_mom_ = -1.0;
   mc_pionpm_min_mom_  = -1.0;
   sel_pion_contained = false;
