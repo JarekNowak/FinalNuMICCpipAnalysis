@@ -1862,19 +1862,26 @@ physical or acceptance effect.
   \centering
   \caption{Wiener-SVD vs.\ D'Agostini (iterative Bayesian, 4~iterations) integrated
     cross section, averaged over the five observables (fake-data truth,
-    $10^{-38}$~cm$^2$/Ar). D'Agostini carries no $A_C$ smearing; its $\sim$24\%
-    higher total is consistent across configurations and stable to $<1\%$ over
-    1/2/4 iterations. The FHC D'Agostini per-observable truth is additionally flat
-    to $1\%$.}
+    $10^{-38}$~cm$^2$/Ar); both columns recomputed with the corrected MC POT
+    normalisation. D'Agostini carries no $A_C$ smearing, so it recovers a
+    $25$--$29\%$ higher total. Crucially the ratio is now \emph{consistent} across the
+    three configurations ($1.25$--$1.29$), whereas with the earlier, incorrect
+    normalisation the RHC and combined ratios ($1.37$, $1.38$) sat well above FHC
+    ($1.23$) --- the inconsistency was an artefact of the inflated RHC/combined
+    Wiener-SVD values, not of the unfolding methods. D'Agostini is also nearly flat
+    across observables (spread $1.2\%$ FHC, $2.2\%$ RHC, $1.5\%$ combined), in contrast
+    to the Wiener-SVD spread, confirming that the observable-to-observable variation of
+    $\sigma_\mathrm{int}$ in Table~\ref{tab:sigint_all} is the $A_C$ smearing rather
+    than a physical or normalisation effect.}
   \label{tab:dagostini}
   \begin{tabular}{lcccc}
     \toprule
     Config & $\langle\sigma\rangle_\mathrm{WSVD}$ & $\langle\sigma\rangle_\mathrm{DAg}$
       & DAg/WSVD & DAg 1$\to$4~iter \\
     \midrule
-    FHC      & $0.91$ & $1.12$ & $1.23$ & $<1\%$ \\
-    RHC      & $1.02$ & $1.39$ & $1.37$ & $<1\%$ \\
-    Combined & $0.94$ & $1.30$ & $1.38$ & $<1\%$ \\
+    FHC      & $0.923$ & $1.170$ & $1.27$ & $<1\%$ \\
+    RHC      & $0.836$ & $1.041$ & $1.25$ & $<1\%$ \\
+    Combined & $0.852$ & $1.102$ & $1.29$ & $<1\%$ \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -2619,10 +2626,13 @@ closes positive with $\chi^2/\mathrm{ndf}\ll1$.
 \end{table}
 
 
-Figure~\ref{fig:dsigma_ccpi1p_fhc} shows the six FHC W/TKI differential cross sections,
-overlaid with all four generator predictions (GENIE, GiBUU, NEUT, NuWro) for the same
-proton-tagged phase space (shown at the analysis binning; the finer-binning montage is in
-preparation). The predictions are built at truth level from each
+Figure~\ref{fig:dsigma_ccpi1p_fhc} shows the six FHC W/TKI differential cross sections
+at the finer six-bin binning. The generator overlays are \emph{not} shown in this version:
+the GENIE, GiBUU, NEUT and NuWro proton-tagged W/TKI predictions were produced at the
+earlier three-bin binning and are therefore dropped by the bin-count match against the
+six-bin measurement. Regenerating them (GENIE and GiBUU natively, NuWro and NEUT from
+their event vectors inside the SL7 container) at the current binning is pending; the
+generator comparison quoted below refers to the earlier three-bin version. The predictions are built at truth level from each
 generator's event-level final state --- GENIE gst events, GiBUU \texttt{FinalEvents},
 and the NuWro and NEUT event vectors reprocessed in their respective SL7-container
 environments --- by applying the inclusive signal plus a leading true proton above

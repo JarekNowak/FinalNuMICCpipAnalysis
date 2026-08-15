@@ -74,6 +74,12 @@
     \item Background composition
   \end{enumerate}
   \vspace{2mm}
+  \textbf{\color{ubred}Part III --- Multi-pion ($2\pi$, $3\pi$)}
+  \begin{enumerate}\small
+    \item Selection tuning \& performance
+    \item Dedicated pion-ID BDT
+  \end{enumerate}
+  \vspace{2mm}
   \textbf{\color{ubred}Backup}
   \end{columns}
 \end{frame}
@@ -384,8 +390,10 @@
 
 \begin{frame}{Proton-tagged differential cross sections (FHC)}
   \centering\includegraphics[height=.72\textheight]{dsigma_ccpi1p_FHC5}\\
-  {\scriptsize Unfolded fake data vs truth, uB tune, and all four generators.
-  Closure $\chi^2/\mathrm{ndf}\ll1$ for every observable.}
+  {\scriptsize Unfolded fake data vs $A_C$-smeared truth and the uB tune.
+  Closure $\chi^2/\mathrm{ndf}\ll1$ for every observable. \alert{Generator overlays
+  are absent}: their W/TKI predictions are still at the previous 3-bin binning and are
+  dropped against the 6-bin data --- regeneration pending.}
 \end{frame}
 
 \begin{frame}{Generator comparison \& background composition}
@@ -411,6 +419,83 @@
   \end{columns}
 \end{frame}
 
+% ===================== PART III : MULTI-PION =====================
+\section{Multi-pion}
+\begin{frame}{Multi-pion: exclusive CC$\,1\mu2\pi$ and CC$\,1\mu3\pi$}
+  \footnotesize
+  New exclusive channels, building on the work of \textbf{Tusharadri Mahmud} (MSc) and
+  \textbf{Linhui Gu}. Thin subselections of the inclusive selection: same muon, but
+  \emph{exactly} 2 or 3 charged pions (any number of protons). They probe the resonant/DIS
+  transition and the intranuclear pion cascade, and are a background to the single-pion
+  signal.
+  \begin{columns}[T]\column{.52\textwidth}
+  \begin{block}{Tuning vs.\ the 1$\pi$ selection}\scriptsize
+  \begin{tabular}{lll}
+  \toprule Setting & 1$\pi$ & Multi-$\pi$\\\midrule
+  Pion--vertex distance & $\le4$ cm & \alert{$\le9.5$ cm} (looser)\\
+  Uncontained pions    & 0 & up to 2\\
+  Opening-angle cut    & on & off\\
+  Shower veto          & on & off\\
+  Wire-gap cuts        & on & off\\
+  Per-pion threshold   & $0.175$ & $0.10$ GeV/$c$\\
+  Pion ID              & LLR & dedicated BDT\\
+  \bottomrule
+  \end{tabular}
+  \end{block}
+  \column{.48\textwidth}
+  \begin{block}{Performance (Run 1 FHC only)}\scriptsize
+  \begin{tabular}{lcc}
+  \toprule & $2\pi$ & $3\pi$\\\midrule
+  Efficiency & $17.9\%$ & $10.1\%$\\
+  Purity     & $26.8\%$ & $11.3\%$\\
+  Events @ full exposure & $\sim$670 & $\sim$66\\
+  Reco ceiling & $66.6\%$ & $52.4\%$\\
+  \bottomrule
+  \end{tabular}
+  \end{block}
+  {\scriptsize Efficiency/purity measured on the \alert{Run-1 FHC $\nu_\mu$ overlay
+  alone} (one MC file); event yields are extrapolated to the full FHC exposure.
+  \alert{RHC is not yet processed} for the multi-$\pi$ channels.\\[1mm]
+  The \alert{reco ceiling} (fraction of true pions reconstructed as tracks at all)
+  shows the loss is \alert{particle-ID}, not reconstruction.}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Multi-pion: dedicated pion-ID BDT}
+  \begin{columns}[T]\column{.54\textwidth}
+  \footnotesize
+  \begin{itemize}\setlength\itemsep{2pt}
+    \item Inherited loose LLR cut replaced by a \alert{dedicated BDT} (TMVA gradient
+      boost), trained to separate true charged pions from the tracks polluting the
+      multi-$\pi$ sample. \alert{ROC $=0.81$}.
+    \item Inputs: pion/proton LLR, Bragg $p/\mu$/MIP likelihoods, track score, length,
+      vertex distance --- no explicit momentum.
+    \item $2\pi$ uses \alert{two momentum-specialised BDTs} (split at $20$ cm track
+      length, tighter soft-pion cut to protect the exact-multiplicity purity);
+      $3\pi$ keeps a \alert{single BDT} (its pions are genuinely soft).
+    \item Trialled on the \alert{inclusive} selection it \alert{hurts}
+      (eff $16.7\!\to\!18.9\%$ but purity $60.3\!\to\!38.8\%$) $\Rightarrow$ inclusive
+      keeps its LLR cut.
+  \end{itemize}
+  \column{.46\textwidth}
+  \begin{block}{Residual background (truth-matched)}\footnotesize
+  \begin{tabular}{lr}
+  \toprule Counted ``pion'' really is & \%\\\midrule
+  real out-of-topology $\pi^\pm$ & 44\\
+  proton mis-ID & 31\\
+  muon & 12\\
+  other & 13\\
+  \bottomrule
+  \end{tabular}
+  \end{block}
+  {\scriptsize Proton contamination is the \alert{irreducible} core --- a proton ranging
+  out like a pion is genuinely ambiguous; adding a Bragg veto on top of the BDT did
+  \emph{not} reduce it and only cost efficiency.}\\[1mm]
+  {\scriptsize Documented in a standalone technote; differential $2\pi$ measurement +
+  total $\sigma$ for $3\pi$ are the targets.}
+\end{columns}
+\end{frame}
+
 \begin{frame}{Summary}
   \begin{itemize}
     \item \alert{Inclusive}: differential CC$1\mu1\pi^{\pm}$ cross sections for FHC, RHC
@@ -424,9 +509,8 @@
     \item Blind analysis: fake data throughout; sidebands (CC0$\pi$, multi-$\pi$, $\pi^0$,
       cosmic) validated in all three beams, data/$\nu$MC $\simeq1.00$, ready to constrain
       the background before unblinding.
-    \item \alert{Ongoing}: $\cos\theta\!\to\!\theta$ switch (the $A_C$ smearing suppresses
-      the forward-peaked $\cos\theta_\mu$ $\times0.33$ vs $\times0.76$ in $\theta_\mu$);
-      RHC proton-tagged closure; detector systematic; tighter-proton-PID study.
+    \item \alert{Multi-pion}: an analysis of the exclusive $2\pi$ and $3\pi$ channels has
+      started, building on the work of Tusharadri Mahmud (MSc) and Linhui Gu.
   \end{itemize}
   \vspace{2mm}
   \centering\color{ubred}\large Thank you --- questions?
@@ -573,16 +657,45 @@
   {\scriptsize Bin-averaged fractional uncertainty [\%]. Flux dominates throughout.}
 \end{frame}
 
+\begin{frame}{Backup: from PeLEE branches to the kinematic inputs}
+  \footnotesize
+  Every observable is built from three reconstructed tracks (muon, charged pion, leading
+  proton), each taken from the PeLEE \texttt{NeutrinoSelectionFilter} ntuple at the
+  candidate's PFP index:
+  \begin{center}\scriptsize
+  \begin{tabular}{lll}
+  \toprule
+  Quantity & PeLEE branch & Note\\\midrule
+  $|\vec p_\mu|$      & \texttt{trk\_range\_muon\_mom\_v} & range-based (primary)\\
+  $|\vec p_\mu|$ (x-check) & \texttt{trk\_mcs\_muon\_mom\_v} & multiple-scattering\\
+  $|\vec p_\pi|$      & \texttt{trk\_range\_muon\_mom\_v} & $\mu$-hypothesis range, at the $\pi$ index\\
+  $T_p \to |\vec p_p|$ & \texttt{trk\_energy\_proton\_v} & $p$-hypothesis range KE;
+     $|\vec p_p|=\sqrt{T_p^2+2T_pm_p}$\\
+  $\hat u_{\mu},\hat u_{\pi},\hat u_{p}$ & \texttt{trk\_dir\_x/y/z\_v} & unit track direction\\
+  $\cos\theta$        & from $\hat u_z$ & w.r.t.\ detector $z$ (beam-ish) axis\\
+  $\theta_{\mu\pi}$   & $\arccos(\hat u_\mu\!\cdot\!\hat u_\pi)$ & opening angle\\
+  PID / candidacy     & \texttt{trk\_llr\_pid\_score\_v}, \texttt{trk\_bragg\_*\_v}, & see PID slide\\
+                      & \texttt{trk\_score\_v}, \texttt{trk\_distance\_v}, \texttt{trk\_len\_v} & \\
+  \bottomrule
+  \end{tabular}
+  \end{center}
+  {\scriptsize Energies follow as $E_i=\sqrt{|\vec p_i|^2+m_i^2}$ with the PDG mass of the
+  assigned species. Truth counterparts use \texttt{mc\_nu\_daughter\_p[xyz]} (back-matched
+  via \texttt{backtracked\_pdg}).}
+\end{frame}
+
 \begin{frame}{Backup: W/TKI observable definitions}
-  \small From the muon, charged-pion and leading-proton momenta (STV tool, option 1):
+  \small From the muon, charged-pion and leading-proton four-vectors above
+  (framework STV tool):
   \begin{align*}
   W_{\pi p} &= \sqrt{(E_\pi+E_p)^2-|\vec p_\pi+\vec p_p|^2}\quad\text{(direct, no $\nu$ direction)}\\
   W_\mathrm{had} &= \sqrt{m_p^2+2m_p(E_\mathrm{cal}-E_\mu)-Q^2}\quad\text{(calorimetric)}\\
   \delta p_T &= |\vec p_T^{\,\mu}+\vec p_T^{\,\mathrm{had}}|,\quad
   \delta\alpha_T,\ \delta\phi_T\ \text{(TKI angles)},\quad p_n=\sqrt{\delta p_T^2+p_L^2}
   \end{align*}
-  Proton momentum from the proton-hypothesis range kinetic energy;
-  $E_b=24.78$~MeV argon removal energy.
+  {\footnotesize with $\vec p^{\,\mathrm{had}}=\vec p_\pi+\vec p_p$,
+  $E_\mathrm{cal}=E_\mu+E_\pi+T_p$, and the transverse components taken w.r.t.\ the beam
+  ($\hat z$) axis. $E_b=24.78$~MeV argon removal energy enters $p_L$ (hence $p_n$).}
 \end{frame}
 
 \begin{frame}{Backup: proton-tagged binning \& closure}

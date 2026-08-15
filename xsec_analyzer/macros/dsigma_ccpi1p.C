@@ -14,11 +14,14 @@ void dsigma_ccpi1p(const char* cfg = "FHC5") {
                          "#deltap_{T} [GeV/c]","#delta#alpha_{T} [deg]",
                          "#delta#phi_{T} [deg]","p_{n} [GeV/c]"};
   gStyle->SetOptStat(0);
-  TCanvas c(Form("ds1p_%s",cfg), "", 1500, 900);
+  TCanvas c(Form("ds1p_%s",cfg), "", 1800, 1100);
   c.Divide(3, 2);
   std::vector<TObject*> keep;
   for (int o = 0; o < 6; ++o) {
     c.cd(o+1);
+    // roomy margins so the axis titles/labels are not clipped or crowded in a 3x2 montage
+    gPad->SetBottomMargin(0.16); gPad->SetLeftMargin(0.17); gPad->SetTopMargin(0.09);
+    gPad->SetRightMargin(0.04);
     TFile* f = TFile::Open(Form("%sclosure_hists_xsec_ccpi1p_%s_%s.root", PROC, cfg, obs[o]));
     if (!f || f->IsZombie()) { printf("  missing closure %s %s\n", cfg, obs[o]); continue; }
     TH1D* hunf = (TH1D*)f->Get("h_unfolded_nuwro");
@@ -32,6 +35,16 @@ void dsigma_ccpi1p(const char* cfg = "FHC5") {
     hunf->SetTitle(Form("%s;%s;d#sigma/dx [10^{-38} cm^{2}/Ar]", obs[o], obsX[o]));
     hunf->SetMarkerStyle(20); hunf->SetMarkerSize(0.8);
     hunf->SetLineColor(kBlack); hunf->SetMarkerColor(kBlack);
+    // Axis formatting: the default division count crams too many tick labels into a
+    // narrow pad and they collide (e.g. the 1.1-1.5 GeV W_pipr range). Use few, well
+    // separated divisions and set explicit title/label sizes + offsets.
+    hunf->GetXaxis()->SetNdivisions(505);
+    hunf->GetXaxis()->SetTitleSize(0.055); hunf->GetXaxis()->SetLabelSize(0.048);
+    hunf->GetXaxis()->SetTitleOffset(1.20);
+    hunf->GetYaxis()->SetNdivisions(505);
+    hunf->GetYaxis()->SetTitleSize(0.050); hunf->GetYaxis()->SetLabelSize(0.045);
+    hunf->GetYaxis()->SetTitleOffset(1.55);
+    hunf->GetYaxis()->SetMaxDigits(3);
     // Generator FTE overlays (flat-index, content = dsigma/dx * binwidth). Only the
     // event-level generators (GENIE gst, GiBUU) have proton-tagged W/TKI predictions;
     // NuWro needs its container to reprocess and NEUT provides no event kinematics.
@@ -59,7 +72,7 @@ void dsigma_ccpi1p(const char* cfg = "FHC5") {
     for (auto hg:gh) for (int b=1;b<=hg->GetNbinsX();++b) ymax = std::max(ymax, hg->GetBinContent(b));
     hunf->SetMinimum(0); hunf->SetMaximum(1.35*ymax);
     hunf->Draw("E1");
-    TLegend* lg = new TLegend(0.38,0.66,0.88,0.90); lg->SetBorderSize(0); lg->SetFillStyle(0); lg->SetTextSize(0.032); lg->SetNColumns(2);
+    TLegend* lg = new TLegend(0.38,0.66,0.88,0.90); lg->SetBorderSize(0); lg->SetFillStyle(0); lg->SetTextSize(0.040); lg->SetNColumns(2);
     lg->AddEntry(hunf, "Unfolded fake data", "lep");
     if (htru) { htru->SetLineColor(kGray+2); htru->SetLineWidth(2); htru->SetLineStyle(2); htru->Draw("hist same"); lg->AddEntry(htru,"Truth (A_{C})","l"); }
     if (htun) { htun->SetLineColor(kBlack); htun->SetLineWidth(2); htun->Draw("hist same"); lg->AddEntry(htun,"uB tune","l"); }
