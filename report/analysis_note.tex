@@ -31,7 +31,7 @@
 % ── Custom commands ───────────────────────────────────────────────────────────
 \newcommand{\numu}{$\nu_\mu$}
 \newcommand{\numubar}{$\bar{\nu}_\mu$}
-\newcommand{\ccpip}{$\mathrm{CC}\pi^+$}
+\newcommand{\ccpip}{$\mathrm{CC}\pi^{\pm}$}
 \newcommand{\pmu}{$p_\mu$}
 \newcommand{\ppi}{$p_\pi$}
 \newcommand{\costhmu}{$\cos\theta_\mu$}
@@ -91,7 +91,7 @@
   \vspace{2cm}
   \begin{abstract}
     We present a measurement of $\nu_\mu + \bar{\nu}_\mu$ charged-current single
-    charged-pion ($\mathrm{CC}\pi^+$) differential cross sections on argon-40 using
+    charged-pion ($\mathrm{CC}\pi^{\pm}$) differential cross sections on argon-40 using
     the full \uboone{} NuMI exposure, in three configurations: forward horn current
     (FHC; Runs~1, 2, 4, 5; $8.857\times10^{20}$ protons on target,
     POT), reverse horn current (RHC; Runs~1, 2, 3, 4a, 4b, 4c;
@@ -121,7 +121,7 @@
     per-run POT normalization bug affecting the multi-file RHC runs, now corrected.
     %
     The observed yield is $\approx\!0.75\times$ the GENIE~v3 prediction, consistent
-    with the known over-prediction of $\mathrm{CC}\pi^+$ production in current
+    with the known over-prediction of $\mathrm{CC}\pi^{\pm}$ production in current
     neutrino interaction generators.
     %
     The extraction is validated by a same-sample self-closure that recovers the
@@ -142,7 +142,7 @@
 \label{sec:intro}
 % =============================================================================
 
-Charged-current single charged-pion (CC$\pi^+$) production,
+Charged-current single charged-pion (CC$\pi^{\pm}$) production,
 \begin{equation}
   \nu_\mu(\bar{\nu}_\mu) + \mathrm{Ar} \;\longrightarrow\;
   \mu^{\mp} + \pi^{\pm} + X,
@@ -160,7 +160,7 @@ differences for individual kinematic variables.
 Fermilab that operated from 2015--2021, providing the world's highest-statistics
 $\nu_\mu$-on-argon dataset below $5$~GeV during its NuMI running period.
 This note presents a simultaneous measurement of five differential cross sections
-in the CC$\pi^+$ channel using the full NuMI exposure in FHC, RHC, and combined
+in the CC$\pi^{\pm}$ channel using the full NuMI exposure in FHC, RHC, and combined
 configurations, employing Pandora pattern recognition~\cite{pandora} and
 Wiener-SVD unfolding~\cite{wienervsd}.
 
@@ -205,7 +205,7 @@ $W \lesssim 2$~GeV and contribute at $E_\nu \gtrsim 1.5$~GeV.
 A non-resonant continuum contributes at all $W$ and interferes (constructively
 or destructively by isospin) with the resonant amplitude.  Deep-inelastic
 scattering (DIS) becomes significant above $W \approx 1.6$~GeV.  Together
-these processes represent $\sim$20\% of the CC$\pi^+$ rate in the energy range
+these processes represent $\sim$20\% of the CC$\pi^{\pm}$ rate in the energy range
 of this analysis and are modelled in GENIE via the Bodek--Yang formalism.
 
 \textbf{Coherent pion production.}
@@ -218,7 +218,7 @@ treated as a background in this analysis.
 \label{sec:fsi}
 
 On a heavy nucleus such as argon ($A = 40$), two classes of nuclear correction
-modify the CC$\pi^+$ rate and kinematics significantly.
+modify the CC$\pi^{\pm}$ rate and kinematics significantly.
 
 \textbf{Initial-state effects.} Fermi motion of the struck nucleon broadens
 kinematic distributions, and Pauli blocking suppresses transitions to low-momentum
@@ -229,7 +229,7 @@ nucleon mass relative to free-nucleon predictions.
 nuclear medium before being detected.  Intranuclear rescattering occurs via:
 \begin{itemize}[noitemsep]
   \item \textit{Pion absorption} ($\pi A \to NN\ldots$): probability $\sim$25--30\%
-    on Ar; converts CC$\pi^+$ events into CC0$\pi$ topology.
+    on Ar; converts CC$\pi^{\pm}$ events into CC0$\pi$ topology.
   \item \textit{Charge exchange} ($\pi^+ n \to \pi^0 p$): produces a CC$\pi^0$ event.
   \item \textit{Quasi-elastic scattering}: pion survives but changes direction;
     modifies $p_\pi$ and $\theta_\pi$ distributions.
@@ -237,7 +237,7 @@ nuclear medium before being detected.  Intranuclear rescattering occurs via:
     $p_\pi \approx 400$~MeV/$c$.
 \end{itemize}
 FSI are modelled in GENIE via the INTRANUKE (hA) cascade.  Because absorption and
-charge exchange mix CC$\pi^+$, CC$\pi^0$, and CC0$\pi$ topologies at the
+charge exchange mix CC$\pi^{\pm}$, CC$\pi^0$, and CC0$\pi$ topologies at the
 $\sim$30\% level, the signal in any CC$\pi$ analysis is necessarily defined by
 the final-state particle content observed in the detector, not by the underlying
 production process (Section~\ref{sec:signal}).
@@ -246,7 +246,7 @@ production process (Section~\ref{sec:signal}).
 \label{sec:generators}
 
 Major neutrino event generators reproduce the inclusive CC cross section to
-10--15\% but show systematic spread in the CC$\pi^+$ rate, owing to differences
+10--15\% but show systematic spread in the CC$\pi^{\pm}$ rate, owing to differences
 in the resonance model, the treatment of the transition region between resonance
 and DIS, and the FSI cascade.
 
@@ -268,7 +268,7 @@ FSI are handled by the INTRANUKE \textit{hA} empirical cascade, which
 propagates hadrons step-by-step using free-nucleon $\pi N$ cross sections
 scaled by an effective nuclear density; the alternative \textit{hN}
 microscopic cascade is also available.
-GENIE is documented to over-predict the CC$\pi^+$ rate by 20--35\% relative to
+GENIE is documented to over-predict the CC$\pi^{\pm}$ rate by 20--35\% relative to
 bubble-chamber and MiniBooNE data when normalised to the BNL dataset; the
 over-prediction is reduced but not eliminated in the AR23 tune.
 
@@ -299,7 +299,7 @@ production via a modified Rein--Sehgal model including 18 resonances up to
 $W \lesssim 2$~GeV, with Graczyk--Sobczyk~\cite{graczyk2008} electromagnetic
 form factors for the $\Delta(1232)$.
 The axial mass $M_A^{\rm RES}$ is a tunable parameter; T2K applies a data-driven
-tune that reduces the overall CC$\pi^+$ normalisation by $\sim$10--20\% relative
+tune that reduces the overall CC$\pi^{\pm}$ normalisation by $\sim$10--20\% relative
 to the default.
 The transition to DIS is handled similarly to GENIE, using GRV98 LO parton
 distribution functions with Bodek--Yang corrections above $W \approx 2$~GeV.
@@ -1001,7 +1001,7 @@ omitted from the extended $p_\pi$ comparison. Against the (fake) data the
 generators give $\chi^2/\mathrm{ndf} = 11.1/6$ (GENIE, $p=0.09$), $7.0/6$ (NuWro,
 $p=0.33$) and $6.3/6$ (NEUT, $p=0.39$): NEUT and NuWro describe the extended
 spectrum well, while GENIE is mildly disfavoured, consistent with the known GENIE
-over-prediction of low-momentum CC$\pi^+$ production.
+over-prediction of low-momentum CC$\pi^{\pm}$ production.
 
 \begin{center}\small
 \captionof{table}{Selection efficiency per true $p_\pi$ bin with the low-momentum
@@ -1464,7 +1464,7 @@ genuine muon track is correctly identified.
 At the current working point (\texttt{trk\_bragg\_pion\_v} $\geq 0.08$), the pion
 candidate is truth-matched to a proton in $\approx18\%$ of cases.  Tighter
 Bragg-score thresholds (0.20--0.30) were studied but shown not to improve the
-figure of merit: the pion-to-proton ratio in CC$\pi^+$ signal is $\approx4:1$,
+figure of merit: the pion-to-proton ratio in CC$\pi^{\pm}$ signal is $\approx4:1$,
 so rejecting protons removes genuine pions at nearly the same rate.
 
 \subsection{Event displays}
@@ -2627,12 +2627,13 @@ closes positive with $\chi^2/\mathrm{ndf}\ll1$.
 
 
 Figure~\ref{fig:dsigma_ccpi1p_fhc} shows the six FHC W/TKI differential cross sections
-at the finer six-bin binning. The generator overlays are \emph{not} shown in this version:
-the GENIE, GiBUU, NEUT and NuWro proton-tagged W/TKI predictions were produced at the
-earlier three-bin binning and are therefore dropped by the bin-count match against the
-six-bin measurement. Regenerating them (GENIE and GiBUU natively, NuWro and NEUT from
-their event vectors inside the SL7 container) at the current binning is pending; the
-generator comparison quoted below refers to the earlier three-bin version. The predictions are built at truth level from each
+at the finer six-bin binning, overlaid with all four generator predictions. The generator
+W/TKI predictions were regenerated at this binning (GENIE and GiBUU natively, NuWro and
+NEUT from their event vectors inside the SL7 container); the rebinning conserves each
+generator's integral to the previous three-bin value (GENIE $0.501$, NuWro $0.646$,
+GiBUU $0.735$, NEUT $0.783\times10^{-38}$~cm$^2$/Ar). All curves --- data, tune and
+generators --- are $A_C$-smeared, so the comparison is made consistently in the
+measurement space (\S\ref{sec:acwtki}). The predictions are built at truth level from each
 generator's event-level final state --- GENIE gst events, GiBUU \texttt{FinalEvents},
 and the NuWro and NEUT event vectors reprocessed in their respective SL7-container
 environments --- by applying the inclusive signal plus a leading true proton above
@@ -2645,6 +2646,57 @@ the data ($\sim0.58$), and they differ most in the low-$\delta p_T$ / high-$p_n$
 sensitive to the proton kinematics and final-state interactions. As throughout, the
 unfolded fake data sit above the $A_C$-smeared truth by the Wiener-SVD normalisation
 factor.
+
+\subsection{Additional smearing in the proton-tagged observables}
+\label{sec:acwtki}
+
+Because the Wiener--SVD additional-smearing matrix $A_C$ is not norm-preserving, each
+observable's predictions are rescaled by a different factor when they are brought into the
+measurement space. Table~\ref{tab:acwtki} gives that factor, measured as the ratio of the
+$A_C$-smeared to the truth-level generator integral, for the six proton-tagged observables.
+It is a property of the response and the binning, not of the model: GENIE and GiBUU agree
+to a few per cent throughout.
+
+The two hadronic-mass variables are the \emph{least} affected in the whole analysis
+($0.77$--$0.88$). This is worth stating explicitly because $W_{\pi p}$ is the sharpest
+distribution measured here --- the ratio of its largest to smallest bin is $\sim\!36$,
+against $\sim\!19$ for $\cos\theta_\mu$, whose forward peak is suppressed by a factor
+$\sim\!0.33$ (\S\ref{sec:thetavar}). Sharpness alone therefore does not drive the
+suppression: $A_C$ removes structure that the \emph{response} cannot resolve, and
+$W_{\pi p}$ is built from directly measured pion and proton momenta with good resolution
+and equal-population bins that track the $\Delta(1232)$ peak, so the peak survives. No
+reparameterisation of $W$ is required.
+
+Two observables do carry a caveat. $\delta p_T$ is strongly suppressed ($0.43$--$0.45$),
+closer to the $\cos\theta_\mu$ regime than to $W$; and $p_n$ is \emph{enhanced} by a factor
+$\sim\!1.7$. Both effects are applied identically to data, tune and generators, so the
+closure is unaffected, but any model comparison read off the $\delta p_T$ and especially
+the $p_n$ panels is distorted by these factors and should not be interpreted as a direct
+statement about the truth-level predictions until the binning and response for those two
+observables have been revisited.
+
+\begin{table}[H]
+  \centering
+  \caption{Additional-smearing factor $A_C$ for the proton-tagged observables (FHC),
+    measured as the ratio of the $A_C$-smeared to the truth-level generator integral. The
+    inclusive observables are given for scale.}
+  \label{tab:acwtki}
+  \begin{tabular}{lccl}
+    \toprule
+    Observable & GENIE & GiBUU & Comment \\
+    \midrule
+    $W_\mathrm{had}$ & $0.88$ & $0.86$ & least smeared in the analysis \\
+    $W_{\pi p}$      & $0.78$ & $0.77$ & sharpest distribution, yet barely affected \\
+    $\delta\alpha_T$ & $0.63$ & $0.62$ & \\
+    $\delta\phi_T$   & $0.61$ & $0.60$ & \\
+    $\delta p_T$     & $0.43$ & $0.45$ & strongly suppressed \\
+    $p_n$            & $1.71$ & $1.65$ & \emph{enhanced} \\
+    \midrule
+    \multicolumn{4}{l}{\textit{Inclusive, for scale:} $p_\mu$ $0.64$; $\theta_\mu$ $0.76$;
+      $\cos\theta_\mu$ $0.33$} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
 
 \begin{figure}[H]
   \centering
@@ -2961,7 +3013,7 @@ $\nu_\mu$ events, hence the large $\nu_e$-enriched POT-equivalent and no $\nu_\m
 signal; the genuine Run~5 $\nu_\mu$ overlay, a \texttt{reweightedPPFX} sample, was
 subsequently located and is used for the extended set below),
 $2.32\times10^{6}$ unique events, normalised to the FHC data POT
-$6.626\times10^{20}$ (Section~\ref{sec:nueconsistency}). Because CC$\pi^+$ is
+$6.626\times10^{20}$ (Section~\ref{sec:nueconsistency}). Because CC$\pi^{\pm}$ is
 resonance-dominated, robustness to the resonant axial mass is tested with
 Poisson-thrown fake data reweighted to $M_A^\mathrm{RES}=1.12\pm0.22$~GeV
 ($\pm1\sigma$; axial dipole ratio in the true interaction $Q^2$, a
@@ -3085,7 +3137,7 @@ RHC, and their combination.
 \label{sec:summary}
 % =============================================================================
 
-We have presented a simultaneous measurement of five CC$\pi^+$ differential cross
+We have presented a simultaneous measurement of five CC$\pi^{\pm}$ differential cross
 sections on argon using the full MicroBooNE NuMI exposure in three configurations
 --- FHC ($8.857\times10^{20}$~POT), RHC ($1.108\times10^{21}$~POT), and their
 combination ($1.994\times10^{21}$~POT) --- the first such multi-observable
@@ -3097,7 +3149,7 @@ efficiency of $\sim\!13$--$20\%$ in the measured phase space (reference phase sp
 $57.2\%$ purity, $12.1$--$12.6\%$ efficiency; Table~\ref{tab:phasespace}), identical
 across the three configurations since the selection is the same. The blind
 data/prediction ratio of $\approx\!0.75$ is consistent with the known GENIE~v3
-over-prediction of CC$\pi^+$ production documented in
+over-prediction of CC$\pi^{\pm}$ production documented in
 MiniBooNE~\cite{miniboone_ccpi}, MINERvA~\cite{minerva_ccpi},
 T2K~\cite{t2k_ccpip}, and the MicroBooNE BNB CC$\pi^+$ measurement~\cite{uboone_bnb2026_ccpi}.
 
@@ -3131,7 +3183,7 @@ the GENIE~v3 prediction, consistent with generator over-predictions of
 20--35\% seen by all prior experiments.  This
 measurement provides:
 \begin{itemize}[noitemsep]
-  \item The first CC$\pi^+$ differential cross sections from the MicroBooNE
+  \item The first CC$\pi^{\pm}$ differential cross sections from the MicroBooNE
     NuMI (off-axis) dataset, complementing the existing BNB-beam CC$\pi^+$
     result~\cite{uboone_bnb2026_ccpi} from the same detector.
   \item Constraints at lower neutrino energies ($E_\nu \sim 0.1$--$0.5$~GeV)
@@ -3142,7 +3194,7 @@ measurement provides:
     to the planned DUNE~\cite{dune} oscillation analysis, which operates at a
     similar beam energy with a LArTPC far detector.
   \item Sensitivity to the $\bar{\nu}_\mu$ contribution ($\approx 38\%$) in
-    CC$\pi^+$ production on argon, previously unmeasured.
+    CC$\pi^{\pm}$ production on argon, previously unmeasured.
 \end{itemize}
 
 \paragraph{Required for publication.}
@@ -3178,7 +3230,7 @@ residual ($\le2.1\%$) dominated by the covariance-import approximation (below).
 Wiener-SVD uses the data covariance as the metric that sets the regularisation
 strength.  The custom macros originally built a \emph{statistics-only diagonal}
 covariance, because the custom pipeline does not throw systematic universes.
-With the CC$\pi^+$ response strongly off-diagonal (50--99\% bin migration), a
+With the CC$\pi^{\pm}$ response strongly off-diagonal (50--99\% bin migration), a
 stat-only covariance under-states the noise, under-regularises, and inflates the
 unfolded integral by $\sim26\%$.  This was proven by a swap test: feeding the
 framework's own inputs through the same Wiener-SVD unfolder with a stat-only
@@ -3218,8 +3270,8 @@ aligned to the framework's 9-bin scheme so the two are directly comparable.
 \subsection{Generator normalisation (NuWro vs GENIE)}
 
 In the closure test the NuWro fake data carries roughly twice the selected
-CC$\pi^+$ signal of the GENIE central-value prediction used to build the
-response, consistent with the well-documented generator spread in CC$\pi^+$
+CC$\pi^{\pm}$ signal of the GENIE central-value prediction used to build the
+response, consistent with the well-documented generator spread in CC$\pi^{\pm}$
 production on argon~\cite{uboone_bnb2026_ccpi}.  The unfolding correctly recovers the
 injected NuWro truth (Section~\ref{sec:nuwroclosure}), confirming that the
 $\sim2\times$ generator difference is propagated faithfully rather than absorbed
@@ -3295,7 +3347,7 @@ The NuWro fake data unfolds to approximately twice the \textsc{Genie} MicroBooNE
 tune in every observable, uniformly in shape
 (Fig.~\ref{fig:nuwro_closure}, Table~\ref{tab:nuwroclosure}); the two independent
 unfolding chains recover the same ratio, cross-validating both. The flat
-$\sim2\times$ offset here is a genuine NuWro-versus-\textsc{Genie}-tune CC$\pi^+$
+$\sim2\times$ offset here is a genuine NuWro-versus-\textsc{Genie}-tune CC$\pi^{\pm}$
 model difference in this NuMI FHC phase space: NuWro is used at its raw cross
 section (its \texttt{weightTune} and \texttt{ppfx\_cv} branches are unset and
 default to unity, so no \textsc{Genie} tune is applied to the fake data). This must

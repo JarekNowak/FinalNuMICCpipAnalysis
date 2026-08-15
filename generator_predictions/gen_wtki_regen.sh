@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # gen_wtki_regen.sh — regenerate the four generator proton-tagged W/TKI predictions at
-# the new 3-bin binning (wtki_gen.h updated). GENIE + GiBUU run in the native ROOT;
+# the 6-bin analysis binning (wtki_gen.h edges = the ccpi1p_<obs>_bin_config.txt edges).
 # NuWro + NEUT reprocess their event vectors inside the SL7 container. Then combine
 # numu+numubar over the FHC flux into the per-Ar FTE overlays.
 set -uo pipefail
 cd /home/t2k/nowak/MicroBooNE/working_xsec_analyzer/generator_predictions
 export LD_LIBRARY_PATH="/usr/lib64/flexiblas:$(root-config --libdir):$PWD/../xsec_analyzer/lib:${LD_LIBRARY_PATH:-}"
 IMG=/cvmfs/singularity.opensciencegrid.org/fermilab/fnal-wn-sl7:latest
-echo "==== GEN W/TKI REGEN (3-bin) START $(date) ===="
+echo "==== GEN W/TKI REGEN (6-bin) START $(date) ===="
 
 # --- GENIE (gst; absolute sigma_tot_cc per Ar: numu 1.390129e-37, numubar 4.208102e-38) ---
 nice root.exe -l -b -q 'genie/analyze_gst_1p.C("newg4/g_numu.gst.root",1.390129e-37,"newg4/genie_1p_numu.root")' >/dev/null 2>&1

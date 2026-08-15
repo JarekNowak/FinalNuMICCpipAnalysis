@@ -38,13 +38,19 @@ namespace wtki {
   }
   // 3-bin analysis edges (match ccpi1p_*_bin_config.txt; coarsened for the low-stat
   // proton-tagged unfolding; first/last bins open -> clamp)
+  // Six equal-population bins, matching the analysis bin configs
+  // (xsec_analyzer/configs/ccpi1p_<obs>_bin_config.txt). The interior edges are copied
+  // from those files; the first/last values are the open outer limits (the analysis
+  // first and last bins are open, and clamp() below folds overflow into them).
+  // Previously 3 bins -- the generator predictions were then silently dropped by the
+  // bin-count match in dsigma_ccpi1p.C once the measurement moved to 6 bins.
   inline std::vector<double> edges(const std::string& k){
-    if(k=="Wpipr")  return {1.08,1.24,1.45,2.00};
-    if(k=="Whad")   return {0.0,1.10,1.40,1.90};
-    if(k=="dpt")    return {0.0,0.55,0.90,1.60};
-    if(k=="dalphat")return {0.,110.,155.,180.};
-    if(k=="dphit")  return {0.,70.,120.,180.};
-    if(k=="pn")     return {0.0,0.65,0.95,1.70};
+    if(k=="Wpipr")  return {1.08,1.19,1.23,1.27,1.34,1.47,2.00};
+    if(k=="Whad")   return {0.0,0.78,1.08,1.21,1.31,1.44,1.90};
+    if(k=="dpt")    return {0.0,0.43,0.59,0.72,0.88,1.17,1.60};
+    if(k=="dalphat")return {0.,80.,120.,142.,158.,170.,180.};
+    if(k=="dphit")  return {0.,37.,63.,84.,107.,139.,180.};
+    if(k=="pn")     return {0.0,0.52,0.67,0.81,0.98,1.25,1.70};
     return {};
   }
   inline double clamp(double v,const std::vector<double>& e){
