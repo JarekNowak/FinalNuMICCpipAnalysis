@@ -31,15 +31,15 @@
 \setbeamertemplate{footline}{%
   \leavevmode\hbox{%
   \begin{beamercolorbox}[wd=.62\paperwidth,ht=2.4ex,dp=1ex,leftskip=.3cm]{section in head/foot}%
-  \usebeamerfont{author in head/foot}MicroBooNE NuMI CC$1\mu1\pi^{\pm}$\hfill\end{beamercolorbox}%
+  \usebeamerfont{author in head/foot}\insertshortauthor\ --- MicroBooNE NuMI CC$1\mu1\pi^{\pm}$\hfill\end{beamercolorbox}%
   \begin{beamercolorbox}[wd=.38\paperwidth,ht=2.4ex,dp=1ex,rightskip=.3cm]{section in head/foot}%
   \hfill\insertshorttitle\quad\insertframenumber\,/\,\inserttotalframenumber\end{beamercolorbox}}}
 
 \title[CC$1\mu1\pi^{\pm}$]{Differential CC$\,1\mu1\pi^{\pm}$ cross sections on argon in the NuMI beam}
 \subtitle{Inclusive measurement and the proton-tagged hadronic-mass / TKI subsample}
-\author{Ishanne Pophale and Jarek Nowak}
+\author[Pophale, Nowak]{Ishanne Pophale and Jarek Nowak}
 \institute{Lancaster University}
-\date{\today}
+\date{18 August 2026}
 
 \begin{document}
 
@@ -93,12 +93,29 @@
     $p_\pi>0.175$~GeV/$c$, in the fiducial volume.
   \end{block}
   \begin{columns}[T]\column{.58\textwidth}
-  \begin{itemize}\small
-    \item Resonant $\Delta(1232)$ production dominates; probes pion production,
-      nuclear effects and final-state interactions on argon.
-    \item NuMI off-axis beam: $\nu_\mu$-dominant FHC, $\bar\nu_\mu$-enriched RHC.
-    \item Five differential observables: $p_\mu$, $p_\pi$, $\cos\theta_\mu$,
-      $\cos\theta_\pi$, $\theta_{\mu\pi}$.
+  \begin{itemize}\scriptsize
+    \item Signal defined by the \alert{final state} $\Rightarrow$ every interaction mode
+      contributes, via primary pion production \emph{and} via FSI:
+  \end{itemize}
+  \vspace{-1mm}
+  \begin{center}\scriptsize
+  \begin{tabular}{lrl}
+  \toprule
+  Mode & \% of signal & Pion origin\\\midrule
+  RES ($\Delta(1232)$, higher $N^\ast$) & 77.5 & primary\\
+  DIS / SIS                             & 17.5 & primary (higher $W$)\\
+  QE                                    & 2.6  & \alert{FSI only} (no primary $\pi$)\\
+  COH                                   & 2.1  & primary, low $|t|$\\
+  MEC / 2p2h                            & 0.3  & \alert{FSI only}\\
+  \bottomrule
+  \end{tabular}
+  \end{center}
+  \vspace{-1mm}
+  \begin{itemize}\scriptsize\setlength\itemsep{1pt}
+    \item FSI also \alert{migrates} events both ways: absorption/charge exchange turns
+      multi-$\pi$ into $1\pi$, and $1\pi$ into $0\pi$.
+    \item NuMI off-axis: $\nu_\mu$-dominant FHC, $\bar\nu_\mu$-enriched RHC. Observables:
+      $p_\mu$, $p_\pi$, $\cos\theta_\mu$, $\cos\theta_\pi$, $\theta_{\mu\pi}$.
   \end{itemize}
   \column{.42\textwidth}
   \begin{block}{Exposure (fake data, blind)}\footnotesize
@@ -177,8 +194,73 @@
   \end{block}
   \end{columns}
   \vspace{1mm}
-  {\scriptsize Pion momentum from the proton-hypothesis range KE (tracks low-energy
-  stopping pions better than the $\mu$ hypothesis).}
+  {\scriptsize Momentum reconstruction on the next slide.}
+\end{frame}
+
+\begin{frame}{Momentum reconstruction: range, MCS and the proton range-KE}
+  \footnotesize
+  All three tracks are \alert{range-based} where possible: a contained track's length maps
+  onto momentum through the particle's $dE/dx$, which is far more precise than calorimetry
+  at these energies.
+  \begin{center}\scriptsize
+  \begin{tabular}{llll}
+  \toprule
+  Particle & Estimator & PeLEE branch & Note\\\midrule
+  $\mu$ (contained) & range momentum & \texttt{trk\_range\_muon\_mom\_v} & \alert{37\%} of selected\\
+  $\mu$ (exiting)   & MCS momentum   & \texttt{trk\_mcs\_muon\_mom\_v}   & \alert{63\%} --- range invalid\\
+  $\pi$             & range momentum, \alert{$\mu$ hypothesis} & \texttt{trk\_range\_muon\_mom\_v} & $m_\mu$ close to $m_\pi$\\
+  $p$               & range \alert{KE}, $p$ hypothesis & \texttt{trk\_energy\_proton\_v} & $\to$ momentum, see below\\
+  \bottomrule
+  \end{tabular}
+  \end{center}
+  {\scriptsize $p_\mu$ is therefore a \alert{hybrid} quantity (\texttt{..\_mom\_reco}
+  switches on muon containment) and is \alert{MCS-dominated}: NuMI muons are energetic and
+  the TPC is small, so most leave it.}\\[1mm]
+  \begin{columns}[T]\column{.52\textwidth}
+  \begin{block}{Proton: range KE $\to$ momentum}\scriptsize
+  The proton branch gives a \emph{kinetic energy}, so it is converted:
+  \[ |\vec p_p|=\sqrt{T_p^{2}+2\,T_p\,m_p} \]
+  Threshold $|\vec p_p|>0.3$~GeV/$c$ ($T_p\gtrsim48$~MeV) --- below this the proton is too
+  short to track. Performance: \alert{$-9\%$ bias, $21\%$ resolution}.
+  \end{block}
+  \column{.48\textwidth}
+  \begin{block}{Why the pion uses the $\mu$ hypothesis}\scriptsize
+  $m_\mu=105.7$~MeV, $m_\pi=139.6$~MeV: the masses are close, so the range$\to$momentum
+  curve is a good proxy for a stopping pion.\\[1mm]
+  It also returns a \alert{momentum}, directly comparable to the true $p_\pi$ it is binned
+  against --- which keeps the migration matrix near-diagonal.\\[1mm]
+  Valid only for \alert{contained} tracks; the selection requires pion containment.
+  \end{block}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Response (smearceptance) matrices --- FHC}
+  \centering
+  \begin{columns}[c]
+  \column{.2\textwidth}\includegraphics[width=\linewidth]{smear_pmu_FHC5}\\
+    \centering{\scriptsize $p_\mu$}
+  \column{.2\textwidth}\includegraphics[width=\linewidth]{smear_ppi_FHC5}\\
+    \centering{\scriptsize \alert{$p_\pi$}}
+  \column{.2\textwidth}\includegraphics[width=\linewidth]{smear_costhmu_FHC5}\\
+    \centering{\scriptsize $\cos\theta_\mu$}
+  \column{.2\textwidth}\includegraphics[width=\linewidth]{smear_costhpi_FHC5}\\
+    \centering{\scriptsize $\cos\theta_\pi$}
+  \column{.2\textwidth}\includegraphics[width=\linewidth]{smear_thmupi_FHC5}\\
+    \centering{\scriptsize $\theta_{\mu\pi}$}
+  \end{columns}
+  \vspace{3mm}
+  \begin{columns}[T]\column{.94\textwidth}
+  {\footnotesize
+  $P(\mathrm{reco}\,|\,\mathrm{true})\times$ efficiency; columns are true bins, rows reco
+  bins. $p_\mu$ and the three angular observables are \alert{near-diagonal} --- note
+  $p_\mu$ is $63\%$ MCS-reconstructed (exiting muons), whose poorer resolution sets its
+  width.
+  \alert{$p_\pi$ is the outlier} --- reco piles into the first bin from every true bin,
+  since pions interact hadronically before stopping so a range-based momentum
+  \alert{under-estimates} $p_\pi$. With $50$--$99\%$ bin migration overall a plain matrix
+  inversion is unusable, hence \alert{Wiener-SVD} regularisation --- at the cost of the
+  $A_C$ additional smearing.}
+  \end{columns}
 \end{frame}
 
 \begin{frame}{Inclusive cut-flow --- FHC (full exposure)}
@@ -229,9 +311,40 @@
   regularisation) with the full systematic covariance from the universe throws.
 \end{frame}
 
-\begin{frame}{Differential cross sections --- FHC}
-  \centering\includegraphics[height=.78\textheight]{dsigma_FHC5}\\
-  {\scriptsize Unfolded fake data vs $A_C$-smeared truth, MicroBooNE tune, and GENIE/GiBUU/NEUT/NuWro.}
+
+\begin{frame}{Differential cross sections --- FHC: the fake-data truth we should recover}
+  \centering\includegraphics[height=.76\textheight]{dsigma_build_FHC5_1}\\
+  {\scriptsize Poisson-thrown fake data are generated from the MicroBooNE tune; after unfolding we should recover this $A_C$-smeared truth.}
+\end{frame}
+
+\begin{frame}{Differential cross sections --- FHC: $+$ unfolded fake data}
+  \centering\includegraphics[height=.76\textheight]{dsigma_build_FHC5_2}\\
+  {\scriptsize The unfolded points sit on the truth: the response, background subtraction and normalisation close.}
+\end{frame}
+
+\begin{frame}{Differential cross sections --- FHC: $+$ MicroBooNE tune}
+  \centering\includegraphics[height=.76\textheight]{dsigma_build_FHC5_3}\\
+  {\scriptsize The tune is the central-value model the fake data were thrown from.}
+\end{frame}
+
+\begin{frame}{Differential cross sections --- FHC: $+$ GENIE}
+  \centering\includegraphics[height=.76\textheight]{dsigma_build_FHC5_4}\\
+  {\scriptsize External generators enter, each $A_C$-smeared so it lives in the same space as the measurement.}
+\end{frame}
+
+\begin{frame}{Differential cross sections --- FHC: $+$ GiBUU}
+  \centering\includegraphics[height=.76\textheight]{dsigma_build_FHC5_5}\\
+
+\end{frame}
+
+\begin{frame}{Differential cross sections --- FHC: $+$ NEUT}
+  \centering\includegraphics[height=.76\textheight]{dsigma_build_FHC5_6}\\
+
+\end{frame}
+
+\begin{frame}{Differential cross sections --- FHC: $+$ NuWro}
+  \centering\includegraphics[height=.76\textheight]{dsigma_build_FHC5_7}\\
+  {\scriptsize All four generators bracket the data; the spread between them is the model uncertainty this measurement can constrain.}
 \end{frame}
 
 \begin{frame}{Differential cross sections --- RHC}
@@ -654,6 +767,30 @@
   \bottomrule
   \end{tabular}\\[2mm]
   {\scriptsize Bin-averaged fractional uncertainty [\%]. Flux dominates throughout.}
+\end{frame}
+
+\begin{frame}{Backup: history --- the superseded pion-momentum estimator}
+  \footnotesize
+  An earlier version of this analysis reconstructed the \alert{pion} momentum from the
+  \alert{proton-hypothesis range kinetic energy} (\texttt{trk\_energy\_proton\_v}) rather
+  than the muon-hypothesis range momentum used now.
+  \begin{itemize}\setlength\itemsep{2pt}
+    \item That is a \alert{kinetic energy}, while the true axis it was binned against
+      (with identical bin edges) is a \alert{momentum} --- two different physical
+      quantities.
+    \item Consequence: the migration matrix was \alert{systematically shifted} rather than
+      near-diagonal. A true $0.2$~GeV/$c$ pion gives $KE\approx0.104$~GeV, \alert{two bins
+      low}; a true $0.175$~GeV/$c$ pion falls \alert{below the first reco bin entirely}.
+    \item Fixed by switching to \texttt{trk\_range\_muon\_mom\_v}
+      (\texttt{CC1mu1piXp.cxx}), which returns a momentum and exploits
+      $m_\mu\!\approx\!m_\pi$.
+  \end{itemize}
+  \vspace{1mm}
+  {\scriptsize Note: the proton-hypothesis range KE remains the \emph{correct} estimator
+  for the \alert{proton} in the W/TKI subsample --- there the quantity wanted really is a
+  kinetic energy, converted to momentum via $|\vec p_p|=\sqrt{T_p^2+2T_pm_p}$.\\[1mm]
+  Resolution panels produced before the switch quote a $\sim\!21\%$ underestimate of
+  $p_\pi$; they are to be regenerated with the current estimator.}
 \end{frame}
 
 \begin{frame}{Backup: from PeLEE branches to the kinematic inputs}

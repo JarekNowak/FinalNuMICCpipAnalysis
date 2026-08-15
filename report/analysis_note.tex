@@ -1175,14 +1175,29 @@ the Pandora topological score already provides the cosmic rejection at Cut~3).
 \subsection{Kinematic reconstruction}
 
 \paragraph{Muon momentum.}
-Range-based momentum from \texttt{trk\_range\_muon\_mom\_v} (primary estimator);
-MCS-based momentum from \texttt{trk\_mcs\_muon\_mom\_v} as cross-check.
+A \emph{hybrid} estimator, switched on containment of the muon-candidate track: the
+range-based momentum \texttt{trk\_range\_muon\_mom\_v} is used when the track ends inside
+the detector, and the multiple-Coulomb-scattering momentum
+\texttt{trk\_mcs\_muon\_mom\_v} when it exits (range is meaningless for an exiting track).
+The reported $p_\mu$ is therefore \texttt{candidate\_muon\_mom\_reco}, not either branch
+alone. In the selected FHC sample the split is $37\%$ contained (range) and
+$63\%$ exiting (MCS), i.e.\ the measurement is \emph{MCS-dominated}: the NuMI muons are
+energetic and the \uboone{} TPC is small, so most of them leave it. This matters for the
+$p_\mu$ resolution and for the detector systematic, since the range and MCS estimators
+carry different uncertainties.
 
 \paragraph{Pion momentum.}
-Estimated from the proton-hypothesis range kinetic energy
-(\texttt{trk\_energy\_proton\_v}), which tracks the true pion momentum more
-accurately than the muon-hypothesis estimator for the short, stopping hadronic
-tracks typical of low-energy pions.
+Taken from the \emph{muon-hypothesis} range momentum
+(\texttt{trk\_range\_muon\_mom\_v}). The muon mass ($105.7$~MeV) is close to the pion
+mass ($139.6$~MeV), so the range-to-momentum conversion is a good proxy, and --- crucially
+--- it is a \emph{momentum}, directly comparable to the true $p_\pi$ it is binned against.
+An earlier version of this analysis used the proton-hypothesis range \emph{kinetic energy}
+(\texttt{trk\_energy\_proton\_v}) instead. That is a different physical quantity from the
+momentum used for the true axis with the same bin edges, so the migration matrix was
+systematically shifted rather than near-diagonal: a true $0.2$~GeV/$c$ pion gives
+$KE\approx0.104$~GeV, two bins low, and a true $0.175$~GeV/$c$ pion falls below the first
+reco bin entirely. Range momentum is meaningful only for contained tracks, which the
+containment requirement in the selection guarantees.
 
 \paragraph{Angles.}
 Polar angles are defined with respect to the detector $z$-axis:
@@ -1691,9 +1706,18 @@ individual background components.
 \end{figure}
 
 Figure~\ref{fig:response} shows the response matrices (normalised per true bin)
-for the five observables.  The diagonal dominance confirms that migration effects
-are modest for the angular observables; $p_\mu$ shows slightly larger migrations
-in the low-momentum bins.
+for the five observables. The three angular observables and $p_\mu$ are near-diagonal;
+for $p_\mu$ the width is set mainly by the MCS estimator, which reconstructs $63\%$ of the
+selected sample and is intrinsically less precise than range.
+
+\emph{$p_\pi$ is the outlier.} Its response is markedly non-diagonal: reconstructed events
+pile into the first bin from every true bin, so the diagonal band is largely absent. The
+likely cause is physical rather than algorithmic --- charged pions interact hadronically
+before coming to rest, so the track range under-estimates the momentum, and no
+range-based estimator can fully recover it. The consequence is that the unfolded
+$p_\pi$ result leans more heavily on the regularisation than the other observables, and
+it is the observable for which a dedicated resolution and binning study would be most
+valuable.
 
 \begin{figure}[H]
   \centering
@@ -1813,7 +1837,9 @@ true bin; the quoted numbers are the overall mean (bias) and RMS (resolution).
     under-estimates above $\sim$1~GeV/$c$; the range estimator is badly biased for
     \emph{exiting} muons (range $=$ distance to wall), which is why the analysis
     uses range only for contained muons (range-or-MCS).  The pion momentum
-    (proton-hypothesis range KE) under-estimates true $p_\pi$ by $\sim$21\%.  The
+    (evaluated there with the superseded proton-hypothesis range KE) under-estimates
+    true $p_\pi$ by $\sim$21\%; the current muon-hypothesis range momentum removes most
+    of that shift, and this panel is to be regenerated.  The
     angular variables are essentially unbiased with narrow resolution.}
   \label{fig:resolution}
 \end{figure}

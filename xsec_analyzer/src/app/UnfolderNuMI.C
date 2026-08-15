@@ -301,7 +301,7 @@ void make_analysis_step_plots( const SystematicsCalculator& syst,
 
     auto* lg = new TLegend( 1 - right_margin + 0.02, 0.55, 0.98, 0.88 );
     lg->AddEntry( h_data, "NuMI data", "lep" );
-    lg->AddEntry( h_sig,  "MC signal (CC#pi^{+})", "f" );
+    lg->AddEntry( h_sig,  "MC signal (CC#pi^{#pm})", "f" );
     lg->AddEntry( h_bkg,  "MC + EXT background", "f" );
     lg->Draw();
 
@@ -344,7 +344,7 @@ void make_analysis_step_plots( const SystematicsCalculator& syst,
 
     auto* lg = new TLegend( 1 - right_margin + 0.02, 0.6, 0.98, 0.88 );
     lg->AddEntry( h_bsub, "Bkgd-subtracted data", "lep" );
-    lg->AddEntry( h_sig2, "MC signal (CC#pi^{+})", "l" );
+    lg->AddEntry( h_sig2, "MC signal (CC#pi^{#pm})", "l" );
     lg->Draw();
 
     draw_header( 0.13, 0.85 );
