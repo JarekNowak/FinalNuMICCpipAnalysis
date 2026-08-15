@@ -1,4 +1,4 @@
-// dsigma_build.C — progressive-reveal ("build") version of the inclusive differential
+// dsigma_build_1p.C — progressive-reveal ("build") version of the PROTON-TAGGED (W/TKI)
 // cross-section montage, for talks. Produces one figure per build step, each adding one
 // more curve on identical axes so the slides overlay cleanly:
 //
@@ -12,13 +12,14 @@
 //
 // The y-axis range is fixed across all steps from the FULL set of curves, so nothing
 // jumps between slides.
-//   usage: root -l -b -q 'macros/dsigma_build.C("FHC5")'
+//   usage: root -l -b -q 'macros/dsigma_build_1p.C("FHC5")'
 #include <vector>
-void dsigma_build(const char* cfg = "FHC5") {
+void dsigma_build_1p(const char* cfg = "FHC5") {
   const char* PROC = "/data/uboone/processed/";
-  const char* obs[5]  = {"pmu","ppi","costhmu","costhpi","thmupi"};
-  const char* obsX[5] = {"p_{#mu} [GeV/c]","p_{#pi} [GeV/c]","cos#theta_{#mu}",
-                         "cos#theta_{#pi}","#theta_{#mu#pi} [rad]"};
+  const char* obs[6]  = {"Wpipr","Whad","dpt","dalphat","dphit","pn"};
+  const char* obsX[6] = {"W_{#pi p} [GeV/c^{2}]","W_{had} [GeV/c^{2}]",
+                         "#deltap_{T} [GeV/c]","#delta#alpha_{T} [deg]",
+                         "#delta#phi_{T} [deg]","p_{n} [GeV/c]"};
   const char* gens[4]   = {"h_gen_GENIE","h_gen_GiBUU","h_gen_NEUT","h_gen_NuWro"};
   const char* glab[4]   = {"GENIE","GiBUU","NEUT","NuWro"};
   int gcol[4] = { TColor::GetColor("#0072B2"), TColor::GetColor("#009E73"),
@@ -44,10 +45,10 @@ void dsigma_build(const char* cfg = "FHC5") {
                   Form("%g", xmin) );
   };
 
-    for (int o = 0; o < 5; ++o) {
+    for (int o = 0; o < 6; ++o) {
       c.cd(o+1);
       gPad->SetBottomMargin(0.15); gPad->SetLeftMargin(0.16); gPad->SetTopMargin(0.08);
-      TFile* f = TFile::Open(Form("%sclosure_hists_xsec_%s_%s.root", PROC, cfg, obs[o]));
+      TFile* f = TFile::Open(Form("%sclosure_hists_xsec_ccpi1p_%s_%s.root", PROC, cfg, obs[o]));
       if (!f || f->IsZombie()) { printf("  missing %s %s\n",cfg,obs[o]); continue; }
       TH1D* hdat = (TH1D*)f->Get("h_unfolded_nuwro");
       TH1D* htru = (TH1D*)f->Get("h_fakedata_truth");
@@ -84,7 +85,7 @@ void dsigma_build(const char* cfg = "FHC5") {
       htru->SetMinimum(0); htru->SetMaximum(1.45*ymax);
       htru->Draw("hist");
 
-      bool fwd = (o==2 || o==3);   // forward-peaked cos(theta): legend on the left
+      bool fwd = false;            // W/TKI: no forward-peaked panel, legend top-right
       TLegend* lg = new TLegend(fwd?0.18:0.42, 0.62, fwd?0.62:0.90, 0.90);
       lg->SetBorderSize(0); lg->SetFillStyle(0); lg->SetTextSize(0.030); lg->SetNColumns(2);
       lg->AddEntry(htru, "Truth (A_{C})", "l");
@@ -103,7 +104,7 @@ void dsigma_build(const char* cfg = "FHC5") {
       mark_xmin(htru);
     lg->Draw(); keep.push_back(lg);
     }
-    TString out = Form("unfold_output/dsigma_build_%s_%d.pdf", cfg, step);
+    TString out = Form("unfold_output/dsigma_build_1p_%s_%d.pdf", cfg, step);
     c.SaveAs(out);
     printf("wrote %s\n", out.Data());
   }

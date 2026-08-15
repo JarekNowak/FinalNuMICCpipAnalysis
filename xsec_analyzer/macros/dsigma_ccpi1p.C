@@ -17,6 +17,19 @@ void dsigma_ccpi1p(const char* cfg = "FHC5") {
   TCanvas c(Form("ds1p_%s",cfg), "", 1800, 1100);
   c.Divide(3, 2);
   std::vector<TObject*> keep;
+
+  // If the x-axis does not start at zero, ROOT only labels the first "round" tick, so the
+  // bottom-left corner reads as the origin (0,0) even though it is not. Draw the actual
+  // lower limit under the left edge of the frame.
+  auto mark_xmin = [](TH1* h){
+    double xmin = h->GetXaxis()->GetXmin();
+    if ( xmin <= 0. ) return;
+    TLatex* t = new TLatex();
+    t->SetNDC(); t->SetTextSize(0.045); t->SetTextAlign(23);
+    t->DrawLatex( gPad->GetLeftMargin(), gPad->GetBottomMargin()-0.055,
+                  Form("%g", xmin) );
+  };
+
   for (int o = 0; o < 6; ++o) {
     c.cd(o+1);
     // roomy margins so the axis titles/labels are not clipped or crowded in a 3x2 montage
@@ -31,7 +44,6 @@ void dsigma_ccpi1p(const char* cfg = "FHC5") {
     hunf = (TH1D*)hunf->Clone(); hunf->SetDirectory(0); keep.push_back(hunf);
     if (htru) { htru=(TH1D*)htru->Clone(); htru->SetDirectory(0); keep.push_back(htru); }
     if (htun) { htun=(TH1D*)htun->Clone(); htun->SetDirectory(0); keep.push_back(htun); }
-    f->Close();
     hunf->SetTitle(Form("%s;%s;d#sigma/dx [10^{-38} cm^{2}/Ar]", obs[o], obsX[o]));
     hunf->SetMarkerStyle(20); hunf->SetMarkerSize(0.8);
     hunf->SetLineColor(kBlack); hunf->SetMarkerColor(kBlack);
@@ -45,25 +57,23 @@ void dsigma_ccpi1p(const char* cfg = "FHC5") {
     hunf->GetYaxis()->SetTitleSize(0.050); hunf->GetYaxis()->SetLabelSize(0.045);
     hunf->GetYaxis()->SetTitleOffset(1.55);
     hunf->GetYaxis()->SetMaxDigits(3);
-    // Generator FTE overlays (flat-index, content = dsigma/dx * binwidth). Only the
-    // event-level generators (GENIE gst, GiBUU) have proton-tagged W/TKI predictions;
-    // NuWro needs its container to reprocess and NEUT provides no event kinematics.
-    const char* gens[4]={"genie","gibuu","neut","nuwro"};
+    // Generator overlays: use the A_C-SMEARED predictions dumped by the unfolder
+    // (h_gen_<Label>), NOT the raw truth-level FTE files. The data and the uB tune both
+    // live in the A_C-smeared measurement space, so every model must be smeared the same
+    // way; drawing raw generators here made them look systematically high.
+    const char* gens[4]={"h_gen_GENIE","h_gen_GiBUU","h_gen_NEUT","h_gen_NuWro"};
     int gcol[4]={TColor::GetColor("#0072B2"),TColor::GetColor("#009E73"),TColor::GetColor("#CC79A7"),TColor::GetColor("#D55E00")};
     int gsty[4]={1,2,7,9}; const char* glab[4]={"GENIE","GiBUU","NEUT","NuWro"};
     std::vector<TH1D*> gh; std::vector<int> gi;
     for (int g=0;g<4;++g){
-      TFile* fg=TFile::Open(Form("../generator_predictions/newg4/%s_wtki_fte.root",gens[g]));
-      if(!fg||fg->IsZombie()) continue;
-      TH1D* hfte=(TH1D*)fg->Get(Form("%s_fte",obs[o]));
-      if(hfte && hfte->GetNbinsX()==hunf->GetNbinsX()){
-        TH1D* hg=(TH1D*)hunf->Clone(Form("g_%s_%d_%d",cfg,o,g)); hg->SetDirectory(0); hg->Reset();
-        for(int b=1;b<=hg->GetNbinsX();++b) hg->SetBinContent(b,hfte->GetBinContent(b)/hg->GetBinWidth(b));
+      TH1D* hg0=(TH1D*)f->Get(gens[g]);
+      if(hg0 && hg0->GetNbinsX()==hunf->GetNbinsX()){
+        TH1D* hg=(TH1D*)hg0->Clone(Form("g_%s_%d_%d",cfg,o,g)); hg->SetDirectory(0);
         hg->SetLineColor(gcol[g]); hg->SetLineStyle(gsty[g]); hg->SetLineWidth(2); hg->SetMarkerSize(0);
         gh.push_back(hg); gi.push_back(g); keep.push_back(hg);
       }
-      fg->Close();
     }
+    f->Close();
     // y-axis max over data(+error), truth, tune and every generator curve
     double ymax = 0.;
     for (int b=1;b<=hunf->GetNbinsX();++b) ymax = std::max(ymax, hunf->GetBinContent(b)+hunf->GetBinError(b));
@@ -78,6 +88,7 @@ void dsigma_ccpi1p(const char* cfg = "FHC5") {
     if (htun) { htun->SetLineColor(kBlack); htun->SetLineWidth(2); htun->Draw("hist same"); lg->AddEntry(htun,"uB tune","l"); }
     for (size_t k=0;k<gh.size();++k){ gh[k]->Draw("hist same"); lg->AddEntry(gh[k], glab[gi[k]], "l"); }
     hunf->Draw("E1 same");
+    mark_xmin(hunf);
     lg->Draw(); keep.push_back(lg);
   }
   TString out = Form("unfold_output/dsigma_ccpi1p_%s.pdf", cfg);

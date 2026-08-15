@@ -20,6 +20,19 @@ void dsigma_current(const char* cfg = "FHC5", const char* gtag = "newg4") {
   TCanvas c(Form("ds_%s",cfg), "", 1600, 900);
   c.Divide(3, 2);
   std::vector<TObject*> keep;
+
+  // If the x-axis does not start at zero, ROOT only labels the first "round" tick, so the
+  // bottom-left corner reads as the origin (0,0) even though it is not. Draw the actual
+  // lower limit under the left edge of the frame.
+  auto mark_xmin = [](TH1* h){
+    double xmin = h->GetXaxis()->GetXmin();
+    if ( xmin <= 0. ) return;
+    TLatex* t = new TLatex();
+    t->SetNDC(); t->SetTextSize(0.045); t->SetTextAlign(23);
+    t->DrawLatex( gPad->GetLeftMargin(), gPad->GetBottomMargin()-0.055,
+                  Form("%g", xmin) );
+  };
+
   for (int o = 0; o < 5; ++o) {
     c.cd(o+1);
     // enlarge the pad margins so the axis titles are not clipped at the panel edges
@@ -80,6 +93,7 @@ void dsigma_current(const char* cfg = "FHC5", const char* gtag = "newg4") {
     const char* glab[4] = { "GENIE", "GiBUU", "NEUT", "NuWro" };
     for (size_t k=0;k<gh.size();++k) { gh[k]->Draw("hist same"); lg->AddEntry(gh[k], glab[gidx[k]], "l"); }
     hunf->Draw("E1 same");
+    mark_xmin(hunf);
     lg->Draw(); keep.push_back(lg); keep.push_back(hunf);
   }
   TString out = Form("unfold_output/dsigma_%s.pdf", cfg);
