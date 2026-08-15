@@ -239,16 +239,55 @@
   {\scriptsize FHC$+$RHC combined exposure (per-universe correlated flux treatment).}
 \end{frame}
 
+\begin{frame}{Muon angle: $\cos\theta_\mu$ vs $\theta_\mu$}
+  \centering\includegraphics[height=.62\textheight]{thetamu_vs_costhmu}\\[1mm]
+  {\scriptsize All curves $A_C$-smeared (same space as the data). Same events, same
+  binning ($\theta$ edges $=\arccos$ of the $\cos\theta$ edges) --- only the variable
+  differs.}
+\end{frame}
+
+\begin{frame}{Why $\theta_\mu$: the $A_C$ smearing penalises the forward peak}
+  \begin{columns}[T]\column{.52\textwidth}
+  \centering\scriptsize
+  \begin{tabular}{llcccc}
+  \toprule
+  Beam & Var & data & tune & GENIE & NuWro\\\midrule
+  FHC & $\cos\theta_\mu$ & 0.82 & 0.67 & 0.27 & 0.30\\
+  FHC & $\theta_\mu$     & 1.00 & 0.87 & 0.63 & 0.92\\\midrule
+  RHC & $\cos\theta_\mu$ & 0.66 & 0.63 & 0.23 & 0.26\\
+  RHC & $\theta_\mu$     & 0.83 & 0.82 & 0.33 & 0.42\\
+  \bottomrule
+  \end{tabular}\\[2mm]
+  {\scriptsize $A_C$ suppression (smeared/truth):\\
+  FHC $\cos\theta_\mu$ \alert{0.33} $\to$ $\theta_\mu$ \alert{0.76} \quad($p_\mu$ 0.64)\\
+  RHC $\cos\theta_\mu$ 0.34 $\to$ $\theta_\mu$ 0.49 \quad($p_\mu$ 0.72)}
+  \column{.48\textwidth}
+  \begin{itemize}\footnotesize
+    \item $\cos\theta_\mu$ is sharply forward-peaked; the regularised measurement cannot
+      resolve it, so $A_C$ smears it away --- penalising the \alert{peaked generators}
+      far more than the smoother tune.
+    \item In $\theta_\mu$ the $\sin\theta$ Jacobian flattens the peak $\Rightarrow$
+      suppression $0.33\!\to\!0.76$, generators land \alert{on} the data.
+    \item Not a model disagreement: truth-level generator totals agree; it is a
+      \alert{variable-choice artefact}.
+    \item RHC improves less (poorer angular response, stronger regularisation).
+      $\theta_\pi$ $\approx$ $\cos\theta_\pi$ (pion never sharply peaked).
+  \end{itemize}
+  \end{columns}
+\end{frame}
+
 \begin{frame}{Integrated \& total flux-averaged cross section}
   \begin{columns}[T]\column{.5\textwidth}
   \begin{block}{Integrated $\sigma_\mathrm{int}$ (Wiener-SVD)}\footnotesize
   \begin{tabular}{lccc}
   \toprule & FHC & RHC & Comb\\\midrule
   $p_\mu$ & 0.99 & 0.86 & 0.82\\
-  $p_\pi$ & 0.98 & 0.97 & 0.96\\
-  $\cos\theta_\mu$ & 0.81 & 0.66 & 0.70\\
-  $\cos\theta_\pi$ & 0.98 & 0.81 & 0.86\\
-  $\theta_{\mu\pi}$ & 0.88 & 0.88 & 0.92\\
+  $p_\pi$ & 0.96 & 0.97 & 0.96\\
+  $\cos\theta_\mu$ & 0.82 & 0.66 & 0.70\\
+  $\cos\theta_\pi$ & 0.97 & 0.81 & 0.86\\
+  $\theta_{\mu\pi}$ & 0.88 & 0.88 & 0.92\\\midrule
+  $\theta_\mu$ & 1.00 & 0.83 & --\\
+  $\theta_\pi$ & 0.97 & 0.80 & --\\
   \bottomrule
   \end{tabular}\\[1mm]
   {\scriptsize spread = Wiener-SVD $A_C$ smearing ($10^{-38}$cm$^2$/Ar)}

@@ -2051,26 +2051,35 @@ $\theta_{\mu\pi}$& $15.9\%$ & $26.0\%$ & $1.64\times$ & $0.43/5$ ($p=0.99$) \\
   $10^{-38}$~cm$^2$/Ar). The value differs between observables because the Wiener-SVD
   additional-smearing $A_C$ is not norm-preserving; the D'Agostini cross-check
   (Sec.~\ref{sec:crosschecks}) recovers a flatter, $\sim$20\% higher total, confirming
-  the spread is a smearing effect. The RHC and Combined columns use the corrected
-  per-(run,sample) MC POT normalization: an earlier version over-counted the multi-file
-  RHC runs (Run~3 split across 5 ntuple files, Run~4 across 3) by scaling each file to
-  the full run POT, inflating the simulated background and biasing the RHC/Combined cross
-  sections low (FHC, with one MC file per run, was unaffected). With that fixed, the
-  RHC integrated cross sections rise by $\sim\!20$--$30\%$ and are now consistent with,
-  or slightly above, FHC for every observable --- i.e.\ the previously apparent ``RHC
-  below FHC'' deficit was the normalization bug, not $\bar\nu_\mu$ physics. (Values are
-  fake-data closures; the signal is $\nu_\mu+\bar\nu_\mu$, so the RHC flux-average is not
-  expected to lie far below FHC.)}
+  the spread is a smearing effect. All entries were recomputed in a single pass with the
+  current code and a forced rebuild of the cached universes. The MC POT normalization
+  scales each ntuple file by its own stored POT ($D_\mathrm{run}/\mathrm{POT}_\mathrm{file}$):
+  the processing writes the \emph{total} run MC POT into every file of a run, so for the
+  multi-file RHC runs (Run~3 split across 5 ntuple files, Run~4 across 3) the per-file
+  scaling summed over the splits gives the correct total. An intermediate version of this
+  analysis instead divided by the \emph{sum} of the per-file POT values; because those
+  values are already run totals, that over-counted the denominator by the split
+  multiplicity and scaled the RHC/Combined simulation a factor of $5$ (Run~3) and $3$
+  (Run~4) too low, which under-subtracted the background and inflated the RHC/Combined
+  cross sections. That change has been reverted and the RHC/Combined columns here are the
+  corrected values, roughly $10$--$25\%$ below the intermediate ones; FHC (one MC file per
+  run) is unaffected by either convention. The last two rows give the alternative
+  angular parameterisation $\theta_\mu,\theta_\pi$ (Sec.~\ref{sec:thetavar}); the Combined
+  entries are in production. (Values are fake-data closures; the signal is
+  $\nu_\mu+\bar\nu_\mu$, so the RHC flux-average is not expected to lie far below FHC.)}
 \label{tab:sigint_all}
 \begin{tabular}{lccc}
 \toprule
 Observable & FHC & RHC & Combined \\
 \midrule
-$p_\mu$          & $0.986$ & $0.860$ & $0.818$ \\
-$p_\pi$          & $0.976$ & $0.972$ & $0.962$ \\
-$\cos\theta_\mu$ & $0.811$ & $0.662$ & $0.702$ \\
-$\cos\theta_\pi$ & $0.979$ & $0.805$ & $0.857$ \\
-$\theta_{\mu\pi}$& $0.877$ & $0.880$ & $0.922$ \\
+$p_\mu$          & $0.987$ & $0.860$ & $0.818$ \\
+$p_\pi$          & $0.964$ & $0.972$ & $0.962$ \\
+$\cos\theta_\mu$ & $0.819$ & $0.662$ & $0.702$ \\
+$\cos\theta_\pi$ & $0.969$ & $0.805$ & $0.857$ \\
+$\theta_{\mu\pi}$& $0.878$ & $0.880$ & $0.922$ \\
+\midrule
+$\theta_\mu$     & $0.996$ & $0.828$ & --- \\
+$\theta_\pi$     & $0.969$ & $0.802$ & --- \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -2100,6 +2109,81 @@ uncertainty is the quadrature of the systematic breakdown
 cut-and-count data-statistical term $\sqrt{N_\mathrm{sel}}/(N_\mathrm{sel}-N_\mathrm{bkg})$,
 which is smaller ($3$--$4\%$) than the unfolded data-statistical term because no
 regularisation amplifies it.
+
+\subsection{Angular variable: $\cos\theta_\mu$ versus $\theta_\mu$}
+\label{sec:thetavar}
+
+The muon-angle distribution is measured in both $\cos\theta_\mu$ and $\theta_\mu$. The two
+carry identical information --- the $\theta_\mu$ bin edges are exactly $\arccos$ of the
+$\cos\theta_\mu$ edges, so the phase space is partitioned identically --- but they behave
+very differently under the Wiener--SVD additional smearing $A_C$, and the choice matters
+for how the measurement compares to models.
+
+In $\cos\theta_\mu$ the signal is sharply forward-peaked: the last two bins
+($\cos\theta_\mu>0.8$) hold most of the rate. The regularised measurement cannot resolve a
+feature that sharp, so $A_C$ redistributes it, suppressing the integral of any truth-level
+prediction by a factor $\sim\!0.3$ --- far more than the $\sim\!0.6$ suppression of the
+momentum observables. Because $A_C$ acts on the sharpness of each model, it penalises the
+peaked external generators much more than the smoother MicroBooNE tune, so the four
+generators are pushed $2$--$3\times$ below the tune and the data even though their
+truth-level total cross sections agree with it to within tens of percent. This is an
+artefact of the variable, not a disagreement between the models.
+
+Reparameterising to $\theta_\mu$ removes it. The $\sin\theta_\mu$ Jacobian flattens the
+forward peak (the $\theta_\mu$ spectrum spans about a factor of ten between its largest and
+smallest bin, against a far sharper rise in $\cos\theta_\mu$), the regularisation no longer
+has to smear away an unresolvable feature, and the suppression drops to $\sim\!0.76$ for
+FHC --- comparable to $p_\mu$. Table~\ref{tab:theta_vs_costheta} and
+Figure~\ref{fig:theta_vs_costheta} show the effect: in $\theta_\mu$ the generators sit on
+top of the data with the tune among them, whereas in $\cos\theta_\mu$ they collapse well
+below it. The tune-to-data $\chi^2$ is also mildly better in $\theta_\mu$
+($3.07/5$ vs $3.80/5$ for FHC, $4.41/5$ vs $4.91/5$ for RHC).
+
+The improvement is smaller for RHC ($A_C$ suppression $0.34\to0.49$, against
+$0.33\to0.76$ for FHC): the RHC muon-angle response is poorer and is regularised more
+strongly, so some smearing survives the reparameterisation. The residual RHC gap is
+therefore a resolution/regularisation effect rather than a normalisation problem --- the
+RHC generator predictions themselves are healthy, sitting a uniform $0.80$--$0.84$ of their
+FHC counterparts as expected for the $\bar\nu_\mu$-enriched beam. The same
+reparameterisation applied to the pion angle changes almost nothing
+($\theta_\pi$ vs $\cos\theta_\pi$: $0.802$ vs $0.805$ for RHC), since the pion is not
+strongly forward-peaked and $A_C$ was never penalising it.
+
+\begin{table}[H]
+  \centering
+  \caption{Integrated cross section ($10^{-38}$~cm$^2$/Ar) for the unfolded fake data, the
+    MicroBooNE tune and the four generators, in $\cos\theta_\mu$ and in $\theta_\mu$. All
+    entries are $A_C$-smeared, i.e.\ live in the same space as the measurement. ``$A_C$
+    supp.'' is the mean ratio of the $A_C$-smeared to the truth-level generator integral;
+    the momentum observable $p_\mu$ is shown for reference.}
+  \label{tab:theta_vs_costheta}
+  \begin{tabular}{llcccccc}
+    \toprule
+    Beam & Variable & data & tune & GENIE & GiBUU & NEUT & NuWro \\
+    \midrule
+    FHC & $\cos\theta_\mu$ & $0.819$ & $0.673$ & $0.274$ & $0.390$ & $0.367$ & $0.295$ \\
+    FHC & $\theta_\mu$     & $0.996$ & $0.871$ & $0.625$ & $0.876$ & $1.025$ & $0.919$ \\
+    \midrule
+    RHC & $\cos\theta_\mu$ & $0.662$ & $0.633$ & $0.226$ & $0.338$ & $0.320$ & $0.256$ \\
+    RHC & $\theta_\mu$     & $0.828$ & $0.824$ & $0.328$ & $0.487$ & $0.505$ & $0.423$ \\
+    \midrule
+    \multicolumn{2}{l}{$A_C$ supp.\ FHC:} & \multicolumn{6}{l}{$\cos\theta_\mu$ $0.23$--$0.34$ \quad $\theta_\mu$ $0.73$--$0.78$ \quad ($p_\mu$ $0.59$--$0.67$)} \\
+    \multicolumn{2}{l}{$A_C$ supp.\ RHC:} & \multicolumn{6}{l}{$\cos\theta_\mu$ $0.25$--$0.36$ \quad $\theta_\mu$ $0.41$--$0.52$ \quad ($p_\mu$ $0.69$--$0.75$)} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{thetamu_vs_costhmu}
+  \caption{Muon-angle differential cross section in $\theta_\mu$ (left) and
+    $\cos\theta_\mu$ (right), for FHC (top) and RHC (bottom). Unfolded fake data (black
+    points), the MicroBooNE tune (black line) and the four generators are all
+    $A_C$-smeared. In $\theta_\mu$ the generators bracket the data; in $\cos\theta_\mu$ the
+    same predictions are suppressed by the additional smearing of the sharp forward peak
+    and fall well below both the data and the tune.}
+  \label{fig:theta_vs_costheta}
+\end{figure}
 
 Table~\ref{tab:total_xsec} compares the result with the four generator predictions,
 each flux-averaged over the corresponding beam. Because the analysis is blind the
