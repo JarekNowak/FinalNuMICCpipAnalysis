@@ -7,9 +7,9 @@
 void dsigma_current(const char* cfg = "FHC5", const char* gtag = "newg4") {
   const char* PROC = "/data/uboone/processed/";
   const char* GP   = "../generator_predictions/newg4/";
-  const char* obs[5]    = {"pmu","ppi","costhmu","costhpi","thmupi"};
-  const char* obsX[5]   = {"p_{#mu} [GeV/c]","p_{#pi} [GeV/c]","cos#theta_{#mu}",
-                           "cos#theta_{#pi}","#theta_{#mu#pi} [rad]"};
+  const char* obs[6]    = {"pmu","ppi","costhmu","costhpi","thmupi","thetamu"};
+  const char* obsX[6]   = {"p_{#mu} [GeV/c]","p_{#pi} [GeV/c]","cos#theta_{#mu}",
+                           "cos#theta_{#pi}","#theta_{#mu#pi} [rad]","#theta_{#mu} [rad]"};
   const char* gens[4]   = {"genie","gibuu","neut","nuwro"};
   // Okabe-Ito colorblind-safe palette + distinct line styles (redundant encoding,
   // so the four generators are separable in grayscale and for all colour-vision types)
@@ -33,7 +33,7 @@ void dsigma_current(const char* cfg = "FHC5", const char* gtag = "newg4") {
                   Form("%g", xmin) );
   };
 
-  for (int o = 0; o < 5; ++o) {
+  for (int o = 0; o < 6; ++o) {
     c.cd(o+1);
     // enlarge the pad margins so the axis titles are not clipped at the panel edges
     gPad->SetBottomMargin(0.15); gPad->SetLeftMargin(0.16); gPad->SetTopMargin(0.08);

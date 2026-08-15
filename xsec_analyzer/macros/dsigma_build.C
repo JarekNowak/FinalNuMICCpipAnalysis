@@ -16,9 +16,9 @@
 #include <vector>
 void dsigma_build(const char* cfg = "FHC5") {
   const char* PROC = "/data/uboone/processed/";
-  const char* obs[5]  = {"pmu","ppi","costhmu","costhpi","thmupi"};
-  const char* obsX[5] = {"p_{#mu} [GeV/c]","p_{#pi} [GeV/c]","cos#theta_{#mu}",
-                         "cos#theta_{#pi}","#theta_{#mu#pi} [rad]"};
+  const char* obs[6]  = {"pmu","ppi","costhmu","costhpi","thmupi","thetamu"};
+  const char* obsX[6] = {"p_{#mu} [GeV/c]","p_{#pi} [GeV/c]","cos#theta_{#mu}",
+                         "cos#theta_{#pi}","#theta_{#mu#pi} [rad]","#theta_{#mu} [rad]"};
   const char* gens[4]   = {"h_gen_GENIE","h_gen_GiBUU","h_gen_NEUT","h_gen_NuWro"};
   const char* glab[4]   = {"GENIE","GiBUU","NEUT","NuWro"};
   int gcol[4] = { TColor::GetColor("#0072B2"), TColor::GetColor("#009E73"),
@@ -44,7 +44,7 @@ void dsigma_build(const char* cfg = "FHC5") {
                   Form("%g", xmin) );
   };
 
-    for (int o = 0; o < 5; ++o) {
+    for (int o = 0; o < 6; ++o) {
       c.cd(o+1);
       gPad->SetBottomMargin(0.15); gPad->SetLeftMargin(0.16); gPad->SetTopMargin(0.08);
       TFile* f = TFile::Open(Form("%sclosure_hists_xsec_%s_%s.root", PROC, cfg, obs[o]));
