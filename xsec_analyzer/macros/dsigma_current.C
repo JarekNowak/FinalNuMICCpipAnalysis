@@ -22,6 +22,8 @@ void dsigma_current(const char* cfg = "FHC5", const char* gtag = "newg4") {
   std::vector<TObject*> keep;
   for (int o = 0; o < 5; ++o) {
     c.cd(o+1);
+    // enlarge the pad margins so the axis titles are not clipped at the panel edges
+    gPad->SetBottomMargin(0.15); gPad->SetLeftMargin(0.16); gPad->SetTopMargin(0.08);
     TFile* f = TFile::Open(Form("%sclosure_hists_xsec_%s_%s.root", PROC, cfg, obs[o]));
     if (!f || f->IsZombie()) { printf("  missing closure %s %s\n", cfg, obs[o]); continue; }
     TH1D* hunf = (TH1D*)f->Get("h_unfolded_nuwro");   // unfolded fake data
@@ -31,24 +33,30 @@ void dsigma_current(const char* cfg = "FHC5", const char* gtag = "newg4") {
     hunf = (TH1D*)hunf->Clone(); hunf->SetDirectory(0);
     hunf->SetTitle(Form("%s;%s;d#sigma/dx [10^{-38} cm^{2}/Ar]", obs[o], obsX[o]));
     hunf->SetMarkerStyle(20); hunf->SetMarkerSize(0.8); hunf->SetLineColor(kBlack); hunf->SetMarkerColor(kBlack);
-    // Build the generator overlays FIRST (per-bin dsigma*width -> divide by width) so
-    // the y-axis can be scaled to include them (otherwise curves above the data clip
-    // outside the frame). Warn if any generator is dropped for a bin-count mismatch.
+    // axis title/label sizes tuned so titles sit inside the enlarged margins (not clipped)
+    hunf->GetXaxis()->SetTitleSize(0.050); hunf->GetXaxis()->SetLabelSize(0.042);
+    hunf->GetXaxis()->SetTitleOffset(1.25);
+    hunf->GetYaxis()->SetTitleSize(0.048); hunf->GetYaxis()->SetLabelSize(0.042);
+    hunf->GetYaxis()->SetTitleOffset(1.55);
+    // Generator overlays: use the A_C-SMEARED predictions the unfolder dumped into the
+    // closure file (h_gen_<Label>), NOT the raw truth-level FTE files. The unfolded data
+    // and the uB tune both live in the A_C-smeared measurement space (Wiener-SVD returns
+    // A_C * truth), so every model must be smeared by the same additional-smearing matrix
+    // A_C for a fair comparison; otherwise the raw generators sit artificially high
+    // relative to the A_C-smeared tune. These h_gen_* are already in dsigma/dx units, so
+    // they are drawn directly (no bin-width division). (void)GP; (void)gtag; kept for API.
+    const char* genHist[4] = { "h_gen_GENIE", "h_gen_GiBUU", "h_gen_NEUT", "h_gen_NuWro" };
+    (void)GP; (void)gtag;
     std::vector<TH1D*> gh; std::vector<int> gidx;
     for (int g = 0; g < 4; ++g) {
-      TFile* fg = TFile::Open(Form("%s%s_%s_fte.root", GP, gens[g], gtag));
-      if (!fg || fg->IsZombie()) { printf("  [warn] %s %s: no FTE file for %s\n",cfg,obs[o],gens[g]); continue; }
-      TH1D* hfte = (TH1D*)fg->Get(Form("%s_fte", obs[o]));
-      if (hfte && hfte->GetNbinsX()==hunf->GetNbinsX()) {
-        TH1D* hg = (TH1D*)hunf->Clone(Form("g_%s_%d_%d",cfg,o,g)); hg->SetDirectory(0); hg->Reset();
-        for (int b=1;b<=hg->GetNbinsX();++b) hg->SetBinContent(b, hfte->GetBinContent(b)/hg->GetBinWidth(b));
+      TH1D* hgd = (TH1D*)f->Get(genHist[g]);
+      if (hgd && hgd->GetNbinsX()==hunf->GetNbinsX()) {
+        TH1D* hg = (TH1D*)hgd->Clone(Form("g_%s_%d_%d",cfg,o,g)); hg->SetDirectory(0);
         hg->SetLineColor(gcol[g]); hg->SetLineStyle(gstyle[g]); hg->SetLineWidth(2); hg->SetMarkerSize(0);
         gh.push_back(hg); gidx.push_back(g); keep.push_back(hg);
       } else {
-        printf("  [warn] %s %s: %s FTE bins=%d != data bins=%d -> DROPPED\n",
-               cfg,obs[o],gens[g], hfte?hfte->GetNbinsX():-1, hunf->GetNbinsX());
+        printf("  [warn] %s %s: %s missing or bin-mismatch -> DROPPED\n", cfg,obs[o],genHist[g]);
       }
-      fg->Close();
     }
     if (htru) { htru=(TH1D*)htru->Clone(); htru->SetDirectory(0); keep.push_back(htru); }
     if (htun) { htun=(TH1D*)htun->Clone(); htun->SetDirectory(0); keep.push_back(htun); }
@@ -58,14 +66,19 @@ void dsigma_current(const char* cfg = "FHC5", const char* gtag = "newg4") {
     if (htru) for (int b=1;b<=htru->GetNbinsX();++b) ymax = std::max(ymax, htru->GetBinContent(b));
     if (htun) for (int b=1;b<=htun->GetNbinsX();++b) ymax = std::max(ymax, htun->GetBinContent(b));
     for (auto hg : gh) for (int b=1;b<=hg->GetNbinsX();++b) ymax = std::max(ymax, hg->GetBinContent(b));
-    hunf->SetMinimum(0); hunf->SetMaximum(1.30*ymax);
+    hunf->SetMinimum(0); hunf->SetMaximum(1.35*ymax);
     hunf->Draw("E1");
-    TLegend* lg = new TLegend(0.45,0.60,0.88,0.90); lg->SetBorderSize(0); lg->SetFillStyle(0); lg->SetTextSize(0.030);
+    // cos#theta_{#mu} (o==2) and cos#theta_{#pi} (o==3) are forward-peaked (highest bin on
+    // the right), so put the legend at TOP-LEFT there; elsewhere keep it top-right.
+    bool fwd_peak = (o == 2 || o == 3);
+    double lx1 = fwd_peak ? 0.18 : 0.45, lx2 = fwd_peak ? 0.61 : 0.88;
+    TLegend* lg = new TLegend(lx1,0.62,lx2,0.90); lg->SetBorderSize(0); lg->SetFillStyle(0); lg->SetTextSize(0.030);
     lg->SetNColumns(2);
     lg->AddEntry(hunf, "Unfolded fake data", "lep");
     if (htru) { htru->SetLineColor(kGray+2); htru->SetLineWidth(2); htru->SetLineStyle(2); htru->Draw("hist same"); lg->AddEntry(htru,"Truth (A_{C})","l"); }
     if (htun) { htun->SetLineColor(kBlack); htun->SetLineWidth(2); htun->Draw("hist same"); lg->AddEntry(htun,"uB tune","l"); }
-    for (size_t k=0;k<gh.size();++k) { gh[k]->Draw("hist same"); lg->AddEntry(gh[k], gens[gidx[k]], "l"); }
+    const char* glab[4] = { "GENIE", "GiBUU", "NEUT", "NuWro" };
+    for (size_t k=0;k<gh.size();++k) { gh[k]->Draw("hist same"); lg->AddEntry(gh[k], glab[gidx[k]], "l"); }
     hunf->Draw("E1 same");
     lg->Draw(); keep.push_back(lg); keep.push_back(hunf);
   }

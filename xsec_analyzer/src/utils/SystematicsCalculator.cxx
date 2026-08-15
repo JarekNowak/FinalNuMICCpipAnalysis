@@ -859,7 +859,9 @@ void SystematicsCalculator::build_universes( TDirectoryFile& root_tdir ) {
             // Normalize by the run-summed MC POT for this sample (see
             // run_type_mc_pot) so multi-file runs are not over-counted.
             double temp_run_pot = run_to_bnb_pot_map.at( run );
-            temp_scale_factor = temp_run_pot / run_type_mc_pot.at( run ).at( type );
+            // Per-file POT scaling (see the reweightable-MC path below): multi-file runs
+            // are event-splits that duplicate the full sample POT, so file_pot is correct.
+            temp_scale_factor = temp_run_pot / file_pot;
           }
           else {
             // Scale all detVar universe histograms from the simulated POT to
@@ -967,8 +969,18 @@ void SystematicsCalculator::build_universes( TDirectoryFile& root_tdir ) {
           // individual file POT) so that runs split across multiple ntuple files
           // are not over-counted; see run_type_mc_pot above.
           double run_bnb_pot = run_to_bnb_pot_map.at( run );
-          double run_mc_pot = run_type_mc_pot.at( run ).at( type );
-          double rw_scale_factor = run_bnb_pot / run_mc_pot;
+          // Scale each MC ntuple file to the BNB data POT for its run by the file's own
+          // POT. The multi-file RHC/COMB runs (Run3 = 5 files, Run4 = 3 files) are event
+          // SPLITS of a single MC production: each split file duplicates the FULL sample
+          // POT in its stored summed_pot, while the events are divided among the files.
+          // Per-file scaling (run_bnb_pot/file_pot) summed over the splits therefore gives
+          // the correct total, since (sum of split events)/file_pot = total/file_pot with
+          // file_pot the true sample POT. Verified by the event-rate test: Run3/Run4
+          // entries-per-POT match the single-file Run1 only at the shared per-file POT, not
+          // the sum. (A previous "fix" divided by the SUMMED per-file POT, run_type_mc_pot,
+          // which over-counted the denominator by the split multiplicity and scaled these
+          // runs' MC 5x/3x too low -- reverted here.)
+          double rw_scale_factor = run_bnb_pot / file_pot;
 
           // Iterate over the reweighting universes, retrieve the
           // histograms for each, and add their POT-scaled contributions

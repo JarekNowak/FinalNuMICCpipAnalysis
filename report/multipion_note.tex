@@ -80,11 +80,13 @@
     (final-state interactions), and are a significant background to the single-pion
     signal. The selections are built as thin subselections of the inclusive
     single-pion selection, adopting the looser pion identification of the dedicated
-    \uboone{} multi-pion study to recover efficiency. On the Run-1 forward-horn-current
+    \uboone{} multi-pion study and replacing its log-likelihood pion cut with a
+    dedicated boosted decision tree (BDT). On the Run-1 forward-horn-current
     $\nu_\mu$ overlay the two-pion (three-pion) selection reaches a signal efficiency
-    of $15.5\%$ ($6.1\%$) at an intrinsic purity of $23\%$ ($12\%$), corresponding to
-    of order $580$ ($40$) selected signal events at full exposure. We present the
-    selection, the cut-flow, and a study of the pion-momentum thresholds that set the
+    of $17.9\%$ ($10.1\%$) at an intrinsic purity of $26.8\%$ ($11.3\%$), corresponding to
+    of order $670$ ($66$) selected signal events at full exposure. We present the
+    selection, the pion-identification BDT, the cut-flow, and a study of the
+    pion-momentum thresholds that set the
     accessible signal phase space; the two-pion channel supports a flux-averaged total
     cross section and a coarse differential measurement, while the three-pion channel
     is a total-cross-section measurement. This note is a companion to the single-pion
@@ -271,6 +273,45 @@ retain the inherited muon-momentum-quality, wire-gap, track-multiplicity and
 software-trigger requirements that the leaner study omits; the trade is a lower
 efficiency for a markedly higher intrinsic purity, which is the more favourable operating
 point for a cross-section extraction.
+
+% =============================================================================
+\section{Pion identification: from LLR to a dedicated BDT}
+\label{sec:bdt}
+
+The efficiency numbers above are limited by the per-track pion identification, not by
+reconstruction. Counting how often each true final-state charged pion is reconstructed as
+a track at all -- independent of whether it survives the pion ID -- sets a reconstruction
+ceiling of $66.6\%$ ($2\pi$) and $52.4\%$ ($3\pi$): every one of those pions is on the table
+if the particle ID does not discard it. The gap between that ceiling and the realised
+efficiency is therefore a pure particle-ID loss, which motivates replacing the inherited
+loose log-likelihood-ratio (LLR) cut with a dedicated classifier.
+
+A boosted decision tree (BDT, TMVA gradient boost) was trained to separate true charged
+pions from the tracks that pollute the multi-pion sample. The input features are the ones
+that carry pion-vs-proton/muon information without encoding momentum directly: the pion
+and proton three-plane LLR scores, the Bragg-peak proton, muon and MIP likelihoods, the
+track score, length and vertex distance. On a held-out sample the classifier reaches an
+integrated ROC of $0.81$. Truth-matching the counted pions (via the backtracked PDG)
+shows the residual background is dominated by protons mis-reconstructed as pions
+($\sim 31\%$), with real out-of-topology pions ($\sim 44\%$) and muons ($\sim 12\%$) making
+up the rest; the proton contamination is the irreducible core, since a proton that ranges
+out exactly like a pion is genuinely ambiguous. Consistent with this, mixing an explicit
+Bragg-peak proton veto back on top of the BDT did not reduce the proton fraction (the
+ambiguous protons pass the Bragg cut too) and only cost signal efficiency, so the final
+configuration uses the BDT alone.
+
+Because the two selections have different soft-pion content, the classifier is deployed
+differently in each. The $2\pi$ selection uses two momentum-specialised BDTs, split at a
+reconstructed track length of $20$~cm, with a tighter operating point on the soft branch
+to protect the exact-multiplicity purity; the $3\pi$ selection keeps a single BDT, because
+$3\pi$ events genuinely contain soft pions and the tight soft cut would erode an already
+scarce efficiency. Relative to the loose-LLR baseline, the BDT raises the operating point
+to a signal efficiency of $17.9\%$ at $26.8\%$ purity for $2\pi$ (split BDT) and $10.1\%$
+at $11.3\%$ purity for $3\pi$ (single BDT), the efficiency for $3\pi$ improving by roughly
+two-thirds over the LLR-only selection. The same classifier was trialled on the inclusive
+CC1$\mu\pi^{\pm}X$p selection and \emph{hurt} it -- efficiency rose from $16.7\%$ to
+$18.9\%$ but purity collapsed from $60.3\%$ to $38.8\%$ -- so the inclusive selection
+retains its LLR cut and the BDT is used only in the multi-pion subselections.
 
 % =============================================================================
 \section{Pion-momentum thresholds and the accessible phase space}

@@ -105,21 +105,110 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}{Event selection \& cut-flow}
-  \begin{columns}[T]\column{.4\textwidth}
-  \begin{itemize}\small
-    \item BDT-based $\mu/\pi/p$ particle ID.
-    \item Vertex-in-FV, topology, track containment, muon/pion gap, $\pi^0$ shower
-      veto, opening angle.
-    \item Per-run POT scaling; EXT (beam-off) data-driven cosmics.
-  \end{itemize}
-  \vspace{2mm}
-  \begin{block}{Final performance}\footnotesize
-  Efficiency $\simeq15.6\%$, purity $\simeq55\%$ (measured phase space).
+\begin{frame}{Event selection: cut sequence}
+  \footnotesize
+  A CC$1\mu1\pi^\pm Xp$ topological selection: one muon, exactly one contained charged
+  pion, any number of protons. Applied in order (cosmic rejection first, then PID, then
+  kinematic cleanup):
+  \begin{columns}[T]\column{.5\textwidth}
+  \begin{enumerate}\setlength\itemsep{1pt}
+    \item[\textbf{1.}] \textbf{NeutrinoSlice} --- $\ge1$ track, software trigger.
+    \item[\textbf{2.}] \textbf{InFiducialVol} --- SCE-corrected $\nu$ vertex in FV.
+    \item[\textbf{3.}] \textbf{Topological} --- Pandora score $>0.67$; primary cosmic
+      rejection (EXT $\times33$ down).
+    \item[\textbf{4.}] \textbf{MuonCandidate} --- $\ge1$ primary track passes $\mu$ PID;
+      longest $=\mu$.
+    \item[\textbf{5.}] \textbf{ContainedPion} --- exactly one other track passes $\pi$
+      PID, endpoint contained; highest LLR $=\pi$.
+  \end{enumerate}
+  \column{.5\textwidth}
+  \begin{enumerate}\setlength\itemsep{1pt}
+    \item[\textbf{6--7.}] \textbf{$\mu$/$\pi$ In3Planes} --- hit on each of U, V, Y.
+    \item[\textbf{8.}] \textbf{ShowerCut} --- veto primary EM showers ($\pi^0$ rejection;
+      one soft shower tolerated).
+    \item[\textbf{9.}] \textbf{OpeningAngle} --- $\theta_{\mu\pi}<2.6$~rad ($149^\circ$);
+      rejects large-angle cosmic/dirt.
+    \item[\textbf{10.}] \textbf{Nonprotons} (final) --- $<4$ non-proton-like tracks
+      (LLR$>0.1$) and $<5$ total primary tracks.
+  \end{enumerate}
+  \end{columns}
+  \vspace{1mm}
+  {\scriptsize Per-run POT scaling; EXT (beam-off) supplies data-driven cosmics; dirt from
+  the GENIE NuMI overlay. \textbf{Final: efficiency $15.6\%$, purity $55\%$} (measured
+  phase space).}
+\end{frame}
+
+\begin{frame}{Particle identification (muon \& pion candidates)}
+  \footnotesize
+  Track-level PID combines Pandora track score, LLR calorimetric PID, Bragg-peak
+  likelihoods and dedicated MIP/pion BDTs:
+  \begin{columns}[T]
+  \column{.5\textwidth}
+  \begin{block}{Muon candidate (Cut 4)}\scriptsize
+  \begin{tabular}{ll}
+  \toprule Variable & Threshold\\\midrule
+  Track score & $>0.80$\\
+  Vertex distance & $\le4.0$ cm\\
+  Track length & $>10.0$ cm\\
+  LLR PID & $>0.20$\\
+  MIP BDT & $\ge-0.10$\\
+  \bottomrule
+  \end{tabular}
   \end{block}
-  \column{.6\textwidth}
+  \column{.5\textwidth}
+  \begin{block}{Pion candidate (Cut 5)}\scriptsize
+  \begin{tabular}{ll}
+  \toprule Variable & Threshold\\\midrule
+  LLR PID & $>0.10$\\
+  Vertex distance & $<4.0$ cm\\
+  Track length & $>20.0$ cm\\
+  MIP BDT & $>-0.10$\\
+  Pion BDT (vs.\ $p$) & $>-0.10$\\
+  Bragg-pion score & $\ge0.08$\\
+  Endpoint contained & yes\\
+  \bottomrule
+  \end{tabular}
+  \end{block}
+  \end{columns}
+  \vspace{1mm}
+  {\scriptsize Pion momentum from the proton-hypothesis range KE (tracks low-energy
+  stopping pions better than the $\mu$ hypothesis).}
+\end{frame}
+
+\begin{frame}{Inclusive cut-flow --- FHC (full exposure)}
+  \begin{columns}[T]\column{.54\textwidth}
+  \centering\scriptsize
+  \begin{tabular}{lrrrrr}
+  \toprule
+  Cut & Signal & Bkg & EXT & Eff\% & Pur\%\\\midrule
+  None          & 5\,580 & 279\,180 & 24.4M & 100.0 & 0.02\\
+  InFiducialVol & 4\,632 & 62\,146 & 1.04M & 83.0 & 0.42\\
+  Topological   & 3\,501 & 28\,040 & 35\,184 & 62.7 & 5.2\\
+  MuonCandidate & 3\,143 & 18\,980 & 15\,516 & 56.3 & 8.3\\
+  ContainedPion & 1\,395 & 2\,094 & 1\,376 & 25.0 & 28.5\\
+  MuonIn3Planes & 1\,336 & 1\,975 & 1\,145 & 23.9 & 29.9\\
+  PionIn3Planes & 1\,239 & 1\,770 & 872 & 22.2 & 31.9\\
+  ShowerCut     & 1\,048 & 898 & 569 & 18.8 & 41.6\\
+  OpeningAngle  & 1\,040 & 813 & 190 & 18.6 & 50.9\\
+  \textbf{Nonprotons} & \textbf{974} & \textbf{643} & \textbf{131} & \textbf{17.5} & \textbf{55.7}\\
+  \bottomrule
+  \end{tabular}\\[1mm]
+  {\scriptsize MC prediction, per-run POT scaled; data blind. Dirt $\lesssim1$ event at
+  final cut.}\\[1mm]
+  {\scriptsize\textbf{Final cut (Nonprotons), all beams:}}\\[0.5mm]
+  \centering\scriptsize
+  \begin{tabular}{lrrrrr}
+  \toprule
+  Beam & Signal & Bkg & EXT & Eff\% & Pur\%\\\midrule
+  FHC  & 974 & 643 & 131 & 17.5 & 55.7\\
+  RHC  & 1\,081 & 746 & 136 & 17.6 & 55.0\\
+  Comb & 2\,055 & 1\,389 & 266 & 17.5 & 55.4\\
+  \bottomrule
+  \end{tabular}
+  \column{.46\textwidth}
   \includegraphics[width=\linewidth]{cutflow_yields_fhc}\\
-  \centering{\scriptsize FHC cut-flow (signal blue, background orange, EXT grey, dirt green)}
+  \centering{\scriptsize FHC stack (signal blue, bkg orange, EXT grey, dirt green; log
+  scale). Two big drops: Topological (cosmics) and ContainedPion (single-$\pi$ topology).}
   \end{columns}
 \end{frame}
 
@@ -155,11 +244,11 @@
   \begin{block}{Integrated $\sigma_\mathrm{int}$ (Wiener-SVD)}\footnotesize
   \begin{tabular}{lccc}
   \toprule & FHC & RHC & Comb\\\midrule
-  $p_\mu$ & 0.99 & 1.02 & 0.88\\
-  $p_\pi$ & 0.98 & 1.19 & 1.11\\
-  $\cos\theta_\mu$ & 0.81 & 0.90 & 0.77\\
-  $\cos\theta_\pi$ & 0.98 & 1.06 & 0.97\\
-  $\theta_{\mu\pi}$ & 0.88 & 0.92 & 0.95\\
+  $p_\mu$ & 0.99 & 0.86 & 0.82\\
+  $p_\pi$ & 0.98 & 0.97 & 0.96\\
+  $\cos\theta_\mu$ & 0.81 & 0.66 & 0.70\\
+  $\cos\theta_\pi$ & 0.98 & 0.81 & 0.86\\
+  $\theta_{\mu\pi}$ & 0.88 & 0.88 & 0.92\\
   \bottomrule
   \end{tabular}\\[1mm]
   {\scriptsize spread = Wiener-SVD $A_C$ smearing ($10^{-38}$cm$^2$/Ar)}
@@ -203,8 +292,9 @@
   \begin{itemize}\small
     \item \texttt{CC1mu1pi1p}: inherits the inclusive selection + a leading proton
       (LLR PID, $p_p\ge0.3$~GeV/$c$, contained). Efficiency $11.5\%$, purity $48\%$.
-    \item Six observables: $W_{\pi p}$, $W_\mathrm{had}$, $\delta p_T$,
-      $\delta\alpha_T$, $\delta\phi_T$, $p_n$ (4 bins each).
+    \item Six W/TKI observables: $W_{\pi p}$, $W_\mathrm{had}$, $\delta p_T$,
+      $\delta\alpha_T$, $\delta\phi_T$, $p_n$ (6 bins each) $+$ five inclusive
+      kinematic observables re-measured on the proton-tagged phase space.
   \end{itemize}
 \end{frame}
 
@@ -222,6 +312,35 @@
   \end{itemize}
   \end{block}
   \end{columns}
+\end{frame}
+
+\begin{frame}{Proton-tagged cut-flow --- FHC (full exposure)}
+  \footnotesize
+  Stages None--Nonprotons are the inherited inclusive selection (with the proton-tagged
+  signal definition: inclusive signal $+$ a true proton $>0.3$~GeV/$c$); the final
+  \textbf{IdentProton} stage adds the leading-proton identification that defines the
+  subsample.
+  \begin{center}\scriptsize
+  \begin{tabular}{lrrrrrr}
+  \toprule
+  Cut & Signal & Bkg & EXT & Pred & Eff\% & Pur\%\\\midrule
+  None          & 3\,387 & 281\,372 & 24.4M & 24.7M & 100.0 & 0.01\\
+  InFiducialVol & 2\,834 & 63\,944 & 1.04M & 1.11M & 83.7 & 0.26\\
+  Topological   & 2\,238 & 29\,303 & 35\,184 & 66\,929 & 66.1 & 3.3\\
+  MuonCandidate & 2\,031 & 20\,092 & 15\,516 & 37\,776 & 60.0 & 5.4\\
+  ContainedPion & 852 & 2\,637 & 1\,376 & 4\,890 & 25.2 & 17.4\\
+  MuonIn3Planes & 812 & 2\,499 & 1\,145 & 4\,473 & 24.0 & 18.2\\
+  PionIn3Planes & 754 & 2\,255 & 872 & 3\,888 & 22.3 & 19.4\\
+  ShowerCut     & 632 & 1\,313 & 569 & 2\,521 & 18.7 & 25.1\\
+  OpeningAngle  & 628 & 1\,226 & 190 & 2\,045 & 18.5 & 30.7\\
+  Nonprotons    & 568 & 1\,049 & 130 & 1\,749 & 16.8 & 32.5\\
+  \textbf{IdentProton} & \textbf{401} & \textbf{373} & \textbf{53} & \textbf{828} & \textbf{11.8} & \textbf{48.4}\\
+  \bottomrule
+  \end{tabular}
+  \end{center}
+  {\scriptsize IdentProton rejects $\sim\!64\%$ of the $\nu$ background while keeping
+  $\sim\!71\%$ of signal: purity $32.5\%\!\to\!48.4\%$. RHC/comb: $46.6\%$/$47.5\%$ purity
+  at $\sim\!12\%$ efficiency.}
 \end{frame}
 
 \begin{frame}{Proton-tagged differential cross sections (FHC)}
@@ -259,12 +378,16 @@
       and combined, per-run POT scaling, Wiener-SVD unfolding; total flux-averaged
       $\sigma$ agrees with GENIE/GiBUU/NEUT/NuWro within $\sim1\sigma$.
     \item \alert{Proton-tagged}: new hadronic-mass ($W_{\pi p}$, $W_\mathrm{had}$) and
-      TKI ($\delta p_T$, $\delta\alpha_T$, $\delta\phi_T$, $p_n$) observables; FHC closure
-      validated; all four generators compared and bracket the data.
-    \item Blind analysis: fake data throughout; sidebands ready to constrain the
-      background before unblinding.
-    \item \alert{Ongoing}: RHC/combined W/TKI in production; detector systematic and a
-      tighter-proton-PID study underway.
+      TKI ($\delta p_T$, $\delta\alpha_T$, $\delta\phi_T$, $p_n$) observables, plus the
+      five inclusive kinematic observables re-measured. \alert{FHC closure validated} at
+      six-bin granularity; \alert{RHC not yet validated} (unfolds negative --- background
+      $>$ data in this low-purity subsample), combined deferred behind it.
+    \item Blind analysis: fake data throughout; sidebands (CC0$\pi$, multi-$\pi$, $\pi^0$,
+      cosmic) validated in all three beams, data/$\nu$MC $\simeq1.00$, ready to constrain
+      the background before unblinding.
+    \item \alert{Ongoing}: $\cos\theta\!\to\!\theta$ switch (the $A_C$ smearing suppresses
+      the forward-peaked $\cos\theta_\mu$ $\times0.33$ vs $\times0.76$ in $\theta_\mu$);
+      RHC proton-tagged closure; detector systematic; tighter-proton-PID study.
   \end{itemize}
   \vspace{2mm}
   \centering\color{ubred}\large Thank you --- questions?
@@ -276,6 +399,111 @@
 {\setbeamercolor{frametitle}{fg=white,bg=ubdark}
 \begin{frame}[plain]\centering\vfill
   {\color{ubdark}\Huge\bfseries Backup}\vfill
+\end{frame}
+
+\begin{frame}{Backup: inclusive cut-flow --- RHC (full exposure)}
+  \begin{columns}[T]\column{.54\textwidth}
+  \centering\scriptsize
+  \begin{tabular}{lrrrrr}
+  \toprule
+  Cut & Signal & Bkg & EXT & Eff\% & Pur\%\\\midrule
+  None          & 6\,131 & 304\,347 & 25.3M & 100.0 & 0.02\\
+  InFiducialVol & 5\,124 & 69\,102 & 1.08M & 83.6 & 0.44\\
+  Topological   & 3\,960 & 31\,629 & 36\,532 & 64.6 & 5.5\\
+  MuonCandidate & 3\,559 & 21\,443 & 16\,110 & 58.0 & 8.6\\
+  ContainedPion & 1\,577 & 2\,649 & 1\,429 & 25.7 & 27.8\\
+  MuonIn3Planes & 1\,512 & 2\,500 & 1\,189 & 24.7 & 29.0\\
+  PionIn3Planes & 1\,409 & 2\,258 & 905 & 23.0 & 30.8\\
+  ShowerCut     & 1\,171 & 1\,061 & 591 & 19.1 & 41.4\\
+  OpeningAngle  & 1\,162 & 965 & 197 & 19.0 & 50.0\\
+  \textbf{Nonprotons} & \textbf{1\,081} & \textbf{746} & \textbf{136} & \textbf{17.6} & \textbf{55.0}\\
+  \bottomrule
+  \end{tabular}\\[1mm]
+  {\scriptsize RHC (Runs 1,2,3,4a-c; $1.108\times10^{21}$ POT). MC prediction, per-run
+  POT scaled; data blind.}
+  \column{.46\textwidth}
+  \includegraphics[width=\linewidth]{cutflow_yields_rhc}\\
+  \centering{\scriptsize RHC stack (signal blue, bkg orange, EXT grey, dirt green; log
+  scale).}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Backup: inclusive cut-flow --- combined (full exposure)}
+  \begin{columns}[T]\column{.54\textwidth}
+  \centering\scriptsize
+  \begin{tabular}{lrrrrr}
+  \toprule
+  Cut & Signal & Bkg & EXT & Eff\% & Pur\%\\\midrule
+  None          & 11\,710 & 583\,527 & 49.8M & 100.0 & 0.02\\
+  InFiducialVol & 9\,756 & 131\,249 & 2.12M & 83.3 & 0.43\\
+  Topological   & 7\,461 & 59\,669 & 71\,717 & 63.7 & 5.4\\
+  MuonCandidate & 6\,702 & 40\,423 & 31\,627 & 57.2 & 8.5\\
+  ContainedPion & 2\,972 & 4\,743 & 2\,805 & 25.4 & 28.2\\
+  MuonIn3Planes & 2\,847 & 4\,475 & 2\,333 & 24.3 & 29.4\\
+  PionIn3Planes & 2\,648 & 4\,028 & 1\,777 & 22.6 & 31.3\\
+  ShowerCut     & 2\,218 & 1\,959 & 1\,161 & 18.9 & 41.5\\
+  OpeningAngle  & 2\,202 & 1\,778 & 387 & 18.8 & 50.4\\
+  \textbf{Nonprotons} & \textbf{2\,055} & \textbf{1\,389} & \textbf{266} & \textbf{17.5} & \textbf{55.4}\\
+  \bottomrule
+  \end{tabular}\\[1mm]
+  {\scriptsize Combined ($1.994\times10^{21}$ POT). Efficiency/purity track the two beams
+  closely --- the selection is beam-independent.}
+  \column{.46\textwidth}
+  \includegraphics[width=\linewidth]{cutflow_yields_comb}\\
+  \centering{\scriptsize Combined stack (log scale).}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Backup: proton-tagged cut-flow --- RHC (full exposure)}
+  \begin{columns}[T]\column{.54\textwidth}
+  \centering\scriptsize
+  \begin{tabular}{lrrrrr}
+  \toprule
+  Cut & Signal & Bkg & EXT & Eff\% & Pur\%\\\midrule
+  None          & 3\,638 & 306\,840 & 25.3M & 100.0 & 0.01\\
+  InFiducialVol & 3\,064 & 71\,162 & 1.08M & 84.2 & 0.26\\
+  Topological   & 2\,455 & 33\,134 & 36\,532 & 67.5 & 3.4\\
+  MuonCandidate & 2\,234 & 22\,769 & 16\,110 & 61.4 & 5.4\\
+  ContainedPion & 935 & 3\,291 & 1\,429 & 25.7 & 16.5\\
+  MuonIn3Planes & 892 & 3\,119 & 1\,189 & 24.5 & 17.1\\
+  PionIn3Planes & 831 & 2\,835 & 905 & 22.9 & 18.2\\
+  ShowerCut     & 687 & 1\,544 & 591 & 18.9 & 24.3\\
+  OpeningAngle  & 683 & 1\,444 & 197 & 18.8 & 29.4\\
+  Nonprotons    & 611 & 1\,217 & 136 & 16.8 & 31.1\\
+  \textbf{IdentProton} & \textbf{436} & \textbf{443} & \textbf{55} & \textbf{12.0} & \textbf{46.6}\\
+  \bottomrule
+  \end{tabular}
+  \column{.46\textwidth}
+  \includegraphics[width=\linewidth]{cutflow_yields_1p_rhc}\\
+  \centering{\scriptsize RHC proton-tagged stack; last stage IdentProton (leading-proton
+  tag). Purity $31.1\%\!\to\!46.6\%$.}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Backup: proton-tagged cut-flow --- combined (full exposure)}
+  \begin{columns}[T]\column{.54\textwidth}
+  \centering\scriptsize
+  \begin{tabular}{lrrrrr}
+  \toprule
+  Cut & Signal & Bkg & EXT & Eff\% & Pur\%\\\midrule
+  None          & 7\,025 & 588\,212 & 49.8M & 100.0 & 0.01\\
+  InFiducialVol & 5\,898 & 135\,106 & 2.12M & 84.0 & 0.26\\
+  Topological   & 4\,693 & 62\,436 & 71\,717 & 66.8 & 3.4\\
+  MuonCandidate & 4\,265 & 42\,860 & 31\,627 & 60.7 & 5.4\\
+  ContainedPion & 1\,787 & 5\,928 & 2\,805 & 25.4 & 16.9\\
+  MuonIn3Planes & 1\,704 & 5\,618 & 2\,333 & 24.3 & 17.6\\
+  PionIn3Planes & 1\,585 & 5\,091 & 1\,777 & 22.6 & 18.7\\
+  ShowerCut     & 1\,320 & 2\,857 & 1\,161 & 18.8 & 24.7\\
+  OpeningAngle  & 1\,310 & 2\,670 & 387 & 18.7 & 30.0\\
+  Nonprotons    & 1\,179 & 2\,266 & 266 & 16.8 & 31.8\\
+  \textbf{IdentProton} & \textbf{837} & \textbf{816} & \textbf{109} & \textbf{11.9} & \textbf{47.5}\\
+  \bottomrule
+  \end{tabular}
+  \column{.46\textwidth}
+  \includegraphics[width=\linewidth]{cutflow_yields_1p_comb}\\
+  \centering{\scriptsize Combined proton-tagged stack; IdentProton purity
+  $31.8\%\!\to\!47.5\%$.}
+  \end{columns}
 \end{frame}
 
 \begin{frame}{Backup: per-run exposure}
@@ -321,17 +549,22 @@
 \begin{frame}{Backup: proton-tagged binning \& closure}
   \centering\footnotesize
   \begin{tabular}{ll}
-  \toprule Observable & Bin edges\\\midrule
-  $W_{\pi p}$ & 1.08, 1.20, 1.32, 1.50, 2.00 GeV/$c^2$\\
-  $W_\mathrm{had}$ & 0, 1.00, 1.20, 1.40, 1.90 GeV/$c^2$\\
-  $\delta p_T$ & 0, 0.45, 0.70, 1.00, 1.60 GeV/$c$\\
-  $\delta\alpha_T$ & 0, 90, 130, 160, 180 deg\\
-  $\delta\phi_T$ & 0, 50, 85, 125, 180 deg\\
-  $p_n$ & 0, 0.55, 0.80, 1.10, 1.70 GeV/$c$\\
+  \toprule Observable & Bin edges (6 equal-population bins)\\\midrule
+  $W_{\pi p}$ & 1.08, 1.19, 1.23, 1.27, 1.34, 1.47, 2.00 GeV/$c^2$\\
+  $W_\mathrm{had}$ & 0, 0.78, 1.08, 1.21, 1.31, 1.44, 1.90 GeV/$c^2$\\
+  $\delta p_T$ & 0, 0.43, 0.59, 0.72, 0.88, 1.17, 1.60 GeV/$c$\\
+  $\delta\alpha_T$ & 0, 80, 120, 142, 158, 170, 180 deg\\
+  $\delta\phi_T$ & 0, 37, 63, 84, 107, 139, 180 deg\\
+  $p_n$ & 0, 0.52, 0.67, 0.81, 0.98, 1.25, 1.70 GeV/$c$\\
   \bottomrule
   \end{tabular}\\[2mm]
-  {\scriptsize FHC closure $\sigma_\mathrm{int}$: 0.64, 0.59, 0.56, 0.56, 0.63, 0.54;
-  $\chi^2/\mathrm{ndf}=1.5,0.2,0.4,0.5,0.3,0.1$ over 4 bins.}
+  {\scriptsize $+$ five kinematic observables ($p_\mu,p_\pi,\cos\theta_\mu,\cos\theta_\pi,\theta_{\mu\pi}$)
+  on inclusive binning.\\[1mm]
+  FHC W/TKI closure $\sigma_\mathrm{int}$: 0.62, 0.60, 0.61, 0.67, 0.63, 0.52;
+  $\chi^2/\mathrm{ndf}\ll1$, all positive.\\
+  \alert{RHC not yet validated}: all 11 observables unfold negative ($-0.48$ to $-0.04$)
+  --- background $>$ data in this $\sim$47\%-purity subsample. Earlier positive RHC values
+  came from an incorrect MC POT normalisation and are retracted. Comb deferred behind RHC.}
 \end{frame}
 
 \begin{frame}{Backup: generator predictions}

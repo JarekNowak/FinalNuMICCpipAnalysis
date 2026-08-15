@@ -2066,11 +2066,11 @@ $\theta_{\mu\pi}$& $15.9\%$ & $26.0\%$ & $1.64\times$ & $0.43/5$ ($p=0.99$) \\
 \toprule
 Observable & FHC & RHC & Combined \\
 \midrule
-$p_\mu$          & $0.986$ & $1.020$ & $0.876$ \\
-$p_\pi$          & $0.976$ & $1.193$ & $1.111$ \\
-$\cos\theta_\mu$ & $0.811$ & $0.896$ & $0.770$ \\
-$\cos\theta_\pi$ & $0.979$ & $1.058$ & $0.970$ \\
-$\theta_{\mu\pi}$& $0.877$ & $0.919$ & $0.952$ \\
+$p_\mu$          & $0.986$ & $0.860$ & $0.818$ \\
+$p_\pi$          & $0.976$ & $0.972$ & $0.962$ \\
+$\cos\theta_\mu$ & $0.811$ & $0.662$ & $0.702$ \\
+$\cos\theta_\pi$ & $0.979$ & $0.805$ & $0.857$ \\
+$\theta_{\mu\pi}$& $0.877$ & $0.880$ & $0.922$ \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -2370,7 +2370,12 @@ neutrino background for a $\sim\!30\%$ signal loss, improving the signal-to-back
 figure of merit $S/\sqrt{B}$ by $\sim\!17\%$; the residual mis-tag and momentum smearing
 are folded into the response matrix and corrected by the unfolding.
 
-Six differential observables are measured. The two hadronic-mass variables are the
+Eleven differential observables are measured in the proton-tagged subsample: the six
+hadronic-mass and transverse-kinematic-imbalance (W/TKI) variables specific to this
+selection, plus the five muon/pion kinematic observables of the inclusive analysis
+($p_\mu$, $p_\pi$, $\cos\theta_\mu$, $\cos\theta_\pi$, $\theta_{\mu\pi}$) re-measured on
+the proton-tagged phase space so that the two selections share a common set of
+kinematic distributions. The two hadronic-mass variables are the
 \emph{directly measured} $\pi p$ invariant mass,
 $W_{\pi p}=\big[(E_\pi+E_p)^2-(\vec p_\pi+\vec p_p)^2\big]^{1/2}$, which makes no
 assumption on the neutrino direction, and the \emph{calorimetric} hadronic mass
@@ -2379,9 +2384,13 @@ reconstructed calorimetric energy. The four TKI observables --- the transverse-m
 imbalance $\delta p_T$, its two angles $\delta\alpha_T$ and $\delta\phi_T$, and the
 inferred struck-nucleon momentum $p_n$ --- are computed from the muon versus the summed
 $(\pi+p)$ hadronic system using the framework STV tool. Proton momenta are obtained from
-the proton-hypothesis range-based kinetic energy. Given the reduced statistics of the
-proton-tagged sample, each observable is measured in four bins, set from the true-signal
-distributions (Table~\ref{tab:wtki_binning}).
+the proton-hypothesis range-based kinetic energy. The six W/TKI observables are each
+measured in six equal-population bins --- matching the granularity of the inclusive
+analysis, now that the per-run POT normalisation (\S\ref{sec:datamc}) removes the
+background-subtraction bias that had previously forced a coarser three-bin binning for the
+lower-statistics reverse-horn-current sample --- while the five inherited kinematic
+observables use the inclusive-analysis binning (four to seven bins). All bin edges are set
+from the validated true-signal distributions (Table~\ref{tab:wtki_binning}).
 
 \subsubsection*{Reconstruction from input quantities}
 \label{sec:wtki_reco}
@@ -2440,22 +2449,24 @@ kinematics.
 
 \begin{table}[H]
   \centering
-  \caption{Binning of the proton-tagged observables (four bins each), chosen from the
-    validated true-signal distributions. The first and last bins are open so the full
-    signal phase space is partitioned. $W_{\pi p}$ brackets the $\Delta(1232)$ peak; the
-    $\delta\alpha_T$ binning is finer toward $180^\circ$, where final-state interactions
-    pile up.}
+  \caption{Binning of the six W/TKI proton-tagged observables (six equal-population bins
+    each), chosen from the validated true-signal distributions. The first and last bins
+    are open so the full signal phase space is partitioned. $W_{\pi p}$ brackets the
+    $\Delta(1232)$ peak; the $\delta\alpha_T$ and $\delta\phi_T$ binnings are finer toward
+    $180^\circ$, where final-state interactions pile up. The five inherited kinematic
+    observables ($p_\mu$, $p_\pi$, $\cos\theta_\mu$, $\cos\theta_\pi$, $\theta_{\mu\pi}$)
+    use the inclusive-analysis binning of \S\ref{app:binning} unchanged.}
   \label{tab:wtki_binning}
   \begin{tabular}{lll}
     \toprule
     Observable & Definition & Bin edges \\
     \midrule
-    $W_{\pi p}$        & $M(\pi p)$, direct        & $1.08,\,1.20,\,1.32,\,1.50,\,2.00$~GeV/$c^2$ \\
-    $W_\mathrm{had}$   & calorimetric              & $0,\,1.00,\,1.20,\,1.40,\,1.90$~GeV/$c^2$ \\
-    $\delta p_T$       & $|\vec p_T^{\,\mu}+\vec p_T^{\,\mathrm{had}}|$ & $0,\,0.45,\,0.70,\,1.00,\,1.60$~GeV/$c$ \\
-    $\delta\alpha_T$   & TKI angle                 & $0,\,90,\,130,\,160,\,180^\circ$ \\
-    $\delta\phi_T$     & TKI angle                 & $0,\,50,\,85,\,125,\,180^\circ$ \\
-    $p_n$              & inferred nucleon momentum & $0,\,0.55,\,0.80,\,1.10,\,1.70$~GeV/$c$ \\
+    $W_{\pi p}$        & $M(\pi p)$, direct        & $1.08,\,1.19,\,1.23,\,1.27,\,1.34,\,1.47,\,2.00$~GeV/$c^2$ \\
+    $W_\mathrm{had}$   & calorimetric              & $0,\,0.78,\,1.08,\,1.21,\,1.31,\,1.44,\,1.90$~GeV/$c^2$ \\
+    $\delta p_T$       & $|\vec p_T^{\,\mu}+\vec p_T^{\,\mathrm{had}}|$ & $0,\,0.43,\,0.59,\,0.72,\,0.88,\,1.17,\,1.60$~GeV/$c$ \\
+    $\delta\alpha_T$   & TKI angle                 & $0,\,80,\,120,\,142,\,158,\,170,\,180^\circ$ \\
+    $\delta\phi_T$     & TKI angle                 & $0,\,37,\,63,\,84,\,107,\,139,\,180^\circ$ \\
+    $p_n$              & inferred nucleon momentum & $0,\,0.52,\,0.67,\,0.81,\,0.98,\,1.25,\,1.70$~GeV/$c$ \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -2466,40 +2477,68 @@ central-value pseudo-data are unfolded with the same Wiener-SVD procedure
 shows the result. The bin-by-bin $\chi^2/\mathrm{ndf}$ is well below unity for every
 observable, confirming the unfolded pseudo-data are statistically consistent with truth
 and that the response, background subtraction and normalisation are self-consistent. The
-integrated-cross-section ratios ($1.02$--$1.22$) reflect the same non-norm-preserving
+integrated-cross-section ratios ($0.94$--$1.19$) reflect the same non-norm-preserving
 Wiener-SVD additional smearing $A_C$ seen in the inclusive measurement
-(\S\ref{sec:crosschecks}), largest for $W_{\pi p}$ where the sharp $\Delta$ peak is most
-smeared. The systematic treatment here includes the flux, cross-section and
+(\S\ref{sec:crosschecks}), largest for $\delta\alpha_T$ and $\theta_{\mu\pi}$. The
+systematic treatment here includes the flux, cross-section and
 reinteraction terms from the MC weight universes; the detector-variation term is deferred
 pending a dedicated reprocessing of the detector-variation samples through this selection.
-The RHC and combined measurements are in production and will be added here.
+
+\paragraph{Status of the reverse-horn-current proton-tagged measurement.}
+The RHC proton-tagged W/TKI measurement is \emph{not yet validated} and no RHC numbers are
+quoted here. All eleven RHC observables currently unfold to \emph{negative} integrated
+cross sections ($-0.48$ to $-0.04\times10^{-38}$~cm$^2$/Ar): in this low-purity subsample
+($\sim\!47\%$ purity, signal $\approx$ background at the final cut) the estimated
+background exceeds the (fake) data in the reco bins, so the background-subtracted spectrum
+is negative before unfolding. An earlier version of this note quoted positive RHC values
+here; those were obtained with an incorrect MC POT normalisation that under-scaled the
+multi-file RHC runs (and hence the subtracted background) by the file-split multiplicity,
+and they are retracted. With the normalisation corrected (\S\ref{sec:datamc}) the
+underlying negative closure --- which the normalisation error had masked --- is again
+apparent, and it is a genuine feature of the proton-tagged RHC sample rather than a
+normalisation artefact. Diagnosing it (background over-prediction, fake-data statistics,
+or the proton-tag efficiency in RHC) is the outstanding item for this subsample; the
+combined-sample measurement, which inherits the RHC exposure, is deferred behind it.
+The FHC proton-tagged measurement (Table~\ref{tab:wtki_fhc}) is unaffected: FHC runs are
+single-file, so the normalisation error never applied to them, and every FHC observable
+closes positive with $\chi^2/\mathrm{ndf}\ll1$.
 
 \begin{table}[H]
   \centering
-  \caption{FHC fake-data closure for the proton-tagged observables. $\sigma_\mathrm{int}$
-    is the integrated (unfolded) cross section over the measured phase space
-    ($10^{-38}$~cm$^2$/Ar); ``unf./truth'' is the ratio of integrals; $\chi^2$ is the
-    bin-by-bin comparison of unfolded pseudo-data to $A_C$-smeared truth (4 bins). The
-    small $\chi^2/\mathrm{ndf}$ validates the chain; the integral ratios are the $A_C$
-    smearing effect, not a bias.}
+  \caption{FHC fake-data closure for the eleven proton-tagged observables at the finer
+    binning. $\sigma_\mathrm{int}$ is the integrated (unfolded) cross section over the
+    measured phase space ($10^{-38}$~cm$^2$/Ar); ``unf./truth'' is the ratio of integrals;
+    $\chi^2$ is the bin-by-bin comparison of unfolded pseudo-data to $A_C$-smeared truth
+    (ndf = number of bins). The upper block is the six W/TKI observables (six bins each);
+    the lower block is the five kinematic observables inherited from the inclusive
+    analysis. The small $\chi^2/\mathrm{ndf}$ validates the chain; the integral ratios are
+    the $A_C$ smearing effect, not a bias.}
   \label{tab:wtki_fhc}
   \begin{tabular}{lccc}
     \toprule
     Observable & $\sigma_\mathrm{int}$ & unf./truth & $\chi^2/\mathrm{ndf}$ \\
     \midrule
-    $W_{\pi p}$      & $0.64$ & $1.22$ & $1.5/4$ \\
-    $W_\mathrm{had}$ & $0.59$ & $1.09$ & $0.2/4$ \\
-    $\delta p_T$     & $0.56$ & $1.05$ & $0.4/4$ \\
-    $\delta\alpha_T$ & $0.56$ & $1.14$ & $0.5/4$ \\
-    $\delta\phi_T$   & $0.63$ & $1.09$ & $0.3/4$ \\
-    $p_n$            & $0.54$ & $1.02$ & $0.1/4$ \\
+    $W_{\pi p}$      & $0.62$ & $1.11$ & $0.09/6$ \\
+    $W_\mathrm{had}$ & $0.60$ & $1.09$ & $0.09/6$ \\
+    $\delta p_T$     & $0.61$ & $1.12$ & $0.46/6$ \\
+    $\delta\alpha_T$ & $0.67$ & $1.19$ & $0.26/6$ \\
+    $\delta\phi_T$   & $0.63$ & $1.11$ & $0.09/6$ \\
+    $p_n$            & $0.52$ & $0.94$ & $0.09/6$ \\
+    \midrule
+    $p_\mu$          & $0.56$ & $1.16$ & $0.39/7$ \\
+    $p_\pi$          & $0.60$ & $1.10$ & $2.58/5$ \\
+    $\cos\theta_\mu$ & $0.52$ & $1.11$ & $0.56/5$ \\
+    $\cos\theta_\pi$ & $0.54$ & $1.13$ & $0.16/4$ \\
+    $\theta_{\mu\pi}$ & $0.50$ & $1.19$ & $0.84/5$ \\
     \bottomrule
   \end{tabular}
 \end{table}
 
-Figure~\ref{fig:dsigma_ccpi1p_fhc} shows the six FHC differential cross sections,
+
+Figure~\ref{fig:dsigma_ccpi1p_fhc} shows the six FHC W/TKI differential cross sections,
 overlaid with all four generator predictions (GENIE, GiBUU, NEUT, NuWro) for the same
-proton-tagged phase space. The predictions are built at truth level from each
+proton-tagged phase space (shown at the analysis binning; the finer-binning montage is in
+preparation). The predictions are built at truth level from each
 generator's event-level final state --- GENIE gst events, GiBUU \texttt{FinalEvents},
 and the NuWro and NEUT event vectors reprocessed in their respective SL7-container
 environments --- by applying the inclusive signal plus a leading true proton above
