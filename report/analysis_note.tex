@@ -1924,7 +1924,7 @@ true bin; the quoted numbers are the overall mean (bias) and RMS (resolution).
   \centering
   \begin{subfigure}[b]{0.32\textwidth}
     \includegraphics[width=\textwidth]{resolution_pmu_mcs}
-    \caption{$p_\mu$ (MCS): bias $-9.8\%$, RMS $29\%$.}
+    \caption{$p_\mu$ (MCS): bias $-9.8\%$, RMS $30\%$.}
   \end{subfigure}
   \hfill
   \begin{subfigure}[b]{0.32\textwidth}
@@ -1934,21 +1934,21 @@ true bin; the quoted numbers are the overall mean (bias) and RMS (resolution).
   \hfill
   \begin{subfigure}[b]{0.32\textwidth}
     \includegraphics[width=\textwidth]{resolution_ppi}
-    \caption{$p_\pi$: bias $-21\%$, RMS $30\%$.}
+    \caption{$p_\pi$: bias $-36\%$, RMS $25\%$.}
   \end{subfigure}\\[6pt]
   \begin{subfigure}[b]{0.32\textwidth}
     \includegraphics[width=\textwidth]{resolution_costhmu}
-    \caption{$\cos\theta_\mu$: RMS $0.065$.}
+    \caption{$\cos\theta_\mu$: RMS $0.076$.}
   \end{subfigure}
   \hfill
   \begin{subfigure}[b]{0.32\textwidth}
     \includegraphics[width=\textwidth]{resolution_costhpi}
-    \caption{$\cos\theta_\pi$: RMS $0.084$.}
+    \caption{$\cos\theta_\pi$: RMS $0.095$.}
   \end{subfigure}
   \hfill
   \begin{subfigure}[b]{0.32\textwidth}
     \includegraphics[width=\textwidth]{resolution_thmupi}
-    \caption{$\theta_{\mu\pi}$: RMS $0.14$~rad.}
+    \caption{$\theta_{\mu\pi}$: RMS $0.135$~rad.}
   \end{subfigure}
   \caption{Reconstruction resolution vs.\ true value, selected signal.  Momenta:
     relative $(\text{reco}-\text{true})/\text{true}$; angles: absolute
@@ -1956,10 +1956,17 @@ true bin; the quoted numbers are the overall mean (bias) and RMS (resolution).
     The muon MCS momentum slightly over-estimates at low $p_\mu$ and increasingly
     under-estimates above $\sim$1~GeV/$c$; the range estimator is badly biased for
     \emph{exiting} muons (range $=$ distance to wall), which is why the analysis
-    uses range only for contained muons (range-or-MCS).  The pion momentum
-    (evaluated there with the superseded proton-hypothesis range KE) under-estimates
-    true $p_\pi$ by $\sim$21\%; the current muon-hypothesis range momentum removes most
-    of that shift, and this panel is to be regenerated.  The
+    uses range only for contained muons (range-or-MCS).  The pion panel has now been
+    regenerated with the current muon-hypothesis range momentum
+    (\texttt{candidate\_pion\_mom\_reco}): it under-estimates true $p_\pi$ by $36\%$ on
+    average, rising from $\sim\!15\%$ at threshold to $\sim\!70\%$ at $1$~GeV/$c$. The
+    earlier expectation that switching from the proton-hypothesis range KE would remove
+    most of the $\sim\!21\%$ shift quoted for that estimator is therefore \emph{not}
+    borne out --- the mean bias is larger, not smaller, once evaluated over the current
+    phase space. This is a migration effect rather than a bias on the result: the
+    response matrix carries it, which is why the $p_\pi$ bin migration is as large as it
+    is (\S\ref{sec:unfolding_resp}), and it is the physical reason the momentum observables
+    retain the least model discrimination through $A_C$ (Table~\ref{tab:ac_survey}). The
     angular variables are essentially unbiased with narrow resolution.}
   \label{fig:resolution}
 \end{figure}
