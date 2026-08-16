@@ -2420,34 +2420,83 @@ very differently under the Wiener--SVD additional smearing $A_C$, and the choice
 for how the measurement compares to models.
 
 In $\cos\theta_\mu$ the signal is sharply forward-peaked: the last two bins
-($\cos\theta_\mu>0.8$) hold most of the rate. The regularised measurement cannot resolve a
-feature that sharp, so $A_C$ redistributes it, suppressing the integral of any truth-level
-prediction by a factor $\sim\!0.3$ --- far more than the $\sim\!0.6$ suppression of the
-momentum observables. Because $A_C$ acts on the sharpness of each model, it penalises the
-peaked external generators much more than the smoother MicroBooNE tune, so the four
-generators are pushed $2$--$3\times$ below the tune and the data even though their
-truth-level total cross sections agree with it to within tens of percent. This is an
-artefact of the variable, not a disagreement between the models.
+($\cos\theta_\mu>0.8$) hold most of the rate, and $A_C$ suppresses the integral of any
+truth-level prediction by a factor $\sim\!0.33$, against $\sim\!0.6$ for the momentum
+observables. The four generators are pushed $2$--$3\times$ below the tune and the data even
+though their truth-level total cross sections agree to within tens of percent.
 
-Reparameterising to $\theta_\mu$ removes it. The $\sin\theta_\mu$ Jacobian flattens the
-forward peak (the $\theta_\mu$ spectrum spans about a factor of ten between its largest and
-smallest bin, against a far sharper rise in $\cos\theta_\mu$), the regularisation no longer
-has to smear away an unresolvable feature, and the suppression drops to $\sim\!0.76$ for
-FHC --- comparable to $p_\mu$. Table~\ref{tab:theta_vs_costheta} and
-Figure~\ref{fig:theta_vs_costheta} show the effect: in $\theta_\mu$ the generators sit on
-top of the data with the tune among them, whereas in $\cos\theta_\mu$ they collapse well
-below it. The tune-to-data $\chi^2$ is also mildly better in $\theta_\mu$
-($3.07/5$ vs $3.80/5$ for FHC, $4.41/5$ vs $4.91/5$ for RHC).
+An earlier version of this note attributed both effects to the sharpness of the peak ---
+$A_C$ smearing away an unresolvable feature, and thereby penalising the peaked generators
+more than the smoother tune. \emph{Both halves of that explanation are wrong}, and are
+retracted here. Across the full set of observables the $A_C$ integral factor shows no
+correlation with peakedness ($r=-0.17$): $W_{\pi p}$ is the sharpest distribution in the
+analysis (peak-to-minimum ratio $36$) yet is suppressed only to $0.78$, $\delta p_T$ is
+comparatively flat (ratio $10$) yet is suppressed to $0.43$, and $p_n$ is flat yet
+\emph{enhanced} to $1.71$ --- an enhancement no peak argument can produce. Within
+$\cos\theta_\mu$ itself the ordering is backwards: NEUT and NuWro are the \emph{flattest}
+of the five truth-level curves (peak-to-minimum $3.8$ and $4.3$, against $16.3$ for the
+tune) and are suppressed the \emph{most} ($0.37$ and $0.29$, against $0.67$). What actually
+drives their suppression is that $A_C$ pushes their backward bins negative
+($-0.0005$ to $-0.0212$ in normalised units), eating the integral. $A_C$ is the Wiener
+filter acting on the SVD modes of the response: it removes whatever the data cannot
+statistically constrain, which is set by the conditioning of the response for that
+observable and binning, not by the shape of the truth distribution --- and it is not
+norm-preserving, so it can suppress or enhance.
 
-The improvement is smaller for RHC ($A_C$ suppression $0.34\to0.49$, against
-$0.33\to0.76$ for FHC): the RHC muon-angle response is poorer and is regularised more
-strongly, so some smearing survives the reparameterisation. The residual RHC gap is
-therefore a resolution/regularisation effect rather than a normalisation problem --- the
-RHC generator predictions themselves are healthy, sitting a uniform $0.80$--$0.84$ of their
-FHC counterparts as expected for the $\bar\nu_\mu$-enriched beam. The same
-reparameterisation applied to the pion angle changes almost nothing
-($\theta_\pi$ vs $\cos\theta_\pi$: $0.802$ vs $0.805$ for RHC), since the pion is not
-strongly forward-peaked and $A_C$ was never penalising it.
+\subsubsection*{The FHC $\theta_\mu$ result is withdrawn: $A_C$ is rank-1 there}
+
+Reparameterising to $\theta_\mu$ appeared to remove the problem entirely: the FHC
+suppression rose to $\sim\!0.76$ and the NEUT/NuWro $\chi^2$ fell from $\sim\!26/5$ to
+$\sim\!2.8/5$, with the generators sitting on top of the data. \emph{That result is an
+artefact of over-regularisation and must not be used for model comparison.}
+
+In the FHC $\theta_\mu$ extraction the unfolded data, the $A_C$-smeared truth, the
+MicroBooNE tune and all four generators share the same normalised shape to four decimal
+places (Table~\ref{tab:thetamu_rank1}). The cause is that $A_C$ is \emph{rank-1} for this
+config: writing the four generator predictions as the columns of a $5\times4$ input matrix
+and their $A_C$-smeared counterparts as the columns of the output matrix, the inputs are
+full rank (ratio of second to first singular value $s_2/s_1=5.0\times10^{-2}$) while the
+outputs have $s_2/s_1=2.8\times10^{-6}$. Every shape degree of freedom has been
+annihilated; each model is mapped onto a single common curve and only its normalisation
+survives. The agreement with the data is therefore true by construction, the effective
+number of degrees of freedom is $\approx1$ rather than $5$, and the quoted $\chi^2/5$ is
+not a goodness-of-fit.
+
+This is specific to FHC $\theta_\mu$, not a property of the $\theta$ parameterisation.
+Fed the identical generator inputs, FHC $\cos\theta_\mu$ returns $s_2/s_1=5.1\times10^{-2}$
+and FHC $p_\mu$ returns $6.6\times10^{-3}$; RHC $\theta_\mu$ returns $2.3\times10^{-2}$ and
+does retain its shape information, which is why its measured improvement is only
+$0.34\to0.49$ --- previously explained as a poorer RHC angular response, when in fact RHC
+is the case that was \emph{not} over-regularised. The generator FTE inputs themselves are
+sound: the $\theta_\mu$ histograms are the exact bin-reversal of the $\cos\theta_\mu$ ones
+and differ properly between models.
+
+\begin{table}[htbp]\centering
+\caption{FHC $\theta_\mu$: normalised bin contents. Five independent inputs --- the
+measurement and four generator predictions plus the tune --- collapse onto one shape,
+the signature of a rank-1 $A_C$.}
+\label{tab:thetamu_rank1}
+\begin{tabular}{lccccc}
+\toprule
+ & bin 1 & bin 2 & bin 3 & bin 4 & bin 5\\\midrule
+Unfolded data          & 0.1485 & 0.3361 & 0.2899 & 0.1934 & 0.0321\\
+$A_C$-smeared truth    & 0.1484 & 0.3359 & 0.2901 & 0.1933 & 0.0323\\
+MicroBooNE tune        & 0.1484 & 0.3359 & 0.2901 & 0.1934 & 0.0322\\
+NEUT                   & 0.1484 & 0.3359 & 0.2901 & 0.1934 & 0.0322\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Consequently the muon-angle measurement is quoted in $\cos\theta_\mu$, which retains its
+shape modes, and the FHC $\theta_\mu$ numbers are withdrawn pending a re-run with a
+regularisation strength that does not collapse the response. The strong $\cos\theta_\mu$
+suppression and the negative backward bins in NEUT and NuWro remain real features of the
+measurement and are reported as such. The RHC generator predictions themselves are healthy,
+sitting a uniform $0.80$--$0.84$ of their FHC counterparts as expected for the
+$\bar\nu_\mu$-enriched beam. The same reparameterisation applied to the pion angle changes
+almost nothing ($\theta_\pi$ vs $\cos\theta_\pi$: $0.802$ vs $0.805$ for RHC); with the
+peak explanation retracted this is simply because the pion-angle response is comparably
+conditioned in the two parameterisations.
 
 \begin{table}[H]
   \centering
@@ -2455,7 +2504,10 @@ strongly forward-peaked and $A_C$ was never penalising it.
     MicroBooNE tune and the four generators, in $\cos\theta_\mu$ and in $\theta_\mu$. All
     entries are $A_C$-smeared, i.e.\ live in the same space as the measurement. ``$A_C$
     supp.'' is the mean ratio of the $A_C$-smeared to the truth-level generator integral;
-    the momentum observable $p_\mu$ is shown for reference.}
+    the momentum observable $p_\mu$ is shown for reference. \textbf{The FHC $\theta_\mu$
+    row is retained for the record only and must not be used for model comparison}: $A_C$
+    is rank-1 for that config, so every entry in the row is the same shape rescaled and the
+    apparent agreement is by construction (Table~\ref{tab:thetamu_rank1}).}
   \label{tab:theta_vs_costheta}
   \begin{tabular}{llcccccc}
     \toprule
@@ -2479,9 +2531,12 @@ strongly forward-peaked and $A_C$ was never penalising it.
   \caption{Muon-angle differential cross section in $\theta_\mu$ (left) and
     $\cos\theta_\mu$ (right), for FHC (top) and RHC (bottom). Unfolded fake data (black
     points), the MicroBooNE tune (black line) and the four generators are all
-    $A_C$-smeared. In $\theta_\mu$ the generators bracket the data; in $\cos\theta_\mu$ the
-    same predictions are suppressed by the additional smearing of the sharp forward peak
-    and fall well below both the data and the tune.}
+    $A_C$-smeared. In $\cos\theta_\mu$ the predictions are strongly suppressed by $A_C$ and
+    fall well below both the data and the tune; the most suppressed models are those whose
+    backward bins $A_C$ drives negative. \textbf{The FHC $\theta_\mu$ panel is not a model
+    comparison}: $A_C$ is rank-1 there, so the data and every prediction are the same curve
+    up to normalisation and their apparent agreement carries no shape information
+    (Sec.~\ref{sec:thetavar}).}
   \label{fig:theta_vs_costheta}
 \end{figure}
 

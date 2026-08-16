@@ -438,32 +438,48 @@
   differs.}
 \end{frame}
 
-\begin{frame}{Why $\theta_\mu$: the $A_C$ smearing penalises the forward peak}
-  \begin{columns}[T]\column{.52\textwidth}
+\begin{frame}{$\cos\theta_\mu$ vs $\theta_\mu$: the FHC $\theta_\mu$ ``agreement'' is an artefact}
+  \begin{columns}[T]\column{.46\textwidth}
   \centering\scriptsize
-  \begin{tabular}{llcccc}
+  \textbf{FHC $\theta_\mu$: normalised shapes}\\[1mm]
+  \begin{tabular}{lccccc}
   \toprule
-  Beam & Var & data & tune & GENIE & NuWro\\\midrule
-  FHC & $\cos\theta_\mu$ & 0.82 & 0.67 & 0.27 & 0.30\\
-  FHC & $\theta_\mu$     & 1.00 & 0.87 & 0.63 & 0.92\\\midrule
-  RHC & $\cos\theta_\mu$ & 0.66 & 0.63 & 0.23 & 0.26\\
-  RHC & $\theta_\mu$     & 0.83 & 0.82 & 0.33 & 0.42\\
+   & \multicolumn{5}{c}{bin}\\\cmidrule{2-6}
+   & 1 & 2 & 3 & 4 & 5\\\midrule
+  data     & .1485 & .3361 & .2899 & .1934 & .0321\\
+  truth    & .1484 & .3359 & .2901 & .1933 & .0323\\
+  uB tune  & .1484 & .3359 & .2901 & .1934 & .0322\\
+  NEUT     & .1484 & .3359 & .2901 & .1934 & .0322\\
   \bottomrule
   \end{tabular}\\[2mm]
-  {\scriptsize $A_C$ suppression (smeared/truth):\\
-  FHC $\cos\theta_\mu$ \alert{0.33} $\to$ $\theta_\mu$ \alert{0.76} \quad($p_\mu$ 0.64)\\
-  RHC $\cos\theta_\mu$ 0.34 $\to$ $\theta_\mu$ 0.49 \quad($p_\mu$ 0.72)}
-  \column{.48\textwidth}
-  \begin{itemize}\footnotesize
-    \item $\cos\theta_\mu$ is sharply forward-peaked; the regularised measurement cannot
-      resolve it, so $A_C$ smears it away --- penalising the \alert{peaked generators}
-      far more than the smoother tune.
-    \item In $\theta_\mu$ the $\sin\theta$ Jacobian flattens the peak $\Rightarrow$
-      suppression $0.33\!\to\!0.76$, generators land \alert{on} the data.
-    \item Not a model disagreement: truth-level generator totals agree; it is a
-      \alert{variable-choice artefact}.
-    \item RHC improves less (poorer angular response, stronger regularisation).
-      $\theta_\pi$ $\approx$ $\cos\theta_\pi$ (pion never sharply peaked).
+  {\scriptsize $A_C$ 2nd/1st singular value\\
+  (same 4 generator inputs, $s_2/s_1=5.0\!\times\!10^{-2}$):\\[1mm]
+  \begin{tabular}{lc}
+  FHC $\theta_\mu$   & \alert{$2.8\times10^{-6}$}\\
+  FHC $\cos\theta_\mu$ & $5.1\times10^{-2}$\\
+  FHC $p_\mu$        & $6.6\times10^{-3}$\\
+  RHC $\theta_\mu$   & $2.3\times10^{-2}$\\
+  \end{tabular}}
+  \column{.54\textwidth}
+  \begin{itemize}\scriptsize\setlength\itemsep{3pt}
+    \item \alert{Retraction.} We previously read the FHC $\theta_\mu$ $\chi^2$ drop
+      ($\sim\!26/5\to\sim\!2.8/5$) as evidence that $\theta_\mu$ cures the
+      $\cos\theta_\mu$ tension. It does not.
+    \item In FHC $\theta_\mu$ the \alert{data, the truth, the tune and all four
+      generators share one shape to 4 decimals}. $A_C$ there is \alert{rank-1}: it
+      annihilates every shape degree of freedom, so each model is mapped onto the same
+      curve and only its normalisation survives.
+    \item $\Rightarrow$ the agreement is \alert{by construction}, effective
+      $\mathrm{ndf}\approx1$, and $\chi^2/5$ is not a goodness-of-fit. The same four
+      generator inputs are \alert{full rank} ($s_2/s_1=5\times10^{-2}$), and
+      $\cos\theta_\mu$/$p_\mu$/RHC $\theta_\mu$ all retain their shape modes --- so this
+      is over-regularisation specific to FHC $\theta_\mu$, not a property of $\theta$.
+    \item The earlier ``$A_C$ penalises the forward peak'' explanation is also wrong:
+      across observables $A_C$ vs peakedness gives $r=-0.17$ ($W_{\pi p}$ sharpest yet
+      $0.78$; $p_n$ flat yet \alert{enhanced} $1.71$), and within $\cos\theta_\mu$ the
+      \alert{flattest} models (NEUT, NuWro) are suppressed \alert{most}.
+    \item \alert{Action}: FHC $\theta_\mu$ is withdrawn from model comparison pending a
+      regularisation re-run; $\cos\theta_\mu$ retains its shape information and stands.
   \end{itemize}
   \end{columns}
 \end{frame}
