@@ -520,10 +520,26 @@
   \centering\includegraphics[width=\linewidth]{fw_systbreak_comb}\\
   {\scriptsize Flux (PPFX) dominates; detector second; total $\sim30$--$40\%$.}
   \column{.45\textwidth}
-  \begin{block}{Background-control sidebands}\footnotesize
-  Four signal-depleted regions (CC$0\pi$, multi-$\pi$, $\pi^0$, cosmic).
-  High-statistics data$/\nu$MC $=1.00$ across FHC/RHC/comb $\Rightarrow$ per-run
-  weighting \& POT machinery validated; ready to constrain the background at unblinding.
+  \begin{block}{Background-control sidebands (combined)}\scriptsize
+  \begin{tabular}{lrrrc}
+  \toprule
+  Region & $N_\mathrm{data}$ & EXT & sig\% & data/$\nu$MC\\\midrule
+  CC$0\pi$      & 24\,148 & 18\,219 & 9.7 & 1.00\\
+  $\pi^0$       & 14\,694 & 10\,494 & 9.9 & 1.01\\
+  multi-$\pi$   & 303     & 85      & 22.9 & 1.08\\
+  cosmic        & 169     & 629     & 8.0 & 1.10\\
+  \bottomrule
+  \end{tabular}\\[1.5mm]
+  {\scriptsize Each inverts \alert{one} signal requirement.
+  \alert{CC$0\pi$} $\to$ the FSI absorption path in/out of the signal;
+  \alert{$\pi^0$} $\to$ shower-veto efficiency;
+  \alert{multi-$\pi$} $\to$ wrong-topology feed-down;
+  \alert{cosmic} $\to$ the only EXT-dominated region ($4.5\times$ the $\nu$MC).\\[1mm]
+  Pseudo-data is a throw of the $\nu$MC, so data/$\nu$MC tests the \alert{machinery}
+  (per-run POT + weighting), not yet the background model. Small-region scatter is
+  Poisson ($\sqrt{N}\!\approx\!8\%$ for cosmic).\\[1mm]
+  At unblinding: CC$0\pi$/$\pi^0$ constrain to $\sim\!1\%$, well inside the
+  $20$--$30\%$ xsec systematic they test.}
   \end{block}
   \end{columns}
 \end{frame}
@@ -735,6 +751,43 @@
   \end{tabular}\\[1mm]
   {\scriptsize $82\%$ true $\nu_\mu$ CC — well modelled \& constrainable.}
   \end{block}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Proton-tagged: background-control sidebands}
+  \footnotesize
+  The proton-tagged selection \alert{inherits} the four sideband definitions from
+  \texttt{CC1mu1piXp} --- no new regions or reprocessing needed. Each can be read either
+  as inherited, or with a tagged proton additionally required (the measurement phase space).
+  \begin{center}\scriptsize
+  \begin{tabular}{lrrrc|rrrc}
+  \toprule
+  & \multicolumn{4}{c|}{as inherited} & \multicolumn{4}{c}{$+$ proton tag}\\
+  Region (comb) & $N_\mathrm{data}$ & EXT & sig\% & d/$\nu$MC & $N_\mathrm{data}$ & EXT & sig\% & d/$\nu$MC\\\midrule
+  CC$0\pi$    & 24\,148 & 18\,219 & 6.0 & 1.00 & 16\,555 & \alert{2\,950} & 6.0 & 1.01\\
+  $\pi^0$     & 14\,694 & 10\,494 & 6.8 & 1.01 & 9\,019  & \alert{2\,418} & 7.1 & 1.02\\
+  multi-$\pi$ & 303     & 85      & 22.6 & 1.08 & 137    & 36      & 18.9 & 1.07\\
+  cosmic      & 169     & 629     & 4.5 & 1.10 & 60     & \alert{12}     & 7.1 & 1.07\\
+  \bottomrule
+  \end{tabular}
+  \end{center}
+  \begin{columns}[T]\column{.5\textwidth}
+  {\scriptsize
+  \begin{itemize}\setlength\itemsep{1pt}
+    \item \alert{More} signal-depleted than for the inclusive selection ($6$--$7\%$ vs
+      $48\%$ purity in the signal region).
+    \item The proton tag costs $\sim\!1/3$ of the statistics but cuts \alert{EXT by
+      $\sim\!6\times$} --- cosmics rarely have a reconstructed proton.
+  \end{itemize}}
+  \column{.5\textwidth}
+  {\scriptsize
+  \begin{itemize}\setlength\itemsep{1pt}
+    \item $\Rightarrow$ the EXT normalisation systematic matters \alert{much less} here
+      than in the inclusive measurement.
+    \item \alert{Gap}: these \emph{apply} the proton tag, so none constrains the
+      $\sim\!13\%$ proton \alert{mis-tag}. That needs an inverted-PID region (new branch
+      $+$ reprocess).
+  \end{itemize}}
   \end{columns}
 \end{frame}
 
