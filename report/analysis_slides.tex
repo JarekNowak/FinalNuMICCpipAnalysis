@@ -787,6 +787,47 @@
   Closure $\chi^2/\mathrm{ndf}\ll1$ for every observable.}
 \end{frame}
 
+\begin{frame}{Proton-tagged closure: all three beam configurations}
+  \begin{columns}[T]\column{.52\textwidth}
+  \centering\tiny
+  \begin{tabular}{lccc|c}
+  \toprule
+  & \multicolumn{3}{c|}{$\sigma_\mathrm{int}$ [$10^{-38}$cm$^2$/Ar]} & COMB\\
+  Observable & FHC & RHC & COMB & $\chi^2/\mathrm{ndf}$\\\midrule
+  $W_{\pi p}$        & 0.62 & 0.578 & 0.564 & 0.07/6\\
+  $W_\mathrm{had}$   & 0.60 & 0.500 & 0.504 & 1.30/6\\
+  $\delta p_T$       & 0.61 & 0.493 & 0.497 & 0.71/6\\
+  $\delta\alpha_T$   & 0.67 & 0.567 & 0.667 & 0.86/6\\
+  $\delta\phi_T$     & 0.63 & 0.568 & 0.573 & 0.05/6\\
+  $p_n$              & 0.52 & 0.548 & 0.556 & 1.00/6\\\midrule
+  $p_\mu$            & 0.56 & 0.531 & 0.523 & 0.65/7\\
+  $p_\pi$            & 0.60 & 0.572 & 0.582 & 2.49/5\\
+  $\cos\theta_\mu$   & 0.52 & 0.512 & 0.529 & 0.52/5\\
+  $\cos\theta_\pi$   & 0.54 & 0.444 & 0.454 & 2.17/4\\
+  $\theta_{\mu\pi}$  & 0.50 & 0.410 & 0.447 & 0.21/5\\
+  \bottomrule
+  \end{tabular}
+  \column{.48\textwidth}
+  \begin{itemize}\scriptsize\setlength\itemsep{4pt}
+    \item \alert{All eleven observables now close positive in all three configurations} ---
+      the proton-tagged measurement is complete. Every combined $\chi^2$ is well below its
+      number of bins.
+    \item The RHC and combined results were previously \alert{negative and withdrawn}. The
+      cause was a POT-normalisation bug, not the data: the processed ntuples carry
+      \alert{two POT conventions}, and normalising by the sum of the \alert{distinct}
+      per-file exposures is correct for both.
+    \item COMB lies between FHC and RHC for \alert{7 of 11}. The four exceptions are small
+      ($p_n$ $+6.9\%$ vs FHC; $\cos\theta_\mu$ $+1.7\%$; $W_{\pi p}$ $-2.4\%$ and $p_\mu$
+      $-1.5\%$ vs RHC) --- COMB is an \alert{independent extraction} with its own response,
+      regularisation and $A_C$, \alert{not} a fluence-weighted average, so it is not
+      required to bracket. All four are far inside the $\sim\!30\%$ systematic.
+    \item The $0.45$--$0.67$ spread \alert{across} observables is $A_C$, not physics: each
+      observable's smearing rescales the integral differently, so these are not eleven
+      independent measurements of one number.
+  \end{itemize}
+  \end{columns}
+\end{frame}
+
 \begin{frame}{Generator comparison \& background composition}
   \begin{columns}[T]\column{.5\textwidth}
   \begin{block}{Integrated proton-tagged $\sigma$ ($10^{-38}$cm$^2$/Ar)}\scriptsize
@@ -940,8 +981,9 @@
       $\sigma$ agrees with GENIE/GiBUU/NEUT/NuWro within $\sim1\sigma$.
     \item \alert{Proton-tagged}: new hadronic-mass ($W_{\pi p}$, $W_\mathrm{had}$) and
       TKI ($\delta p_T$, $\delta\alpha_T$, $\delta\phi_T$, $p_n$) observables, plus the
-      five inclusive kinematic observables re-measured. \alert{FHC and RHC closure
-      validated} at six-bin granularity; combined in production.
+      five inclusive kinematic observables re-measured. \alert{Closure validated in all
+      three configurations} at six-bin granularity --- eleven observables $\times$ FHC,
+      RHC and combined, all positive, every combined $\chi^2$ below its bin count.
     \item Blind analysis: fake data throughout; sidebands (CC0$\pi$, multi-$\pi$, $\pi^0$,
       cosmic) validated in all three beams, data/$\nu$MC $\simeq1.00$, ready to constrain
       the background before unblinding.
