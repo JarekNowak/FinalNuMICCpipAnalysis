@@ -2868,24 +2868,26 @@ systematic treatment here includes the flux, cross-section and
 reinteraction terms from the MC weight universes; the detector-variation term is deferred
 pending a dedicated reprocessing of the detector-variation samples through this selection.
 
-\paragraph{Status of the reverse-horn-current proton-tagged measurement.}
-The RHC proton-tagged W/TKI measurement is \emph{not yet validated} and no RHC numbers are
-quoted here. All eleven RHC observables currently unfold to \emph{negative} integrated
-cross sections ($-0.48$ to $-0.04\times10^{-38}$~cm$^2$/Ar): in this low-purity subsample
-($\sim\!47\%$ purity, signal $\approx$ background at the final cut) the estimated
-background exceeds the (fake) data in the reco bins, so the background-subtracted spectrum
-is negative before unfolding. An earlier version of this note quoted positive RHC values
-here; those were obtained with an incorrect MC POT normalisation that under-scaled the
-multi-file RHC runs (and hence the subtracted background) by the file-split multiplicity,
-and they are retracted. With the normalisation corrected (\S\ref{sec:datamc}) the
-underlying negative closure --- which the normalisation error had masked --- is again
-apparent, and it is a genuine feature of the proton-tagged RHC sample rather than a
-normalisation artefact. Diagnosing it (background over-prediction, fake-data statistics,
-or the proton-tag efficiency in RHC) is the outstanding item for this subsample; the
-combined-sample measurement, which inherits the RHC exposure, is deferred behind it.
-The FHC proton-tagged measurement (Table~\ref{tab:wtki_fhc}) is unaffected: FHC runs are
-single-file, so the normalisation error never applied to them, and every FHC observable
-closes positive with $\chi^2/\mathrm{ndf}\ll1$.
+The reverse-horn-current measurement is complete at the same finer binning
+(Table~\ref{tab:wtki_rhc}). All eleven RHC observables close positive, with
+$\sigma_\mathrm{int}$ clustered in $0.41$--$0.58\times10^{-38}$~cm$^2$/Ar --- just below the
+FHC band ($0.50$--$0.67$), as expected for the $\bar\nu_\mu$-enriched RHC flux --- and
+$\chi^2/\mathrm{ndf}\lesssim1$ for almost every observable.
+
+Reaching this point required resolving a normalisation subtlety that is worth recording,
+because it produced spurious \emph{negative} cross sections for this subsample at an
+intermediate stage. The processed ntuples use two different POT conventions: the files
+behind the inclusive selection store the \emph{total} run MC POT duplicated in every file
+of a multi-file run, whereas the proton-tagged files store each file's \emph{own} POT.
+Normalising by the individual file POT is therefore correct for the first set but scales
+every split of a multi-file run to the full run exposure in the second, inflating the
+simulated background by the split multiplicity ($\sim\!3\times$ for RHC) and driving the
+background-subtracted spectrum negative. Normalising by the summed per-file POT has the
+mirror problem. The analysis now normalises by the sum of the \emph{distinct} per-file POT
+values, which reduces to the correct run total under either convention; FHC, with one MC
+file per run, is unaffected by the choice.
+
+The combined-sample measurement is in production and will be added here.
 
 \begin{table}[H]
   \centering
@@ -2939,6 +2941,33 @@ the data ($\sim0.58$), and they differ most in the low-$\delta p_T$ / high-$p_n$
 sensitive to the proton kinematics and final-state interactions. As throughout, the
 unfolded fake data sit above the $A_C$-smeared truth by the Wiener-SVD normalisation
 factor.
+
+\begin{table}[H]
+  \centering
+  \caption{RHC fake-data closure for the eleven proton-tagged observables at the finer
+    binning, columns as in Table~\ref{tab:wtki_fhc}. All observables close positive with
+    the convention-agnostic MC POT normalisation described above; $\sigma_\mathrm{int}$
+    sits just below the FHC band, consistent with the $\bar\nu_\mu$-enriched RHC flux.}
+  \label{tab:wtki_rhc}
+  \begin{tabular}{lccc}
+    \toprule
+    Observable & $\sigma_\mathrm{int}$ & unf./truth & $\chi^2/\mathrm{ndf}$ \\
+    \midrule
+    $W_{\pi p}$      & $0.578$ & $1.18$ & $0.44/6$ \\
+    $W_\mathrm{had}$ & $0.500$ & $1.10$ & $2.19/6$ \\
+    $\delta p_T$     & $0.493$ & $1.20$ & $1.00/6$ \\
+    $\delta\alpha_T$ & $0.567$ & $1.20$ & $0.44/6$ \\
+    $\delta\phi_T$   & $0.568$ & $1.17$ & $1.40/6$ \\
+    $p_n$            & $0.548$ & $1.30$ & $3.07/6$ \\
+    \midrule
+    $p_\mu$          & $0.531$ & $1.23$ & $0.94/7$ \\
+    $p_\pi$          & $0.572$ & $1.23$ & $0.71/5$ \\
+    $\cos\theta_\mu$ & $0.512$ & $1.22$ & $2.23/5$ \\
+    $\cos\theta_\pi$ & $0.444$ & $1.06$ & $3.74/4$ \\
+    $\theta_{\mu\pi}$ & $0.410$ & $1.15$ & $0.86/5$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
 
 \subsection{Additional smearing in the proton-tagged observables}
 \label{sec:acwtki}

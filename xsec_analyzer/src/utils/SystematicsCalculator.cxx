@@ -478,17 +478,40 @@ void SystematicsCalculator::build_universes( TDirectoryFile& root_tdir ) {
   // run) this map entry equals that file's POT, so the normalization is
   // unchanged. Keyed by sample type so distinct samples (numu overlay vs dirt)
   // are never lumped together.
+  // TWO POT CONVENTIONS EXIST IN THE PROCESSED FILES, and the correct denominator
+  // differs between them, so neither "divide by file_pot" nor "divide by the sum of
+  // file_pot" is right on its own:
+  //
+  //   (a) /data/uboone/processed/     : every file of a multi-file run stores the SAME
+  //       value, the TOTAL run MC POT (e.g. Run3 aa-ae all 5.5185e21). Dividing by the
+  //       sum would over-count the denominator by the number of files.
+  //   (b) /data/uboone/processed/w/   : each file stores its OWN POT (Run3 aa-ae =
+  //       1.320, 1.188, 1.210, 1.295, 0.504 e21, matching the raw SubRun sums). Dividing
+  //       by any single file's POT would scale that file to the full run exposure and
+  //       over-count the MC by the number of files.
+  //
+  // Summing the DISTINCT values is correct for both: in (a) the set collapses to the one
+  // shared total, in (b) it is the true per-file sum. Both give the actual run MC POT.
+  // (Getting this wrong the other way is what produced the RHC W/TKI negative closure:
+  // the W/TKI files follow convention (b) while the inclusive files follow (a).)
   std::map< int, std::map< NFT, double > > run_type_mc_pot;
   for ( const auto& rt_pair : fpm.ntuple_file_map() ) {
     int rr = rt_pair.first;
     for ( const auto& tf_pair : rt_pair.second ) {
       const auto& tt = tf_pair.first;
       if ( !ntuple_type_is_mc( tt ) ) continue;
+      std::vector< double > seen;
       for ( const std::string& fn : tf_pair.second ) {
         TFile tmp_pot_file( fn.c_str(), "read" );
         TParameter<float>* tmp_pot = nullptr;
         tmp_pot_file.GetObject( "summed_pot", tmp_pot );
-        if ( tmp_pot ) run_type_mc_pot[ rr ][ tt ] += tmp_pot->GetVal();
+        if ( !tmp_pot ) continue;
+        double v = tmp_pot->GetVal();
+        bool dup = false;
+        for ( double s : seen ) {
+          if ( std::abs( s - v ) <= 1e-6 * std::abs( s ) ) { dup = true; break; }
+        }
+        if ( !dup ) { seen.push_back( v ); run_type_mc_pot[ rr ][ tt ] += v; }
       }
     }
   }
@@ -859,9 +882,8 @@ void SystematicsCalculator::build_universes( TDirectoryFile& root_tdir ) {
             // Normalize by the run-summed MC POT for this sample (see
             // run_type_mc_pot) so multi-file runs are not over-counted.
             double temp_run_pot = run_to_bnb_pot_map.at( run );
-            // Per-file POT scaling (see the reweightable-MC path below): multi-file runs
-            // are event-splits that duplicate the full sample POT, so file_pot is correct.
-            temp_scale_factor = temp_run_pot / file_pot;
+            // Same convention-agnostic denominator as the reweightable-MC path below.
+            temp_scale_factor = temp_run_pot / run_type_mc_pot.at( run ).at( type );
           }
           else {
             // Scale all detVar universe histograms from the simulated POT to
@@ -969,18 +991,13 @@ void SystematicsCalculator::build_universes( TDirectoryFile& root_tdir ) {
           // individual file POT) so that runs split across multiple ntuple files
           // are not over-counted; see run_type_mc_pot above.
           double run_bnb_pot = run_to_bnb_pot_map.at( run );
-          // Scale each MC ntuple file to the BNB data POT for its run by the file's own
-          // POT. The multi-file RHC/COMB runs (Run3 = 5 files, Run4 = 3 files) are event
-          // SPLITS of a single MC production: each split file duplicates the FULL sample
-          // POT in its stored summed_pot, while the events are divided among the files.
-          // Per-file scaling (run_bnb_pot/file_pot) summed over the splits therefore gives
-          // the correct total, since (sum of split events)/file_pot = total/file_pot with
-          // file_pot the true sample POT. Verified by the event-rate test: Run3/Run4
-          // entries-per-POT match the single-file Run1 only at the shared per-file POT, not
-          // the sum. (A previous "fix" divided by the SUMMED per-file POT, run_type_mc_pot,
-          // which over-counted the denominator by the split multiplicity and scaled these
-          // runs' MC 5x/3x too low -- reverted here.)
-          double rw_scale_factor = run_bnb_pot / file_pot;
+          // Denominator = the run's true total MC POT, obtained as the sum of the DISTINCT
+          // per-file summed_pot values (see run_type_mc_pot above). This is correct for
+          // both POT conventions present in the processed files, whereas dividing by
+          // file_pot alone is right only for the duplicated-total convention and dividing
+          // by the plain sum is right only for the true-per-file convention.
+          double run_mc_pot = run_type_mc_pot.at( run ).at( type );
+          double rw_scale_factor = run_bnb_pot / run_mc_pot;
 
           // Iterate over the reweighting universes, retrieve the
           // histograms for each, and add their POT-scaled contributions
