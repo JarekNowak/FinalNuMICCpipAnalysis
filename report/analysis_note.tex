@@ -2043,7 +2043,40 @@ bin while $32.6\%$ fall all the way into the \emph{lowest} one. Every true bin a
 first therefore deposits most of its events into reco bin 1, which is exactly the
 ``pile-up into the first bin'' seen in Figure~\ref{fig:response}.
 
-\paragraph{Consequences, and what would improve it.}
+\paragraph{How the BNB CC1$\pi^\pm$ analysis handles the same problem.}
+The published BNB CC$1\pi^{\pm}$Xp analysis (internal note v0.91) faces an identical
+estimator --- it too takes ``the momentum of pion candidates from range'' --- and its
+treatment is worth reproducing here, because it is a solved problem there and an open one
+here.
+
+That analysis does three things we do not. First, it defines a \emph{golden pion}: one
+that comes to rest and leaves a Bragg peak, as opposed to one that scattered or interacted.
+Second, it trains a dedicated \emph{golden-pion BDT} and applies it as an extra cut for
+the pion-momentum differential cross section only, leaving the total and angular results on
+the generic selection. The BDT separates golden from non-golden pions using track
+``wiggliness'' (the standard deviation of the angular difference between directions of
+adjacent points along the fitted track, so a direct handle on scattering), the number of
+reconstructed descendant particles, the track--shower score, and the Bragg likelihood
+ratio. The cost and benefit are quoted explicitly: efficiency falls from $20.3\%$ to
+$9.5\%$ and purity is essentially unchanged ($51.9\to49.5\%$), but the golden fraction of
+the selected signal rises from $36.3\%$ to $67.7\%$. They apply the same logic to the muon
+momentum, restricting that cross section to contained muons ($8.4\%$ efficiency,
+$56.1\%$ purity) so it uses range only.
+
+Third, and most directly comparable, their binning is chosen against an explicit criterion:
+each bin must hold at least 100 predicted MC events \emph{and} the diagonal element of the
+smearing matrix must exceed $0.68$. The resulting pion-momentum edges are
+$0.10, 0.16, 0.19, 0.22, 0.60$~GeV/$c$ with an overflow bin --- fine structure only where
+the estimator still tracks truth, then a single wide bin from $0.22$ to $0.60$ and
+everything above $0.60$ in overflow.
+
+Set against that criterion our binning does not survive: the diagonal fractions measured
+above are $94.3, 36.5, 23.1, 10.4$ and $6.2\%$, so \emph{one} of five bins passes $0.68$
+and the top three fail it by a wide margin. Our edges ($0.175$--$0.550$ in five bins, open
+above) put four boundaries inside precisely the region where the reconstructed momentum has
+saturated.
+
+\paragraph{Consequences, and what would improve it.}\paragraph{Consequences, and what would improve it.}
 This is not a bias on the extracted cross section --- the response matrix contains it and
 the unfolding inverts it --- but it is the reason the $p_\pi$ result leans harder on the
 regularisation than any other observable, and it explains the $A_C$ survey result that the
@@ -2052,11 +2085,24 @@ momentum observables retain only $11$--$21\%$ of their truth-level model discrim
 diagonal strength in the top bin, the measurement above $\sim\!0.5$~GeV/$c$ is effectively
 inferred from the response model rather than measured.
 
-Three things would help, in increasing order of effort: quoting $p_\pi$ only up to
-$\sim\!0.4$~GeV/$c$, where the estimator still tracks truth; using calorimetric rather than
-range-based energy for pion candidates; or tagging interacting versus stopping pions and
-treating them as separate populations. None is required for the present result, but the
-first is worth considering before the $p_\pi$ spectrum is quoted as a shape measurement.
+The BNB note therefore supplies a tested recipe, and the ingredients are largely already in
+hand. Of its four BDT inputs we have the Bragg likelihood ratios
+(\texttt{trk\_bragg\_pion}, \texttt{\_mip}, \texttt{\_mu}, \texttt{\_p}) and the
+track--shower score in the ntuples --- indeed the multi-pion pion-ID BDT in this analysis
+already trains on exactly those --- and the descendant counts are available as
+\texttt{pfp\_trk\_daughters\_v} / \texttt{pfp\_shr\_daughters\_v}. Only wiggliness is
+missing, and it cannot be computed from the current ntuples: no per-point trajectory
+information is stored (only \texttt{trk\_end\_spacepoints\_v}), so it would have to be
+added upstream in \texttt{ProcessNTuples} or the PeLEE production.
+
+In increasing order of effort, then: rebin $p_\pi$ against the BNB's own criterion
+(diagonal $>0.68$), which on the numbers above means roughly two resolved bins below
+$\sim\!0.25$~GeV/$c$ plus a wide bin and an overflow, and can be done today; add a
+golden-pion cut for the $p_\pi$ cross section built from the Bragg, track-score and
+descendant variables already available, accepting the factor-two efficiency loss the BNB
+analysis accepts; or add wiggliness upstream and reproduce their BDT in full. None changes
+the total or angular results, which do not use this estimator. The first is worth doing
+before the $p_\pi$ spectrum is quoted as a shape measurement.
 
 \subsection{Model comparison: $\chi^2$ against truth, tune and generators}
 \label{sec:chi2}
