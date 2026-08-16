@@ -478,8 +478,57 @@
       across observables $A_C$ vs peakedness gives $r=-0.17$ ($W_{\pi p}$ sharpest yet
       $0.78$; $p_n$ flat yet \alert{enhanced} $1.71$), and within $\cos\theta_\mu$ the
       \alert{flattest} models (NEUT, NuWro) are suppressed \alert{most}.
-    \item \alert{Action}: FHC $\theta_\mu$ is withdrawn from model comparison pending a
-      regularisation re-run; $\cos\theta_\mu$ retains its shape information and stands.
+    \item \alert{Action}: FHC $\theta_\mu$ withdrawn from model comparison pending a
+      regularisation re-run. All 18 extractions were re-unfolded with $A_C$ now dumped to
+      file --- FHC $\theta_\mu$ is the \alert{only} rank-1 case (backup).
+  \end{itemize}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Backup: how much model discrimination survives $A_C$ (all 18)}
+  \begin{columns}[T]\column{.50\textwidth}
+  \centering\tiny
+  \begin{tabular}{llccc}
+  \toprule
+  Beam & Obs & before & after & keep\\\midrule
+  FHC & $p_\mu$           & .0248 & .0052 & 21\%\\
+  FHC & $p_\pi$           & .0586 & .0080 & 14\%\\
+  FHC & $\cos\theta_\mu$  & .0554 & .0724 & 131\%\\
+  FHC & $\cos\theta_\pi$  & .0589 & .0211 & 36\%\\
+  FHC & $\theta_{\mu\pi}$ & .0422 & .0391 & 93\%\\
+  FHC & $\theta_\mu$      & .0554 & 2.5e-6 & \alert{\textbf{0\%}}\\\midrule
+  RHC & $p_\mu$           & .0232 & .0036 & 15\%\\
+  RHC & $p_\pi$           & .0556 & .0068 & 12\%\\
+  RHC & $\cos\theta_\mu$  & .0644 & .0771 & 120\%\\
+  RHC & $\cos\theta_\pi$  & .0629 & .0165 & 26\%\\
+  RHC & $\theta_{\mu\pi}$ & .0505 & .0295 & 58\%\\
+  RHC & $\theta_\mu$      & .0644 & .0188 & 29\%\\\midrule
+  COMB & $p_\mu$          & .0240 & .0028 & 12\%\\
+  COMB & $p_\pi$          & .0571 & .0064 & 11\%\\
+  COMB & $\cos\theta_\mu$ & .0598 & .5500 & 919\%\\
+  COMB & $\cos\theta_\pi$ & .0609 & .0166 & 27\%\\
+  COMB & $\theta_{\mu\pi}$& .0463 & .0360 & 78\%\\
+  COMB & $\theta_\mu$     & .0598 & .0070 & 12\%\\
+  \bottomrule
+  \end{tabular}
+  \column{.50\textwidth}
+  \begin{itemize}\scriptsize\setlength\itemsep{4pt}
+    \item ``before/after'' = largest pairwise difference between normalised generator
+      shapes, truth-level vs $A_C$-smeared. \alert{Keep $\approx0$ $\Rightarrow$ the
+      measurement can no longer tell the models apart.}
+    \item \alert{FHC $\theta_\mu$ is the only zero} --- the only $A_C$ whose rows are all
+      one vector (spread $9\%$, eff.\ rank $1.02$; everything else $170$--$1050\%$,
+      $1.24$--$1.91$). RHC/COMB $\theta_\mu$ are \alert{not} affected.
+    \item \alert{Momenta keep only $11$--$21\%$} everywhere: not destroyed, but a good
+      $\chi^2$ on $p_\mu$/$p_\pi$ is a weak statement. $\theta_{\mu\pi}$ ($58$--$93\%$) is
+      the healthiest variable we have.
+    \item \alert{The $>100\%$ for $\cos\theta_\mu$ is not good news}: $A_C$ pushes the
+      generators \alert{negative} in the backward bins while the tune stays positive
+      (COMB bin 2: NuWro $-0.43$ vs tune $+0.51$). Unphysical $\Rightarrow$ that spread is
+      artefact, not discrimination, and its $\chi^2$ inherits the problem.
+    \item So the original framing was \alert{backwards}: neither muon-angle variable is
+      clean --- $\theta_\mu$ loses everything (FHC), $\cos\theta_\mu$ keeps shape only via
+      negative excursions.
   \end{itemize}
   \end{columns}
 \end{frame}

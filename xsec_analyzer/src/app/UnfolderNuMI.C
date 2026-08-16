@@ -710,6 +710,36 @@ void UnfolderNuMI(std::string XSEC_Config, std::string SLICE_Config, std::string
         for ( char& ch : clean ) if ( !std::isalnum((unsigned char)ch) ) ch = '_';
         write_clone( gp.first.c_str(), ("h_gen_" + clean).c_str() );
       }
+      // Dump the additional-smearing matrix A_C restricted to this slice. Without
+      // it there is no way to check downstream how much shape information the
+      // regularisation actually kept: a nearly rank-deficient A_C maps every model
+      // onto one curve, so the predictions agree with the data by construction
+      // rather than physically. (FHC theta_mu was found to be rank-1 this way, but
+      // only indirectly, by SVD-ing the smeared predictions.)
+      {
+        const TMatrixD& A_C_full = *xsec.result_.add_smear_matrix_;
+        size_t ac_start = std::numeric_limits< size_t >::max();
+        size_t ac_stop = 0;
+        for ( const auto& entry : slice.bin_map_ ) {
+          const auto& set = entry.second;
+          if ( set.size() != 1 ) continue;
+          ac_start = std::min( ac_start, *set.begin() );
+          ac_stop = std::max( ac_stop, *set.rbegin() );
+        }
+        if ( ac_start <= ac_stop ) {
+          int nac = static_cast<int>( ac_stop - ac_start + 1 );
+          TH2D h_ac( "h_A_C", "Additional smearing matrix A_{C};true bin;smeared bin",
+            nac, 0., nac, nac, 0., nac );
+          for ( int i = 0; i < nac; ++i ) {
+            for ( int j = 0; j < nac; ++j ) {
+              h_ac.SetBinContent( i + 1, j + 1,
+                A_C_full( ac_start + i, ac_start + j ) );
+            }
+          }
+          h_ac.SetDirectory( &ch_file );
+          h_ac.Write();
+        }
+      }
       ch_file.Close();
       if ( save_dir ) save_dir->cd();
       std::cout << "[closure-dump] wrote " << ch_name << std::endl;

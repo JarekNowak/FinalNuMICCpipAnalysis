@@ -2498,6 +2498,83 @@ almost nothing ($\theta_\pi$ vs $\cos\theta_\pi$: $0.802$ vs $0.805$ for RHC); w
 peak explanation retracted this is simply because the pion-angle response is comparably
 conditioned in the two parameterisations.
 
+\subsubsection*{Is any other observable affected? A survey of all eighteen extractions}
+
+The rank-1 failure was found by inspection, so the unfolder was modified to write the
+slice-restricted $A_C$ into the closure file (\texttt{h\_A\_C}; it had previously only been
+drawn to a canvas, and the attempt to save it failed silently with ``the current directory
+is not associated with a file''). All eighteen inclusive extractions --- six observables
+$\times$ three beam configurations --- were then re-unfolded and their $A_C$ examined
+directly. Table~\ref{tab:ac_survey} reports, for each, how much of the model discrimination
+present in the truth-level predictions survives the smearing: the largest pairwise
+difference between normalised generator shapes before and after $A_C$, and their ratio.
+
+\begin{table}[htbp]\centering
+\caption{Retention of model discrimination through $A_C$. ``Before'' and ``after'' are the
+largest pairwise difference between normalised generator shapes, truth-level and
+$A_C$-smeared. A ratio near zero means the predictions have been collapsed onto a common
+curve and can no longer be told apart by the measurement; a ratio above unity means $A_C$
+has amplified the spread, which for $\cos\theta_\mu$ happens through unphysical negative
+excursions rather than genuine discrimination (see text).}
+\label{tab:ac_survey}
+\begin{tabular}{llccc}
+\toprule
+Beam & Observable & before & after & retention\\\midrule
+FHC & $p_\mu$            & 0.0248 & 0.0052 & 21\%\\
+FHC & $p_\pi$            & 0.0586 & 0.0080 & 14\%\\
+FHC & $\cos\theta_\mu$   & 0.0554 & 0.0724 & 131\%\\
+FHC & $\cos\theta_\pi$   & 0.0589 & 0.0211 & 36\%\\
+FHC & $\theta_{\mu\pi}$  & 0.0422 & 0.0391 & 93\%\\
+FHC & $\theta_\mu$       & 0.0554 & $2.5\times10^{-6}$ & \textbf{0\%}\\\midrule
+RHC & $p_\mu$            & 0.0232 & 0.0036 & 15\%\\
+RHC & $p_\pi$            & 0.0556 & 0.0068 & 12\%\\
+RHC & $\cos\theta_\mu$   & 0.0644 & 0.0771 & 120\%\\
+RHC & $\cos\theta_\pi$   & 0.0629 & 0.0165 & 26\%\\
+RHC & $\theta_{\mu\pi}$  & 0.0505 & 0.0295 & 58\%\\
+RHC & $\theta_\mu$       & 0.0644 & 0.0188 & 29\%\\\midrule
+COMB & $p_\mu$           & 0.0240 & 0.0028 & 12\%\\
+COMB & $p_\pi$           & 0.0571 & 0.0064 & 11\%\\
+COMB & $\cos\theta_\mu$  & 0.0598 & 0.5500 & 919\%\\
+COMB & $\cos\theta_\pi$  & 0.0609 & 0.0166 & 27\%\\
+COMB & $\theta_{\mu\pi}$ & 0.0463 & 0.0360 & 78\%\\
+COMB & $\theta_\mu$      & 0.0598 & 0.0070 & 12\%\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The rank-1 collapse is \emph{unique to FHC $\theta_\mu$}: it is the only entry with zero
+retention, and the only $A_C$ whose rows are all the same vector (spread $9\%$ across rows,
+effective rank $1.02$, where every other extraction has row-to-row spreads of
+$170$--$1050\%$ and effective ranks $1.24$--$1.91$). RHC and combined $\theta_\mu$ are not
+affected; the combined case is the weaker of the two ($12\%$ retention, effective rank
+$1.06$) and its $\theta_\mu$ model comparison should be read as a soft test, but it is not
+degenerate.
+
+Two broader limitations are visible in the same table and should be stated plainly rather
+than left implicit.
+
+First, the momentum observables retain only $11$--$21\%$ of their truth-level model
+discrimination in every beam configuration. $A_C$ does not destroy the shape information
+there, but it removes most of it, so a good $\chi^2$ against $p_\mu$ or $p_\pi$ is a weak
+statement about a model. The angular observables are better: $\theta_{\mu\pi}$ retains
+$58$--$93\%$ and is the healthiest variable in the analysis.
+
+Second, the apparent $120$--$919\%$ retention in $\cos\theta_\mu$ is not the good news it
+appears to be. It arises because $A_C$ drives the generator predictions to \emph{negative}
+differential cross sections in the backward bins while leaving the tune positive --- for
+the combined configuration the smeared predictions run from $-0.43$ (NuWro) to $+0.51$ (the
+tune) in the second bin. A negative differential cross section is unphysical, so the large
+spread reflects a regularisation artefact rather than genuine model separation, and any
+$\chi^2$ computed against those curves inherits the problem. This is the same effect that
+produces the strong $\cos\theta_\mu$ integral suppression discussed above.
+
+Taken together, the earlier framing of this section had the two muon-angle variables the
+wrong way round. $\cos\theta_\mu$ was described as the variable $A_C$ ruins and $\theta_\mu$
+as the fix; in fact FHC $\theta_\mu$ is the one extraction in which the measurement retains
+no shape information at all, while $\cos\theta_\mu$ retains its shape modes but at the cost
+of unphysical negative excursions. Neither is a clean muon-angle measurement, and both
+carry the caveats recorded here.
+
 \begin{table}[H]
   \centering
   \caption{Integrated cross section ($10^{-38}$~cm$^2$/Ar) for the unfolded fake data, the
