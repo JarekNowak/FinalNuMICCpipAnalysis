@@ -52,6 +52,13 @@ SHARED_SOURCES += $(wildcard src/utils/*.cxx)
 # Object files that will be included in the shared library
 SHARED_OBJECTS := $(SHARED_SOURCES:.cxx=.o)
 
+# Pin the default goal BEFORE including the dependency files below. The '.d'
+# files contain rules of their own, so the first one included would otherwise
+# become the default goal and a bare "make" would build a single object file
+# instead of the project -- silently leaving every binary stale, which is
+# indistinguishable from a successful no-op build.
+.DEFAULT_GOAL := all
+
 # Header dependency files emitted by -MMD (one per object, plus one per app
 # binary since those compile and link in a single step). Included with a
 # leading '-' so a clean tree, where none exist yet, is not an error.

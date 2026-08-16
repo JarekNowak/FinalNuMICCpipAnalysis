@@ -104,7 +104,28 @@ disk.
 
 ## 4. `XSEC_FORCE_REBUILD` is opt-in and the cache has no invalidation key
 
-**Severity: high — this has already caused wrong results once.**
+**Status: FIXED.** Every cached `total_` subfolder is now stamped with a digest of the
+inputs that produced it — normalisation scheme tag, active file list, data POT and trigger
+counts, and the per-file simulated POT (which this analysis rewrites in place via
+`macros/set_summed_pot*.C`, so a config-only digest would have missed it). A cache whose key
+is absent or does not match is discarded and rebuilt automatically, with the reason and both
+keys printed. `XSEC_FORCE_REBUILD` still works as a manual override, but correctness no
+longer depends on remembering it, so the 27 drivers that omitted it are safe by construction.
+
+Verified end to end: an unkeyed cache invalidates ("carries no normalisation key"); an
+unchanged run reuses ("normalisation key v2-distinct-sum-pot-bc6edad00c9530dd"); perturbing a
+single beam-on trigger count invalidates with both keys shown
+(`bc6edad00c9530dd` → `882b038b0266fcd2`); the override still forces a rebuild.
+
+Bump `NORM_SCHEME_TAG` in `SystematicsCalculator.hh` whenever the normalisation changes.
+
+> **Found while testing this:** the Makefile had `-include $(DEPS)` *before* its first real
+> target, so a rule from a `.d` file became the default goal — a bare `make` built one object
+> file and nothing else. Every plain `make` in this repo was a near-no-op that silently left
+> stale binaries, which is indistinguishable from a successful build and compounds exactly the
+> failure mode this item is about. (It is why my first attempt to test the cache key appeared
+> to do nothing: the binary was 9 minutes older than the code.) Fixed with an explicit
+> `.DEFAULT_GOAL := all`.
 
 `SystematicsCalculator.cxx:166-178`: the POT-summed `total_` subfolder is reused whenever it
 exists, unless the env var is set. There is no hash or version stamp tying the cache to the
@@ -223,8 +244,9 @@ that plausible. Consider keying on file identity rather than POT value.
 
 ## Status
 
-**Fixed:** #1 (as corrected), #2, #3, #5 — commit `9892a24`.
-**Outstanding:** #4 (cache invalidation key) and the #6 / #7 items.
+**Fixed:** #1 (as corrected), #2, #3, #5 — commit `9892a24`; #4 plus the Makefile
+default-goal bug found while testing it.
+**Outstanding:** #6 (detVar POT) and the #7 items.
 
 ## Suggested order of work
 

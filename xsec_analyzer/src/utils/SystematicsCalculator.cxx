@@ -1,3 +1,11 @@
+// Standard library includes
+#include <cstdint>
+#include <iomanip>
+#include <sstream>
+
+// ROOT includes
+#include "TNamed.h"
+
 // XSecAnalyzer includes
 #include "XSecAnalyzer/SystematicsCalculator.hh"
 
@@ -163,18 +171,48 @@ std::cout<<"We do get in here but something goes wrong "<<std::endl;
 
 
 
-  // Setting XSEC_FORCE_REBUILD forces the POT-summed universes to be recomputed
-  // from the per-file histograms rather than loaded from the cached "total_..."
-  // subfolder. Needed after a change to the POT normalization (build_universes),
-  // since otherwise a stale cache built by the old code would be silently reused.
+  // Decide whether the cached POT-summed universes in "total_..." can be
+  // reused. The cache stores only the RESULT of applying the normalisation, so
+  // reusing one built from different inputs silently yields wrong numbers --
+  // exactly the failure that produced the "tune is 2x low" episode. Every cache
+  // is therefore stamped with a digest of its inputs (scheme version, file
+  // list, data POT/triggers, per-file simulated POT) and rebuilt automatically
+  // whenever that digest does not match. XSEC_FORCE_REBUILD remains as a manual
+  // override, but correctness no longer depends on remembering to set it.
+  norm_cache_key_ = this->compute_norm_cache_key();
+
   bool force_rebuild = ( std::getenv("XSEC_FORCE_REBUILD") != nullptr );
+  std::string invalidate_reason;
+
   if ( total_subdir && force_rebuild ) {
-    std::cout << "XSEC_FORCE_REBUILD set: discarding cached universes \""
-      << total_subfolder_name << "\" and rebuilding.\n";
-    // Delete the stale cache key (in memory; persisted only if the file is
-    // writable and later written). The rebuild below uses the correct scaling.
+    invalidate_reason = "XSEC_FORCE_REBUILD is set";
+  }
+  else if ( total_subdir ) {
+    TNamed* stored_key = nullptr;
+    total_subdir->GetObject( NORM_KEY_OBJECT_NAME, stored_key );
+    if ( !stored_key ) {
+      invalidate_reason = "it carries no normalisation key (built by code"
+        " predating the cache-key check)";
+    }
+    else if ( norm_cache_key_ != stored_key->GetTitle() ) {
+      invalidate_reason = std::string("its normalisation key \"")
+        + stored_key->GetTitle() + "\" does not match the current inputs \""
+        + norm_cache_key_ + '\"';
+    }
+  }
+
+  if ( total_subdir && !invalidate_reason.empty() ) {
+    std::cout << "Discarding cached universes \"" << total_subfolder_name
+      << "\": " << invalidate_reason << ".\nRebuilding from the per-file"
+      " histograms.\n";
+    // Drop the stale cache (in memory; persisted only if the file is writable
+    // and later written). The rebuild below uses the current scaling.
     root_tdir->Delete( ( total_subfolder_name + ";*" ).c_str() );
     total_subdir = nullptr;
+  }
+  else if ( total_subdir ) {
+    std::cout << "Reusing cached universes \"" << total_subfolder_name
+      << "\" (normalisation key " << norm_cache_key_ << ").\n";
   }
 
   if ( !total_subdir ) {
@@ -401,6 +439,67 @@ void SystematicsCalculator::load_universes( TDirectoryFile& total_subdir ) {
 
   total_bnb_data_pot_ = temp_pot->GetVal();
 //std::cout<<"sys test 11 "<<std::endl;
+}
+
+// Digest of everything that determines the POT-summed universes. Any change to
+// these inputs must invalidate a cached "total_" subfolder, because the cache
+// stores the RESULT of applying them and carries no other record of what it was
+// built from. Deliberately includes the per-file simulated POT: this analysis
+// rewrites summed_pot in place (macros/set_summed_pot*.C), which changes the
+// normalisation without touching a single config file. Reading one TParameter
+// per file is cheap next to summing the universe histograms the cache exists to
+// avoid.
+std::string SystematicsCalculator::compute_norm_cache_key() const {
+
+  const auto& fpm = FilePropertiesManager::Instance();
+  const auto& data_norm_map = fpm.data_norm_map();
+
+  // Build a canonical description string. Ordering is deterministic because the
+  // underlying containers are std::map / std::set.
+  std::ostringstream desc;
+  desc << "scheme=" << NORM_SCHEME_TAG << ';';
+  desc << "fpm=" << fpm.config_file_name() << ';';
+
+  for ( const auto& run_and_type_pair : fpm.ntuple_file_map() ) {
+    int run = run_and_type_pair.first;
+    for ( const auto& type_and_files : run_and_type_pair.second ) {
+      NFT type = type_and_files.first;
+      desc << "r" << run << 't'
+        << static_cast< int >( type ) << ':';
+      for ( const std::string& fn : type_and_files.second ) {
+        desc << fn;
+        // Data files: fold in the trigger count and POT used for normalisation
+        auto dn = data_norm_map.find( fn );
+        if ( dn != data_norm_map.end() ) {
+          desc << '#' << dn->second.trigger_count_
+            << '#' << std::setprecision(10) << dn->second.pot_;
+        }
+        // MC files: fold in the simulated POT actually stored in the file
+        else if ( ntuple_type_is_mc( type ) ) {
+          TFile tmp_file( fn.c_str(), "read" );
+          TParameter< float >* tmp_pot = nullptr;
+          tmp_file.GetObject( "summed_pot", tmp_pot );
+          desc << '#' << ( tmp_pot ? std::to_string( tmp_pot->GetVal() )
+                                   : std::string("nopot") );
+        }
+        desc << ',';
+      }
+      desc << ';';
+    }
+  }
+
+  // FNV-1a 64-bit over the description. A hash keeps the stored key short and
+  // avoids embedding absolute paths in the output file.
+  const std::string s = desc.str();
+  uint64_t h = 1469598103934665603ULL;
+  for ( unsigned char c : s ) {
+    h ^= static_cast< uint64_t >( c );
+    h *= 1099511628211ULL;
+  }
+  std::ostringstream key;
+  key << NORM_SCHEME_TAG << '-' << std::hex << std::setw(16)
+    << std::setfill('0') << h;
+  return key.str();
 }
 
 void SystematicsCalculator::build_universes( TDirectoryFile& root_tdir ) {
@@ -1145,6 +1244,13 @@ void SystematicsCalculator::save_universes( TDirectoryFile& out_tdf ) {
 
   // Make the requested output TDirectoryFile the active one
   out_tdf.cd();
+
+  // Stamp the cache with the digest of the inputs it was built from, so a later
+  // run detects a mismatch and rebuilds instead of silently reusing it.
+  if ( !norm_cache_key_.empty() ) {
+    TNamed key_obj( NORM_KEY_OBJECT_NAME, norm_cache_key_.c_str() );
+    key_obj.Write();
+  }
 
   // Save the data histograms
   for ( const auto& pair : data_hists_ ) {

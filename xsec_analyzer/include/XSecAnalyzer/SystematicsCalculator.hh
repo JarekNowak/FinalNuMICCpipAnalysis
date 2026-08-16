@@ -151,6 +151,14 @@ class SystematicsCalculator {
 
     void save_universes( TDirectoryFile& out_tdf );
 
+    // Digest of every input that determines the POT-summed universes: the
+    // normalisation scheme version, the active file list, the data POT and
+    // trigger counts, and the per-(run, type) simulated POT. Stored alongside
+    // the cached universes so a cache built under different inputs (or by
+    // older normalisation code) is detected and rebuilt automatically instead
+    // of being silently reused. See NORM_SCHEME_TAG.
+    std::string compute_norm_cache_key() const;
+
     const Universe& cv_universe() const {
       return *rw_universes_.at( CV_UNIV_NAME ).front();
     }
@@ -267,6 +275,22 @@ class SystematicsCalculator {
     // ntuples. The full name is formed from this prefix and the name of the
     // FilePropertiesManager configuration file that is currently active.
     const std::string TOTAL_SUBFOLDER_NAME_PREFIX = "total_";
+
+    // Bump this whenever the POT/trigger normalisation in build_universes
+    // changes. It is folded into the cache key, so every previously cached
+    // "total_" subfolder is invalidated and rebuilt rather than silently
+    // reused. "v2-distinct-sum-pot" corresponds to normalising the simulated
+    // exposure by the sum of the DISTINCT per-file summed_pot values, which is
+    // correct for both POT conventions present in the processed ntuples.
+    static constexpr const char* NORM_SCHEME_TAG = "v2-distinct-sum-pot";
+
+    // Name of the TNamed object holding the cache key inside the "total_"
+    // subfolder.
+    static constexpr const char* NORM_KEY_OBJECT_NAME = "norm_cache_key";
+
+    // Cache key for the current inputs, filled during initialisation and
+    // written out by save_universes().
+    std::string norm_cache_key_;
 
     // Holds reco-space histograms for data (BNB and EXT) bin counts
     std::map< NFT, std::unique_ptr<TH1D> > data_hists_;
