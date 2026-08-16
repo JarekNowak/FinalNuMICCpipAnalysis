@@ -1994,9 +1994,9 @@ stopping point, so the visible range --- and any momentum inferred from it --- i
 truncated. This grows rapidly with momentum and comes to dominate.
 
 \paragraph{The reconstructed momentum saturates.}
-Table~\ref{tab:ppi_sat} makes the consequence plain: as the true momentum rises by a
-factor of four and a half, the reconstructed momentum barely moves, saturating at
-$\approx0.34$~GeV/$c$. Above that the estimator carries almost no information about how
+Table~\ref{tab:ppi_sat} and Figure~\ref{fig:ppi_sat} make the consequence plain: as the
+true momentum rises by a factor of four and a half, the reconstructed momentum barely
+moves, saturating at $\approx0.34$~GeV/$c$. Above that the estimator carries almost no information about how
 energetic the pion actually was.
 
 \begin{table}[htbp]\centering
@@ -2020,6 +2020,19 @@ $0.800$--$1.200$ & 164 & 0.951 & 0.336 & 0.329 & 0.353 \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.72\textwidth]{ppi_saturation}
+  \caption{Mean reconstructed against mean true pion momentum, selected signal. The
+    analysis estimator (filled, $\mu\to\pi$ mass corrected) tracks truth at threshold but
+    flattens out near $0.34$~GeV/$c$: a true $0.95$~GeV/$c$ pion reconstructs at the same
+    place as a true $0.55$~GeV/$c$ one. The raw \texttt{candidate\_pion\_mom\_reco} branch
+    (open) sits systematically below it by the uncorrected mass-hypothesis offset. The
+    saturation is caused by hadronic interaction truncating the track range, and no
+    range-based estimator can recover it.}
+  \label{fig:ppi_sat}
+\end{figure}
 
 \paragraph{What that does to the response matrix.}
 Migrating the five analysis bins with the corrected estimator gives a nearly
