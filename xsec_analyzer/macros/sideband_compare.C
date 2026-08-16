@@ -44,9 +44,14 @@ void sideband_compare(const char* mode="fhc", const char* datasrc="fake",
   auto FHCdata=[&](){ for(auto r:{"run1","run2","run4","run5"}) data.push_back(std::string(P)+"xsec-ana-fakedata_fhc_"+r+".root"); };
   auto RHCdata=[&](){ for(auto r:{"run1","run2","run3","run4"}) data.push_back(std::string(P)+"xsec-ana-fakedata_rhc_"+r+".root"); };
   std::string m=mode;
-  if(m=="fhc"){FHCmc();FHCdata();sc_ext=5.9313;sc_dirt=0.092402*0.65;}
-  else if(m=="rhc"){RHCmc();RHCdata();sc_ext=6.1584;sc_dirt=0.071666*0.65;}
-  else {FHCmc();RHCmc();FHCdata();RHCdata();sc_ext=12.0898;sc_dirt=0.092402*0.65;}
+  // sc_ext carries the 2% NuMI beam-occupancy factor the framework applies on top of the
+  // beam-on/beam-off trigger ratio (SystematicsCalculator.cxx: "* 0.98"); it was missing
+  // here, over-counting EXT by 2%. sc_dirt for "comb" sums both modes' exposures, matching
+  // sc_ext -- the old two-branch ternary silently gave comb the FHC-only dirt scale.
+  const double NUMI_EXT_OCC = 0.98;
+  if(m=="fhc"){FHCmc();FHCdata();sc_ext=NUMI_EXT_OCC*5.9313;sc_dirt=0.092402*0.65;}
+  else if(m=="rhc"){RHCmc();RHCdata();sc_ext=NUMI_EXT_OCC*6.1584;sc_dirt=0.071666*0.65;}
+  else {FHCmc();RHCmc();FHCdata();RHCdata();sc_ext=NUMI_EXT_OCC*12.0898;sc_dirt=(0.092402+0.071666)*0.65;}
   // real beam-on files would replace `data` here when unblinding the control regions.
   if(std::string(datasrc)=="beamon"){ printf("  [beamon requested — real-data control-region unblinding; not wired until authorised]\n"); return; }
 

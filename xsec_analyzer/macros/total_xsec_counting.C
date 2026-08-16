@@ -83,7 +83,14 @@ void total_xsec_counting() {
   // dirt scaled to the full mode exposure (D_total/summedMC*0.65), as in cutflow_yields.C.
   // syst_frac = quadrature of the systematic-breakdown sources (excl. data stat), pmu column
   //   (Tables tab:systbreak_*): FHC 25.5%, RHC 35.7%, comb 28.9%.
-  one("FHC",      8.857e20,  6.81159e-10, fhc,  5.9313,  0.092402*0.65, 0.255, "newg4");
-  one("RHC",      1.1082e21, 6.44646e-10, rhc,  6.1584,  0.071666*0.65, 0.357, "rhc");
-  one("Combined", 1.99390e21,6.60865e-10, comb, 12.0898, 0.092402*0.65, 0.289, "comb");
+  // EXT scale = beam-on/beam-off trigger ratio x the 2% NuMI beam-occupancy factor. The
+  // per-run extBNB entries are all symlinks to this one beam-off file with equal trigger
+  // counts, so the per-run sum the framework does reduces exactly to these ratios; the
+  // 0.98 occupancy factor, however, was missing here and over-counted EXT by 2%.
+  // Dirt for "Combined" sums both modes' exposures (it previously used the FHC-only
+  // scale, leaving combined dirt ~44% low).
+  const double OCC = 0.98;
+  one("FHC",      8.857e20,  6.81159e-10, fhc,  OCC*5.9313,  0.092402*0.65, 0.255, "newg4");
+  one("RHC",      1.1082e21, 6.44646e-10, rhc,  OCC*6.1584,  0.071666*0.65, 0.357, "rhc");
+  one("Combined", 1.99390e21,6.60865e-10, comb, OCC*12.0898, (0.092402+0.071666)*0.65, 0.289, "comb");
 }

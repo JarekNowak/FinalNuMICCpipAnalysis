@@ -32,11 +32,23 @@ void cutflow_yields(const char* mode="fhc") {
   else { fhcMC(); rhcMC(); }
   // EXT (beam-off cosmic) scaled by the (per-run summed) beam-on/beam-off trigger ratio:
   //   FHC 22667109/3821593=5.93, RHC 23534937/3821593=6.16, comb 46202046/3821593=12.09.
-  double sc_ext = (std::string(mode)=="fhc") ? 5.9313
-                : (std::string(mode)=="rhc") ? 6.1584 : 12.0898;
+  // The per-run extBNB entries in file_properties are all symlinks to this one beam-off
+  // file with the same trigger count, so summing per run reduces exactly to this single
+  // ratio -- the scalar here is equivalent to the framework's per-run scaling, not an
+  // approximation of it.
+  // NUMI_EXT_OCC: the framework additionally applies the 2% NuMI beam-occupancy factor
+  // (SystematicsCalculator.cxx: "(bnb_trigs/ext_trigs) * 0.98"). It was missing here, so
+  // EXT was 2% over-counted relative to the differential result.
+  const double NUMI_EXT_OCC = 0.98;
+  double sc_ext = NUMI_EXT_OCC * ( (std::string(mode)=="fhc") ? 5.9313
+                : (std::string(mode)=="rhc") ? 6.1584 : 12.0898 );
   ext.push_back({std::string(P)+"xsec-ana-beamoff_run1Andrun3.root", sc_ext});
-  // Dirt: per-mode POT scale x dirt normalisation weight (0.65).
-  double sc_dirt = (std::string(mode)=="rhc") ? 0.071666*0.65 : 0.092402*0.65;
+  // Dirt: per-mode POT scale x dirt normalisation weight (0.65). "comb" must sum both
+  // modes' exposures, exactly as sc_ext does -- a two-branch ternary silently sent it
+  // down the FHC branch, leaving combined dirt scaled to FHC exposure alone.
+  double sc_dirt = ( (std::string(mode)=="fhc") ? 0.092402
+                   : (std::string(mode)=="rhc") ? 0.071666
+                   : (0.092402 + 0.071666) ) * 0.65;
   dirt.push_back({std::string(P)+"xsec-ana-prodgenie_numi_uboone_overlay_dirt_fhc_mcc9_run1_v28_all_snapshot.root", sc_dirt});
 
   double sig[10]={0}, tot[10]={0}, ex[10]={0}, dt[10]={0};

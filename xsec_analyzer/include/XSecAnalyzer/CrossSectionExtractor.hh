@@ -185,9 +185,14 @@ class CrossSectionExtractor {
     std::map< std::string, std::unique_ptr< PredictedTrueEvents > > pred_map_;
 
     // Integrated numu+numubar flux per POT (cm^-2), config-driven via the
-    // "Flux <value>" line so each horn mode uses its own normalisation. Default
-    // is the FHC new-G4 value (E > 60 MeV); RHC and combined configs override it.
-    double flux_per_pot_ = 6.81159e-10;
+    // "Flux <value>" line so each horn mode uses its own normalisation.
+    // Deliberately initialised to a sentinel rather than to the FHC value: a
+    // silent FHC default is correct for only one beam out of three, so an RHC
+    // or combined config that omitted the line would have been normalised
+    // 5.4% / 3.1% wrong with no warning at all. conversion_factor() now refuses
+    // to run in NuMI mode unless the config set it explicitly.
+    static constexpr double FLUX_UNSET = -1.;
+    double flux_per_pot_ = FLUX_UNSET;
 
     // Unfolder object used to correct cross-section measurements for
     // inefficiency and bin migrations
@@ -484,9 +489,16 @@ CrossSectionResult CrossSectionExtractor::get_unfolded_events() {
 
 double CrossSectionExtractor::conversion_factor() const {
   double total_pot = syst_->total_bnb_data_pot_;
-  // NuMI: use the per-configuration flux from the "Flux" config line (default is
-  // the FHC value, identical to integrated_numu_flux_in_FV for FHC). BNB keeps
-  // the original active-volume approximation.
+  // NuMI: use the per-configuration flux from the "Flux" config line. There is
+  // no default -- see FLUX_UNSET above for why guessing one is unsafe.
+  if ( useNuMI && flux_per_pot_ <= 0. ) {
+    throw std::runtime_error( "No \"Flux <value>\" line in the cross-section"
+      " configuration file. NuMI requires it explicitly (FHC 6.81159e-10,"
+      " RHC 6.446460e-10, combined 6.608653e-10 cm^-2 per POT, E > 60 MeV);"
+      " there is no safe default because the correct value differs per horn"
+      " mode." );
+  }
+  // BNB keeps the original active-volume approximation.
   double integ_flux = useNuMI ? ( total_pot * flux_per_pot_ )
                               : integrated_numu_flux_in_FV( total_pot );
 

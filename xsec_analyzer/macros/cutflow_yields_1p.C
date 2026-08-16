@@ -30,9 +30,16 @@ void cutflow_yields_1p(const char* mode="fhc") {
   if(std::string(mode)=="fhc") fhcMC();
   else if(std::string(mode)=="rhc") rhcMC();
   else { fhcMC(); rhcMC(); }
-  double sc_ext = (std::string(mode)=="fhc") ? 5.9313 : (std::string(mode)=="rhc") ? 6.1584 : 12.0898;
+  // NUMI_EXT_OCC: 2% NuMI beam-occupancy factor the framework applies on top of the
+  // trigger ratio (SystematicsCalculator.cxx); it was missing here, over-counting EXT 2%.
+  const double NUMI_EXT_OCC = 0.98;
+  double sc_ext = NUMI_EXT_OCC * ( (std::string(mode)=="fhc") ? 5.9313 : (std::string(mode)=="rhc") ? 6.1584 : 12.0898 );
   ext.push_back({std::string(P)+"xsec-ana-beamoff_run1Andrun3.root", sc_ext});
-  double sc_dirt = (std::string(mode)=="rhc") ? 0.071666*0.65 : 0.092402*0.65;
+  // "comb" sums both modes' exposures, as sc_ext does; the old two-branch ternary sent
+  // comb down the FHC branch and scaled combined dirt to FHC exposure alone.
+  double sc_dirt = ( (std::string(mode)=="fhc") ? 0.092402
+                   : (std::string(mode)=="rhc") ? 0.071666
+                   : (0.092402 + 0.071666) ) * 0.65;
   dirt.push_back({std::string(P)+"xsec-ana-prodgenie_numi_uboone_overlay_dirt_fhc_mcc9_run1_v28_all_snapshot.root", sc_dirt});
 
   double sig[11]={0}, tot[11]={0}, ex[11]={0}, dt[11]={0};
