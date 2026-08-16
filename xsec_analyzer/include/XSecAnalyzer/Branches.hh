@@ -23,7 +23,25 @@ inline void set_event_branch_addresses(TTree& etree, AnalysisEvent& ev)
 
   // Software-trigger flag. Only hook it if the branch exists, so input files
   // without it keep the fail-open default (ev.swtrig_ = 1).
-  if ( etree.GetBranch("swtrig") ) SetBranchAddress(etree, "swtrig", &ev.swtrig_ );
+  //
+  // The CRT-era (Run 4 / Run 5) PeLEE productions need the same fail-open
+  // treatment for a different reason: they DO carry a "swtrig" branch, but it
+  // is identically 0 -- those files are already software-trigger filtered, and
+  // the branch is vestigial. Binding it there would overwrite the fail-open
+  // default with 0 and reject 100% of the sample (verified: 0 of 3613316 run4d
+  // and 0 of 2490913 run5 beam-off events have swtrig == 1, giving zero
+  // selected cosmics, while the pre-CRT samples have swtrig == 1 for 100%).
+  //
+  // The two productions are told apart by the companion branches: wherever
+  // "swtrig" is meaningful the file also carries swtrig_pre / swtrig_post /
+  // swtrig_pre_ext / swtrig_post_ext, and where it is vestigial only the bare
+  // "swtrig" is present. Requiring swtrig_pre keeps the cut fully active for
+  // every MC sample (Run1 fhc 87.2%, Run4 fhc 82.6% pass) and for the pre-CRT
+  // beam-off, so no existing normalisation changes -- it only stops the newer
+  // beam-off productions from being rejected wholesale.
+  if ( etree.GetBranch("swtrig") && etree.GetBranch("swtrig_pre") ) {
+    SetBranchAddress(etree, "swtrig", &ev.swtrig_ );
+  }
 
   // Topological score
   SetBranchAddress(etree, "topological_score", &ev.topological_score_ );
