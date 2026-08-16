@@ -2638,6 +2638,172 @@ beam configurations.
   \end{tabular}
 \end{table}
 
+\paragraph{Yields and composition.}
+Table~\ref{tab:sideband_yields} gives the full breakdown for the three configurations. The
+regions differ enormously in size and in what they are sensitive to, which is what makes
+them complementary rather than redundant:
+
+\begin{itemize}
+  \item \textbf{CC$0\pi$} is by far the largest ($\sim\!12$k pseudo-data events per beam,
+    $\sim\!24$k combined). Its neutrino component is dominated by the quasi-elastic and
+    $2p2h$ modes that feed the signal region only through pion \emph{absorption} in the
+    final state. It is therefore the natural handle on the FSI model that converts
+    CC$\,1\pi^{\pm}$ into CC$0\pi$ and vice versa --- the largest single migration path
+    into and out of the signal definition (\S\ref{sec:signal}).
+  \item \textbf{$\pi^0$} is the second largest ($6.5$--$14.7$k). It is enriched in
+    CC/NC$\,\pi^0$ events, whose showers are precisely what the shower veto (Cut~8) is
+    designed to remove; it therefore tests the veto efficiency and the $\pi^0$ production
+    normalisation together. These are the events that leak into the signal region when a
+    photon is missed.
+  \item \textbf{multi-$\pi$} is small ($127$--$303$ events) but has the highest signal
+    contamination of the four ($\sim\!23\%$), because a true multi-pion event with one
+    pion lost is exactly the wrong-topology background the selection fights. Its size is
+    what limits its constraining power at present.
+  \item \textbf{cosmic} is the only region where the beam-off (EXT) contribution
+    \emph{dominates} the prediction: $308$ EXT against $68$ neutrino-MC events for FHC, a
+    ratio of $4.5$, against $0.8$ in CC$0\pi$. It is consequently the region that
+    constrains the cosmic normalisation, and the one whose interpretation changes most at
+    unblinding, since the current pseudo-data contain no EXT component at all.
+\end{itemize}
+
+\paragraph{What the present numbers do and do not show.}
+With Poisson-thrown neutrino-MC pseudo-data, the ratios of Table~\ref{tab:sidebands}
+test the \emph{machinery} --- per-run POT scaling, CV weighting, the selection logic in
+each inverted region --- and not the background model. That test passes: the two
+high-statistics regions sit at $N_\mathrm{data}/N_{\nu\mathrm{MC}}=1.00$--$1.02$ in all
+three configurations, which is a non-trivial check of the per-run normalisation that
+caused the difficulties described in \S\ref{sec:datamc}. The apparent deviations in the
+small regions are statistical: with $69$ cosmic-sideband events for FHC, a $\sqrt{N}$
+fluctuation is $12\%$, so the observed $0.94$ and the RHC $1.24$ (on $100$ events, $10\%$)
+are within about one and two standard deviations respectively.
+
+\paragraph{Use at unblinding.}
+Once the control regions are opened with beam-on data the same table becomes a genuine
+background test, and the statistical precision available is set by the yields above: the
+CC$0\pi$ and $\pi^0$ regions would constrain their dominant background normalisations to
+roughly $1\%$ and $1.5\%$ statistically for the combined exposure, well below the
+$\sim\!20$--$30\%$ cross-section systematic they are intended to test. The cosmic region
+would constrain the EXT normalisation to $\sim\!8\%$, comparable to the $3$--$5\%$
+trigger-ratio uncertainty already assigned. The multi-$\pi$ region, at $\sim\!300$
+combined events, gives $\sim\!6\%$ --- useful as a cross-check but not competitive with
+the others. The intended procedure is to unblind the control regions first, use them to
+constrain or reweight the dominant background components, and only then open the signal
+region.
+
+\begin{table}[H]
+  \centering
+  \caption{Sideband yields at full exposure. ``Signal'' is the signal contamination of the
+    neutrino MC, ``$\nu$ bkg'' the remaining neutrino MC, EXT the beam-off (cosmic) sample
+    scaled by the trigger ratio, and dirt the out-of-cryostat overlay. The pseudo-data
+    column is a Poisson throw of the neutrino MC only, so it should be compared with
+    Signal $+$ $\nu$ bkg; EXT and dirt are listed for scale and enter the comparison only
+    with real beam-on data.}
+  \label{tab:sideband_yields}
+  \small
+  \begin{tabular}{llrrrrrc}
+    \toprule
+    Beam & Sideband & Pseudo-data & Signal & $\nu$ bkg & EXT & Dirt & Sig.\ frac. \\
+    \midrule
+    FHC & CC$0\pi$    & $11\,887$ & $1\,122$ & $10\,736$ & $8\,939$ & $54$ & $9.5\%$ \\
+    FHC & multi-$\pi$ & $127$     & $30$     & $94$      & $42$     & $0.1$ & $24.0\%$ \\
+    FHC & $\pi^0$     & $6\,555$  & $661$    & $5\,931$  & $5\,148$ & $12$ & $10.0\%$ \\
+    FHC & cosmic      & $69$      & $6$      & $68$      & $308$    & $2.2$ & $8.1\%$ \\
+    \midrule
+    RHC & CC$0\pi$    & $12\,261$ & $1\,204$ & $11\,034$ & $9\,281$ & $42$ & $9.8\%$ \\
+    RHC & multi-$\pi$ & $176$     & $35$     & $124$     & $43$     & $0.1$ & $22.0\%$ \\
+    RHC & $\pi^0$     & $8\,139$  & $778$    & $7\,234$  & $5\,346$ & $9$  & $9.7\%$ \\
+    RHC & cosmic      & $100$     & $6$      & $74$      & $320$    & $1.7$ & $8.0\%$ \\
+    \midrule
+    Comb & CC$0\pi$    & $24\,148$ & $2\,327$ & $21\,770$ & $18\,219$ & $54$ & $9.7\%$ \\
+    Comb & multi-$\pi$ & $303$     & $65$     & $217$     & $85$      & $0.1$ & $22.9\%$ \\
+    Comb & $\pi^0$     & $14\,694$ & $1\,439$ & $13\,165$ & $10\,494$ & $12$ & $9.9\%$ \\
+    Comb & cosmic      & $169$     & $12$     & $142$     & $629$     & $2.2$ & $8.0\%$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Control regions for the proton-tagged subsample}
+\label{sec:sidebands_1p}
+
+The proton-tagged selection inherits its cut logic from \texttt{CC1mu1piXp}, and with it
+the four sideband definitions of \S\ref{sec:sidebands}: the reprocessed proton-tagged
+files already carry \texttt{CC1mu1pi1p\_sb\_cc0pi}, \texttt{\_sb\_multipi},
+\texttt{\_sb\_pi0} and \texttt{\_sb\_cosmic}. No new definitions or reprocessing are
+required to exercise the background model of the W/TKI measurement; the same four regions
+can be evaluated either as inherited (the inclusive phase space) or with a reconstructed
+tagged proton additionally required, which places them in the same phase space as the
+measurement itself. Table~\ref{tab:sidebands_1p} gives both.
+
+Three things follow from the numbers. First, all four regions are \emph{more}
+signal-depleted for the proton-tagged signal than they were for the inclusive one:
+$5.9$--$7.3\%$ signal contamination in CC$0\pi$ and $\pi^0$, against a $48\%$ purity in the
+signal region, because requiring a proton does not make a pion-less or $\pi^0$ event look
+like signal. Second, the proton requirement costs about a third of the statistics
+(CC$0\pi$: $11\,887\to8\,268$ for FHC) but suppresses the beam-off contribution by roughly
+a factor six ($8\,939\to1\,447$): cosmic-induced events rarely contain a reconstructed
+proton above threshold, so the proton tag is itself a strong cosmic rejector. This is
+worth noting for the systematic budget --- the EXT normalisation matters far less in the
+proton-tagged measurement than in the inclusive one. Third, the pseudo-data to
+neutrino-MC ratios remain consistent with unity in every region and configuration
+($0.956$--$1.158$ with the tag), so the per-run normalisation machinery is validated in
+the proton-tagged phase space as well.
+
+\paragraph{What these regions cannot do.}
+All four \emph{apply} the proton tag rather than invert it, so none of them constrains the
+proton \emph{mis-tag} background --- the $\sim\!13\%$ of tagged protons that are really a
+pion or another track, which smears $W_{\pi p}$ and the TKI variables directly. Testing
+that requires a region defined by inverting the proton PID (selecting candidates that pass
+the momentum and containment requirements but fail the LLR cut), which does need a new
+branch in \texttt{CC1mu1pi1p} and a reprocess. Slicing a measured W/TKI observable is
+\emph{not} an alternative: because the signal definition is inclusive in those variables,
+cutting on them splits the signal region rather than depleting it. Explicitly, on the
+Run-1 FHC overlay the signal region has $53.7\%$ purity and the slices $W_{\pi p}>1.5$~GeV,
+$W_{\pi p}<1.15$~GeV, $p_n>0.8$~GeV/$c$ and $\delta p_T>0.7$~GeV/$c$ give $50.0\%$,
+$48.9\%$, $47.3\%$ and $52.0\%$ respectively --- no depletion at all. Even the
+kinematically forbidden region $W_\mathrm{had}<m_\pi+m_p$ retains $53.4\%$ signal, because
+the calorimetric mass is systematically under-reconstructed and true signal populates it
+through resolution.
+
+\begin{table}[H]
+  \centering
+  \caption{Sideband yields for the proton-tagged subsample at full exposure, evaluated
+    with the inherited definitions both as-is and with a tagged proton additionally
+    required. ``Sig.'' is the proton-tagged signal contamination of the neutrino MC.
+    $N_\mathrm{data}/N_{\nu\mathrm{MC}}$ compares the Poisson-thrown pseudo-data with the
+    CV-weighted neutrino MC; EXT and dirt are listed for scale.}
+  \label{tab:sidebands_1p}
+  \small
+  \begin{tabular}{llrrrrcc}
+    \toprule
+    Beam & Region & $N_\mathrm{data}$ & Signal & $\nu$ bkg & EXT & Sig.\ frac.\ & $N_\mathrm{data}/N_{\nu\mathrm{MC}}$ \\
+    \midrule
+    \multicolumn{8}{l}{\textit{inherited definitions (inclusive phase space)}} \\
+    FHC  & CC$0\pi$    & $11\,887$ & $704$ & $11\,155$ & $8\,939$ & $5.9\%$ & $1.002$ \\
+    FHC  & multi-$\pi$ & $127$     & $30$  & $94$      & $42$     & $23.9\%$ & $1.030$ \\
+    FHC  & $\pi^0$     & $6\,555$  & $465$ & $6\,127$  & $5\,148$ & $7.0\%$ & $0.994$ \\
+    FHC  & cosmic      & $69$      & $3.5$ & $70$      & $308$    & $4.7\%$ & $0.937$ \\
+    RHC  & CC$0\pi$    & $12\,261$ & $730$ & $11\,508$ & $9\,281$ & $6.0\%$ & $1.002$ \\
+    RHC  & $\pi^0$     & $8\,139$  & $523$ & $7\,489$  & $5\,346$ & $6.5\%$ & $1.016$ \\
+    Comb & CC$0\pi$    & $24\,148$ & $1\,434$ & $22\,663$ & $18\,219$ & $6.0\%$ & $1.002$ \\
+    Comb & $\pi^0$     & $14\,694$ & $988$ & $13\,616$ & $10\,494$ & $6.8\%$ & $1.006$ \\
+    \midrule
+    \multicolumn{8}{l}{\textit{with a tagged proton required (measurement phase space)}} \\
+    FHC  & CC$0\pi$    & $8\,268$  & $484$ & $7\,636$  & $1\,447$ & $6.0\%$ & $1.018$ \\
+    FHC  & multi-$\pi$ & $54$      & $9.8$ & $46$      & $18$     & $17.7\%$ & $0.978$ \\
+    FHC  & $\pi^0$     & $3\,988$  & $292$ & $3\,730$  & $1\,186$ & $7.3\%$ & $0.991$ \\
+    FHC  & cosmic      & $24$      & $1.7$ & $23$      & $5.9$    & $6.7\%$ & $0.956$ \\
+    RHC  & CC$0\pi$    & $8\,287$  & $499$ & $7\,812$  & $1\,503$ & $6.0\%$ & $0.997$ \\
+    RHC  & multi-$\pi$ & $83$      & $14$  & $58$      & $19$     & $19.8\%$ & $1.143$ \\
+    RHC  & $\pi^0$     & $5\,031$  & $332$ & $4\,487$  & $1\,232$ & $6.9\%$ & $1.044$ \\
+    RHC  & cosmic      & $36$      & $2.3$ & $29$      & $6.2$    & $7.5\%$ & $1.158$ \\
+    Comb & CC$0\pi$    & $16\,555$ & $983$ & $15\,448$ & $2\,950$ & $6.0\%$ & $1.008$ \\
+    Comb & multi-$\pi$ & $137$     & $24$  & $104$     & $36$     & $18.9\%$ & $1.071$ \\
+    Comb & $\pi^0$     & $9\,019$  & $624$ & $8\,218$  & $2\,418$ & $7.1\%$ & $1.020$ \\
+    Comb & cosmic      & $60$      & $4.0$ & $52$      & $12$     & $7.1\%$ & $1.067$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
 % =============================================================================
 
 \section{Proton-tagged subsample: hadronic invariant mass and transverse kinematic

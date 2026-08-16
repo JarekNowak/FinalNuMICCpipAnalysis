@@ -16,7 +16,17 @@
 struct Src { std::string file; double scale; };
 
 void sideband_compare(const char* mode="fhc", const char* datasrc="fake",
-                      const char* dir="/data/uboone/processed/sb/") {
+                      const char* dir="/data/uboone/processed/sb/",
+                      const char* sel="CC1mu1piXp", bool proton_tag=false) {
+  // `sel`        : selection prefix. "CC1mu1piXp" = inclusive; "CC1mu1pi1p" = the
+  //                proton-tagged subsample, whose files inherit the same sb_* branches
+  //                from the parent selection, so no new definitions are needed.
+  // `proton_tag` : additionally require a reconstructed tagged proton
+  //                (n_proton_reco >= 1). This turns each inherited region into its
+  //                proton-tagged counterpart, which is the appropriate control region
+  //                for the W/TKI measurement because it lives in the same phase space.
+  //                NOTE: these regions APPLY the proton tag, so they cannot constrain
+  //                the proton MIS-TAG background -- that needs an inverted-PID region.
   // `dir` holds the sb_-instrumented reprocessed files (MC + fake data + EXT + dirt).
   // Defaults to the sideband reprocess dir so the running xsec batch's standard files
   // stay untouched; point it back at the standard dir once those carry sb_.
@@ -56,11 +66,13 @@ void sideband_compare(const char* mode="fhc", const char* datasrc="fake",
     double v=h.Integral(0,2); return std::isfinite(v)?v:0.; };
 
   const char* sb[4]={"sb_cc0pi","sb_multipi","sb_pi0","sb_cosmic"};
-  const char* PRE="CC1mu1piXp_";
-  printf("\n==== %s sidebands (data source: %s, per-run scaled, CV-weighted MC) ====\n",mode,datasrc);
+  TString PRE = TString(sel)+"_";
+  TString PTAG = proton_tag ? TString(" && ")+PRE+"n_proton_reco>=1" : TString("");
+  printf("\n==== %s sidebands [%s%s] (data source: %s, per-run scaled, CV-weighted MC) ====\n",
+         mode, sel, proton_tag?" + proton tag":"", datasrc);
   printf("%-12s %9s %9s %9s %9s %9s %8s %9s\n","sideband","N_data","sig","nu-bkg","EXT","dirt","sig%%","data/vMC");
   for(auto s:sb){
-    TString F=Form("%s%s",PRE,s), SIG=Form("%sMC_Signal",PRE);
+    TString F=TString("(")+PRE+s+PTAG+")", SIG=PRE+"MC_Signal";
     double Nsig=0,Nbkg=0;
     for(auto&x:mc){ TChain c("stv_tree"); c.Add(x.file.c_str());
       Nsig+=wsum(c,F+" && "+SIG,true)*x.scale; Nbkg+=wsum(c,F+" && !"+SIG,true)*x.scale; }
