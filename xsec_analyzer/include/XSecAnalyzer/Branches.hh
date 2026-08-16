@@ -84,6 +84,12 @@ inline void set_event_branch_addresses(TTree& etree, AnalysisEvent& ev)
     ev.pfp_shr_daughters_count_ );
 
   set_object_input_branch_address( etree, "trk_score_v", ev.pfp_track_score_ );
+  // Track wiggliness (deflection stdev/mean). Optional: absent from older PeLEE
+  // productions, so bind only when present.
+  if ( etree.GetBranch("trk_avg_deflection_stdev_v") )
+    set_object_input_branch_address( etree, "trk_avg_deflection_stdev_v", ev.trk_avg_deflection_stdev_ );
+  if ( etree.GetBranch("trk_avg_deflection_mean_v") )
+    set_object_input_branch_address( etree, "trk_avg_deflection_mean_v", ev.trk_avg_deflection_mean_ );
   set_object_input_branch_address( etree, "pfpdg", ev.pfp_reco_pdg_ );
   set_object_input_branch_address( etree, "pfnhits", ev.pfp_hits_ );
   set_object_input_branch_address( etree, "pfnplanehits_U", ev.pfp_hitsU_ );
@@ -412,6 +418,10 @@ inline void set_event_output_branch_addresses(TTree& out_tree, AnalysisEvent& ev
 
   set_object_output_branch_address< std::vector<float> >( out_tree,
     "trk_score_v", ev.pfp_track_score_, create );
+  set_object_output_branch_address( out_tree,
+    "trk_avg_deflection_stdev_v", ev.trk_avg_deflection_stdev_, create );
+  set_object_output_branch_address( out_tree,
+    "trk_avg_deflection_mean_v", ev.trk_avg_deflection_mean_, create );
 
   set_object_output_branch_address< std::vector<int> >( out_tree,
     "pfpdg", ev.pfp_reco_pdg_, create );

@@ -64,6 +64,14 @@ public:
 
   MyPointer< std::vector<float> > pfp_track_score_;
 
+  // Track "wiggliness": the standard deviation of the angular deflection between
+  // adjacent points of the fitted track. Pions that STOP scatter hard over their slow
+  // final centimetres and end up wigglier; pions that interact hadronically are cut
+  // short while still fast and stay straighter. It is therefore a handle on whether a
+  // range-based momentum is trustworthy -- see the golden-pion discussion in the note.
+  MyPointer< std::vector<float> > trk_avg_deflection_stdev_;
+  MyPointer< std::vector<float> > trk_avg_deflection_mean_;
+
   // Reco PDG code assigned by Pandora
   MyPointer< std::vector<int> > pfp_reco_pdg_;
 

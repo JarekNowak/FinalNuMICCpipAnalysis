@@ -2085,22 +2085,47 @@ momentum observables retain only $11$--$21\%$ of their truth-level model discrim
 diagonal strength in the top bin, the measurement above $\sim\!0.5$~GeV/$c$ is effectively
 inferred from the response model rather than measured.
 
-The BNB note therefore supplies a tested recipe, and the ingredients are largely already in
-hand. Of its four BDT inputs we have the Bragg likelihood ratios
-(\texttt{trk\_bragg\_pion}, \texttt{\_mip}, \texttt{\_mu}, \texttt{\_p}) and the
-track--shower score in the ntuples --- indeed the multi-pion pion-ID BDT in this analysis
-already trains on exactly those --- and the descendant counts are available as
-\texttt{pfp\_trk\_daughters\_v} / \texttt{pfp\_shr\_daughters\_v}. Only wiggliness is
-missing, and it cannot be computed from the current ntuples: no per-point trajectory
-information is stored (only \texttt{trk\_end\_spacepoints\_v}), so it would have to be
-added upstream in \texttt{ProcessNTuples} or the PeLEE production.
+The BNB note therefore supplies a tested recipe, and \emph{all four} of its BDT inputs are
+already available to us. The Bragg likelihood ratios (\texttt{trk\_bragg\_pion},
+\texttt{\_mip}, \texttt{\_mu}, \texttt{\_p}) and the track--shower score are in the
+ntuples --- the multi-pion pion-ID BDT in this analysis already trains on exactly those ---
+and the descendant counts are \texttt{pfp\_trk\_daughters\_v} /
+\texttt{pfp\_shr\_daughters\_v}. Wiggliness is there too, under a different name: the PeLEE
+ntuples carry \texttt{trk\_avg\_deflection\_stdev\_v} (with companions
+\texttt{\_mean\_v} and \texttt{\_separation\_mean\_v}), which is precisely the standard
+deviation of the angular deflection between adjacent track points. It is fully populated.
+It was simply not among the branches \texttt{ProcessNTuples} copied forward; it now is.
+
+\paragraph{Wiggliness works, but with the opposite sign to the naive expectation.}
+Testing it directly on truth-matched charged pions in the Run-1 FHC overlay --- calling a
+pion ``golden-like'' when the mass-corrected range momentum recovers the true momentum to
+within $20\%$, and ``interacting'' when it recovers less than $60\%$ --- gives a clear
+separation, but golden pions are the \emph{wigglier} ones, by about a factor two in the
+mean ($0.0048$ against $0.0027$). That is not a momentum artefact: it survives binning in
+track length, with the ratio staying at $0.51$--$0.63$ from $5$~cm to $400$~cm.
+
+The sign makes physical sense on reflection. A pion that stops travels its full range and
+scatters violently through its final slow centimetres, so the deflection spread averaged
+along the track is large. A pion that interacts hadronically is cut short while still fast
+and never reaches that wiggly end, so its track is straighter. High wiggliness is thus a
+signature of \emph{having stopped} --- exactly the population for which a range-based
+momentum is meaningful.
+
+As a single cut it is already useful: on this sample the golden fraction is $39.9\%$ before
+any cut, and requiring \texttt{trk\_avg\_deflection\_stdev\_v}$\,>0.001$ keeps $86.8\%$ of
+golden pions while rejecting $48.8\%$ of interacting ones, lifting the golden fraction to
+$53.0\%$. A tighter cut at $0.002$ gives $57.8\%$ efficiency and $55.7\%$ golden. For
+reference the BNB's four-variable BDT reaches $67.7\%$ golden at roughly half the
+generic-selection efficiency, so one variable recovers a good part of the gain and the
+remaining three --- all of which we have --- should close much of the rest.
 
 In increasing order of effort, then: rebin $p_\pi$ against the BNB's own criterion
 (diagonal $>0.68$), which on the numbers above means roughly two resolved bins below
 $\sim\!0.25$~GeV/$c$ plus a wide bin and an overflow, and can be done today; add a
 golden-pion cut for the $p_\pi$ cross section built from the Bragg, track-score and
 descendant variables already available, accepting the factor-two efficiency loss the BNB
-analysis accepts; or add wiggliness upstream and reproduce their BDT in full. None changes
+analysis accepts; or reproduce their BDT in full, which is now a training exercise rather than a
+production change. None changes
 the total or angular results, which do not use this estimator. The first is worth doing
 before the $p_\pi$ spectrum is quoted as a shape measurement.
 
