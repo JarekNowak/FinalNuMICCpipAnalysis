@@ -45,8 +45,17 @@ void make_resolution_figures() {
             24, 0.15, 2.0, -1.0, 1.0, "resolution_pmu_range");
 
   // ---- pion momentum, relative ----
+  // Pion momentum: plot the estimator the ANALYSIS actually bins on, not the raw
+  // branch. candidate_pion_mom_reco is track_range_mom_mu_ -- a MUON-hypothesis range
+  // momentum applied to a pion track -- and the reco bin definitions in
+  // ccpi_ppi_bin_config_opt.txt correct it with a kinetic-energy-preserving mu->pi mass
+  // swap (E_mu -> T -> E_pi -> p_pi) before binning. Plotting the raw branch overstates
+  // the bias at low momentum, where that correction is exactly what is missing:
+  // <reco/true> in the first true bin is 0.888 raw but 0.976 corrected.
+  const TString PICOR = Form("sqrt(pow(sqrt(pow(%scandidate_pion_mom_reco,2)+0.011164)"
+                             "-0.10566+0.13957,2)-0.019480)", P);
   one_panel(t, SEL, Form("%scandidate_pion_mom_true",P),
-            Form("(%scandidate_pion_mom_reco-%scandidate_pion_mom_true)/%scandidate_pion_mom_true",P,P,P),
+            Form("(%s-%scandidate_pion_mom_true)/%scandidate_pion_mom_true",PICOR.Data(),P,P),
             "p_{#pi} resolution", "true p_{#pi} [GeV/c]", "(reco#minustrue)/true",
             18, 0.175, 1.0, -1.0, 1.0, "resolution_ppi");
 

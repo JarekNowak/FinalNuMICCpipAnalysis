@@ -1934,7 +1934,7 @@ true bin; the quoted numbers are the overall mean (bias) and RMS (resolution).
   \hfill
   \begin{subfigure}[b]{0.32\textwidth}
     \includegraphics[width=\textwidth]{resolution_ppi}
-    \caption{$p_\pi$: bias $-36\%$, RMS $25\%$.}
+    \caption{$p_\pi$: bias $-31\%$, RMS $27\%$ (analysis estimator).}
   \end{subfigure}\\[6pt]
   \begin{subfigure}[b]{0.32\textwidth}
     \includegraphics[width=\textwidth]{resolution_costhmu}
@@ -1956,20 +1956,94 @@ true bin; the quoted numbers are the overall mean (bias) and RMS (resolution).
     The muon MCS momentum slightly over-estimates at low $p_\mu$ and increasingly
     under-estimates above $\sim$1~GeV/$c$; the range estimator is badly biased for
     \emph{exiting} muons (range $=$ distance to wall), which is why the analysis
-    uses range only for contained muons (range-or-MCS).  The pion panel has now been
-    regenerated with the current muon-hypothesis range momentum
-    (\texttt{candidate\_pion\_mom\_reco}): it under-estimates true $p_\pi$ by $36\%$ on
-    average, rising from $\sim\!15\%$ at threshold to $\sim\!70\%$ at $1$~GeV/$c$. The
-    earlier expectation that switching from the proton-hypothesis range KE would remove
-    most of the $\sim\!21\%$ shift quoted for that estimator is therefore \emph{not}
-    borne out --- the mean bias is larger, not smaller, once evaluated over the current
-    phase space. This is a migration effect rather than a bias on the result: the
-    response matrix carries it, which is why the $p_\pi$ bin migration is as large as it
-    is (\S\ref{sec:unfolding_resp}), and it is the physical reason the momentum observables
-    retain the least model discrimination through $A_C$ (Table~\ref{tab:ac_survey}). The
+    uses range only for contained muons (range-or-MCS).  The pion panel shows the estimator the
+    analysis actually bins on, not the raw \texttt{candidate\_pion\_mom\_reco} branch
+    (\S\ref{sec:ppi_bias}): mean bias $-31\%$, RMS $27\%$. That average is dominated by
+    high momenta --- the bias is only $-2\%$ in the first true bin and reaches $-65\%$
+    above $0.8$~GeV/$c$ --- because the reconstructed value saturates near
+    $0.34$~GeV/$c$ once pions interact hadronically before stopping. The
     angular variables are essentially unbiased with narrow resolution.}
   \label{fig:resolution}
 \end{figure}
+
+\subsection{The pion-momentum bias and why $p_\pi$ is the worst-conditioned observable}
+\label{sec:ppi_bias}
+
+The $p_\pi$ response is the least diagonal of any observable in the analysis. This section
+quantifies why, because the cause is physical and sets a floor on what the measurement can
+say about the pion momentum spectrum.
+
+\paragraph{Two separate effects, only one of them corrected.}
+The reconstructed pion momentum stored in the ntuple,
+\texttt{candidate\_pion\_mom\_reco}, is \texttt{trk\_range\_muon\_mom\_v}: a range-based
+momentum evaluated under the \emph{muon} mass hypothesis and applied to a pion track. Two
+distinct things follow.
+
+First, the mass hypothesis itself biases the estimate low, because for a given range a
+pion carries more momentum than a muon. The size is $\sim\!17$--$19\%$ from the CSDA
+range scaling, and it is essentially independent of momentum. This effect \emph{is}
+corrected, though not in the branch: the reco bin definitions in
+\texttt{ccpi\_ppi\_bin\_config\_opt.txt} apply a kinetic-energy-preserving $\mu\to\pi$
+mass swap, $E_\mu \to T \to E_\pi \to p_\pi$, before binning. It works --- in the lowest
+true bin $\langle p^{\rm reco}/p^{\rm true}\rangle$ goes from $0.888$ with the raw branch
+to $0.976$ with the correction.
+
+Second, and not corrected by anything, charged pions interact hadronically before coming
+to rest. The reconstructed track then ends at the interaction point rather than the
+stopping point, so the visible range --- and any momentum inferred from it --- is
+truncated. This grows rapidly with momentum and comes to dominate.
+
+\paragraph{The reconstructed momentum saturates.}
+Table~\ref{tab:ppi_sat} makes the consequence plain: as the true momentum rises by a
+factor of four and a half, the reconstructed momentum barely moves, saturating at
+$\approx0.34$~GeV/$c$. Above that the estimator carries almost no information about how
+energetic the pion actually was.
+
+\begin{table}[htbp]\centering
+\caption{Pion momentum reconstruction versus truth, selected signal, Run-1 FHC. ``raw'' is
+  the \texttt{candidate\_pion\_mom\_reco} branch; ``corr.'' additionally applies the
+  $\mu\to\pi$ mass swap used by the reco bin definitions. The mass correction removes the
+  bias at threshold; nothing removes the saturation above it.}
+\label{tab:ppi_sat}
+\begin{tabular}{lrcccc}
+\toprule
+true $p_\pi$ [GeV/$c$] & $N$ & $\langle p^{\rm true}\rangle$ & $\langle p^{\rm corr}\rangle$
+ & raw/true & corr./true \\\midrule
+$0.175$--$0.250$ & 528 & 0.210 & 0.205 & 0.888 & 0.976 \\
+$0.250$--$0.300$ & 270 & 0.276 & 0.238 & 0.790 & 0.863 \\
+$0.300$--$0.350$ & 254 & 0.325 & 0.253 & 0.716 & 0.779 \\
+$0.350$--$0.400$ & 265 & 0.374 & 0.270 & 0.664 & 0.721 \\
+$0.400$--$0.500$ & 403 & 0.443 & 0.279 & 0.581 & 0.629 \\
+$0.500$--$0.600$ & 252 & 0.548 & 0.307 & 0.520 & 0.560 \\
+$0.600$--$0.800$ & 272 & 0.688 & 0.326 & 0.441 & 0.473 \\
+$0.800$--$1.200$ & 164 & 0.951 & 0.336 & 0.329 & 0.353 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{What that does to the response matrix.}
+Migrating the five analysis bins with the corrected estimator gives a nearly
+lower-triangular matrix: the diagonal fraction falls from $94.3\%$ in the first true bin
+to $36.5$, $23.1$, $10.4$ and finally $6.2\%$ in the last. For the highest true bin
+($p_\pi>0.55$~GeV/$c$) only $6.2\%$ of events are reconstructed in the corresponding reco
+bin while $32.6\%$ fall all the way into the \emph{lowest} one. Every true bin above the
+first therefore deposits most of its events into reco bin 1, which is exactly the
+``pile-up into the first bin'' seen in Figure~\ref{fig:response}.
+
+\paragraph{Consequences, and what would improve it.}
+This is not a bias on the extracted cross section --- the response matrix contains it and
+the unfolding inverts it --- but it is the reason the $p_\pi$ result leans harder on the
+regularisation than any other observable, and it explains the $A_C$ survey result that the
+momentum observables retain only $11$--$21\%$ of their truth-level model discrimination
+(Table~\ref{tab:ac_survey}) while $\theta_{\mu\pi}$ retains $58$--$93\%$. With $6\%$
+diagonal strength in the top bin, the measurement above $\sim\!0.5$~GeV/$c$ is effectively
+inferred from the response model rather than measured.
+
+Three things would help, in increasing order of effort: quoting $p_\pi$ only up to
+$\sim\!0.4$~GeV/$c$, where the estimator still tracks truth; using calorimetric rather than
+range-based energy for pion candidates; or tagging interacting versus stopping pions and
+treating them as separate populations. None is required for the present result, but the
+first is worth considering before the $p_\pi$ spectrum is quoted as a shape measurement.
 
 \subsection{Model comparison: $\chi^2$ against truth, tune and generators}
 \label{sec:chi2}
