@@ -273,46 +273,50 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}{Why $p_\pi$ is being withdrawn from the inclusive selection}
+\begin{frame}{The pion momentum cannot be measured well --- and why}
   \centering
   \begin{columns}[T]
   \column{.34\textwidth}\centering
-    \includegraphics[height=.30\textheight]{ppi_saturation}\\
-    {\tiny reco \alert{saturates} at $\approx0.34$~GeV/$c$}
+    \includegraphics[height=.26\textheight]{ppi_saturation}\\
+    {\tiny \alert{What we measure stops responding} to the true momentum above
+     $\sim\!0.35$~GeV/$c$}
   \column{.32\textwidth}\centering
-    \includegraphics[height=.30\textheight]{resolution_ppi}\\
-    {\tiny bias $-31\%$: $-2\%$ at threshold, $-65\%$ above $0.8$}
+    \includegraphics[height=.26\textheight]{resolution_ppi}\\
+    {\tiny Per event: right at low momentum, then \alert{increasingly too low}}
   \column{.30\textwidth}\centering
-    \includegraphics[height=.30\textheight]{fw_resp_ppi}\\
-    {\tiny every true bin piles into \alert{reco bin 1}}
+    \includegraphics[height=.26\textheight]{fw_resp_ppi}\\
+    {\tiny Whatever the true momentum (columns), events land in the
+     \alert{lowest measured bin}}
   \end{columns}
   \vspace{2mm}
-  \begin{columns}[T]\column{.46\textwidth}
+  \begin{columns}[T]\column{.44\textwidth}
   \centering\scriptsize
+  \textbf{\% landing in the \emph{correct} momentum bin}\\[1mm]
   \begin{tabular}{lccccc}
   \toprule
-  migration diagonal & b1 & b2 & b3 & b4 & b5\\\midrule
-  no cut             & 99 & 24 & 13 & 6 & 6\\
-  golden BDT $>0$    & 99 & 33 & 25 & 15 & 9\\
-  golden BDT $>0.15$ & 99 & 47 & 42 & 36 & 20\\
-  \alert{perfect (truth) golden} & 99 & \alert{36} & \alert{24} & \alert{14} & \alert{9}\\
+   & \multicolumn{5}{c}{true momentum, low $\to$ high}\\\midrule
+  all pions            & 99 & 24 & 13 & 6 & 6\\
+  keep the cleanest    & 99 & 47 & 42 & 36 & 20\\
+  \alert{cheating: use truth} & 99 & \alert{36} & \alert{24} & \alert{14} & \alert{9}\\
   \bottomrule
-  \end{tabular}\\[1.5mm]
-  {\tiny usable-bin criterion (BNB CC$1\pi$): diagonal $>68\%$ $\Rightarrow$ \alert{1 of 5 passes}}
-  \column{.54\textwidth}
-  \begin{itemize}\scriptsize\setlength\itemsep{3pt}
-    \item \alert{Physical cause}: pions interact before stopping, so the track ends at the
-      interaction point and \alert{range-based} momentum saturates. (The $\mu$-hypothesis
-      mass error is a separate $\sim\!18\%$ and \alert{is} already corrected.)
-    \item \alert{Golden-pion BDT trained} --- wiggliness $+$ Bragg $+$ track score $+$
-      daughters, ROC $0.758$. Matches the BNB classifier: $43\!\to\!65\%$ golden at $45\%$
-      efficiency vs their $36\!\to\!68\%$ at $47\%$.
-    \item \alert{Still not enough}: a \alert{perfect} truth-level golden selection leaves
-      bins 2--5 at $36/24/14/9\%$ --- no classifier beats its own label.
-    \item $\Rightarrow$ quote $p_\pi$ on the \alert{golden-enhanced / proton-tagged} samples.
-      Proton-tagged \alert{not yet quantified}. All other observables unaffected.
+  \end{tabular}\\[1mm]
+  {\tiny Normally a bin is usable above $68\%$. \alert{Only the first qualifies.}}
+  \column{.56\textwidth}
+  \begin{itemize}\scriptsize\setlength\itemsep{5pt}
+    \item Momentum comes from \alert{how far the particle travels} --- fine for muons,
+      which just slow down and stop.
+    \item \alert{Pions don't}: most hit a nucleus and vanish part-way, so the track ends
+      early and we read \alert{too little momentum}. Faster pion, sooner it happens.
+    \item We tried keeping only pions that \alert{did stop cleanly}, spotted from the track
+      shape by a machine-learning classifier --- as good as the published BNB one.
+    \item \alert{Still not enough}: even \alert{cheating} with simulation truth barely
+      helps, so no classifier can rescue this.
   \end{itemize}
   \end{columns}
+  \vspace{1mm}
+  {\footnotesize$\Rightarrow$ we will report the pion momentum only for the
+   \alert{sub-samples where it is meaningful}, not the main selection.
+   \alert{Everything else we measure is unaffected.}}
 \end{frame}
 
 \begin{frame}{Inclusive cut-flow --- FHC (full exposure)}
