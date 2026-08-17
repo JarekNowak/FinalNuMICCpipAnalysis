@@ -54,8 +54,7 @@ logs/
 generator_predictions/nuwro/*.root
 generator_predictions/nuwro/*.root.*
 generator_predictions/analysis/nuwro_cc1pi
-generator_predictions/*.log
-generator_predictions/nuwro/*.log
+generator_predictions/**/*.log
 
 # GENIE standalone: keep code, ignore large event/spline files
 generator_predictions/genie/*.root
@@ -75,3 +74,29 @@ generator_predictions/q2.txt
 generator_predictions/qv.txt
 generator_predictions/totals.txt
 generator_predictions/newg4/T.txt
+
+# ---------------------------------------------------------------------------
+# Generator run artifacts. The event samples, their per-run working directories
+# and the NEUT/GiBUU cross-section tables are inputs or intermediates, not
+# source: 7.5 GB of them in this tree at the time of writing. The macros and
+# driver scripts that consume them ARE tracked, so the chain stays reproducible
+# given the samples.
+# ---------------------------------------------------------------------------
+*.dat
+generator_predictions/newg4/gibuu/run_*/
+generator_predictions/newg4/*.status
+
+# Scanned or external documents kept alongside the note (3.2 GB)
+report/internalDocs/
+
+# GENIE per-run output directory and compiled generator readers (binaries)
+generator_predictions/newg4/g_numu
+generator_predictions/newg4/g_numubar
+generator_predictions/newg4/nuwro_cc1pi
+generator_predictions/newg4/nuwro_cc1pi1p
+generator_predictions/newg4/neut/fort.*
+generator_predictions/ppi2bin/nuwro_cc1pi_2bin
+generator_predictions/pmufix/nuwro_cc1pi_pmufix
+
+# TMVA training output (the weights .xml ARE tracked; the rest is regenerable)
+xsec_analyzer/golden_nolen/

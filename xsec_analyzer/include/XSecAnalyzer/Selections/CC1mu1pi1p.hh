@@ -50,6 +50,10 @@ private:
   double reco_proton_mom_;
   double reco_proton_costh_;
   int    reco_n_proton_;
+  // diagnostic: LLR PID score of the identified proton candidate (lower = more
+  // proton-like); stored so a tighter proton-PID working point can be emulated
+  // offline without reprocessing.
+  double reco_proton_llr_;
 
   // ---- true proton-tagged observables ----
   double true_W_pipr_;
