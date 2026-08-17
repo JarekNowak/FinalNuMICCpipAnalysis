@@ -2129,6 +2129,51 @@ production change. None changes
 the total or angular results, which do not use this estimator. The first is worth doing
 before the $p_\pi$ spectrum is quoted as a shape measurement.
 
+\subsubsection*{A truncation bug in the generator predictions, found while rebinning}
+
+Rebinning $p_\pi$ required regenerating the generator predictions from the event level,
+which exposed a separate error in how they were built. The predictions were histogrammed
+with a closed upper edge --- $1.0$~GeV/$c$ for $p_\pi$ and $3.0$~GeV/$c$ for $p_\mu$ ---
+while the corresponding analysis bins are \emph{open}. The overflow was then discarded by
+\texttt{combine\_newg4.C}, so the tail above those edges was simply lost.
+
+The consequence is that each generator's flux-averaged total disagreed with itself
+depending on which variable it had been binned in. That total is a single number and cannot
+depend on the binning variable, which makes this an unambiguous internal check:
+
+\begin{center}\small
+\begin{tabular}{lcccccc}
+\toprule
+generator & $p_\mu$ & $p_\pi$ & $\cos\theta_\mu$ & $\cos\theta_\pi$ & $\theta_{\mu\pi}$ & spread \\\midrule
+\multicolumn{7}{l}{\emph{before}} \\
+GENIE & $0.790$ & $0.762$ & $0.823$ & $0.823$ & $0.823$ & $8.0\%$ \\
+NuWro & $1.198$ & $1.176$ & $1.253$ & $1.253$ & $1.253$ & $6.5\%$ \\
+\multicolumn{7}{l}{\emph{after}} \\
+GENIE & $0.823$ & $0.823$ & $0.823$ & $0.823$ & $0.823$ & $0.01\%$ \\
+NuWro & $1.253$ & $1.253$ & $1.253$ & $1.253$ & $1.253$ & $0.00\%$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent All four generators were regenerated from their event samples for all three beam
+configurations, changing only the affected upper edge. The angular observables were already
+correct --- they are complete by construction, since $\cos\theta$ and $\theta_{\mu\pi}$ have
+no tail to lose --- and they now agree with the momenta to better than $0.01\%$.
+
+The effect on the physics conclusions is modest but not negligible: the generator totals
+rise by $4$--$8\%$, which moves each generator closer to the measured cross section. In the
+cut-and-count comparison (Table~\ref{tab:total_xsec}) GENIE goes from $1.0\sigma$ to
+$0.9\sigma$ below the FHC measurement while NEUT goes from $0.8\sigma$ to $1.0\sigma$ above
+it. Had the $p_\pi$ prediction alone been used, the $8\%$ deficit would have appeared as a
+data--model disagreement in that one observable and nowhere else.
+
+Two practical notes for anyone repeating this. The NEUT and NuWro event readers cannot be
+run natively: NEUT's \texttt{neutclass} libraries are built against ROOT~5 and NuWro needs
+its own event library, so both require the SL7 container. And when rewriting histograms into
+an existing ROOT file, read the inputs fully into memory first --- writing while an input
+file is the active directory silently sends the histogram to the wrong file, which is how a
+first attempt at this appeared to succeed while leaving the RHC predictions untouched.
+
 \subsubsection*{Adopted response: a two-bin $p_\pi$ scheme}
 
 The binning has been changed accordingly. The five-bin scheme is replaced by two bins,
@@ -2966,6 +3011,9 @@ combined total carry the larger uncertainty, driven by the RHC detector systemat
     generator predictions. The measurement uncertainty is the systematic breakdown
     (flux/detector/cross-section/reinteraction, Tables~\ref{tab:systbreak_fhc}--%
     \ref{tab:systbreak_comb}) $\oplus$ cut-and-count data statistics. Values in
+    \emph{Generator values corrected 2026-08-17}: they previously came from truncated
+    binnings ($p_\mu$ closed at $3$~GeV/$c$, $p_\pi$ at $1$~GeV/$c$) that discarded the
+    tails, making every prediction $4$--$8\%$ low; see \S\ref{sec:ppi_bias}.
     parentheses give each generator's deviation from the measurement in units of the
     measurement uncertainty.}
   \label{tab:total_xsec}
@@ -2973,9 +3021,9 @@ combined total carry the larger uncertainty, driven by the RHC detector systemat
     \toprule
     Config & Measurement & GENIE & GiBUU & NEUT & NuWro \\
     \midrule
-    FHC      & $1.06 \pm 0.27$ & $0.79\,(1.0\sigma)$ & $1.08\,(0.1\sigma)$ & $1.26\,(0.8\sigma)$ & $1.20\,(0.5\sigma)$ \\
-    RHC      & $0.98 \pm 0.35$ & $0.63\,(1.0\sigma)$ & $0.89\,(0.3\sigma)$ & $1.04\,(0.2\sigma)$ & $0.98\,(0.0\sigma)$ \\
-    Combined & $1.02 \pm 0.30$ & $0.70\,(1.1\sigma)$ & $0.97\,(0.1\sigma)$ & $1.15\,(0.4\sigma)$ & $1.08\,(0.2\sigma)$ \\
+    FHC      & $1.06 \pm 0.27$ & $0.82\,(0.9\sigma)$ & $1.13\,(0.3\sigma)$ & $1.32\,(1.0\sigma)$ & $1.25\,(0.7\sigma)$ \\
+    RHC      & $0.98 \pm 0.35$ & $0.67\,(0.9\sigma)$ & $0.94\,(0.1\sigma)$ & $1.11\,(0.3\sigma)$ & $1.04\,(0.2\sigma)$ \\
+    Combined & $1.02 \pm 0.30$ & $0.74\,(0.9\sigma)$ & $1.03\,(0.0\sigma)$ & $1.20\,(0.6\sigma)$ & $1.14\,(0.4\sigma)$ \\
     \bottomrule
   \end{tabular}
 \end{table}
