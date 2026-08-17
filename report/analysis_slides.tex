@@ -1,6 +1,6 @@
 \documentclass[aspectratio=169,10pt]{beamer}
 % ============================================================================
-% MicroBooNE NuMI CC1mu1pi± Xp analysis — inclusive + proton-tagged (W/TKI)
+% MicroBooNE NuMI CC1mu1pi± Xp analysis ,  inclusive + proton-tagged (W/TKI)
 % Red theme, page numbers, backup slides.
 % ============================================================================
 \usepackage{graphicx}
@@ -8,7 +8,7 @@
 \usepackage{amsmath}
 \graphicspath{{figures/}}
 
-% ---- red colour theme ----
+%,- red colour theme,-
 \definecolor{ubred}{RGB}{160,20,20}
 \definecolor{ubdark}{RGB}{90,10,10}
 \definecolor{ublight}{RGB}{205,70,70}
@@ -27,11 +27,11 @@
 \setbeamertemplate{frametitle}{\vskip4pt\usebeamercolor[fg]{frametitle}%
   \begin{beamercolorbox}[wd=\paperwidth,ht=2.4ex,dp=1ex,leftskip=.3cm]{frametitle}%
   \bfseries\insertframetitle\end{beamercolorbox}}
-% ---- footline with page number ----
+%,- footline with page number,-
 \setbeamertemplate{footline}{%
   \leavevmode\hbox{%
   \begin{beamercolorbox}[wd=.62\paperwidth,ht=2.4ex,dp=1ex,leftskip=.3cm]{section in head/foot}%
-  \usebeamerfont{author in head/foot}\insertshortauthor\ --- MicroBooNE NuMI CC$1\mu1\pi^{\pm}$\hfill\end{beamercolorbox}%
+  \usebeamerfont{author in head/foot}\insertshortauthor\ | MicroBooNE NuMI CC$1\mu1\pi^{\pm}$\hfill\end{beamercolorbox}%
   \begin{beamercolorbox}[wd=.38\paperwidth,ht=2.4ex,dp=1ex,rightskip=.3cm]{section in head/foot}%
   \hfill\insertshorttitle\quad\insertframenumber\,/\,\inserttotalframenumber\end{beamercolorbox}}}
 
@@ -54,7 +54,7 @@
 \begin{frame}{Outline}
   \begin{columns}[T]
   \column{.5\textwidth}
-  \textbf{\color{ubred}Part I --- Inclusive CC$1\mu1\pi^{\pm}Xp$}
+  \textbf{\color{ubred}Part I, Inclusive CC$1\mu1\pi^{\pm}Xp$}
   \begin{enumerate}\small
     \item Motivation \& signal
     \item Beam, exposure, selection
@@ -65,7 +65,7 @@
     \item Systematics \& sideband validation
   \end{enumerate}
   \column{.5\textwidth}
-  \textbf{\color{ubred}Part II --- Proton-tagged (W / TKI)}
+  \textbf{\color{ubred}Part II, Proton-tagged (W / TKI)}
   \begin{enumerate}\small
     \item Motivation: hadronic mass \& TKI
     \item Selection \& proton-tag performance
@@ -74,7 +74,7 @@
     \item Background composition
   \end{enumerate}
   \vspace{2mm}
-  \textbf{\color{ubred}Part III --- Multi-pion ($2\pi$, $3\pi$)}
+  \textbf{\color{ubred}Part III, Multi-pion ($2\pi$, $3\pi$)}
   \begin{enumerate}\small
     \item Selection tuning \& performance
     \item Dedicated pion-ID BDT
@@ -86,7 +86,7 @@
 
 % ===================== PART I : INCLUSIVE =====================
 \section{Inclusive}
-\begin{frame}{Part I --- Inclusive CC$\,1\mu1\pi^{\pm}Xp$}
+\begin{frame}{Part I, Inclusive CC$\,1\mu1\pi^{\pm}Xp$}
   \begin{block}{Signal definition}
     $\nu_\mu/\bar\nu_\mu$ charged-current, exactly one muon and one charged pion,
     any number of protons, no $\pi^0$/kaons/heavier mesons; muon $p_\mu>0.15$, pion
@@ -135,23 +135,23 @@
   kinematic cleanup):
   \begin{columns}[T]\column{.5\textwidth}
   \begin{enumerate}\setlength\itemsep{1pt}
-    \item[\textbf{1.}] \textbf{NeutrinoSlice} --- $\ge1$ track, software trigger.
-    \item[\textbf{2.}] \textbf{InFiducialVol} --- SCE-corrected $\nu$ vertex in FV.
-    \item[\textbf{3.}] \textbf{Topological} --- Pandora score $>0.67$; primary cosmic
+    \item[\textbf{1.}] \textbf{NeutrinoSlice}, $\ge1$ track, software trigger.
+    \item[\textbf{2.}] \textbf{InFiducialVol}, SCE-corrected $\nu$ vertex in FV.
+    \item[\textbf{3.}] \textbf{Topological}, Pandora score $>0.67$; primary cosmic
       rejection (EXT $\times33$ down).
-    \item[\textbf{4.}] \textbf{MuonCandidate} --- $\ge1$ primary track passes $\mu$ PID;
+    \item[\textbf{4.}] \textbf{MuonCandidate}, $\ge1$ primary track passes $\mu$ PID;
       longest $=\mu$.
-    \item[\textbf{5.}] \textbf{ContainedPion} --- exactly one other track passes $\pi$
+    \item[\textbf{5.}] \textbf{ContainedPion}, exactly one other track passes $\pi$
       PID, endpoint contained; highest LLR $=\pi$.
   \end{enumerate}
   \column{.5\textwidth}
   \begin{enumerate}\setlength\itemsep{1pt}
-    \item[\textbf{6--7.}] \textbf{$\mu$/$\pi$ In3Planes} --- hit on each of U, V, Y.
-    \item[\textbf{8.}] \textbf{ShowerCut} --- veto primary EM showers ($\pi^0$ rejection;
+    \item[\textbf{6--7.}] \textbf{$\mu$/$\pi$ In3Planes}, hit on each of U, V, Y.
+    \item[\textbf{8.}] \textbf{ShowerCut}, veto primary EM showers ($\pi^0$ rejection;
       one soft shower tolerated).
-    \item[\textbf{9.}] \textbf{OpeningAngle} --- $\theta_{\mu\pi}<2.6$~rad ($149^\circ$);
+    \item[\textbf{9.}] \textbf{OpeningAngle}, $\theta_{\mu\pi}<2.6$~rad ($149^\circ$);
       rejects large-angle cosmic/dirt.
-    \item[\textbf{10.}] \textbf{Nonprotons} (final) --- $<4$ non-proton-like tracks
+    \item[\textbf{10.}] \textbf{Nonprotons} (final), $<4$ non-proton-like tracks
       (LLR$>0.1$) and $<5$ total primary tracks.
   \end{enumerate}
   \end{columns}
@@ -207,7 +207,7 @@
   \toprule
   Particle & Estimator & PeLEE branch & Note\\\midrule
   $\mu$ (contained) & range momentum & \texttt{trk\_range\_muon\_mom\_v} & \alert{37\%} of selected\\
-  $\mu$ (exiting)   & MCS momentum   & \texttt{trk\_mcs\_muon\_mom\_v}   & \alert{63\%} --- range invalid\\
+  $\mu$ (exiting)   & MCS momentum   & \texttt{trk\_mcs\_muon\_mom\_v}   & \alert{63\%}, range invalid\\
   $\pi$             & range momentum, \alert{$\mu$ hypothesis} & \texttt{trk\_range\_muon\_mom\_v} & $m_\mu$ close to $m_\pi$\\
   $p$               & range \alert{KE}, $p$ hypothesis & \texttt{trk\_energy\_proton\_v} & $\to$ momentum, see below\\
   \bottomrule
@@ -220,7 +220,7 @@
   \begin{block}{Proton: range KE $\to$ momentum}\scriptsize
   The proton branch gives a \emph{kinetic energy}, so it is converted:
   \[ |\vec p_p|=\sqrt{T_p^{2}+2\,T_p\,m_p} \]
-  Threshold $|\vec p_p|>0.3$~GeV/$c$ ($T_p\gtrsim48$~MeV) --- below this the proton is too
+  Threshold $|\vec p_p|>0.3$~GeV/$c$ ($T_p\gtrsim48$~MeV), below this the proton is too
   short to track. Performance: \alert{$-9\%$ bias, $21\%$ resolution}.
   \end{block}
   \column{.48\textwidth}
@@ -228,13 +228,13 @@
   $m_\mu=105.7$~MeV, $m_\pi=139.6$~MeV: the masses are close, so the range$\to$momentum
   curve is a good proxy for a stopping pion.\\[1mm]
   It also returns a \alert{momentum}, directly comparable to the true $p_\pi$ it is binned
-  against --- which keeps the migration matrix near-diagonal.\\[1mm]
+  against; which keeps the migration matrix near-diagonal.\\[1mm]
   Valid only for \alert{contained} tracks; the selection requires pion containment.
   \end{block}
   \end{columns}
 \end{frame}
 
-\begin{frame}{Response (smearceptance) matrices --- FHC}
+\begin{frame}{Response (smearceptance) matrices, FHC}
   \centering
   \begin{columns}[c]
   \column{.16\textwidth}\includegraphics[width=\linewidth]{smear_pmu_FHC5}\\
@@ -254,16 +254,16 @@
   \begin{columns}[T]\column{.94\textwidth}
   {\footnotesize
   $P(\mathrm{reco}\,|\,\mathrm{true})\times$ efficiency; columns are true bins, rows reco
-  bins. $p_\mu$ and the three angular observables are \alert{near-diagonal} --- note
+  bins. $p_\mu$ and the three angular observables are \alert{near-diagonal}, note
   $p_\mu$ is $63\%$ MCS-reconstructed (exiting muons), whose poorer resolution sets its
   width.
-  \alert{$p_\pi$ is the outlier} --- reco piles into the first bin from every true bin,
+  \alert{$p_\pi$ is the outlier}, reco piles into the first bin from every true bin,
   since pions interact hadronically before stopping so a range-based momentum
   \alert{under-estimates} $p_\pi$. With $50$--$99\%$ bin migration overall a plain matrix
-  inversion is unusable, hence \alert{Wiener-SVD} regularisation --- at the cost of the
+  inversion is unusable, hence \alert{Wiener-SVD} regularisation; at the cost of the
   $A_C$ additional smearing.\\[1mm]
   \alert{Planned scope change:} measured migration diagonals for $p_\pi$ are
-  $99/24/13/6/6\%$ --- the BNB CC$1\pi$ criterion for a usable bin is $>68\%$, so only the
+  $99/24/13/6/6\%$; the BNB CC$1\pi$ criterion for a usable bin is $>68\%$, so only the
   first passes. A golden-pion BDT was trained and reproduces the BNB classifier performance
   ($43\!\to\!65\%$ golden at $45\%$ efficiency) but \alert{cannot fix it}: even a
   \alert{perfect} truth-level golden selection leaves bins 2--5 at $36/24/14/9\%$. We
@@ -273,7 +273,7 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}{The pion momentum cannot be measured well --- and why}
+\begin{frame}{The pion momentum cannot be measured well, and why}
   \centering
   \begin{columns}[T]
   \column{.34\textwidth}\centering
@@ -303,25 +303,25 @@
   all pions        & \alert{97} & \alert{62} & & & \\
   \bottomrule
   \end{tabular}\\[1mm]
-  {\tiny A bin is normally called usable above $68\%$. Merging cannot create resolution ---
+  {\tiny A bin is normally called usable above $68\%$. Merging cannot create resolution,
    it stops us quoting five numbers when we have about one and a half.
    \alert{Three} bins was tested and is \alert{worse} ($97/38/39$).\\[1mm]
    \textbf{FHC closure} $\chi^2=\alert{0.15/2}$ (was $1.96/5$); result overleaf.}
   \column{.56\textwidth}
   \begin{itemize}\scriptsize\setlength\itemsep{5pt}
-    \item Momentum comes from \alert{how far the particle travels} --- fine for muons,
+    \item Momentum comes from \alert{how far the particle travels}, fine for muons,
       which just slow down and stop.
     \item \alert{Pions don't}: most hit a nucleus and vanish part-way, so the track ends
       early and we read \alert{too little momentum}. Faster pion, sooner it happens.
     \item We tried keeping only pions that \alert{did stop cleanly}, spotted from the track
-      shape by a machine-learning classifier --- as good as the published BNB one.
+      shape by a machine-learning classifier, as good as the published BNB one.
     \item \alert{Still not enough}: at equal fraction kept, \alert{cheating} with truth
-      does no better --- the classifier is already at the ceiling.
+      does no better; the classifier is already at the ceiling.
   \end{itemize}
   \end{columns}
   \vspace{1mm}
   {\footnotesize$\Rightarrow$ pion momentum will be reported only where it is
-   \alert{meaningful} --- \alert{everything else we measure is unaffected}.}
+   \alert{meaningful}, \alert{everything else we measure is unaffected}.}
 \end{frame}
 
 \begin{frame}{The rebinned pion-momentum result (FHC)}
@@ -346,10 +346,10 @@
   \begin{itemize}\small\setlength\itemsep{5pt}
     \item \alert{Closes well}: $\chi^2=0.15/2$ ($p=0.93$), against $1.96/5$ for the old
       five-bin scheme.
-    \item $\sigma_\mathrm{int}$ moves only $0.964\!\to\!0.976$ --- \alert{rebinning changed
+    \item $\sigma_\mathrm{int}$ moves only $0.964\!\to\!0.976$, \alert{rebinning changed
       how finely we report, not what we measured}.
     \item All four generators \alert{bracket the data} in both bins
-      ($0.59$--$0.93$ vs $0.98$), NEUT closest, GENIE lowest --- the \alert{same ordering
+      ($0.59$--$0.93$ vs $0.98$), NEUT closest, GENIE lowest; the \alert{same ordering
       as every other observable}.
     \item Generator curves use the \alert{corrected} predictions: the old ones truncated
       the $p_\pi$ tail at $1$~GeV/$c$ and were $\sim\!8\%$ low.
@@ -358,7 +358,7 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}{Inclusive cut-flow --- FHC (full exposure)}
+\begin{frame}{Inclusive cut-flow, FHC (full exposure)}
   \begin{columns}[T]\column{.54\textwidth}
   \centering\scriptsize
   \begin{tabular}{lrrrrr}
@@ -451,7 +451,7 @@
     \centering{\scriptsize $\theta_\mu$}
   \end{columns}
   \vspace{1mm}
-  {\scriptsize Data $-$ estimated background vs CV MC signal --- the input to the unfolding. Background from MC ($\nu$) $+$ beam-off EXT (cosmic) $+$ dirt overlay; validated by the sidebands.}
+  {\scriptsize Data $-$ estimated background vs CV MC signal; the input to the unfolding. Background from MC ($\nu$) $+$ beam-off EXT (cosmic) $+$ dirt overlay; validated by the sidebands.}
 \end{frame}
 
 
@@ -474,51 +474,51 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}{Differential cross sections --- FHC: the fake-data truth we should recover}
+\begin{frame}{Differential cross sections, FHC: the fake-data truth we should recover}
   \centering\includegraphics[height=.76\textheight]{dsigma_build_FHC5_1}\\
   {\scriptsize Poisson-thrown fake data are generated from the MicroBooNE tune; after unfolding we should recover this $A_C$-smeared truth.}
 \end{frame}
 
-\begin{frame}{Differential cross sections --- FHC: $+$ unfolded fake data}
+\begin{frame}{Differential cross sections, FHC: $+$ unfolded fake data}
   \centering\includegraphics[height=.76\textheight]{dsigma_build_FHC5_2}\\
   {\scriptsize The unfolded points sit on the truth: the response, background subtraction and normalisation close.}
 \end{frame}
 
-\begin{frame}{Differential cross sections --- FHC: $+$ MicroBooNE tune}
+\begin{frame}{Differential cross sections, FHC: $+$ MicroBooNE tune}
   \centering\includegraphics[height=.76\textheight]{dsigma_build_FHC5_3}\\
   {\scriptsize The tune is the central-value model the fake data were thrown from.}
 \end{frame}
 
-\begin{frame}{Differential cross sections --- FHC: $+$ GENIE}
+\begin{frame}{Differential cross sections, FHC: $+$ GENIE}
   \centering\includegraphics[height=.76\textheight]{dsigma_build_FHC5_4}\\
   {\scriptsize External generators enter, each $A_C$-smeared so it lives in the same space as the measurement.}
 \end{frame}
 
-\begin{frame}{Differential cross sections --- FHC: $+$ GiBUU}
+\begin{frame}{Differential cross sections, FHC: $+$ GiBUU}
   \centering\includegraphics[height=.76\textheight]{dsigma_build_FHC5_5}\\
 
 \end{frame}
 
-\begin{frame}{Differential cross sections --- FHC: $+$ NEUT}
+\begin{frame}{Differential cross sections, FHC: $+$ NEUT}
   \centering\includegraphics[height=.76\textheight]{dsigma_build_FHC5_6}\\
 
 \end{frame}
 
-\begin{frame}{Differential cross sections --- FHC: $+$ NuWro}
+\begin{frame}{Differential cross sections, FHC: $+$ NuWro}
   \centering\includegraphics[height=.76\textheight]{dsigma_build_FHC5_7}\\
   {\scriptsize All four generators bracket the data. \alert{Error bars are stat $\oplus$
   syst}: the full covariance (flux, cross-section, detector, re-interaction, POT, targets,
-  data/MC/EXT stats) propagated through the unfolding --- $\simeq\!27\%$ for $p_\mu$ (FHC),
+  data/MC/EXT stats) propagated through the unfolding, $\simeq\!27\%$ for $p_\mu$ (FHC),
   flux-dominated ($23\%$).}
 \end{frame}
 
-\begin{frame}{Differential cross sections --- RHC}
+\begin{frame}{Differential cross sections, RHC}
   \centering\includegraphics[height=.78\textheight]{dsigma_RHCFULL}\\
   {\scriptsize $\bar\nu_\mu$-enriched beam; unfolded fake data vs $A_C$-smeared truth,
   MicroBooNE tune, and GENIE/GiBUU/NEUT/NuWro.}
 \end{frame}
 
-\begin{frame}{Differential cross sections --- combined}
+\begin{frame}{Differential cross sections, combined}
   \centering\includegraphics[height=.78\textheight]{dsigma_COMB}\\
   {\scriptsize FHC$+$RHC combined exposure (per-universe correlated flux treatment).
   Error bars are \alert{stat $\oplus$ syst} (full covariance).}
@@ -527,7 +527,7 @@
 \begin{frame}{Muon angle: $\cos\theta_\mu$ vs $\theta_\mu$}
   \centering\includegraphics[height=.62\textheight]{thetamu_vs_costhmu}\\[1mm]
   {\scriptsize All curves $A_C$-smeared (same space as the data). Same events, same
-  binning ($\theta$ edges $=\arccos$ of the $\cos\theta$ edges) --- only the variable
+  binning ($\theta$ edges $=\arccos$ of the $\cos\theta$ edges); only the variable
   differs.}
 \end{frame}
 
@@ -565,7 +565,7 @@
     \item $\Rightarrow$ the agreement is \alert{by construction}, effective
       $\mathrm{ndf}\approx1$, and $\chi^2/5$ is not a goodness-of-fit. The same four
       generator inputs are \alert{full rank} ($s_2/s_1=5\times10^{-2}$), and
-      $\cos\theta_\mu$/$p_\mu$/RHC $\theta_\mu$ all retain their shape modes --- so this
+      $\cos\theta_\mu$/$p_\mu$/RHC $\theta_\mu$ all retain their shape modes, so this
       is over-regularisation specific to FHC $\theta_\mu$, not a property of $\theta$.
     \item The earlier ``$A_C$ penalises the forward peak'' explanation is also wrong:
       across observables $A_C$ vs peakedness gives $r=-0.17$ ($W_{\pi p}$ sharpest yet
@@ -573,7 +573,7 @@
       \alert{flattest} models (NEUT, NuWro) are suppressed \alert{most}.
     \item \alert{Action}: FHC $\theta_\mu$ withdrawn from model comparison pending a
       regularisation re-run. All 18 extractions were re-unfolded with $A_C$ now dumped to
-      file --- FHC $\theta_\mu$ is the \alert{only} rank-1 case (backup).
+      file, FHC $\theta_\mu$ is the \alert{only} rank-1 case (backup).
   \end{itemize}
   \end{columns}
 \end{frame}
@@ -609,7 +609,7 @@
     \item ``before/after'' = largest pairwise difference between normalised generator
       shapes, truth-level vs $A_C$-smeared. \alert{Keep $\approx0$ $\Rightarrow$ the
       measurement can no longer tell the models apart.}
-    \item \alert{FHC $\theta_\mu$ is the only zero} --- the only $A_C$ whose rows are all
+    \item \alert{FHC $\theta_\mu$ is the only zero}; the only $A_C$ whose rows are all
       one vector (spread $9\%$, eff.\ rank $1.02$; everything else $170$--$1050\%$,
       $1.24$--$1.91$). RHC/COMB $\theta_\mu$ are \alert{not} affected.
     \item \alert{Momenta keep only $11$--$21\%$} everywhere: not destroyed, but a good
@@ -620,7 +620,7 @@
       (COMB bin 2: NuWro $-0.43$ vs tune $+0.51$). Unphysical $\Rightarrow$ that spread is
       artefact, not discrimination, and its $\chi^2$ inherits the problem.
     \item So the original framing was \alert{backwards}: neither muon-angle variable is
-      clean --- $\theta_\mu$ loses everything (FHC), $\cos\theta_\mu$ keeps shape only via
+      clean, $\theta_\mu$ loses everything (FHC), $\cos\theta_\mu$ keeps shape only via
       negative excursions.
   \end{itemize}
   \end{columns}
@@ -667,7 +667,7 @@
   \bottomrule
   \end{tabular}\\[1mm]
   {\scriptsize $A_C$ is a \alert{common} $\simeq\!0.7$ factor on all four models, so it
-  cannot generate the \alert{$1.6\times$ spread} between them at truth level --- that is a
+  cannot generate the \alert{$1.6\times$ spread} between them at truth level; that is a
   genuine model difference. Cut-and-count data (no $A_C$): $1.06$.}
   \end{block}
   \end{columns}
@@ -704,7 +704,7 @@
 
 % ===================== PART II : PROTON-TAGGED =====================
 \section{Proton-tagged}
-\begin{frame}{Part II --- Proton-tagged subsample: hadronic mass \& TKI}
+\begin{frame}{Part II, Proton-tagged subsample: hadronic mass \& TKI}
   \begin{block}{Idea}
     Requiring an identified proton reconstructs the full hadronic system, opening two
     new observable classes: the \alert{hadronic invariant mass} (probes
@@ -736,7 +736,7 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}{Proton-tagged cut-flow --- FHC (full exposure)}
+\begin{frame}{Proton-tagged cut-flow, FHC (full exposure)}
   \footnotesize
   Stages None--Nonprotons are the inherited inclusive selection (with the proton-tagged
   signal definition: inclusive signal $+$ a true proton $>0.3$~GeV/$c$); the final
@@ -772,17 +772,17 @@
   $\hat z$; framework STV tool):
   \vspace{-1mm}
   \begin{columns}[T]\column{.52\textwidth}
-  \begin{block}{Hadronic mass --- probes $\Delta/N^\ast$}\scriptsize
+  \begin{block}{Hadronic mass, probes $\Delta/N^\ast$}\scriptsize
   \begin{align*}
   W_{\pi p} &= \sqrt{(E_\pi+E_p)^2-|\vec p_\pi+\vec p_p|^2}\\
   W_\mathrm{had} &= \sqrt{m_p^2+2m_p(E_\mathrm{cal}-E_\mu)-Q^2}
   \end{align*}
-  $W_{\pi p}$ is \alert{directly measured} --- no assumption on the $\nu$ direction or
+  $W_{\pi p}$ is \alert{directly measured}; no assumption on the $\nu$ direction or
   energy. $W_\mathrm{had}$ is calorimetric, $E_\mathrm{cal}=E_\mu+E_\pi+T_p$.\\[1mm]
   Threshold: $W_{\pi p}\ge m_\pi+m_p=1.08$~GeV/$c^2$.
   \end{block}
   \column{.48\textwidth}
-  \begin{block}{TKI --- probes Fermi motion \& FSI}\scriptsize
+  \begin{block}{TKI, probes Fermi motion \& FSI}\scriptsize
   \begin{align*}
   \delta p_T &= |\vec p_T^{\,\mu}+\vec p_T^{\,\mathrm{had}}|\\
   \delta\alpha_T &= \angle\big(-\vec p_T^{\,\mu},\ \vec p_T^{\,\mu}+\vec p_T^{\,\mathrm{had}}\big)\\
@@ -820,7 +820,7 @@
   \end{columns}
   \vspace{1mm}
   {\scriptsize Points: (blind) fake data; stack: MC \alert{signal} $+$ \alert{background}.
-  Purity at the IdentProton stage is $48\%$ --- lower than the inclusive selection, so the
+  Purity at the IdentProton stage is $48\%$, lower than the inclusive selection, so the
   subtraction is proportionally larger.}
 \end{frame}
 
@@ -844,11 +844,11 @@
     \centering{\scriptsize $p_n$}
   \end{columns}
   \vspace{1mm}
-  {\scriptsize Data $-$ estimated background vs CV MC signal --- the input to the
+  {\scriptsize Data $-$ estimated background vs CV MC signal; the input to the
   unfolding for the six W/TKI observables.}
 \end{frame}
 
-\begin{frame}{Proton-tagged: response (smearceptance) matrices --- FHC}
+\begin{frame}{Proton-tagged: response (smearceptance) matrices, FHC}
   \centering
   \begin{columns}[c]
   \column{.27\textwidth}\includegraphics[width=\linewidth]{wsmear_Wpipr}\\
@@ -902,7 +902,7 @@
   \end{tabular}
   \column{.48\textwidth}
   \begin{itemize}\scriptsize\setlength\itemsep{4pt}
-    \item \alert{All eleven observables now close positive in all three configurations} ---
+    \item \alert{All eleven observables now close positive in all three configurations},
       the proton-tagged measurement is complete. Every combined $\chi^2$ is well below its
       number of bins.
     \item The RHC and combined results were previously \alert{negative and withdrawn}. The
@@ -911,7 +911,7 @@
       per-file exposures is correct for both.
     \item COMB lies between FHC and RHC for \alert{7 of 11}. The four exceptions are small
       ($p_n$ $+6.9\%$ vs FHC; $\cos\theta_\mu$ $+1.7\%$; $W_{\pi p}$ $-2.4\%$ and $p_\mu$
-      $-1.5\%$ vs RHC) --- COMB is an \alert{independent extraction} with its own response,
+      $-1.5\%$ vs RHC), COMB is an \alert{independent extraction} with its own response,
       regularisation and $A_C$, \alert{not} a fluence-weighted average, so it is not
       required to bracket. All four are far inside the $\sim\!30\%$ systematic.
     \item The $0.45$--$0.67$ spread \alert{across} observables is $A_C$, not physics: each
@@ -948,7 +948,7 @@
   $\nu_e$ CC & 1\\
   \bottomrule
   \end{tabular}\\[1mm]
-  {\scriptsize $82\%$ true $\nu_\mu$ CC — well modelled \& constrainable.}
+  {\scriptsize $82\%$ true $\nu_\mu$ CC ,  well modelled \& constrainable.}
   \end{block}
   \end{columns}
 \end{frame}
@@ -956,7 +956,7 @@
 \begin{frame}{Proton-tagged: background-control sidebands}
   \footnotesize
   The proton-tagged selection \alert{inherits} the four sideband definitions from
-  \texttt{CC1mu1piXp} --- no new regions or reprocessing needed. Each can be read either
+  \texttt{CC1mu1piXp}; no new regions or reprocessing needed. Each can be read either
   as inherited, or with a tagged proton additionally required (the measurement phase space).
   \begin{center}\scriptsize
   \begin{tabular}{lrrrc|rrrc}
@@ -976,7 +976,7 @@
     \item \alert{More} signal-depleted than for the inclusive selection ($6$--$7\%$ vs
       $48\%$ purity in the signal region).
     \item The proton tag costs $\sim\!1/3$ of the statistics but cuts \alert{EXT by
-      $\sim\!6\times$} --- cosmics rarely have a reconstructed proton.
+      $\sim\!6\times$}, cosmics rarely have a reconstructed proton.
   \end{itemize}}
   \column{.5\textwidth}
   {\scriptsize
@@ -992,7 +992,7 @@
 
 % ===================== PART III : MULTI-PION =====================
 \section{Multi-pion}
-\begin{frame}{Part III --- Multi-pion: exclusive CC$\,1\mu2\pi$ and CC$\,1\mu3\pi$}
+\begin{frame}{Part III, Multi-pion: exclusive CC$\,1\mu2\pi$ and CC$\,1\mu3\pi$}
   \footnotesize
   New exclusive channels, building on the work of \textbf{Tusharadri Mahmud} (MSc) and
   \textbf{Linhui Gu}. Thin subselections of the inclusive selection: same muon, but
@@ -1040,7 +1040,7 @@
       boost), trained to separate true charged pions from the tracks polluting the
       multi-$\pi$ sample. \alert{ROC $=0.81$}.
     \item Inputs: pion/proton LLR, Bragg $p/\mu$/MIP likelihoods, track score, length,
-      vertex distance --- no explicit momentum.
+      vertex distance; no explicit momentum.
     \item $2\pi$ uses \alert{two momentum-specialised BDTs} (split at $20$ cm track
       length, tighter soft-pion cut to protect the exact-multiplicity purity);
       $3\pi$ keeps a \alert{single BDT} (its pions are genuinely soft).
@@ -1059,7 +1059,7 @@
   \bottomrule
   \end{tabular}
   \end{block}
-  {\scriptsize Proton contamination is the \alert{irreducible} core --- a proton ranging
+  {\scriptsize Proton contamination is the \alert{irreducible} core; a proton ranging
   out like a pion is genuinely ambiguous; adding a Bragg veto on top of the BDT did
   \emph{not} reduce it and only cost efficiency.}\\[1mm]
   {\scriptsize Documented in a standalone technote; differential $2\pi$ measurement +
@@ -1075,21 +1075,21 @@
     \item \alert{Proton-tagged}: new hadronic-mass ($W_{\pi p}$, $W_\mathrm{had}$) and
       TKI ($\delta p_T$, $\delta\alpha_T$, $\delta\phi_T$, $p_n$) observables, plus the
       five inclusive kinematic observables re-measured. \alert{Closure validated in all
-      three configurations} at six-bin granularity --- eleven observables $\times$ FHC,
+      three configurations} at six-bin granularity, eleven observables $\times$ FHC,
       RHC and combined, all positive, every combined $\chi^2$ below its bin count.
     \item Blind analysis: fake data throughout; sidebands (CC0$\pi$, multi-$\pi$, $\pi^0$,
       cosmic) validated in all three beams, data/$\nu$MC $\simeq1.00$, ready to constrain
       the background before unblinding.
     \item \alert{$p_\pi$ scope change}: its response fails the standard binning criterion
-      ($>\!68\%$ diagonal) in 4 of 5 bins, and a trained golden-pion BDT --- even at
-      \alert{perfect} truth-level selection --- does not repair it. We expect to quote
+      ($>\!68\%$ diagonal) in 4 of 5 bins, and a trained golden-pion BDT, even at
+      \alert{perfect} truth-level selection, does not repair it. We expect to quote
       $p_\pi$ on the \alert{golden-pion-enhanced and/or proton-tagged} samples rather than
       the inclusive one. No other observable is affected.
     \item \alert{Multi-pion}: an analysis of the exclusive $2\pi$ and $3\pi$ channels has
       started, building on the work of Tusharadri Mahmud (MSc) and Linhui Gu.
   \end{itemize}
   \vspace{2mm}
-  \centering\color{ubred}\large Thank you --- questions?
+  \centering\color{ubred}\large Thank you, questions?
 \end{frame}
 
 % ===================== BACKUP =====================
@@ -1100,7 +1100,7 @@
   {\color{ubdark}\Huge\bfseries Backup}\vfill
 \end{frame}
 
-\begin{frame}{Backup: inclusive cut-flow --- RHC (full exposure)}
+\begin{frame}{Backup: inclusive cut-flow, RHC (full exposure)}
   \begin{columns}[T]\column{.54\textwidth}
   \centering\scriptsize
   \begin{tabular}{lrrrrr}
@@ -1127,7 +1127,7 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}{Backup: inclusive cut-flow --- combined (full exposure)}
+\begin{frame}{Backup: inclusive cut-flow, combined (full exposure)}
   \begin{columns}[T]\column{.54\textwidth}
   \centering\scriptsize
   \begin{tabular}{lrrrrr}
@@ -1146,14 +1146,14 @@
   \bottomrule
   \end{tabular}\\[1mm]
   {\scriptsize Combined ($1.994\times10^{21}$ POT). Efficiency/purity track the two beams
-  closely --- the selection is beam-independent.}
+  closely; the selection is beam-independent.}
   \column{.46\textwidth}
   \includegraphics[width=\linewidth]{cutflow_yields_comb}\\
   \centering{\scriptsize Combined stack (log scale).}
   \end{columns}
 \end{frame}
 
-\begin{frame}{Backup: proton-tagged cut-flow --- RHC (full exposure)}
+\begin{frame}{Backup: proton-tagged cut-flow, RHC (full exposure)}
   \begin{columns}[T]\column{.54\textwidth}
   \centering\scriptsize
   \begin{tabular}{lrrrrr}
@@ -1179,7 +1179,7 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}{Backup: proton-tagged cut-flow --- combined (full exposure)}
+\begin{frame}{Backup: proton-tagged cut-flow, combined (full exposure)}
   \begin{columns}[T]\column{.54\textwidth}
   \centering\scriptsize
   \begin{tabular}{lrrrrr}
@@ -1233,14 +1233,14 @@
   {\scriptsize Bin-averaged fractional uncertainty [\%]. Flux dominates throughout.}
 \end{frame}
 
-\begin{frame}{Backup: history --- the superseded pion-momentum estimator}
+\begin{frame}{Backup: history; the superseded pion-momentum estimator}
   \footnotesize
   An earlier version of this analysis reconstructed the \alert{pion} momentum from the
   \alert{proton-hypothesis range kinetic energy} (\texttt{trk\_energy\_proton\_v}) rather
   than the muon-hypothesis range momentum used now.
   \begin{itemize}\setlength\itemsep{2pt}
     \item That is a \alert{kinetic energy}, while the true axis it was binned against
-      (with identical bin edges) is a \alert{momentum} --- two different physical
+      (with identical bin edges) is a \alert{momentum}, two different physical
       quantities.
     \item Consequence: the migration matrix was \alert{systematically shifted} rather than
       near-diagonal. A true $0.2$~GeV/$c$ pion gives $KE\approx0.104$~GeV, \alert{two bins
@@ -1251,7 +1251,7 @@
   \end{itemize}
   \vspace{1mm}
   {\scriptsize Note: the proton-hypothesis range KE remains the \emph{correct} estimator
-  for the \alert{proton} in the W/TKI subsample --- there the quantity wanted really is a
+  for the \alert{proton} in the W/TKI subsample; there the quantity wanted really is a
   kinetic energy, converted to momentum via $|\vec p_p|=\sqrt{T_p^2+2T_pm_p}$.\\[1mm]
   Resolution panels produced before the switch quote a $\sim\!21\%$ underestimate of
   $p_\pi$; they are to be regenerated with the current estimator.}
@@ -1318,13 +1318,13 @@
   $0.41$--$0.58$, just below the FHC band as expected for the $\bar\nu_\mu$-enriched flux.
   Combined in production.}\\[1mm]
   {\scriptsize\textbf{$A_C$ smearing factor} (smeared/truth): $W_\mathrm{had}$ 0.88,
-  $W_{\pi p}$ 0.78 (sharpest distribution, yet barely affected --- \alert{no $W$
+  $W_{\pi p}$ 0.78 (sharpest distribution, yet barely affected, \alert{no $W$
   reparameterisation needed}), $\delta\alpha_T$ 0.63, $\delta\phi_T$ 0.61,
   \alert{$\delta p_T$ 0.43}, \alert{$p_n$ 1.71 (enhanced)}. The last two distort model
   comparison in those panels.}
 \end{frame}
 
-\begin{frame}{Backup: $\chi^2/\mathrm{ndf}$ --- inclusive, all observables and beams}
+\begin{frame}{Backup: $\chi^2/\mathrm{ndf}$, inclusive, all observables and beams}
   \centering\scriptsize
   Unfolded fake data compared with each $A_C$-smeared prediction.
   \begin{tabular}{llcccccc}
@@ -1348,7 +1348,7 @@
   \bottomrule
   \end{tabular}\\[1mm]
   {\scriptsize The small \emph{truth} column is the closure. RHC closure is visibly worse
-  than FHC. The $\cos\theta_\mu$ row is an outlier for NEUT/NuWro --- see next slide.}
+  than FHC. The $\cos\theta_\mu$ row is an outlier for NEUT/NuWro, see next slide.}
 \end{frame}
 
 \begin{frame}{Backup: the $\cos\theta_\mu$ $\chi^2$ is largely an $A_C$ artefact}
@@ -1373,11 +1373,11 @@
   the data and $\chi^2$ explodes. In $\theta_\mu$, where the suppression is $\times0.76$,
   the \alert{same models agree well} ($\chi^2$ falls by $\sim9\times$). The $\pi$ angle,
   never sharply peaked, is unchanged. \alert{The large $\cos\theta_\mu$ $\chi^2$ is
-  therefore mostly a variable-choice artefact, not model disagreement} --- a further
+  therefore mostly a variable-choice artefact, not model disagreement}; a further
   argument for quoting $\theta$ rather than $\cos\theta$.}
 \end{frame}
 
-\begin{frame}{Backup: $\chi^2/\mathrm{ndf}$ --- proton-tagged (FHC)}
+\begin{frame}{Backup: $\chi^2/\mathrm{ndf}$, proton-tagged (FHC)}
   \centering\scriptsize
   \begin{tabular}{lcccccc|c}
   \toprule
@@ -1395,7 +1395,7 @@
   0.57,0.71$ against generator $\chi^2\simeq1.2,1.0,3.3,6.2,9.4,17$. The two observables
   $A_C$ barely touches ($W_\mathrm{had}$, $W_{\pi p}$) agree with \alert{all four}
   generators; the two it distorts most ($\delta p_T$ suppressed to $0.43$, $p_n$
-  \emph{enhanced} to $1.71$) show the largest $\chi^2$ --- in the same direction for every
+  \emph{enhanced} to $1.71$) show the largest $\chi^2$; in the same direction for every
   model. \alert{This is the signature of a smearing artefact, not model discrimination},
   the same effect seen in $\cos\theta_\mu$. The closure (truth column) is excellent
   throughout.}
