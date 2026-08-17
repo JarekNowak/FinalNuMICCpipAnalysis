@@ -2170,10 +2170,24 @@ $>+0.15$  & $15.2\%$ & $84.5\%$ & 99.2 & 46.9 & 42.2 & 36.1 & 19.5 \\\midrule
 \end{tabular}
 \end{table}
 
-The last row is the decisive one. Selecting golden pions \emph{perfectly}, using the truth
-label itself, still gives diagonals of $36.1, 24.1, 14.2$ and $8.9\%$ in bins 2--5. No
-classifier can beat that, so no golden-pion selection --- ours or a better one --- will make
-the present $p_\pi$ binning meet the BNB criterion.
+The last row is the decisive one, and it must be read against the \emph{efficiency} column
+rather than against the tightest cut. Perfect truth-level golden selection keeps $43.1\%$ of
+tracks and gives $36.1, 24.1, 14.2, 8.9\%$ in bins 2--5; the classifier at the matching
+$44.8\%$ efficiency gives $33.1, 24.5, 15.4, 9.1\%$. They agree bin by bin. The classifier
+is therefore already performing as well as perfect knowledge of which pions stopped, and no
+better classifier exists to be built.
+
+\paragraph{A caveat on the tighter working points.} The $>0.15$ row looks better than
+perfect truth selection ($46.9, 42.2, 36.1, 19.5\%$), which is impossible for an honest
+classifier and is worth understanding rather than quoting. It arises because a hard cut on
+the classifier preferentially keeps \emph{long} tracks: inside the top true bin, the surviving
+tracks have a mean length of $120.8$~cm against $78.2$~cm for all pions, and a mean
+reconstructed momentum of $0.406$ against $0.307$~GeV/$c$. The cut is thus partly a cut on
+the reconstructed momentum itself, which raises the diagonal by construction while sculpting
+the spectrum. The apparent gain is circular and the tight working points should not be used.
+This is the same failure mode anticipated for track length as a direct input; it enters here
+through the deflection variables, which correlate with length, even though length itself was
+excluded from training.
 
 \paragraph{Why, and what is left.} Golden pions still reconstruct at
 $\langle p^{\rm corr}/p^{\rm true}\rangle = 0.73$ on this sample. Interaction is therefore

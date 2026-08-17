@@ -292,15 +292,17 @@
   \begin{columns}[T]\column{.44\textwidth}
   \centering\scriptsize
   \textbf{\% landing in the \emph{correct} momentum bin}\\[1mm]
-  \begin{tabular}{lccccc}
+  \begin{tabular}{lcccccc}
   \toprule
-   & \multicolumn{5}{c}{true momentum, low $\to$ high}\\\midrule
-  all pions            & 99 & 24 & 13 & 6 & 6\\
-  keep the cleanest    & 99 & 47 & 42 & 36 & 20\\
-  \alert{cheating: use truth} & 99 & \alert{36} & \alert{24} & \alert{14} & \alert{9}\\
+   & keep & \multicolumn{5}{c}{true momentum, low $\to$ high}\\\midrule
+  all pions                   & 100\% & 99 & 24 & 13 & 6 & 6\\
+  classifier                  & 45\%  & 99 & 33 & 25 & 15 & 9\\
+  \alert{cheating: use truth} & 43\%  & 99 & \alert{36} & \alert{24} & \alert{14} & \alert{9}\\
   \bottomrule
   \end{tabular}\\[1mm]
-  {\tiny Normally a bin is usable above $68\%$. \alert{Only the first qualifies.}}
+  {\tiny Normally a bin is usable above $68\%$. \alert{Only the first qualifies.}
+   Compared at \alert{equal} fraction kept, the classifier already does as well as
+   perfect knowledge --- it is not the weak link.}
   \column{.56\textwidth}
   \begin{itemize}\scriptsize\setlength\itemsep{5pt}
     \item Momentum comes from \alert{how far the particle travels} --- fine for muons,
@@ -309,8 +311,8 @@
       early and we read \alert{too little momentum}. Faster pion, sooner it happens.
     \item We tried keeping only pions that \alert{did stop cleanly}, spotted from the track
       shape by a machine-learning classifier --- as good as the published BNB one.
-    \item \alert{Still not enough}: even \alert{cheating} with simulation truth barely
-      helps, so no classifier can rescue this.
+    \item \alert{Still not enough}: at equal fraction kept, \alert{cheating} with truth
+      does no better --- the classifier is already at the ceiling.
   \end{itemize}
   \end{columns}
   \vspace{1mm}
