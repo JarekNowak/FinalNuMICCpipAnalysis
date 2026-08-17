@@ -359,6 +359,49 @@
   \end{columns}
 \end{frame}
 
+\begin{frame}{The same result, drawn}
+  \centering
+  \begin{columns}[T]
+    \column{.333\textwidth}\centering\includegraphics[width=\textwidth]{ppi2bin_xsec_FHC}
+    \column{.333\textwidth}\centering\includegraphics[width=\textwidth]{ppi2bin_xsec_RHC}
+    \column{.333\textwidth}\centering\includegraphics[width=\textwidth]{ppi2bin_xsec_COMB}
+  \end{columns}
+  \vspace{2mm}
+  \begin{itemize}\small\setlength\itemsep{3pt}
+    \item Data (points, full systematics) against \alert{$A_C$-smeared} truth, tune and the
+      four generators, so everything is compared in the same space.
+    \item \alert{Bins drawn equal-width for legibility} -- they are $0.030$ and
+      $0.795$~GeV/$c$ wide, so to scale the first would be $4\%$ of the axis. Area is
+      therefore \alert{not} proportional to cross section; $\sigma_\mathrm{int}$ is printed
+      on each panel instead.
+    \item The uncertainty on bin~1 is large ($42$--$53\%$ depending on beam, against
+      $29$--$34\%$ on bin~2): it is a $30$~MeV/$c$ slice, and that is the price of a bin
+      narrow enough to be resolved.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Why the truth curves are smeared before comparison}
+  \centering
+  \begin{columns}[T]
+    \column{.31\textwidth}\centering\includegraphics[width=\textwidth]{ppi2bin_AC_FHC}
+    \column{.31\textwidth}\centering\includegraphics[width=\textwidth]{ppi2bin_AC_RHC}
+    \column{.31\textwidth}\centering\includegraphics[width=\textwidth]{ppi2bin_AC_COMB}
+  \end{columns}
+  \vspace{2mm}
+  \begin{itemize}\small\setlength\itemsep{3pt}
+    \item Wiener--SVD returns $\hat{x} = A_C t$, not $t$: the measurement is a
+      \alert{smeared} version of the truth, so any prediction must be passed through $A_C$
+      before it can be compared with it.
+    \item $A_C$ is \alert{not normalisation-preserving} -- rows do not sum to one -- and the
+      negative entry (true bin~1 into smeared bin~2) is the regularisation
+      \alert{borrowing between the two bins}: they are not independent even after merging.
+    \item FHC and RHC regularise similarly (diagonal $0.50$, $0.47$); the \alert{combined
+      fit borrows appreciably more} (diagonal $0.34$, off-diagonal $-0.53$). Despite that,
+      unfolded/truth is $1.13$ in all three -- the offset is a normalisation effect and does
+      not track how hard $A_C$ smears.
+  \end{itemize}
+\end{frame}
+
 \begin{frame}{Inclusive cut-flow, FHC (full exposure)}
   \begin{columns}[T]\column{.54\textwidth}
   \centering\scriptsize

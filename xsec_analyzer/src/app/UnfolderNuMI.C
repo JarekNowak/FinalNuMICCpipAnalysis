@@ -730,9 +730,13 @@ void UnfolderNuMI(std::string XSEC_Config, std::string SLICE_Config, std::string
           int nac = static_cast<int>( ac_stop - ac_start + 1 );
           TH2D h_ac( "h_A_C", "Additional smearing matrix A_{C};true bin;smeared bin",
             nac, 0., nac, nac, 0., nac );
+          // A_C is row-major: out_i = sum_j A_C(i,j) t_j, so i is the SMEARED index and j
+          // the TRUE one. TH2D::SetBinContent takes (binx, biny), so the true index must
+          // go first to match the axis titles above and the migration-matrix convention
+          // used elsewhere in the analysis (x = true, y = smeared).
           for ( int i = 0; i < nac; ++i ) {
             for ( int j = 0; j < nac; ++j ) {
-              h_ac.SetBinContent( i + 1, j + 1,
+              h_ac.SetBinContent( j + 1, i + 1,
                 A_C_full( ac_start + i, ac_start + j ) );
             }
           }
