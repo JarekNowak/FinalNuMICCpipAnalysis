@@ -14,9 +14,37 @@
 // jumps between slides.
 //   usage: root -l -b -q 'macros/dsigma_build.C("FHC5")'
 #include <vector>
+
+// Remap a two-bin p_pi histogram onto an equal-width axis. The adopted bins are
+// [0.175,0.205] and everything above, i.e. 0.030 against 0.795 GeV/c: drawn to scale the
+// first is 4% of the axis and collapses into an invisible spike that also sets the y-range,
+// leaving the panel looking empty. Equal width keeps both bins readable; the cost is that
+// area is no longer proportional to cross section, which the slide text states.
+TH1D* eq2bin( TH1D* h ) {
+  if ( !h ) return nullptr;
+  static int uid = 0;
+  int n = h->GetNbinsX();
+  TH1D* nh = new TH1D( Form("eq2_%d", uid++), h->GetTitle(), n, 0., n );
+  nh->SetDirectory( 0 );
+  for ( int i = 1; i <= n; ++i ) {
+    nh->SetBinContent( i, h->GetBinContent(i) );
+    nh->SetBinError  ( i, h->GetBinError(i)   );
+  }
+  nh->SetLineColor( h->GetLineColor() );   nh->SetLineStyle( h->GetLineStyle() );
+  nh->SetLineWidth( h->GetLineWidth() );   nh->SetMarkerColor( h->GetMarkerColor() );
+  nh->SetMarkerStyle( h->GetMarkerStyle() ); nh->SetMarkerSize( h->GetMarkerSize() );
+  nh->GetXaxis()->SetBinLabel( 1, "0.175-0.205" );
+  nh->GetXaxis()->SetBinLabel( 2, "> 0.205" );
+  nh->GetXaxis()->SetLabelSize( 0.058 );
+  return nh;
+}
+
 void dsigma_build(const char* cfg = "FHC5") {
   const char* PROC = "/data/uboone/processed/";
   const char* obs[6]  = {"pmu","ppi","costhmu","costhpi","thmupi","thetamu"};
+  // p_pi is read from the ADOPTED two-bin extraction; the five-bin version is
+  // superseded (only its lowest bin cleared the 0.68 smearing-diagonal criterion).
+  const char* src[6]    = {"pmu","ppi2bin","costhmu","costhpi","thmupi","thetamu"};
   const char* obsX[6] = {"p_{#mu} [GeV/c]","p_{#pi} [GeV/c]","cos#theta_{#mu}",
                          "cos#theta_{#pi}","#theta_{#mu#pi} [rad]","#theta_{#mu} [rad]"};
   const char* gens[4]   = {"h_gen_GENIE","h_gen_GiBUU","h_gen_NEUT","h_gen_NuWro"};
@@ -47,7 +75,7 @@ void dsigma_build(const char* cfg = "FHC5") {
     for (int o = 0; o < 6; ++o) {
       c.cd(o+1);
       gPad->SetBottomMargin(0.15); gPad->SetLeftMargin(0.16); gPad->SetTopMargin(0.08);
-      TFile* f = TFile::Open(Form("%sclosure_hists_xsec_%s_%s.root", PROC, cfg, obs[o]));
+      TFile* f = TFile::Open(Form("%sclosure_hists_xsec_%s_%s.root", PROC, cfg, src[o]));
       if (!f || f->IsZombie()) { printf("  missing %s %s\n",cfg,obs[o]); continue; }
       TH1D* hdat = (TH1D*)f->Get("h_unfolded_nuwro");
       TH1D* htru = (TH1D*)f->Get("h_fakedata_truth");
@@ -65,6 +93,13 @@ void dsigma_build(const char* cfg = "FHC5") {
         h->SetMarkerSize(0); gh.push_back(h); keep.push_back(h);
       }
       f->Close();
+
+      if ( std::string(src[o]) == "ppi2bin" ) {
+        hdat = eq2bin(hdat); htru = eq2bin(htru); if (htun) htun = eq2bin(htun);
+        for (auto& h : gh) h = eq2bin(h);
+        keep.push_back(hdat); keep.push_back(htru); if (htun) keep.push_back(htun);
+        for (auto h : gh) if (h) keep.push_back(h);
+      }
 
       // Fixed y-range from ALL curves so the axes never move between build steps
       double ymax = 0.;
