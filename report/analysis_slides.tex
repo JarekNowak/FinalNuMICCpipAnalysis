@@ -273,6 +273,48 @@
   \end{columns}
 \end{frame}
 
+\begin{frame}{Why $p_\pi$ is being withdrawn from the inclusive selection}
+  \centering
+  \begin{columns}[T]
+  \column{.34\textwidth}\centering
+    \includegraphics[height=.30\textheight]{ppi_saturation}\\
+    {\tiny reco \alert{saturates} at $\approx0.34$~GeV/$c$}
+  \column{.32\textwidth}\centering
+    \includegraphics[height=.30\textheight]{resolution_ppi}\\
+    {\tiny bias $-31\%$: $-2\%$ at threshold, $-65\%$ above $0.8$}
+  \column{.30\textwidth}\centering
+    \includegraphics[height=.30\textheight]{fw_resp_ppi}\\
+    {\tiny every true bin piles into \alert{reco bin 1}}
+  \end{columns}
+  \vspace{2mm}
+  \begin{columns}[T]\column{.46\textwidth}
+  \centering\scriptsize
+  \begin{tabular}{lccccc}
+  \toprule
+  migration diagonal & b1 & b2 & b3 & b4 & b5\\\midrule
+  no cut             & 99 & 24 & 13 & 6 & 6\\
+  golden BDT $>0$    & 99 & 33 & 25 & 15 & 9\\
+  golden BDT $>0.15$ & 99 & 47 & 42 & 36 & 20\\
+  \alert{perfect (truth) golden} & 99 & \alert{36} & \alert{24} & \alert{14} & \alert{9}\\
+  \bottomrule
+  \end{tabular}\\[1.5mm]
+  {\tiny usable-bin criterion (BNB CC$1\pi$): diagonal $>68\%$ $\Rightarrow$ \alert{1 of 5 passes}}
+  \column{.54\textwidth}
+  \begin{itemize}\scriptsize\setlength\itemsep{3pt}
+    \item \alert{Physical cause}: pions interact before stopping, so the track ends at the
+      interaction point and \alert{range-based} momentum saturates. (The $\mu$-hypothesis
+      mass error is a separate $\sim\!18\%$ and \alert{is} already corrected.)
+    \item \alert{Golden-pion BDT trained} --- wiggliness $+$ Bragg $+$ track score $+$
+      daughters, ROC $0.758$. Matches the BNB classifier: $43\!\to\!65\%$ golden at $45\%$
+      efficiency vs their $36\!\to\!68\%$ at $47\%$.
+    \item \alert{Still not enough}: a \alert{perfect} truth-level golden selection leaves
+      bins 2--5 at $36/24/14/9\%$ --- no classifier beats its own label.
+    \item $\Rightarrow$ quote $p_\pi$ on the \alert{golden-enhanced / proton-tagged} samples.
+      Proton-tagged \alert{not yet quantified}. All other observables unaffected.
+  \end{itemize}
+  \end{columns}
+\end{frame}
+
 \begin{frame}{Inclusive cut-flow --- FHC (full exposure)}
   \begin{columns}[T]\column{.54\textwidth}
   \centering\scriptsize
