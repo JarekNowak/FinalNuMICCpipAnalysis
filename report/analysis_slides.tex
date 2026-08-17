@@ -306,7 +306,7 @@
   {\tiny A bin is normally called usable above $68\%$. Merging cannot create resolution,
    it stops us quoting five numbers when we have about one and a half.
    \alert{Three} bins was tested and is \alert{worse} ($97/38/39$).\\[1mm]
-   \textbf{FHC closure} $\chi^2=\alert{0.15/2}$ (was $1.96/5$); result overleaf.}
+   \textbf{Closure} $\chi^2=\alert{0.15/2}$ FHC (was $1.96/5$); all three beams overleaf.}
   \column{.56\textwidth}
   \begin{itemize}\scriptsize\setlength\itemsep{5pt}
     \item Momentum comes from \alert{how far the particle travels}, fine for muons,
@@ -324,36 +324,37 @@
    \alert{meaningful}, \alert{everything else we measure is unaffected}.}
 \end{frame}
 
-\begin{frame}{The rebinned pion-momentum result (FHC)}
+\begin{frame}{The rebinned pion-momentum result: all three beams}
   \centering
-  \begin{columns}[T]\column{.52\textwidth}
-  \centering\small
-  \textbf{$d\sigma/dp_\pi$ [$10^{-38}$cm$^2$/(GeV/$c$)/Ar]}\\[1.5mm]
-  \begin{tabular}{lccc}
+  \begin{columns}[T]\column{.56\textwidth}
+  \centering\scriptsize
+  \textbf{$d\sigma/dp_\pi$ [$10^{-38}$cm$^2$/(GeV/$c$)/Ar]}\\[1mm]
+  \begin{tabular}{lcc|cc|cc}
   \toprule
-   & bin 1 & bin 2 & $\sigma_\mathrm{int}$\\
-   & \tiny$0.175$--$0.205$ & \tiny$>0.205$ & \\\midrule
-  \alert{unfolded data} & \alert{$2.81\pm1.17$} & \alert{$1.12\pm0.35$} & \alert{$0.98$}\\
-  truth ($A_C$)         & $2.46$ & $1.00$ & $0.87$\\
-  uB tune               & $1.75$ & $0.86$ & $0.74$\\\midrule
-  GENIE & $1.39$ & $0.69$ & $0.59$\\
-  GiBUU & $2.23$ & $0.87$ & $0.76$\\
-  NEUT  & $2.30$ & $1.09$ & $0.93$\\
-  NuWro & $2.21$ & $1.03$ & $0.88$\\
+   & \multicolumn{2}{c|}{FHC} & \multicolumn{2}{c|}{RHC} & \multicolumn{2}{c}{Comb}\\
+   & b1 & b2 & b1 & b2 & b1 & b2\\\midrule
+  \alert{data} & \alert{2.81} & \alert{1.12} & \alert{2.03} & \alert{1.04} & \alert{2.29} & \alert{1.05}\\
+  truth        & 2.46 & 1.00 & 2.04 & 0.91 & 2.11 & 0.92\\
+  uB tune      & 1.75 & 0.86 & 1.38 & 0.80 & 1.50 & 0.79\\\midrule
+  GENIE & 1.39 & 0.69 & 1.02 & 0.57 & 1.14 & 0.59\\
+  GiBUU & 2.23 & 0.87 & 1.67 & 0.73 & 1.66 & 0.75\\
+  NEUT  & 2.30 & 1.09 & 1.74 & 0.92 & 1.87 & 0.95\\
+  NuWro & 2.21 & 1.03 & 1.64 & 0.86 & 1.77 & 0.89\\\midrule
+  $\sigma_\mathrm{int}$ & \multicolumn{2}{c|}{\alert{0.976}} & \multicolumn{2}{c|}{\alert{0.887}} & \multicolumn{2}{c}{\alert{0.903}}\\
+  $\chi^2/2$ & \multicolumn{2}{c|}{0.15} & \multicolumn{2}{c|}{0.24} & \multicolumn{2}{c}{0.13}\\
   \bottomrule
-  \end{tabular}
-  \column{.48\textwidth}
+  \end{tabular}\\[1mm]
+  {\tiny b1 $=[0.175,0.205]$, b2 $=$ everything above. All curves $A_C$-smeared.}
+  \column{.44\textwidth}
   \begin{itemize}\small\setlength\itemsep{5pt}
-    \item \alert{Closes well}: $\chi^2=0.15/2$ ($p=0.93$), against $1.96/5$ for the old
-      five-bin scheme.
-    \item $\sigma_\mathrm{int}$ moves only $0.964\!\to\!0.976$, \alert{rebinning changed
-      how finely we report, not what we measured}.
-    \item All four generators \alert{bracket the data} in both bins
-      ($0.59$--$0.93$ vs $0.98$), NEUT closest, GENIE lowest; the \alert{same ordering
-      as every other observable}.
-    \item Generator curves use the \alert{corrected} predictions: the old ones truncated
-      the $p_\pi$ tail at $1$~GeV/$c$ and were $\sim\!8\%$ low.
-    \item Still to come: \alert{RHC and combined} at this binning.
+    \item \alert{All three close well}: $\chi^2 = 0.15$, $0.24$, $0.13$ on two bins
+      ($p\ge0.89$), against $1.96/5$ for the old FHC five-bin scheme.
+    \item Unfolded/truth is \alert{1.13 in all three} beams, the usual Wiener-SVD offset,
+      now \alert{identical across beams} where the five-bin scheme was not.
+    \item Generators \alert{bracket the data everywhere}, NEUT closest, GENIE lowest, so
+      the ordering is stable against beam \alert{and} binning.
+    \item Predictions use the \alert{corrected} FTE files; the old ones truncated the
+      $p_\pi$ tail and were $\sim\!8\%$ low.
   \end{itemize}
   \end{columns}
 \end{frame}
