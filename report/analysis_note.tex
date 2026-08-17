@@ -2420,11 +2420,52 @@ misrepresent how well it is measured. The other inclusive observables are unaffe
 angular variables and $p_\mu$ retain their shape information, and the total cross section
 does not use this estimator at all.
 
-This is stated as intent rather than as a completed study. The golden-pion route is
-quantified above. The proton-tagged route is not yet: requiring a tagged proton changes the
-phase space and the purity but does nothing directly to the pion reconstruction, so whether
-it improves the $p_\pi$ response is an open question that needs the same migration-diagonal
-test applied to the \texttt{CC1mu1pi1p} sample before either option is adopted.
+\paragraph{The proton-tagged route, now measured.} Both routes have now been quantified. The
+golden-pion route is above; the proton-tagged one was run for FHC, and the expectation
+stated in earlier drafts, that requiring a tagged proton ``does nothing directly to the pion
+reconstruction'', is \emph{contradicted by the measurement}. Applying the same
+migration-diagonal test to the \texttt{CC1mu1pi1p} sample at the same two-bin edges gives
+
+\begin{center}\small
+\begin{tabular}{lccc}
+\toprule
+selection & bin 1 $[0.175,0.205]$ & bin 2 ($>0.205$) & both $>0.68$? \\\midrule
+inclusive \texttt{CC1mu1piXp} & $97\%$ & $62\%$ & no \\
+\textbf{proton-tagged} \texttt{CC1mu1pi1p} & $\mathbf{88.9\%}$ & $\mathbf{74.2\%}$ & \textbf{yes} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent measured on the four FHC \texttt{numuMC} overlays (Runs 1, 2, 4, 5), selected
+signal, with the reconstructed momentum mass-corrected exactly as the bin config does it.
+The upper bin improves from $62\%$ to $74\%$ and clears the criterion, which the inclusive
+selection never does at any binning we tried. Requiring a reconstructed proton evidently
+selects events whose pion is better reconstructed, rather than merely trading purity for
+efficiency; the proton-tagged sample is biased toward lower hadronic activity, and the
+pion in such events is more likely to range out than to interact.
+
+The proton-tagged extraction closes cleanly. With $\sigma_\mathrm{int} = 0.575$ and
+$\chi^2 = 0.15/2$ ($p = 0.93$), the unfolded fake data are $1.676\pm1.156$ and
+$0.660\pm0.234$ against an $A_C$-smeared truth of $1.590$ and $0.571$, i.e.\ ratios of
+$1.05$ and $1.16$ (Fig.~\ref{fig:ppi2bin_1p}). This is the first configuration in which the
+$p_\pi$ differential cross section satisfies the field's binning criterion in \emph{every}
+bin, so it, and not the inclusive selection, is where the measurement should be quoted.
+
+\begin{figure}[htbp]\centering
+  \includegraphics[width=0.52\textwidth]{ppi2bin_xsec_1p_FHC}
+  \caption{The two-bin $p_\pi$ cross section on the proton-tagged \texttt{CC1mu1pi1p}
+    selection, FHC. Same edges as the inclusive result of Fig.~\ref{fig:ppi2bin_xsec} so the
+    two are directly comparable, and the bins are again drawn equal-width. No generator
+    curves appear because the proton-tagged \texttt{xsec} config declares only the tune and
+    the fake data.}
+  \label{fig:ppi2bin_1p}
+\end{figure}
+
+\noindent Two caveats. Only FHC has been run; RHC and the combined exposure each need their
+own universe construction before the change of scope can be completed. And the split at
+$0.205$ was inherited from the inclusive optimisation rather than re-derived for this
+selection, so it is a working point that passes, not necessarily the best one available
+here.
 
 \subsection{Model comparison: $\chi^2$ against truth, tune and generators}
 \label{sec:chi2}

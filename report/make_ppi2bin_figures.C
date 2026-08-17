@@ -161,6 +161,58 @@ void make_ppi2bin_figures() {
     
   }
 
+
+  // ---- proton-tagged (CC1mu1pi1p) two-bin p_pi, FHC ------------------------------
+  // Same scheme and same edges as the inclusive result, so the two are directly
+  // comparable. This closure file carries no generator curves: the ccpi1p xsec config
+  // declares only the tune and the fake data.
+  {
+    TFile* f = TFile::Open(
+      "/data/uboone/processed/closure_hists_xsec_ccpi1p_FHC5_ppi2bin.root" );
+    if ( f && !f->IsZombie() ) {
+      TH1D* hdat = equalise( (TH1D*) f->Get("h_unfolded_nuwro"), "dat_1p" );
+      TH1D* htru = equalise( (TH1D*) f->Get("h_fakedata_truth"), "tru_1p" );
+      TH1D* htun = equalise( (TH1D*) f->Get("h_genie_tune"),     "tun_1p" );
+      f->Close();
+
+      hdat->SetMarkerStyle( 20 ); hdat->SetMarkerSize( 1.3 );
+      hdat->SetLineColor( kBlack ); hdat->SetLineWidth( 2 ); hdat->SetMarkerColor( kBlack );
+      htru->SetLineColor( kRed+1 );  htru->SetLineWidth( 3 );
+      htun->SetLineColor( kBlue+1 ); htun->SetLineWidth( 3 ); htun->SetLineStyle( 2 );
+
+      double ymax = hdat->GetBinContent(1) + hdat->GetBinError(1);
+      ymax = std::max( ymax, htru->GetBinContent(1) );
+
+      TCanvas cv( "c_1p", "", 640, 560 );
+      cv.SetLeftMargin( 0.16 ); cv.SetBottomMargin( 0.14 ); cv.SetTopMargin( 0.05 );
+      hdat->SetTitle( ";p_{#pi} [GeV/c];"
+                      "d#sigma/dp_{#pi} [10^{-38} cm^{2}/(GeV/c)/Ar]" );
+      hdat->GetYaxis()->SetTitleSize( 0.052 ); hdat->GetYaxis()->SetTitleOffset( 1.30 );
+      hdat->GetXaxis()->SetTitleSize( 0.052 ); hdat->GetYaxis()->SetLabelSize( 0.048 );
+      hdat->GetYaxis()->SetRangeUser( 0., 1.32*ymax );
+      hdat->Draw( "E1" );
+      htru->Draw( "hist same" ); htun->Draw( "hist same" );
+      hdat->Draw( "E1 same" );
+
+      TLegend lg( 0.58, 0.71, 0.96, 0.93 );
+      lg.SetBorderSize( 0 ); lg.SetFillStyle( 0 ); lg.SetTextSize( 0.040 );
+      lg.AddEntry( hdat, "unfolded data", "lep" );
+      lg.AddEntry( htru, "A_{C} truth", "l" );
+      lg.AddEntry( htun, "uB tune", "l" );
+      lg.Draw();
+
+      TLatex tx; tx.SetNDC(); tx.SetTextSize( 0.044 );
+      tx.DrawLatex( 0.19, 0.888, "#bf{Proton-tagged, FHC}" );
+      tx.SetTextSize( 0.042 );
+      tx.DrawLatex( 0.19, 0.825, "#sigma_{int} = 0.575" );
+      tx.DrawLatex( 0.19, 0.768, "#chi^{2}/ndf = 0.15/2" );
+      tx.DrawLatex( 0.19, 0.711, "p = 0.93" );
+      tx.DrawLatex( 0.19, 0.654, "diagonals 89 / 74%" );
+
+      cv.SaveAs( Form("%sppi2bin_xsec_1p_FHC.eps", FIG) );
+    }
+  }
+
   // Convert to tight PDFs so that an \includegraphics width in the note sizes the plot
   // rather than the surrounding whitespace.
   gSystem->Exec( Form("report/eps2pdf.sh %sppi2bin_*.eps", FIG) );
