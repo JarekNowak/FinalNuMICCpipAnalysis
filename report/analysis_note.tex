@@ -2129,6 +2129,77 @@ production change. None changes
 the total or angular results, which do not use this estimator. The first is worth doing
 before the $p_\pi$ spectrum is quoted as a shape measurement.
 
+\subsubsection*{A golden-pion classifier was trained and tested: it works, and it is not enough}
+
+Following the BNB recipe, a golden-pion BDT was trained and evaluated
+(\texttt{macros/golden\_pion\_train.C}, \texttt{macros/golden\_pion\_compare.C}). The truth
+label is \texttt{mc\_end\_p} $<0.01$~GeV/$c$ --- the pion ranged out --- joined to
+reconstruction by matching \texttt{backtracked\_p} to \texttt{mc\_p}, which pairs $100\%$ of
+candidate tracks with no ambiguity. The inputs are the three deflection variables, the four
+Bragg likelihood ratios, the track--shower score and the descendant count. Training used
+$126\,518$ labelled tracks from Runs 1, 2 and 4; the split is by \emph{run}, so all numbers
+below are on Run 2, which the classifier never saw.
+
+\paragraph{As a classifier it reproduces the BNB benchmark.} ROC integral $0.758$. At
+$44.8\%$ efficiency it lifts the golden fraction from $43.1\%$ to $64.9\%$, against the BNB's
+$36.3\to67.7\%$ at roughly $47\%$ efficiency. The variable ranking is dominated by the
+deflection variables (\texttt{wmean}, then \texttt{wstd}), with the Bragg ratios contributing
+essentially nothing --- worth noting, since Bragg was expected to carry the stopping
+signature.
+
+\paragraph{But it does not fix the binning, and cannot.} Table~\ref{tab:golden_compare}
+gives the migration diagonal in the five analysis bins as the cut is tightened. The first bin
+is already fine and stays fine; no other bin reaches $0.68$ at any working point, even at
+$15\%$ efficiency.
+
+\begin{table}[htbp]\centering
+\caption{Golden-pion BDT: efficiency, achieved golden fraction, and the $p_\pi$ migration
+  diagonal per true bin, on the held-out run. The BNB criterion for a usable bin is a
+  diagonal above $0.68$.}
+\label{tab:golden_compare}
+\begin{tabular}{lccccccc}
+\toprule
+BDT cut & eff. & golden frac. & b1 & b2 & b3 & b4 & b5 \\\midrule
+none      & $100\%$  & $43.1\%$ & 99.2 & 23.7 & 13.2 & 6.4 & 5.5 \\
+$>-0.05$  & $57.0\%$ & $58.1\%$ & 99.1 & 29.4 & 19.7 & 11.2 & 7.1 \\
+$>0.00$   & $44.8\%$ & $64.9\%$ & 99.1 & 33.1 & 24.5 & 15.4 & 9.1 \\
+$>+0.10$  & $24.6\%$ & $79.4\%$ & 99.1 & 42.9 & 36.8 & 29.3 & 15.7 \\
+$>+0.15$  & $15.2\%$ & $84.5\%$ & 99.2 & 46.9 & 42.2 & 36.1 & 19.5 \\\midrule
+\multicolumn{3}{l}{\emph{perfect (truth) golden selection}} & 98.9 & 36.1 & 24.1 & 14.2 & 8.9 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The last row is the decisive one. Selecting golden pions \emph{perfectly}, using the truth
+label itself, still gives diagonals of $36.1, 24.1, 14.2$ and $8.9\%$ in bins 2--5. No
+classifier can beat that, so no golden-pion selection --- ours or a better one --- will make
+the present $p_\pi$ binning meet the BNB criterion.
+
+\paragraph{Why, and what is left.} Golden pions still reconstruct at
+$\langle p^{\rm corr}/p^{\rm true}\rangle = 0.73$ on this sample. Interaction is therefore
+not the only problem: the momentum conversion is itself biased. A single flat rescaling does
+\emph{not} repair it --- applying the best global factor drops the first bin from $98.9$ to
+$49.1\%$ and leaves $0/5$ bins passing --- because the bias is momentum-dependent, exactly as
+the saturation curve of Figure~\ref{fig:ppi_sat} shows.
+
+Coarser binning helps but does not rescue it either. Collapsing to two bins ($0.175$,
+$0.230$, $\infty$) gives $98.7$ and $58.3\%$ with perfect golden selection: better, still
+short of $0.68$. Only a single bin --- that is, no differential measurement at all ---
+trivially passes.
+
+\paragraph{Conclusion.} The comparison is worth stating plainly rather than filing as a
+partial success. The classifier does what it was built to do and matches the published
+benchmark, but the $p_\pi$ differential measurement above $\sim\!0.23$~GeV/$c$ cannot be made
+to meet the BNB's own binning criterion with a range-based estimator, with or without a
+golden-pion cut. The BNB analysis passes that criterion because its resolved bins
+($0.10$--$0.16$, $0.16$--$0.19$, $0.19$--$0.22$) all sit \emph{below} our $0.175$~GeV/$c$
+threshold, in the region where range still tracks momentum; above $0.22$ it uses a single
+wide bin and an overflow. The realistic options for this analysis are therefore to lower the
+pion threshold toward $0.10$~GeV/$c$ and resolve the region where the estimator works, to
+adopt a two-bin-plus-overflow $p_\pi$ result and say so, or to replace the range-based
+estimator altogether. The golden-pion BDT is a useful ingredient in any of those, but it is
+not by itself the fix.
+
 \subsection{Model comparison: $\chi^2$ against truth, tune and generators}
 \label{sec:chi2}
 
