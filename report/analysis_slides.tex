@@ -292,17 +292,20 @@
   \begin{columns}[T]\column{.44\textwidth}
   \centering\scriptsize
   \textbf{\% landing in the \emph{correct} momentum bin}\\[1mm]
-  \begin{tabular}{lcccccc}
+  \begin{tabular}{lccccc}
   \toprule
-   & keep & \multicolumn{5}{c}{true momentum, low $\to$ high}\\\midrule
-  all pions                   & 100\% & 99 & 24 & 13 & 6 & 6\\
-  classifier                  & 45\%  & 99 & 33 & 25 & 15 & 9\\
-  \alert{cheating: use truth} & 43\%  & 99 & \alert{36} & \alert{24} & \alert{14} & \alert{9}\\
+  \multicolumn{6}{l}{\emph{old 5-bin scheme}, true momentum low $\to$ high}\\\midrule
+  all pions        & 99 & 24 & 13 & 6 & 6\\
+  best classifier  & 99 & 33 & 25 & 15 & 9\\
+  \alert{even cheating with truth} & 99 & \alert{36} & \alert{24} & \alert{14} & \alert{9}\\
+  \midrule
+  \multicolumn{6}{l}{\alert{\emph{adopted 2-bin scheme}}: $[0.175,0.205]$ $+$ everything above}\\\midrule
+  all pions        & \alert{97} & \alert{62} & & & \\
   \bottomrule
   \end{tabular}\\[1mm]
-  {\tiny Normally a bin is usable above $68\%$. \alert{Only the first qualifies.}
-   Compared at \alert{equal} fraction kept, the classifier already does as well as
-   perfect knowledge --- it is not the weak link.}
+  {\tiny A bin is normally called usable above $68\%$. Merging cannot create resolution ---
+   it stops us quoting five numbers when we have about one and a half.
+   \alert{Three} bins was tested and is \alert{worse} ($97/38/39$).}
   \column{.56\textwidth}
   \begin{itemize}\scriptsize\setlength\itemsep{5pt}
     \item Momentum comes from \alert{how far the particle travels} --- fine for muons,
@@ -316,9 +319,8 @@
   \end{itemize}
   \end{columns}
   \vspace{1mm}
-  {\footnotesize$\Rightarrow$ we will report the pion momentum only for the
-   \alert{sub-samples where it is meaningful}, not the main selection.
-   \alert{Everything else we measure is unaffected.}}
+  {\footnotesize$\Rightarrow$ pion momentum will be reported only where it is
+   \alert{meaningful} --- \alert{everything else we measure is unaffected}.}
 \end{frame}
 
 \begin{frame}{Inclusive cut-flow --- FHC (full exposure)}
