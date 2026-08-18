@@ -17,7 +17,7 @@ void golden_pion_compare( const char* varset = "nolen" ) {
   TTree* t = (TTree*) f.Get( "train" );
   if ( !t ) { printf( "  no training tree\n" ); return; }
 
-  float wstd,wmean,wsep,bragg_pion,bragg_mip,bragg_mu,bragg_p,tscore,ndau,len;
+  float wstd,wmean,wsep,bragg_pion,bragg_mip,bragg_mu,bragg_p,tscore,ndau,len,dmom;
   float p_true,p_range,p_corr; int golden,run_id;
   t->SetBranchAddress("wstd",&wstd);             t->SetBranchAddress("wmean",&wmean);
   t->SetBranchAddress("wsep",&wsep);             t->SetBranchAddress("bragg_pion",&bragg_pion);
@@ -26,6 +26,7 @@ void golden_pion_compare( const char* varset = "nolen" ) {
   t->SetBranchAddress("ndau",&ndau);             t->SetBranchAddress("len",&len);
   t->SetBranchAddress("p_true",&p_true);         t->SetBranchAddress("p_range",&p_range);
   t->SetBranchAddress("p_corr",&p_corr);
+  if ( t->GetBranch("dmom") ) t->SetBranchAddress("dmom",&dmom);
   t->SetBranchAddress("golden",&golden);         t->SetBranchAddress("run_id",&run_id);
 
   TMVA::Reader reader( "!Color:!Silent" );
@@ -39,6 +40,7 @@ void golden_pion_compare( const char* varset = "nolen" ) {
   reader.AddVariable( "tscore", &tscore );
   reader.AddVariable( "ndau", &ndau );
   if ( std::string(varset) == "withlen" ) reader.AddVariable( "len", &len );
+  if ( std::string(varset) == "mcs" )     reader.AddVariable( "dmom", &dmom );
   reader.BookMVA( "BDT", Form("golden_%s/weights/GoldenPion_BDT.weights.xml", varset) );
 
   // analysis bins (true and reco share edges; reco bin 1 is everything below 0.250)

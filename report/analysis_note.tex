@@ -2504,6 +2504,68 @@ $44.8\%$ efficiency gives $33.1, 24.5, 15.4, 9.1\%$. They agree bin by bin. The 
 is therefore already performing as well as perfect knowledge of which pions stopped, and no
 better classifier exists to be built.
 
+\paragraph{Multiple Coulomb scattering was tried as a pion momentum estimator, and as a
+classifier input.} Range saturates because the pion interacts before stopping, which
+truncates the track. Multiple-Coulomb-scattering (MCS) momentum is inferred from the
+scattering along whatever track exists and is not truncated by an interaction, so it is the
+natural candidate to replace range. The CC0$\pi$ analysis uses exactly this pairing, range
+for contained tracks and MCS for exiting ones. Measured on $122\,878$ truth-matched pion
+tracks (\texttt{trk\_mcs\_muon\_mom\_v}, filled for $99.9\%$ of them):
+
+\begin{center}\small
+\begin{tabular}{lccccc}
+\toprule
+true $p_\pi$ [GeV/$c$] & $\langle$len$\rangle$ & $\langle$range/true$\rangle$ & RMS
+ & $\langle$MCS/true$\rangle$ & RMS \\\midrule
+$0.175$--$0.250$ & $25$~cm & $0.834$ & $0.16$ & $4.335$ & $14.1$ \\
+$0.320$--$0.420$ & $46$~cm & $0.629$ & $0.23$ & $2.438$ & $7.2$ \\
+$0.550$--$0.800$ & $71$~cm & $0.446$ & $0.18$ & $1.423$ & $3.5$ \\
+$0.800$--$1.500$ & $84$~cm & $\mathbf{0.319}$ & $0.16$ & $\mathbf{1.011}$ & $2.1$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent The trade is stark. In the top bin range is biased to $0.319$, which is the
+saturation, while MCS is essentially unbiased at $1.011$; but MCS carries a $210\%$ RMS
+there and $1400\%$ in the lowest bin. It is unusable as a per-event estimator. The reason is
+structural and explains why the CC0$\pi$ recipe does not transfer: they apply MCS to
+\emph{exiting} tracks, which are long by construction, whereas our problematic pions are
+contained but interacting, $25$--$84$~cm long, and MCS needs of order a metre.
+
+The same note uses the \emph{disagreement} between the two estimators as a track-quality BDT
+input rather than as an estimator. That is well motivated here: a pion that interacts has a
+truncated range but an untruncated MCS, so the fractional difference
+$(p_\mathrm{range}-p_\mathrm{MCS})/p_\mathrm{range}$ should flag precisely the events that
+break the response. Adding it to the golden-pion classifier, it ranks \emph{second of ten}
+in importance, behind only the mean deflection. It nonetheless changes nothing:
+
+\begin{center}\small
+\begin{tabular}{lcc}
+\toprule
+classifier inputs & ROC integral & diagonals at $\sim\!44\%$ efficiency \\\midrule
+baseline (nine variables) & $0.758$ & $99.1 / 33.1 / 24.5 / 15.4 / 9.1$ \\
+$+$ range$-$MCS difference & $0.757$ & $99.0 / 34.8 / 24.8 / 14.8 / 9.1$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent The interpretation is that the new variable is highly informative but not
+\emph{additionally} informative: it is strongly correlated with the deflection variables
+already present, since both measure whether the track scattered heavily and ended abruptly.
+High importance rank with unchanged ROC is the signature of a redundant input. This is an
+independent confirmation of the ceiling argument above: the classifier already extracts what
+golden-ness has to offer, and the limit is the physics of the label rather than the quality
+of the classifier.
+
+One tempting variant was deliberately not pursued. Retraining on the label ``range is
+accurate'', $|p_\mathrm{corr}/p_\mathrm{true}-1|<0.2$, would target the quantity we actually
+care about and would certainly raise the diagonals. It would also be selecting on the answer:
+keeping events where the estimator happens to be right sculpts the response by construction
+and inflates the diagonal without measuring anything, the same trap documented for the tight
+BDT working point above. The golden label is used precisely because it is a physical property
+of the pion, independent of how well it was reconstructed.
+
+
 \paragraph{A caveat on the tighter working points.} The $>0.15$ row looks better than
 perfect truth selection ($46.9, 42.2, 36.1, 19.5\%$), which is impossible for an honest
 classifier and is worth understanding rather than quoting. It arises because a hard cut on

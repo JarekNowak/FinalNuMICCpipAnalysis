@@ -23,6 +23,15 @@
 void golden_pion_train( const char* varset = "nolen" ) {
 
   const bool use_len = ( std::string(varset) == "withlen" );
+  // "mcs" adds the fractional disagreement between the range and MCS momentum estimates.
+  // Rationale: range is TRUNCATED when the pion interacts before stopping, while MCS infers
+  // momentum from scattering along the surviving track and is not truncated. The two
+  // therefore disagree precisely for the events that break the p_pi response. The CC0pi
+  // analysis uses the same quantity as a track-quality BDT input rather than as an
+  // estimator (their Sec. 4, "muon quality"), which is the right way to use it: MCS alone
+  // is unusable here (RMS 210% even in the best momentum bin, because our pion tracks are
+  // 25-84 cm and MCS needs about a metre).
+  const bool use_mcs = ( std::string(varset) == "mcs" );
 
   // ---- inputs: one entry per truth-matched reconstructed pion candidate ----------
   const char* files[4] = {
@@ -39,6 +48,7 @@ void golden_pion_train( const char* varset = "nolen" ) {
   TTree* tr_tree = new TTree( "train", "golden pion training sample" );
 
   float wstd, wmean, wsep, bragg_pion, bragg_mip, bragg_mu, bragg_p, tscore, ndau, len;
+  float dmom, p_mcs;
   float p_true, p_range, p_corr;
   int   golden, run_id;
   tr_tree->Branch( "wstd", &wstd );          tr_tree->Branch( "wmean", &wmean );
@@ -48,6 +58,7 @@ void golden_pion_train( const char* varset = "nolen" ) {
   tr_tree->Branch( "ndau", &ndau );          tr_tree->Branch( "len", &len );
   tr_tree->Branch( "p_true", &p_true );      tr_tree->Branch( "p_range", &p_range );
   tr_tree->Branch( "p_corr", &p_corr );
+  tr_tree->Branch( "dmom", &dmom );        tr_tree->Branch( "p_mcs", &p_mcs );
   tr_tree->Branch( "golden", &golden );      tr_tree->Branch( "run_id", &run_id );
 
   const double mmu = 0.10566, mpi = 0.13957;
@@ -61,7 +72,7 @@ void golden_pion_train( const char* varset = "nolen" ) {
     t->SetBranchStatus( "*", 0 );
     for ( auto b : { "backtracked_pdg","backtracked_px","backtracked_py","backtracked_pz",
                      "backtracked_purity","mc_pdg","mc_px","mc_py","mc_pz","mc_end_p",
-                     "trk_score_v","trk_len_v","trk_range_muon_mom_v",
+                     "trk_score_v","trk_len_v","trk_range_muon_mom_v","trk_mcs_muon_mom_v",
                      "trk_avg_deflection_stdev_v","trk_avg_deflection_mean_v",
                      "trk_avg_deflection_separation_mean_v","trk_bragg_pion_v",
                      "trk_bragg_mip_v","trk_bragg_mu_v","trk_bragg_p_v",
@@ -71,6 +82,7 @@ void golden_pion_train( const char* varset = "nolen" ) {
     std::vector<int>   *bpdg=0, *mpdg=0;
     std::vector<float> *bpx=0,*bpy=0,*bpz=0,*bpur=0,*mpx=0,*mpy=0,*mpz=0,*mep=0;
     std::vector<float> *ts=0,*tl=0,*rm=0,*ws=0,*wm=0,*wsp=0,*bpi=0,*bmip=0,*bmu=0,*bp=0;
+    std::vector<float> *mcs=0;
     std::vector<unsigned int> *dtr=0,*dsh=0;
     t->SetBranchAddress("backtracked_pdg",&bpdg);   t->SetBranchAddress("backtracked_px",&bpx);
     t->SetBranchAddress("backtracked_py",&bpy);     t->SetBranchAddress("backtracked_pz",&bpz);
@@ -80,6 +92,7 @@ void golden_pion_train( const char* varset = "nolen" ) {
     t->SetBranchAddress("mc_end_p",&mep);
     t->SetBranchAddress("trk_score_v",&ts);        t->SetBranchAddress("trk_len_v",&tl);
     t->SetBranchAddress("trk_range_muon_mom_v",&rm);
+    t->SetBranchAddress("trk_mcs_muon_mom_v",&mcs);
     t->SetBranchAddress("trk_avg_deflection_stdev_v",&ws);
     t->SetBranchAddress("trk_avg_deflection_mean_v",&wm);
     t->SetBranchAddress("trk_avg_deflection_separation_mean_v",&wsp);
@@ -127,6 +140,14 @@ void golden_pion_train( const char* varset = "nolen" ) {
         bragg_pion = san( bpi->at(j) ); bragg_mip = san( bmip->at(j) );
         bragg_mu   = san( bmu->at(j) ); bragg_p   = san( bp->at(j) );
         tscore = ts->at(j); len = tl->at(j);
+        // fractional range-vs-MCS disagreement, clipped to the CC0pi range. MCS is
+        // occasionally unfilled (0.1% of tracks); those get the sentinel -5.
+        p_mcs = mcs ? mcs->at(j) : -1.f;
+        if ( p_mcs > 0. && pr > 0. ) {
+          dmom = ( pr - p_mcs ) / pr;
+          if ( dmom >  2.5 ) dmom =  2.5;
+          if ( dmom < -2.5 ) dmom = -2.5;
+        } else dmom = -5.f;
         ndau = dtr->at(j) + dsh->at(j);
         golden = ( mep->at(best) < 0.01 ) ? 1 : 0;
         run_id = fi;
@@ -161,6 +182,7 @@ void golden_pion_train( const char* varset = "nolen" ) {
   d->AddVariable( "tscore", 'F' );
   d->AddVariable( "ndau", 'F' );
   if ( use_len ) d->AddVariable( "len", 'F' );
+  if ( use_mcs ) d->AddVariable( "dmom", 'F' );
 
   // split by run: runs 0,2 train / runs 1,3 test
   d->AddSignalTree( tr_tree, 1.0 );
