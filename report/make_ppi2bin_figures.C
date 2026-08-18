@@ -29,9 +29,9 @@ static const int   GSTY[4] = { 9, 7, 5, 10 };
 // integrated sigma quoted on each panel (10^-38 cm^2/Ar), from the note table
 struct Cfg { const char* tag; const char* file; const char* label; double sig; double chi2; double pval; };
 static const Cfg CFG[3] = {
-  { "FHC",  "FHC5",    "FHC (#nu_{#mu})",       0.976, 0.15, 0.93 },
-  { "RHC",  "RHCFULL", "RHC (#bar{#nu}_{#mu})", 0.887, 0.24, 0.89 },
-  { "COMB", "COMB",    "Combined",              0.903, 0.13, 0.94 }
+  { "FHC",  "FHC5",    "FHC (#nu_{#mu})",       0.965, 0.15, 0.93 },
+  { "RHC",  "RHCFULL", "RHC (#bar{#nu}_{#mu})", 0.882, 0.24, 0.89 },
+  { "COMB", "COMB",    "Combined",              0.880, 0.13, 0.94 }
 };
 
 // Re-bin a 2-bin histogram onto an equal-width axis so the narrow first bin stays visible.
@@ -172,9 +172,9 @@ void make_ppi2bin_figures() {
     struct P { const char* tag; const char* file; const char* label;
                double sig; double chi2; double pval; const char* diag; };
     const P onep[3] = {
-      { "FHC",  "ccpi1p_FHC5",    "Proton-tagged, FHC",      0.575, 0.15, 0.93, "89 / 74%" },
-      { "RHC",  "ccpi1p_RHCFULL", "Proton-tagged, RHC",      0.495, 2.37, 0.31, "89 / 75%" },
-      { "COMB", "ccpi1p_COMB",    "Proton-tagged, combined", 0.541, 1.01, 0.60, "89 / 75%" }
+      { "FHC",  "ccpi1p_FHC5",    "Proton-tagged, FHC",      0.596, 0.15, 0.93, "89 / 74%" },
+      { "RHC",  "ccpi1p_RHCFULL", "Proton-tagged, RHC",      0.497, 2.36, 0.31, "89 / 75%" },
+      { "COMB", "ccpi1p_COMB",    "Proton-tagged, combined", 0.539, 1.01, 0.60, "89 / 75%" }
     };
 
     for ( int c = 0; c < 3; ++c ) {
