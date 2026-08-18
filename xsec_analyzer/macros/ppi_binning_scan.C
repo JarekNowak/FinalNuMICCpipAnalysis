@@ -126,13 +126,16 @@ void ppi_binning_scan( const char* sel = "incl", const char* beam = "fhc" ) {
     std::vector<double> d, n;
     std::vector<std::vector<double>> refs = {
       { LO, 0.205, HI },
+      { LO, 0.205, 0.235, HI },          // two 30 MeV/c bins, everything else in the last
       { LO, 0.250, 0.320, 0.420, 0.550, HI }
     };
-    const char* rn[2] = { "adopted 2-bin", "original 5-bin" };
-    for ( int r = 0; r < 2; ++r ) {
+    const char* rn[3] = { "adopted 2-bin", "3-bin 30+30+rest", "original 5-bin" };
+    for ( int r = 0; r < 3; ++r ) {
       evaluate( refs[r], d, n );
       printf( "  %-15s column-norm (efficiency-like, the criterion):", rn[r] );
       for ( double x : d ) printf( " %5.1f%%", 100*x );
+      printf( "\n  %-15s events per true bin                       :", "" );
+      for ( double x : n ) printf( " %6.0f", x );
       printf( "\n  %-15s row-norm    (purity of each reco bin)      :", "" );
       const std::vector<double>& e = refs[r];
       const int nb = e.size()-1;
@@ -143,6 +146,18 @@ void ppi_binning_scan( const char* sel = "incl", const char* beam = "fhc" ) {
         printf( " %5.1f%%", col>0 ? 100*box(t0,t1,r0,r1)/col : 0. );
       }
       printf( "\n" );
+    }
+  }
+
+  // ---- two-bin boundary trade-off, the table the note quotes -----------------------
+  {
+    printf( "\n  two-bin boundary trade-off (first-bin width vs diagonals)\n" );
+    printf( "    boundary  width      bin 1    bin 2   events b1\n" );
+    std::vector<double> d, n;
+    for ( double b : { 0.185, 0.190, 0.195, 0.200, 0.205, 0.210, 0.220, 0.250, 0.300 } ) {
+      evaluate( { LO, b, HI }, d, n );
+      printf( "    %6.3f   %3.0f MeV/c   %5.1f%%   %5.1f%%   %6.0f\n",
+              b, (b-LO)*1000, 100*d[0], 100*d[1], n[0] );
     }
   }
 

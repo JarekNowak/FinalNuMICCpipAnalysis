@@ -376,6 +376,29 @@ void make_analysis_step_plots( const SystematicsCalculator& syst,
 
     draw_header( 0.12, 0.93 );
     c->SaveAs( "unfold_output/plot_step3_smearing_matrix.pdf" );
+
+    // Also dump the matrix itself, and its column-normalised diagonal. The response was
+    // previously available only as a PDF, so the migration diagonal that the binning
+    // criterion is stated in could not be read back and checked against the numbers
+    // quoted in the note. Column sum = efficiency, so dividing by it gives
+    // P(reco = i | true = i) among SELECTED events, which is the criterion's quantity.
+    {
+      TFile fsm( "unfold_output/smear_matrix_dump.root", "recreate" );
+      h_sm->Write( "h_smear_times_eff" );
+      auto* h_diag = new TH1D( "h_diagonal", "column-normalised diagonal;true bin;P(reco=i|true=i)",
+                               ntrue, 0, ntrue );
+      std::cout << "[DIAGDUMP] column-normalised response diagonal:";
+      for ( int t = 0; t < ntrue; ++t ) {
+        double col = 0.;
+        for ( int r = 0; r < nreco; ++r ) col += ( *smear )( r, t );
+        double d = ( col > 0. && t < nreco ) ? ( *smear )( t, t ) / col : 0.;
+        h_diag->SetBinContent( t + 1, d );
+        std::cout << ' ' << std::fixed << std::setprecision(3) << d;
+      }
+      std::cout << std::endl;
+      h_diag->Write();
+      fsm.Close();
+    }
   }
 
   // ── Step 4: selection efficiency vs true bin (column sums of smearceptance) ──
