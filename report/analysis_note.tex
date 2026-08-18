@@ -2827,23 +2827,30 @@ same direction for every model.
 \toprule
 Observable & $A_C$ & $|A_C-1|$ & typical generator $\chi^2$/6 \\
 \midrule
-$W_\mathrm{had}$ & $0.88$ & $0.12$ & $1.2$ \\
-$W_{\pi p}$      & $0.78$ & $0.22$ & $1.0$ \\
-$\delta\alpha_T$ & $0.63$ & $0.37$ & $3.3$ \\
-$\delta\phi_T$   & $0.61$ & $0.39$ & $6.2$ \\
-$\delta p_T$     & $0.43$ & $0.57$ & $9.4$ \\
-$p_n$            & $1.71$ & $0.71$ & $17$  \\
+$W_\mathrm{had}$ & $0.69$ & $0.31$ & $4.1$ \\
+$W_{\pi p}$      & $0.77$ & $0.23$ & $1.6$ \\
+$\delta\alpha_T$ & $0.71$ & $0.29$ & $7.1$ \\
+$\delta\phi_T$   & $0.80$ & $0.20$ & $15.5$ \\
+$\delta p_T$     & $0.67$ & $0.33$ & $70$ \\
+$p_n$            & $0.69$ & $0.31$ & $76$  \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-The two observables the smearing barely touches, $W_\mathrm{had}$ and $W_{\pi p}$, are
-described well by \emph{all four} generators ($\chi^2\lesssim1.8/6$). The two it distorts
-most, $\delta p_T$, suppressed to $0.43$, and $p_n$, \emph{enhanced} to $1.71$, carry
-the largest $\chi^2$, reaching $25.4/6$ for NEUT in $p_n$. That a quantity as
-model-independent as $|A_C-1|$ orders the $\chi^2$ of four independent generators is the
-signature of a smearing artefact rather than of physics: it is the same effect identified
-in $\cos\theta_\mu$ (\S\ref{sec:chi2}), where reparameterising to $\theta_\mu$ reduced the
+\emph{This argument was made with the pre-fix $A_C$ and does not survive.} With the
+uniform-grid regularisation the smearing factors ranged from $0.43$ to $1.71$, and $p_n$
+was \emph{amplified} by $71\%$, which is not something a physical smearing matrix should
+do; on that set $|A_C-1|$ did order the generator $\chi^2$, and the ordering was read as a
+smearing artefact. With the width-aware regularisation the factors cluster at $0.67$--$0.80$
+and $|A_C-1|$ is flat to within $0.13$ across observables, while the generator $\chi^2$
+still spans $1.6$ to $76$ per six bins. A flat quantity cannot order a varying one, so the
+artefact explanation is withdrawn: the $\chi^2$ ordering of the TKI observables is physics.
+
+That is the expected behaviour rather than a surprise. $\delta p_T$ and $p_n$ probe the
+nuclear initial state and final-state interactions directly, and generators differ most
+there; the previous $A_C$ was flattening precisely the observables built to discriminate.
+The same reassessment applies to $\cos\theta_\mu$ (\S\ref{sec:chi2}), where reparameterising
+to $\theta_\mu$ reduced the
 NEUT and NuWro $\chi^2$ by a factor $\sim\!9$ on identical data. The closure column is
 excellent throughout ($\le0.46/6$), so the chain itself is sound; it is the
 \emph{model comparison} in $\delta p_T$ and $p_n$ that should not be read as
@@ -2859,12 +2866,12 @@ discrimination until the binning and response of those two observables are revis
     \toprule
     Observable & truth & uB tune & GENIE & GiBUU & NEUT & NuWro & $A_C$ \\
     \midrule
-    $W_\mathrm{had}$ & $0.09/6$ & $1.39/6$ & $1.65/6$ & $1.06/6$ & $1.17/6$ & $1.05/6$ & $0.88$ \\
-    $W_{\pi p}$      & $0.09/6$ & $0.95/6$ & $1.78/6$ & $0.62/6$ & $0.56/6$ & $0.87/6$ & $0.78$ \\
-    $\delta\alpha_T$ & $0.26/6$ & $2.74/6$ & $4.73/6$ & $2.95/6$ & $2.78/6$ & $3.53/6$ & $0.63$ \\
-    $\delta\phi_T$   & $0.09/6$ & $5.14/6$ & $7.21/6$ & $5.61/6$ & $5.39/6$ & $6.47/6$ & $0.61$ \\
-    $\delta p_T$     & $0.46/6$ & $5.34/6$ & $9.89/6$ & $8.27/6$ & $9.02/6$ & $10.38/6$ & $0.43$ \\
-    $p_n$            & $0.09/6$ & $4.24/6$ & $7.72/6$ & $18.74/6$ & $25.40/6$ & $16.45/6$ & $1.71$ \\
+    $W_\mathrm{had}$ & $0.86/6$ & $2.50/6$ & $4.51/6$ & $3.87/6$ & $3.46/6$ & $4.71/6$ & $0.69$ \\
+    $W_{\pi p}$      & $0.19/6$ & $1.65/6$ & $2.59/6$ & $1.11/6$ & $0.85/6$ & $1.87/6$ & $0.77$ \\
+    $\delta\alpha_T$ & $0.67/6$ & $3.46/6$ & $7.41/6$ & $6.74/6$ & $7.27/6$ & $6.83/6$ & $0.71$ \\
+    $\delta\phi_T$   & $4.02/6$ & $5.96/6$ & $12.22/6$ & $15.40/6$ & $17.60/6$ & $16.82/6$ & $0.80$ \\
+    $\delta p_T$     & $1.87/6$ & $6.37/6$ & $44.43/6$ & $69.31/6$ & $91.61/6$ & $76.04/6$ & $0.67$ \\
+    $p_n$            & $0.19/6$ & $4.93/6$ & $39.79/6$ & $74.32/6$ & $108.00/6$ & $83.83/6$ & $0.69$ \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -3198,10 +3205,12 @@ An earlier version of this note attributed both effects to the sharpness of the 
 $A_C$ smearing away an unresolvable feature, and thereby penalising the peaked generators
 more than the smoother tune. \emph{Both halves of that explanation are wrong}, and are
 retracted here. Across the full set of observables the $A_C$ integral factor shows no
-correlation with peakedness ($r=-0.17$): $W_{\pi p}$ is the sharpest distribution in the
-analysis (peak-to-minimum ratio $36$) yet is suppressed only to $0.78$, $\delta p_T$ is
-comparatively flat (ratio $10$) yet is suppressed to $0.43$, and $p_n$ is flat yet
-\emph{enhanced} to $1.71$; an enhancement no peak argument can produce. Within
+correlation with peakedness ($r=-0.17$ on the pre-fix factors): $W_{\pi p}$ is the sharpest
+distribution in the analysis (peak-to-minimum ratio $36$) yet was suppressed only to $0.78$,
+$\delta p_T$ is comparatively flat (ratio $10$) yet was suppressed to $0.43$, and $p_n$ is
+flat yet was \emph{enhanced} to $1.71$; an enhancement no peak argument can produce. The
+retraction stands, and the width-aware $A_C$ makes the point moot: the factors are now
+uniform across observables regardless of shape. Within
 $\cos\theta_\mu$ itself the ordering is backwards: NEUT and NuWro are the \emph{flattest}
 of the five truth-level curves (peak-to-minimum $3.8$ and $4.3$, against $16.3$ for the
 tune) and are suppressed the \emph{most} ($0.37$ and $0.29$, against $0.67$). What actually
