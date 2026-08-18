@@ -24,6 +24,7 @@
 
 // XSecAnalyzer includes
 #include "XSecAnalyzer/CrossSectionExtractor.hh"
+#include "XSecAnalyzer/WienerSVDUnfolder.hh"
 #include "XSecAnalyzer/PGFPlotsDumpUtils.hh"
 #include "XSecAnalyzer/SliceBinning.hh"
 #include "XSecAnalyzer/SliceHistogram.hh"
@@ -455,6 +456,55 @@ void UnfolderNuMI(std::string XSEC_Config, std::string SLICE_Config, std::string
   // get unfolded results
   auto* sb_ptr = new SliceBinning( SLICE_Config );
   auto& sb = *sb_ptr;
+
+  // ---- give the regularisation matrix the physical bin widths ---------------------
+  // The extractor knows only true-bin indices; the physical edges live in the slice
+  // definitions loaded just above. Without them the derivative regularisation matrices
+  // assume a uniform grid, which on these binnings (width ratios up to 14:1) makes the
+  // operator near-singular and collapses A_C towards rank one.
+  {
+    auto* wsvd = dynamic_cast< WienerSVDUnfolder* >( extr->get_unfolder() );
+    if ( wsvd ) {
+      // The unfolder spans SIGNAL true bins only; the background true bin carries no
+      // physical width and is not part of A_C. Index the width vector by signal-bin
+      // position, which is what the regularisation matrix is dimensioned on.
+      const auto& tbins = extr->get_syst().true_bins_;
+      std::map< size_t, size_t > global_to_signal;
+      for ( size_t i = 0; i < tbins.size(); ++i ) {
+        if ( tbins[i].type_ == kSignalTrueBin ) {
+          size_t next = global_to_signal.size();
+          global_to_signal[ i ] = next;
+        }
+      }
+      size_t n_true = global_to_signal.size();
+      std::vector< double > widths( n_true, 0. );
+      // one pass over every slice; a true bin appearing in several slices keeps the
+      // first width found, and bins that appear in none keep 0 and are skipped below
+      for ( const auto& slice : sb.slices_ ) {
+        if ( !slice.hist_ ) continue;
+        for ( const auto& bp : slice.bin_map_ ) {
+          if ( bp.second.size() != 1u ) continue;      // only unambiguous 1D bins
+          size_t tb_global = *bp.second.begin();
+          auto it = global_to_signal.find( tb_global );
+          if ( it != global_to_signal.end() && widths[ it->second ] == 0. ) {
+            widths[ it->second ] = slice.hist_->GetBinWidth( bp.first );
+          }
+        }
+      }
+      int n_set = 0;
+      for ( double x : widths ) if ( x > 0. ) ++n_set;
+      // only supply them if every true bin got a width; a partial vector would be worse
+      // than none, since the matrix would mix physical and unit spacings
+      if ( n_set == (int)n_true ) {
+        wsvd->set_bin_widths( widths );
+        std::cout << "[REGWIDTH] supplied " << n_set << " true-bin widths to the"
+          " regularisation matrix" << std::endl;
+      } else {
+        std::cout << "[REGWIDTH] only " << n_set << '/' << n_true << " true bins have a"
+          " width; falling back to uniform spacing" << std::endl;
+      }
+    }
+  }
 
   auto xsec = extr->get_unfolded_events();
   double conv_factor = extr->conversion_factor();

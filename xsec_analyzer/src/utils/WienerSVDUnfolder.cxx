@@ -217,22 +217,53 @@ void WienerSVDUnfolder::set_reg_matrix( TMatrixD& C ) const {
     C.UnitMatrix();
   }
   else if ( reg_type_ == kFirstDeriv ) {
+    // d/dx of the DENSITY. On a uniform grid this reduces to the old (-1, +1) stencil.
+    const bool have_w = ( (int)bin_widths_.size() == num_rows );
     for ( int r = 0; r < num_rows; ++r ) {
-      C( r, r ) = -1.;
-      if ( r < num_rows - 1 ) C( r, r + 1 ) = 1.;
+      double wr = have_w ? bin_widths_[r] : 1.;
+      double wn = ( have_w && r < num_rows - 1 ) ? bin_widths_[r + 1] : 1.;
+      // distance between the centres of bins r and r+1
+      double h = have_w ? 0.5 * ( wr + wn ) : 1.;
+      C( r, r ) = -1. / ( wr * h );
+      if ( r < num_rows - 1 ) C( r, r + 1 ) = 1. / ( wn * h );
     }
   }
   else if ( reg_type_ == kSecondDeriv ) {
-    // Small number added to diagonal to avoid numerical inversion problems
+    // Second derivative of the DENSITY, on a possibly non-uniform grid.
+    //
+    // The vector this acts on holds event COUNTS per bin, so dividing column j by its
+    // width converts to a density before differencing. On a uniform grid of width 1 the
+    // whole thing reduces to the old (1, -2, 1) stencil, so existing behaviour is
+    // preserved when no widths are supplied.
+    //
+    // Getting this right matters. With the plain stencil on a non-uniform grid the
+    // operator is not a second derivative at all, and its near-null direction is not the
+    // physically-flat one; the Wiener filter can then keep that direction alone, which
+    // drives A_C towards rank one and destroys the shape information the measurement is
+    // meant to carry. That is what happened to FHC theta_mu (bin widths spanning a factor
+    // of ten) and, less severely, to cos(theta_mu).
     constexpr double inv_epsilon = 1e-6;
+    const bool have_w = ( (int)bin_widths_.size() == num_rows );
+    auto w = [&]( int i ) { return have_w ? bin_widths_[i] : 1.; };
+
     for ( int r = 0; r < num_rows; ++r ) {
-      if ( r < num_rows - 1 ) {
-        C( r + 1, r ) = 1.;
-        C( r, r + 1 ) = 1.;
+      if ( r > 0 && r < num_rows - 1 ) {
+        // spacings between adjacent bin centres
+        double hl = 0.5 * ( w(r - 1) + w(r) );
+        double hr = 0.5 * ( w(r) + w(r + 1) );
+        C( r, r - 1 ) =  2. / ( hl * ( hl + hr ) * w(r - 1) );
+        C( r, r     ) = -2. / ( hl * hr * w(r) ) + inv_epsilon;
+        C( r, r + 1 ) =  2. / ( hr * ( hl + hr ) * w(r + 1) );
       }
-      double diag = inv_epsilon - 2.;
-      if ( r == 0 || r == num_rows - 1 ) diag += 1.;
-      C( r, r ) = diag;
+      else {
+        // One-sided at the ends: a first-derivative stencil, which leaves the operator
+        // non-singular without asserting that the distribution vanishes at the edges
+        // (it does not: cos(theta_mu) peaks at the upper edge).
+        int o = ( r == 0 ) ? 1 : -1;
+        double h = 0.5 * ( w(r) + w(r + o) );
+        C( r, r     ) = -1. / ( w(r) * h ) + inv_epsilon;
+        C( r, r + o ) =  1. / ( w(r + o) * h );
+      }
     }
   }
   else throw std::runtime_error( "Unrecognized regularization matrix type"

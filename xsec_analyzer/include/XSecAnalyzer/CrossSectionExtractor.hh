@@ -164,6 +164,12 @@ class CrossSectionExtractor {
     // a measurement together with full uncertainties
     CrossSectionResult get_unfolded_events();
 
+    // Access to the configured unfolder, so that callers holding the slice definitions
+    // can supply information the extractor does not have. Used to pass the physical
+    // true-bin widths to the Wiener-SVD regularisation matrices, which are otherwise
+    // built assuming a uniform grid.
+    inline Unfolder* get_unfolder() { return unfolder_.get(); }
+
     // Get the beam exposure for the data
     double get_data_pot() const {  return syst_->total_bnb_data_pot_; }
 
