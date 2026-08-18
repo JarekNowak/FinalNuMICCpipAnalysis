@@ -50,6 +50,33 @@ exactly as their multiplicity trend predicts. Note also that genuine backward-go
 (1.81%) outnumber flipped ones by ~8:1, so a blanket `cos_reco < -0.9` rejection would remove
 more real signal than mis-reconstruction, the opposite of the CC0pi situation.
 
+## Does it help with EXT rejection?
+
+Part of the surviving beam-off sample is thought to be broken cosmic muon tracks, where the
+break is reconstructed as a vertex. That leaves a directional signature, and it is present:
+
+| reco cos(theta_mu) | EXT | MC signal | enrichment |
+|---|---|---|---|
+| < 0 | 31.8% | 4.1% | **7.8x** |
+| < -0.5 | 9.1% | 1.4% | 6.4x |
+
+The enrichment is real, but the arithmetic does not support a cut. At the final cut the FHC
+sample is 974 signal, 128 EXT, 1746 predicted. A `cos < 0` requirement removes ~41 EXT and
+~40 signal, close to one for one; and since EXT is subtracted data-driven and unbiased,
+removing part of it buys only a smaller *statistical* uncertainty on the subtraction,
+sqrt(128)~11 -> sqrt(87)~9 events. Spending 40 signal events to gain ~2 is a net loss.
+
+**The ceiling on any cosmic cut**: EXT is 7.3% of the selected sample and already subtracted
+without bias, so removing ALL of it for ZERO signal loss would gain ~11 events of statistical
+uncertainty on 1746. Any cut costing more than ~1% of signal is a net loss however
+efficiently it tags cosmics.
+
+The `fwd_preferred && chi2>6` tagger is more surgical than an angular cut, since it fires on
+tracks whose calorimetry disagrees with the assigned direction rather than on backward tracks
+as such, and so would spare the genuine backward muons that outnumber flipped ones ~8:1. It
+is worth measuring under the same 11-event ceiling, but it cannot become a significant
+improvement to the measurement.
+
 ## What is still worth doing
 
 Not the cut. Two smaller things:

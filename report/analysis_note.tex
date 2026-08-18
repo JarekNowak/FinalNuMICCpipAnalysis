@@ -891,6 +891,49 @@ well; the single beam-off file is therefore attached per run through symlinks so
 run bookkeeping is complete without duplicating the data.) The uncertainty on this ratio
 is a leading systematic on the EXT background.
 
+\paragraph{A directional cut against residual cosmics: considered and rejected.} Part of the
+surviving beam-off sample is thought to be broken cosmic muon tracks, where the break is
+reconstructed as a vertex and the track direction bears no relation to it. That leaves a
+directional signature, and it is present in the data: among selected events the beam-off
+sample is enriched at backward reconstructed muon angles by nearly an order of magnitude
+relative to signal.
+
+\begin{center}\small
+\begin{tabular}{lccc}
+\toprule
+reco $\cos\theta_\mu$ & EXT (beam-off) & MC signal & enrichment \\\midrule
+$<0$    & $31.8\%$ & $4.1\%$ & $7.8\times$ \\
+$<-0.5$ & $9.1\%$  & $1.4\%$ & $6.4\times$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent The enrichment is real but the arithmetic does not support a cut. At the final cut
+the FHC sample is $974$ signal, $128$ EXT and $1\,746$ predicted in total
+(Tab.~\ref{tab:cutflow}). A $\cos\theta_\mu<0$ requirement would remove $\approx41$ EXT
+events and $\approx40$ signal events, close to one for one. Because the beam-off sample is
+subtracted from the data directly, and that subtraction is unbiased by construction, removing
+part of it buys only a reduction in the subtraction's \emph{statistical} uncertainty, from
+$\sqrt{128}\approx11$ to $\sqrt{87}\approx9$ events. Spending $40$ signal events to gain
+$\approx2$ events of uncertainty is a net loss.
+
+The same bound applies to any cosmic cut, not just this one: EXT is $7.3\%$ of the selected
+sample and is already subtracted without bias, so removing \emph{all} of it for \emph{zero}
+signal loss would gain about $11$ events of statistical uncertainty on a sample of $1\,746$.
+Any cut costing more than about $1\%$ of the signal is a net loss regardless of how
+efficiently it tags cosmics. The residual beam-off contribution is therefore left in place
+and handled by subtraction.
+
+A more surgical variant remains untested. The CC0$\pi$ analysis tags mis-directed tracks with
+the calorimetric flag \texttt{trk\_bragg\_mu\_fwd\_preferred\_v} in coincidence with a poor
+forward-muon fit, $\chi^2_\mu>6$, which fires on tracks whose $dE/dx$ profile disagrees with
+the assigned direction rather than on backward-going tracks as such. That would not cut
+genuine backward muons, which outnumber mis-reconstructed ones here by roughly $8{:}1$. Both
+branches exist in the input ntuples but are not currently propagated by
+\texttt{ProcessNTuples}; the study is scoped in \texttt{report/BACKWARD\_MUON\_PLAN.md}. It is
+bounded by the same $11$-event ceiling, so it is worth measuring but cannot become a
+significant improvement.
+
 \paragraph{Software trigger.}
 Data and EXT files are pre-filtered to require the software trigger
 (\texttt{swtrig~==~1}).  MC events failing \texttt{swtrig~=~0} are removed at the
@@ -4608,8 +4651,6 @@ it, not physical effects: they are eleven orders of magnitude below the smallest
 uncertainty in the analysis. The unfolding construction is therefore exactly self-consistent,
 and every deviation seen in the fake-data closure tests is attributable to the statistical
 throw and to the response model, not to the unfolding implementation.
-
-
 
 % =============================================================================
 \section{Data/MC Normalisation}
