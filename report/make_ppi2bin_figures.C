@@ -162,28 +162,43 @@ void make_ppi2bin_figures() {
   }
 
 
-  // ---- proton-tagged (CC1mu1pi1p) two-bin p_pi, FHC ------------------------------
+  // ---- proton-tagged (CC1mu1pi1p) two-bin p_pi ------------------------------------
   // Same scheme and same edges as the inclusive result, so the two are directly
-  // comparable. This closure file carries no generator curves: the ccpi1p xsec config
-  // declares only the tune and the fake data.
+  // comparable. These closure files carry no generator curves: the ccpi1p xsec configs
+  // declare only the tune and the fake data. Configurations still running are skipped.
   {
-    TFile* f = TFile::Open(
-      "/data/uboone/processed/closure_hists_xsec_ccpi1p_FHC5_ppi2bin.root" );
-    if ( f && !f->IsZombie() ) {
-      TH1D* hdat = equalise( (TH1D*) f->Get("h_unfolded_nuwro"), "dat_1p" );
-      TH1D* htru = equalise( (TH1D*) f->Get("h_fakedata_truth"), "tru_1p" );
-      TH1D* htun = equalise( (TH1D*) f->Get("h_genie_tune"),     "tun_1p" );
+    // tag, closure-file tag, panel label, sigma_int, chi2, p, diagonals -- the last four
+    // are filled in from the unfold log as each configuration lands
+    struct P { const char* tag; const char* file; const char* label;
+               double sig; double chi2; double pval; const char* diag; };
+    const P onep[3] = {
+      { "FHC",  "ccpi1p_FHC5",    "Proton-tagged, FHC",      0.575, 0.15, 0.93, "89 / 74%" },
+      { "RHC",  "ccpi1p_RHCFULL", "Proton-tagged, RHC",      0.,    0.,   0.,   nullptr    },
+      { "COMB", "ccpi1p_COMB",    "Proton-tagged, combined", 0.,    0.,   0.,   nullptr    }
+    };
+
+    for ( int c = 0; c < 3; ++c ) {
+      TFile* f = TFile::Open(
+        Form("/data/uboone/processed/closure_hists_xsec_%s_ppi2bin.root", onep[c].file) );
+      if ( !f || f->IsZombie() ) {
+        printf( "  [skip] proton-tagged %s (not yet unfolded)\n", onep[c].tag );
+        continue;
+      }
+      TH1D* hdat = equalise( (TH1D*) f->Get("h_unfolded_nuwro"), Form("dat1p_%s",onep[c].tag) );
+      TH1D* htru = equalise( (TH1D*) f->Get("h_fakedata_truth"), Form("tru1p_%s",onep[c].tag) );
+      TH1D* htun = equalise( (TH1D*) f->Get("h_genie_tune"),     Form("tun1p_%s",onep[c].tag) );
       f->Close();
+      if ( !hdat || !htru ) continue;
 
       hdat->SetMarkerStyle( 20 ); hdat->SetMarkerSize( 1.3 );
       hdat->SetLineColor( kBlack ); hdat->SetLineWidth( 2 ); hdat->SetMarkerColor( kBlack );
       htru->SetLineColor( kRed+1 );  htru->SetLineWidth( 3 );
-      htun->SetLineColor( kBlue+1 ); htun->SetLineWidth( 3 ); htun->SetLineStyle( 2 );
+      if ( htun ) { htun->SetLineColor( kBlue+1 ); htun->SetLineWidth( 3 ); htun->SetLineStyle( 2 ); }
 
       double ymax = hdat->GetBinContent(1) + hdat->GetBinError(1);
       ymax = std::max( ymax, htru->GetBinContent(1) );
 
-      TCanvas cv( "c_1p", "", 640, 560 );
+      TCanvas cv( Form("c1p_%s",onep[c].tag), "", 640, 560 );
       cv.SetLeftMargin( 0.16 ); cv.SetBottomMargin( 0.14 ); cv.SetTopMargin( 0.05 );
       hdat->SetTitle( ";p_{#pi} [GeV/c];"
                       "d#sigma/dp_{#pi} [10^{-38} cm^{2}/(GeV/c)/Ar]" );
@@ -191,25 +206,28 @@ void make_ppi2bin_figures() {
       hdat->GetXaxis()->SetTitleSize( 0.052 ); hdat->GetYaxis()->SetLabelSize( 0.048 );
       hdat->GetYaxis()->SetRangeUser( 0., 1.32*ymax );
       hdat->Draw( "E1" );
-      htru->Draw( "hist same" ); htun->Draw( "hist same" );
+      htru->Draw( "hist same" );
+      if ( htun ) htun->Draw( "hist same" );
       hdat->Draw( "E1 same" );
 
       TLegend lg( 0.58, 0.71, 0.96, 0.93 );
       lg.SetBorderSize( 0 ); lg.SetFillStyle( 0 ); lg.SetTextSize( 0.040 );
       lg.AddEntry( hdat, "unfolded data", "lep" );
       lg.AddEntry( htru, "A_{C} truth", "l" );
-      lg.AddEntry( htun, "uB tune", "l" );
+      if ( htun ) lg.AddEntry( htun, "uB tune", "l" );
       lg.Draw();
 
       TLatex tx; tx.SetNDC(); tx.SetTextSize( 0.044 );
-      tx.DrawLatex( 0.19, 0.888, "#bf{Proton-tagged, FHC}" );
+      tx.DrawLatex( 0.19, 0.888, Form("#bf{%s}", onep[c].label) );
       tx.SetTextSize( 0.042 );
-      tx.DrawLatex( 0.19, 0.825, "#sigma_{int} = 0.575" );
-      tx.DrawLatex( 0.19, 0.768, "#chi^{2}/ndf = 0.15/2" );
-      tx.DrawLatex( 0.19, 0.711, "p = 0.93" );
-      tx.DrawLatex( 0.19, 0.654, "diagonals 89 / 74%" );
+      if ( onep[c].sig > 0. ) {
+        tx.DrawLatex( 0.19, 0.825, Form("#sigma_{int} = %.3f", onep[c].sig) );
+        tx.DrawLatex( 0.19, 0.768, Form("#chi^{2}/ndf = %.2f/2", onep[c].chi2) );
+        tx.DrawLatex( 0.19, 0.711, Form("p = %.2f", onep[c].pval) );
+      }
+      if ( onep[c].diag ) tx.DrawLatex( 0.19, 0.654, Form("diagonals %s", onep[c].diag) );
 
-      cv.SaveAs( Form("%sppi2bin_xsec_1p_FHC.eps", FIG) );
+      cv.SaveAs( Form("%sppi2bin_xsec_1p_%s.eps", FIG, onep[c].tag) );
     }
   }
 
