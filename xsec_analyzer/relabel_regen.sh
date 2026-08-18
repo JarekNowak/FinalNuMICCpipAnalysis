@@ -55,4 +55,20 @@ for cfg in fhc5 rhcfull comb; do
     rm -f "$PROC/relabel_${t}_${o}.root"
   done
 done
+# p_pi RESPONSE MATRICES ARE A DELIBERATE EXCEPTION.
+# Everything above draws p_pi at the adopted two-bin scheme, but the two slides that
+# explain WHY the binning was reduced need the ORIGINAL five-bin response: a 2x2 matrix
+# cannot show "reco piles into the lowest bin". Redraw those two figures from the five-bin
+# diagnostic config, which has the generator predictions stripped out (the FTE files were
+# regenerated at two bins and would fail a bin-count check).
+rm -f "$UO"/plot_step3_*.pdf
+bin/UnfolderNuMI configs/ccpi_xsec_config_numi_ppi5bin_fhc5.txt configs/ccpi_ppi_slice_config_opt.txt \
+  "$PROC/ppi5bin_diag.root" > "$LOG/ppi5bin_resp.log" 2>&1
+if [ -f "$UO/plot_step3_smearing_matrix.pdf" ]; then
+  cp "$UO/plot_step3_smearing_matrix.pdf" "$FIG/fw_resp_ppi.pdf"
+  cp "$UO/plot_step3_smearing_matrix.pdf" "$FIG/smear_ppi_FHC5.pdf"
+  n=$((n+2)); echo "  p_pi response matrices redrawn at FIVE bins (diagnostic)"
+else echo "  !! five-bin p_pi response FAILED"; fail=$((fail+1)); fi
+rm -f "$PROC/ppi5bin_diag.root"
+
 echo "==== figures written: $n, failures: $fail ===="

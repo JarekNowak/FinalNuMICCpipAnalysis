@@ -1,0 +1,19 @@
+# p_pi at the ORIGINAL FIVE-BIN binning, generators stripped out.
+#
+# Used ONLY to draw the diagnostic response matrix for the slides that explain WHY the
+# binning was reduced (slides "Response (smearceptance) matrices" and "Why the pion
+# momentum cannot be measured well"). A 2x2 matrix cannot show "reco piles into the
+# lowest bin", so those panels need the five-bin response.
+#
+# The generator Prediction lines are removed because the FTE files were regenerated at the
+# two-bin binning; loading them here would fail on a bin-count mismatch. The response
+# matrix does not use them.
+#            oscillation from sparse Run1 stats (max unc/val 739 -> 5.3).
+# Prediction: central-value MicroBooNE tune from the CV universe
+UnivFile /data/uboone/processed/ccpi_FHC5_ppi_univmake.root
+SystFile configs/ccpi_systcalc_numi.conf
+FPFile configs/file_properties_numi_fhc5.txt
+Unfold WienerSVD 1 second-deriv
+Flux 6.81159e-10
+Prediction uBTune "MicroBooNE Tune" univ CV
+Prediction FakeData "Fakedata" univ FakeData
