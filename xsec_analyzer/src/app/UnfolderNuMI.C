@@ -462,7 +462,43 @@ void UnfolderNuMI(std::string XSEC_Config, std::string SLICE_Config, std::string
   double total_pot = extr->get_data_pot();
 
   double A_C_total = 1;
+
+  // ---- IDENTITY CLOSURE ("unfold on itself") -------------------------------------
+  // Wiener-SVD returns xhat = U r for a measured reco vector r, and defines the
+  // additional smearing matrix as A_C = U R, so that xhat = A_C t for an exact input
+  // r = R t. Feeding the CV prediction back through the chain must therefore reproduce
+  // A_C t identically, for ANY truth vector t. That is equivalent to the matrix identity
+  //     U * R  ==  A_C
+  // which is what is checked here: it tests the whole unfolding construction rather than
+  // one particular truth vector, and it is independent of the data. Any disagreement
+  // beyond rounding means the unfolding matrix and the smearing matrix were built from
+  // different responses, which no fake-data closure test would reveal.
+  {
+    auto R_id = extr->get_syst().get_cv_smearceptance_matrix();  // rows reco, cols true
+    const TMatrixD& U_mat = *xsec.result_.unfolding_matrix_;   // true x reco
+    const TMatrixD& AC_ref = *xsec.result_.add_smear_matrix_;  // true x true
+    const int nt = U_mat.GetNrows(), nr = U_mat.GetNcols();
+    double max_dev = 0., max_ac = 0., sum_sq = 0.;
+    for ( int i = 0; i < nt; ++i ) {
+      for ( int j = 0; j < nt; ++j ) {
+        double us = 0.;
+        for ( int k = 0; k < nr; ++k ) us += U_mat( i, k ) * ( *R_id )( k, j );
+        double dev = std::fabs( us - AC_ref( i, j ) );
+        if ( dev > max_dev ) max_dev = dev;
+        if ( std::fabs( AC_ref(i,j) ) > max_ac ) max_ac = std::fabs( AC_ref(i,j) );
+        sum_sq += dev * dev;
+      }
+    }
+    std::cout << "[IDENTITY] bins " << nt
+              << "  max|U*R - A_C| " << std::scientific << std::setprecision(3) << max_dev
+              << "  rms " << std::sqrt( sum_sq / ( nt * nt ) )
+              << "  max|A_C| " << max_ac
+              << "  relative " << ( max_ac > 0. ? max_dev / max_ac : 0. )
+              << std::endl;
+  }
+
   if (total_only) {
+
     const TMatrixD &A_C_temp =  *xsec.result_.add_smear_matrix_;
     A_C_total = A_C_temp(0,0);
     std::cout << "Total Only Mode: A_C matrix element = " << A_C_total << std::endl;
