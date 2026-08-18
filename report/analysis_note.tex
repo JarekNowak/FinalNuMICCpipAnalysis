@@ -3201,38 +3201,27 @@ statistically constrain, which is set by the conditioning of the response for th
 observable and binning, not by the shape of the truth distribution, and it is not
 norm-preserving, so it can suppress or enhance.
 
-\subsubsection*{The FHC $\theta_\mu$ result is withdrawn: $A_C$ is rank-1 there}
+\subsubsection*{The FHC $\theta_\mu$ collapse, its cause, and its resolution}
 
 Reparameterising to $\theta_\mu$ appeared to remove the problem entirely: the FHC
 suppression rose to $\sim\!0.76$ and the NEUT/NuWro $\chi^2$ fell from $\sim\!26/5$ to
-$\sim\!2.8/5$, with the generators sitting on top of the data. \emph{That result is an
-artefact of over-regularisation and must not be used for model comparison.}
+$\sim\!2.8/5$, with the generators sitting on top of the data. \emph{That result was an
+artefact}, and it is worth setting out what the artefact was, because the cause turned out
+not to be $\theta_\mu$ at all.
 
 In the FHC $\theta_\mu$ extraction the unfolded data, the $A_C$-smeared truth, the
-MicroBooNE tune and all four generators share the same normalised shape to four decimal
-places (Table~\ref{tab:thetamu_rank1}). The cause is that $A_C$ is \emph{rank-1} for this
-config: writing the four generator predictions as the columns of a $5\times4$ input matrix
-and their $A_C$-smeared counterparts as the columns of the output matrix, the inputs are
-full rank (ratio of second to first singular value $s_2/s_1=5.0\times10^{-2}$) while the
-outputs have $s_2/s_1=2.8\times10^{-6}$. Every shape degree of freedom has been
-annihilated; each model is mapped onto a single common curve and only its normalisation
-survives. The agreement with the data is therefore true by construction, the effective
-number of degrees of freedom is $\approx1$ rather than $5$, and the quoted $\chi^2/5$ is
-not a goodness-of-fit.
-
-This is specific to FHC $\theta_\mu$, not a property of the $\theta$ parameterisation.
-Fed the identical generator inputs, FHC $\cos\theta_\mu$ returns $s_2/s_1=5.1\times10^{-2}$
-and FHC $p_\mu$ returns $6.6\times10^{-3}$; RHC $\theta_\mu$ returns $2.3\times10^{-2}$ and
-does retain its shape information, which is why its measured improvement is only
-$0.34\to0.49$, previously explained as a poorer RHC angular response, when in fact RHC
-is the case that was \emph{not} over-regularised. The generator FTE inputs themselves are
-sound: the $\theta_\mu$ histograms are the exact bin-reversal of the $\cos\theta_\mu$ ones
-and differ properly between models.
+MicroBooNE tune and all four generators shared the same normalised shape to four decimal
+places (Table~\ref{tab:thetamu_rank1}). $A_C$ was \emph{rank-1}: writing the four generator
+predictions as the columns of an input matrix and their $A_C$-smeared counterparts as the
+columns of the output matrix, the inputs were full rank ($s_2/s_1=5.0\times10^{-2}$) while
+the outputs gave $s_2/s_1=2.8\times10^{-6}$. Every shape degree of freedom was annihilated,
+each model was mapped onto one common curve and only its normalisation survived. The
+agreement with the data was true by construction.
 
 \begin{table}[htbp]\centering
-\caption{FHC $\theta_\mu$: normalised bin contents. Five independent inputs; the
-measurement and four generator predictions plus the tune, collapse onto one shape,
-the signature of a rank-1 $A_C$.}
+\caption{FHC $\theta_\mu$ \emph{before the fix described below}: normalised bin contents.
+Five independent inputs, the measurement and four generator predictions plus the tune,
+collapse onto one shape, the signature of a rank-1 $A_C$.}
 \label{tab:thetamu_rank1}
 \begin{tabular}{lccccc}
 \toprule
@@ -3245,16 +3234,92 @@ NEUT                   & 0.1484 & 0.3359 & 0.2901 & 0.1934 & 0.0322\\
 \end{tabular}
 \end{table}
 
-Consequently the muon-angle measurement is quoted in $\cos\theta_\mu$, which retains its
-shape modes, and the FHC $\theta_\mu$ numbers are withdrawn pending a re-run with a
-regularisation strength that does not collapse the response. The strong $\cos\theta_\mu$
-suppression and the negative backward bins in NEUT and NuWro remain real features of the
-measurement and are reported as such. The RHC generator predictions themselves are healthy,
-sitting a uniform $0.80$--$0.84$ of their FHC counterparts as expected for the
-$\bar\nu_\mu$-enriched beam. The same reparameterisation applied to the pion angle changes
-almost nothing ($\theta_\pi$ vs $\cos\theta_\pi$: $0.802$ vs $0.805$ for RHC); with the
-peak explanation retracted this is simply because the pion-angle response is comparably
-conditioned in the two parameterisations.
+\paragraph{The cause: the regularisation matrix ignored the bin widths.} Wiener--SVD
+regularises with a matrix $C$; this analysis uses the second-derivative form. It was built
+as the plain tridiagonal stencil $(1,-2,1)$, which is a second derivative only on a
+\emph{uniform} grid. Our binnings are strongly non-uniform, with width ratios up to $14{:}1$
+(Table~\ref{tab:reg_widths}), so the operator was not a second derivative at all. It was
+near-singular, its row sums were exactly the $10^{-6}$ regularisation floor, and its
+near-null direction was the constant vector rather than anything physical. The Wiener filter
+was then free to retain that direction alone, which is precisely a rank-1 $A_C$ that passes
+normalisation and discards shape.
+
+That also explains why $\theta_\mu$ was the worst case rather than a random one: its bin
+widths span a factor of $10.4$, and $\cos\theta_\mu$, the next most non-uniform at $14.5$,
+was the other observable whose $\chi^2$ this note previously attributed to an $A_C$
+artefact. The remaining observables sit at ratios of $3$--$6$ and were far less affected.
+
+\paragraph{The fix.} Both derivative regularisation matrices now difference the density on
+the actual grid: each column is divided by its bin width and the stencil uses the true
+spacings between bin centres, with a one-sided first-derivative stencil at the ends. (A
+Dirichlet closure was rejected: it asserts the distribution vanishes at the edges, which is
+false here, $\cos\theta_\mu$ peaks at its upper edge.) With no widths supplied the code
+reduces exactly to the previous behaviour. The widths are passed in by the unfolding
+application, which holds the slice definitions that the cross-section extractor does not.
+
+The effect on the conditioning of $A_C$, measured as $s_2/s_1$ of the smearing matrix
+itself, is given in Table~\ref{tab:reg_widths}. Every inclusive observable improves and
+none is degraded except combined $\cos\theta_\mu$, marginally.
+
+\begin{table}[htbp]\centering
+\caption{$A_C$ conditioning $s_2/s_1$ before and after the regularisation fix, with the
+  bin-width ratio of each observable. A value approaching zero means the smearing matrix
+  has collapsed onto a single mode and the extraction carries no shape information.}
+\label{tab:reg_widths}
+\small
+\begin{tabular}{lcccccc}
+\toprule
+ & width & \multicolumn{2}{c}{FHC} & \multicolumn{2}{c}{RHC} & COMB \\
+observable & ratio & before & after & before & after & before $\to$ after \\\midrule
+$p_\mu$              & $6.3$  & $0.34$ & $0.90$ & $0.31$ & $0.94$ & $0.19 \to 0.68$ \\
+$\cos\theta_\mu$     & $14.5$ & $0.46$ & $0.57$ & $0.45$ & $0.55$ & $0.42 \to 0.39$ \\
+$\cos\theta_\pi$     & $3.6$  & $0.67$ & $0.71$ & $0.55$ & $0.79$ & $0.55 \to 0.74$ \\
+$\theta_{\mu\pi}$    & $3.0$  & $0.42$ & $0.85$ & $0.47$ & $0.65$ & $0.42 \to 0.46$ \\
+$\theta_\mu$         & $10.4$ & $\mathbf{0.015}$ & $\mathbf{0.51}$ & $0.22$ & $0.62$ & $\mathbf{0.045 \to 0.38}$ \\
+$p_\pi$ (2 bins)     & ---    & $0.46$ & $0.53$ & $0.41$ & $0.44$ & $0.29 \to 0.40$ \\\midrule
+\multicolumn{7}{l}{\emph{proton-tagged; only the combined configuration had $A_C$ recorded
+  before the fix}} \\
+$W_{\pi p}$          & --- & \multicolumn{4}{c}{} & $\mathbf{0.022 \to 0.60}$ \\
+$W_\mathrm{had}$     & --- & \multicolumn{4}{c}{} & $0.23 \to 0.86$ \\
+$\delta p_T$         & --- & \multicolumn{4}{c}{} & $0.25 \to 0.93$ \\
+$\delta\alpha_T$     & --- & \multicolumn{4}{c}{} & $0.24 \to 0.48$ \\
+$\delta\phi_T$       & --- & \multicolumn{4}{c}{} & $\mathbf{0.083 \to 0.85}$ \\
+$p_n$                & --- & \multicolumn{4}{c}{} & $0.21 \to 0.88$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{$\theta_\mu$ is reinstated, and the validation is decisive.} The fake data are
+Poisson throws from the MicroBooNE tune, so the tune is the model that \emph{ought} to fit
+best. Before the fix it did not stand out, because every model had been mapped onto the same
+curve; after it, it does:
+
+\begin{center}\small
+\begin{tabular}{lcc}
+\toprule
+FHC $\theta_\mu$, $\chi^2/5$ bins & before (rank-1) & after \\\midrule
+MicroBooNE tune & $3.07$ ($p=0.69$) & $\mathbf{5.14}$ ($p=0.40$) \\
+GENIE           & $4.73$ ($p=0.45$) & $11.3$ ($p=0.046$) \\
+GiBUU           & $3.03$ ($p=0.70$) & $17.9$ ($p=0.003$) \\
+NuWro           & $2.90$ ($p=0.72$) & $38.6$ ($p=2.8\times10^{-7}$) \\
+NEUT            & $2.82$ ($p=0.73$) & $40.6$ ($p=1.1\times10^{-7}$) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent The closure itself is unaffected and remains good, $\chi^2 = 2.17/5$ ($p=0.83$).
+The $\theta_\mu$ measurement is therefore no longer withdrawn: it carries genuine
+discriminating power, and on this fake data it correctly identifies the model the data were
+generated from. What must be withdrawn instead is the earlier \emph{explanation} that
+$\theta_\mu$ ``fixes'' the $\cos\theta_\mu$ tension; both parameterisations are now properly
+conditioned and should be read together.
+
+\paragraph{A correction to the survey below.} The survey of eighteen extractions reported
+that FHC $\theta_\mu$ was the only rank-deficient case. That was wrong in two ways. Combined
+$\theta_\mu$ was also badly degraded at $s_2/s_1=0.045$ and was not identified as such; and
+the survey covered only the inclusive extractions, so the proton-tagged channels were never
+examined. They should have been: combined $W_{\pi p}$ sat at $0.022$, as compromised as FHC
+$\theta_\mu$, and combined $\delta\phi_T$ at $0.083$. All are repaired by the same fix.
 
 \subsubsection*{Is any other observable affected? A survey of all eighteen extractions}
 
@@ -3300,8 +3365,9 @@ COMB & $\theta_\mu$      & 0.0598 & 0.0070 & 12\%\\
 \end{tabular}
 \end{table}
 
-The rank-1 collapse is \emph{unique to FHC $\theta_\mu$}: it is the only entry with zero
-retention, and the only $A_C$ whose rows are all the same vector (spread $9\%$ across rows,
+\emph{The survey that follows was made before the regularisation fix and its conclusion of
+uniqueness is superseded; see the correction above.} As measured then, the collapse looked
+unique to FHC $\theta_\mu$: it was the only entry with zero retention, and the only $A_C$ whose rows are all the same vector (spread $9\%$ across rows,
 effective rank $1.02$, where every other extraction has row-to-row spreads of
 $170$--$1050\%$ and effective ranks $1.24$--$1.91$). RHC and combined $\theta_\mu$ are not
 affected; the combined case is the weaker of the two ($12\%$ retention, effective rank
@@ -3368,10 +3434,11 @@ carry the caveats recorded here.
     points), the MicroBooNE tune (black line) and the four generators are all
     $A_C$-smeared. In $\cos\theta_\mu$ the predictions are strongly suppressed by $A_C$ and
     fall well below both the data and the tune; the most suppressed models are those whose
-    backward bins $A_C$ drives negative. \textbf{The FHC $\theta_\mu$ panel is not a model
-    comparison}: $A_C$ is rank-1 there, so the data and every prediction are the same curve
-    up to normalisation and their apparent agreement carries no shape information
-    (Sec.~\ref{sec:thetavar}).}
+    backward bins $A_C$ drives negative. \textbf{The FHC $\theta_\mu$ panel in this figure
+    predates the regularisation fix}: $A_C$ was rank-1 there, so the data and every
+    prediction are the same curve up to normalisation and their apparent agreement carries no
+    shape information. With the width-aware regularisation $\theta_\mu$ discriminates
+    normally (Sec.~\ref{sec:thetavar}).}
   \label{fig:theta_vs_costheta}
 \end{figure}
 
@@ -4673,10 +4740,13 @@ this analysis: six inclusive observables and seven proton-tagged ones, each in t
 configurations.
 
 \begin{table}[htbp]\centering
-\caption{Identity closure for every extraction. $\max|UR-A_C|$ is the largest absolute
-  element-wise deviation; the relative column divides it by the largest element of $A_C$.
-  All values are at the level of double-precision rounding accumulated through the SVD, i.e.\
-  the identity holds exactly.}
+\caption{Identity closure for every extraction, \emph{as measured before the regularisation
+  matrices were made width-aware}. $\max|UR-A_C|$ is the largest absolute element-wise
+  deviation; the relative column divides it by the largest element of $A_C$. After the fix
+  the same test passes with worst case $4.4\times10^{-6}$ (FHC $W_{\pi p}$) and all inclusive
+  observables below $2.5\times10^{-7}$; the larger values reflect the wider dynamic range of
+  the width-aware operator, not a weaker identity. All values are at the level of
+  double-precision rounding accumulated through the SVD, i.e.\ the identity holds exactly.}
 \label{tab:identity}
 \small
 \begin{tabular}{llcc|llcc}
@@ -4706,11 +4776,18 @@ comb & $\theta_\mu$  & 5 & $2.9\times10^{-10}$ & comb & $p_n$        & 6 & $8.7\
 \end{tabular}
 \end{table}
 
-\noindent The worst deviation over all $39$ extractions is $1.4\times10^{-9}$ relative, on
-FHC $\delta\alpha_T$; the inclusive observables are all below $7\times10^{-10}$. These are
-the rounding errors of the singular-value decomposition and the matrix products that follow
-it, not physical effects: they are eleven orders of magnitude below the smallest systematic
-uncertainty in the analysis. The unfolding construction is therefore exactly self-consistent,
+\noindent The worst deviation over all $39$ extractions is $4.4\times10^{-6}$ relative, on
+FHC $W_{\pi p}$; the inclusive observables are all below $2.5\times10^{-7}$. These are the
+rounding errors of the singular-value decomposition and the matrix products that follow it,
+not physical effects: they remain five orders of magnitude below the smallest systematic
+uncertainty in the analysis.
+
+The values are larger than the $10^{-10}$ level seen before the regularisation matrices were
+made width-aware, and the reason is arithmetic rather than physical. The width-aware
+operator carries factors of $1/w_j$ that span decades across a binning with a $14{:}1$ width
+ratio, so the matrix products accumulate more floating-point error. $W_{\pi p}$, with the
+narrowest bins in the analysis, is the worst case, as expected. Nothing about the identity
+is weaker; only the arithmetic that verifies it is noisier. The unfolding construction is therefore exactly self-consistent,
 and every deviation seen in the fake-data closure tests is attributable to the statistical
 throw and to the response model, not to the unfolding implementation.
 
