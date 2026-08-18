@@ -1949,10 +1949,18 @@ true bin; the quoted numbers are the overall mean (bias) and RMS (resolution).
   \begin{subfigure}[b]{0.32\textwidth}
     \includegraphics[width=\textwidth]{resolution_thmupi}
     \caption{$\theta_{\mu\pi}$: RMS $0.135$~rad.}
+  \end{subfigure}\\[6pt]
+  \begin{subfigure}[b]{0.32\textwidth}
+    \includegraphics[width=\textwidth]{resolution_thetamu}
+    \caption{$\theta_\mu$: RMS $0.081$~rad.}
   \end{subfigure}
   \caption{Reconstruction resolution vs.\ true value, selected signal.  Momenta:
     relative $(\text{reco}-\text{true})/\text{true}$; angles: absolute
     $(\text{reco}-\text{true})$.  Red points: mean residual per true bin.
+    $\theta_\mu$ is derived as $\arccos(\cos\theta_\mu)$, exactly as the bin config
+    does it, so the panel shows the quantity the analysis bins on; it is unbiased
+    ($-0.004$~rad) with RMS $0.081$~rad, the drift below zero above $\sim2.5$~rad being
+    a handful of backward-going muons.
     The muon MCS momentum slightly over-estimates at low $p_\mu$ and increasingly
     under-estimates above $\sim$1~GeV/$c$; the range estimator is badly biased for
     \emph{exiting} muons (range $=$ distance to wall), which is why the analysis

@@ -77,6 +77,16 @@ void make_resolution_figures() {
             "#theta_{#mu#pi} resolution", "true #theta_{#mu#pi} [rad]", "reco#minustrue [rad]",
             13, 0.0, 2.6, -1.0, 1.0, "resolution_thmupi");
 
+  // ---- muon polar angle, absolute ----
+  // theta_mu is not a branch: the analysis derives it as acos(costh) inside the bin
+  // config (ccpi_thetamu_bin_config_opt.txt), so the resolution is computed the same way
+  // rather than from a would-be angle branch. Range 0-3.15 rad matches the slice config.
+  one_panel(t, SEL, Form("TMath::ACos(%scandidate_muon_costh_true)",P),
+            Form("(TMath::ACos(%scandidate_muon_costh_reco)"
+                 "-TMath::ACos(%scandidate_muon_costh_true))",P,P),
+            "#theta_{#mu} resolution", "true #theta_{#mu} [rad]", "reco#minustrue [rad]",
+            21, 0.0, 3.15, -0.5, 0.5, "resolution_thetamu");
+
   f->Close();
   printf("done -> report/figures/resolution_*.png\n");
 }
