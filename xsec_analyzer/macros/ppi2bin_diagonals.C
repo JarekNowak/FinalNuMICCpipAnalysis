@@ -53,7 +53,9 @@ void ppi2bin_diagonals( const char* sel = "1p", const char* beam = "fhc" ) {
   TChain ch( "stv_tree" );
   int nf = 0;
   for ( const auto& m : mc ) {
-    TString p = Form( "/data/uboone/processed/w/xsec-ana-%s.root", m.c_str() );
+    // processed/ holds the inclusive branches, processed/w/ the proton-tagged ones
+    const char* dir = onep ? "/data/uboone/processed/w/" : "/data/uboone/processed/";
+    TString p = Form( "%sxsec-ana-%s.root", dir, m.c_str() );
     if ( gSystem->AccessPathName(p) ) { printf( "  [missing] %s\n", p.Data() ); continue; }
     ch.Add( p ); ++nf;
   }
