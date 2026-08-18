@@ -173,7 +173,7 @@ void make_ppi2bin_figures() {
                double sig; double chi2; double pval; const char* diag; };
     const P onep[3] = {
       { "FHC",  "ccpi1p_FHC5",    "Proton-tagged, FHC",      0.575, 0.15, 0.93, "89 / 74%" },
-      { "RHC",  "ccpi1p_RHCFULL", "Proton-tagged, RHC",      0.,    0.,   0.,   nullptr    },
+      { "RHC",  "ccpi1p_RHCFULL", "Proton-tagged, RHC",      0.495, 2.37, 0.31, "89 / 75%" },
       { "COMB", "ccpi1p_COMB",    "Proton-tagged, combined", 0.,    0.,   0.,   nullptr    }
     };
 

@@ -243,7 +243,11 @@ void make_analysis_step_plots( const SystematicsCalculator& syst,
     l.SetNDC();
     l.SetTextAlign( 12 );
     l.SetTextSize( 0.04 );
-    l.DrawLatex( x, y, "MicroBooNE NuMI Data" );
+// BLINDING: every "data" histogram in this analysis is Poisson-thrown FAKE data
+    // (see the onBNB entries in the file_properties files). The plot labels say so
+    // explicitly; a plot labelled plain "Data" would misrepresent a blind result.
+    // REVISIT AT UNBLINDING: these three strings must go back to real-data wording.
+    l.DrawLatex( x, y, "MicroBooNE NuMI fake data" );
     l.DrawLatex( x, y - 0.05, pot_label.c_str() );
   };
 
@@ -300,7 +304,7 @@ void make_analysis_step_plots( const SystematicsCalculator& syst,
     h_data->Draw( "e1 same" );
 
     auto* lg = new TLegend( 1 - right_margin + 0.02, 0.55, 0.98, 0.88 );
-    lg->AddEntry( h_data, "NuMI data", "lep" );
+    lg->AddEntry( h_data, "NuMI fake data", "lep" );
     lg->AddEntry( h_sig,  "MC signal (CC#pi^{#pm})", "f" );
     lg->AddEntry( h_bkg,  "MC + EXT background", "f" );
     lg->Draw();
@@ -981,7 +985,7 @@ void UnfolderNuMI(std::string XSEC_Config, std::string SLICE_Config, std::string
     TLatex label;
     label.SetTextAlign(12); // Set text alignment (left-aligned)
     label.SetNDC(); // Set position in normalized coordinates
-    std::string labelText1( "MicroBooNE NuMI Data" );
+    std::string labelText1( "MicroBooNE NuMI fake data" );
     // POT was hardcoded to 2.2e20; use the actual data POT for this run
     // (total_pot from get_data_pot()) so the label matches the sample.
     std::string labelText2( toLatexScientific( total_pot ) + " POT" );

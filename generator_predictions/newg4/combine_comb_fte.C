@@ -17,9 +17,12 @@ void combine_comb_fte(const char* fhc_fte,const char* rhc_fte,const char* out_ft
   const double wF = PhiF*POTF, wR = PhiR*POTR, WT = wF+wR;
   printf("  weights: E_FHC=%.4e E_RHC=%.4e  frac(FHC)=%.4f frac(RHC)=%.4f\n",
          wF,wR,wF/WT,wR/WT);
-  const char* obs[5]={"pmu","ppi","costhmu","costhpi","thmupi"};
+  // NOTE: thetamu was added to the per-mode FTE files later than the rest and was
+  // missing from this list, so the combined file had no thetamu_fte and the combined
+  // theta_mu unfold could not run at all. Keep this list in step with make_fte.C.
+  const char* obs[6]={"pmu","ppi","costhmu","costhpi","thmupi","thetamu"};
   TFile fF(fhc_fte), fR(rhc_fte), fo(out_fte,"recreate");
-  for(int o=0;o<5;o++){
+  for(int o=0;o<6;o++){
     TString nm=Form("%s_fte",obs[o]);
     TH1D* a=(TH1D*)fF.Get(nm); TH1D* b=(TH1D*)fR.Get(nm);
     if(!a||!b){printf("  missing %s (FHC:%p RHC:%p)\n",nm.Data(),(void*)a,(void*)b);continue;}
