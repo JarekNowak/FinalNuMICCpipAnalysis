@@ -2233,7 +2233,7 @@ first attempt at this appeared to succeed while leaving the RHC predictions unto
 
 The binning has been changed accordingly. The five-bin scheme is replaced by two bins,
 $[0.175, 0.205]$~GeV/$c$ and everything above, which raises the migration diagonals from
-$99/24/13/6/6\%$ to $\mathbf{97/62\%}$.
+$96/35/21/10/6\%$ to $\mathbf{91/76\%}$, clearing the $68\%$ criterion in \emph{both} bins.
 
 The boundary is not a free choice dressed up as an optimisation. The worst diagonal is
 always the upper bin and it falls monotonically as the boundary rises, so the binding
@@ -2243,23 +2243,34 @@ constraint is the \emph{width} of the first bin rather than the diagonal itself:
 \begin{tabular}{lccc}
 \toprule
 boundary & first-bin width & diagonal, bin 1 & diagonal, bin 2 \\\midrule
-$0.185$ & $10$~MeV/$c$ & $95.8\%$ & $69.3\%$ \\
-$0.200$ & $25$~MeV/$c$ & $97.1\%$ & $63.8\%$ \\
-\textbf{0.205} & \textbf{30~MeV/}$\mathbf{c}$ & $\mathbf{97.4\%}$ & $\mathbf{61.9\%}$ \\
-$0.250$ & $75$~MeV/$c$ & $99.2\%$ & $46.4\%$ \\
+$0.185$ & $10$~MeV/$c$ & $79.7\%$ & $85.4\%$ \\
+$0.195$ & $20$~MeV/$c$ & $88.8\%$ & $80.0\%$ \\
+$0.200$ & $25$~MeV/$c$ & $90.4\%$ & $77.7\%$ \\
+\textbf{0.205} & \textbf{30~MeV/}$\mathbf{c}$ & $\mathbf{91.0\%}$ & $\mathbf{75.5\%}$ \\
+$0.220$ & $45$~MeV/$c$ & $93.3\%$ & $69.1\%$ \\
+$0.250$ & $75$~MeV/$c$ & $95.6\%$ & $56.1\%$ \\
+$0.300$ & $125$~MeV/$c$ & $96.3\%$ & $39.0\%$ \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-\noindent $0.205$ is the narrowest first bin with precedent: $30$~MeV/$c$ matches the
-narrowest bin used in the BNB CC$1\pi$ analysis. Pushing lower would formally clear the
-$68\%$ criterion but only by making the first bin $10$~MeV/$c$ wide, which is not a useful
-cross-section bin. An independent three-bin optimisation placed its first boundary at
-$0.205$ as well.
+\noindent Both bins clear the criterion anywhere between roughly $0.19$ and $0.22$, so the
+choice within that window is governed by bin width rather than by the criterion. $0.205$ is
+the narrowest first bin with precedent: $30$~MeV/$c$ matches the narrowest bin used in the
+BNB CC$1\pi$ analysis. Going narrower trades first-bin diagonal for upper-bin diagonal and
+at $10$~MeV/$c$ the first bin itself falls to $80\%$ on only $325$ events, which is not a
+useful cross-section bin; going wider, $0.220$ still passes but leaves the upper bin at
+$69\%$, with no margin. An exhaustive scan over all edge sets
+(\texttt{macros/ppi\_binning\_scan.C}) returns $0.205$ as the best first boundary for every
+number of bins tried, and for the proton-tagged selection as well.
 
 A three-bin variant was built and measured before being discarded. The best achievable
-(same $30$~MeV/$c$ minimum width) is $97/38/39\%$, against $97/62\%$ for two bins: the third
-bin costs about $25$ points on the worst bin. Above $\sim\!0.25$~GeV/$c$ the reconstructed
+(same $30$~MeV/$c$ minimum width, edges $0.205$ and $0.265$) is $91/51/52\%$, against
+$91/76\%$ for two bins: the third bin costs $25$ points on the worst bin and drops it well
+below the criterion. Two $30$~MeV/$c$ bins followed by an open bin
+($0.205$, $0.235$) is worse still at $91/39/62\%$, and note that it degrades the
+\emph{upper} bin too, from $76\%$ to $62\%$: narrowing the top bin's reco range pushes
+genuinely high-momentum events out of their own bin. Four bins reach only $91/39/39/42\%$. Above $\sim\!0.25$~GeV/$c$ the reconstructed
 momentum barely varies, so a second boundary there separates almost nothing and merely
 divides one poorly-measured region into two equally poor halves. The same ordering holds
 under a golden-pion cut ($67/52/46\%$), so it is not an artefact of the selection.
@@ -2375,10 +2386,12 @@ smears.
   \label{fig:ppi2bin_AC}
 \end{figure}
 
-Even at $97/62\%$ the upper bin remains below the $68\%$ criterion, which is why the change
-of scope described below still stands: the two-bin scheme makes the inclusive $p_\pi$ result
-honest about its own resolution, but it does not by itself make it a competitive shape
-measurement.
+At $91/76\%$ both bins clear the $68\%$ criterion, so the two-bin scheme makes the inclusive
+$p_\pi$ result usable on the standard test rather than merely honest about its limitations.
+It remains a coarse measurement: two bins cannot resolve a shape, and above
+$\sim\!0.34$~GeV/$c$ the reconstructed momentum saturates, so the upper bin is an integral
+over a wide range rather than a differential point. What the scheme buys is a result whose
+response is defensible, not a competitive shape measurement.
 
 \subsubsection*{A golden-pion classifier was trained and tested: it works, and it is not enough}
 
@@ -2470,26 +2483,26 @@ current intention is to \emph{withdraw the pion-momentum differential cross sect
 inclusive selection} and to quote it instead on the \emph{proton-tagged} subsample. Both
 candidate routes were tried; as the two following paragraphs show, the golden-pion
 classifier does not repair the response even at perfect truth-level selection, whereas the
-proton tag does, in all three beam configurations. The inclusive $p_\pi$ result is the one measurement in
-this analysis whose response cannot be made to satisfy the binning criterion the field
-applies, and reporting it at face value alongside observables that comfortably pass would
-misrepresent how well it is measured. The other inclusive observables are unaffected: the
-angular variables and $p_\mu$ retain their shape information, and the total cross section
-does not use this estimator at all.
+proton tag does not change the response appreciably either way. At the two-bin scheme the
+inclusive selection already satisfies the binning criterion, so $p_\pi$ need not be withdrawn
+from it; what it cannot support is the five-bin \emph{shape} measurement originally planned.
+The other inclusive observables are unaffected: the angular variables and $p_\mu$ retain
+their shape information, and the total cross section does not use this estimator at all.
 
 \paragraph{The proton-tagged route, now measured in all three configurations.} Both routes
 have now been quantified. The golden-pion route is above; the proton-tagged one has been run
-for FHC, RHC and the combined exposure, and the expectation stated in earlier drafts, that
-requiring a tagged proton ``does nothing directly to the pion reconstruction'', is
-\emph{contradicted by the measurement}. Applying the same migration-diagonal test to the
-\texttt{CC1mu1pi1p} sample at the same two-bin edges gives
+for FHC, RHC and the combined exposure. The expectation stated in earlier drafts, that
+requiring a tagged proton ``does nothing directly to the pion reconstruction'', turns out to
+be \emph{correct}: at the same two-bin edges the proton-tagged response is
+indistinguishable from the inclusive one, marginally worse rather than better. Applying the
+same migration-diagonal test gives
 
 \begin{center}\small
 \begin{tabular}{llccc c}
 \toprule
 selection & config. & $N_\mathrm{sig}$ bin 1 & bin 1 $[0.175,0.205]$
  & bin 2 ($>0.205$) & both $>0.68$? \\\midrule
-inclusive \texttt{CC1mu1piXp} & FHC & --- & $97\%$ & $62\%$ & no \\\midrule
+inclusive \texttt{CC1mu1piXp} & FHC & $1056$ & $91.0\%$ & $75.5\%$ & yes \\\midrule
 \textbf{proton-tagged} & FHC & $469$ & $\mathbf{88.9\%}$ & $\mathbf{74.2\%}$ & \textbf{yes} \\
 \texttt{CC1mu1pi1p} & RHC & $621$ & $\mathbf{89.4\%}$ & $\mathbf{75.1\%}$ & \textbf{yes} \\
  & comb. & $1090$ & $\mathbf{89.2\%}$ & $\mathbf{74.7\%}$ & \textbf{yes} \\
@@ -2499,14 +2512,24 @@ inclusive \texttt{CC1mu1piXp} & FHC & --- & $97\%$ & $62\%$ & no \\\midrule
 
 \noindent measured on the \texttt{numuMC} overlays named in the corresponding
 \texttt{file\_properties} lists, selected signal, with the reconstructed momentum
-mass-corrected exactly as the bin config does it. The upper bin improves from $62\%$ to
-$74$--$75\%$ and clears the criterion in \emph{every} beam configuration, which the
-inclusive selection never does at any binning we tried. The three configurations agree to
-better than a percentage point, so this is a property of the selection rather than of a
-particular exposure. Requiring a reconstructed proton evidently selects events whose pion is
-better reconstructed, rather than merely trading purity for efficiency: the proton-tagged
-sample is biased toward lower hadronic activity, and the pion in such events is more likely
-to range out than to interact.
+mass-corrected exactly as the bin config does it. All four rows clear the criterion in both
+bins, and the proton-tagged values sit about two points \emph{below} the inclusive ones
+rather than above them. The three proton-tagged configurations agree to better than a
+percentage point, so the response is a property of the selection rather than of a particular
+exposure, but the proton tag does not improve it.
+
+That is the expected result on reflection, and it corrects a claim made in an earlier draft
+of this note. The pion-momentum response is set by whether the pion ranges out or interacts
+hadronically before stopping, which is a property of the pion's own passage through the
+argon. Requiring a reconstructed proton at the vertex changes the event sample, the purity
+and the efficiency, but it does not change what happens to the pion downstream, so there is
+no mechanism by which it would sharpen the momentum response. The measurement now says so
+directly.
+
+The consequence is that the proton-tagged $p_\pi$ measurement stands on its own merits, as
+the pion-momentum cross section of an exclusive final state that also yields $W$ and TKI, and
+not as a repair of the inclusive one. The inclusive $p_\pi$ at two bins is equally
+defensible on the response test.
 
 \begin{table}[htbp]\centering
 \caption{Two-bin $p_\pi$ on the proton-tagged \texttt{CC1mu1pi1p} selection, all three beam
@@ -2550,10 +2573,11 @@ $\chi^2/\mathrm{ndf}$ & \multicolumn{2}{c|}{$0.15/2$ ($p=0.93$)}
 \end{figure}
 
 All three extractions close, with $\chi^2$ of $0.15$, $2.37$ and $1.01$ on two bins
-($p = 0.93$, $0.31$, $0.60$). This is the first selection for which the $p_\pi$ differential
-cross section satisfies the field's binning criterion in every bin of every beam
-configuration, so it, and not the inclusive selection, is where the measurement should be
-quoted.
+($p = 0.93$, $0.31$, $0.60$). The $p_\pi$ differential cross section satisfies the field's
+binning criterion in every bin of every beam configuration here, as it does on the inclusive
+selection; the two are equivalent on that test, and the proton-tagged version is reported
+because it belongs to the exclusive final state, not because it is required to make $p_\pi$
+measurable.
 
 \paragraph{One number that needs stating plainly.} The RHC first bin unfolds to $2.02$ times
 its $A_C$-smeared truth, against $1.05$ for FHC and $1.52$ for combined. Quoted as a ratio
@@ -4768,8 +4792,8 @@ unbiasedness of the FHC, RHC, and combined full-exposure extractions equally.
       \textbf{0.175, 0.205, $\infty$} \quad(first edge 0.175 = signal threshold; second
       bin open above). \emph{Changed 2026-08-17}, see \S\ref{sec:ppi_bias}. The previous
       five-bin scheme (0.175, 0.250, 0.320, 0.420, 0.550, open) had migration diagonals of
-      $99/24/13/6/6\%$, so only its first bin met the $>68\%$ usable-bin criterion; the
-      two-bin scheme gives $97/62\%$. (An earlier draft of this table listed
+      $96/35/21/10/6\%$, so only its first bin met the $>68\%$ usable-bin criterion; the
+      two-bin scheme gives $91/76\%$, clearing it in both. (An earlier draft of this table listed
       0.175, 0.20, 0.30, 0.40, 0.50, 1.00, which never matched the configuration files.)
       \\[4pt]
     $\cos\theta_\mu$ &
