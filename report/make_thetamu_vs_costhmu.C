@@ -31,7 +31,7 @@ void make_thetamu_vs_costhmu() {
                   TColor::GetColor("#CC79A7"), TColor::GetColor("#D55E00") };
   int gsty[4] = { 1, 2, 7, 9 };
 
-  TCanvas c( "c_tvc", "", 1300, 620 );
+  TCanvas c( "c_tvc", "", 1300, 470 );
   c.Divide( 2, 1 );
   std::vector<TObject*> keep;
 
