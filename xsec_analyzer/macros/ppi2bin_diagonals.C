@@ -27,13 +27,17 @@ void ppi2bin_diagonals( const char* sel = "1p", const char* beam = "fhc" ) {
   // on that pattern silently drops it and shifts the answer (90.3/74.4 from three runs
   // against 88.9/74.2 from four), so the files are listed explicitly.
   std::vector<std::string> mc;
-  if ( std::string(beam) == "fhc" ) {
+  const std::string bm( beam );
+  if ( bm == "fhc" || bm == "comb" ) {
     mc = { "Run1_fhc_new_numi_flux_fhc_pandora_ntuple",
            "Run2_fhc_new_numi_flux_fhc_pandora_ntuple",
            "Run4_fhc_new_numi_flux_fhc_pandora_ntuple",
            "reweightedPPFX_numi_nu_overlay_pion_ntuples_run5_fhc" };
-  } else {
-    mc = { "Run1_rhc_new_numi_flux_rhc_pandora_ntuple",
+  }
+  if ( bm == "rhc" || bm == "comb" ) {
+    // combined = the union of both beam file sets, matching file_properties_numi_comb_w.txt
+    const std::vector<std::string> r = {
+           "Run1_rhc_new_numi_flux_rhc_pandora_ntuple",
            "Run2_rhc_new_numi_flux_rhc_pandora_ntuple",
            "Run3_rhc_new_numi_flux_rhc_pandora_ntuple_aa",
            "Run3_rhc_new_numi_flux_rhc_pandora_ntuple_ab",
@@ -43,6 +47,7 @@ void ppi2bin_diagonals( const char* sel = "1p", const char* beam = "fhc" ) {
            "Run4a_rhc_new_numi_flux_rhc_pandora_ntuple",
            "Run4b_rhc_new_numi_flux_rhc_pandora_ntuple",
            "Run4c_rhc_new_numi_flux_rhc_pandora_ntuple" };
+    mc.insert( mc.end(), r.begin(), r.end() );
   }
 
   TChain ch( "stv_tree" );
