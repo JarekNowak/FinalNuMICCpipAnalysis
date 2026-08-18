@@ -1027,7 +1027,8 @@ $0.550$--$1.000$ & 2933 & 429 & $14.6\%$ \\
 \label{sec:fv}
 % =============================================================================
 
-The fiducial volume (FV) is defined in \texttt{selection/FV\_new.h}:
+The fiducial volume (FV) is defined in \texttt{CC1mu1piXp.cxx} (the independent
+cross-check selection carries the same numbers in \texttt{FV\_new.h}):
 \begin{equation}
   x \in [10.0,\;246.0]\cm, \quad
   y \in [-101.0,\;+101.0]\cm, \quad
@@ -1048,6 +1049,52 @@ to require that the pion candidate track endpoint is contained:
   y \in [-113.53,\;+107.47]\cm,\quad
   z \in [2.1,\;1034.9]\cm.
 \end{equation}
+
+\subsection{Which volume applies where}
+\label{sec:fv_where}
+
+Three distinct volumes appear above and it is worth stating plainly which is used for what,
+since ``contained'' and ``in the fiducial volume'' are not the same requirement.
+
+\begin{center}\small
+\begin{tabular}{lll}
+\toprule
+volume & extent & used for \\\midrule
+fiducial (FV) & $[10,246]\times[-101,101]\times[10,986]\cm$ & neutrino vertex, true \emph{and} reco \\
+ & minus $z\in[675.1,775.1]\cm$ & \\
+containment & $[2,254.35]\times[-113.53,107.47]\times[2.1,1034.9]\cm$ & track endpoints \\
+active TPC & $[0,256.35]\times[-115.5,117.5]\times[0,1036.9]\cm$ & (reference only) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{True and reco use identical dimensions.} The framework keeps the two as separate
+quantities, \texttt{true\_FV()} and \texttt{reco\_FV()}, and other selections in the code base
+use that freedom. Here they are defined as the same box
+(\texttt{CC1mu1piXp.cxx}, \texttt{define\_true\_FV} / \texttt{define\_reco\_FV}). The signal
+definition tests the \emph{true} neutrino vertex and the selection tests the \emph{reconstructed}
+vertex, both through the same helper, so both inherit the dead-region veto as well. There is
+no asymmetry between the two, and the FV therefore does not itself generate any migration
+between signal and background.
+
+\paragraph{The dead-region veto applies to the vertex only.} An event whose vertex lies
+outside the unresponsive-wire slab is kept even if one of its tracks crosses that slab. This
+is the conventional choice, but it is an assumption rather than a necessity: tracks crossing
+dead wires have degraded calorimetry and range reconstruction, and the associated
+inefficiency is absorbed into the response matrix rather than removed by a cut.
+
+\paragraph{The dead slab is also removed from the target count.} The argon target number is
+computed from the FV with the slab subtracted, not from the full box. Retaining the slab
+would inflate the target count by $100/976 \approx 10\%$ and bias every cross section low by
+the same factor. Note that this subtraction is applied on the NuMI code path specifically;
+the generic path computes the target number without it, so the two must not be mixed.
+
+\paragraph{Relation to the active volume.} The FV is inset from the active TPC by
+approximately $10\cm$ in $x$, $15\cm$ in $y$, $10\cm$ at the upstream $z$ face and $51\cm$ at
+the downstream face. The containment box, by contrast, is inset by only $2\cm$: track
+endpoints are required to be inside the detector, not inside the fiducial region, which is
+the correct requirement for range-based momentum and for the pion-containment cut.
+
 
 % =============================================================================
 \section{Event Selection}
