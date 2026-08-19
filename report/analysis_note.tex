@@ -2935,6 +2935,45 @@ between generators, not agreement between them. The same test should be applied 
 $W_\mathrm{had}$, whose upper bins are also narrower than its $177$~MeV/$c^2$ half-width,
 before either $W$ result is quoted as a shape measurement.
 
+\paragraph{Adopted scheme: two bins split at $1.15$~GeV/$c^2$.} The boundary is more tightly
+constrained than it was for $p_\pi$, where anything between roughly $0.19$ and $0.22$ worked.
+Here only one choice satisfies both the diagonal criterion and the $100$-event floor:
+
+\begin{center}\small
+\begin{tabular}{lccr l}
+\toprule
+boundary [GeV/$c^2$] & bin 1 & bin 2 & $N$(bin 1) & \\\midrule
+$1.13$          & $76.5\%$ & $88.0\%$ & $51$   & below the event floor \\
+$\mathbf{1.15}$ & $\mathbf{83.2\%}$ & $\mathbf{77.9\%}$ & $\mathbf{137}$ & \textbf{adopted} \\
+$1.17$          & $86.8\%$ & $66.8\%$ & $266$  & bin 2 just fails \\
+$1.19$          & $87.6\%$ & $56.0\%$ & $468$  & fails \\
+$1.23$          & $91.7\%$ & $37.6\%$ & $1114$ & fails \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent Moving the boundary up buys population in the first bin at the direct expense of
+the second: the two diagonals trade against each other steeply, and the window in which both
+exceed $0.68$ is only about $\pm0.01$~GeV/$c^2$ wide. That narrowness is itself a
+consequence of the resolution being comparable to the full width of the peak region.
+
+Two consequences should be carried with the result. First, \textbf{the first bin is thin},
+$137$ selected signal events against a floor of $100$, so its statistical uncertainty will be
+large once systematics are folded in; the $p_\pi$ first bin, with $469$ events, already
+carries $42$--$53\%$. Second, if that proves too sparse in practice, $1.17$ is the natural
+fallback: it doubles the population for a bin-2 diagonal of $66.8\%$, marginally below
+threshold, which is a defensible trade to state explicitly rather than a criterion to fail
+silently.
+
+The scheme is implemented in \texttt{configs/ccpi1p\_Wpipr\_bin\_config\_2bin.txt}, with the
+reasoning recorded alongside it in a companion \texttt{.README}. At the time of writing the
+universe construction for the FHC configuration is in progress; the extracted cross section,
+its closure and the resulting generator $\chi^2$ are not yet available, and the comparison
+that matters, whether the apparent $W_{\pi p}$ agreement survives a binning the detector can
+actually resolve, remains to be made. The same test has not yet been applied to
+$W_\mathrm{had}$.
+
+
 
 \subsection{Cross-check methods}
 \label{sec:crosschecks}
