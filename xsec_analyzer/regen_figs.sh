@@ -16,7 +16,7 @@ mkdir -p "$DUMP" "$UO"
 declare -A TAG=( [fhc5]=FHC5 [rhcfull]=RHCFULL [comb]=COMB )
 declare -A PFX=( [fhc5]="" [rhcfull]="rhc_" [comb]="comb_" )
 declare -A GT=(  [fhc5]=newg4 [rhcfull]=rhc [comb]=comb )
-obs=(pmu ppi costhmu costhpi thmupi)
+obs=(pmu ppi costhmu costhpi thmupi thetamu)
 
 echo "==== REGEN FIGS START $(date) ===="
 nr=0

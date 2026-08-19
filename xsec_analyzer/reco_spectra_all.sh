@@ -10,7 +10,7 @@ declare -A TAG=( [fhc5]=FHC5 [rhcfull]=RHCFULL [comb]=COMB )
 declare -A PFX=( [fhc5]="" [rhcfull]="rhc_" [comb]="comb_" )
 n=0
 for cfg in fhc5 rhcfull comb; do t=${TAG[$cfg]}; p=${PFX[$cfg]}
-  for o in pmu ppi costhmu costhpi thmupi; do
+  for o in pmu ppi costhmu costhpi thmupi thetamu; do
     bin/UnfolderNuMI configs/ccpi_xsec_config_numi_${o}_${cfg}.txt configs/ccpi_${o}_slice_config_opt.txt \
       $PROC/xsec_${t}_${o}.root > /dev/null 2>&1
     if [ -f unfold_output/plot_step1_reco_spectrum.pdf ]; then
@@ -18,6 +18,6 @@ for cfg in fhc5 rhcfull comb; do t=${TAG[$cfg]}; p=${PFX[$cfg]}
     else echo "  MISSING plot_step1 for $cfg $o"; fi
   done
 done
-echo "reco spectra written: $n/15"
+echo "reco spectra written: $n/18"
 ls "$FIG"/fw_reco_*.pdf 2>/dev/null | wc -l
 echo "########## RECO SPECTRA DONE ##########"
