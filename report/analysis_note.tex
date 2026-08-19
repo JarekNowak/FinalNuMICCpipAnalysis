@@ -712,6 +712,72 @@ analysis ntuples. (The absolute flux normalisation used for the cross-section in
 Sec.~\ref{sec:flux_status} is still taken from the previous flux histograms; moving
 that normalisation onto the new-G4 flux is a separate, tracked update.)
 
+\subsection{Beam direction in detector coordinates}
+\label{sec:beamdir}
+
+Two different angles describe the \uboone{}--NuMI geometry, and they must not be
+confused (Fig.~\ref{fig:numigeom}). The \emph{off-axis angle} is a property of the
+beamline: the detector sits $91.1$~m off the NuMI axis at $672.7$~m downstream of the
+target, a baseline of $678.8$~m and an off-axis angle of $7.71^\circ$
+($134.6$~mrad).\footnote{Computed from the detector position in beam coordinates,
+$(5502,\,7259,\,67270)$~cm, taken from the same rotation matrix used for the NuMI
+beamline geometry weights. This supersedes the $110$~mrad quoted earlier in this
+section.} That angle says nothing about how the TPC is oriented.
+
+The angle that enters the measurement is a different one: the direction in which the
+neutrinos travel \emph{relative to the detector $z$ axis}. Averaged over interactions
+in the active volume, the true neutrino direction in detector coordinates is
+$(0.4624,\,0.0489,\,0.8853)$, which lies $28.6^\circ$ away from $z$. The detector $z$
+axis is therefore a poor stand-in for the beam: it is not the direction the neutrinos
+came from, nor the NuMI beamline axis (itself $23.2^\circ$ from $z$).
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{numi_geometry}
+  \caption{The NuMI geometry seen by \uboone{}. (a) Beamline geometry, to scale: the
+    detector sits $91.1$~m off the NuMI axis at a baseline of $678.8$~m, an off-axis
+    angle of $7.7^\circ$. (b) The same neutrinos in TPC coordinates, to scale (the
+    $x$--$z$ projection; the quoted $28.6^\circ$ is the full three-dimensional angle):
+    the beam arrives $28.6^\circ$ away from the detector $z$ axis, so one and the same
+    muon is assigned $\theta_\mu=12^\circ$ about $z$ but $\theta_\mu=40.6^\circ$ about
+    the neutrino. The generators mean the second. (c) The resulting shift in the true
+    $\cos\theta_\mu$ distribution; dotted lines mark the analysis bin edges. Under the
+    two conventions $64.6\%$ of signal events fall in a different bin ($44.6\%$ for
+    $\cos\theta_\pi$).}
+  \label{fig:numigeom}
+\end{figure}
+
+This matters because every polar angle and every transverse-kinematic-imbalance
+variable is defined with respect to the neutrino direction. In the generator
+predictions the neutrino defines $+z$ by construction --- the GENIE event records used
+here have $p_x^\nu=p_y^\nu=0$ and $p_z^\nu=E_\nu$ exactly --- so a measurement that
+refers its angles to the detector $z$ axis is not being compared with the prediction
+it appears to be compared with. The effect is not small: $64.6\%$ of signal events
+change $\cos\theta_\mu$ bin between the two conventions, and $44.6\%$ change
+$\cos\theta_\pi$ bin. For the TKI variables the axis error exceeds the observable
+itself, the mean $\delta p_T$ being $0.742$~GeV/$c$ about $z$ against $0.264$~GeV/$c$
+about the beam.
+
+Accordingly, all angular and TKI observables in this analysis are referred to the
+neutrino direction. Truth-level quantities use the exact per-event neutrino direction,
+which reproduces the generator convention exactly; reconstructed quantities use the
+fixed target-to-detector axis above, since the per-event direction is not measurable
+in data. The residual spread between the two is the physical divergence of the beam
+--- neutrinos reaching the detector are produced by decays distributed along the decay
+pipe --- and is not recoverable from the interaction vertex: over a $678.8$~m baseline
+a $2.5$~m detector subtends only ${\sim}4$~mrad. Measured against the true per-event
+direction, the RMS opening angle is $532$~mrad for the detector $z$ axis, $242$~mrad
+for the NuMI beamline axis, $178$~mrad for the fixed target-to-detector axis, and
+$178$~mrad for a per-event target-to-vertex direction, against a best-possible
+$175$~mrad for any fixed axis. A constant axis is therefore as good as anything
+available, and the truth/reco difference is a resolution effect absorbed by the
+response matrix like any other.
+
+Quantities that are invariant under this choice of axis are unaffected: $p_\mu$,
+$p_\pi$, the muon--pion opening angle $\theta_{\mu\pi}$, the invariant mass
+$W_{\pi p}$, and all integrated cross sections. The event selection is likewise
+unaffected, as no selection cut and no BDT input variable uses a polar angle.
+
 \subsection{Data exposure}
 
 The analysis is \emph{blind}: the real beam-on data are not used. Each configuration
@@ -1290,11 +1356,19 @@ reco bin entirely. Range momentum is meaningful only for contained tracks, which
 containment requirement in the selection guarantees.
 
 \paragraph{Angles.}
-Polar angles are defined with respect to the detector $z$-axis:
-$\cos\theta_\mu = p_z^\mu / |\mathbf{p}^\mu|$,
-$\cos\theta_\pi = p_z^\pi / |\mathbf{p}^\pi|$.
-The opening angle $\theta_{\mu\pi} = \arccos(\hat{u}_\mu \cdot \hat{u}_\pi)$
-is computed from reconstructed track directions.
+Polar angles are defined with respect to the \emph{neutrino direction}
+$\hat{u}_\nu$, not the detector $z$-axis:
+$\cos\theta_\mu = \hat{u}_\mu \cdot \hat{u}_\nu$,
+$\cos\theta_\pi = \hat{u}_\pi \cdot \hat{u}_\nu$.
+The two are far from equivalent --- the NuMI beam reaches \uboone{} $28.6^\circ$
+away from $z$, and referring the angles to $z$ would place $64.6\%$ of signal events
+in a different $\cos\theta_\mu$ bin than the generator predictions they are compared
+with (Sec.~\ref{sec:beamdir}). For reconstructed quantities $\hat{u}_\nu$ is the fixed
+target-to-detector axis $(0.4624,\,0.0489,\,0.8853)$; at truth level it is the exact
+per-event neutrino direction. The opening angle
+$\theta_{\mu\pi} = \arccos(\hat{u}_\mu \cdot \hat{u}_\pi)$ is computed from
+reconstructed track directions and, being an angle between two measured tracks, is
+independent of this choice.
 
 % =============================================================================
 \section{Cut-Flow and Selection Performance}

@@ -106,7 +106,7 @@
   \vspace{-1mm}
   \begin{itemize}\scriptsize\setlength\itemsep{1.5pt}
     \item \textbf{FSI migration}: absorption ($N\pi \to 1\pi$) and charge exchange ($1\pi \to 0\pi$).
-    \item \textbf{NuMI beam ($110$\,mrad)}: $\nu_\mu$-dominant FHC, $\bar\nu_\mu$-enriched RHC.
+    \item \textbf{NuMI beam ($135$\,mrad off-axis)}: $\nu_\mu$-dominant FHC, $\bar\nu_\mu$-enriched RHC.
     \item \textbf{Observables}: $p_\mu$, $p_\pi$, $\cos\theta_\mu$, $\cos\theta_\pi$, $\theta_{\mu\pi}$.
   \end{itemize}
   \column{.45\textwidth}
@@ -120,8 +120,38 @@
   Comb & $53.0\%$ & $44.4\%$ & $1.5\%$ & $1.1\%$ & $19.94$\\
   \bottomrule
   \end{tabular}\\[1mm]
-  {\tiny $110$\,mrad off-axis gives large wrong-sign flux. Signal is charge-blind ($|\nu_\mathrm{pdg}|=14$), measuring $\nu_\mu+\bar\nu_\mu$ combined.}
+  {\tiny $135$\,mrad off-axis gives large wrong-sign flux. Signal is charge-blind ($|\nu_\mathrm{pdg}|=14$), measuring $\nu_\mu+\bar\nu_\mu$ combined.}
   \end{block}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{The NuMI beam is not along the detector $z$ axis}
+  \begin{center}
+    \includegraphics[width=0.90\textwidth]{numi_geometry}
+  \end{center}
+  \vspace{-4mm}
+  \begin{columns}[T]\column{.50\textwidth}
+  \begin{itemize}\tiny\setlength\itemsep{2pt}
+    \item Two \emph{different} angles, easily confused:
+    \begin{itemize}\tiny
+      \item \textbf{$7.7^\circ$} = off-axis angle --- where the detector sits
+            ($91$\,m off axis at $679$\,m). Beamline geometry only.
+      \item \alert{$\mathbf{28.6^\circ}$} = beam vs.\ detector $z$. \textbf{This is the one
+            that matters.}
+    \end{itemize}
+    \item Generators define $\theta$ about the $\nu$ ($p^\nu_x\!=\!p^\nu_y\!=\!0$ exactly);
+          the analysis had been using $z$.
+  \end{itemize}
+  \column{.50\textwidth}
+  \begin{itemize}\tiny\setlength\itemsep{2pt}
+    \item Impact: $64.6\%$ of events change $\cos\theta_\mu$ bin, $44.6\%$ change
+          $\cos\theta_\pi$ bin; mean $\delta p_T$ $0.742 \to 0.264$\,GeV/$c$.
+    \item \textbf{Unaffected} (frame-independent): $p_\mu$, $p_\pi$, $\theta_{\mu\pi}$,
+          $W_{\pi p}$, integrated $\sigma$ --- and the selection itself (no cut or BDT
+          input uses a polar angle).
+    \item \textbf{Now fixed}: truth uses the per-event $\nu$ direction, reco a fixed
+          axis. Angular and TKI results being re-extracted.
+  \end{itemize}
   \end{columns}
 \end{frame}
 
