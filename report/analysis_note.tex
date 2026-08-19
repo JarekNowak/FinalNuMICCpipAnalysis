@@ -759,18 +759,25 @@ itself, the mean $\delta p_T$ being $0.742$~GeV/$c$ about $z$ against $0.264$~Ge
 about the beam.
 
 Accordingly, all angular and TKI observables in this analysis are referred to the
-neutrino direction. Truth-level quantities use the exact per-event neutrino direction,
-which reproduces the generator convention exactly; reconstructed quantities use the
-fixed target-to-detector axis above, since the per-event direction is not measurable
-in data. The residual spread between the two is the physical divergence of the beam
---- neutrinos reaching the detector are produced by decays distributed along the decay
-pipe --- and is not recoverable from the interaction vertex: over a $678.8$~m baseline
-a $2.5$~m detector subtends only ${\sim}4$~mrad. Measured against the true per-event
-direction, the RMS opening angle is $532$~mrad for the detector $z$ axis, $242$~mrad
-for the NuMI beamline axis, $178$~mrad for the fixed target-to-detector axis, and
-$178$~mrad for a per-event target-to-vertex direction, against a best-possible
-$175$~mrad for any fixed axis. A constant axis is therefore as good as anything
-available, and the truth/reco difference is a resolution effect absorbed by the
+neutrino direction, following the $\beta$ convention of the NuMI $\nu_e$ CC$1\pi$
+internal note~\cite{numi_nue_ccpi} and of the earlier NuMI $\nu_e$ cross-section
+measurement it derives from~\cite{mistry_thesis}. At truth level the exact per-event
+neutrino direction is used, which reproduces the generator convention exactly. At
+reconstruction level the neutrino direction is approximated by the vector from the
+NuMI target --- at $(-31388,\,-3316,\,-60100)$~cm in detector coordinates, a $684$~m
+baseline --- to the reconstructed interaction vertex. Adopting the same $\beta$ as the
+$\nu_e$ analysis keeps the two NuMI measurements directly comparable.
+
+The choice of reconstruction-level axis is in any case not a sensitive one. A single
+fixed axis and the per-event $\beta$ differ by a median of $2.4$~mrad (maximum
+$7.3$~mrad), which moves only $0.42\%$ of muons across a $\cos\theta_\mu$ bin edge ---
+to be compared with the $64.6\%$ moved by the detector-$z$ convention. Against the true
+per-event direction the two perform almost identically, with a mean opening angle of
+$1.95^\circ$ for $\beta$ and $2.00^\circ$ for a fixed axis. What neither can recover is
+the physical divergence of the beam: neutrinos reaching the detector come from decays
+distributed along the decay pipe, not from the target, and over a $684$~m baseline a
+$2.5$~m detector subtends only ${\sim}4$~mrad, so the vertex position carries almost no
+information about the direction. That residual is a resolution effect, absorbed by the
 response matrix like any other.
 
 Quantities that are invariant under this choice of axis are unaffected: $p_\mu$,
@@ -1363,9 +1370,9 @@ $\cos\theta_\pi = \hat{u}_\pi \cdot \hat{u}_\nu$.
 The two are far from equivalent --- the NuMI beam reaches \uboone{} $28.6^\circ$
 away from $z$, and referring the angles to $z$ would place $64.6\%$ of signal events
 in a different $\cos\theta_\mu$ bin than the generator predictions they are compared
-with (Sec.~\ref{sec:beamdir}). For reconstructed quantities $\hat{u}_\nu$ is the fixed
-target-to-detector axis $(0.4624,\,0.0489,\,0.8853)$; at truth level it is the exact
-per-event neutrino direction. The opening angle
+with (Sec.~\ref{sec:beamdir}). For reconstructed quantities $\hat{u}_\nu$ is the $\beta$
+direction of Refs.~\cite{numi_nue_ccpi,mistry_thesis}, from the NuMI target to the
+reconstructed vertex; at truth level it is the exact per-event neutrino direction. The opening angle
 $\theta_{\mu\pi} = \arccos(\hat{u}_\mu \cdot \hat{u}_\pi)$ is computed from
 reconstructed track directions and, being an angle between two measured tracks, is
 independent of this choice.
@@ -5541,6 +5548,17 @@ unbiasedness of the FHC, RHC, and combined full-exposure extractions equally.
 
 % =============================================================================
 \begin{thebibliography}{99}
+
+\bibitem{numi_nue_ccpi}
+  MicroBooNE Collaboration,
+  ``Measurement of the flux-averaged differential $\nu_e$ CC$1\pi$ cross section
+  in the NuMI beam,'' Internal Note v3.2 (2025).
+
+\bibitem{mistry_thesis}
+  K.~Mistry,
+  ``First Measurement of the Flux-Averaged Differential Charged-Current
+  Electron-Neutrino and Antineutrino Cross Section on Argon with the MicroBooNE
+  Detector,'' PhD thesis (2021).
 
 \bibitem{nova}
   NOvA Collaboration, M.~A.~Acero \textit{et al.},

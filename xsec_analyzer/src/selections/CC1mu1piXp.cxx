@@ -31,6 +31,12 @@ namespace {
     return NuMIBeam::axis();
   }
 
+  // Reco-level neutrino direction: the beta convention of the NuMI nue CC1pi note,
+  // i.e. the target-to-reconstructed-vertex vector.
+  TVector3 reco_nu_dir( const AnalysisEvent* ev ) {
+    return NuMIBeam::nu_dir_from_vertex( ev->nu_vx_, ev->nu_vy_, ev->nu_vz_ );
+  }
+
   // z dead region excluded from the neutrino-vertex fiducial volume, matching
   // the custom selection (FV_new.h deadzmin/deadzmax). Applies to the neutrino
   // VERTEX FV only — not to track containment.
@@ -639,14 +645,15 @@ if(CandidateMuonIndex != -1){
 
 candidate_muon_mom_mcs = Event->track_mcs_mom_mu_->at(CandidateMuonIndex);
 
-// Reco muon cos(theta) w.r.t. the NEUTRINO direction, not the detector z axis:
+// Reco muon cos(theta) w.r.t. the NEUTRINO direction (the beta convention of the
+// NuMI nue CC1pi note: target -> reconstructed vertex), not the detector z axis:
 // the NuMI beam arrives 28 degrees away from z, and every generator prediction
 // defines cos(theta) about the neutrino (where it is +z by construction). Using z
 // here moved 64.6% of events into a different analysis bin. See NuMIBeamFrame.hh.
 TVector3 mu_dir( Event->track_dirx_->at(CandidateMuonIndex),
                  Event->track_diry_->at(CandidateMuonIndex),
                  Event->track_dirz_->at(CandidateMuonIndex) );
-candidate_muon_costh_reco = mu_dir.Unit().Dot( NuMIBeam::axis() );
+candidate_muon_costh_reco = mu_dir.Unit().Dot( reco_nu_dir(Event) );
 
 }
 
@@ -673,7 +680,7 @@ candidate_pion_mom_reco = Event->track_range_mom_mu_->at(CandidatePionIndex);
 TVector3 pi_dir( Event->track_dirx_->at(CandidatePionIndex),
                  Event->track_diry_->at(CandidatePionIndex),
                  Event->track_dirz_->at(CandidatePionIndex) );
-candidate_pion_costh_reco = pi_dir.Unit().Dot( NuMIBeam::axis() );
+candidate_pion_costh_reco = pi_dir.Unit().Dot( reco_nu_dir(Event) );
 
 }
 

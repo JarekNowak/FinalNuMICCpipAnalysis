@@ -53,11 +53,36 @@ namespace NuMIBeam {
   inline TVector3 detector_in_beam_coords() { return TVector3( 5502., 7259., 67270. ); }
 
   // Mean neutrino direction in DETECTOR coordinates: (0.46237, 0.04885, 0.88534),
-  // i.e. 28.0 degrees from the detector z axis.
+  // i.e. 27.7 degrees from the detector z axis.
   inline const TVector3& axis() {
     static const TVector3 a =
       ( det_to_beam().Inverse() * detector_in_beam_coords() ).Unit();
     return a;
+  }
+
+  // NuMI target position in DETECTOR coordinates (cm), ~684 m upstream.
+  inline const TVector3& target() {
+    static const TVector3 t =
+      -( det_to_beam().Inverse() * detector_in_beam_coords() );
+    return t;
+  }
+
+  // The angle beta of the NuMI nue CC1pi internal note (v3.2 Sec. 5.3) and of
+  // K. Mistry's thesis: approximate the neutrino direction by the vector from the
+  // NuMI target to the reconstructed interaction vertex. This is the reco-level
+  // convention; at truth level the exact neutrino direction is used instead, exactly
+  // as that note does.
+  //
+  // It differs from the fixed axis() above by a median 2.4 mrad (max 7.3 mrad), which
+  // moves 0.42% of muons across a cos(theta_mu) analysis bin edge - so the two are
+  // interchangeable in practice. beta is used because it is the established NuMI
+  // convention, not because it measurably improves anything: against the true
+  // per-event direction it gives a mean opening angle of 1.95 degrees where the fixed
+  // axis gives 2.00.
+  inline TVector3 nu_dir_from_vertex( double vx, double vy, double vz ) {
+    TVector3 d = TVector3( vx, vy, vz ) - target();
+    if ( d.Mag() <= 0. ) return axis();
+    return d.Unit();
   }
 
   // Rotate a detector-frame vector into a frame whose +z is `nu_dir`. Any such

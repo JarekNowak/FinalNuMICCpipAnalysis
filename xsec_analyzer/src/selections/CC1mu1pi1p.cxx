@@ -20,6 +20,11 @@ namespace {
     return NuMIBeam::axis();
   }
 
+  // Reco-level neutrino direction: the beta convention (target -> reco vertex).
+  TVector3 reco_nu_dir( const AnalysisEvent* ev ) {
+    return NuMIBeam::nu_dir_from_vertex( ev->nu_vx_, ev->nu_vy_, ev->nu_vz_ );
+  }
+
   // Proton identification LLR-PID working point. Tightened from the framework
   // DEFAULT_PROTON_PID_CUT (0.2) to 0.05 after a cut scan on FHC: this maximises
   // S/sqrt(B) (+2%) and lifts purity (+1.7 pts) at ~0.3% efficiency cost, with the
@@ -163,13 +168,14 @@ void CC1mu1pi1p::compute_reco_observables( AnalysisEvent* Event ) {
   pr.SetMag( pmom );
   double Epr = KEp + PROTON_MASS;
   reco_proton_mom_ = pmom;
-  reco_proton_costh_ = pr.Unit().Dot( NuMIBeam::axis() );
+  reco_proton_costh_ = pr.Unit().Dot( reco_nu_dir(Event) );
   reco_proton_llr_ = Event->track_llr_pid_score_->at( CandidateProtonIdx_ );
 
-  // Reconstructed: the per-event neutrino direction is unknowable in data (the beam
-  // divergence that dominates it is not correlated with the vertex), so use the fixed
-  // mean axis. The ~178 mrad residual is a resolution effect absorbed by the response.
-  compute_had_observables( mu, Emu, pi, Epi, pr, Epr, NuMIBeam::axis(),
+  // Reconstructed: the beta convention of the NuMI nue CC1pi internal note - the
+  // neutrino direction approximated by the NuMI target to the reconstructed vertex.
+  // The true per-event direction is not recoverable in data; what beta leaves behind
+  // is the physical divergence of the beam, a resolution effect the response absorbs.
+  compute_had_observables( mu, Emu, pi, Epi, pr, Epr, reco_nu_dir(Event),
     reco_W_pipr_, reco_W_had_,
     reco_deltaAlphaT_, reco_deltaPhiT_, reco_deltaPt_, reco_pn_ );
 }
