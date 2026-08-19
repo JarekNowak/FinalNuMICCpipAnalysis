@@ -7,12 +7,25 @@
 // include every curve (no clipping).
 //   usage: root -l -b -q 'macros/dsigma_ccpi1p.C("FHC5")'  (or RHCFULL / COMB)
 #include <vector>
-void dsigma_ccpi1p(const char* cfg = "FHC5") {
+// set = "wtki" (the six W/TKI observables, default) or "incl" (the five inclusive-kinematic
+// observables measured on the proton-tagged selection, which were re-run 2026-08-19)
+void dsigma_ccpi1p(const char* cfg = "FHC5", const char* set = "wtki") {
+  const bool incl = ( std::string(set) == "incl" );
   const char* PROC = "/data/uboone/processed/";
-  const char* obs[6]  = {"Wpipr","Whad","dpt","dalphat","dphit","pn"};
-  const char* obsX[6] = {"W_{#pi p} [GeV/c^{2}]","W_{had} [GeV/c^{2}]",
+  const char* obs_wtki[6] = {"Wpipr","Whad","dpt","dalphat","dphit","pn"};
+  const char* obs_incl[6] = {"pmu","ppi2bin","costhmu","costhpi","thmupi","thmupi"};
+  // display names: the closure files are keyed on ppi2bin but the panel should read p_pi
+  const char* disp_incl[6] = {"pmu","ppi","costhmu","costhpi","thmupi",""};
+  const char* obs[6];
+  for ( int i = 0; i < 6; ++i ) obs[i] = incl ? obs_incl[i] : obs_wtki[i];
+  const int n_panel = incl ? 5 : 6;
+  const char* obsX_wtki[6] = {"W_{#pi p} [GeV/c^{2}]","W_{had} [GeV/c^{2}]",
                          "#deltap_{T} [GeV/c]","#delta#alpha_{T} [deg]",
                          "#delta#phi_{T} [deg]","p_{n} [GeV/c]"};
+  const char* obsX_incl[6] = {"p_{#mu} [GeV/c]","p_{#pi} [GeV/c]","cos#theta_{#mu}",
+                         "cos#theta_{#pi}","#theta_{#mu#pi} [rad]",""};
+  const char* obsX[6];
+  for ( int i = 0; i < 6; ++i ) obsX[i] = incl ? obsX_incl[i] : obsX_wtki[i];
   gStyle->SetOptStat(0);
   TCanvas c(Form("ds1p_%s",cfg), "", 1800, 1100);
   c.Divide(3, 2);
@@ -30,7 +43,7 @@ void dsigma_ccpi1p(const char* cfg = "FHC5") {
                   Form("%g", xmin) );
   };
 
-  for (int o = 0; o < 6; ++o) {
+  for (int o = 0; o < n_panel; ++o) {
     c.cd(o+1);
     // roomy margins so the axis titles/labels are not clipped or crowded in a 3x2 montage
     gPad->SetBottomMargin(0.16); gPad->SetLeftMargin(0.17); gPad->SetTopMargin(0.09);
@@ -44,7 +57,7 @@ void dsigma_ccpi1p(const char* cfg = "FHC5") {
     hunf = (TH1D*)hunf->Clone(); hunf->SetDirectory(0); keep.push_back(hunf);
     if (htru) { htru=(TH1D*)htru->Clone(); htru->SetDirectory(0); keep.push_back(htru); }
     if (htun) { htun=(TH1D*)htun->Clone(); htun->SetDirectory(0); keep.push_back(htun); }
-    hunf->SetTitle(Form("%s;%s;d#sigma/dx [10^{-38} cm^{2}/Ar]", obs[o], obsX[o]));
+    hunf->SetTitle(Form("%s;%s;d#sigma/dx [10^{-38} cm^{2}/Ar]", incl ? disp_incl[o] : obs[o], obsX[o]));
     hunf->SetMarkerStyle(20); hunf->SetMarkerSize(0.8);
     hunf->SetLineColor(kBlack); hunf->SetMarkerColor(kBlack);
     // Axis formatting: the default division count crams too many tick labels into a
@@ -91,7 +104,7 @@ void dsigma_ccpi1p(const char* cfg = "FHC5") {
     mark_xmin(hunf);
     lg->Draw(); keep.push_back(lg);
   }
-  TString out = Form("unfold_output/dsigma_ccpi1p_%s.pdf", cfg);
+  TString out = Form("unfold_output/dsigma_ccpi1p%s_%s.pdf", incl ? "_incl" : "", cfg);
   c.SaveAs(out);
   printf("wrote %s\n", out.Data());
 }

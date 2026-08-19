@@ -2876,6 +2876,66 @@ discrimination until the binning and response of those two observables are revis
   \end{tabular}
 \end{table}
 
+
+\subsection{The $W$ binnings are finer than the resolution}
+\label{sec:w_binning}
+
+$W_{\pi p}$ shows the least model tension of the proton-tagged observables, and it was also
+the worst-conditioned $A_C$ in the analysis before the regularisation fix
+($s_2/s_1=0.022$, against $0.2$--$0.25$ for the rest). Those two facts have a common cause,
+and it is not physics.
+
+The bin edges were chosen for equal population, six bins of roughly equal content, without
+reference to the resolution. Measured on selected signal, FHC Runs 1/2/4:
+
+\begin{center}\small
+\begin{tabular}{lcc}
+\toprule
+ & $W_{\pi p}$ & $W_\mathrm{had}$ \\\midrule
+residual RMS [GeV/$c^2$]           & $0.142$ & $0.283$ \\
+robust half-width ($16$--$84\%$)   & $0.101$ & $0.177$ \\
+bias (mean reco $-$ true)          & $\mathbf{-0.111}$ & $-0.032$ \\\midrule
+narrowest analysis bin             & $\mathbf{0.040}$ & $0.100$ \\
+widest analysis bin                & $1.430$ & $1.300$ \\
+width ratio                        & $\mathbf{35.7}$ & $13.0$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent The second and third $W_{\pi p}$ bins are $40$~MeV/$c^2$ wide against a resolution
+of $101$--$142$~MeV/$c^2$: they are two to three times narrower than the detector can
+resolve. The bias alone, $-111$~MeV/$c^2$, is larger than three of the six bin widths. The
+migration diagonals follow directly, $87.6/22.3/11.7/12.0/10.0/2.3\%$: only the first bin
+is measured, and the top bin at $2.3\%$ is essentially unmeasured.
+
+This is the same failure as the five-bin $p_\pi$ scheme, and for the same underlying reason.
+$W_{\pi p}$ is reconstructed from the pion and proton momenta, so it inherits the saturation
+of the range-based pion momentum described in \S\ref{sec:ppi_bias}; its resolution cannot be
+better than that of its inputs.
+
+An exhaustive edge scan, the same procedure and criterion used for $p_\pi$, gives:
+
+\begin{center}\small
+\begin{tabular}{llc}
+\toprule
+scheme & diagonals & verdict \\\midrule
+current, six bins            & $87.6 / 22.3 / 11.7 / 12.0 / 10.0 / 2.3\%$ & 1 of 6 usable \\
+best two bins (split $1.15$) & $\mathbf{83.2 / 77.9\%}$ & \textbf{both usable} \\
+best three bins              & $83.2 / 49.7 / 45.9\%$ & fails \\
+best four bins               & $83.2 / 45.0 / 28.2 / 28.2\%$ & fails \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent As with $p_\pi$, two bins is not merely the best option but the only one that
+satisfies the criterion, and the first bin is thin ($137$ selected signal events, against a
+floor of $100$). The implication for the model comparison is direct: the low $\chi^2$
+currently quoted for $W_{\pi p}$ reflects a binning that cannot resolve the differences
+between generators, not agreement between them. The same test should be applied to
+$W_\mathrm{had}$, whose upper bins are also narrower than its $177$~MeV/$c^2$ half-width,
+before either $W$ result is quoted as a shape measurement.
+
+
 \subsection{Cross-check methods}
 \label{sec:crosschecks}
 
