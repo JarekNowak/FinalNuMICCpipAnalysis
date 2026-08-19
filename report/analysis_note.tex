@@ -2975,6 +2975,166 @@ $W_\mathrm{had}$.
 
 
 
+
+\subsection{What limits $W_{\pi p}$, and what can be done about it}
+\label{sec:wpipr_limits}
+
+The two-bin $W_{\pi p}$ scheme of \S\ref{sec:w_binning} was built and run. It does not work,
+for a reason distinct from the six-bin failure, and the investigation that followed settles
+what the pion momentum can and cannot deliver.
+
+\paragraph{The two-bin extraction fails on statistics.} The \emph{response} behaves exactly
+as designed: the framework returns migration diagonals of $0.802$ and $0.773$, matching the
+truth-level scan, and the closure is acceptable at $\chi^2=1.17/2$ ($p=0.56$). The
+\emph{extraction} nonetheless carries almost no shape information, because $A_C$ collapses:
+
+\begin{center}\small
+\begin{tabular}{lcc}
+\toprule
+two-bin scheme & $A_C$ & $s_2/s_1$ \\\midrule
+$W_{\pi p}$, first bin $N=137$      & $\bigl(\begin{smallmatrix} 0.018 & -0.410 \\ 0.034 & 0.892\end{smallmatrix}\bigr)$ & $\mathbf{0.031}$ \\
+$p_\pi$ proton-tagged, $N=469$      & $\bigl(\begin{smallmatrix} 0.498 & -0.089 \\ 0.013 & 0.854\end{smallmatrix}\bigr)$ & $0.577$ \\
+$p_\pi$ inclusive, $N=1056$         & $\bigl(\begin{smallmatrix} 0.594 & -0.382 \\ 0.011 & 0.891\end{smallmatrix}\bigr)$ & $0.528$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent The top-left entry is $0.018$: $A_C$ passes under two per cent of the first bin and
+takes $-0.41$ from the second. This is a rank-one collapse of the kind described in
+\S\ref{sec:thetavar}, but its cause is statistical rather than a defective regulariser. With
+$137$ events the first bin has such poor signal-to-noise that the Wiener filter suppresses
+that mode almost entirely, and the ordering across the three schemes, $137\to0.031$,
+$469\to0.577$, $1056\to0.528$, follows population rather than anything geometric.
+
+$W_{\pi p}$ is therefore caught between two requirements. Bins narrow enough to satisfy the
+response criterion leave the first bin too sparse to unfold; bins wide enough for a stable
+unfold ($1.19$ gives $468$ events, matching the $p_\pi$ case that works) fail the criterion at
+$56\%$. \textbf{At the current exposure $W_{\pi p}$ does not support a shape measurement} and
+should be quoted as an integrated cross section unless the pion momentum improves.
+
+\paragraph{The limitation is the pion momentum, and only the pion momentum.} Correlating the
+$W_{\pi p}$ residual against each input residual isolates the cause:
+
+\begin{center}\small
+\begin{tabular}{lc|lc}
+\toprule
+input & $r$ & $W$ residual RMS when\ldots & \\\midrule
+pion momentum   & $\mathbf{+0.726}$ & all events                 & $0.142$ \\
+proton momentum & $+0.012$ & pion momentum well reconstructed    & $\mathbf{0.061}$ \\
+pion $\cos\theta$   & $-0.029$ & proton momentum well reconstructed  & $0.130$ \\
+proton $\cos\theta$ & $-0.032$ & both well reconstructed             & $0.038$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent Fixing the pion momentum alone takes the resolution from $0.142$ to $0.061$, a
+factor $2.3$; fixing the proton buys almost nothing, and the angles are irrelevant. A single
+defect propagates through the whole analysis: the hadronic interaction that truncates the
+pion track forces $p_\pi$ to two bins, and forces $W_{\pi p}$ out of a shape measurement
+altogether.
+
+\paragraph{Reparameterising to $W^2$ does not help.} A monotonic transformation with mapped
+edges leaves the migration matrix unchanged, which was verified directly: splitting at
+$1.15$~GeV/$c^2$ in $W$ and at $1.15^2=1.3225$~GeV$^2/c^4$ in $W^2$ gives diagonals of
+$83.2\%$ and $77.9\%$ in both cases, on identical events. Resolution and bin width scale
+together, $\sigma(W^2)=2W\sigma(W)$, so $\sigma/\text{width}$ is invariant at about $2$ either
+way. This is the same lesson as $\theta_\mu$ versus $\cos\theta_\mu$ (\S\ref{sec:thetavar}).
+
+\subsection{Survey of pion momentum estimators without a magnetic field}
+\label{sec:ppi_estimators}
+
+Four approaches were measured on truth-matched pion tracks. All are limited by the same
+mechanism, that each measures what the pion did \emph{before} it interacted:
+
+\begin{center}\small
+\begin{tabular}{lccl}
+\toprule
+estimator & $\langle$reco/true$\rangle$, top bin & RMS & note \\\midrule
+range (analysis)      & $0.319$ & $0.16$ & saturates near $0.34$~GeV/$c$ \\
+calorimetric energy   & $0.383$ & $0.31$ & also truncated, and $2\times$ noisier \\
+MCS                   & $1.011$ & $2.1$  & unbiased, unusably noisy on short tracks \\
+golden-pion selection & $0.327$ & $0.18$ & no gain above $0.8$~GeV/$c$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Calorimetry does not escape the truncation.} Deposited charge stops at the
+interaction point just as range does, so $\langle$calo/true$\rangle$ falls from $1.136$ to
+$0.383$ across the momentum range while the RMS is three to five times that of range
+($1.007$ to $0.313$, against $0.157$ to $0.158$). It is the same measurement with more noise.
+
+\paragraph{The golden-pion selection is weaker than previously described.} Splitting the
+sample by the truth label shows that golden pions are not well reconstructed either, and that
+their advantage disappears exactly where it is needed:
+
+\begin{center}\small
+\begin{tabular}{lccc}
+\toprule
+true $p_\pi$ [GeV/$c$] & golden fraction & golden $\langle$range/true$\rangle$ & non-golden \\\midrule
+$0.175$--$0.250$ & $77.8\%$ & $0.873$ & $0.699$ \\
+$0.320$--$0.420$ & $44.1\%$ & $0.705$ & $0.570$ \\
+$0.550$--$0.800$ & $21.4\%$ & $0.507$ & $0.429$ \\
+$0.800$--$1.500$ & $17.2\%$ & $\mathbf{0.327}$ & $\mathbf{0.317}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent Above $0.8$~GeV/$c$ the golden and non-golden values are identical to within one
+per cent. The reason is physical: a $1$~GeV/$c$ pion has a CSDA range of several metres in
+argon and cannot stop inside a $2.5$~m TPC unless it has already lost most of its energy
+through processes that truncate or break the track. ``Golden'' at high momentum therefore
+selects a pathological subsample rather than a clean one, which is why the classifier of
+\S\ref{sec:ppi_bias} reaches a ceiling: above $\sim\!0.5$~GeV/$c$ there is no clean
+subsample to find.
+
+\paragraph{A multivariate regression fixes the bias but redistributes the resolution.} A
+BDTG regression on $p_\pi^{\rm true}$, using range, MCS, calorimetry, length, the three
+deflection variables, the four Bragg likelihoods, track score and daughter count, was trained
+on Runs 1 and 4 and evaluated on the held-out Run 2. It largely removes the saturation in the
+mean, $\langle$pred/true$\rangle$ running $1.196$ to $0.722$ against $0.835$ to $0.319$ for
+range, at comparable RMS. Rebuilding $W_{\pi p}$ with it:
+
+\begin{center}\small
+\begin{tabular}{lcc}
+\toprule
+pion estimator & $W$ bias & $W$ RMS \\\midrule
+range (analysis)   & $-0.127$ & $0.144$ \\
+BDTG regression    & $\mathbf{-0.005}$ & $0.119$ \\
+true $p_\pi$ (ceiling) & $+0.003$ & $\mathbf{0.046}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent The bias falls by a factor of $25$, which matters independently of binning: a
+$-127$~MeV/$c^2$ shift distorts the whole $W$ distribution. The resolution improves only from
+$0.144$ to $0.119$ against a ceiling of $0.046$, so the regression recovers about a quarter of
+what is available.
+
+Its effect on the binning is a redistribution rather than a rescue. The six-bin diagonals move
+from $98/30/19/19/13/6\%$ to $63/38/33/43/52/56\%$: the top bin improves nearly tenfold, but
+the first bin degrades from $98\%$ to $63\%$, and in the two-bin scheme the worst bin falls
+from $73\%$ to $58\%$. That degradation is regression to the mean, the estimator being pulled
+toward the sample centre, and it damages the low-$W$ region where the resonance physics sits.
+The same pattern appears in $p_\pi$ itself, where the first bin falls from $99.2\%$ to
+$60.6\%$ while the top bin rises from $0.5\%$ to $33.2\%$.
+
+Two objections stand against adopting it. The estimator would be MC-trained and sits upstream
+of everything, so its model dependence becomes a systematic on every result rather than on one
+cut. And the trade it offers moves measurability out of the region of interest. It is not
+adopted here.
+
+\paragraph{What would actually work.} The ceiling measurements above bound what is available:
+a perfect pion momentum would give $W_{\pi p}$ a resolution of $0.046$, a factor of three
+better than the regression achieves and enough to support several bins. The information is
+carried away by the interaction products, so the approach that attacks the cause is to
+recover their energy: the pion and its daughters treated as a mini-calorimeter, using the
+per-PFP calorimetric energies and daughter links already present in the input files. For the
+proton-tagged sample there is a second, independent handle in transverse kinematic imbalance,
+where the muon and proton constrain the pion transverse momentum without using the pion's own
+reconstruction at all, at the cost of Fermi-motion smearing of order $250$~MeV/$c$. Neither
+has been tried.
+
+
 \subsection{Cross-check methods}
 \label{sec:crosschecks}
 
