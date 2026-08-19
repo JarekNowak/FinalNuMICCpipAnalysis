@@ -1,0 +1,30 @@
+Two-bin TKI binning, derived on the beam-frame-corrected (beta) observables.
+
+The previous six-bin edges were equal-population quantiles of the UNCORRECTED,
+detector-z variables (see configs/../include/XSecAnalyzer/NuMIBeamFrame.hh). On the
+corrected observables they are unusable: delta_pT put 80.8% of events in the first bin
+and 0.2% in the last, delta_phiT 63.6% in the first.
+
+Re-derived with macros/tki_binning_scan.C - a maximin dynamic program over the
+migration matrix, criterion diagonal > 0.68, on FHC Run1+2+4 (~3500 selected signal
+events). Six bins reach only 25-34% diagonals; the constraint is resolution, not
+statistics - dropping the events floor from 400 to 250 changed nothing. This is the
+same limitation that forced p_pi to two bins and W_pipr to an integrated measurement,
+and it has the same root cause, the range-based pion momentum.
+
+  observable   edge          diagonals      events
+  delta_pT     0.300 GeV/c   73.6 / 75.4    2361 / 1140
+  delta_phiT   50 deg        78.2 / 78.4    2610 /  895
+  p_n          0.375 GeV/c   78.1 / 78.6    2256 / 1234
+  delta_alphaT 120 deg       65.6 / 67.3    1916 / 1589
+
+delta_alphaT does not meet the 0.68 criterion at any binning; its best two-bin scheme
+reaches 65.6/67.3. It is retained as a two-bin differential measurement by explicit
+decision, on the grounds that it is close to the threshold. It is the one observable
+here whose A_C should be checked carefully after extraction - a rank-deficient A_C
+(s2/s1 well below the ~0.5 seen for the working p_pi schemes) would mean the shape
+information has been filtered away, as happened for the two-bin W_pipr.
+
+The six-bin configs (ccpi1p_<obs>_bin_config.txt) are kept for the record and must not
+be used for a quoted result. The generator-side edges in
+generator_predictions/wtki_gen.h are matched to the values above.

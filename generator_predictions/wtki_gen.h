@@ -45,12 +45,19 @@ namespace wtki {
   // Previously 3 bins -- the generator predictions were then silently dropped by the
   // bin-count match in dsigma_ccpi1p.C once the measurement moved to 6 bins.
   inline std::vector<double> edges(const std::string& k){
-    if(k=="Wpipr")  return {1.08,1.19,1.23,1.27,1.34,1.47,2.00};
-    if(k=="Whad")   return {0.0,0.78,1.08,1.21,1.31,1.44,1.90};
-    if(k=="dpt")    return {0.0,0.43,0.59,0.72,0.88,1.17,1.60};
-    if(k=="dalphat")return {0.,80.,120.,142.,158.,170.,180.};
-    if(k=="dphit")  return {0.,37.,63.,84.,107.,139.,180.};
-    if(k=="pn")     return {0.0,0.52,0.67,0.81,0.98,1.25,1.70};
+    // TWO bins for the TKI observables, matching ccpi1p_<obs>_bin_config_2bin.txt.
+    // The previous six-bin edges were equal-population quantiles of the uncorrected,
+    // detector-z variables and are meaningless on the beam-frame observables (see
+    // configs/ccpi1p_TKI_binning.README): six bins reach only 25-34% migration
+    // diagonals, against the >0.68 criterion, and the limit is resolution rather than
+    // statistics. W_pipr is quoted integrated for the same reason, so it collapses to
+    // a single bin here.
+    if(k=="Wpipr")  return {1.08,2.00};
+    if(k=="Whad")   return {0.0,1.90};
+    if(k=="dpt")    return {0.0,0.300,1.60};
+    if(k=="dalphat")return {0.,120.,180.};
+    if(k=="dphit")  return {0.,50.,180.};
+    if(k=="pn")     return {0.0,0.375,1.70};
     return {};
   }
   inline double clamp(double v,const std::vector<double>& e){
