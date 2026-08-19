@@ -1,0 +1,24 @@
+Two-bin W_pipr scheme, split at 1.15 GeV/c^2.
+
+WHY. The six-bin equal-population scheme is finer than the detector resolves. Measured
+residual RMS 0.142 GeV/c^2, robust half-width 0.101, bias -0.111, against bins as narrow as
+0.040 -- two to three times narrower than the resolution, with a bias exceeding three of the
+six bin widths. Its migration diagonals are 87.6/22.3/11.7/12.0/10.0/2.3%: one usable bin
+of six, the top bin effectively unmeasured. W_pipr is built from the pion and proton momenta
+and so inherits the range-momentum saturation; it cannot resolve better than its inputs.
+
+WHY 1.15. An exhaustive edge scan (macros/w_binning_scan.C) finds two bins to be the only
+scheme satisfying the >0.68 criterion, and the usable window is narrow:
+
+  boundary  bin1   bin2   N(bin1)
+    1.13    76.5%  88.0%     51    below the 100-event floor
+    1.15    83.2%  77.9%    137    ADOPTED
+    1.17    86.8%  66.8%    266    bin 2 just fails
+    1.19    87.6%  56.0%    468    fails
+
+1.15 is the only boundary clearing the criterion in both bins with at least 100 events.
+Bin 1 is thin at 137 events and that should be stated wherever the result is quoted; 1.17
+doubles the statistics for a bin-2 diagonal of 66.8%, just under threshold, and is the
+obvious fallback if the first bin proves too sparse once systematics are folded in.
+
+Three and four bin schemes fail at any edges (best 83.2/49.7/45.9 and 83.2/45.0/28.2/28.2).
