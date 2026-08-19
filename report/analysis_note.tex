@@ -3135,6 +3135,61 @@ reconstruction at all, at the cost of Fermi-motion smearing of order $250$~MeV/$
 has been tried.
 
 
+
+\paragraph{Recovering the interaction products does not work either.} The ceiling
+measurements above locate the missing information in the secondaries produced when the pion
+interacts, so the natural remedy is to treat the pion and its products as a single
+calorimeter. This was tested. PeLEE carries no parent index, so association is geometric,
+by PFP start point relative to the pion track end, optionally restricted to the generation
+immediately below the pion in the Pandora hierarchy. The hierarchy restriction matters: at a
+$40$~cm radius the unrestricted sum collects $0.371$~GeV in the lowest momentum bin, where
+only $0.034$~GeV is missing, so it is dominated by unrelated activity.
+
+With the hierarchy cut applied, on Run 1:
+
+\begin{center}\small
+\begin{tabular}{lccccc}
+\toprule
+true $p_\pi$ [GeV/$c$] & $\langle$KE missing$\rangle$ & \multicolumn{4}{c}{$\langle\sum E$ of daughters within $R\rangle$ [GeV]} \\
+ & & $5$~cm & $10$~cm & $20$~cm & $40$~cm \\\midrule
+$0.175$--$0.420$ & $0.034$ & $0.023$ & $0.026$ & $0.029$ & $0.037$ \\
+$0.420$--$0.800$ & $0.246$ & $0.040$ & $0.048$ & $0.055$ & $0.062$ \\
+$0.800$--$1.500$ & $\mathbf{0.659}$ & $0.056$ & $0.074$ & $0.091$ & $\mathbf{0.104}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent ``KE missing'' is the pion's true kinetic energy less the calorimetric energy of its
+own track. In the top momentum bin $659$~MeV is unaccounted for and the visible daughters
+supply $104$~MeV, of which about $37$~MeV is the baseline seen even in the lowest bin where
+almost nothing is missing. Genuine recovery is therefore of order $10\%$ at high momentum and
+$25\%$ in the middle bin.
+
+That is far too little to change the measurement, and the reason is physical rather than
+algorithmic. Pion absorption on argon, $\pi A\to NN\ldots$, deposits much of the energy in
+nucleons, roughly half of which are neutrons and therefore invisible in liquid argon; the
+charged products are frequently short and fall below the threshold to be reconstructed as
+separate particles. The energy is not merely unassociated, it is largely undetected. Applying
+the daughter sum would move $\langle$reco/true$\rangle$ in the top bin from $0.32$ to about
+$0.42$, still less than half of truth.
+
+\paragraph{Where this leaves the pion momentum.} Five approaches have now been measured:
+range, calorimetry, MCS, golden-pion tagging and a multivariate regression, together with
+recovery of the interaction products. Each is limited by the same fact, that a charged pion
+which interacts before stopping destroys the information a non-magnetised detector uses to
+infer its momentum, and that a substantial part of the energy leaves the detector unseen.
+The regression is the only one that materially improves anything, removing the $W_{\pi p}$
+bias, and it does so at the cost of model dependence and of the low-$W$ region.
+
+One avenue remains untried and is independent of the pion's own reconstruction: for the
+proton-tagged sample, transverse kinematic imbalance constrains the pion transverse momentum
+from the muon and proton alone. It is limited by Fermi motion, of order $250$~MeV/$c$, which
+is comparable to the present errors rather than better than them, so it is worth measuring
+but should not be expected to transform the measurement. Failing that, the honest conclusion
+is that $p_\pi$ is a two-bin measurement and $W_{\pi p}$ an integrated one at this exposure,
+and that both are limited by physics rather than by analysis choices.
+
+
 \subsection{Cross-check methods}
 \label{sec:crosschecks}
 
