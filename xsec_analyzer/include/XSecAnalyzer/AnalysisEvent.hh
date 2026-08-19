@@ -173,6 +173,14 @@ public:
   // True neutrino 4-momentum
   float mc_nu_energy_ = BOGUS;
 
+  // True neutrino 3-momentum in DETECTOR coordinates. Needed because the NuMI
+  // neutrinos travel 28 degrees away from the detector z axis, so every polar angle
+  // and every transverse-kinematic-imbalance variable must be referred to this
+  // direction rather than to z. See NuMIBeamFrame.hh.
+  float mc_nu_px_ = BOGUS;
+  float mc_nu_py_ = BOGUS;
+  float mc_nu_pz_ = BOGUS;
+
   // Whether the event is CC (0) or NC (1)
   int mc_nu_ccnc_ = false;
 

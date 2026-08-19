@@ -222,6 +222,14 @@ inline void set_event_branch_addresses(TTree& etree, AnalysisEvent& ev)
   SetBranchAddress(etree, "true_nu_vtx_y", &ev.mc_nu_vy_ );
   SetBranchAddress(etree, "true_nu_vtx_z", &ev.mc_nu_vz_ );
   SetBranchAddress(etree, "nu_e", &ev.mc_nu_energy_ );
+
+  // True neutrino direction (detector coordinates). Guarded: absent from data files
+  // and from some older ntuple generations. Consumers must check for BOGUS.
+  if ( etree.GetBranch("true_nu_px") ) {
+    SetBranchAddress(etree, "true_nu_px", &ev.mc_nu_px_ );
+    SetBranchAddress(etree, "true_nu_py", &ev.mc_nu_py_ );
+    SetBranchAddress(etree, "true_nu_pz", &ev.mc_nu_pz_ );
+  }
   SetBranchAddress(etree, "ccnc", &ev.mc_nu_ccnc_ );
   SetBranchAddress(etree, "interaction", &ev.mc_nu_interaction_type_ );
 

@@ -32,8 +32,13 @@ private:
 
   // Fill W_pipr, W_had and the TKI variables from the muon, pion and proton
   // 3-momenta and energies (used identically for reco and truth).
+  // `nu_dir` is the neutrino direction in detector coordinates, about which the
+  // TKI variables are defined: the true per-event direction on the truth side, the
+  // fixed NuMIBeam::axis() on the reco side. NOT the detector z axis - see
+  // NuMIBeamFrame.hh.
   void compute_had_observables( const TVector3& mu, double Emu,
     const TVector3& pi, double Epi, const TVector3& pr, double Epr,
+    const TVector3& nu_dir,
     double& W_pipr, double& W_had, double& dalphaT, double& dphiT,
     double& dpT, double& pn );
 

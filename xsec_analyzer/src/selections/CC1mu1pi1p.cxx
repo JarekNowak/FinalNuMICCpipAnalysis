@@ -6,11 +6,20 @@
 // XSecAnalyzer includes
 #include "XSecAnalyzer/Selections/CC1mu1pi1p.hh"
 #include "XSecAnalyzer/STVTools.hh"
+#include "XSecAnalyzer/NuMIBeamFrame.hh"
 #include "XSecAnalyzer/Constants.hh"
 #include "XSecAnalyzer/FiducialVolume.hh"
 #include "XSecAnalyzer/AnalysisEvent.hh"
 
 namespace {
+  // True neutrino direction in detector coordinates (see NuMIBeamFrame.hh). Truth-level
+  // angles are referred to it so they match the generator predictions exactly.
+  TVector3 true_nu_dir( const AnalysisEvent* ev ) {
+    TVector3 d( ev->mc_nu_px_, ev->mc_nu_py_, ev->mc_nu_pz_ );
+    if ( d.Mag() > 0. ) return d.Unit();
+    return NuMIBeam::axis();
+  }
+
   // Proton identification LLR-PID working point. Tightened from the framework
   // DEFAULT_PROTON_PID_CUT (0.2) to 0.05 after a cut scan on FHC: this maximises
   // S/sqrt(B) (+2%) and lifts purity (+1.7 pts) at ~0.3% efficiency cost, with the
@@ -86,6 +95,7 @@ bool CC1mu1pi1p::selection( AnalysisEvent* Event ) {
 // Shared W / TKI kinematics from muon, pion, proton 3-momenta and energies.
 void CC1mu1pi1p::compute_had_observables( const TVector3& mu, double Emu,
   const TVector3& pi, double Epi, const TVector3& pr, double Epr,
+  const TVector3& nu_dir,
   double& W_pipr, double& W_had, double& dalphaT, double& dphiT,
   double& dpT, double& pn ) {
 
@@ -97,10 +107,19 @@ void CC1mu1pi1p::compute_had_observables( const TVector3& mu, double Emu,
 
   // TKI + calorimetric W_had from the muon vs. the visible (pion+proton)
   // hadronic system, via the framework STV tool.
-  TVector3 had = pi + pr;
+  //
+  // STVTools takes the DETECTOR z axis as longitudinal throughout - correct for BNB,
+  // where the beam runs along z, but wrong for NuMI, whose neutrinos arrive 28 degrees
+  // away from it. Rotating the momenta into a frame whose +z is the neutrino direction
+  // makes that assumption true again, so STVTools itself is left untouched and the BNB
+  // selections that share it are unaffected. Without this the axis error swamps the
+  // observable: mean delta_pT comes out at 0.690 GeV/c about z against 0.267 GeV/c
+  // about the beam. See NuMIBeamFrame.hh.
+  TVector3 mu_b  = NuMIBeam::to_beam_frame( mu, nu_dir );
+  TVector3 had_b = NuMIBeam::to_beam_frame( pi + pr, nu_dir );
   double Ehad = Epi + Epr;
   STVTools stv;
-  stv.CalculateSTVs( const_cast<TVector3&>(mu), had, Emu, Ehad, CalcType );
+  stv.CalculateSTVs( mu_b, had_b, Emu, Ehad, CalcType );
   dpT     = stv.ReturnPt();
   pn      = stv.ReturnPn();
   dalphaT = stv.ReturnDeltaAlphaT();
@@ -144,10 +163,14 @@ void CC1mu1pi1p::compute_reco_observables( AnalysisEvent* Event ) {
   pr.SetMag( pmom );
   double Epr = KEp + PROTON_MASS;
   reco_proton_mom_ = pmom;
-  reco_proton_costh_ = pr.CosTheta();
+  reco_proton_costh_ = pr.Unit().Dot( NuMIBeam::axis() );
   reco_proton_llr_ = Event->track_llr_pid_score_->at( CandidateProtonIdx_ );
 
-  compute_had_observables( mu, Emu, pi, Epi, pr, Epr, reco_W_pipr_, reco_W_had_,
+  // Reconstructed: the per-event neutrino direction is unknowable in data (the beam
+  // divergence that dominates it is not correlated with the vertex), so use the fixed
+  // mean axis. The ~178 mrad residual is a resolution effect absorbed by the response.
+  compute_had_observables( mu, Emu, pi, Epi, pr, Epr, NuMIBeam::axis(),
+    reco_W_pipr_, reco_W_had_,
     reco_deltaAlphaT_, reco_deltaPhiT_, reco_deltaPt_, reco_pn_ );
 }
 
@@ -177,11 +200,14 @@ void CC1mu1pi1p::compute_true_observables( AnalysisEvent* Event ) {
   double Emu = ssqrt( TrueCandidateMuonP.Mag2() + MUON_MASS*MUON_MASS );
   double Epi = ssqrt( TrueCandidatePionP.Mag2() + PI_PLUS_MASS*PI_PLUS_MASS );
   true_proton_mom_ = pr.Mag();
-  true_proton_costh_ = pr.CosTheta();
+  true_proton_costh_ = pr.Unit().Dot( true_nu_dir(Event) );
 
+  // Truth: use the exact per-event neutrino direction, which is how every generator
+  // prediction defines these variables (the neutrino is +z by construction there).
+  // Fall back to the fixed axis only if the ntuple lacks the truth momentum branches.
   compute_had_observables( TrueCandidateMuonP, Emu, TrueCandidatePionP, Epi,
-    pr, Epr, true_W_pipr_, true_W_had_, true_deltaAlphaT_, true_deltaPhiT_,
-    true_deltaPt_, true_pn_ );
+    pr, Epr, true_nu_dir(Event), true_W_pipr_, true_W_had_, true_deltaAlphaT_,
+    true_deltaPhiT_, true_deltaPt_, true_pn_ );
 }
 
 // ---------------------------------------------------------------------------
