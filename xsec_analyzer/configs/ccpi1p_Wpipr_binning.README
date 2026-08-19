@@ -1,0 +1,30 @@
+Why W_pipr is quoted as an integrated cross section, and not differentially.
+
+W_pipr does not support a shape measurement at this exposure, and the reason is not
+the particular binning that was tried first. An exhaustive scan of every two- and
+three-bin scheme over 1.12 < edge < 1.70 (FHC Run1+2+4, 3505 selected signal events)
+finds none that satisfies the usable-bin criterion of a migration diagonal above 0.68
+with adequate statistics in every bin:
+
+  two bins, edge 1.15 : N = 137 / 3367   diag = 0.832 / 0.779  -> first bin too small
+  two bins, edge 1.27 : N = 1744 / 1760  diag = 0.951 / 0.261  -> upper bin unusable
+  three bins, best    :                  diag3 never exceeds 0.347
+
+The trend across the scan shows the mechanism. Reconstructed W_pipr is biased about
+111 MeV low, because it inherits the saturation of the range-based pion momentum, so
+raising the edge far enough to balance the statistics drains the upper bin by downward
+migration: diag1 climbs from 0.786 to 0.999 while diag2 collapses from 0.927 to 0.004.
+There is no edge at which both bins are simultaneously populated and diagonal.
+
+W_pipr is therefore quoted as an integrated cross section. That is a cut-and-count
+measurement, not an unfolded one: with a single bin there is nothing to unfold - the
+response matrix is 1x1, the additional smearing matrix A_C is trivially 1, and the
+regularisation has no effect - so it is reported through the total flux-averaged
+cross-section path rather than through Wiener-SVD. Integrated over the full W range it
+is the same quantity as the total proton-tagged cross section.
+
+The six-bin configuration (ccpi1p_Wpipr_bin_config.txt) and the two-bin one are kept
+for the record; neither should be used for a quoted result.
+
+The matching integrated generator predictions are built by
+generator_predictions/newg4/make_wpipr_1bin.C.
