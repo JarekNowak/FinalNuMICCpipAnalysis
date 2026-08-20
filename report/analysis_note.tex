@@ -95,7 +95,7 @@
     the full \uboone{} NuMI exposure, in three configurations: forward horn current
     (FHC; Runs~1, 2, 4, 5; $8.857\times10^{20}$ protons on target,
     POT), reverse horn current (RHC; Runs~1, 2, 3, 4a, 4b, 4c;
-    $1.108\times10^{21}$~POT), and their combination ($1.994\times10^{21}$~POT).
+    $11.082\times10^{20}$~POT), and their combination ($19.939\times10^{20}$~POT).
     The analysis is blind: results are extracted on Poisson-thrown central-value
     fake data.
     %
@@ -120,9 +120,12 @@
     consistent with (or slightly above) FHC; an earlier apparent RHC deficit was a
     per-run POT normalization bug affecting the multi-file RHC runs, now corrected.
     %
-    The observed yield is $\approx\!0.75\times$ the GENIE~v3 prediction, consistent
-    with the known over-prediction of $\mathrm{CC}\pi^{\pm}$ production in current
-    neutrino interaction generators.
+    For the current fake-data extraction the injected central-value sample corresponds
+    to $\approx\!0.75\times$ the standalone GENIE~v3 prediction in this phase space,
+    consistent with the known over-prediction of $\mathrm{CC}\pi^{\pm}$ production in
+    current neutrino interaction generators. No beam-on data is unblinded in this note:
+    every ``data'' point shown is Poisson-thrown from the central-value Monte Carlo
+    (\S\ref{sec:mc}), so no statement here is a measurement of a real deficit.
     %
     The extraction is validated by a same-sample self-closure that recovers the
     truth to within $\approx\!6\%$ for every observable, and cross-checked against
@@ -483,7 +486,7 @@ first such measurement on an argon target.
 
 The BNB and NuMI analyses probe complementary phase space: BNB is on-axis with a
 narrow $\nu_\mu$ spectrum peaked at $\sim$700~MeV and negligible $\bar{\nu}_\mu$
-content, while NuMI FHC at 110~mrad off-axis provides a softer, broader spectrum
+content, while NuMI FHC at 135~mrad off-axis provides a softer, broader spectrum
 with a $\sim$38\% $\bar{\nu}_\mu$ admixture and extends sensitivity to
 $E_\nu \sim 0.1$--$0.5$~GeV.
 
@@ -670,7 +673,7 @@ horns whose polarity selects the sign of the focused mesons. In Forward Horn
 Current (FHC) mode the horns focus positive pions and kaons, giving a beam with
 predominantly $\nu_\mu$ content; in Reverse Horn Current (RHC) mode the polarity
 is reversed to focus negatives, giving a predominantly $\bar{\nu}_\mu$ beam.
-\uboone{} is located approximately 110~mrad off-axis from the NuMI beam axis,
+\uboone{} is located $135$~mrad ($7.71^\circ$) off-axis from the NuMI beam axis\footnote{From the detector position in beam coordinates, $(5502,\,7259,\,67270)$~cm: $91.1$~m transverse at $672.7$~m downstream. Earlier versions of this note quoted $110$~mrad. See \S\ref{sec:beamdir}.},
 reducing the peak neutrino energy to the 0.5--2.5~GeV range and narrowing the
 energy spectrum. Because \uboone{} sits off-axis and at comparatively low energy,
 the horn sign-selection is imperfect and both modes carry a sizeable wrong-sign
@@ -721,8 +724,7 @@ beamline: the detector sits $91.1$~m off the NuMI axis at $672.7$~m downstream o
 target, a baseline of $678.8$~m and an off-axis angle of $7.71^\circ$
 ($134.6$~mrad).\footnote{Computed from the detector position in beam coordinates,
 $(5502,\,7259,\,67270)$~cm, taken from the same rotation matrix used for the NuMI
-beamline geometry weights. This supersedes the $110$~mrad quoted earlier in this
-section.} That angle says nothing about how the TPC is oriented.
+beamline geometry weights.} That angle says nothing about how the TPC is oriented.
 
 The angle that enters the measurement is a different one: the direction in which the
 neutrinos travel \emph{relative to the detector $z$ axis}. Averaged over interactions
@@ -889,8 +891,19 @@ The number of argon target nuclei in the fiducial volume is computed from first
 principles as
 \begin{equation}
   N_{\mathrm{Ar}} = \frac{\rho_{\mathrm{LAr}} \cdot V_{\mathrm{FV}} \cdot N_A}{A_{\mathrm{Ar}}}
-  \approx 8.71\times10^{28},
+  = 8.710\times10^{29},
+  \label{eq:nar}
 \end{equation}
+with $\rho_{\mathrm{LAr}}=1.3836$~g/cm$^3$, $A_{\mathrm{Ar}}=39.948$~g/mol and
+$N_A=6.02214076\times10^{23}$~mol$^{-1}$. The fiducial box is
+$10<x<246$, $-101<y<101$, $10<z<986$~cm ($4.6528\times10^{7}$~cm$^3$), from which the
+$675.1<z<775.1$~cm dead region is subtracted, leaving
+$V_{\mathrm{FV}}=4.1761\times10^{7}$~cm$^3$. Without that subtraction the same
+expression would give $9.705\times10^{29}$. This is the value the code uses, computed
+by \texttt{num\_Ar\_targets\_in\_FV(FV,\,675.1,\,775.1)} in
+\texttt{CrossSectionExtractor.hh}, and it is the value entering the conversion factor
+of \S\ref{sec:unfolding} and the cut-and-count normalisation of
+\S\ref{sec:total_xsec}.
 and the per-configuration normalisation factor is $N_{\mathrm{norm}} =
 \Phi_\mathrm{mode}\cdot N_{\mathrm{POT,mode}}\cdot N_{\mathrm{Ar}}$, evaluated with
 each mode's flux and data POT (Table~\ref{tab:pot}).
@@ -1835,12 +1848,29 @@ where $i$ runs over reconstructed bins.
 \subsection{Response matrix}
 \label{sec:unfolding_resp}
 
-A 2D response matrix $A_{ij}$ (true bin $j$, reco bin $i$) is built from selected
-signal MC using the same binning on both axes.  Each column is normalised to unit
-sum so that $A_{ij} = P(\text{reco in bin } i\,|\,\text{true in bin } j)$.  The
-efficiency vector $\varepsilon_j = \sum_i A_{ij}$ is the ratio of selected
-(\texttt{h\_smear\_sel}) to generated (\texttt{h\_true\_gen}) signal events per
-true bin.
+Two distinct matrices are in play and it is worth separating them, since they differ
+by exactly the efficiency. The \emph{migration} matrix
+\begin{equation}
+  M_{ij} = P(\text{reco in bin } i \,|\, \text{true in bin } j,\ \text{selected}),
+  \qquad \textstyle\sum_i M_{ij} = 1,
+\end{equation}
+describes only where selected events move between bins. The \emph{smearceptance}
+matrix additionally carries the probability of being selected at all,
+\begin{equation}
+  S_{ij} = \varepsilon_j\, M_{ij},
+  \qquad \textstyle\sum_i S_{ij} = \varepsilon_j,
+  \label{eq:smearcept}
+\end{equation}
+where $\varepsilon_j$ is the ratio of selected (\texttt{h\_smear\_sel}) to generated
+(\texttt{h\_true\_gen}) signal events in true bin $j$.
+
+It is $S$, not $M$, that enters the unfolding: \texttt{UnfolderNuMI.C} passes
+\texttt{get\_cv\_smearceptance\_matrix()} to the unfolder, and the efficiency of
+Fig.~\ref{fig:efficiency} is recovered as its column sums. $S$ is built from selected
+signal MC using the same binning on both axes. Figure~\ref{fig:response} plots the
+column-normalised $M$ rather than $S$, because normalising each column to unity makes
+the migration structure legible independently of how the efficiency varies across the
+true bins.
 
 \subsection{Regularised unfolding: the bias--variance trade-off}
 \label{sec:unfmethods}
@@ -3653,9 +3683,9 @@ Every differential cross section and every integrated value quoted in this note 
 are the square root of the diagonal of the \emph{total} covariance matrix, propagated
 through the unfolding: flux (PPFX multisims), cross-section (GENIE multisims and unisims),
 detector variations, hadron re-interaction, POT counting and target number, together with
-the data, MC and EXT statistical terms. For $p_\mu$ in FHC the total is $\simeq\!27\%$,
-dominated by flux ($23\%$), with detector $7\%$, cross-section $8\%$ and data statistics
-$8\%$. The cut-and-count total cross sections of \S\ref{sec:total_xsec} quote the same
+the data, MC and EXT statistical terms. For $p_\mu$ in FHC the bin-averaged total is
+$32.9\%$ (Table~\ref{tab:systbreak_fhc}), dominated by flux ($24.6\%$), with detector
+$12.3\%$, data statistics $11.6\%$ and cross-section $9.2\%$. The cut-and-count total cross sections of \S\ref{sec:total_xsec} quote the same
 combination, written there as systematic $\oplus$ data-statistical (FHC: $25.5\%\oplus4.3\%$).
 
 \subsection{Total flux-averaged cross section (cut-and-count)}
@@ -3975,11 +4005,11 @@ combined total carry the larger uncertainty, driven by the RHC detector systemat
     generator predictions. The measurement uncertainty is the systematic breakdown
     (flux/detector/cross-section/reinteraction, Tables~\ref{tab:systbreak_fhc}--%
     \ref{tab:systbreak_comb}) $\oplus$ cut-and-count data statistics. Values in
-    \emph{Generator values corrected 2026-08-17}: they previously came from truncated
-    binnings ($p_\mu$ closed at $3$~GeV/$c$, $p_\pi$ at $1$~GeV/$c$) that discarded the
-    tails, making every prediction $4$--$8\%$ low; see \S\ref{sec:ppi_bias}.
     parentheses give each generator's deviation from the measurement in units of the
-    measurement uncertainty.}
+    measurement uncertainty. The generator predictions are integrated over the full
+    binning; earlier versions of this table used truncated binnings ($p_\mu$ closed at
+    $3$~GeV/$c$, $p_\pi$ at $1$~GeV/$c$) that discarded the tails and made every
+    prediction $4$--$8\%$ low (\S\ref{sec:ppi_bias}).}
   \label{tab:total_xsec}
   \begin{tabular}{lccccc}
     \toprule
@@ -4785,7 +4815,8 @@ Table~\ref{tab:systematics} lists the sources and their estimated impacts.
       & Framework \texttt{PredTotal}$+$data Poisson imported; removed $\sim26\%$ bias \\[4pt]
     EXT subtraction on NuWro fake data
       & \textbf{Resolved}
-      & Cancelled via \texttt{fake\_data\_ext\_cancel}; re-enable for real data \\[4pt]
+      & Cancelled via \texttt{fake\_data\_ext\_cancel}.
+        \emph{Follow-up:} re-enable before unblinding \\[4pt]
     $\theta_{\mu\pi}$ binning (10 vs 9, C4)
       & \textbf{Resolved}
       & Custom aligned to framework 9-bin scheme \\[4pt]
@@ -5585,11 +5616,10 @@ unbiasedness of the FHC, RHC, and combined full-exposure extractions equally.
       2.30, 2.60, 3.00 \quad(first edge 0.15 = signal threshold) \\[4pt]
     $p_\pi$ (GeV/$c$) &
       \textbf{0.175, 0.205, $\infty$} \quad(first edge 0.175 = signal threshold; second
-      bin open above). \emph{Changed 2026-08-17}, see \S\ref{sec:ppi_bias}. The previous
-      five-bin scheme (0.175, 0.250, 0.320, 0.420, 0.550, open) had migration diagonals of
-      $96/35/21/10/6\%$, so only its first bin met the $>68\%$ usable-bin criterion; the
-      two-bin scheme gives $91/76\%$, clearing it in both. (An earlier draft of this table listed
-      0.175, 0.20, 0.30, 0.40, 0.50, 1.00, which never matched the configuration files.)
+      bin open above). The superseded five-bin scheme (0.175, 0.250, 0.320, 0.420,
+      0.550, open) had migration diagonals of $96/35/21/10/6\%$, so only its first bin met
+      the $>68\%$ usable-bin criterion; the two-bin scheme gives $91/76\%$, clearing it in
+      both (\S\ref{sec:ppi_bias}).
       \\[4pt]
     $\cos\theta_\mu$ &
       $-1.0$, $-0.5$, 0.0, 0.2, 0.4, 0.55, 0.65, 0.75, 0.82, 0.88, 0.93, 0.97, 1.0 \\[4pt]
