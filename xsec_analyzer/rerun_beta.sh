@@ -50,11 +50,13 @@ proc_one(){  # rawpath outpath filetype selection tag
   if [[ "$in" == *"+"* ]]; then
     local p1="${in%%+*}" p2="${in##*+}"
     [[ -f "$p1" && -f "$p2" ]] || { say "FAIL s1 $tag (missing part)"; return 1; }
-    merged="$PROC/merge_tmp_$(basename ${out%.root}).root"
-    if [[ ! -s "$merged" ]]; then
-      $NICE hadd -f -k "$merged" "$p1" "$p2" > "$LOG/s1_${tag}_hadd.log" 2>&1 \
-        || { say "FAIL s1 $tag (hadd)"; rm -f "$merged"; return 1; }
-    fi
+    # Scratch name keyed on the TAG, so the inclusive and proton-tagged units of the
+    # same detVar never share it. They previously did, and the second unit both read a
+    # half-written file and had it deleted underneath it by the first.
+    merged="$PROC/merge_tmp_${tag}.root"
+    rm -f "$merged"
+    $NICE hadd -f -k "$merged" "$p1" "$p2" > "$LOG/s1_${tag}_hadd.log" 2>&1 \
+      || { say "FAIL s1 $tag (hadd)"; rm -f "$merged"; return 1; }
     in="$merged"
   fi
   [[ -f "$in" ]] || { say "FAIL s1 $tag (no input: $in)"; return 1; }
@@ -73,7 +75,12 @@ stage1(){
   while IFS='|' read -r raw outdir ft sel tag; do
     [[ -z "${raw// }" || "${raw:0:1}" == "#" ]] && continue
     raw=$(echo $raw); outdir=$(echo $outdir); ft=$(echo $ft); sel=$(echo $sel); tag=$(echo $tag)
-    proc_one "$raw" "$outdir/xsec-ana-$(basename $raw)" "$ft" "$sel" "$tag" &
+    # For merged (part1+part2) inputs, basename of the concatenated path yields the
+    # part2 filename, so the output name must come from the tag instead. The tag
+    # carries a "w_" prefix for the proton-tagged family; strip it for the filename.
+    local oname
+    if [[ "$raw" == *"+"* ]]; then oname="${tag#w_}.root"; else oname="$(basename $raw)"; fi
+    proc_one "$raw" "$outdir/xsec-ana-$oname" "$ft" "$sel" "$tag" &
     while [ "$(jobs -rp | wc -l)" -ge "$NPROC" ]; do wait -n 2>/dev/null || sleep 5; done
   done < "../logs/rerun_beta_inputs.txt"
   wait
@@ -89,12 +96,112 @@ stage1(){
 # ---------------------------------------------------------------- stage 1b
 stage1b(){
   say "===== STAGE 1b: fake-data re-throw ====="
-  for m in 0 1; do
-    local tag="throw_$m"
+  # Four separate throws, not two. The integer argument to these macros is a SEED,
+  # not a mode: calling throw_perrun_w.C(0) then (1) simply re-threw the same four
+  # FHC proton-tagged files twice and left the inclusive family and all of RHC
+  # untouched, still carrying the pre-beta kinematics.
+  #   macros/throw_perrun_fhc.C   -> inclusive FHC        (processed/)
+  #   macros/throw_perrun_rhc.C   -> inclusive RHC        (processed/)
+  #   macros/throw_perrun_w.C     -> proton-tagged FHC    (processed/w/)
+  #   throw_perrun_w_rhc()        -> proton-tagged RHC    (processed/w/), same file
+  local calls=( "throw_perrun_fhc.C" "throw_perrun_rhc.C" "throw_perrun_w.C"
+                "throw_perrun_w.C+throw_perrun_w_rhc" )
+  local names=( "incl_fhc" "incl_rhc" "w_fhc" "w_rhc" )
+  local i
+  for i in "${!calls[@]}"; do
+    local tag="throw_${names[$i]}"
     done_already "s1b $tag" && { echo "  [skip] $tag"; continue; }
-    $NICE root.exe -l -b -q "macros/throw_perrun_w.C($m)" > "$LOG/s1b_$tag.log" 2>&1 \
-      && { mark "s1b $tag"; say "OK   s1b $tag"; } || say "FAIL s1b $tag"
+    local spec="${calls[$i]}" cmd
+    if [[ "$spec" == *"+"* ]]; then
+      # load the file, then invoke the named function inside it
+      cmd="macros/${spec%%+*}+ -e ${spec##*+}(1)"
+      $NICE root.exe -l -b -q "macros/${spec%%+*}" -e "${spec##*+}(1)" > "$LOG/s1b_$tag.log" 2>&1
+    else
+      $NICE root.exe -l -b -q "macros/$spec(1)" > "$LOG/s1b_$tag.log" 2>&1
+    fi
+    if [ $? -eq 0 ]; then mark "s1b $tag"; say "OK   s1b $tag"; else say "FAIL s1b $tag"; fi
   done
+}
+
+
+# ---------------------------------------------------------------- stage gates
+# A stage must never consume the output of an incomplete or stale earlier stage.
+# The first pass of this re-run did exactly that: 20 detVar units failed in stage 1,
+# stage 2 went ahead and built universes from the pre-beta detVar files still sitting
+# on disk from 2026-08-09, and the detector systematic in all 47 extractions was
+# silently invalid. Nothing in the pipeline noticed, because every individual univmake
+# and unfold succeeded. Hence two gates: completeness and freshness.
+
+# Newest mtime among the sources that determine the branch VALUES. Any processed file
+# older than this was produced by different physics logic.
+code_stamp(){
+  local newest=0 t
+  for f in src/selections/*.cxx include/XSecAnalyzer/Selections/*.hh \
+           include/XSecAnalyzer/NuMIBeamFrame.hh include/XSecAnalyzer/Branches.hh \
+           include/XSecAnalyzer/AnalysisEvent.hh src/utils/STVTools.cxx; do
+    [ -f "$f" ] || continue
+    t=$(stat -c %Y "$f"); (( t > newest )) && newest=$t
+  done
+  echo "$newest"
+}
+
+# Gate 1: every unit in the manifest carries a DONE mark.
+gate_complete(){
+  local missing=0 tag
+  while IFS='|' read -r raw outdir ft sel tag; do
+    [[ -z "${raw// }" || "${raw:0:1}" == "#" ]] && continue
+    tag=$(echo $tag)
+    if ! done_already "s1 $tag"; then
+      [ "$missing" -lt 20 ] && say "   not done: s1 $tag"
+      missing=$((missing+1))
+    fi
+  done < ../logs/rerun_beta_inputs.txt
+  if (( missing )); then say "!! GATE FAILED: $missing stage-1 unit(s) incomplete"; return 1; fi
+  say "GATE ok: all stage-1 units complete"
+  return 0
+}
+
+# Gate 2: every processed file that stage 2 will read is newer than the code stamp.
+# This is the gate that would have caught the detVar problem: those files existed and
+# opened cleanly, they were simply built by ten-day-old code.
+gate_fresh(){
+  local stamp=$(code_stamp) stale=0 shown=0 p r t
+  say "   code stamp: $(date -d @$stamp '+%Y-%m-%d %H:%M')"
+  for fp in configs/file_properties_numi_fhc5.txt configs/file_properties_numi_rhcfull.txt \
+            configs/file_properties_numi_comb.txt configs/file_properties_numi_fhc5_w.txt \
+            configs/file_properties_numi_rhcfull_w.txt configs/file_properties_numi_comb_w.txt; do
+    [ -f "$fp" ] || continue
+    while read -r p rest; do
+      [[ -z "$p" || "${p:0:1}" == "#" ]] && continue
+      [[ "$p" == /data/uboone/* ]] || continue
+      r=$(readlink -f "$p")
+      if [ ! -f "$r" ]; then
+        [ "$shown" -lt 15 ] && { say "   MISSING  $(basename $p)"; shown=$((shown+1)); }
+        stale=$((stale+1)); continue
+      fi
+      t=$(stat -c %Y "$r")
+      if (( t < stamp )); then
+        [ "$shown" -lt 15 ] && { say "   STALE    $(basename $r)  ($(date -d @$t '+%m-%d %H:%M'))"; shown=$((shown+1)); }
+        stale=$((stale+1))
+      fi
+    done < "$fp"
+  done
+  if (( stale )); then say "!! GATE FAILED: $stale processed file(s) missing or older than the code"; return 1; fi
+  say "GATE ok: every processed file stage 2 reads is newer than the code"
+  return 0
+}
+
+gate_before_stage2(){
+  say "===== GATE: checking stage 1 before stage 2 ====="
+  local bad=0
+  gate_complete || bad=1
+  gate_fresh    || bad=1
+  if (( bad )); then
+    say "!! REFUSING TO RUN STAGE 2. Completed work is kept in $STATUS;"
+    say "!! fix the failures above and re-run this script to resume."
+    return 1
+  fi
+  return 0
 }
 
 # ---------------------------------------------------------------- stage 2
@@ -192,7 +299,13 @@ stage3(){
 
 say "######## RERUN BETA START (from stage $START_STAGE) ########"
 [ "$START_STAGE" -le 1 ] && { stage1; stage1b; }
-[ "$START_STAGE" -le 2 ] && stage2
+if [ "$START_STAGE" -le 2 ]; then
+  if gate_before_stage2; then stage2; else
+    say "######## RERUN BETA HALTED AT THE GATE ########"; exit 2
+  fi
+fi
+# Stage 3 reads the univmake outputs, so it inherits the same gate by construction:
+# stage 2 cannot have run without passing it.
 [ "$START_STAGE" -le 3 ] && stage3
 say "######## RERUN BETA COMPLETE ########"
 grep -c "^DONE" "$STATUS" | xargs echo "  units completed:"
