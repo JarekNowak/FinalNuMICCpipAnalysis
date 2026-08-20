@@ -1,0 +1,160 @@
+Here is a review of the "analysis_note.pdf" document, focusing on draft overlaps, inaccuracies, and structural inconsistencies.
+
+## Structural Overlaps and Draft Artifacts
+
+* The document contains superseded text left alongside updated text.
+
+
+* In Section 8.10, the text states "Withdrawn pending re-extraction," yet the subsequent paragraphs contain arguments based on the "pre-fix $A_{C}$" that the text itself admits "does not survive".
+
+
+* Similarly, Section 9.2 leaves a superseded survey intact while explicitly warning that its "conclusion of uniqueness is superseded".
+
+
+* In the "Known Issues" table (Table 44), several items are marked "Resolved," but their impact descriptions still read like pending tasks, such as "re-enable for real data" or "full custom propagation pending".
+
+
+
+## Kinematic and Geometric Inconsistencies
+
+* Section 2.1 introduces the detector as sitting "approximately 110 mrad off-axis".
+
+
+* However, Section 2.2 recalculates this as 134.6 mrad or $7.7^{\circ}$ and explicitly states this "supersedes the 110 mrad quoted earlier".
+
+
+* Section 4 defines the $p_{\pi}$ threshold as $>0.175$ GeV/c, but later details the addition of a low-momentum bin spanning [0.113, 0.175] GeV/c.
+
+
+* Despite this addition, Section 14.1 validates the turn-on curve specifically for $p_{\pi}>0.175$ GeV/c without evaluating the appended lower bin.
+
+
+
+## Table and Value Discrepancies
+
+* The abstract defines the reverse horn current (RHC) exposure as $1.108\times10^{21}$ protons on target (POT).
+
+
+* Later text and tables (such as Table 2) switch the notation to $11.082\times10^{20}$ POT, which is mathematically identical but introduces formatting inconsistencies.
+
+
+* Table 38 includes a manual changelog note ("Changed 2026-08-17, see §8.8") directly within the table cells, which breaks the formal presentation style.
+
+
+
+Would you like me to focus on verifying the internal consistency of the mathematical formulas or the reported statistical uncertainties next?
+
+
+
+
+Let's dive straight into the mathematical formulas and the reported statistical uncertainties. There are a few significant computational discrepancies and mismatched uncertainty figures in "analysis_note.pdf" that need to be ironed out before finalizing the draft.
+
+### The Argon Target Nuclei ($N_{Ar}$) Discrepancy
+
+* Equation 2 explicitly defines the number of argon target nuclei in the fiducial volume as $N_{Ar}\approx8.71\times10^{28}$.
+
+
+* However, in the data tables of Section 8.5 and the cut-and-count text of Section 9.1, the value is listed as $8.710\times10^{29}$.
+
+
+* The event-to-cross-section conversion factor calculated in Section 8.5, $conv = 4.527\times10^{3}$, is only mathematically sound if the $10^{29}$ figure is used. Equation 2 clearly has a typo in the exponent that requires correction.
+
+
+
+### Mismatched Uncertainty Breakdowns
+
+* The text at the end of Section 9 states that for FHC $p_{\mu}$, the total uncertainty is $\simeq27\%$, and the data statistics component sits at 8%.
+
+
+* Table 31 directly contradicts this narrative, listing the FHC $p_{\mu}$ total uncertainty as 32.9% and the data statistics component as 11.6%. These figures need to be synchronized across the text and the tables.
+
+
+
+### NuWro and Generator Comparisons
+
+* In Section 8.8, the text notes a previous truncation bug that made generator predictions 4-8% low. When representing NuWro's performance against the MicroBooNE tune, ensuring these repaired totals strictly align across all phase spaces is critical, especially given your deep familiarity with the generator's internal architecture.
+
+
+* Table 30 correctly computes the deviations for NuWro against the measurement, but you should verify if the informal "Generator values corrected 2026-08-17" note in the caption was meant to be stripped out for the final manuscript.
+
+
+
+Should we look at the binning optimization strategies for $p_{\pi}$ next, or would you prefer to review the transverse kinematic imbalance (TKI) observables?
+
+
+
+
+Here is a detailed look at the inconsistencies and structural overlaps within the $p_{\pi}$ binning strategies and the TKI observables in the analysis note.
+
+Both sections suffer from a "chronological narrative" problem: the text documents the trial-and-error process of the analysis rather than presenting the final, resolved methodology.
+
+### Binning Optimization Strategies for $p_{\pi}$
+
+The discussion surrounding the pion momentum reconstruction ($p_{\pi}$) is highly detailed but contains significant narrative whiplash.
+
+* **The BDT vs. Two-Bin Fix:** The draft spends considerable length detailing the implementation of a BNB-style "golden-pion" BDT, acknowledging that because reconstructed momentum saturates at $\approx0.34$ GeV/c, the BDT fails to meet the $>0.68$ diagonal criterion for higher bins. It then presents the "Adopted response" as a coarse two-bin scheme ([0.175, 0.205] and $>0.205$ GeV/c) that clears the threshold at 91/76%. However, subsequent sections continue to reference the defunct five-bin problem as if the two-bin solution hasn't already been adopted.
+
+
+* **To Withdraw or Not to Withdraw:** There is a direct contradiction regarding the scope of the $p_{\pi}$ measurement. The text announces a "Planned change of scope" to withdraw the inclusive $p_{\pi}$ differential cross section and quote it exclusively on the proton-tagged subsample. Just two paragraphs later, it completely reverses course, stating that the proton tag does not improve the momentum response and that "the inclusive $p_{\pi}$ at two bins is equally defensible".
+
+
+
+### Transverse Kinematic Imbalance (TKI) Observables
+
+The TKI sections are similarly tangled with superseded conclusions and regularisation artifacts.
+
+* **Ghost Sections:** Section 8.10 opens with a stark "Withdrawn pending re-extraction" warning. Despite this, it leaves intact multiple paragraphs detailing how comparing variables evaluated about the detector $z$ axis versus the neutrino direction produces massive $\chi^2$ mismatches.
+
+
+* **The $A_C$ Smearing Contradiction:** Section 10.2 warns the reader that the Wiener-SVD additional smearing ($A_C$) severely suppresses $\delta p_T$ (0.43-0.45) and enhances $p_n$ (1.7), explicitly stating that "any model comparison read off the $\delta p_T$ and especially the $p_n$ panels is distorted" and should not be trusted. Yet, the very next table (Table 42) includes a note clarifying that these dramatic factors were "pre-fix" values; post-fix, the values are uniform to within 0.13, meaning "the $\chi^2$ ordering can no longer be attributed to smearing". The main text of 10.2 needs to be rewritten to reflect the post-fix reality.
+
+
+
+Given these overlapping drafts, would you like to focus next on streamlining the narrative structure of these sections, or should we look at the specific code-level fixes (like the width-aware regularisation operator) that resolved the artifact issues?
+
+
+It is incredibly common for analysis notes to read like a lab notebook during the drafting phase, preserving the chronological journey of debugging rather than presenting the final destination. Let's tackle how to streamline this narrative, and then clearly outline the mathematical mechanics of the regularisation fix.
+
+## Streamlining the Narrative
+
+To transition this from a working draft to a publication-ready manuscript, the superseded "dead ends" need to be stripped out to prevent reader confusion.
+
+* **Remove the Peak Sharpness Theory:** Section 9.2 currently attributes the $A_C$ suppression of forward-peaked signals to the "sharpness of the peak" before completely retracting the claim two paragraphs later. The text should be edited to exclusively present the correct, post-fix explanation: $A_C$ removes structure based on the conditioning of the response, not the shape of the truth distribution.
+
+
+* **Clear the Ghost Sections:** The paragraphs in Section 8.10 marked "Withdrawn pending re-extraction" should be deleted entirely. Presenting the post-fix uniform $A_C$ smearing values (where factors cluster tightly at 0.67–0.80) as the definitive methodology removes the confusing narrative that the TKI $\chi^2$ ordering was an artifact.
+
+
+* **Consolidate the Binning Saga:** The extensive documentation of the five-bin scheme and the golden-pion BDT should be drastically reduced or moved to an appendix. The text should immediately declare the two-bin scheme as the adopted, mathematically sound solution that clears the 68% diagonal criterion.
+
+
+
+## The Width-Aware Regularisation Fix
+
+The underlying cause of the model collapse in the angular observables was a mismatch between the mathematical operator and the physical binning.
+
+* The original Wiener-SVD regularisation matrix utilized a standard tridiagonal stencil (1, -2, 1).
+
+
+* This specific operator inherently assumes a uniform grid, but the analysis bin widths varied drastically, reaching ratios up to 14:1 for $cos~\theta_{\mu}$.
+
+
+* Applying a uniform operator to highly non-uniform bins caused the regularisation matrix to become near-singular.
+
+
+* This mathematical singularity forced the additional smearing matrix $A_C$ to collapse into a rank-1 state, represented by an abysmal condition number ($s_2/s_1 = 2.8\times10^{-6}$), annihilating all shape degrees of freedom.
+
+
+* The implemented fix correctly divides each column by its explicit bin width and utilizes the true physical spacings between bin centers.
+
+
+* By making the matrix width-aware, the proper conditioning of $A_C$ is restored ($s_2/s_1$ jumps from 0.015 to 0.51 for FHC $\theta_{\mu}$).
+
+
+* This accurately evaluates the physics models, correctly dropping the FHC $\theta_{\mu}$ $\chi^2$ from $\approx26/5$ down to $\approx2.8/5$ for generators like NuWro and NEUT.
+
+
+* This same code-level fix also successfully repaired unnoticed degradation in the combined sample for both the hadronic invariant mass $W_{\pi p}$ and the kinematic imbalance angle $\delta\phi_T$.
+
+
+

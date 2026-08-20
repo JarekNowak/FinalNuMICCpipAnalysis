@@ -1,0 +1,221 @@
+I reviewed the note for physics consistency rather than editorial polish. Overall it is scientifically strong, but there are several publish-blocking inconsistencies and a few physics-framing issues that should be cleaned up before wider circulation.
+
+Bottom line
+
+The analysis logic is mostly sound: the NuMI beam-axis treatment is well motivated, the pion-momentum limitations are correctly diagnosed, the two-bin pπp_\pi choice is defensible, and the Wiener-SVD ACA_C caveats are handled with unusual transparency. The main risks are internal contradictions left from iterative updates, especially in flux normalisation, target count, response-matrix definitions, angular-variable conclusions, binning tables, and systematics status.
+
+Major physics or analysis issues to fix
+1. Target-number inconsistency: likely a factor-of-ten typo
+
+This is the most important numerical inconsistency I found. In Sec. 2.4 the note states NAr≈8.71×1028N_{\rm Ar}\approx 8.71\times10^{28}, but later the unfolding normalisation and cut-and-count sections use NAr=8.710×1029N_{\rm Ar}=8.710\times10^{29}. A factor of ten in target number would be catastrophic for the cross-section scale, even if the code uses the correct value. The text must be made unambiguous and ideally should show the fiducial mass, density, FV dimensions, and dead-region subtraction used to obtain the number.
+
+Action: verify the code constant, then correct every textual occurrence to the same value. Add a one-line numerical derivation.
+
+2. Flux-normalisation wording is internally inconsistent
+
+Sec. 2.1 says the flux composition table is integrated over Eν>0.1E_\nu>0.1 GeV, while Sec. 2.4 says the cross-section normalisation uses new-G4 flux over Eν>60E_\nu>60 MeV. The note also says the absolute normalisation is “still taken from the previous flux histograms” in one place, but later says the authoritative normalisation is new-G4 and quotes FHC/RHC/combined values.
+
+Why it matters: readers will ask whether the event weights, composition table, and absolute Φ\Phi in the denominator are based on the same flux file and same threshold. The cross-section scale depends directly on this.
+
+Action: split clearly between:
+
+flux composition, if integrated above 0.1 GeV only for descriptive purposes;
+cross-section denominator, integrated above 60 MeV;
+PPFX central-value weights, if applied event-by-event separately from the absolute flux histogram.
+3. Response-matrix definition contradicts the efficiency definition
+
+Sec. 8.3 says each response column is normalised to unit sum, Aij=P(reco i∣true j)A_{ij}=P({\rm reco}\ i|{\rm true}\ j), then says ϵj=∑iAij\epsilon_j=\sum_i A_{ij}. If the column is truly normalised to unity, ϵj=1\epsilon_j=1 by construction. But Fig. 18 is labelled as “efficiency × P(reco∣true)P({\rm reco}|{\rm true}),” and Fig. 19 defines the efficiency separately.
+
+
+Likely intended definition: the matrix used in unfolding is probably a “smearceptance” matrix,
+
+Aij=P(selected and reco i∣true j),A_{ij} = P({\rm selected\ and\ reco}\ i | {\rm true}\ j),
+
+whose column sum is ϵj\epsilon_j. Alternatively, the migration matrix is unit-normalised and efficiency is stored separately. The text currently mixes the two.
+
+Action: define two objects explicitly:
+
+Mij=P(ireco∣jtrue,selected),∑iMij=1M_{ij}=P(i_{\rm reco}|j_{\rm true},{\rm selected}), \quad \sum_i M_{ij}=1 Sij=ϵjMij,∑iSij=ϵjS_{ij}=\epsilon_j M_{ij}, \quad \sum_i S_{ij}=\epsilon_j
+
+Then state which one Wiener-SVD uses.
+
+4. The angular-variable story still contains old and new conclusions simultaneously
+
+The note contains mutually incompatible statements about cos⁡θμ\cos\theta_\mu versus θμ\theta_\mu. One section says the cos⁡θμ\cos\theta_\mu tension is a parameterisation artefact and that θμ\theta_\mu reduces the model χ2\chi^2, but later the width-aware regularisation fix reinstates θμ\theta_\mu and shows it also discriminates strongly. Then still later, text says the FHC θμ\theta_\mu row is retained only for the record and “must not be used” because ACA_C was rank-1.
+
+
+Action: rewrite Sec. 8.9 and Sec. 9.2 as a single final narrative:
+
+old uniform-grid regularisation caused rank-deficient ACA_C for non-uniform bins;
+width-aware regularisation fixes this;
+post-fix θμ\theta_\mu and cos⁡θμ\cos\theta_\mu both carry information, but may weight model differences differently;
+all pre-fix χ2\chi^2, ACA_C-suppression factors, and “do not use” labels are historical diagnostics only and should be moved to an appendix or deleted.
+
+Right now a reviewer will not know which angular result is the one being reported.
+
+5. pπp_\pi treatment is physically well argued, but the scope statement should be sharper
+
+The discussion of range saturation is one of the strongest parts of the note. You show that the corrected range estimator follows truth near threshold but saturates near 0.340.34 GeV/c, and that the five-bin scheme fails the diagonal-response criterion while the two-bin scheme passes.
+
+
+The remaining physics issue is presentation: the two-bin pπp_\pi result is defensible, but it is not really a shape measurement above threshold. The upper bin is an integral over a large, poorly resolved momentum region. The note says this, but the abstract and summary still call all observables “differential cross sections” without enough caveat.
+
+Action: in the abstract and summary, say something like:
+
+“The pπp_\pi result is reported in two coarse bins; the upper bin should be interpreted as an integral above 0.205 GeV/c rather than a resolved high-momentum shape measurement.”
+
+6. Binning table and result tables are out of sync
+
+Table 53 still lists a very fine pμp_\mu binning with many edges, while the main results use a coarser optimised pμp_\mu binning with seven bins. Similarly, some systematic/closure tables still refer to pπp_\pi with five bins after the note has adopted the two-bin scheme.
+
+Action: create a single “final binning” table and make every result table refer to it. Move old binnings to a historical appendix only if needed.
+
+7. Systematics status is contradictory
+
+Earlier parts of the note say every differential and integrated result carries full statistical and systematic uncertainties, with flux, GENIE, detector, reinteraction, POT, target number and statistical components propagated. Later Sec. 11 says “Full systematic uncertainty propagation has not yet been performed” and lists estimated impacts.
+
+Action: decide whether Sec. 11 is obsolete. If systematics are now propagated through the framework and imported into the custom pipeline, then replace Sec. 11 with the final propagated uncertainty model. If native custom propagation is still pending, say precisely:
+
+primary result uses framework-propagated systematics;
+custom pipeline currently imports covariance;
+native custom multisims are pending but not required for the reported framework result.
+8. “Observed yield is 0.75 GENIE” is risky in a blind/fake-data note
+
+The abstract and summary use language like “observed yield” and “blind data/prediction ratio” while the analysis is explicitly performed on Poisson-thrown fake data. That can read as if real beam-on data already show a 25% deficit.
+
+Action: replace with language such as:
+
+“For the current fake-data extraction, the injected central-value sample corresponds to approximately 0.75 of the standalone GENIE v3 prediction in this phase space.”
+
+Do not call it an observed data deficit until unblinding.
+
+Gaps or missing checks
+A. Charge-blind νμ+νˉμ\nu_\mu+\bar\nu_\mu interpretation needs stronger caveat
+
+The signal is charge-blind and FHC/RHC have very different νμ/νˉμ\nu_\mu/\bar\nu_\mu compositions. You correctly quote separate FHC, RHC and combined fluxes, but the interpretation should repeatedly emphasise that these are flux-averaged mixed ν+νˉ\nu+\bar\nu cross sections, not pure νμ\nu_\mu or pure νˉμ\bar\nu_\mu cross sections.
+
+Action: add one sentence in the abstract and every model-comparison section.
+
+B. Background sidebands are well designed, but the role of EXT in fake data needs a clearer warning
+
+The sideband section correctly notes that current pseudo-data contain no EXT/dirt, so pseudo-data should be compared only to neutrino MC, with EXT/dirt shown for scale.
+
+Action: put this warning in the Table 34 caption and again near any sideband ratio plot. This avoids a reviewer mistaking the current sideband closure for a full background validation.
+
+C. Proton-tagged section contains historical “withdrawn” language
+
+The proton-tagged pπp_\pi result now seems to close and has acceptable two-bin response in all three beam configurations, but Sec. 8.10 still begins with “Withdrawn pending re-extraction” for related TKI/model-comparison material. Later text then says the artefact explanation is withdrawn and the post-fix interpretation is different.
+
+
+Action: mark historical material explicitly as “superseded” or move it to an appendix. In the main text, keep only the post-fix, final extraction status.
+
+Overlaps and places to compress
+The pπp_\pi saturation story appears in several places: reconstruction, response matrices, BNB comparison, golden-pion BDT, MCS study, proton-tagged discussion, and summary. It is valuable but too repetitive. Keep the detailed investigation in Sec. 8.8, then refer back to it briefly elsewhere.
+The ACA_C caveat is repeated in the unfolding section, integrated cross-section table, angular section, proton-tagged section, and summary. That is understandable, but it would be cleaner to define one “rules for comparing to models” box and refer to it.
+Historical fixes are currently embedded in the physics flow. Move old POT bugs, truncation bugs, rank-1 ACA_C, and previous binning attempts into a “resolved issues” appendix unless they are needed to justify the final result.
+Suggested priority list before circulation
+Fix NArN_{\rm Ar} everywhere and verify the code constant.
+Resolve flux wording: one flux file, one threshold for the denominator, clear distinction from composition plots and PPFX weights.
+Correct response-matrix definitions: migration versus smearceptance.
+Rewrite angular-variable narrative using only post-width-aware-regularisation conclusions.
+Update all binning and table dimensions to final two-bin pπp_\pi and final pμp_\mu binning.
+Replace obsolete systematics section or clearly label framework-propagated versus custom-native propagation.
+Remove “observed” language for fake-data results.
+Move superseded studies to appendices to reduce apparent contradictions.
+Overall assessment
+
+I would call the analysis physics-ready in concept but not yet note-ready in presentation. The main physics choices are defensible, especially the beam-axis convention, measured phase space, two-bin pπp_\pi, and ACA_C-smeared model comparison. The risks are not primarily new physics mistakes, but rather accumulated contradictions from a very active analysis development history. Cleaning those up will make the result much easier for reviewers to trust
+
+
+
+
+The best presentation is to make pπp_\pi a deliberately coarse, response-limited measurement, not a conventional multi-bin shape result. I would present the inclusive pπp_\pi result as a valid two-bin cross section, with the upper bin explicitly described as an integral above threshold, and then show the proton-tagged pπp_\pi result only as the corresponding exclusive-channel measurement, not as a “repair” of the inclusive result.
+
+Recommended framing
+1. Lead with the physics limitation, not with the binning
+
+State up front that the pion range estimator is useful only close to threshold. The note shows that after the μ→π\mu\rightarrow\pi mass correction, the reconstructed momentum tracks truth in the first bin but saturates near 0.34 GeV/c0.34\ \mathrm{GeV}/c, because interacting charged pions are truncated before range-out.
+
+Suggested text:
+
+The pπp_\pi observable is limited by the range-based pion momentum estimator. After the pion-mass correction the estimator is reliable near threshold, but above roughly 0.30.3 to 0.4 GeV/c0.4\ \mathrm{GeV}/c the reconstructed momentum saturates because many pions interact hadronically before stopping. Therefore the pπp_\pi result is reported in two coarse bins rather than as a resolved high-momentum shape measurement.
+
+2. Use the two-bin inclusive result as the primary pπp_\pi result
+
+The final inclusive bins should be:
+
+pπ∈[0.175,0.205] GeV/c,pπ>0.205 GeV/c.p_\pi \in [0.175, 0.205]\ \mathrm{GeV}/c,\qquad p_\pi > 0.205\ \mathrm{GeV}/c .
+
+This is defensible because the migration diagonals improve from 96,35,21,10,6%96,35,21,10,6\% in the old five-bin scheme to 91,76%91,76\% in the two-bin scheme, clearing the adopted >68%>68\% usable-bin criterion in both bins.
+
+Suggested caption language:
+
+The two-bin pπp_\pi binning is chosen from the response matrix, not from model separation. The old five-bin scheme resolved structure that the detector response could not support; the adopted two-bin scheme gives migration diagonals of 91%91\% and 76%76\%, satisfying the same response criterion used to reject the finer binning.
+
+3. Do not call the upper bin a differential high-pπp_\pi point
+
+This is the key language change. The upper bin is not a resolved measurement of the high-momentum pion spectrum. It is an integrated rate over a wide region where the estimator has little shape information.
+
+Use wording like:
+
+The first bin is a near-threshold differential point. The second bin should be interpreted as an integral over pπ>0.205 GeV/cp_\pi>0.205\ \mathrm{GeV}/c, not as a resolved differential measurement of the high-pπp_\pi spectrum.
+
+I would put that sentence in three places: the abstract, the pπp_\pi subsection, and the summary.
+
+4. Show the old five-bin result only as a diagnostic, not as a result
+
+The five-bin study is valuable because it explains why the final result is coarse, but it should not sit visually next to the final result in a way that makes it look like an alternative measurement. The old scheme had only one bin passing the response criterion, with the upper bins having very poor diagonal response.
+
+Best structure:
+
+Short diagnostic plot/table: saturation curve and old migration diagonals.
+“Therefore” paragraph.
+Final two-bin result plot/table.
+Optional appendix: golden-pion and MCS studies.
+5. Present proton-tagged pπp_\pi as a separate exclusive result
+
+The proton-tagged pπp_\pi measurement is useful, but it does not improve the pion momentum response. Your note shows the proton-tagged diagonals are essentially the same as, or slightly worse than, the inclusive ones: inclusive FHC 91.0%,75.5%91.0\%,75.5\%, proton-tagged FHC 88.9%,74.2%88.9\%,74.2\%, and proton-tagged RHC/combined around 89%,75%89\%,75\%.
+
+So the proton-tagged wording should be:
+
+The proton-tagged pπp_\pi result is reported as the pion-momentum cross section in the exclusive CC1μ\mu1π\pi1p phase space. It is not used to improve the pion momentum response; the response is set by the pion’s own range-out or hadronic interaction history and is essentially unchanged by requiring a proton tag.
+
+Suggested final presentation layout
+In the main results section
+
+Use one concise subsection:
+
+“Pion momentum: response-limited two-bin result”
+
+Include:
+
+one sentence on range saturation;
+the two bin edges;
+the migration diagonals 91%,76%91\%,76\%;
+the final FHC/RHC/combined table;
+one plot with equal visual bin spacing but clearly labelled bin widths;
+a caption saying the second bin is an integral above 0.205 GeV/c0.205\ \mathrm{GeV}/c.
+In the systematic or unfolding caveat
+
+Add:
+
+Because the upper pπp_\pi bin integrates over a wide region where reconstructed momentum saturates, model comparisons should be interpreted primarily as rate comparisons between a threshold bin and an above-threshold bin, not as tests of detailed pion spectral shape.
+
+In the summary
+
+Use an honest but positive statement:
+
+The pion momentum measurement is retained, but only in a two-bin form. This preserves a defensible response matrix and gives a useful near-threshold versus above-threshold rate comparison, while avoiding an unsupported claim of high-pπp_\pi shape resolution.
+
+What I would avoid
+Avoid saying “five pπp_\pi bins were measured but regularised.” That invites criticism because the response does not support them.
+Avoid presenting the golden-pion BDT as a near-solution. It works as a classifier, but even perfect truth-level golden selection does not recover a usable five-bin response.
+Avoid implying proton tagging improves pion momentum reconstruction. Your own result shows it does not.
+Avoid quoting the upper bin centre as if it were a point measurement. Better to label it simply “>0.205 GeV/c>0.205\ \mathrm{GeV}/c” and draw it as a categorical bin if possible.
+My recommendation in one sentence
+
+Publish pπp_\pi as a two-bin, response-validated, threshold-versus-above-threshold cross section, with the upper bin explicitly treated as an integral, and keep the golden-pion/MCS/proton-tag studies as supporting diagnostics rather than alternative headline results.
+
+
+
+.
