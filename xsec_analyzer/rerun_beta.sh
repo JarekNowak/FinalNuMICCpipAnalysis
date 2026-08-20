@@ -55,8 +55,21 @@ proc_one(){  # rawpath outpath filetype selection tag
     # half-written file and had it deleted underneath it by the first.
     merged="$PROC/merge_tmp_${tag}.root"
     rm -f "$merged"
-    $NICE hadd -f -k "$merged" "$p1" "$p2" > "$LOG/s1_${tag}_hadd.log" 2>&1 \
-      || { say "FAIL s1 $tag (hadd)"; rm -f "$merged"; return 1; }
+    # NO -k here. "-k" means "skip corrupt or unreadable files and keep going", which
+    # over NFS turns a transient read failure into a SILENTLY TRUNCATED merge: the
+    # first attempt at this produced a detVar merge holding 96,900 of 923,357 events,
+    # exit status 0, nothing in the log. Fail loudly instead, and verify the merged
+    # entry count against the sum of the parts before processing anything.
+    $NICE hadd -f "$merged" "$p1" "$p2" > "$LOG/s1_${tag}_hadd.log" 2>&1 \
+      || { say "FAIL s1 $tag (hadd rc=$?)"; rm -f "$merged"; return 1; }
+    local nexp nget
+    nexp=$(root.exe -l -b -q -e "Long64_t n=0;for(auto p:{\"$p1\",\"$p2\"}){auto f=TFile::Open(p);auto t=f?(TTree*)f->Get(\"nuselection/NeutrinoSelectionFilter\"):nullptr;if(t)n+=t->GetEntries();if(f)f->Close();}printf(\"%lld\\n\",n);" 2>/dev/null | tail -1)
+    nget=$(root.exe -l -b -q -e "auto f=TFile::Open(\"$merged\");auto t=f?(TTree*)f->Get(\"nuselection/NeutrinoSelectionFilter\"):nullptr;printf(\"%lld\\n\",t?t->GetEntries():-1);" 2>/dev/null | tail -1)
+    if [[ "$nexp" != "$nget" ]]; then
+      say "FAIL s1 $tag (merge truncated: got ${nget:-?} of ${nexp:-?} entries)"
+      rm -f "$merged"; return 1
+    fi
+    echo "  [merge ok] $tag $nget entries"
     in="$merged"
   fi
   [[ -f "$in" ]] || { say "FAIL s1 $tag (no input: $in)"; return 1; }
