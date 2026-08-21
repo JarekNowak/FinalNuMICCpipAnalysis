@@ -204,29 +204,102 @@ computed from misidentified objects in most background events -- and, importantl
 we do not know how often in signal events, because the NoCR signal sample's
 non-muon truth matching is unreliable.
 
+\subsection{The photon candidate: what the data says}
+\label{sec:photonstudy}
+
+This was investigated first, and the result contradicts the obvious expectation, so
+it is recorded in full.
+
+\paragraph{Composition.} Truth-matching the photon candidate in background events
+(69557 preselected events) gives:
+
+\begin{center}
+\begin{tabular}{lr}
+\toprule
+Truth match & Fraction [\%] \\
+\midrule
+photon              & 30.0 \\
+unmatched (PDG 0)   & 26.7 \\
+proton              & 15.2 \\
+charged pion        & 16.3 \\
+muon                &  9.8 \\
+electron            &  1.4 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent Charged tracks reconstructed as showers -- proton, pion, muon together --
+account for $41\%$, and a further $27\%$ has no truth match at all.
+
+\paragraph{The signal photon is soft, which inverts the strategy.} The
+$\Szero$--$\Lam$ mass splitting is only $77$~MeV, so
+\begin{equation}
+  E_\gamma = \frac{m_{\Szero}^2 - m_{\Lam}^2}{2 m_{\Szero}} = 74.5~\mathrm{MeV}
+\end{equation}
+in the \Szero\ rest frame. The measured mean energy of the photon candidate in
+signal events is $70$~MeV, which matches that prediction and is good evidence that
+the selection is finding the right object. The background photon candidate averages
+$140$~MeV, because the $\pi^0$ photons that dominate it are far harder.
+
+\textbf{Requiring shower-like quality would therefore remove signal
+preferentially}, which is the opposite of what an earlier draft of this note
+proposed. A $74$~MeV photon is near the reconstruction threshold: it makes few
+hits and deposits little energy. Measured against true photons in background
+events -- which are $\pi^0$ photons and much harder -- the signal photon looks
+\emph{less} shower-like, not more.
+
+\paragraph{Cutting in the correct direction helps, but only before the BDT.}
+Scanning cuts in the soft direction at preselection:
+
+\begin{center}
+\begin{tabular}{lrrr}
+\toprule
+Cut & $\epsilon_S$ [\%] & Background rejected [\%] & FoM gain \\
+\midrule
+$E_\gamma < 120$~MeV          & 94.5 & 25.4 & $\times1.092$ \\
+$N_{\mathrm{hits}}^{Y} < 102$ & 95.7 & 21.5 & $\times1.079$ \\
+$E_\gamma \in [5,100]$~MeV    & 70.6 & 55.2 & $\times1.052$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent But \texttt{Shower1Energy} is already one of the 49 BDT inputs, so the
+question is whether the cut adds anything the BDT has not already taken. Applied on
+top of the BDT operating point it does not:
+
+\begin{center}
+\begin{tabular}{lrrr}
+\toprule
+Selection & $S$ & $B$ & FoM \\
+\midrule
+BDT only                            & 502 & 20762 & 3.443 \\
+BDT $+$ $E_\gamma<120$~MeV          & 482 & 18663 & 3.484 \quad($\times1.012$) \\
+BDT $+$ $E_\gamma<100$~MeV          & 456 & 17706 & 3.384 \quad($\times0.983$) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Conclusion.} The photon candidate cannot be improved by cutting on
+variables the BDT already has -- it is using them close to optimally. An explicit
+$\pi^0$ mass veto is likewise ineffective, rejecting only $9\%$ of background,
+because it requires \emph{two} reconstructed showers and most background events
+supply only one. Improvement must come from information the BDT does not yet have.
+
+\paragraph{The one genuinely unused handle.} \texttt{shr\_moliere\_avg\_v}, the
+shower Moli\`ere angle, is in the ntuples and in the plotting variable list but is
+\emph{not} among the 49 BDT inputs. It measures lateral spread, which is
+orthogonal to energy and hit count and is the classic discriminant between an
+electromagnetic shower and a track stub. Adding it requires re-running the
+selection to dump it into the training tree, then retraining both folds. That is
+the concrete next step for the photon candidate, and it should be judged by the
+FoM gain on top of the BDT, not at preselection.
+
 \subsection{Proposed selection work, in order}
 
 \begin{enumerate}
-  \item \textbf{Fix the photon candidate first ($29\%$ correct).} It is chosen
-        purely by proximity to the vertex, with no particle-identification
-        requirement at all, so a track misreconstructed as a shower wins whenever
-        it starts closest. Three handles are already in the ntuples and unused:
-        \begin{itemize}
-          \item \texttt{shr\_moliere\_avg\_v} -- electromagnetic showers are
-                broader than a proton stub;
-          \item shower $dE/dx$ -- a conversion photon deposits $\sim\!4$~MeV/cm,
-                twice minimum ionising, whereas a stopping proton deposits far
-                more;
-          \item conversion distance -- a real photon converts a few cm from the
-                vertex, a proton track starts at it.
-        \end{itemize}
-        Requiring shower-like behaviour before accepting the photon should be the
-        single largest gain available.
-  \item \textbf{Use the $\pi^0$ mass as a cut, not only as a BDT input.} With
-        $76\%$ of the background from $\pi^0$-producing RES and DIS, an explicit
-        veto on a reconstructed di-photon mass near $135$~MeV is a direct attack on
-        the dominant mode. It is currently only one of 49 BDT inputs, where its
-        power is diluted.
+  \item \textbf{Add \texttt{shr\_moliere\_avg\_v} to the BDT}
+        (Sec.~\ref{sec:photonstudy}) and retrain. This is the only unused photon
+        handle; cuts on the existing ones are exhausted.
   \item \textbf{Improve the pion candidate ($31\%$ correct).} The joint
         discriminant of Eq.~\ref{eq:Ddisc} is already a real improvement over
         $\chi^2_p$ alone, but the failure mode is specific: a second proton is
