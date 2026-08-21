@@ -1,0 +1,354 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=2.4cm]{geometry}
+\usepackage{amsmath,amssymb,booktabs,graphicx,hyperref,xcolor}
+\usepackage[T1]{fontenc}
+\hypersetup{colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,
+            urlcolor=blue!50!black}
+\newcommand{\Szero}{\ensuremath{\Sigma^{0}}}
+\newcommand{\Lam}{\ensuremath{\Lambda}}
+\newcommand{\uboone}{MicroBooNE}
+\newcommand{\numubar}{\ensuremath{\bar{\nu}_\mu}}
+
+\title{\Szero\ Production in the NuMI Beam at \uboone:\\ Analysis Note}
+\author{J.~Nowak, N.~Patel}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Working note for the \uboone\ \Szero\ production analysis in the NuMI beam. The
+selection reconstructs the $\Szero \to \Lam\gamma$, $\Lam \to p\pi^-$ chain in
+$\numubar$ charged-current interactions and is finished with a cross-validated
+gradient BDT. This note records the current state, the planned port into the
+\texttt{xsec\_analyzer} framework, and the three pieces of work that follow:
+a Poisson-thrown fake-data sample, extension from RHC-only to the combined
+FHC$+$RHC exposure, and the selection work needed to lift a purity that currently
+sits near $0.1\%$.
+\end{abstract}
+
+\tableofcontents
+
+% =============================================================================
+\section{Status and scope}
+% =============================================================================
+
+The analysis measures, or more realistically sets a limit on, \Szero\ production
+in $\numubar$ charged-current interactions. The signature is
+\begin{equation}
+  \numubar + \mathrm{Ar} \to \mu^{+} + \Szero + X, \qquad
+  \Szero \to \Lam\gamma, \qquad \Lam \to p\,\pi^{-},
+\end{equation}
+so the reconstructed final state is a muon, a proton, a pion and a photon.
+
+The existing selection (\texttt{Sigma/pelee/SigmaSelection.C}) runs on standard
+PeLEE ntuples and reaches, at the operating point $\mathrm{BDTG}>-0.90$ scaled to
+the full RHC data exposure of $1.1526\times10^{21}$~POT:
+
+\begin{table}[h]\centering
+\caption{Current selection performance, RHC only.}
+\begin{tabular}{lrrrr}
+\toprule
+Stage & Raw signal & Efficiency [\%] & Purity [\%] & $S/\sqrt{S+B}$ \\
+\midrule
+Preselection (NTracksCut) & 650 & 15.7 & 0.040 & 0.038 \\
+Cut-based                 & 497 & 12.0 & 0.077 & 0.045 \\
+BDTG (current final)      & 502 & 12.1 & 0.108 & 0.054 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent Efficiency is respectable; purity is not. A purity of $0.108\%$ means
+roughly one signal event per thousand selected, and $\sim\!2640$ background events
+under $\sim\!2.9$ signal events at full RHC POT. \textbf{Improving the selection is
+therefore the priority}, ahead of any normalisation or extraction work: at this
+purity no downstream treatment can rescue the measurement.
+
+\paragraph{What this analysis produces.} Not a differential cross section. At
+$0.1\%$ purity and $12\%$ efficiency the deliverable is a cross-section
+\emph{upper limit}. This matters for the framework port (Sec.~\ref{sec:port}),
+because \texttt{xsec\_analyzer} is built end-to-end for differential extraction and
+contains no limit machinery.
+
+% =============================================================================
+\section{Framework port}
+\label{sec:port}
+% =============================================================================
+
+The selection is being ported into \texttt{xsec\_analyzer} as a
+\texttt{SelectionBase} subclass, alongside the CC$1\mu1\pi$ selections. The port
+buys the framework's systematic machinery -- flux (PPFX multisims),
+cross-section (GENIE multisims and unisims), detector variations, hadron
+reinteraction -- which is exactly the covariance a limit needs for its background
+prediction, and which would otherwise have to be built from scratch.
+
+\paragraph{What is ported.} Selection, cut flow, truth categorisation, reco and
+true observables, and the systematic universes at a \emph{single} analysis bin.
+
+\paragraph{What is not.} Limit setting, which stays in \texttt{CrossSection.C}
+reading the framework covariance. An unfolded \Szero\ spectrum would be
+meaningless at this purity, so no multi-bin scheme is planned.
+
+\paragraph{Framework gaps.} Three, all small. Nine branches the selection uses are
+present in the ntuples but unbound in \texttt{Branches.hh}
+(\texttt{trk\_pid\_chipi\_v}, \texttt{shr\_energy\_y\_v},
+\texttt{shr\_p\{x,y,z\}\_v}, \texttt{pi0\_energy\{1,2\}\_Y},
+\texttt{pi0\_gammadot}, \texttt{shr\_moliere\_avg\_v}); the fiducial volume is
+looser than the CC$\pi$ one and must be set per selection rather than inherited;
+and the factory needs a registration branch. Details in
+\texttt{SIGMA0\_FRAMEWORK\_PLAN.md}.
+
+% =============================================================================
+\section{Selection}
+% =============================================================================
+
+\subsection{Signal definition}
+$\texttt{nu\_pdg} = -14$, $\texttt{ccnc} = 0$, a \Szero\ (PDG 3212) in the
+final-state list \texttt{mc\_pdg}, and the true vertex inside the fiducial volume.
+Photons are not stored in \texttt{mc\_pdg}, so the decay is tagged by the \Szero\
+itself rather than by its daughters.
+
+\subsection{Fiducial volume}
+$3.00 < x < 253.35$, $-112.53 < y < 114.47$, $3.1 < z < 1033.0$~cm, excluding the
+dead region $675.1 < z < 775.1$~cm. This is deliberately looser than the
+CC$1\mu1\pi$ box ($10$--$246$, $\pm101$, $10$--$986$): the signal is rare enough
+that acceptance is worth more than vertex quality.
+
+\subsection{Candidate reconstruction}
+\begin{itemize}
+  \item \textbf{Muon}: longest track with $\texttt{trk\_score}>0.8$, start within
+        $20$~cm of the vertex, length $>10$~cm, and LLR PID $>0.7$.
+  \item \textbf{Proton and pion}: assigned jointly by the combined discriminant
+        \begin{equation}
+          D = \frac{\mathrm{LLR}}{0.591}
+              + \frac{\chi^2_p - \chi^2_\pi}{124.5},
+          \label{eq:Ddisc}
+        \end{equation}
+        with proton $=\arg\min D$ and pion $=\arg\max D$. This separates true
+        protons from true pions with AUC $0.873$, against $0.838$ for $\chi^2_p$
+        alone and $0.852$ for LLR alone. The $\chi^2$ term is dropped per track
+        when undefined ($\sim\!30\%$ of tracks).
+  \item \textbf{Photon}: the two non-track PFPs closest to the vertex; the closest
+        is taken as the \Szero\ decay photon.
+\end{itemize}
+
+\subsection{Cut chain}
+Nine cumulative stages: \texttt{AllEvents}, \texttt{FiducialV},
+\texttt{CosmicVeto} ($\texttt{topological\_score}>0.20$), \texttt{NShowers}
+($0<n_{\mathrm{shr}}<4$), \texttt{MuonCandidate}, \texttt{ProtonCandidate},
+\texttt{PionCandidate}, \texttt{NTracksCut} ($n_{\mathrm{trk}}<5$), \texttt{BDTG}.
+
+\subsection{Derived observables}
+\Lam\ mass from $(p,\pi)$; \Szero\ mass from $(\Lam,\gamma)$ using the per-PFP
+shower energy \texttt{shr\_energy\_y\_v}; \Lam\ and photon vertex-pointing angles
+and impact parameters; \Lam\ decay distance; and a $\pi^0$ di-photon mass built
+from the framework $\pi^0$ reconstruction for background rejection.
+
+\subsection{BDT}
+Gradient BDT over 49 inputs, evaluated with two-fold cross-validation: folds are
+trained on even and odd event numbers and each is applied only to the events it did
+not train on. Per-fold ROC $\simeq0.81$. The cross-validation is not optional --
+applying a fold to its own training events would inflate the ROC and the apparent
+significance.
+
+% =============================================================================
+\section{Why the purity is low, and what to do about it}
+\label{sec:purity}
+% =============================================================================
+
+This is the priority. Two diagnostics point at the same place.
+
+\paragraph{The surviving background is $\pi^0$ events.}
+\begin{table}[h]\centering
+\caption{Surviving background by interaction mode at the final selection.}
+\begin{tabular}{lrr}
+\toprule
+Mode & Scaled yield & \% of background \\
+\midrule
+Resonant (RES)       & 1381.8 & 52.3 \\
+Deep inelastic (DIS) &  635.3 & 24.0 \\
+Quasi-elastic (QE)   &  363.8 & 13.8 \\
+Meson exchange (MEC) &  177.1 &  6.7 \\
+Cosmic               &   74.6 &  2.8 \\
+Coherent (COH)       &    8.9 &  0.3 \\
+\midrule
+Total                & 2643.1 & 100 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent RES and DIS together are $76\%$. Both produce $\pi^0 \to \gamma\gamma$,
+which supplies a fake \Szero\ photon, plus charged hadrons that fake the proton and
+pion tracks. The background is not diffuse: it is one physics process.
+
+\paragraph{The candidate assignment is the weak link.} Truth-matched purities of
+the individual candidates in background events:
+
+\begin{center}
+\begin{tabular}{lrl}
+\toprule
+Candidate & Correct [\%] & Dominant impostor \\
+\midrule
+Muon   & 81 & --- \\
+Proton & 58 & --- \\
+Pion   & 31 & another proton (28\%) \\
+Photon & 29 & a proton (18\%) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent The muon is reliable and the proton is acceptable, but \textbf{the pion
+and photon candidates are wrong roughly $70\%$ of the time}. Since both the \Lam\
+and \Szero\ masses are built from them, the two most powerful BDT inputs are being
+computed from misidentified objects in most background events -- and, importantly,
+we do not know how often in signal events, because the NoCR signal sample's
+non-muon truth matching is unreliable.
+
+\subsection{Proposed selection work, in order}
+
+\begin{enumerate}
+  \item \textbf{Fix the photon candidate first ($29\%$ correct).} It is chosen
+        purely by proximity to the vertex, with no particle-identification
+        requirement at all, so a track misreconstructed as a shower wins whenever
+        it starts closest. Three handles are already in the ntuples and unused:
+        \begin{itemize}
+          \item \texttt{shr\_moliere\_avg\_v} -- electromagnetic showers are
+                broader than a proton stub;
+          \item shower $dE/dx$ -- a conversion photon deposits $\sim\!4$~MeV/cm,
+                twice minimum ionising, whereas a stopping proton deposits far
+                more;
+          \item conversion distance -- a real photon converts a few cm from the
+                vertex, a proton track starts at it.
+        \end{itemize}
+        Requiring shower-like behaviour before accepting the photon should be the
+        single largest gain available.
+  \item \textbf{Use the $\pi^0$ mass as a cut, not only as a BDT input.} With
+        $76\%$ of the background from $\pi^0$-producing RES and DIS, an explicit
+        veto on a reconstructed di-photon mass near $135$~MeV is a direct attack on
+        the dominant mode. It is currently only one of 49 BDT inputs, where its
+        power is diluted.
+  \item \textbf{Improve the pion candidate ($31\%$ correct).} The joint
+        discriminant of Eq.~\ref{eq:Ddisc} is already a real improvement over
+        $\chi^2_p$ alone, but the failure mode is specific: a second proton is
+        taken as the pion $28\%$ of the time. Adding the sign-sensitive
+        information -- track length against the proton range curve, or the
+        $\Lam$-mass constraint itself as part of the assignment rather than as a
+        consequence of it -- would target that directly.
+  \item \textbf{Reconsider the \Lam\ decay topology.} \Lam\ has $c\tau = 7.89$~cm,
+        so a genuine $\Lam \to p\pi^-$ has a displaced vertex. The selection
+        computes \texttt{LambdaDecayDist} and the pointing angle but does not cut
+        on them. A displaced-vertex requirement is close to background-free in
+        principle and is the most distinctive feature of the signal.
+\end{enumerate}
+
+\noindent The analysis is also \textbf{signal-statistics limited}: 650 raw signal
+events at preselection, with a BDT ROC that plateaus regardless of background size
+or added variables. More signal MC is the largest single lever, and no amount of
+selection work substitutes for it.
+
+% =============================================================================
+\section{Fake data by Poisson throw}
+\label{sec:fakedata}
+% =============================================================================
+
+\paragraph{The problem.} The current ``data'' sample is the signal file itself
+(\texttt{SigmaSelection.C} maps the same NuWro hyperon ntuple to both sample~0 and
+sample~4), scaled by POT. That is not a closure test: it contains no background, no
+statistical fluctuation, and is perfectly correlated with the signal prediction it
+would be compared against.
+
+\paragraph{The fix.} Adopt the same Poisson-throw scheme the CC$1\mu1\pi$ analysis
+uses (\texttt{macros/throw\_perrun\_*.C}). For each MC event with central-value
+weight $w_{\mathrm{cv}}$ and POT scale $\alpha = \mathrm{POT}_{\mathrm{data}} /
+\mathrm{POT}_{\mathrm{MC}}$, draw
+\begin{equation}
+  n \sim \mathrm{Poisson}\!\left( w_{\mathrm{cv}}\,\alpha \right)
+\end{equation}
+and write the event $n$ times into the fake-data tree with all weights reset to
+unity. Applied across \emph{all} samples -- signal, other hyperons, background,
+dirt -- this produces a fake dataset that
+\begin{itemize}
+  \item contains the correct background admixture, which matters enormously here
+        because background outnumbers signal by $\sim\!900{:}1$;
+  \item carries the right statistical fluctuations, so uncertainties can be
+        validated rather than assumed;
+  \item is statistically independent of the prediction, making a genuine closure
+        test possible.
+\end{itemize}
+
+\paragraph{Implementation.} A \texttt{throw\_sigma0.C} modelled on
+\texttt{throw\_perrun\_w.C}: chain the processed MC, drop the multisim weight
+branches, \texttt{CloneTree(0)} to preserve the \Szero\ observables, throw, and
+stamp \texttt{summed\_pot} with the target POT. One seed per sample so the throw is
+reproducible.
+
+\paragraph{Caveat to keep in view.} A Poisson throw from the same MC is a
+\emph{statistical} closure test, not a model test. It cannot reveal generator
+mismodelling, because the ``data'' and the prediction come from the same generator.
+A genuine model test needs a hyperon sample from a different generator -- GENIE
+against the current NuWro -- which does not exist locally. Until it does, the
+throw validates the statistical and normalisation chain only, and that limitation
+should be stated wherever the closure is quoted.
+
+% =============================================================================
+\section{Exposure: RHC now, combined later}
+\label{sec:exposure}
+% =============================================================================
+
+\paragraph{Now: RHC only.} Everything is scaled to the full RHC data exposure,
+$\mathrm{POT}_{\mathrm{data}} = 1.1526\times10^{21}$:
+
+\begin{center}
+\begin{tabular}{llr}
+\toprule
+Sample & Source & Generated POT \\
+\midrule
+\Szero\ signal / hyperons & NuWro hyperon-enhanced & $2.1764\times10^{23}$ \\
+Background   & RHC overlay, Runs 1$+$2$+$4a$+$4b$+$4c & $9.94482\times10^{21}$ \\
+Dirt         & Run~1 RHC only & $4.21274\times10^{20}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent Two known imperfections: the dirt sample is Run-1 RHC only, scaled up to
+the full RHC exposure, and the signal sample is generated with no cosmic overlay
+(NoCR), which is why its non-muon truth matching cannot be trusted.
+
+\paragraph{Later: combined FHC$+$RHC.} The signal is $\numubar$ charged-current,
+so RHC is the sensitive mode -- but FHC carries a substantial wrong-sign
+$\numubar$ component ($34.0\%$ of the FHC flux, against $53.3\%$ for RHC), and the
+FHC exposure is $8.857\times10^{20}$~POT. Folding FHC in therefore adds real signal
+rather than only background, and the CC$1\mu1\pi$ analysis already has the
+machinery: per-run POT scaling, a combined \texttt{file\_properties}, and combined
+flux normalisation.
+
+Deferred deliberately. The combination is a normalisation exercise, and at $0.1\%$
+purity it would add background faster than signal in absolute terms. The selection
+work of Sec.~\ref{sec:purity} comes first; the exposure extension is worth doing
+once the selection is worth extending. When it happens it needs: FHC overlay
+samples processed through the same selection, an FHC hyperon signal sample (or a
+justified reuse of the RHC one, given the signal is beam-mode independent at the
+interaction level), FHC dirt, and a combined-mode flux normalisation following
+\texttt{Flux} in the CC$\pi$ xsec configs.
+
+% =============================================================================
+\section{Work plan}
+% =============================================================================
+
+\begin{enumerate}
+  \item \textbf{Selection (priority).} Photon-candidate identification, explicit
+        $\pi^0$ veto, pion assignment, \Lam\ displaced-vertex requirement.
+        Sec.~\ref{sec:purity}.
+  \item \textbf{Framework port.} Branch bindings, \texttt{Sigma0} selection class,
+        factory registration, cut-flow validation against the standalone code
+        before any config work. Sec.~\ref{sec:port}.
+  \item \textbf{Fake data.} \texttt{throw\_sigma0.C}, all samples, RHC POT.
+        Sec.~\ref{sec:fakedata}.
+  \item \textbf{Systematics.} Single-bin \texttt{univmake} for the background
+        covariance.
+  \item \textbf{Combined exposure.} FHC$+$RHC once the selection justifies it.
+        Sec.~\ref{sec:exposure}.
+  \item \textbf{Limit.} Outside the framework, reading its covariance.
+\end{enumerate}
+
+\end{document}
