@@ -367,6 +367,77 @@ candidate is already $81\%$ pure and is not where we are losing. Their analysis 
 also BNB, so the flux and interaction mix differ, and any borrowed \emph{numerical}
 threshold would have to be re-derived.
 
+\subsection{Plan: dedicated BDTs in place of one large BDT}
+\label{sec:bdtsplit}
+
+\paragraph{Why the single BDT is the wrong shape.} One BDT over 49 inputs is trained
+against a background that is really four unrelated physics processes -- $\pi^0$-producing
+RES ($52\%$) and DIS ($24\%$), quasi-elastic ($14\%$) and MEC ($7\%$) events with no
+$\pi^0$ at all, and cosmics ($3\%$). A single discriminant must find one surface
+separating signal from \emph{all} of them at once, so it learns whatever those
+backgrounds have in common and averages away the structure specific to each. gLEE
+runs five, and their signal is rarer than ours.
+
+The evidence that this is the binding constraint rather than variable quality is that
+adding variables barely moves the answer: the Moli\`ere angle changed the figure of
+merit by $\times1.013$, and the ROC plateaus regardless of background size or added
+inputs. A better-shaped discriminant is a different lever from a better variable.
+
+\paragraph{Proposed structure.} Three BDTs, cut independently, replacing the single
+BDTG:
+
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+BDT & Trained against & Fraction of bkg & Discriminating on \\
+\midrule
+$\pi^0$-rejection & RES $+$ DIS with a true $\pi^0$ & $\sim\!76\%$ &
+  SSV block, $\pi^0$ mass, shower shape \\
+Non-$\pi^0$ $\nu$ & QE $+$ MEC $+$ COH, no $\pi^0$ & $\sim\!21\%$ &
+  track multiplicity, PID, $\Lam$ mass \\
+Cosmic & cosmic-tagged events & $\sim\!3\%$ &
+  topological score, containment, $\Lam$ pointing \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent Each is trained signal-versus-one-class, keeping the same two-fold
+cross-validation by event-number parity. The truth labels needed to define the
+classes already exist in the training dump: \texttt{Interaction},
+\texttt{HasPi0}, \texttt{CosmicMu} and \texttt{Ccnc} are written to
+\texttt{BDTInput.root} as diagnostic branches, so the split costs no new
+reconstruction, only a change to how \texttt{TrainBDT.C} builds its background tree.
+
+\paragraph{How to combine them.} Two options, and the choice should be made on
+measurement rather than taste:
+\begin{itemize}
+  \item \textbf{Independent cuts}, as gLEE does -- one threshold per score, tuned
+        jointly. Transparent, and each cut can be validated in its own sideband.
+  \item \textbf{A second-stage combination} -- feed the three scores into a small
+        final discriminant. Usually stronger, but harder to validate and easy to
+        overtrain on 650 signal events.
+\end{itemize}
+Given our signal statistics, independent cuts are the safer starting point.
+
+\paragraph{The statistics problem this creates, and the answer to it.} Splitting the
+background does not reduce the signal available for training: all $650$ signal events
+are used in every BDT. It does reduce the \emph{background} per training, but from
+$69557$ preselected events, so even the cosmic class retains thousands. The real
+constraint remains the $650$ signal events, which is why the incoming cosmic-overlay
+signal samples matter more than any of this.
+
+\paragraph{Order of work.} Build the $\pi^0$-rejection BDT first and evaluate it
+against the current single BDT at matched signal efficiency. If it alone does not
+improve the figure of merit, the split is not the answer and the effort should move
+to signal statistics instead. Only if it does should the other two follow.
+
+\paragraph{Interaction with the SSV variables.} The SSV block belongs naturally in
+the $\pi^0$-rejection BDT, where its targets are. Adding it to the single BDT first
+-- as has now been done -- is worth doing anyway, because it measures how much of the
+gain comes from the variables and how much from the restructuring: if the SSV
+variables give little in the single BDT but a lot in a dedicated $\pi^0$ BDT, that is
+direct evidence for the split.
+
 \subsection{Proposed selection work, in order}
 
 \begin{enumerate}
@@ -375,10 +446,13 @@ threshold would have to be re-derived.
         actual failure mode and is expected to dominate everything else on this list.
   \item \textbf{Split the BDT by background class} (Sec.~\ref{sec:glee}), starting
         with a dedicated $\pi^0$-rejection BDT.
-  \item \textbf{Add \texttt{shr\_moliere\_avg\_v} to the BDT}
-        (Sec.~\ref{sec:photonstudy}) and retrain. Done; see that section for the
-        measured separation, which is weak ($\langle S^2\rangle = 0.065$ against
-        $0.159$ for shower energy), so little is expected of it.
+  \item \textbf{Add \texttt{shr\_moliere\_avg\_v} to the BDT.} \emph{Done, and it
+        does almost nothing}, as its separation predicted: $503$ signal against $502$,
+        purity $0.111\%$ against $0.108\%$, figure of merit $0.0544$ against $0.0537$,
+        a gain of $\times1.013$. Recorded because it closes off the last unused
+        photon-shape variable and supports the argument of
+        Sec.~\ref{sec:bdtsplit} that variable quality is no longer the binding
+        constraint.
   \item \textbf{Improve the pion candidate ($31\%$ correct).} The joint
         discriminant of Eq.~\ref{eq:Ddisc} is already a real improvement over
         $\chi^2_p$ alone, but the failure mode is specific: a second proton is
