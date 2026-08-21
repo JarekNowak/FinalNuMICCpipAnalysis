@@ -294,12 +294,91 @@ selection to dump it into the training tree, then retraining both folds. That is
 the concrete next step for the photon candidate, and it should be judged by the
 FoM gain on top of the BDT, not at preselection.
 
+\subsection{Methods worth adopting from the single-photon analyses}
+\label{sec:glee}
+
+The gLEE single-photon search and the NC$\pi^0$ technote solve a problem very close
+to ours: isolate a single photon against a background of $\pi^0$ events in which one
+decay photon was missed. Four of their methods transfer directly.
+
+\paragraph{1. Second-Shower Veto -- look for the photon that was \emph{not}
+reconstructed.} This is the most important one. Our $\pi^0$ veto requires
+\emph{both} decay photons to be reconstructed, which is why it fires so rarely and
+rejects only $9\%$ of background (Sec.~\ref{sec:photonstudy}). gLEE instead trains a
+dedicated Second-Shower Veto (SSV) BDT on evidence that a second photon exists even
+when Pandora never built a shower from it. Their SSV inputs include:
+\begin{itemize}
+  \item the \textbf{fraction of unassociated hits in the slice} -- hits in the
+        neutrino slice belonging to no reconstructed object, which is exactly what a
+        missed low-energy photon leaves behind;
+  \item the \textbf{number of unassociated hits} (used logarithmically);
+  \item a \textbf{minimum conversion parameter}, and the implied invariant mass of
+        the candidate photon paired with any second-shower candidate.
+\end{itemize}
+Applied to \Szero, this attacks the dominant background where it actually lives: our
+RES and DIS background is $76\%$ of the total and is $\pi^0$-driven, and the failure
+mode is precisely a missed second photon. This should be tried before any further
+work on the existing $\pi^0$ mass variable.
+
+The ingredients are already in our ntuples, checked directly on the signal file:
+\texttt{slnhits} and \texttt{slnunhits} (total and unassociated hits in the slice,
+whose ratio is gLEE's fraction variable), \texttt{slclustfrac},
+\texttt{secondshower\_Y\_nhit} and \texttt{secondshower\_Y\_dot} from the PeLEE
+second-shower tagger, and \texttt{shrsubclusters0/1/2} (sub-cluster counts, which the
+CC$1\mu1\pi$ BDT already uses). None of these is currently read by
+\texttt{SigmaSelection.C}. Adding them is the same mechanical exercise as the
+Moli\`ere angle -- bind the branch, add to both variable lists, retrain -- but on
+variables with a far better physics motivation.
+
+\paragraph{2. One BDT per background class, not one BDT for everything.} gLEE runs
+\emph{five} BDTs for its $1\gamma1p$ channel -- Cosmic, $\nu_e$, BNB-Other, NC$\pi^0$
+and SSV -- each trained against one background, with a separate cut on each score.
+We use a single BDT over 49 inputs trained against all backgrounds at once. Given
+that our background decomposes cleanly (RES $52\%$, DIS $24\%$, QE $14\%$, MEC
+$7\%$, cosmic $3\%$), a dedicated $\pi^0$-rejection BDT and a separate cosmic BDT
+would let each learn its own discriminating structure instead of averaging over
+processes that look nothing alike. This is an architectural change and the single
+largest departure from the current design.
+
+\paragraph{3. Conversion distance as a first-class variable.} gLEE uses the shower
+conversion distance throughout, in both linear and logarithmic form, as one of its
+most-shown discriminants. We have \texttt{Shower1VtxDist}, which is the distance
+from the vertex to the shower start and is closely related, but it is one input among
+49 rather than a variable the selection is built around. A real photon converts a few
+centimetres from the vertex; a proton track begins at it. Worth examining separately
+and in log form, since gLEE's plots show the discrimination lives at small distances
+where a linear axis compresses it.
+
+\paragraph{4. Constrain the $\pi^0$ rate from data.} The NC$\pi^0$ technote fits the
+$\pi^0$ normalisation to data and finds GENIE over-predicts non-coherent NC$\pi^0$ by
+$25\%$: the flat fit gives $N_{\mathrm{non-coh}} = 0.75$ ($\chi^2/\mathrm{ndf} =
+1.96/4$), and gLEE separately uses a flat $0.69$ or a momentum-dependent
+$0.92 - 0.80\,|\vec{p}_{\mathrm{true}}|$ scaling. Since our background prediction is
+dominated by the same physics, an unconstrained $\pi^0$ normalisation is both a bias
+and a large systematic. A sideband constraint would reduce both. Note that gLEE
+deliberately does \emph{not} apply the scaling in its final fit, relying on the
+covariance matrix instead -- that is the more defensible route for us too, and it
+argues for making sure the $\pi^0$ normalisation uncertainty is properly represented
+in the covariance rather than for rescaling the central value.
+
+\paragraph{What does not transfer.} gLEE's signal is a single photon with no muon,
+so its $\nu_e$ and BNB-Other BDTs target backgrounds we do not have; our muon
+candidate is already $81\%$ pure and is not where we are losing. Their analysis is
+also BNB, so the flux and interaction mix differ, and any borrowed \emph{numerical}
+threshold would have to be re-derived.
+
 \subsection{Proposed selection work, in order}
 
 \begin{enumerate}
+  \item \textbf{Second-Shower Veto variables} (Sec.~\ref{sec:glee}): unassociated-hit
+        fraction and count in the slice. This targets $76\%$ of the background at its
+        actual failure mode and is expected to dominate everything else on this list.
+  \item \textbf{Split the BDT by background class} (Sec.~\ref{sec:glee}), starting
+        with a dedicated $\pi^0$-rejection BDT.
   \item \textbf{Add \texttt{shr\_moliere\_avg\_v} to the BDT}
-        (Sec.~\ref{sec:photonstudy}) and retrain. This is the only unused photon
-        handle; cuts on the existing ones are exhausted.
+        (Sec.~\ref{sec:photonstudy}) and retrain. Done; see that section for the
+        measured separation, which is weak ($\langle S^2\rangle = 0.065$ against
+        $0.159$ for shower energy), so little is expected of it.
   \item \textbf{Improve the pion candidate ($31\%$ correct).} The joint
         discriminant of Eq.~\ref{eq:Ddisc} is already a real improvement over
         $\chi^2_p$ alone, but the failure mode is specific: a second proton is
