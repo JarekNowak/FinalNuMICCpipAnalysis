@@ -29,15 +29,28 @@ set +u; source ./setup_xsec_analyzer.sh 2>/dev/null; set -u
 PROC=/data/uboone/processed
 LOG=../logs/rerun_beta; mkdir -p "$LOG"
 STATUS=$LOG/status.txt; touch "$STATUS"
-NICE="nice -n 12"
+NICE="nice -n 15"
 NPROC=${NPROC:-3}          # parallel ProcessNTuples; /data is NFS, >3 does not help
 NUNIV=${NUNIV:-2}          # parallel univmake, as in perrun_batch2.sh
 START_STAGE=${STAGE:-1}
 REBUILD_ALL=${REBUILD_ALL:-0}
 
 say(){ echo "[$(date '+%m-%d %H:%M:%S')] $*" | tee -a "$STATUS"; }
-done_already(){ grep -qxF "DONE $1" "$STATUS"; }
-mark(){ echo "DONE $1" >> "$STATUS"; }
+
+# Completion marks are PER-UNIT FILES, not appends to a shared log.
+#
+# They used to be `echo "DONE $tag" >> $STATUS`. $STATUS lives on NFS, where a
+# concurrent append from two parallel units finishing seconds apart is NOT atomic
+# and one of the two lines is silently lost. The unit had really completed, but the
+# driver had no record of it and rebuilt it from scratch on the next restart.
+# Measured on the 2026-08-22 run: 36 "OK s2" lines against only 11 surviving DONE
+# marks, 11 of 24 units built twice, roughly 8 hours of wasted compute.
+#
+# Creating a distinct file per unit is atomic on NFS, so marks cannot collide.
+DONEDIR="$LOG/done"; mkdir -p "$DONEDIR"
+_donekey(){ printf '%s' "$1" | tr ' /' '__'; }
+done_already(){ [ -f "$DONEDIR/$(_donekey "$1")" ]; }
+mark(){ : > "$DONEDIR/$(_donekey "$1")"; echo "DONE $1" >> "$STATUS"; }
 
 # ---------------------------------------------------------------- stage 1
 # Reprocess one ntuple and validate that the tree and a beta-dependent branch exist.
@@ -88,11 +101,14 @@ stage1(){
   while IFS='|' read -r raw outdir ft sel tag; do
     [[ -z "${raw// }" || "${raw:0:1}" == "#" ]] && continue
     raw=$(echo $raw); outdir=$(echo $outdir); ft=$(echo $ft); sel=$(echo $sel); tag=$(echo $tag)
-    # For merged (part1+part2) inputs, basename of the concatenated path yields the
-    # part2 filename, so the output name must come from the tag instead. The tag
-    # carries a "w_" prefix for the proton-tagged family; strip it for the filename.
-    local oname
-    if [[ "$raw" == *"+"* ]]; then oname="${tag#w_}.root"; else oname="$(basename $raw)"; fi
+    # The output name ALWAYS comes from the tag, never from the input basename. Two
+    # cases previously broke: merged "part1+part2" inputs, whose basename is the part2
+    # filename, and single-file detVar inputs whose output name differs from the input
+    # name entirely (e.g. prod_numi_..._detvar_cv_run4_rhc_ana.root must be written as
+    # detvar_run4rhc_CV.root, which is what file_properties expects). Deriving the name
+    # from the tag covers both; the tag carries a "w_" prefix for the proton-tagged
+    # family, stripped here.
+    local oname="${tag#w_}.root"
     proc_one "$raw" "$outdir/xsec-ana-$oname" "$ft" "$sel" "$tag" &
     while [ "$(jobs -rp | wc -l)" -ge "$NPROC" ]; do wait -n 2>/dev/null || sleep 5; done
   done < "../logs/rerun_beta_inputs.txt"
@@ -224,25 +240,43 @@ univ_one(){  # fpm bincfg out tag
   local sz=$(stat -c%s "$out" 2>/dev/null || echo 0)
   if [ "$sz" -gt 50000000 ] && [ "$REBUILD_ALL" != "1" ]; then mark "s2 $tag"; say "OK   s2 $tag (existing $((sz/1000000))MB)"; return 0; fi
   say "  start s2 $tag"
-  FPM="$fpm" BIN_CONFIG="$bc" OUT="$out" ./run_universe_maker.sh > "$LOG/s2_$tag.log" 2>&1
+  # $NICE was defined but never applied here, so univmake ran at nice 5 and
+  # competed with other users of this shared box. UNIV_THREADS (read by
+  # univmake.C) caps each job's ROOT implicit-MT pool; without it a single job
+  # sizes its pool to the whole machine and extra parallelism just thrashes.
+  FPM="$fpm" BIN_CONFIG="$bc" OUT="$out" $NICE ./run_universe_maker.sh > "$LOG/s2_$tag.log" 2>&1
   sz=$(stat -c%s "$out" 2>/dev/null || echo 0)
   if [ "$sz" -gt 50000000 ]; then mark "s2 $tag"; say "OK   s2 $tag ($((sz/1000000))MB)"; else say "FAIL s2 $tag (size $sz)"; fi
 }
-setpot_dirt(){  # summed_pot  [dirtfile]
-  local d=${2:-$PROC/xsec-ana-prodgenie_numi_uboone_overlay_dirt_fhc_mcc9_run1_v28_all_snapshot.root}
-  root.exe -l -b -q -e "TFile*f=TFile::Open(\"$d\",\"update\");TParameter<float> p(\"summed_pot\",(float)$1);p.Write(\"summed_pot\",TObject::kOverwrite);f->Close();" >/dev/null 2>&1
-}
+# setpot_dirt() REMOVED 2026-08-22.
+#
+# It used to overwrite the summed_pot parameter INSIDE the shared dirt file with a
+# different value per configuration, so that one run1 FHC dirt sample could stand in
+# for the whole exposure of FHC, RHC and COMB alike. The inflations were x2.70 /
+# x18.31 / x6.07, whose RHC/FHC ratio of 0.147 disagrees with the true dirt POT ratio
+# of 0.567, and COMB came out BELOW both of its own inputs (0.749 against FHC 0.885
+# and RHC 0.800) which a combined exposure cannot do.
+#
+# Mode- and run-matched dirt now exists and is processed with its native POT, so the
+# framework scales each run itself exactly as it does for numuMC. Runs with no
+# dedicated sample use a symlinked stand-in (FHC run2 <- run1; RHC runs 1,2 <- run3b),
+# which is the same pattern already used for EXT.
 
 stage2(){
   say "===== STAGE 2: univmake (NUNIV=$NUNIV) ====="
   # --- inclusive: only the observables whose definition changed ---
   # p_mu, p_pi and theta_mupi are frame-independent and verified unchanged, so their
   # univmake outputs stay valid (REBUILD_ALL=1 overrides).
-  local INCL_OBS="costhmu costhpi thetamu thetapi"
-  [ "$REBUILD_ALL" == "1" ] && INCL_OBS="pmu ppi2bin costhmu costhpi thmupi thetamu thetapi"
-  for spec in "fhc5 FHC5 6.2046e20" "rhcfull RHCFULL 9.1429e19" "comb COMB 2.757e20"; do
-    set -- $spec; local cfg=$1 TAG=$2 dirt=$3
-    setpot_dirt "$dirt"
+  # theta_pi is deliberately NOT built. It was introduced (a32f1b4) only as the
+  # symmetric partner of theta_mu, which exists because A_C crushed the sharply
+  # forward-peaked cos(theta_mu); that same commit records that theta_pi "is
+  # essentially unchanged (never sharply peaked)". It is not unfolded by stage 3 and
+  # is not referenced in the note, so building it costs ~4.7 h for nothing. The
+  # configs are kept on disk should it ever be wanted.
+  local INCL_OBS="costhmu costhpi thetamu"
+  [ "$REBUILD_ALL" == "1" ] && INCL_OBS="pmu ppi2bin costhmu costhpi thmupi thetamu"
+  for spec in "fhc5 FHC5" "rhcfull RHCFULL" "comb COMB"; do
+    set -- $spec; local cfg=$1 TAG=$2
     for o in $INCL_OBS; do
       local bc=configs/ccpi_${o}_bin_config_opt.txt
       [ -f "$bc" ] || bc=configs/ccpi_${o}_bin_config.txt
@@ -254,17 +288,25 @@ stage2(){
     wait
   done
   # --- proton-tagged: the four TKI observables at the NEW two-bin binning ---
-  for spec in "fhc5 FHC5 6.2046e20" "rhcfull RHCFULL 9.1429e19" "comb COMB 2.757e20"; do
-    set -- $spec; local cfg=$1 TAG=$2 dirt=$3
-    setpot_dirt "$dirt"
+  for spec in "fhc5 FHC5" "rhcfull RHCFULL" "comb COMB"; do
+    set -- $spec; local cfg=$1 TAG=$2
     for o in dpt dalphat dphit pn; do
       univ_one "configs/file_properties_numi_${cfg}_w.txt" "configs/ccpi1p_${o}_bin_config_2bin.txt" \
                "$PROC/ccpi1p_${TAG}_${o}2bin_univmake.root" "${TAG}_${o}2bin" &
       while [ "$(jobs -rp | wc -l)" -ge "$NUNIV" ]; do wait -n 2>/dev/null || sleep 10; done
     done
     wait
-    # proton-tagged angular observables also moved
-    for o in costhmu costhpi; do
+    # Proton-tagged angular/kinematic observables.
+    #
+    # This list MUST cover every observable stage 3 unfolds for this family, which is
+    # "Wpipr Whad costhmu costhpi pmu ppi thmupi". It previously held only costhmu and
+    # costhpi, so stage 3 unfolded FIVE observables whose univmake outputs stage 2 had
+    # never built -- stale files from an older run. That was invisible until the dirt
+    # change, when stage 3 failed with
+    #   Missing TDirectoryFile ...xsec-ana-dirt_fhc_run1.root
+    # because the stale outputs predate the per-run dirt entries. 15 units failed
+    # (5 observables x 3 configs).
+    for o in costhmu costhpi Wpipr Whad pmu ppi thmupi; do
       univ_one "configs/file_properties_numi_${cfg}_w.txt" "configs/ccpi1p_${o}_bin_config.txt" \
                "$PROC/ccpi1p_${TAG}_${o}_univmake.root" "1p_${TAG}_${o}" &
       while [ "$(jobs -rp | wc -l)" -ge "$NUNIV" ]; do wait -n 2>/dev/null || sleep 10; done
@@ -275,10 +317,41 @@ stage2(){
 }
 
 # ---------------------------------------------------------------- stage 3
+# ---- stage-2/stage-3 consistency guard -------------------------------------
+# Stage 3 must never unfold a univmake file that stage 2 did not successfully
+# build.  Three separate bugs (ppi2bin naming, the 50 MB size gate, and the
+# proton-tagged observable loop) let stage 3 consume stale or missing inputs and
+# only surfaced hours into a run.  The mark name is derived from the UnivFile in
+# the xsec config -- the one string both stages already agree on -- so there is
+# no third copy of the observable list to drift.
+# ROOT creates the output at univmake START, so file existence is NOT proof of a
+# finished build; only the mark, written after a clean exit, is.
+s2_mark_for(){ local b; b=$(basename "$1" _univmake.root)
+  case "$b" in
+    ccpi1p_*2bin) echo "s2_${b#ccpi1p_}" ;;
+    ccpi1p_*)     echo "s2_1p_${b#ccpi1p_}" ;;
+    *)            echo "s2_${b#ccpi_}" ;;
+  esac; }
+unit_ready(){   # xseccfg -> 0 ready, 1 not; prints reason on failure
+  local xc="$1" uf fp mk
+  uf=$(awk '$1=="UnivFile"{print $2}' "$xc"); fp=$(awk '$1=="FPFile"{print $2}' "$xc")
+  [ -n "$uf" ] || { echo "no UnivFile line in $(basename "$xc")"; return 1; }
+  # s2_mark_for already returns the full marker basename (s2_<TAG>_<obs>), which is
+  # exactly what mark()/_donekey() produce for "s2 <tag>" -- do NOT re-prefix it.
+  mk="$DONEDIR/$(s2_mark_for "$uf")"
+  [ -f "$mk" ] || { echo "stage-2 never completed ($(basename "$uf"))"; return 1; }
+  [ -f "$uf" ] || { echo "marked but univmake missing ($(basename "$uf"))"; return 1; }
+  if [ -n "$fp" ] && [ -f "$fp" ] && [ "$fp" -nt "$uf" ]; then
+    echo "STALE: $(basename "$fp") newer than $(basename "$uf")"; return 1; fi
+  return 0
+}
+
 unfold_one(){  # xseccfg slicecfg out tag
   local xc="$1" sc="$2" out="$3" tag="$4"
   done_already "s3 $tag" && { echo "  [skip] $tag"; return 0; }
   [ -f "$xc" ] && [ -f "$sc" ] || { say "SKIP s3 $tag (missing config)"; return 0; }
+  local _why; if ! _why=$(unit_ready "$xc"); then
+    say "SKIP s3 $tag (stage-2 not ready: $_why)"; return 0; fi
   ./bin/UnfolderNuMI "$xc" "$sc" "$out" > "$LOG/s3_$tag.log" 2>&1
   local s=$(grep -oE "SYSTDUMP\] sigma_int [0-9.eE+-]+" "$LOG/s3_$tag.log" | awk '{print $3}')
   if [ -n "$s" ]; then mark "s3 $tag"; say "OK   s3 $tag sigma_int=$s"; else say "FAIL s3 $tag"; fi
@@ -287,6 +360,15 @@ unfold_one(){  # xseccfg slicecfg out tag
 
 stage3(){
   say "===== STAGE 3: extraction ====="
+  # Consistency summary before anything unfolds.  Never fatal: the per-unit
+  # unit_ready() guard in unfold_one is what actually protects each unit, and
+  # check_stages.sh exits 1 (problems) / 2 (stage 2 still running) by design,
+  # so "|| true" keeps a future "set -e" from turning this into an outage.
+  if [ -x ./check_stages.sh ]; then
+    local _cs; _cs=$(./check_stages.sh 2>&1) || true
+    printf '%s\n' "$_cs" >> "$STATUS"
+    say "stage2/3 consistency: $(printf '%s\n' "$_cs" | grep -E '^  ready ' || echo 'unavailable')"
+  fi
   for spec in "fhc5 FHC5" "rhcfull RHCFULL" "comb COMB"; do
     set -- $spec; local cfg=$1 TAG=$2
     for o in pmu costhmu costhpi thmupi thetamu; do
