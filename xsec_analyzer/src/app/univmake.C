@@ -103,7 +103,20 @@ int main( int argc, char* argv[] ) {
   std::cout << "Processing systematic universes for a total of "
 	    << input_files.size() << " input ntuple files\n";
 
-  ROOT::EnableImplicitMT();
+  // Thread pool size. EnableImplicitMT() with no argument sizes the pool to the
+  // WHOLE machine, so two concurrent univmake jobs took ~7.5 cores each and
+  // saturated all 16, starving other users of this shared box and making extra
+  // parallelism pointless. UNIV_THREADS caps it so several units can run at once
+  // within the same core budget; unset keeps the old whole-machine behaviour.
+  {
+    const char* nt = std::getenv( "UNIV_THREADS" );
+    unsigned int nthreads = nt ? std::strtoul( nt, nullptr, 10 ) : 0u;
+    if ( nthreads > 0u ) {
+      std::cout << "Enabling implicit MT with " << nthreads << " thread(s)\n";
+      ROOT::EnableImplicitMT( nthreads );
+    }
+    else ROOT::EnableImplicitMT();
+  }
 
   // Store the name of the root TDirectoryFile created by the UniverseMaker
   // objects below. We will use it to ensure that the MCC9SystematicsCalculator
