@@ -282,7 +282,7 @@ class SystematicsCalculator {
     // reused. "v2-distinct-sum-pot" corresponds to normalising the simulated
     // exposure by the sum of the DISTINCT per-file summed_pot values, which is
     // correct for both POT conventions present in the processed ntuples.
-    static constexpr const char* NORM_SCHEME_TAG = "v2-distinct-sum-pot";
+    static constexpr const char* NORM_SCHEME_TAG = "v3-detvar-pooled-pot";
 
     // Name of the TNamed object holding the cache key inside the "total_"
     // subfolder.

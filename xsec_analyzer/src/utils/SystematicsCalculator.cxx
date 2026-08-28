@@ -989,8 +989,33 @@ void SystematicsCalculator::build_universes( TDirectoryFile& root_tdir ) {
             // the *total* BNB data POT for all runs analyzed. Since we only
             // have detVar samples for Run 3b, we assume that they can be
             // applied globally in this step.
-            // TODO: revisit this as appropriate
-            temp_scale_factor = total_bnb_data_pot_ / file_pot;
+            //
+            // The denominator is the summed MC POT over ALL files of this detVar
+            // type, not this one file's POT. A single-file configuration is
+            // unaffected (the sum is that file's POT), but a combined measurement
+            // carries one detVar set per horn current -- both labelled run 1 --
+            // and the histograms below are ACCUMULATED. Dividing each by its own
+            // POT scaled each set independently to the FULL data exposure, so the
+            // sum covered that exposure twice and the detector covariance came out
+            // roughly double. Measured 2026-08-28 on the inclusive COMB config:
+            // detVar_total was 42.3% of the prediction against 23.2% (FHC5) and
+            // 27.4% (RHCFULL) for p_mu -- far above BOTH of its own inputs, which
+            // a combined exposure cannot be. The inflated covariance
+            // over-regularised the Wiener-SVD and pushed the combined truth 9%
+            // below the POT-weighted average of its inputs. Pooling the POT treats
+            // the per-mode sets as one sample of their combined statistics, scaled
+            // once to the data exposure.
+            double dv_pot = file_pot;
+            const auto dv_run_iter = run_type_mc_pot.find( run );
+            if ( dv_run_iter != run_type_mc_pot.end() ) {
+              const auto dv_type_iter = dv_run_iter->second.find( type );
+              if ( dv_type_iter != dv_run_iter->second.end()
+                && dv_type_iter->second > 0. )
+              {
+                dv_pot = dv_type_iter->second;
+              }
+            }
+            temp_scale_factor = total_bnb_data_pot_ / dv_pot;
           }
 
           // Apply the scaling factor defined above to all histograms that

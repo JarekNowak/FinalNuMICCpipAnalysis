@@ -236,9 +236,16 @@ gate_before_stage2(){
 # ---------------------------------------------------------------- stage 2
 univ_one(){  # fpm bincfg out tag
   local fpm="$1" bc="$2" out="$3" tag="$4"
-  done_already "s2 $tag" && { echo "  [skip] $tag"; return 0; }
-  local sz=$(stat -c%s "$out" 2>/dev/null || echo 0)
-  if [ "$sz" -gt 50000000 ] && [ "$REBUILD_ALL" != "1" ]; then mark "s2 $tag"; say "OK   s2 $tag (existing $((sz/1000000))MB)"; return 0; fi
+  # REBUILD_ALL=1 must override the completion mark, not just the size shortcut.
+  # The mark check used to come first, so REBUILD_ALL=1 silently returned cached
+  # results for every already-marked unit and only forced a rebuild of units that
+  # had no mark -- the opposite of what the flag says. Found 2026-08-28 while
+  # checking whether the beta re-run had actually rebuilt the inclusive family.
+  if [ "$REBUILD_ALL" != "1" ]; then
+    done_already "s2 $tag" && { echo "  [skip] $tag"; return 0; }
+    local sz=$(stat -c%s "$out" 2>/dev/null || echo 0)
+    if [ "$sz" -gt 50000000 ]; then mark "s2 $tag"; say "OK   s2 $tag (existing $((sz/1000000))MB)"; return 0; fi
+  fi
   say "  start s2 $tag"
   # $NICE was defined but never applied here, so univmake ran at nice 5 and
   # competed with other users of this shared box. UNIV_THREADS (read by
