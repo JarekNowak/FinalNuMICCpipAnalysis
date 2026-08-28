@@ -1,0 +1,63 @@
+# file_properties_numi_comb.txt  — PER-RUN (real-data-ready) COMBINED FHC+RHC
+# ---------------------------------------------------------------------------
+# Columns:  file_name  run  file_type  [triggers  POT]
+# Per-run POT scaling: FHC runs keep 1,2,4,5; RHC runs are OFFSET to 11,12,13,14 so
+# the two horn modes do not collide in run_to_bnb_pot_map. Each run scaled by its own
+# D_run/MC_run (Table tab:pot). EXT: same beam-off per run (symlinks); the per-run
+# bnb_trigs/3821593 sum to (22667109+23534937)/3821593 = 12.09.
+#
+# ---- onBNB (per-run fake data) ----
+# ---- extBNB (same beam-off per run, symlinks) ----
+# ---- numu MC overlay (native / group summed_pot, on its real run) ----
+# ---- dirt: PER-RUN with native summed_pot (2026-08-22) ---------------------
+# Previously ONE run1 FHC dirt sample covered every run and every beam mode, with
+# its summed_pot overwritten per configuration to fake the exposure scaling
+# (inflations x2.70 FHC / x18.31 RHC / x6.07 COMB, whose RHC/FHC ratio 0.147
+# disagreed with the true dirt ratio 0.567). Mode- and run-matched dirt now
+# exists and carries its own POT, so the framework scales each run natively and
+# setpot_dirt is gone.
+#   FHC dirt total 2.418e21 : run1 1.674e21, run4c 1.548e20, run4d 2.388e20,
+#                             run5 3.501e20
+# detVar entries REMOVED for the 2026-08-28 test of whether they dilute the
+# inclusive COMB truth prediction (COMB/expected = 0.910 with them present,
+# vs 1.020 for the proton-tagged family which has no detVar files).
+/data/uboone/processed/xsec-ana-fakedata_fhc_run1.root 1 onBNB 9846635 3.283e20
+/data/uboone/processed/xsec-ana-fakedata_fhc_run2.root 2 onBNB 3535129 1.268e20
+/data/uboone/processed/xsec-ana-fakedata_fhc_run4.root 4 onBNB 4131149 2.075e20
+/data/uboone/processed/xsec-ana-fakedata_fhc_run5.root 5 onBNB 5154196 2.231e20
+/data/uboone/processed/xsec-ana-fakedata_rhc_run1.root 11 onBNB 1458253 0.6053e20
+/data/uboone/processed/xsec-ana-fakedata_rhc_run2.root 12 onBNB 5422907 2.591e20
+/data/uboone/processed/xsec-ana-fakedata_rhc_run3.root 13 onBNB 10349610 5.003e20
+/data/uboone/processed/xsec-ana-fakedata_rhc_run4.root 14 onBNB 6304167 2.883e20
+/data/uboone/processed/xsec-ana-beamoff_fhc_run1.root 1 extBNB 3821593 0
+/data/uboone/processed/xsec-ana-beamoff_fhc_run2.root 2 extBNB 3821593 0
+/data/uboone/processed/xsec-ana-beamoff_fhc_run4.root 4 extBNB 3821593 0
+/data/uboone/processed/xsec-ana-beamoff_fhc_run5.root 5 extBNB 3821593 0
+/data/uboone/processed/xsec-ana-beamoff_rhc_run1.root 11 extBNB 3821593 0
+/data/uboone/processed/xsec-ana-beamoff_rhc_run2.root 12 extBNB 3821593 0
+/data/uboone/processed/xsec-ana-beamoff_rhc_run3.root 13 extBNB 3821593 0
+/data/uboone/processed/xsec-ana-beamoff_rhc_run4.root 14 extBNB 3821593 0
+/data/uboone/processed/xsec-ana-Run1_fhc_new_numi_flux_fhc_pandora_ntuple.root 1 numuMC
+/data/uboone/processed/xsec-ana-Run2_fhc_new_numi_flux_fhc_pandora_ntuple.root 2 numuMC
+/data/uboone/processed/xsec-ana-Run4_fhc_new_numi_flux_fhc_pandora_ntuple.root 4 numuMC
+/data/uboone/processed/xsec-ana-reweightedPPFX_numi_nu_overlay_pion_ntuples_run5_fhc.root 5 numuMC
+/data/uboone/processed/xsec-ana-Run1_rhc_new_numi_flux_rhc_pandora_ntuple.root 11 numuMC
+/data/uboone/processed/xsec-ana-Run2_rhc_new_numi_flux_rhc_pandora_ntuple.root 12 numuMC
+/data/uboone/processed/xsec-ana-Run3_rhc_new_numi_flux_rhc_pandora_ntuple_aa.root 13 numuMC
+/data/uboone/processed/xsec-ana-Run3_rhc_new_numi_flux_rhc_pandora_ntuple_ab.root 13 numuMC
+/data/uboone/processed/xsec-ana-Run3_rhc_new_numi_flux_rhc_pandora_ntuple_ac.root 13 numuMC
+/data/uboone/processed/xsec-ana-Run3_rhc_new_numi_flux_rhc_pandora_ntuple_ad.root 13 numuMC
+/data/uboone/processed/xsec-ana-Run3_rhc_new_numi_flux_rhc_pandora_ntuple_ae.root 13 numuMC
+/data/uboone/processed/xsec-ana-Run4a_rhc_new_numi_flux_rhc_pandora_ntuple.root 14 numuMC
+/data/uboone/processed/xsec-ana-Run4b_rhc_new_numi_flux_rhc_pandora_ntuple.root 14 numuMC
+/data/uboone/processed/xsec-ana-Run4c_rhc_new_numi_flux_rhc_pandora_ntuple.root 14 numuMC
+/data/uboone/processed/xsec-ana-dirt_fhc_run1.root 1 dirtMC
+/data/uboone/processed/xsec-ana-dirt_fhc_run2.root 2 dirtMC          # stand-in: run1 sample
+/data/uboone/processed/xsec-ana-dirt_fhc_run4c.root 4 dirtMC
+/data/uboone/processed/xsec-ana-dirt_fhc_run4d.root 4 dirtMC
+/data/uboone/processed/xsec-ana-dirt_fhc_run5.root 5 dirtMC
+/data/uboone/processed/xsec-ana-dirt_rhc_run1.root 11 dirtMC          # stand-in: run3b sample
+/data/uboone/processed/xsec-ana-dirt_rhc_run2.root 12 dirtMC          # stand-in: run3b sample
+/data/uboone/processed/xsec-ana-dirt_rhc_run3.root 13 dirtMC
+/data/uboone/processed/xsec-ana-dirt_rhc_run4a.root 14 dirtMC
+/data/uboone/processed/xsec-ana-dirt_rhc_run4b.root 14 dirtMC
