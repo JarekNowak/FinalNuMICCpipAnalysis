@@ -39,8 +39,30 @@
 /data/uboone/processed/xsec-ana-Run4a_rhc_new_numi_flux_rhc_pandora_ntuple.root 14 numuMC
 /data/uboone/processed/xsec-ana-Run4b_rhc_new_numi_flux_rhc_pandora_ntuple.root 14 numuMC
 /data/uboone/processed/xsec-ana-Run4c_rhc_new_numi_flux_rhc_pandora_ntuple.root 14 numuMC
-# ---- dirt (summed_pot set by the batch to 2.757e20 -> scales Run1 dirt to D_comb) ----
-/data/uboone/processed/xsec-ana-prodgenie_numi_uboone_overlay_dirt_fhc_mcc9_run1_v28_all_snapshot.root 1 dirtMC
+# ---- dirt: PER-RUN with native summed_pot (2026-08-22) ---------------------
+# Previously ONE run1 FHC dirt sample covered every run and every beam mode, with
+# its summed_pot overwritten per configuration to fake the exposure scaling
+# (inflations x2.70 FHC / x18.31 RHC / x6.07 COMB, whose RHC/FHC ratio 0.147
+# disagreed with the true dirt ratio 0.567). Mode- and run-matched dirt now
+# exists and carries its own POT, so the framework scales each run natively and
+# setpot_dirt is gone.
+#   FHC dirt total 2.418e21 : run1 1.674e21, run4c 1.548e20, run4d 2.388e20,
+#                             run5 3.501e20
+#   RHC dirt total 1.371e21 : run3b 1.032e21, run4a 7.921e19, run4b 2.593e20
+# STAND-INS (no dedicated sample exists for these runs; the same file is
+# symlinked per run so each is scaled to ITS OWN data POT, as done for EXT):
+#   FHC run2  <- run1 snapshot
+#   RHC run1, run2  <- run3b
+/data/uboone/processed/xsec-ana-dirt_fhc_run1.root 1 dirtMC
+/data/uboone/processed/xsec-ana-dirt_fhc_run2.root 2 dirtMC          # stand-in: run1 sample
+/data/uboone/processed/xsec-ana-dirt_fhc_run4c.root 4 dirtMC
+/data/uboone/processed/xsec-ana-dirt_fhc_run4d.root 4 dirtMC
+/data/uboone/processed/xsec-ana-dirt_fhc_run5.root 5 dirtMC
+/data/uboone/processed/xsec-ana-dirt_rhc_run1.root 11 dirtMC          # stand-in: run3b sample
+/data/uboone/processed/xsec-ana-dirt_rhc_run2.root 12 dirtMC          # stand-in: run3b sample
+/data/uboone/processed/xsec-ana-dirt_rhc_run3.root 13 dirtMC
+/data/uboone/processed/xsec-ana-dirt_rhc_run4a.root 14 dirtMC
+/data/uboone/processed/xsec-ana-dirt_rhc_run4b.root 14 dirtMC
 # ---- detector variations (Run4 FHC + Run4 RHC accumulated; total_bnb_data_pot scaling) ----
 /data/uboone/processed/xsec-ana-detvar_run4fhc_CV.root 1 detVarCV
 /data/uboone/processed/xsec-ana-detvar_run4fhc_LYdown.root 1 detVarLYdown
