@@ -116,9 +116,13 @@
     POT$^{-1}$; new-G4 GEANT4 values above $60$~MeV, Sec.~\ref{sec:flux}); the RHC
     value is lower because its beam is $\bar\nu_\mu$-dominant. The resulting
     Wiener-SVD integrated cross sections are of order
-    $0.8$--$1.2\times10^{-38}$~cm$^2$/Ar (Table~\ref{tab:sigint_all}), with RHC
-    consistent with (or slightly above) FHC; an earlier apparent RHC deficit was a
-    per-run POT normalization bug affecting the multi-file RHC runs, now corrected.
+    $0.6$--$1.0\times10^{-38}$~cm$^2$/Ar (Table~\ref{tab:sigint_all}), with RHC
+    \emph{below} FHC in every observable. That deficit is a property of the injected
+    sample rather than a normalisation artefact: it is present in the fake-data truth
+    (RHC/FHC $=0.785$) and in the GENIE tune ($0.779$), two independent model inputs
+    which agree, while the exposures sum exactly and each configuration carries its own
+    flux. The measured ratio ($0.900$) in fact \emph{understates} the deficit, because
+    the extraction distorts it toward unity.
     %
     For the current fake-data extraction the injected central-value sample corresponds
     to $\approx\!0.75\times$ the standalone GENIE~v3 prediction in this phase space,
@@ -127,14 +131,20 @@
     every ``data'' point shown is Poisson-thrown from the central-value Monte Carlo
     (\S\ref{sec:mc}), so no statement here is a measurement of a real deficit.
     %
-    The extraction is validated by a same-sample self-closure that recovers the
-    truth to within $\approx\!6\%$ for every observable, and cross-checked against
+    The extraction is validated by a same-sample self-closure, and cross-checked
+    against
     the D'Agostini iterative-Bayesian method: its flat, iteration-stable integral
     ($\sim\!20$--$40\%$ above Wiener-SVD, config-dependent) confirms that the
     observable-to-observable spread of the Wiener-SVD integrated cross sections is
     the additional-smearing matrix $A_C$, not a physical or acceptance effect
     (Sec.~\ref{sec:crosschecks}). All results use the \textsc{XSecAnalyzer}
-    framework on the resolution-optimised binning of Sec.~\ref{sec:binopt}.
+    framework on the resolution-optimised binning of Sec.~\ref{sec:binopt}. One
+    feature of the closure is not yet explained and is stated here rather than buried:
+    the unfolded integral sits at $1.13\times$ the fake-data truth in \emph{all three}
+    configurations. This is a uniform Wiener--SVD normalisation offset of the same
+    order as the physics differences being measured; its uniformity across
+    configurations is new, and followed from correcting the combined-configuration
+    detector systematic (Sec.~\ref{sec:combtruth}).
   \end{abstract}
   \vfill
   \tableofcontents
@@ -3455,7 +3465,7 @@ physical or acceptance effect.
     normalisation the RHC and combined ratios ($1.37$, $1.38$) sat well above FHC
     ($1.23$); the inconsistency was an artefact of the inflated RHC/combined
     Wiener-SVD values, not of the unfolding methods. D'Agostini is also nearly flat
-    across observables (spread $1.2\%$ FHC, $2.2\%$ RHC, $1.5\%$ combined), in contrast
+    across observables (spread $2.1\%$ FHC, $1.6\%$ RHC, $1.6\%$ combined), in contrast
     to the Wiener-SVD spread, confirming that the observable-to-observable variation of
     $\sigma_\mathrm{int}$ in Table~\ref{tab:sigint_all} is the $A_C$ smearing rather
     than a physical or normalisation effect.}
@@ -3465,9 +3475,9 @@ physical or acceptance effect.
     Config & $\langle\sigma\rangle_\mathrm{WSVD}$ & $\langle\sigma\rangle_\mathrm{DAg}$
       & DAg/WSVD & DAg 1$\to$4~iter \\
     \midrule
-    FHC      & $0.923$ & $1.170$ & $1.27$ & $<1\%$ \\
-    RHC      & $0.836$ & $1.041$ & $1.25$ & $<1\%$ \\
-    Combined & $0.852$ & $1.102$ & $1.29$ & $<1\%$ \\
+    FHC      & $0.887$ & $1.183$ & $1.33$ & $<1\%$ \\
+    RHC      & $0.794$ & $1.036$ & $1.31$ & $<1\%$ \\
+    Combined & $0.871$ & $1.103$ & $1.27$ & $<1\%$ \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -3665,14 +3675,13 @@ $\theta_{\mu\pi}$& $15.9\%$ & $26.0\%$ & $1.64\times$ & $0.43/5$ ($p=0.99$) \\
 \toprule
 Observable & FHC & RHC & Combined \\
 \midrule
-$p_\mu$          & $0.956$ & $0.717$ & $0.736$ \\
-$p_\pi$          & $0.965$ & $0.882$ & $0.880$ \\
-$\cos\theta_\mu$ & $0.966$ & $0.757$ & $0.636$ \\
-$\cos\theta_\pi$ & $0.829$ & $0.766$ & $0.729$ \\
-$\theta_{\mu\pi}$& $0.987$ & $0.889$ & $0.931$ \\
+$p_\mu$          & $0.918$ & $0.628$ & $0.780$ \\
+$p_\pi$          & $0.923$ & $0.850$ & $0.875$ \\
+$\cos\theta_\mu$ & $0.795$ & $0.711$ & $0.812$ \\
+$\cos\theta_\pi$ & $0.824$ & $0.779$ & $0.868$ \\
+$\theta_{\mu\pi}$& $0.930$ & $0.878$ & $0.938$ \\
 \midrule
-$\theta_\mu$     & $0.861$ & $0.781$ & $0.650$ \\
-$\theta_\pi$     & $0.878$ & $0.739$ & $0.748$ \\
+$\theta_\mu$     & $0.934$ & $0.917$ & $0.953$ \\
 \bottomrule
 \end{tabular}
 \end{center}
