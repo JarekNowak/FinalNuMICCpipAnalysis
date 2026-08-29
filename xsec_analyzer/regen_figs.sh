@@ -24,7 +24,22 @@ for cfg in fhc5 rhcfull comb; do t=${TAG[$cfg]}; p=${PFX[$cfg]}
   for o in "${obs[@]}"; do
     xc=configs/ccpi_xsec_config_numi_${o}_${cfg}.txt
     sc=configs/ccpi_${o}_slice_config_opt.txt
+    # p_pi is extracted in the COARSENED 2-bin scheme: reco p_pi saturates around
+    # 0.34 GeV/c and the top true bin of the fine binning is only 6.2% diagonal, so
+    # the analysis (and the generator prediction files, whose ppi_fte histograms
+    # carry 2 bins) moved to ccpi_ppi_bin_config_2bin.txt. Using the fine-binned
+    # ppi univmake here aborts with "Prediction histogram bin count mismatch -
+    # number found : 2 | expected number : 5". The figure NAME stays fw_*_ppi,
+    # which is what the note references.
+    if [ "$o" = ppi ]; then
+      xc=configs/ccpi_xsec_config_numi_ppi2bin_${cfg}.txt
+      sc=configs/ccpi_ppi_slice_config_2bin.txt
+    fi
     [ -f "$xc" ] || { echo "  MISSING xsec config $xc"; continue; }
+    # Clear the fixed-name plots FIRST: a crashed unfold otherwise leaves the
+    # previous observable's plot_stepN_*.pdf in place, which is then copied under
+    # this observable's figure name and counted as a success.
+    rm -f "$UO"/plot_step[1-4]_*.pdf
     bin/UnfolderNuMI "$xc" "$sc" $PROC/xsec_${t}_${o}.root > "$DUMP/${cfg}_${o}.raw" 2>&1
     grep '\[SYSTDUMP\]' "$DUMP/${cfg}_${o}.raw" > "$DUMP/${cfg}_${o}.dump"
     [ -f "$UO/plot_step1_reco_spectrum.pdf" ] && { cp "$UO/plot_step1_reco_spectrum.pdf" "$FIG/fw_reco_${p}${o}.pdf"; nr=$((nr+1)); }
