@@ -1,0 +1,74 @@
+\documentclass[11pt,a4paper]{article}
+
+% ── Packages (only those available on this installation) ──────────────────────
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{listings}
+\usepackage{float}
+\usepackage{placeins}
+
+% ── Figure path ───────────────────────────────────────────────────────────────
+\graphicspath{{figures/}}
+
+% ── Hyperref setup ────────────────────────────────────────────────────────────
+\hypersetup{
+  colorlinks = true,
+  linkcolor  = blue!70!black,
+  citecolor  = green!50!black,
+  urlcolor   = blue!70!black,
+}
+
+% ── Custom commands ───────────────────────────────────────────────────────────
+\newcommand{\numu}{$\nu_\mu$}
+\newcommand{\numubar}{$\bar{\nu}_\mu$}
+\newcommand{\ccpip}{$\mathrm{CC}\pi^{\pm}$}
+\newcommand{\pmu}{$p_\mu$}
+\newcommand{\ppi}{$p_\pi$}
+\newcommand{\costhmu}{$\cos\theta_\mu$}
+\newcommand{\costhpi}{$\cos\theta_\pi$}
+\newcommand{\thmupi}{$\theta_{\mu\pi}$}
+\newcommand{\uboone}{MicroBooNE}
+\newcommand{\GeVc}{\,\text{GeV}\!/c}
+\newcommand{\pot}{\,\text{POT}}
+\newcommand{\cm}{\,\text{cm}}
+
+% inline math shorthand so they work inside math mode too
+\newcommand{\pmuM}{p_\mu}
+\newcommand{\ppiM}{p_\pi}
+\newcommand{\cthmuM}{\cos\theta_\mu}
+\newcommand{\cthpiM}{\cos\theta_\pi}
+\newcommand{\thmupM}{\theta_{\mu\pi}}
+
+% ── Listings (C++ snippets) ───────────────────────────────────────────────────
+\lstset{
+  language=C++,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\bfseries\color{blue!70!black},
+  commentstyle=\itshape\color{gray},
+  backgroundcolor=\color{gray!10},
+  frame=single,
+  framerule=0.4pt,
+  numbers=none,
+  breaklines=true,
+}
+
+% ── Table column helpers ──────────────────────────────────────────────────────
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+% Let TeX stretch spacing on hard-to-break lines (long \texttt paths/code) to keep
+% text out of the margin.
+\emergencystretch=3em
+
+% ─────────────────────────────────────────────────────────────────────────────

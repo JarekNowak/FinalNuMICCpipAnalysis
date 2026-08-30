@@ -1,0 +1,261 @@
+\input{common_preamble}
+
+\begin{document}
+
+\begin{titlepage}
+\centering
+\vspace*{2cm}
+{\LARGE\bfseries Change Log\par}
+\vspace{0.5cm}
+{\large Measurement of $\nu_\mu + \bar{\nu}_\mu$ Charged-Current Single Pion
+Production on Argon in the NuMI Beam\par}
+\vspace{0.8cm}
+{\large Corrections that changed a result\par}
+\vspace{0.5cm}
+{\normalsize Draft 1.0, 2026-08-30\par}
+\vspace{1.5cm}
+{\large Ishanee Pophale, Jarek Nowak\par}
+\vspace{0.5cm}
+{\normalsize\textit{Lancaster University}\par}
+\vspace{2cm}
+
+\begin{abstract}
+This document records every correction that materially moved a number in the
+$\mathrm{CC}\pi^{\pm}$ NuMI analysis, with the value before and after.  It exists so
+that a reader of the analysis note never has to work out whether a given table predates
+a given fix, and so that a result quoted from an older draft can be identified as
+superseded rather than merely different.
+
+Most entries are normalisation errors.  That concentration is itself worth stating: the
+extraction divides by four numbers --- the data exposure, the integrated flux, the argon
+target count, and the per-run Monte Carlo exposure --- and eight separate defects came
+from one of those four differing between configurations without anything detecting it.
+The response is \texttt{norm\_manifest.py}, which reads the authoritative configuration
+files and asserts that they agree, so that a future drift fails a check instead of
+producing a wrong cross section.
+
+Two corrections changed physics conclusions rather than only normalisation, and the
+conclusions they invalidated are marked as withdrawn here and in the analysis note: the
+non-uniform-grid regularisation defect, which had collapsed several additional-smearing
+matrices towards rank one, and the beam-axis convention, under which reconstructed
+angular and transverse observables were not the same quantities as the generator
+predictions they were being compared against.
+\end{abstract}
+\end{titlepage}
+
+\tableofcontents
+\clearpage
+
+\section{How to read this document}
+
+Each entry states what was wrong, how it was found, what changed numerically, and what
+--- if anything --- had to be withdrawn.  ``Before'' values are quoted from the draft in
+which they appeared and should not be used; they are given so that an older table can be
+recognised.
+
+Entries are ordered by the stage of the analysis they affect, not chronologically:
+exposure and flux first, then the Monte Carlo weighting, then the unfolding, then the
+systematic covariance.
+
+\section{Exposure, flux, and target normalisation}
+
+\subsection{Obsolete integrated flux (factor ${\sim}3.48$)}
+
+An outdated flux file was used to convert the extracted event rate into a cross section.
+The integrated flux it supplied was larger than the correct value by a factor of
+approximately $3.48$, so every cross section produced with it was smaller than the truth
+by the same factor.
+
+\textbf{Effect.} All cross sections, all configurations.  Any absolute normalisation from
+a draft predating this fix is wrong by ${\sim}3.48$ and must not be quoted.  Shapes were
+unaffected, because the error was a single multiplicative constant.
+
+\subsection{Configuration-specific flux was not being used}
+
+The RHC and combined extractions were normalised with the FHC integrated flux.  The three
+exposures see genuinely different spectra, and the correct integrated fluxes are
+\[
+\Phi_{\mathrm{FHC}} = 6.81159\times10^{-10},\quad
+\Phi_{\mathrm{RHC}} = 6.44646\times10^{-10},\quad
+\Phi_{\mathrm{comb}} = 6.60865\times10^{-10}
+\]
+in $\mathrm{cm}^{-2}\,\mathrm{POT}^{-1}$.
+
+\textbf{Effect.} RHC cross sections rose by $5.7\%$ and combined by $3.1\%$.  FHC was
+already correct and did not move.  The flux is now set by an explicit \texttt{Flux} line
+in each cross-section configuration file rather than inherited, and
+\texttt{norm\_manifest.py} checks that all configurations of a given exposure agree on it.
+
+\subsection{Per-mode rather than per-run exposure weighting}
+
+Data and Monte Carlo exposures were pooled per horn mode and a single scale factor
+applied.  Because the data-to-Monte-Carlo exposure ratio differs substantially between
+runs, this weighted the result by how much simulation happened to exist for each run
+rather than by the data actually collected.  Each run is now scaled by its own
+$S_r = \mathrm{POT}^{\mathrm{data}}_r/\mathrm{POT}^{\mathrm{MC}}_r$.
+
+\textbf{Effect.} Changed the relative weight of runs within every configuration.  This is
+also the change that makes the framework ready for real data, where the per-run exposures
+are not free parameters.
+
+\subsection{Duplicated run-total POT in split files}
+
+Two conventions coexist in the processed samples.  In \texttt{processed/} a run split
+across several files repeats the \emph{run-total} exposure in every file; in
+\texttt{processed/w/} each file carries its own \emph{true} exposure.  Dividing by the
+per-file value broke the first convention and summing over files broke the second: the
+first made the inclusive tune come out a factor of two low, the second drove an RHC
+proton-tagged cross section negative.
+
+The resolution is to normalise by the sum of \emph{distinct} per-run exposures, which is
+correct under both conventions.
+
+\textbf{Effect.} At the time of the fix the RHC $W_{\pi p}$ cross section moved from
+$-0.194$ to $+0.578$ (in units of $10^{-38}\,\mathrm{cm}^2/\mathrm{Ar}$), and the
+inclusive RHC $p_\mu$ result was unchanged at $0.860$.  Results retracted on the strength
+of the negative value were reinstated.  Both numbers have since moved again under the
+central-value weighting fix below; the current values are in the analysis note.
+
+\section{Monte Carlo weighting}
+
+\subsection{Central-value weight applied twice to the fake data}
+
+This is the largest single correction and it affected every result.
+
+The fake data are generated externally by \texttt{throw\_perrun\_*.C}, which folds the
+tuned central value, the PPFX central value and the normalisation into the event
+multiplicity and then writes the per-event weights back as unity --- the throw is a
+Poisson realisation of an already-weighted expectation.  The framework's
+\texttt{build\_universes} nevertheless substituted the \emph{weighted} central-value
+histogram for the raw counts, on both the reconstructed and the truth side, so the
+central value was applied a second time.
+
+\textbf{How it was found.} By asking directly whether the unfolded result was being
+compared against the input that generated it.  Four independent checks confirmed the
+diagnosis: $1621.0$ is a direct count of selected events across the four FHC files;
+$1721.9$ equals both \texttt{FakeDataMC\_0\_reco} and
+$\texttt{onBNB\_reco}-\texttt{extBNB\_reco}$; run~1 gives $558.0$ entries unweighted
+against $599.9$ weighted for the same $558$ events; and the throw's own expectation of
+$1567.1$ agrees with the thrown count at $1.3\sigma$.
+
+\textbf{Effect.} The mean inclusive closure ratio moved from $1.106$ to $1.001$, and all
+$51$ extracted cross sections fell by between $3.8\%$ and $12.9\%$.  Every absolute cross
+section from a draft predating this fix is high by roughly a tenth.
+
+\textbf{Withdrawn.} Two earlier explanations of the closure excess --- one attributing it
+to the unfolding covariance and Wiener filter, one to $A_C$ smearing --- were both wrong
+and are retracted.  They are retained in the technical supplement as recorded dead ends
+rather than deleted.
+
+\subsection{Generator prediction histograms truncated at the overflow}
+
+Generator predictions were read without their overflow contents, so the highest-momentum
+region was silently missing from the comparison curves.
+
+\textbf{Effect.} Model comparison only; the measured cross sections were unaffected.  Any
+generator $\chi^2$ from a draft predating the regeneration is invalid.
+
+\section{Unfolding}
+
+\subsection{Second-derivative regularisation on a non-uniform grid}
+
+The Wiener-SVD second-derivative regulariser used the uniform-grid $(1,-2,1)$ stencil on
+bins whose widths differ by factors of ten to fifteen.  On such a grid that operator is
+not an approximation to the second derivative of anything, and its near-null direction is
+not the physically flat one.  The Wiener filter can then retain that direction alone,
+which drives the additional-smearing matrix $A_C$ towards rank one and destroys the shape
+information the measurement is supposed to carry.
+
+The corrected operator differences the \emph{density} on a non-uniform grid, reducing to
+the old stencil when the widths are equal, with one-sided first-derivative rows at the
+ends so that the operator stays non-singular without asserting that the distribution
+vanishes at the edges --- which it does not, since $\cos\theta_\mu$ peaks at the upper
+edge.
+
+\textbf{Effect} on the conditioning measure $s_2/s_1$ of $A_C$:
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+Observable & before & after \\
+\midrule
+FHC $\theta_\mu$              & $0.015$ & $0.51$ \\
+combined $\theta_\mu$         & $0.045$ & $0.38$ \\
+proton-tagged $W_{\pi p}$     & $0.022$ & $0.60$ \\
+proton-tagged $p_n$           & $0.21$  & $0.88$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Withdrawn.} The earlier conclusion that $\theta_\mu$ ``repairs'' what
+$\cos\theta_\mu$ cannot is retracted: under the defective operator every model was being
+collapsed onto a common shape, so the apparent agreement was an artefact of the
+regularisation rather than a property of the data.  After the fix $\theta_\mu$
+discriminates between models again and prefers the tune that generated the fake data.
+
+This entry is the clearest illustration of why closure alone is not a sufficient
+validation.  A rank-one extraction closes perfectly against its own correspondingly
+smeared truth while retaining almost no shape information.
+
+\subsection{Angular and transverse observables were defined about detector \texorpdfstring{$z$}{z}}
+
+The NuMI neutrinos arrive approximately $28.6^\circ$ away from the detector $z$ axis, but
+reconstructed angles and transverse kinematic imbalance were being computed about $z$
+while the generator predictions were computed about the neutrino direction.  These are
+not the same observables.  Truth-level quantities now use the per-event neutrino
+direction and reconstruction uses the target-to-vertex direction; the two constructions
+differ only at the milliradian level.
+
+\textbf{Effect.} $64.6\%$ of signal events change $\cos\theta_\mu$ bin and $44.6\%$ change
+$\cos\theta_\pi$ bin.  The mean $\delta p_T$ moves from $0.742$ to
+$0.264\ \mathrm{GeV}/c$.  The muon and pion momenta, the opening angle $\theta_{\mu\pi}$,
+the hadronic mass $W_{\pi p}$, and the event selection are all unaffected.
+
+\textbf{Withdrawn.} All proton-tagged transverse-kinematic model comparisons made before
+this correction are withdrawn, because the measured and predicted quantities were
+different observables.
+
+\section{Systematic covariance}
+
+\subsection{Combined detector-variation exposure double-counted}
+
+The combined configuration pooled detector-variation samples per horn mode, and the
+denominator used a single file's exposure rather than the summed Monte Carlo exposure over
+all files of that variation type, so the combined detector systematic was inflated.
+
+\textbf{Effect.} The total detector systematic fell from $42.3\%$ to $24.6\%$, and the
+combined result moved from $0.910$ to $1.027$ times its expected value.  FHC and RHC were
+bit-identical before and after, which is the check that isolates the defect to the
+combination step.
+
+\section{Open items}
+
+\subsection{Proton-tagged detector systematics are absent, not merely incomplete}
+
+Of the $51$ current extractions, all $18$ inclusive results carry a detector systematic
+and all $33$ proton-tagged results carry none: the \texttt{detVar} column is \texttt{n/a}
+for every proton-tagged observable in every configuration.  The quoted proton-tagged
+uncertainties are therefore understated by the size of a term that runs between $16.9\%$
+and $42.8\%$ in the inclusive results.
+
+This is why the proton-tagged material is presented as secondary scope in the analysis
+note, and why no proton-tagged result should be quoted as final until the detector
+variations have been propagated through that selection.
+
+\subsection{Superseded values that may still be encountered}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+Quantity & superseded value & status \\
+\midrule
+Mean inclusive closure ratio        & $1.106$          & now $1.001$ \\
+RHC $W_{\pi p}$ cross section       & $-0.194$         & sign was a POT-convention artefact \\
+Combined detector systematic        & $42.3\%$         & now $24.6\%$ \\
+Combined result / expected          & $0.910$          & now $1.027$ \\
+FHC $\theta_\mu$ $A_C$ conditioning & $0.015$          & now $0.51$ \\
+Mean $\delta p_T$                   & $0.742$~GeV/$c$  & now $0.264$~GeV/$c$ (beam frame) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\end{document}
