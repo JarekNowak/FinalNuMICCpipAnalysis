@@ -5229,6 +5229,65 @@ this analysis on the second (Section~\ref{sec:multirun}). (vi)~\textbf{Scope:}
 both analyses cover Runs~1--5 in FHC and RHC; the present measurement reports FHC,
 RHC, and their combination.
 
+% =============================================================================
+\section{Limitations and Open Questions}
+\label{sec:limitations}
+% =============================================================================
+
+Four things are not settled. They are collected here rather than left in the
+sections that produced them, because each is large enough to bear on how the
+numbers in this note should be read.
+
+\paragraph{A uniform 13\% Wiener--SVD normalisation offset.}
+On fake data the truth is known exactly, so the unfolded integral should reproduce
+it. It does not: the ratio is $1.13$ in FHC, RHC \emph{and} combined. The offset is
+the same order as the physics differences this analysis sets out to measure --- the
+RHC/FHC truth ratio itself is $0.785$ --- so it cannot be dismissed as a small
+correction.
+
+Two features make it more interesting than a simple scale error. It is
+\emph{uniform}: before the combined-configuration detector systematic was corrected
+(\S\ref{sec:combtruth}) the three ratios were $1.14$, $1.03$ and $1.08$, and that
+correction brought them into agreement without being aimed at them. And it is not
+the additional smearing, since $A_C$ is applied to every prediction curve and
+cancels in a comparison of unfolded data against $A_C$-smeared truth.
+
+What it is not: not a POT or flux error (the exposures sum exactly and each
+configuration carries its own flux), not a detector-variation artefact (it survives
+with the detVar term removed entirely), and not a response-matrix pathology (the
+column-normalised diagonals agree across configurations to three decimal places).
+It is stated here as unexplained.
+
+\paragraph{\texorpdfstring{An inconsistency in the $A_C$ normalisation.}{An inconsistency in the A-C normalisation.}}
+For the proton-tagged $p_\mu$ in FHC the fake-data truth integrates to $0.476$, the
+unfolded result to $0.553$, and $A_C$ applied to that truth to $0.376$. If the
+Wiener--SVD estimate satisfies $\hat{x}=A_C\,x_\mathrm{true}$, the unfolded result
+should sit at $0.79\times$ the truth; it sits at $1.16\times$. Both cannot hold.
+
+One caveat limits how far this can be pushed with the present outputs: the $A_C$
+written to the closure sidecar is restricted to the slice, while the smearing is
+applied in the full true-bin space before slicing, so the operation cannot be
+reproduced exactly from that file. A related hypothesis --- that the fake-data truth
+is missing the $A_C$ smearing applied to every other prediction --- was tested
+directly and refuted: applying it moves the closure ratio from $1.09$--$1.24$ to
+$1.54$--$1.60$, further from unity. Resolving this needs the convention settled at
+the source rather than inferred downstream.
+
+\paragraph{One detector systematic still sits outside its inputs.}
+After the per-mode detVar pooling fix, five of the six inclusive observables have a
+combined detector uncertainty bracketed by their FHC and RHC values, as a combined
+exposure should. $\cos\theta_\mu$ does not: $23.7\%$ against inputs of $26.1\%$ and
+$32.5\%$. This is small next to the $41.4\%$ it carried before the fix, but the
+direction is unexplained.
+
+\paragraph{\texorpdfstring{$\theta_\mu$ carries no shape information in FHC.}{theta-mu carries no shape information in FHC.}}
+The additional smearing matrix for FHC $\theta_\mu$ is rank-1 to numerical
+precision: its second singular value is $2.8\times10^{-6}$ of the first, against
+$\sim\!5\times10^{-2}$ for the inputs. Every model and the data are mapped onto one
+curve, so the apparent agreement between them in that observable is by construction
+rather than physical. Any statement that $\theta_\mu$ repairs what $A_C$ does to
+$\cos\theta_\mu$ is withdrawn; the two are not independent tests.
+
 \section{Summary}
 \label{sec:summary}
 % =============================================================================
