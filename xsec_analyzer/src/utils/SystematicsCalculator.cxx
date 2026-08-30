@@ -694,8 +694,22 @@ void SystematicsCalculator::build_universes( TDirectoryFile& root_tdir ) {
         // scaling to the beam-on triggers in the case of EXT data
         if ( !is_mc ) {
 
-          // when using fake data, use the weighted CV histogram if it is present
-          auto tmp_reco_hist = type == NFT::kOnBNB ? get_object_unique_ptr<TH1D>((CV_UNIV_NAME + "_0_reco").c_str(), *subdir) : nullptr;
+          // Externally-thrown fake data is DATA and is counted, not re-weighted.
+          //
+          // throw_perrun_*.C samples Poisson(tuned_cv * ppfx_cv * normalisation * D/MCPOT)
+          // copies of each event and writes those weights back as 1.0, so the CV weight is
+          // already carried by the event multiplicity. Taking the weighted CV histogram
+          // here applied it a second time: measured 2026-08-30, the reco counts were
+          // inflated by 1.062 (FHC5) / 1.078 (RHC) / 1.070 (COMB) over the events actually
+          // thrown, against 1.016-1.018 for the corresponding true signal bins, so the
+          // mismatch that reached the closure was 1.046-1.059.
+          //
+          // Kept behind a flag rather than deleted: a fake-data sample produced WITH live
+          // weights (rather than an external throw) would still need the weighted path.
+          constexpr bool FAKE_DATA_IS_EXTERNAL_THROW = true;
+          auto tmp_reco_hist = ( type == NFT::kOnBNB && !FAKE_DATA_IS_EXTERNAL_THROW )
+            ? get_object_unique_ptr<TH1D>( (CV_UNIV_NAME + "_0_reco").c_str(), *subdir )
+            : nullptr;
           const auto dataContainsWeightedCV = tmp_reco_hist.get() != nullptr;
           
           auto reco_hist = dataContainsWeightedCV ? std::move(tmp_reco_hist) : get_object_unique_ptr<TH1D>("unweighted_0_reco", *subdir);
@@ -875,7 +889,10 @@ void SystematicsCalculator::build_universes( TDirectoryFile& root_tdir ) {
           // check whether weighted CV universes exists for fake data, and use if present
           const auto tmp_reco_hist = get_object_unique_ptr<TH1D>((CV_UNIV_NAME + "_0_reco").c_str(), *subdir);
           const auto dataContainsWeightedCV = tmp_reco_hist.get() != nullptr;
-          std::string hist_name_prefix = (dataContainsWeightedCV ? CV_UNIV_NAME : "unweighted" ) + "_0";
+          // Same convention as the reco side above: an external throw carries the CV weight
+          // in its multiplicity, so its truth is the unweighted true distribution.
+          std::string hist_name_prefix = ( dataContainsWeightedCV ? CV_UNIV_NAME : "unweighted" )
+            + "_0";
 
 	//std::cout<<"sys test 14 "<<std::endl;
 	 std::cout<<"sys test after processing universes 14 "<< std::endl;
