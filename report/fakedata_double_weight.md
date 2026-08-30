@@ -67,3 +67,39 @@ are being combined.
 
 Until this is settled, the integrated cross sections carry a ~6-8% normalisation
 error from this source alone, on top of the residual offset.
+
+---
+
+## Follow-up: is the proton-tagged residual caused by its own throw?
+
+Asked 2026-08-30, after the fix left the inclusive family at unity but the
+proton-tagged family at ~1.09.
+
+**No. The two families are thrown from the same events.**
+
+`throw_perrun_w.C` reads the same source ntuples with the same per-run POT values
+as `throw_perrun_fhc.C` (3.283e20 / 2.3282e21 for run 1, and so on). The outputs
+were checked directly: `xsec-ana-fakedata_fhc_run1.root` and
+`w/xsec-ana-fakedata_fhc_run1.root` both hold 100274 entries and the same
+`sum(reco_nu_vtx_sce_x)` to full floating-point precision. They are the same Poisson
+realisation, processed with different selection branches (`CC1mu1piXp_Selected` in
+one, `CC1mu1pi1p_Selected` in the other), which is why they cannot simply be
+swapped.
+
+Also excluded:
+
+- **POT convention.** `processed/` and `processed/w/` carry identical `summed_pot`
+  for the same run (2.3282e21, 2.4934e21), so the two-convention issue does not
+  bite here.
+- **Regularisation.** Running the proton-tagged family with identity regularisation
+  gives 1.067 / 1.119 / 1.082 (mean 1.090 over 33 extractions), against 1.053 /
+  1.118 / 1.100 with the second derivative. The residual is unchanged, so it is not
+  a smoothing artefact -- unlike the observable-to-observable scatter, which is.
+- **The double weighting itself.** It was present in the proton-tagged samples too,
+  but smaller (factor 1.028 against 1.062 for the inclusive), and removing it moved
+  the closure from ~1.15 to ~1.09.
+
+So a ~9% residual remains, specific to the `CC1mu1pi1p` chain, and it is not the
+fake data, the POT, or the regularisation. What is left is the selection itself:
+its efficiency, its response matrix, or its background subtraction. That is where
+to look next.
