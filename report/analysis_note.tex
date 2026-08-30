@@ -5413,45 +5413,65 @@ Four things are not settled. They are collected here rather than left in the
 sections that produced them, because each is large enough to bear on how the
 numbers in this note should be read.
 
-\paragraph{A uniform 13\% Wiener--SVD normalisation offset.}
+\paragraph{A covariance-dependent normalisation offset of order 11\%.}
 On fake data the truth is known exactly, so the unfolded integral should reproduce
 it. It does not. Over the eighteen inclusive extractions the ratio averages $1.106$,
 with a per-observable scatter of $0.93$--$1.23$ (standard deviation $0.081$) and
 configuration means of $1.12$ (FHC), $1.08$ (RHC) and $1.12$ (combined). The offset
 is the same order as the physics differences this analysis sets out to measure ---
 the RHC/FHC truth ratio itself is $0.785$ --- so it cannot be dismissed as a small
-correction.
+correction. It is \emph{not} uniform, and an earlier draft overstated the case by
+quoting $1.13$ for all three configurations; that figure is correct for $p_\pi$
+alone and is withdrawn.
 
-It is \emph{not} uniform, and an earlier draft of this section overstated the case
-by quoting $1.13$ for all three configurations. That figure is correct for $p_\pi$
-alone, where the three agree to three decimal places; it is not representative of
-the other five observables, and the claim is withdrawn.
+The comparison itself is sound: as established above, the stored truth curve is
+already $A_C$-smeared, so unfolded result and truth live in the same space.
 
-It is not the additional smearing, since $A_C$ is applied to every prediction curve
-and cancels in a comparison of unfolded data against $A_C$-smeared truth.
+\paragraph{What drives it.}
+The offset tracks the \emph{covariance}, not the smearing. Three independent lines
+point the same way.
 
-What it is not: not a POT or flux error (the exposures sum exactly and each
-configuration carries its own flux), not a detector-variation artefact (it survives
-with the detVar term removed entirely), and not a response-matrix pathology (the
-column-normalised diagonals agree across configurations to three decimal places).
-It is stated here as unexplained.
+First, it does not follow $A_C$. If the ratio of integrals were set by the smearing,
+it would track the $A_C$ row sums; those span $0.24$--$0.97$, a factor of four, while
+the ratio spans only $0.93$--$1.23$. Fitting both descriptions to the eighteen
+points, a constant ratio beats ``ratio $=$ row sum'' by a factor of six in rms
+residual ($0.081$ against $0.503$).
 
-One further constraint narrows it usefully. The same-sample self-closure of
-App.~\ref{sec:identity}, in which the \textsc{Genie} overlay is placed in the
-\texttt{onBNB} slot so that data and response come from the \emph{same} sample,
-recovers the truth to $0.94$--$1.06$ --- it does \emph{not} show this offset. The
-offset therefore appears when the injected sample and the response differ (NuWro
-fake data against a \textsc{Genie}-derived response) and vanishes when they do not,
-which would point at model dependence in the unfolding rather than an algorithmic
-bias.
+Second, it correlates with the size of the systematic covariance, and negatively:
+against the flux term, which dominates it at $22$--$33\%$, the correlation is
+$r=-0.643$. Larger covariance, smaller unfolded integral.
 
-That hypothesis has since been tested and is \emph{not} supported. It predicts that
-the offset should grow with the NuWro/\textsc{Genie} disagreement in a given
-observable. Across the eighteen extractions the correlation between the offset and
-the NuWro/\textsc{Genie} integral ratio is $r=-0.32$: weak, and of the wrong sign,
-since the observables where the two generators disagree most show the \emph{smaller}
-offset. Whatever distinguishes the same-sample self-closure from the NuWro closure,
-it is not simply the size of the generator disagreement.
+Third, and decisively, changing the covariance moves it. Removing a single term ---
+the detector systematic --- from the covariance while leaving everything else alone
+shifts the ratio by $2$--$12\%$ in five of six test extractions (mean $5.6\%$,
+range $-5.9\%$ to $+11.7\%$). The same effect is visible in the detector discussion
+above, where restricting the detVar input moves an extracted cross section by $8\%$.
+
+The mechanism follows. The covariance enters the Wiener filter, so the strength of
+the regularisation --- and with it the amount by which the filter suppresses the
+result --- depends on the systematic budget. $A_C$ is constructed to describe what
+the filter does to the \emph{shape}, and applying it to the predictions is what makes
+the shape comparison meaningful. It does not absorb the accompanying change in
+normalisation, which is why the closure does not return unity even though every curve
+is correctly smeared.
+
+\paragraph{What this means for the measurement.}
+The offset is a property of regularised unfolding as configured here, not a bug and
+not a failed closure. But it is not harmless: an $11\%$ normalisation shift that
+varies with the systematic budget cannot be quoted as a cross section without either
+being corrected for or carried as an uncertainty. Two consequences follow directly.
+A configuration with a larger systematic budget will report a systematically smaller
+integral, so comparisons between FHC, RHC and combined inherit part of this effect.
+And because the offset moves when a systematic is added or removed, the central value
+is not independent of the systematic model --- which is the opposite of what a
+systematic uncertainty is normally taken to mean.
+
+The same-sample self-closure of App.~\ref{sec:identity} recovers $0.94$--$1.06$
+because it is run with a different covariance, the detector-variation POT offset
+being absent by construction. That is consistent with everything above, and it is the
+natural place to start in quantifying the size of the correction needed: repeating it
+across the systematic budget would map the offset as a function of the covariance
+directly. Supporting numbers in \texttt{report/offset\_vs\_AC.tsv}.
 
 \paragraph{\texorpdfstring{The $A_C$ ``inconsistency'' was a misreading, now resolved.}{The A-C inconsistency was a misreading, now resolved.}}
 An earlier version of this section reported an inconsistency: for the proton-tagged
@@ -5481,12 +5501,28 @@ correct, and the $11\%$ excess is a genuine normalisation bias in the extraction
 rather than an artefact of comparing quantities in different spaces. Supporting
 numbers in \texttt{report/offset\_vs\_AC.tsv}.
 
-\paragraph{One detector systematic still sits outside its inputs.}
-After the per-mode detVar pooling fix, five of the six inclusive observables have a
-combined detector uncertainty bracketed by their FHC and RHC values, as a combined
-exposure should. $\cos\theta_\mu$ does not: $23.7\%$ against inputs of $26.1\%$ and
-$32.5\%$. This is small next to the $41.4\%$ it carried before the fix, but the
-direction is unexplained.
+\paragraph{\texorpdfstring{Why the combined detector systematic sits low.}{Why the combined detector systematic sits low.}}
+After the per-mode detVar pooling fix the combined detector uncertainty tends toward
+the \emph{low} end of the band spanned by its two inputs --- on average $39\%$ of the
+way up that range --- and for $\cos\theta_\mu$ it falls just below both ($23.7\%$
+against $26.1\%$ and $32.5\%$). At first sight a combined exposure returning less
+detector uncertainty than either input looks wrong.
+
+It is not. Running the combined extraction with only the FHC detVar set, and then
+with only the RHC set, gives $27.8\%$ and $26.0\%$ for $\cos\theta_\mu$; pooling
+both gives $23.7\%$. Each individual set therefore carries more uncertainty than the
+two together. That is the expected behaviour if each measured detector shift is the
+true shift plus a statistical fluctuation from the finite size of the detVar sample:
+pooling the two samples averages the fluctuation down while leaving the true shift
+alone. On that reading the pooled number is the \emph{better} estimate and the
+single-mode numbers are mildly inflated, which is consistent with the combined value
+sitting low in every observable rather than only in $\cos\theta_\mu$.
+
+One consequence deserves attention. Changing only which detVar files enter the fit
+moves the extracted $\cos\theta_\mu$ cross section from $0.758$ to $0.822$, an $8\%$
+swing, because the detector covariance feeds the Wiener filter and therefore the
+regularisation. The detector systematic is not a post-hoc error bar here; it changes
+the central value.
 
 \paragraph{\texorpdfstring{$\theta_\mu$ carries no shape information in FHC.}{theta-mu carries no shape information in FHC.}}
 The additional smearing matrix for FHC $\theta_\mu$ is rank-1 to numerical
