@@ -5462,12 +5462,48 @@ diagnostic that actually worked was comparing the number of events in the
 fake-data files ($1621$ selected, FHC) against the number the extraction was using
 ($1721.9$).
 
-\paragraph{A residual in the proton-tagged family.}
-The proton-tagged samples are thrown by the same machinery into a separate
-directory and carry a smaller double-weighting factor ($1.028$ for FHC). Removing
-it moves their closure from $\approx\!1.15$ to $1.053$ (FHC), $1.118$ (RHC) and
-$1.100$ (combined) --- an improvement, but not to unity. Whatever remains there is
-specific to that selection and is not the effect described above.
+\paragraph{The proton-tagged residual is throw statistics, not a defect.}
+Removing the double weighting left the proton-tagged family at
+$\approx\!1.09$ rather than unity, and that residual has since been decomposed and
+traced.
+
+Both ends of the chain verify independently to $0.3\%$. The throw is correct: run~1
+of the FHC fake data holds $252.0$ selected events against a tree-level expectation
+of $251.3$, computed as $\sum(w_\mathrm{CV})\,D/\mathrm{POT}$ over
+\texttt{CC1mu1pi1p}-selected events in the reprocessed MC. The framework's assembly
+is correct: summing the per-file central-value histograms with their own POT scale
+factors gives $714.2$ against an assembled prediction of $716.6$.
+
+What remained was the thrown data sitting above the prediction, $755.0$ against
+$714.1$, a ratio of $1.057$ ($+1.5\sigma$) concentrated in run~2 at $+2.2\sigma$.
+That ratio accounts for essentially the whole closure --- $1.057$ against a measured
+$1.067$, leaving $1.009$ unexplained --- which already pointed at the input rather
+than the extraction.
+
+Re-throwing with a different seed confirms it. The per-run excesses reshuffle, which
+a systematic defect would not do: the run~2 excess falls to $1.008$, the excess
+appears instead in run~1 ($1.102$), and run~5 moves the other way ($0.906$). The
+total input ratio moves to $1.032$, and the closure follows it:
+
+\begin{center}\small
+\begin{tabular}{lcc}
+\toprule
+Regularisation & seed 1 & seed 7 \\
+\midrule
+identity          & $1.062$ & $1.026$ \\
+second derivative & $1.062$ & $0.943$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent The second derivative lands \emph{below} unity, which is a useful reminder
+of how much observable-level scatter the derivative regularisation contributes on
+top of the normalisation.
+
+The practical consequence is worth stating rather than leaving to be rediscovered: a
+single Poisson throw carries a $\sim\!1.5\sigma$ normalisation wobble at this sample
+size, so a closure of $1.06$ is not evidence of a bias. Quoting the closure with its
+throw-to-throw spread, or averaging several throws, would make that visible.
 
 \paragraph{\texorpdfstring{The $A_C$ ``inconsistency'' was a misreading, now resolved.}{The A-C inconsistency was a misreading, now resolved.}}
 An earlier version of this section reported an inconsistency: for the proton-tagged
