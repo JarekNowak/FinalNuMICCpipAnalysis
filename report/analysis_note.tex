@@ -5459,6 +5459,33 @@ unfolded result to $0.553$, and $A_C$ applied to that truth to $0.376$. If the
 Wiener--SVD estimate satisfies $\hat{x}=A_C\,x_\mathrm{true}$, the unfolded result
 should sit at $0.79\times$ the truth; it sits at $1.16\times$. Both cannot hold.
 
+This is not one awkward observable. Across the eighteen inclusive extractions the
+row sums of $A_C$ --- what $\hat{x}=A_C\,x_\mathrm{true}$ predicts the ratio of
+integrals should be --- span $0.24$ to $0.97$, a factor of $4.1$. The measured ratio
+spans only $0.93$ to $1.23$, a factor of $1.3$, and shows no tendency to follow the
+row sum. Fitting the two competing descriptions to all eighteen points:
+
+\begin{center}\small
+\begin{tabular}{lcc}
+\toprule
+Model & prediction & rms residual \\
+\midrule
+$\hat{x}=A_C\,x_\mathrm{true}$ (as documented) & ratio $=$ $A_C$ row sum & $0.503$ \\
+$\hat{x}=k\,x_\mathrm{true}$ ($A_C$ irrelevant) & ratio $=$ const $=1.106$ & $0.081$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent The constant-offset description is favoured by a factor of six in rms.
+The unfolded normalisation is, empirically, \emph{independent of how strongly $A_C$
+suppresses} --- $\cos\theta_\mu$ in RHC has a row sum of $0.24$ and still returns a
+ratio of $0.98$. Either the $A_C$ written to the closure file is not the operator
+actually applied to the data, or the unfolded histogram has already had its effect
+divided out. Which of those it is decides whether the $11\%$ is a genuine
+normalisation bias or an artefact of comparing two quantities that live in
+different spaces, and it cannot be settled from the sidecar files alone. The
+supporting numbers are in \texttt{report/offset\_vs\_AC.tsv}.
+
 One caveat limits how far this can be pushed with the present outputs: the $A_C$
 written to the closure sidecar is restricted to the slice, while the smearing is
 applied in the full true-bin space before slicing, so the operation cannot be
