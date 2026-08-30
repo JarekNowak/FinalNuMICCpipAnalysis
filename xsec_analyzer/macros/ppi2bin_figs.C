@@ -66,7 +66,7 @@ static void one_xsec(const char* cfg, bool proton_tagged){
   auto* hd = equalise(hu, "hd");
   hd->SetMarkerStyle(20); hd->SetMarkerSize(1.2); hd->SetLineWidth(2); hd->SetLineColor(kBlack);
   hd->GetXaxis()->SetTitle("p_{#pi} bin  (0.175-0.205, >0.205 GeV/c; equal width for legibility)");
-  hd->GetYaxis()->SetTitle("d#sigma/dp_{#pi}  [10^{-38} cm^{2}/GeV/c per nucleon]");
+  hd->GetYaxis()->SetTitle("d#sigma/dp_{#pi}  [10^{-38} cm^{2}/(GeV/c)/Ar]");
   hd->GetXaxis()->SetNdivisions(2,0,0);
   double ymax = hd->GetMaximum()+hd->GetBinError(hd->GetMaximumBin());
   for (auto& cv : curves){ auto* h=(TH1D*)f->Get(cv.first.c_str()); if(h) ymax=std::max(ymax,h->GetMaximum()); }
