@@ -5230,6 +5230,186 @@ both analyses cover Runs~1--5 in FHC and RHC; the present measurement reports FH
 RHC, and their combination.
 
 % =============================================================================
+\section{Configuration closure: is COMB the combination of its own inputs?}
+\label{sec:combtruth}
+
+The integrated cross section extracted from a given configuration is not a
+configuration-independent number: it depends on the additional smearing matrix
+$A_C$, which differs per configuration and per observable. The observable-to-
+observable spread within a single configuration is $15.9\%$ (FHC5), $17.4\%$
+(RHCFULL) and $14.8\%$ (COMB) for the proton-tagged family, i.e.\ larger than the
+$\sim\!10\%$ FHC-versus-RHC difference. Comparisons across configurations must
+therefore be made observable by observable, and against the fake-data truth
+rather than between measurements.
+
+\paragraph{The RHC deficit is in the input, not the extraction.}
+For the proton-tagged family the measured RHC/FHC ratio is $0.900$. The
+corresponding ratio of the fake-data \emph{truth} integrals is $0.785$ and of the
+GENIE tune $0.779$ --- two independent model inputs that agree with each other and
+disagree with the measurement. The deficit is therefore a property of the sample,
+while the extraction distorts the ratio toward unity. Normalisation is not
+implicated: the exposures sum exactly
+($8.857\times10^{20}+1.1082\times10^{21}=1.9939\times10^{21}$~POT) and the
+per-configuration flux values reproduce the POT-weighted combination to $0.01\%$.
+
+\paragraph{COMB against the POT-weighted average of its inputs.}
+A configuration spanning both horn currents should predict a cross section between
+those of its two inputs. Comparing the COMB fake-data truth with the POT-weighted
+mean of the FHC and RHC truths, observable by observable:
+
+\begin{table}[H]
+  \centering
+  \caption{COMB fake-data truth divided by the POT-weighted average of the FHC5 and
+    RHCFULL truths. Unity indicates a configuration consistent with its own inputs.
+    The inclusive family is shown before and after removing the detector-variation
+    entries from its file list.}
+  \label{tab:combtruth}
+  \small
+  \begin{tabular}{l c c}
+    \toprule
+    Family & Mean COMB/expected & Range \\
+    \midrule
+    Proton-tagged (7 observables, no detVar systematic) & $1.020$ & $0.989$--$1.052$ \\
+    Inclusive (6 observables), detVar systematic included & $0.910$ & $0.767$--$1.069$ \\
+    Inclusive (6 observables), detVar systematic removed  & $1.019$ & $0.985$--$1.046$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \caption{COMB fake-data truth divided by the POT-weighted average of the FHC5 and
+    RHCFULL truths, with and without the detVar term in the covariance. Both sides of
+    each ratio are computed with the \emph{same} systematics configuration, so the
+    comparison is internally consistent.}
+  \label{tab:combnodv}
+  \small
+  \begin{tabular}{l c c c}
+    \toprule
+    Observable & detVar syst.\ in & detVar syst.\ out & Change \\
+    \midrule
+    $p_\mu$              & $0.885$ & $1.046$ & $+0.161$ \\
+    $\cos\theta_\mu$     & $0.938$ & $1.044$ & $+0.106$ \\
+    $\cos\theta_\pi$     & $0.937$ & $1.030$ & $+0.094$ \\
+    $\theta_{\mu\pi}$    & $1.069$ & $1.008$ & $-0.061$ \\
+    $\theta_\mu$         & $0.767$ & $0.985$ & $+0.219$ \\
+    $p_\pi$ (2-bin)      & $0.862$ & $0.997$ & $+0.136$ \\
+    \midrule
+    Mean                 & $0.910$ & $1.019$ & $+0.109$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The proton-tagged family is consistent. The inclusive family is not: its COMB truth
+sits $9\%$ below the average of its own inputs, worst for $\theta_\mu$ at $0.767$.
+Because the effect is present in the \emph{truth}, it is not an unfolding defect ---
+it also explains the previously reported ``COMB below both inputs'' behaviour, which
+appears in $5$ of $6$ inclusive observables in the truth as well as in the
+measurement.
+
+Three candidate causes have been excluded. The flux is correct (COMB
+$6.60865\times10^{-10}$ against a POT-weighted $6.6081\times10^{-10}$). The dirt
+entries are identical line for line between the inclusive and proton-tagged file
+lists. The known mis-produced Run-5 $\nu_e$ detVar samples are quarantined and
+absent. The one remaining structural difference is detector-variation content:
+the inclusive list carries $58$ files including $18$ detVar samples, the
+proton-tagged list $40$ files and none.
+
+\paragraph{The cause is the detVar covariance, not the detVar files.}
+The inclusive COMB universes were first rebuilt from a file list with the $18$ detVar
+entries removed, which requires a matching systematics configuration with the eight
+\texttt{DV} knobs deleted (the unfolder throws \texttt{std::out\_of\_range} when a
+declared systematic has no universes in the file). That changed the result by
+$20$--$25\%$. However, running the \emph{original} universe file --- detVar entries
+still present --- against only the modified systematics configuration reproduces the
+new numbers exactly, in both the truth and the unfolded result. The detVar files
+themselves therefore have \emph{no} effect on the extraction; the entire change comes
+from dropping the \texttt{detVar\_total} term from the covariance. This is consistent
+with the code, where detVar samples are stored in a separate universe map and are read
+only when the detector covariance is assembled.
+
+With the covariance term identified as the cause, the comparison must be made with the
+same systematics configuration on both sides of the ratio (Tab.~\ref{tab:combnodv}).
+Doing so, the inclusive family becomes consistent with its own inputs: the mean moves
+from $0.910$ to $1.019$ and the range from $0.767$--$1.069$ to $0.985$--$1.046$,
+matching the $1.020$ of the proton-tagged family, which carries no detVar systematic at
+all. The ``COMB below its own inputs'' behaviour disappears, and $\theta_{\mu\pi}$ ---
+the one observable that had been \emph{above} unity --- moves toward it
+($1.069\to1.008$) rather than being pushed further out.
+
+\paragraph{Why the combined configuration is affected and its inputs are not.}
+The detector systematic is anomalously large for COMB. For $p_\mu$ it is $23.2\%$ of
+the prediction in FHC5 and $27.4\%$ in RHCFULL, but $42.3\%$ in COMB; for $\theta_\mu$,
+$15.4\%$ and $19.4\%$ against $36.4\%$. A combined measurement draws on the exposure of
+both horn currents and should carry a detector uncertainty \emph{between} those of its
+inputs, not one $1.3$--$1.9\times$ larger than either. The structural difference is that
+COMB carries two per-mode detVar sets ($18$ files, two of them \texttt{detVarCV}) where
+each input carries one ($9$ files, one \texttt{detVarCV}), and these are accumulated
+rather than averaged. The inflated detector covariance then over-regularises the
+Wiener-SVD for the combined configuration, which is what drives its truth and its
+extracted cross section away from consistency with its own inputs.
+
+\paragraph{The fix.}
+In \texttt{SystematicsCalculator::build\_universes()} each detVar file was scaled by
+\texttt{total\_bnb\_data\_pot\_ / file\_pot} and the resulting histograms were then
+\emph{accumulated}. With one detVar set this is correct. With two --- both labelled
+run~1, so they are indistinguishable by run number --- each set was independently
+scaled to the \emph{full} data exposure and the sum therefore covered that exposure
+twice, roughly doubling the detector covariance. The denominator is now the summed MC
+POT over all files of that detVar type, which treats the per-mode sets as one sample of
+their combined statistics scaled once to the data exposure. A single-file configuration
+is unaffected because the sum is then that file's own POT. Because the universes are
+cached inside the response file, \texttt{NORM\_SCHEME\_TAG} was bumped from
+\texttt{v2-distinct-sum-pot} to \texttt{v3-detvar-pooled-pot} to invalidate them.
+
+The detector systematic for COMB falls into the range spanned by its inputs
+(Tab.~\ref{tab:detvarfix}), and the configuration closure recovers: the mean
+COMB/expected moves from $0.910$ to $1.027$ with the range narrowing from
+$0.767$--$1.069$ to $0.958$--$1.071$, matching the $1.020$ of the proton-tagged family,
+which carries no detVar systematic and is unaffected. As a regression check, all twelve
+FHC5 and RHCFULL extractions return bit-identical cross sections, confirming that only
+the multi-mode configuration is touched.
+
+\begin{table}[H]
+  \centering
+  \caption{Detector systematic \texttt{detVar\_total} as a percentage of the prediction,
+    before and after pooling the detVar POT. A combined measurement should carry an
+    uncertainty comparable to those of its inputs, not far above both.}
+  \label{tab:detvarfix}
+  \small
+  \begin{tabular}{l c c c c}
+    \toprule
+    Observable & FHC5 & RHCFULL & COMB (before) & COMB (after) \\
+    \midrule
+    $p_\mu$           & $23.1$ & $27.4$ & $42.3$ & $24.6$ \\
+    $\cos\theta_\mu$  & $26.1$ & $32.5$ & $41.4$ & $23.7$ \\
+    $\cos\theta_\pi$  & $20.4$ & $30.3$ & $37.8$ & $21.3$ \\
+    $\theta_{\mu\pi}$ & $17.2$ & $16.0$ & $28.6$ & $16.6$ \\
+    $\theta_\mu$      & $15.4$ & $19.4$ & $36.4$ & $18.0$ \\
+    $p_\pi$ (2-bin)   & $23.5$ & $33.9$ & $49.9$ & $27.2$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+One residual: for $\cos\theta_\mu$ the corrected COMB value ($23.7\%$) sits slightly
+below both inputs ($26.1\%$, $32.5\%$) rather than between them. The remaining five are
+bracketed. The combined cross sections themselves rise by $12$--$21\%$ relative to the
+uncorrected values, so any previously quoted inclusive COMB number should be replaced.
+
+\paragraph{An unresolved inconsistency in the $A_C$ normalisation.}
+For \texttt{1p}~$p_\mu$ (FHC5) the fake-data truth integrates to $0.4763$, the
+unfolded result to $0.5528$, and $A_C$ applied to the truth to $0.3761$. If the
+Wiener-SVD estimate satisfies $\hat{x}=A_C x_{\mathrm{true}}$ the unfolded result
+should sit at $0.79\times$ the truth; it sits at $1.16\times$. One caveat limits
+this test: the $A_C$ written to the closure file is restricted to the slice, while
+the smearing is applied in the full true-bin space before slicing, so the operation
+cannot be reproduced exactly from the sidecar file. A related hypothesis --- that
+the fake-data truth is missing the $A_C$ smearing applied to every other prediction
+in \texttt{UnfolderNuMI.C} --- was tested directly and refuted: applying it moves the
+closure ratio from $1.09$--$1.24$ to $1.54$--$1.60$, and the change was reverted.
+
+
+% =============================================================================
 \section{Limitations and Open Questions}
 \label{sec:limitations}
 % =============================================================================
@@ -5706,184 +5886,6 @@ unbiasedness of the FHC, RHC, and combined full-exposure extractions equally.
 % =============================================================================
 
 % =============================================================================
-\subsection{Configuration closure: is COMB the combination of its own inputs?}
-\label{sec:combtruth}
-
-The integrated cross section extracted from a given configuration is not a
-configuration-independent number: it depends on the additional smearing matrix
-$A_C$, which differs per configuration and per observable. The observable-to-
-observable spread within a single configuration is $15.9\%$ (FHC5), $17.4\%$
-(RHCFULL) and $14.8\%$ (COMB) for the proton-tagged family, i.e.\ larger than the
-$\sim\!10\%$ FHC-versus-RHC difference. Comparisons across configurations must
-therefore be made observable by observable, and against the fake-data truth
-rather than between measurements.
-
-\paragraph{The RHC deficit is in the input, not the extraction.}
-For the proton-tagged family the measured RHC/FHC ratio is $0.900$. The
-corresponding ratio of the fake-data \emph{truth} integrals is $0.785$ and of the
-GENIE tune $0.779$ --- two independent model inputs that agree with each other and
-disagree with the measurement. The deficit is therefore a property of the sample,
-while the extraction distorts the ratio toward unity. Normalisation is not
-implicated: the exposures sum exactly
-($8.857\times10^{20}+1.1082\times10^{21}=1.9939\times10^{21}$~POT) and the
-per-configuration flux values reproduce the POT-weighted combination to $0.01\%$.
-
-\paragraph{COMB against the POT-weighted average of its inputs.}
-A configuration spanning both horn currents should predict a cross section between
-those of its two inputs. Comparing the COMB fake-data truth with the POT-weighted
-mean of the FHC and RHC truths, observable by observable:
-
-\begin{table}[H]
-  \centering
-  \caption{COMB fake-data truth divided by the POT-weighted average of the FHC5 and
-    RHCFULL truths. Unity indicates a configuration consistent with its own inputs.
-    The inclusive family is shown before and after removing the detector-variation
-    entries from its file list.}
-  \label{tab:combtruth}
-  \small
-  \begin{tabular}{l c c}
-    \toprule
-    Family & Mean COMB/expected & Range \\
-    \midrule
-    Proton-tagged (7 observables, no detVar systematic) & $1.020$ & $0.989$--$1.052$ \\
-    Inclusive (6 observables), detVar systematic included & $0.910$ & $0.767$--$1.069$ \\
-    Inclusive (6 observables), detVar systematic removed  & $1.019$ & $0.985$--$1.046$ \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-\begin{table}[H]
-  \centering
-  \caption{COMB fake-data truth divided by the POT-weighted average of the FHC5 and
-    RHCFULL truths, with and without the detVar term in the covariance. Both sides of
-    each ratio are computed with the \emph{same} systematics configuration, so the
-    comparison is internally consistent.}
-  \label{tab:combnodv}
-  \small
-  \begin{tabular}{l c c c}
-    \toprule
-    Observable & detVar syst.\ in & detVar syst.\ out & Change \\
-    \midrule
-    $p_\mu$              & $0.885$ & $1.046$ & $+0.161$ \\
-    $\cos\theta_\mu$     & $0.938$ & $1.044$ & $+0.106$ \\
-    $\cos\theta_\pi$     & $0.937$ & $1.030$ & $+0.094$ \\
-    $\theta_{\mu\pi}$    & $1.069$ & $1.008$ & $-0.061$ \\
-    $\theta_\mu$         & $0.767$ & $0.985$ & $+0.219$ \\
-    $p_\pi$ (2-bin)      & $0.862$ & $0.997$ & $+0.136$ \\
-    \midrule
-    Mean                 & $0.910$ & $1.019$ & $+0.109$ \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-The proton-tagged family is consistent. The inclusive family is not: its COMB truth
-sits $9\%$ below the average of its own inputs, worst for $\theta_\mu$ at $0.767$.
-Because the effect is present in the \emph{truth}, it is not an unfolding defect ---
-it also explains the previously reported ``COMB below both inputs'' behaviour, which
-appears in $5$ of $6$ inclusive observables in the truth as well as in the
-measurement.
-
-Three candidate causes have been excluded. The flux is correct (COMB
-$6.60865\times10^{-10}$ against a POT-weighted $6.6081\times10^{-10}$). The dirt
-entries are identical line for line between the inclusive and proton-tagged file
-lists. The known mis-produced Run-5 $\nu_e$ detVar samples are quarantined and
-absent. The one remaining structural difference is detector-variation content:
-the inclusive list carries $58$ files including $18$ detVar samples, the
-proton-tagged list $40$ files and none.
-
-\paragraph{The cause is the detVar covariance, not the detVar files.}
-The inclusive COMB universes were first rebuilt from a file list with the $18$ detVar
-entries removed, which requires a matching systematics configuration with the eight
-\texttt{DV} knobs deleted (the unfolder throws \texttt{std::out\_of\_range} when a
-declared systematic has no universes in the file). That changed the result by
-$20$--$25\%$. However, running the \emph{original} universe file --- detVar entries
-still present --- against only the modified systematics configuration reproduces the
-new numbers exactly, in both the truth and the unfolded result. The detVar files
-themselves therefore have \emph{no} effect on the extraction; the entire change comes
-from dropping the \texttt{detVar\_total} term from the covariance. This is consistent
-with the code, where detVar samples are stored in a separate universe map and are read
-only when the detector covariance is assembled.
-
-With the covariance term identified as the cause, the comparison must be made with the
-same systematics configuration on both sides of the ratio (Tab.~\ref{tab:combnodv}).
-Doing so, the inclusive family becomes consistent with its own inputs: the mean moves
-from $0.910$ to $1.019$ and the range from $0.767$--$1.069$ to $0.985$--$1.046$,
-matching the $1.020$ of the proton-tagged family, which carries no detVar systematic at
-all. The ``COMB below its own inputs'' behaviour disappears, and $\theta_{\mu\pi}$ ---
-the one observable that had been \emph{above} unity --- moves toward it
-($1.069\to1.008$) rather than being pushed further out.
-
-\paragraph{Why the combined configuration is affected and its inputs are not.}
-The detector systematic is anomalously large for COMB. For $p_\mu$ it is $23.2\%$ of
-the prediction in FHC5 and $27.4\%$ in RHCFULL, but $42.3\%$ in COMB; for $\theta_\mu$,
-$15.4\%$ and $19.4\%$ against $36.4\%$. A combined measurement draws on the exposure of
-both horn currents and should carry a detector uncertainty \emph{between} those of its
-inputs, not one $1.3$--$1.9\times$ larger than either. The structural difference is that
-COMB carries two per-mode detVar sets ($18$ files, two of them \texttt{detVarCV}) where
-each input carries one ($9$ files, one \texttt{detVarCV}), and these are accumulated
-rather than averaged. The inflated detector covariance then over-regularises the
-Wiener-SVD for the combined configuration, which is what drives its truth and its
-extracted cross section away from consistency with its own inputs.
-
-\paragraph{The fix.}
-In \texttt{SystematicsCalculator::build\_universes()} each detVar file was scaled by
-\texttt{total\_bnb\_data\_pot\_ / file\_pot} and the resulting histograms were then
-\emph{accumulated}. With one detVar set this is correct. With two --- both labelled
-run~1, so they are indistinguishable by run number --- each set was independently
-scaled to the \emph{full} data exposure and the sum therefore covered that exposure
-twice, roughly doubling the detector covariance. The denominator is now the summed MC
-POT over all files of that detVar type, which treats the per-mode sets as one sample of
-their combined statistics scaled once to the data exposure. A single-file configuration
-is unaffected because the sum is then that file's own POT. Because the universes are
-cached inside the response file, \texttt{NORM\_SCHEME\_TAG} was bumped from
-\texttt{v2-distinct-sum-pot} to \texttt{v3-detvar-pooled-pot} to invalidate them.
-
-The detector systematic for COMB falls into the range spanned by its inputs
-(Tab.~\ref{tab:detvarfix}), and the configuration closure recovers: the mean
-COMB/expected moves from $0.910$ to $1.027$ with the range narrowing from
-$0.767$--$1.069$ to $0.958$--$1.071$, matching the $1.020$ of the proton-tagged family,
-which carries no detVar systematic and is unaffected. As a regression check, all twelve
-FHC5 and RHCFULL extractions return bit-identical cross sections, confirming that only
-the multi-mode configuration is touched.
-
-\begin{table}[H]
-  \centering
-  \caption{Detector systematic \texttt{detVar\_total} as a percentage of the prediction,
-    before and after pooling the detVar POT. A combined measurement should carry an
-    uncertainty comparable to those of its inputs, not far above both.}
-  \label{tab:detvarfix}
-  \small
-  \begin{tabular}{l c c c c}
-    \toprule
-    Observable & FHC5 & RHCFULL & COMB (before) & COMB (after) \\
-    \midrule
-    $p_\mu$           & $23.1$ & $27.4$ & $42.3$ & $24.6$ \\
-    $\cos\theta_\mu$  & $26.1$ & $32.5$ & $41.4$ & $23.7$ \\
-    $\cos\theta_\pi$  & $20.4$ & $30.3$ & $37.8$ & $21.3$ \\
-    $\theta_{\mu\pi}$ & $17.2$ & $16.0$ & $28.6$ & $16.6$ \\
-    $\theta_\mu$      & $15.4$ & $19.4$ & $36.4$ & $18.0$ \\
-    $p_\pi$ (2-bin)   & $23.5$ & $33.9$ & $49.9$ & $27.2$ \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-One residual: for $\cos\theta_\mu$ the corrected COMB value ($23.7\%$) sits slightly
-below both inputs ($26.1\%$, $32.5\%$) rather than between them. The remaining five are
-bracketed. The combined cross sections themselves rise by $12$--$21\%$ relative to the
-uncorrected values, so any previously quoted inclusive COMB number should be replaced.
-
-\paragraph{An unresolved inconsistency in the $A_C$ normalisation.}
-For \texttt{1p}~$p_\mu$ (FHC5) the fake-data truth integrates to $0.4763$, the
-unfolded result to $0.5528$, and $A_C$ applied to the truth to $0.3761$. If the
-Wiener-SVD estimate satisfies $\hat{x}=A_C x_{\mathrm{true}}$ the unfolded result
-should sit at $0.79\times$ the truth; it sits at $1.16\times$. One caveat limits
-this test: the $A_C$ written to the closure file is restricted to the slice, while
-the smearing is applied in the full true-bin space before slicing, so the operation
-cannot be reproduced exactly from the sidecar file. A related hypothesis --- that
-the fake-data truth is missing the $A_C$ smearing applied to every other prediction
-in \texttt{UnfolderNuMI.C} --- was tested directly and refuted: applying it moves the
-closure ratio from $1.09$--$1.24$ to $1.54$--$1.60$, and the change was reverted.
-
 \section{Observable Binning}
 \label{app:binning}
 

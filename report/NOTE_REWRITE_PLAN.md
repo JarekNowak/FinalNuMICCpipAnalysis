@@ -32,7 +32,21 @@ more expensive order of operations, because the prose has to be revisited twice.
 
 ## 1. Structural diagnosis
 
-### 1.1 Five sections sit after the Summary — 763 lines, 13% of the note
+### 1.1 ~~Five sections sit after the Summary~~ — **WRONG, corrected 2026-08-30**
+
+The note already has `\appendix` at :5367, so those five sections are appendices A-E,
+not misplaced body sections. They are correctly placed. What follows in this
+subsection was written before I checked for `\appendix` and is retained only to show
+what was actually verified.
+
+The real issue is narrower and survives: **the configuration-closure result
+(`sec:combtruth`) sits inside Appendix C**, when it is a current, load-bearing finding
+-- it is what identified and validated the combined detector-systematic fix. That one
+subsection should be promoted to the body; A, B, D and E stay where they are.
+
+The original (incorrect) diagnosis follows.
+
+### 1.1-old Five sections after the Summary — 763 lines, 13% of the note
 
 `Summary` is at :5220, and then the document continues:
 
@@ -211,7 +225,8 @@ the reading order stops doubling back.
    no action needed. See `ORPHAN_FIGURES.txt`.
 3. Rewrite §8, §9, §10 from the re-extracted numbers.
 4. Write §12 from the open items above.
-5. Move the five post-Summary sections into §11; create appendices A-D.
+5. Promote `sec:combtruth` from Appendix C into the body. Appendices A-E already
+   exist and are correctly structured -- no wholesale move is needed (see §1.1).
 6. Rewrite §1 and §13 last, once the body is settled.
 7. Rebuild, check for undefined references, and diff the PDF page count as a sanity
    check on what moved.
