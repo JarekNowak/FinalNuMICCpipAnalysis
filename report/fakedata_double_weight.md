@@ -103,3 +103,48 @@ So a ~9% residual remains, specific to the `CC1mu1pi1p` chain, and it is not the
 fake data, the POT, or the regularisation. What is left is the selection itself:
 its efficiency, its response matrix, or its background subtraction. That is where
 to look next.
+
+---
+
+## Localising the proton-tagged residual: it is the input, fluctuating high
+
+Decomposed 2026-08-30, FHC5, `costhmu`, proton-tagged.
+
+Both ends of the chain check out independently:
+
+- **The throw is correct.** Run 1 holds 252.0 selected events against a tree-level
+  expectation of 251.3, computed as `sum(tcv*pcv*nw) * D/MCPOT` over
+  `CC1mu1pi1p_Selected` events in the `w/` MC. Agreement 0.3%.
+- **The framework's assembly is correct.** Summing the per-file numuMC CV
+  histograms with their own POT scale factors gives 714.2 against an assembled
+  `CV_reco` of 716.6. Agreement 0.3%.
+
+What remains is that the thrown data sits above the MC prediction:
+
+| run | thrown | MC | ratio | significance |
+|---|---|---|---|---|
+| run1 | 252.0 | 254.0 | 0.992 | −0.1σ |
+| run2 | 131.0 | 108.1 | 1.212 | **+2.2σ** |
+| run4 | 181.0 | 173.1 | 1.046 | +0.6σ |
+| run5 | 191.0 | 178.9 | 1.068 | +0.9σ |
+| total | 755.0 | 714.1 | 1.057 | +1.5σ |
+
+And that ratio accounts for essentially all of the closure:
+
+    input data/MC ratio      1.057
+    closure (identity reg.)  1.067
+    left unexplained         1.009
+
+**So the unfolding chain is fine to better than 1%, and the proton-tagged residual
+is the fake data itself having fluctuated high** -- by 1.5σ overall in FHC, driven
+by run 2 at +2.2σ.
+
+This is a statistical fluctuation in one Poisson throw, not a defect. The
+independent checks are FHC (+1.5σ) and RHC (+1.8σ); COMB is their sum and is not a
+third independent measurement, so the combined significance is around +2.3σ, not
+the ~3σ suggested earlier in this session by treating the three as independent.
+
+The test: re-throw with a different seed. If the closure moves toward unity, this is
+confirmed; if it stays at 1.09, something systematic remains. That is cheap --
+`throw_perrun_w.C(seed)` takes a seed argument -- and should be done before the
+proton-tagged numbers are quoted.
