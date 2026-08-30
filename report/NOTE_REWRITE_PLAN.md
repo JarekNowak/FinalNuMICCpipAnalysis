@@ -187,10 +187,16 @@ the reading order stops doubling back.
 
 ## 6. Risks and prerequisites
 
-- **Three figures still have no producer**: `fw_bkgsub_*`, `fw_xsec_*`,
-  `dsigma_build_1p_*`. Same failure mode as the `ppi2bin` set, which turned out to be
-  hiding a stale table. **Check these for staleness before trusting them**; write
-  producers as for `ppi2bin_figs.C`.
+- ~~Three figures still have no producer~~ **RESOLVED 2026-08-30.** `fw_bkgsub_*`,
+  `fw_xsec_*` and `dsigma_build_1p_*` are referenced by **no** `.tex` file, note or
+  slides. They are not producer-less stale content; they are dead files, and mislead
+  nobody. My earlier claim that they "show superseded COMB numbers" was an inference
+  from the `ppi2bin` precedent and was wrong.
+
+  The audit that established this also found **82 of 237 figure basenames (35%) are
+  orphaned** and **0 references are broken** (an earlier count of 16 "missing" was an
+  artefact of listing only `.pdf` when many figures are `.png`). See
+  `ORPHAN_FIGURES.txt`. Orphan cleanup is cosmetic and should not gate the rewrite.
 - **D'Agostini numbers** need a re-run before `tab:dagostini` can be restated.
 - Do not restructure and re-derive in the same pass. Re-derive, verify, commit; then
   restructure.
@@ -201,7 +207,8 @@ the reading order stops doubling back.
 
 1. Re-extract all results into a machine-readable table; diff against the note; publish
    the diff. (Half a day. Largely scripted — the closure files already exist.)
-2. Check the three producer-less figure families for staleness; write producers.
+2. ~~Check the three producer-less figure families~~ DONE — they are unreferenced;
+   no action needed. See `ORPHAN_FIGURES.txt`.
 3. Rewrite §8, §9, §10 from the re-extracted numbers.
 4. Write §12 from the open items above.
 5. Move the five post-Summary sections into §11; create appendices A-D.
