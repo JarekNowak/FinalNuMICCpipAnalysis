@@ -5453,47 +5453,33 @@ since the observables where the two generators disagree most show the \emph{smal
 offset. Whatever distinguishes the same-sample self-closure from the NuWro closure,
 it is not simply the size of the generator disagreement.
 
-\paragraph{\texorpdfstring{An inconsistency in the $A_C$ normalisation.}{An inconsistency in the A-C normalisation.}}
-For the proton-tagged $p_\mu$ in FHC the fake-data truth integrates to $0.476$, the
-unfolded result to $0.553$, and $A_C$ applied to that truth to $0.376$. If the
-Wiener--SVD estimate satisfies $\hat{x}=A_C\,x_\mathrm{true}$, the unfolded result
-should sit at $0.79\times$ the truth; it sits at $1.16\times$. Both cannot hold.
+\paragraph{\texorpdfstring{The $A_C$ ``inconsistency'' was a misreading, now resolved.}{The A-C inconsistency was a misreading, now resolved.}}
+An earlier version of this section reported an inconsistency: for the proton-tagged
+$p_\mu$ in FHC the fake-data truth integrates to $0.476$, the unfolded result to
+$0.553$, and $A_C$ applied to that truth to $0.376$, so that $\hat{x}=A_C
+x_\mathrm{true}$ appeared to predict $0.79\times$ where $1.16\times$ was measured.
 
-This is not one awkward observable. Across the eighteen inclusive extractions the
-row sums of $A_C$ --- what $\hat{x}=A_C\,x_\mathrm{true}$ predicts the ratio of
-integrals should be --- span $0.24$ to $0.97$, a factor of $4.1$. The measured ratio
-spans only $0.93$ to $1.23$, a factor of $1.3$, and shows no tendency to follow the
-row sum. Fitting the two competing descriptions to all eighteen points:
+That was an error on our part, not a defect in the extraction.
+\texttt{CrossSectionExtractor} applies $A_C$ \emph{in place} to every entry of its
+prediction map, the fake-data truth among them, before any of them is written out.
+The curve stored as the truth is therefore \emph{already} $A_C$-smeared, and
+multiplying it by $A_C$ a second time --- which is what the comparison above did ---
+simply double-smears it. This also explains why explicitly adding a second
+\texttt{apply\_ac} to that curve moved the closure ratio further from unity
+($1.09$--$1.24 \to 1.54$--$1.60$) rather than toward it.
 
-\begin{center}\small
-\begin{tabular}{lcc}
-\toprule
-Model & prediction & rms residual \\
-\midrule
-$\hat{x}=A_C\,x_\mathrm{true}$ (as documented) & ratio $=$ $A_C$ row sum & $0.503$ \\
-$\hat{x}=k\,x_\mathrm{true}$ ($A_C$ irrelevant) & ratio $=$ const $=1.106$ & $0.081$ \\
-\bottomrule
-\end{tabular}
-\end{center}
+The evidence is unambiguous across all eighteen inclusive extractions. If the stored
+truth were raw, the ratio of integrals would track the $A_C$ row sum, which spans
+$0.24$--$0.97$. It does not: the ratio stays between $0.93$ and $1.23$ while the row
+sum varies by a factor of four, and all eighteen points sit closer to unity than to
+their own row sum. $\cos\theta_\mu$ in RHC is the clearest case, with a row sum of
+$0.24$ and a ratio of $0.98$.
 
-\noindent The constant-offset description is favoured by a factor of six in rms.
-The unfolded normalisation is, empirically, \emph{independent of how strongly $A_C$
-suppresses} --- $\cos\theta_\mu$ in RHC has a row sum of $0.24$ and still returns a
-ratio of $0.98$. Either the $A_C$ written to the closure file is not the operator
-actually applied to the data, or the unfolded histogram has already had its effect
-divided out. Which of those it is decides whether the $11\%$ is a genuine
-normalisation bias or an artefact of comparing two quantities that live in
-different spaces, and it cannot be settled from the sidecar files alone. The
-supporting numbers are in \texttt{report/offset\_vs\_AC.tsv}.
-
-One caveat limits how far this can be pushed with the present outputs: the $A_C$
-written to the closure sidecar is restricted to the slice, while the smearing is
-applied in the full true-bin space before slicing, so the operation cannot be
-reproduced exactly from that file. A related hypothesis --- that the fake-data truth
-is missing the $A_C$ smearing applied to every other prediction --- was tested
-directly and refuted: applying it moves the closure ratio from $1.09$--$1.24$ to
-$1.54$--$1.60$, further from unity. Resolving this needs the convention settled at
-the source rather than inferred downstream.
+The consequence matters for how the offset above should be read. Unfolded result and
+truth curve live in the \emph{same} space, so comparing their integrals directly is
+correct, and the $11\%$ excess is a genuine normalisation bias in the extraction
+rather than an artefact of comparing quantities in different spaces. Supporting
+numbers in \texttt{report/offset\_vs\_AC.tsv}.
 
 \paragraph{One detector systematic still sits outside its inputs.}
 After the per-mode detVar pooling fix, five of the six inclusive observables have a
