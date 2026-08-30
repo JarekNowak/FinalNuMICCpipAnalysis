@@ -177,10 +177,6 @@ in the CC$\pi^{\pm}$ channel using the full NuMI exposure in FHC, RHC, and combi
 configurations, employing Pandora pattern recognition~\cite{pandora} and
 Wiener-SVD unfolding~\cite{wienervsd}.
 
-% =============================================================================
-% ===== DEV: sections "Theoretical Background" and "Detector" hidden for
-% readability during analysis development. Remove the \iffalse ... \fi to restore. =====
-\iffalse
 \section{Theoretical Background and Prior CC$\pi^+$ Measurements}
 \label{sec:theory}
 % =============================================================================
@@ -669,7 +665,6 @@ the $dE/dx$ profile along the track is the primary tool for muon/pion/proton
 separation (Section~\ref{sec:selection}).
 
 % =============================================================================
-\fi
 % ===== end DEV-hidden sections (Theoretical Background, Detector) =====
 \section{Beam and Neutrino Flux}
 \label{sec:flux}
@@ -5513,10 +5508,20 @@ correspondingly smaller and, being a different phase space, are not directly
 comparable to the framework's full-$0.1\GeVc$ numbers.
 
 \paragraph{Context in the experimental landscape.}
-The measured $\sigma_{\mathrm{int}}$ corresponds to $\approx 0.65$--$0.70$ times
-the GENIE~v3 prediction, consistent with generator over-predictions of
-20--35\% seen by all prior experiments.  This
-measurement provides:
+The unfolded fake data sits at $1.85$--$1.90$ times the $A_C$-smeared GENIE~v3
+curve, averaged over the six inclusive observables and consistent across the three
+configurations. This is a statement about the \emph{injected} sample rather than
+about nature: the fake data is thrown from NuWro, which predicts roughly twice the
+GENIE CC$\pi^{\pm}$ rate in this phase space, and the ratio also carries the
+uniform $13\%$ extraction offset of \S\ref{sec:limitations}. Against the MicroBooNE
+tune the same ratio is $1.35$--$1.45$.
+
+An earlier version of this section reported $\approx0.65$--$0.70$ times GENIE, in
+the opposite direction and described as consistent with generator over-prediction.
+That number cannot be reproduced from any current output and its provenance is not
+established; it is withdrawn rather than restated. No claim about the sign of a
+data-generator discrepancy can be made from this note in any case, because no
+beam-on data is unblinded. This measurement provides:
 \begin{itemize}[noitemsep]
   \item The first CC$\pi^{\pm}$ differential cross sections from the MicroBooNE
     NuMI (off-axis) dataset, complementing the existing BNB-beam CC$\pi^+$
@@ -5532,12 +5537,27 @@ measurement provides:
     CC$\pi^{\pm}$ production on argon, previously unmeasured.
 \end{itemize}
 
+\paragraph{What the combined configuration required.}
+The combined measurement initially returned an integrated cross section below both
+of its own inputs, which a combined exposure cannot do. The cause was the detector
+systematic: a combined configuration carries one detVar set per horn current, and
+each was independently scaled to the \emph{full} data exposure before the two were
+summed, so the exposure was counted twice and the detector covariance came out
+roughly double ($42.3\%$ of the prediction against $23.2\%$ and $27.4\%$ for its
+inputs). Pooling the detVar POT brings it to $24.6\%$, inside the range spanned by
+the inputs, and restores the closure: the combined truth moves from $0.910$ to
+$1.027$ of the POT-weighted average of its inputs (\S\ref{sec:combtruth}). The
+FHC-only and RHC-only cross sections are bit-identical before and after, so only
+the combined configuration was ever affected.
+
 \paragraph{Required for publication.}
-Native systematic propagation in the custom pipeline (flux, cross-section, and
-detector-response multisims, currently imported from the framework for the
-unfolding covariance) and inclusion of Runs~2, 4, and~5 beam-on data
-($\approx 5.4\times$ additional exposure) are needed before a real-data result can
-be published.  With the EXT cancellation and full covariance in place the unfolded
+The four open items of \S\ref{sec:limitations}, of which the uniform $13\%$
+Wiener--SVD normalisation offset is the most consequential, since it is the same
+order as the physics differences being measured. Beyond those: native systematic
+propagation in the custom pipeline (flux, cross-section, and detector-response
+multisims, currently imported from the framework for the unfolding covariance) and
+inclusion of Runs~2, 4, and~5 beam-on data ($\approx 5.4\times$ additional
+exposure) are needed before a real-data result can be published.  With the EXT cancellation and full covariance in place the unfolded
 spectra are everywhere positive and stable; the remaining $\le2\%$ residual against
 the framework is dominated by the covariance-import approximation
 (Section~\ref{sec:datamc}).  A comparison with NEUT and GiBUU predictions is also
