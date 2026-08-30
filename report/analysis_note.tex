@@ -131,20 +131,20 @@
     every ``data'' point shown is Poisson-thrown from the central-value Monte Carlo
     (\S\ref{sec:mc}), so no statement here is a measurement of a real deficit.
     %
-    The extraction is validated by a same-sample self-closure, and cross-checked
-    against
+    The extraction is validated by a same-sample self-closure, and cross-checked against
     the D'Agostini iterative-Bayesian method: its flat, iteration-stable integral
-    ($\sim\!20$--$40\%$ above Wiener-SVD, config-dependent) confirms that the
+    ($27$--$33\%$ above Wiener-SVD, and flat to $\le2.1\%$ across observables where the
+      Wiener-SVD spread is $16$--$37\%$) confirms that the
     observable-to-observable spread of the Wiener-SVD integrated cross sections is
     the additional-smearing matrix $A_C$, not a physical or acceptance effect
     (Sec.~\ref{sec:crosschecks}). All results use the \textsc{XSecAnalyzer}
     framework on the resolution-optimised binning of Sec.~\ref{sec:binopt}. One
-    feature of the closure is not yet explained and is stated here rather than buried:
-    the unfolded integral sits at $1.13\times$ the fake-data truth in \emph{all three}
-    configurations. This is a uniform Wiener--SVD normalisation offset of the same
-    order as the physics differences being measured; its uniformity across
-    configurations is new, and followed from correcting the combined-configuration
-    detector systematic (Sec.~\ref{sec:combtruth}).
+      feature of the closure is not yet explained and is stated here rather than buried:
+      the unfolded integral sits above the fake-data truth by $11\%$ on average over the
+      eighteen inclusive extractions, with a per-observable scatter of $0.93$--$1.23$ and
+      no configuration systematically better behaved than another (means $1.12$, $1.08$,
+      $1.12$). This is a Wiener--SVD normalisation offset of the same order as the physics
+      differences being measured (\S\ref{sec:limitations}).
   \end{abstract}
   \vfill
   \tableofcontents
@@ -5415,17 +5415,20 @@ numbers in this note should be read.
 
 \paragraph{A uniform 13\% Wiener--SVD normalisation offset.}
 On fake data the truth is known exactly, so the unfolded integral should reproduce
-it. It does not: the ratio is $1.13$ in FHC, RHC \emph{and} combined. The offset is
-the same order as the physics differences this analysis sets out to measure --- the
-RHC/FHC truth ratio itself is $0.785$ --- so it cannot be dismissed as a small
+it. It does not. Over the eighteen inclusive extractions the ratio averages $1.106$,
+with a per-observable scatter of $0.93$--$1.23$ (standard deviation $0.081$) and
+configuration means of $1.12$ (FHC), $1.08$ (RHC) and $1.12$ (combined). The offset
+is the same order as the physics differences this analysis sets out to measure ---
+the RHC/FHC truth ratio itself is $0.785$ --- so it cannot be dismissed as a small
 correction.
 
-Two features make it more interesting than a simple scale error. It is
-\emph{uniform}: before the combined-configuration detector systematic was corrected
-(\S\ref{sec:combtruth}) the three ratios were $1.14$, $1.03$ and $1.08$, and that
-correction brought them into agreement without being aimed at them. And it is not
-the additional smearing, since $A_C$ is applied to every prediction curve and
-cancels in a comparison of unfolded data against $A_C$-smeared truth.
+It is \emph{not} uniform, and an earlier draft of this section overstated the case
+by quoting $1.13$ for all three configurations. That figure is correct for $p_\pi$
+alone, where the three agree to three decimal places; it is not representative of
+the other five observables, and the claim is withdrawn.
+
+It is not the additional smearing, since $A_C$ is applied to every prediction curve
+and cancels in a comparison of unfolded data against $A_C$-smeared truth.
 
 What it is not: not a POT or flux error (the exposures sum exactly and each
 configuration carries its own flux), not a detector-variation artefact (it survives
@@ -5439,9 +5442,16 @@ App.~\ref{sec:identity}, in which the \textsc{Genie} overlay is placed in the
 recovers the truth to $0.94$--$1.06$ --- it does \emph{not} show this offset. The
 offset therefore appears when the injected sample and the response differ (NuWro
 fake data against a \textsc{Genie}-derived response) and vanishes when they do not,
-which points at model dependence in the unfolding rather than an algorithmic bias.
-That is a hypothesis, not a demonstration: it predicts the offset should scale with
-the NuWro/\textsc{Genie} disagreement in each observable, which has not been tested.
+which would point at model dependence in the unfolding rather than an algorithmic
+bias.
+
+That hypothesis has since been tested and is \emph{not} supported. It predicts that
+the offset should grow with the NuWro/\textsc{Genie} disagreement in a given
+observable. Across the eighteen extractions the correlation between the offset and
+the NuWro/\textsc{Genie} integral ratio is $r=-0.32$: weak, and of the wrong sign,
+since the observables where the two generators disagree most show the \emph{smaller}
+offset. Whatever distinguishes the same-sample self-closure from the NuWro closure,
+it is not simply the size of the generator disagreement.
 
 \paragraph{\texorpdfstring{An inconsistency in the $A_C$ normalisation.}{An inconsistency in the A-C normalisation.}}
 For the proton-tagged $p_\mu$ in FHC the fake-data truth integrates to $0.476$, the
