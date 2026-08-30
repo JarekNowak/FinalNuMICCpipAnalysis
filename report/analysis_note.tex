@@ -4456,9 +4456,10 @@ reconstructed calorimetric energy. The four TKI observables; the transverse-mome
 imbalance $\delta p_T$, its two angles $\delta\alpha_T$ and $\delta\phi_T$, and the
 inferred struck-nucleon momentum $p_n$, are computed from the muon versus the summed
 $(\pi+p)$ hadronic system using the framework STV tool. Proton momenta are obtained from
-the proton-hypothesis range-based kinetic energy. The six W/TKI observables are each
-measured in six equal-population bins, matching the granularity of the inclusive
-analysis, now that the per-run POT normalisation (\S\ref{sec:datamc}) removes the
+the proton-hypothesis range-based kinetic energy. The two $W$ variables are measured
+in six equal-population bins; the four TKI variables use the coarsened two-bin scheme
+adopted after the finer binning was found to sit inside the resolution
+(\S\ref{sec:w_binning}). The per-run POT normalisation (\S\ref{sec:datamc}) removes the
 background-subtraction bias that had previously forced a coarser three-bin binning for the
 lower-statistics reverse-horn-current sample, while the five inherited kinematic
 observables use the inclusive-analysis binning (four to seven bins). All bin edges are set
@@ -4583,7 +4584,9 @@ The combined-sample measurement is in production and will be added here.
     binning. $\sigma_\mathrm{int}$ is the integrated (unfolded) cross section over the
     measured phase space ($10^{-38}$~cm$^2$/Ar); ``unf./truth'' is the ratio of integrals;
     $\chi^2$ is the bin-by-bin comparison of unfolded pseudo-data to $A_C$-smeared truth
-    (ndf = number of bins). The upper block is the six W/TKI observables (six bins each);
+    (ndf = number of bins). The upper block is the six W/TKI observables; the two $W$
+    variables are at six bins, while the four TKI variables use the coarsened two-bin
+    scheme adopted after the finer binning was found to sit inside the resolution;
     the lower block is the five kinematic observables inherited from the inclusive
     analysis. The small $\chi^2/\mathrm{ndf}$ validates the chain; the integral ratios are
     the $A_C$ smearing effect, not a bias.}
@@ -4592,18 +4595,18 @@ The combined-sample measurement is in production and will be added here.
     \toprule
     Observable & $\sigma_\mathrm{int}$ & unf./truth & $\chi^2/\mathrm{ndf}$ \\
     \midrule
-    $W_{\pi p}$        & $0.550$ & $1.12$ & $0.19/6$ \\
-    $W_\mathrm{had}$   & $0.500$ & $1.13$ & $0.86/6$ \\
-    $\delta p_T$       & $0.482$ & $1.15$ & $1.87/6$ \\
-    $\delta\alpha_T$   & $0.551$ & $1.20$ & $0.67/6$ \\
-    $\delta\phi_T$     & $0.592$ & $1.17$ & $4.02/6$ \\
-    $p_n$              & $0.432$ & $1.00$ & $0.19/6$ \\
+    $W_{\pi p}$        & $0.548$ & $1.12$ & $0.20/6$ \\
+    $W_\mathrm{had}$   & $0.554$ & $1.26$ & $6.23/6$ \\
+    $\delta p_T$       & $0.568$ & $1.00$ & $0.01/2$ \\
+    $\delta\alpha_T$   & $0.512$ & $1.04$ & $0.89/2$ \\
+    $\delta\phi_T$     & $0.488$ & $0.86$ & $0.21/2$ \\
+    $p_n$              & $0.503$ & $1.04$ & $0.88/2$ \\
     \midrule
-    $p_\mu$            & $0.555$ & $1.16$ & $0.54/7$ \\
-    $p_\pi$            & $0.596$ & $1.15$ & $0.15/2$ \\
-    $\cos\theta_\mu$   & $0.555$ & $1.11$ & $0.18/5$ \\
-    $\cos\theta_\pi$   & $0.479$ & $1.13$ & $0.18/4$ \\
-    $\theta_{\mu\pi}$  & $0.515$ & $1.14$ & $0.66/5$ \\
+    $p_\mu$            & $0.553$ & $1.16$ & $0.55/7$ \\
+    $p_\pi$            & $0.537$ & $1.12$ & $3.91/5$ \\
+    $\cos\theta_\mu$   & $0.513$ & $1.09$ & $2.15/5$ \\
+    $\cos\theta_\pi$   & $0.470$ & $1.13$ & $2.41/4$ \\
+    $\theta_{\mu\pi}$  & $0.512$ & $1.13$ & $0.64/5$ \\
   \bottomrule
   \end{tabular}
 \end{table}
@@ -4632,8 +4635,8 @@ factor.
 
 \begin{table}[H]
   \centering
-  \caption{RHC fake-data closure for the eleven proton-tagged observables at the finer
-    binning, columns as in Table~\ref{tab:wtki_fhc}. All observables close positive with
+  \caption{RHC fake-data closure for the eleven proton-tagged observables,
+    binning and columns as in Table~\ref{tab:wtki_fhc}. All observables close positive with
     the convention-agnostic MC POT normalisation described above; $\sigma_\mathrm{int}$
     sits just below the FHC band, consistent with the $\bar\nu_\mu$-enriched RHC flux.}
   \label{tab:wtki_rhc}
@@ -4641,18 +4644,18 @@ factor.
     \toprule
     Observable & $\sigma_\mathrm{int}$ & unf./truth & $\chi^2/\mathrm{ndf}$ \\
     \midrule
-    $W_{\pi p}$        & $0.515$ & $1.22$ & $3.42/6$ \\
-    $W_\mathrm{had}$   & $0.540$ & $1.34$ & $3.02/6$ \\
-    $\delta p_T$       & $0.452$ & $1.21$ & $1.16/6$ \\
-    $\delta\alpha_T$   & $0.472$ & $1.22$ & $5.12/6$ \\
-    $\delta\phi_T$     & $0.596$ & $1.21$ & $1.55/6$ \\
-    $p_n$              & $0.464$ & $1.07$ & $3.18/6$ \\
+    $W_{\pi p}$        & $0.514$ & $1.22$ & $3.46/6$ \\
+    $W_\mathrm{had}$   & $0.470$ & $1.24$ & $5.60/6$ \\
+    $\delta p_T$       & $0.496$ & $1.13$ & $0.23/2$ \\
+    $\delta\alpha_T$   & $0.550$ & $1.26$ & $1.38/2$ \\
+    $\delta\phi_T$     & $0.605$ & $1.21$ & $0.57/2$ \\
+    $p_n$              & $0.517$ & $1.17$ & $0.37/2$ \\
     \midrule
-    $p_\mu$            & $0.499$ & $1.23$ & $1.21/7$ \\
-    $p_\pi$            & $0.497$ & $1.10$ & $2.36/2$ \\
-    $\cos\theta_\mu$   & $0.559$ & $1.28$ & $0.78/5$ \\
-    $\cos\theta_\pi$   & $0.474$ & $1.24$ & $4.04/4$ \\
-    $\theta_{\mu\pi}$  & $0.465$ & $1.16$ & $0.48/5$ \\
+    $p_\mu$            & $0.498$ & $1.22$ & $1.19/7$ \\
+    $p_\pi$            & $0.459$ & $1.11$ & $1.94/5$ \\
+    $\cos\theta_\mu$   & $0.484$ & $1.24$ & $7.76/5$ \\
+    $\cos\theta_\pi$   & $0.431$ & $1.15$ & $2.96/4$ \\
+    $\theta_{\mu\pi}$  & $0.460$ & $1.15$ & $0.53/5$ \\
   \bottomrule
   \end{tabular}
 \end{table}
