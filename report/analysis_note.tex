@@ -3455,8 +3455,8 @@ physical or acceptance effect.
     cross section, averaged over the five observables (fake-data truth,
     $10^{-38}$~cm$^2$/Ar); both columns recomputed with the corrected MC POT
     normalisation. D'Agostini carries no $A_C$ smearing, so it recovers a
-    $25$--$29\%$ higher total. Crucially the ratio is now \emph{consistent} across the
-    three configurations ($1.25$--$1.29$), whereas with the earlier, incorrect
+    $27$--$33\%$ higher total. Crucially the ratio is now \emph{consistent} across the
+    three configurations ($1.27$--$1.33$), whereas with the earlier, incorrect
     normalisation the RHC and combined ratios ($1.37$, $1.38$) sat well above FHC
     ($1.23$); the inconsistency was an artefact of the inflated RHC/combined
     Wiener-SVD values, not of the unfolding methods. D'Agostini is also nearly flat
@@ -4658,7 +4658,7 @@ factor.
 \begin{table}[H]
   \centering
   \caption{Combined FHC$+$RHC fake-data closure for the eleven proton-tagged observables at
-    the finer binning, columns as in Table~\ref{tab:wtki_fhc}. All eleven close positive and
+    binning and columns as in Table~\ref{tab:wtki_fhc}. All eleven close positive and
     every $\chi^2$ is comfortably below its number of bins. This completes the proton-tagged
     measurement in all three beam configurations. Note that the combined result is an
     independent extraction, not a fluence-weighted average of the FHC and RHC ones, so it is
@@ -4668,18 +4668,18 @@ factor.
     \toprule
     Observable & $\sigma_\mathrm{int}$ & unf./truth & $\chi^2/\mathrm{ndf}$ \\
     \midrule
-    $W_{\pi p}$        & $0.531$ & $1.17$ & $1.34/6$ \\
-    $W_\mathrm{had}$   & $0.460$ & $1.14$ & $2.18/6$ \\
-    $\delta p_T$       & $0.463$ & $1.12$ & $0.74/6$ \\
-    $\delta\alpha_T$   & $0.516$ & $1.22$ & $3.44/6$ \\
-    $\delta\phi_T$     & $0.576$ & $1.14$ & $1.45/6$ \\
-    $p_n$              & $0.472$ & $1.13$ & $0.90/6$ \\
+    $W_{\pi p}$        & $0.529$ & $1.17$ & $1.41/6$ \\
+    $W_\mathrm{had}$   & $0.554$ & $1.30$ & $6.38/6$ \\
+    $\delta p_T$       & $0.646$ & $1.06$ & $0.16/2$ \\
+    $\delta\alpha_T$   & $0.531$ & $1.15$ & $0.20/2$ \\
+    $\delta\phi_T$     & $0.657$ & $1.08$ & $0.30/2$ \\
+    $p_n$              & $0.497$ & $1.08$ & $0.24/2$ \\
     \midrule
-    $p_\mu$            & $0.554$ & $1.22$ & $0.75/7$ \\
-    $p_\pi$            & $0.539$ & $1.13$ & $1.01/2$ \\
-    $\cos\theta_\mu$   & $0.580$ & $1.17$ & $0.68/5$ \\
-    $\cos\theta_\pi$   & $0.462$ & $1.16$ & $2.41/4$ \\
-    $\theta_{\mu\pi}$  & $0.484$ & $1.15$ & $0.19/5$ \\
+    $p_\mu$            & $0.553$ & $1.21$ & $0.74/7$ \\
+    $p_\pi$            & $0.511$ & $1.17$ & $3.17/5$ \\
+    $\cos\theta_\mu$   & $0.505$ & $1.14$ & $2.26/5$ \\
+    $\cos\theta_\pi$   & $0.478$ & $1.17$ & $4.30/4$ \\
+    $\theta_{\mu\pi}$  & $0.481$ & $1.15$ & $0.17/5$ \\
   \bottomrule
   \end{tabular}
 \end{table}
@@ -5432,6 +5432,16 @@ configuration carries its own flux), not a detector-variation artefact (it survi
 with the detVar term removed entirely), and not a response-matrix pathology (the
 column-normalised diagonals agree across configurations to three decimal places).
 It is stated here as unexplained.
+
+One further constraint narrows it usefully. The same-sample self-closure of
+App.~\ref{sec:identity}, in which the \textsc{Genie} overlay is placed in the
+\texttt{onBNB} slot so that data and response come from the \emph{same} sample,
+recovers the truth to $0.94$--$1.06$ --- it does \emph{not} show this offset. The
+offset therefore appears when the injected sample and the response differ (NuWro
+fake data against a \textsc{Genie}-derived response) and vanishes when they do not,
+which points at model dependence in the unfolding rather than an algorithmic bias.
+That is a hypothesis, not a demonstration: it predicts the offset should scale with
+the NuWro/\textsc{Genie} disagreement in each observable, which has not been tested.
 
 \paragraph{\texorpdfstring{An inconsistency in the $A_C$ normalisation.}{An inconsistency in the A-C normalisation.}}
 For the proton-tagged $p_\mu$ in FHC the fake-data truth integrates to $0.476$, the
