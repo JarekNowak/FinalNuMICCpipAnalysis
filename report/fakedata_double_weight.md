@@ -148,3 +148,52 @@ The test: re-throw with a different seed. If the closure moves toward unity, thi
 confirmed; if it stays at 1.09, something systematic remains. That is cheap --
 `throw_perrun_w.C(seed)` takes a seed argument -- and should be done before the
 proton-tagged numbers are quoted.
+
+---
+
+## The re-throw test: confirmed statistical
+
+Run 2026-08-30. `throw_perrun_w.C(7)` regenerated the proton-tagged FHC fake data
+with a new seed; the `ccpi1p_FHC5_costhmu` universes were rebuilt from it into a
+separate output, and the closure re-measured.
+
+**The per-run excesses reshuffled.** A systematic defect would sit in the same run
+each time; these did not:
+
+| run | seed 1 | seed 7 | MC | seed1/MC | seed7/MC |
+|---|---|---|---|---|---|
+| run1 | 252 | 280 | 254.0 | 0.992 | 1.102 |
+| run2 | 131 | 109 | 108.1 | **1.212** | 1.008 |
+| run4 | 181 | 186 | 173.1 | 1.046 | 1.075 |
+| run5 | 191 | 162 | 178.9 | 1.068 | 0.906 |
+| total | 755 | 737 | 714.1 | 1.057 | 1.032 |
+
+The run-2 excess that drove the seed-1 result (+2.2 sigma) is 1.008 under seed 7,
+and the excess moved to run 1 while run 5 went the other way.
+
+**The closure followed.** For `costhmu` FHC5:
+
+| regularisation | seed 1 | seed 7 |
+|---|---|---|
+| identity | 1.0615 | 1.0258 |
+| second derivative | 1.0615 | 0.9430 |
+
+The input ratio moved 1.057 -> 1.032, predicting a closure near 1.036; identity
+returned 1.026. The second derivative went to 0.943, i.e. below unity, which also
+shows how much observable-level scatter the derivative regularisation adds on top.
+
+**Conclusion.** The proton-tagged residual is a Poisson fluctuation in the fake-data
+throw, not a defect. Combined with the decomposition above -- throw verified to
+0.3%, framework assembly verified to 0.3%, under 1% left unexplained after the input
+ratio -- the proton-tagged chain is sound.
+
+The production fake data has been restored to the seed-1 throw (755 selected),
+which is what the numbers in the note were derived from. The seed-1 backup remains
+at `/data/uboone/processed/w/fakedata_seed1_backup/`, and the seed-7 test universes
+at `ccpi1p_FHC5seed7_costhmu_univmake.root`.
+
+Worth stating plainly for anyone quoting proton-tagged numbers: a single Poisson
+throw carries a ~1.5 sigma normalisation wobble at this sample size, so a closure of
+1.06 is not evidence of a bias. Averaging several throws, or quoting the closure
+with its throw-to-throw spread, would make that visible rather than leaving it to be
+rediscovered.
