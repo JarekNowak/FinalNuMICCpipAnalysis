@@ -116,7 +116,7 @@
     POT$^{-1}$; new-G4 GEANT4 values above $60$~MeV, Sec.~\ref{sec:flux}); the RHC
     value is lower because its beam is $\bar\nu_\mu$-dominant. The resulting
     Wiener-SVD integrated cross sections are of order
-    $0.6$--$1.0\times10^{-38}$~cm$^2$/Ar (Table~\ref{tab:sigint_all}), with RHC
+    $0.58$--$0.86\times10^{-38}$~cm$^2$/Ar (Table~\ref{tab:sigint_all}), with RHC
     \emph{below} FHC in every observable. That deficit is a property of the injected
     sample rather than a normalisation artefact: it is present in the fake-data truth
     (RHC/FHC $=0.785$) and in the GENIE tune ($0.779$), two independent model inputs
@@ -140,11 +140,11 @@
     (Sec.~\ref{sec:crosschecks}). All results use the \textsc{XSecAnalyzer}
     framework on the resolution-optimised binning of Sec.~\ref{sec:binopt}. One
       feature of the closure is not yet explained and is stated here rather than buried:
-      the unfolded integral sits above the fake-data truth by $11\%$ on average over the
-      eighteen inclusive extractions, with a per-observable scatter of $0.93$--$1.23$ and
-      no configuration systematically better behaved than another (means $1.12$, $1.08$,
-      $1.12$). This is a Wiener--SVD normalisation offset of the same order as the physics
-      differences being measured (\S\ref{sec:limitations}).
+      the unfolded integral reproduces the fake-data truth to $1.007$ (identity
+      regularisation) and $1.001$ (second derivative) over the eighteen inclusive
+      extractions, after correcting a double application of the central-value weight to
+      the externally-thrown fake data (\S\ref{sec:limitations}). Earlier versions of this
+      note carried an unexplained $13\%$ excess from that source.
   \end{abstract}
   \vfill
   \tableofcontents
@@ -3670,13 +3670,13 @@ $\theta_{\mu\pi}$& $15.9\%$ & $26.0\%$ & $1.64\times$ & $0.43/5$ ($p=0.99$) \\
 \toprule
 Observable & FHC & RHC & Combined \\
 \midrule
-$p_\mu$          & $0.918$ & $0.628$ & $0.780$ \\
-$p_\pi$          & $0.923$ & $0.850$ & $0.875$ \\
-$\cos\theta_\mu$ & $0.795$ & $0.711$ & $0.812$ \\
-$\cos\theta_\pi$ & $0.824$ & $0.779$ & $0.868$ \\
-$\theta_{\mu\pi}$& $0.930$ & $0.878$ & $0.938$ \\
+$p_\mu$          & $0.828$ & $0.575$ & $0.723$ \\
+$p_\pi$          & $0.855$ & $0.763$ & $0.799$ \\
+$\cos\theta_\mu$ & $0.764$ & $0.626$ & $0.750$ \\
+$\cos\theta_\pi$ & $0.751$ & $0.678$ & $0.776$ \\
+$\theta_{\mu\pi}$ & $0.857$ & $0.765$ & $0.837$ \\
 \midrule
-$\theta_\mu$     & $0.934$ & $0.917$ & $0.953$ \\
+$\theta_\mu$     & $0.846$ & $0.839$ & $0.842$ \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -4590,18 +4590,18 @@ The combined-sample measurement is in production and will be added here.
     \toprule
     Observable & $\sigma_\mathrm{int}$ & unf./truth & $\chi^2/\mathrm{ndf}$ \\
     \midrule
-    $W_{\pi p}$        & $0.548$ & $1.12$ & $0.20/6$ \\
-    $W_\mathrm{had}$   & $0.554$ & $1.26$ & $6.23/6$ \\
-    $\delta p_T$       & $0.568$ & $1.00$ & $0.01/2$ \\
-    $\delta\alpha_T$   & $0.512$ & $1.04$ & $0.89/2$ \\
-    $\delta\phi_T$     & $0.488$ & $0.86$ & $0.21/2$ \\
-    $p_n$              & $0.503$ & $1.04$ & $0.88/2$ \\
+    $W_{\pi p}$        & $0.519$ & $1.06$ & $0.39/6$ \\
+    $W_\mathrm{had}$   & $0.510$ & $1.17$ & $5.38/6$ \\
+    $\delta p_T$       & $0.587$ & $1.03$ & $0.01/2$ \\
+    $\delta\alpha_T$   & $0.503$ & $1.02$ & $0.36/2$ \\
+    $\delta\phi_T$     & $0.499$ & $0.87$ & $0.17/2$ \\
+    $p_n$              & $0.492$ & $1.02$ & $0.40/2$ \\
     \midrule
-    $p_\mu$            & $0.553$ & $1.16$ & $0.55/7$ \\
-    $p_\pi$            & $0.537$ & $1.12$ & $3.91/5$ \\
-    $\cos\theta_\mu$   & $0.513$ & $1.09$ & $2.15/5$ \\
-    $\cos\theta_\pi$   & $0.470$ & $1.13$ & $2.41/4$ \\
-    $\theta_{\mu\pi}$  & $0.512$ & $1.13$ & $0.64/5$ \\
+    $p_\mu$            & $0.537$ & $1.13$ & $0.85/7$ \\
+    $p_\pi$            & $0.507$ & $1.06$ & $3.96/5$ \\
+    $\cos\theta_\mu$   & $0.501$ & $1.06$ & $1.37/5$ \\
+    $\cos\theta_\pi$   & $0.451$ & $1.09$ & $2.69/4$ \\
+    $\theta_{\mu\pi}$  & $0.487$ & $1.08$ & $0.62/5$ \\
   \bottomrule
   \end{tabular}
 \end{table}
@@ -4639,18 +4639,18 @@ factor.
     \toprule
     Observable & $\sigma_\mathrm{int}$ & unf./truth & $\chi^2/\mathrm{ndf}$ \\
     \midrule
-    $W_{\pi p}$        & $0.514$ & $1.22$ & $3.46/6$ \\
-    $W_\mathrm{had}$   & $0.470$ & $1.24$ & $5.60/6$ \\
-    $\delta p_T$       & $0.496$ & $1.13$ & $0.23/2$ \\
-    $\delta\alpha_T$   & $0.550$ & $1.26$ & $1.38/2$ \\
-    $\delta\phi_T$     & $0.605$ & $1.21$ & $0.57/2$ \\
-    $p_n$              & $0.517$ & $1.17$ & $0.37/2$ \\
+    $W_{\pi p}$        & $0.472$ & $1.12$ & $1.97/6$ \\
+    $W_\mathrm{had}$   & $0.449$ & $1.19$ & $3.90/6$ \\
+    $\delta p_T$       & $0.462$ & $1.05$ & $0.12/2$ \\
+    $\delta\alpha_T$   & $0.506$ & $1.16$ & $0.41/2$ \\
+    $\delta\phi_T$     & $0.537$ & $1.07$ & $0.06/2$ \\
+    $p_n$              & $0.492$ & $1.11$ & $0.09/2$ \\
     \midrule
-    $p_\mu$            & $0.498$ & $1.22$ & $1.19/7$ \\
-    $p_\pi$            & $0.459$ & $1.11$ & $1.94/5$ \\
-    $\cos\theta_\mu$   & $0.484$ & $1.24$ & $7.76/5$ \\
-    $\cos\theta_\pi$   & $0.431$ & $1.15$ & $2.96/4$ \\
-    $\theta_{\mu\pi}$  & $0.460$ & $1.15$ & $0.53/5$ \\
+    $p_\mu$            & $0.466$ & $1.14$ & $0.47/7$ \\
+    $p_\pi$            & $0.447$ & $1.08$ & $1.33/5$ \\
+    $\cos\theta_\mu$   & $0.461$ & $1.18$ & $5.65/5$ \\
+    $\cos\theta_\pi$   & $0.413$ & $1.10$ & $1.44/4$ \\
+    $\theta_{\mu\pi}$  & $0.440$ & $1.10$ & $1.01/5$ \\
   \bottomrule
   \end{tabular}
 \end{table}
@@ -4668,18 +4668,18 @@ factor.
     \toprule
     Observable & $\sigma_\mathrm{int}$ & unf./truth & $\chi^2/\mathrm{ndf}$ \\
     \midrule
-    $W_{\pi p}$        & $0.529$ & $1.17$ & $1.41/6$ \\
-    $W_\mathrm{had}$   & $0.554$ & $1.30$ & $6.38/6$ \\
-    $\delta p_T$       & $0.646$ & $1.06$ & $0.16/2$ \\
-    $\delta\alpha_T$   & $0.531$ & $1.15$ & $0.20/2$ \\
-    $\delta\phi_T$     & $0.657$ & $1.08$ & $0.30/2$ \\
-    $p_n$              & $0.497$ & $1.08$ & $0.24/2$ \\
+    $W_{\pi p}$        & $0.486$ & $1.08$ & $0.82/6$ \\
+    $W_\mathrm{had}$   & $0.529$ & $1.24$ & $5.44/6$ \\
+    $\delta p_T$       & $0.627$ & $1.03$ & $0.08/2$ \\
+    $\delta\alpha_T$   & $0.502$ & $1.09$ & $0.07/2$ \\
+    $\delta\phi_T$     & $0.621$ & $1.02$ & $0.41/2$ \\
+    $p_n$              & $0.477$ & $1.04$ & $0.17/2$ \\
     \midrule
-    $p_\mu$            & $0.553$ & $1.21$ & $0.74/7$ \\
-    $p_\pi$            & $0.511$ & $1.17$ & $3.17/5$ \\
-    $\cos\theta_\mu$   & $0.505$ & $1.14$ & $2.26/5$ \\
-    $\cos\theta_\pi$   & $0.478$ & $1.17$ & $4.30/4$ \\
-    $\theta_{\mu\pi}$  & $0.481$ & $1.15$ & $0.17/5$ \\
+    $p_\mu$            & $0.528$ & $1.16$ & $0.64/7$ \\
+    $p_\pi$            & $0.490$ & $1.12$ & $3.14/5$ \\
+    $\cos\theta_\mu$   & $0.487$ & $1.10$ & $1.64/5$ \\
+    $\cos\theta_\pi$   & $0.457$ & $1.12$ & $3.74/4$ \\
+    $\theta_{\mu\pi}$  & $0.463$ & $1.10$ & $0.11/5$ \\
   \bottomrule
   \end{tabular}
 \end{table}
@@ -5413,63 +5413,61 @@ Four things are not settled. They are collected here rather than left in the
 sections that produced them, because each is large enough to bear on how the
 numbers in this note should be read.
 
-\paragraph{An upstream normalisation offset of order 13\%, plus regularisation scatter.}
-On fake data the truth is known exactly, so the unfolded integral should reproduce
-it. It does not, and running the extraction four ways separates the effect into two
-pieces that behave quite differently.
+\paragraph{The normalisation offset: found and fixed.}
+Earlier versions of this note carried an unexplained $\approx\!13\%$ excess of the
+unfolded integral over the fake-data truth, and treated it as the leading open
+question. It has been traced and removed.
+
+The fake data is produced externally by \texttt{throw\_perrun\_*.C}, which samples
+$\mathrm{Poisson}\!\left(w_\mathrm{CV}\,D_\mathrm{run}/\mathrm{POT}_\mathrm{run}\right)$
+copies of each event, with
+$w_\mathrm{CV}=\texttt{tuned\_cv}\times\texttt{ppfx\_cv}\times\texttt{normalisation}$,
+and writes those three weights back as unity. The central-value weight is therefore
+already carried by the event \emph{multiplicity}.
+\texttt{SystematicsCalculator::build\_universes()} then substituted the
+\emph{weighted} central-value histogram for the raw counts whenever the
+\texttt{onBNB} sample was fake data, applying $w_\mathrm{CV}$ a second time --- on
+both the reco side, which is the data, and the true side, which is what the data is
+compared against. Measured in the per-file directories, the reco counts were
+inflated by $1.062$ (FHC), $1.078$ (RHC) and $1.070$ (combined) relative to the
+events actually thrown.
+
+An externally thrown sample is data: it is counted, not re-weighted. Both sites now
+take the unweighted histograms. The effect on the closure, over all eighteen
+inclusive extractions:
 
 \begin{center}\small
-\begin{tabular}{lccc}
+\begin{tabular}{lcc}
 \toprule
-Unfolding configuration & mean $\hat{x}/x_\mathrm{true}$ & spread & mean $A_C$ row sum \\
+Regularisation & before & after \\
 \midrule
-Wiener--SVD, first derivative  & $1.073$ & $0.78$--$1.18$ & $0.61$ \\
-Wiener--SVD, second derivative & $1.106$ & $0.93$--$1.23$ & $0.65$ \\
-Wiener--SVD, identity          & $1.127$ & $1.08$--$1.15$ & $0.74$ \\
-D'Agostini, 4 iterations       & $1.125$ & $1.10$--$1.15$ & $0.99$ \\
+identity        & $1.127$ \ ($1.08$--$1.15$) & $1.007$ \ ($0.96$--$1.05$) \\
+second derivative & $1.106$ \ ($0.93$--$1.23$) & $1.001$ \ ($0.85$--$1.10$) \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-\noindent \textbf{A common offset of $12$--$13\%$ survives every configuration.} It
-is present in D'Agostini, which is a different algorithm with different
-regularisation and an $A_C$ that is very nearly normalisation-preserving (row sum
-$0.99$ against $0.65$ for the default). An effect common to two unrelated unfolding
-methods cannot be a property of either, so it is \emph{upstream} of the unfolding.
-The two configurations that distort least agree closely --- identity $1.127$,
-D'Agostini $1.125$ --- and give the cleanest estimate of its size, $\approx\!12.6\%$.
+\noindent The inclusive closure now returns unity. Every integrated cross section
+in this note moved correspondingly, by $3.8$--$12.9\%$ downward, and the tables
+have been re-derived.
 
-\textbf{The observable-to-observable scatter, by contrast, is the regularisation.}
-Identity and D'Agostini return ratios within $0.05$--$0.07$ of each other across all
-six observables; the derivative regularisations spread them over $0.30$ and $0.40$.
-That scatter is the $A_C$ smearing, and it is the reason the integrated cross section
-varies between observables that cover the same phase space.
+Two things are worth recording about how this was found, because both were wrong
+turnings that looked convincing. The offset was first attributed to the covariance
+entering the Wiener filter, on the evidence that removing the detector systematic
+shifts the ratio by $2$--$12\%$; that evidence was real but was a second-order
+response to a mis-normalised input. It was then attributed to the additional
+smearing $A_C$, which was excluded by running D'Agostini --- a different algorithm
+with a near-normalisation-preserving $A_C$ --- and finding the same offset. The
+diagnostic that actually worked was comparing the number of events in the
+fake-data files ($1621$ selected, FHC) against the number the extraction was using
+($1721.9$).
 
-\paragraph{On the choice of regularisation.}
-Moving from the second derivative to the first is the wrong direction: it nearly
-doubles the spread ($0.30\to0.40$) and introduces a $0.78$ low outlier, while
-shifting the mean only from $1.106$ to $1.073$. Identity regularisation gives much
-the best closure uniformity, at the cost of the smoothing the derivative operators
-provide, and its agreement with D'Agostini is a useful cross-check on both. The
-second derivative is retained as the default; the case for revisiting that is the
-$0.30$ spread, not the offset, which identity does not remove either.
-
-\paragraph{What this means for the measurement.}
-The $\approx\!13\%$ excess is not an unfolding artefact and will not be removed by
-choosing a different unfolder or regulariser. It is a normalisation mismatch between
-the injected fake data and the truth curve it is compared against, and it must be
-found before an integrated cross section is quoted --- a $13\%$ normalisation error
-is larger than most of the systematic budget. The natural places to look are the
-steps between event counts and a cross section that the two paths do not share:
-the exposure used to scale the fake data against the one used to build the
-prediction, the background subtraction, and the flux and target-number factors.
-
-An earlier version of this section attributed the offset to the covariance entering
-the Wiener filter, on the evidence that removing the detector term shifts the ratio
-by $2$--$12\%$. That evidence stands, but the interpretation was wrong: the
-covariance modulates the offset, it does not cause it, since the offset survives in
-D'Agostini and in identity regularisation. Supporting numbers in
-\texttt{report/regularisation\_scan.tsv} and \texttt{report/offset\_vs\_AC.tsv}.
+\paragraph{A residual in the proton-tagged family.}
+The proton-tagged samples are thrown by the same machinery into a separate
+directory and carry a smaller double-weighting factor ($1.028$ for FHC). Removing
+it moves their closure from $\approx\!1.15$ to $1.053$ (FHC), $1.118$ (RHC) and
+$1.100$ (combined) --- an improvement, but not to unity. Whatever remains there is
+specific to that selection and is not the effect described above.
 
 \paragraph{\texorpdfstring{The $A_C$ ``inconsistency'' was a misreading, now resolved.}{The A-C inconsistency was a misreading, now resolved.}}
 An earlier version of this section reported an inconsistency: for the proton-tagged
