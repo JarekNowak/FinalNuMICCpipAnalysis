@@ -40,6 +40,18 @@ Two consequences:
    a physical or acceptance difference.  The D'Agostini cross-check, which is flat across
    observables, is what establishes that.
 
+## Coverage — this release is partial
+
+The Wiener filter depends on the data covariance, so `A_C` depends on the central-value
+weighting fix (commit `51af326`, 2026-08-30).  A matrix computed before that fix is not
+the released measurement.
+
+**15 of 39 extractions are released here.**  The other 24 — `p_pi` in all three
+configurations, and the entire proton-tagged family — have sidecars predating the fix and
+are pending re-extraction.  They are deliberately absent rather than shipped with a
+caveat.  `export_matrices.C` refuses to write a matrix whose source predates the fix, so
+they will appear automatically once re-run.
+
 ## Scope
 
 `p_pi` matrices are the adopted **two-bin** scheme (`ppi2bin`).  The five-bin `p_pi`

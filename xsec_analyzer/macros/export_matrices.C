@@ -8,7 +8,21 @@
 //   root -l -b -q 'macros/export_matrices.C("../report/data_release")'
 #include <sys/stat.h>
 
+// The central-value double-weighting fix (commit 51af326, 2026-08-30 13:26) moved every
+// cross section by 3.8-12.9%, and the Wiener filter -- hence A_C -- depends on the data
+// covariance, so a sidecar written before it is not the released measurement. Exporting
+// one silently is how a stale number reaches a data release, so the cutoff is enforced
+// here rather than trusted to whoever runs this.
+static const time_t FAKEDATA_FIX_EPOCH = 1788092802; // git show -s --format=%ct 51af326
+
 static void dump_one(const char* path, const char* tag, const char* outdir, FILE* index){
+  struct stat st;
+  if ( stat(path, &st) != 0 ) { printf("  MISSING   %s\n", path); return; }
+  if ( st.st_mtime < FAKEDATA_FIX_EPOCH ) {
+    printf("  STALE     %-30s (written %.19s, predates the fake-data fix) -- SKIPPED\n",
+           tag, ctime(&st.st_mtime));
+    return;
+  }
   TFile* f = TFile::Open(path);
   if (!f || f->IsZombie()) { printf("  MISSING  %s\n", path); return; }
   TH2D* ac = (TH2D*)f->Get("h_A_C");
