@@ -81,18 +81,23 @@
       %
       \textbf{Scope.}  The primary results are the total cross section, the angular
       observables, $d\sigma/dp_\mu$, and a deliberately coarse two-bin $d\sigma/dp_\pi$.
-      The proton-tagged subsample is secondary scope, because detector variations have not
-      yet been propagated through that selection --- all eighteen inclusive extractions
-      carry a detector systematic and all thirty-three proton-tagged extractions carry
-      none --- and the differential $W_{\pi p}$ shape is withdrawn, the exposure supporting
-      an integrated cross section only.  Sec.~\ref{sec:status_matrix} gives a per-result
-      status table.
+      The proton-tagged subsample is secondary scope because the exposure supports an
+      integrated cross section rather than a resonance shape, so the differential
+      $W_{\pi p}$ is withdrawn; its systematics are otherwise complete.  All fifty-one
+      extractions carry a full covariance including detector variations, the proton-tagged
+      ones having been rebuilt and re-unfolded for that purpose on 2026-08-31 --- they
+      previously carried none, the detector variation samples having been processed but
+      never referenced by the proton-tagged configuration.
+      Sec.~\ref{sec:status_matrix} gives a per-result status table.
       %
       \textbf{Companion documents.}  This note describes the current state of the analysis.
       The validation and diagnostic studies behind it --- the pion-momentum estimator
       survey, the binning and threshold optimisation, and the closure programme --- are in
       the technical validation supplement.  Every correction that changed a result, with
-      the values before and after, is in the change log.
+      the values before and after, is in the change log.  The additional-smearing and
+      covariance matrices for all fifty-one extractions are released as text in
+      \texttt{report/data\_release/}; a prediction cannot be compared with these results
+      without the former, nor used quantitatively without the latter.
   \end{abstract}
   \vfill
   \tableofcontents
@@ -2302,14 +2307,13 @@ $d\sigma/dp_\pi$, two-bin
 \multicolumn{3}{l}{\emph{Secondary scope --- partial covariance}}\\
 \midrule
 Proton-tagged integrated cross section
-  & Complete; model comparison pending
-  & Detector systematics now propagated and central value postdates the
-    weighting fix.  $\chi^2$ against models not yet recomputed. \\
+  & Complete
+  & Detector systematics propagated, central value postdates the weighting
+    fix, closure $\chi^2$ recomputed, $A_C$ and covariance released. \\
 Proton-tagged differential results, including transverse kinematic imbalance
-  & Complete; model comparison pending
-  & Detector systematics now propagated; beam-frame reconstruction corrected;
-    central values postdate the weighting fix.  $\chi^2$ against models not
-    yet recomputed. \\
+  & Complete
+  & Detector systematics propagated; beam-frame reconstruction corrected;
+    central values postdate the weighting fix; $A_C$ and covariance released. \\
 \midrule
 \multicolumn{3}{l}{\emph{Withdrawn --- do not quote}}\\
 \midrule
@@ -2339,6 +2343,41 @@ interval and is not a differential point in the usual sense.  It is plotted at e
 visual width for legibility, which is flagged on the axis, and should be read as a
 region rather than a spectrum.  The estimator survey establishing that this is a physical
 information limit rather than an unrefined estimator is in the technical supplement.
+
+\paragraph{On the closure \texorpdfstring{$\chi^2$}{chi-squared} values.}
+The closure $\chi^2$ quoted for each extraction compares the unfolded result with the
+fake-data truth using the \emph{full} systematic covariance, and the resulting $p$-values
+are almost all above $0.9$ (median $0.96$ across all fifty-one extractions).  That should
+not be read as excellent agreement with the model.  For a self-closure with
+correctly-sized uncertainties the $p$-values would be roughly uniform on $[0,1]$, and
+they are not.
+
+The reason is that the measurement and the truth it is being compared against share their
+systematics: both come from the same generator, the same flux and the same exposure, so
+the flux, cross-section and exposure terms are common-mode and largely cancel in the
+difference while still inflating the covariance used to judge it.  Recomputing the same
+comparison with the statistical covariance alone raises $\chi^2/\mathrm{ndf}$ from
+$0.02$--$0.2$ to $0.5$--$0.8$, much nearer the expected value:
+
+\begin{center}
+\small
+\begin{tabular}{lccc}
+\toprule
+Extraction & full & prediction-only & statistics-only \\
+\midrule
+inclusive FHC $p_\mu$        & $0.14/7$ & $0.22/7$ & $1.01/7$ \\
+inclusive comb $p_\mu$       & $1.43/7$ & $2.87/7$ & $4.71/7$ \\
+proton-tagged FHC $p_\mu$    & $1.01/7$ & $2.20/7$ & $3.02/7$ \\
+proton-tagged comb $W_{\pi p}$ & $0.48/6$ & $0.77/6$ & $4.88/6$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The closure $\chi^2$ is therefore a check that the extraction does not \emph{disagree}
+with its input beyond the quoted band, which it passes, and not a measure of how well the
+band is sized.  A test of the latter needs either a covariance restricted to the terms
+that differ between measurement and reference, or an ensemble of throws.  Neither is done
+here, and the $p$-values should be read with that limitation in mind.
 
 \paragraph{On the blinding status.}
 Every ``data'' point in this note is Poisson-thrown central-value fake data.  No beam-on
@@ -2612,12 +2651,21 @@ varies from observable to observable while the underlying physical total cannot.
 D'Agostini cross-check, whose integral is flat across observables, is what establishes
 that this spread is the smearing rather than a physical or acceptance effect.
 
-Two extractions have \emph{negative} row sums (1p~RHCFULL~costhmu, 1p~RHCFULL~Wpipr), meaning the smeared
-content of a bin is a net-negative combination of the truth distribution.  This is not
-forbidden --- $A_C$ is a regularisation operator, not a probability matrix --- but a
-negative row is a symptom of an ill-conditioned solution in that bin, and predictions
-smeared through those rows should be treated with corresponding caution.  Both are RHC
-proton-tagged, the configuration with the fewest selected events.
+Two extractions have \emph{negative} row sums, and the pattern identifies their cause.
+In $W_{\pi p}$ the top bin carries large negative off-diagonal terms in \emph{all three}
+configurations ($-1.08$ FHC, $-0.94$ combined, $-0.84$ RHC); only RHC tips negative
+overall, because its diagonal element is the smallest of the three.  The same happens in
+the first $\cos\theta_\mu$ bin of the proton-tagged RHC sample, whose diagonal is $0.075$
+against off-diagonal terms summing to $-0.89$.
+
+So this is not an RHC-specific defect but the regularisation pushing back against the
+least-determined bin of each observable --- for $W_{\pi p}$, the same top bin that is only
+$2\%$ diagonal in the six-bin response and that already led to withdrawing the
+differential shape.  A negative row is not forbidden, since $A_C$ is a regularisation
+operator rather than a probability matrix, but a prediction smeared through one is being
+told that raising the truth in that bin \emph{lowers} the measured content, which is a
+statement about the regularisation and not about the detector.  Treat those two rows with
+corresponding caution.
 
 \paragraph{Numerical data release.}
 All fifty-one extractions are released with both their additional-smearing matrix and
@@ -2901,13 +2949,15 @@ a median of $23.9\%$, against $16.9\%$--$42.8\%$ for the inclusive results: the 
 order, as expected for the same detector.  The central values were regenerated in the
 same pass and therefore also postdate the central-value weighting fix.
 
-What remains outstanding is narrower.  The model comparisons ($\chi^2$ against truth,
-tune and generators) have not been recomputed for the proton-tagged sample and are marked
-pending in the results table rather than carried over, since the pre-fix values no longer
-correspond to these central values.  The differential $W_{\pi p}$ shape remains withdrawn
-on binning grounds that the detector systematic does not affect --- at this exposure the
-proton-tagged sample supports an integrated cross section, not a resonance-shape
-measurement.  See Sec.~\ref{sec:status_matrix}.
+The closure $\chi^2$ values were recomputed in the same pass, so no quantity in this
+section is carried over from before the fix, and the additional-smearing and covariance
+matrices are released with the rest (Sec.~\ref{sec:ac_rowsums}).
+
+What remains is a binning limitation that no systematic treatment addresses: the
+differential $W_{\pi p}$ shape stays withdrawn, because at this exposure no binning
+satisfies both the migration and the statistics requirement.  The proton-tagged sample
+supports an integrated cross section, not a resonance-shape measurement.  See
+Sec.~\ref{sec:status_matrix}.
 \end{quote}
 % =============================================================================
 

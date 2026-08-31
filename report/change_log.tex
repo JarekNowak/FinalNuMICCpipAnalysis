@@ -227,19 +227,33 @@ combined result moved from $0.910$ to $1.027$ times its expected value.  FHC and
 bit-identical before and after, which is the check that isolates the defect to the
 combination step.
 
+\subsection{Proton-tagged detector systematics were absent entirely}
+
+Of the fifty-one extractions, the thirty-three proton-tagged ones carried \emph{no}
+detector systematic at all: the \texttt{detVar} column was \texttt{n/a} for every
+proton-tagged observable in every configuration, so their quoted uncertainties omitted a
+term worth $17$--$43\%$ in the corresponding inclusive results.
+
+The cause was a configuration gap rather than missing data.  The proton-tagged detector
+variation samples had been processed on 2026-08-20/21 and carry the required branches, but
+nothing referenced them: the \texttt{\_w} file-properties tables contained no
+\texttt{detVar} lines, and \texttt{ccpi1p\_systcalc\_numi.conf} had no \texttt{DV} block
+at all.  Both were needed; adding either alone does nothing.
+
+\textbf{Effect.}  The thirty-three proton-tagged universes were rebuilt with the nine
+detector variation samples included and re-unfolded from them.  Every extraction in the
+analysis now carries a detector term.  The proton-tagged terms run $10.5\%$--$64.4\%$
+with a median of $23.9\%$, against $16.9\%$--$42.8\%$ for the inclusive results.
+
+\textbf{Check.}  Per-mode detector-variation double counting has occurred in this analysis
+before, and the combined configuration --- which carries two per-mode sets where the
+single-mode configurations carry one --- is the one exposed to it.  Double counting
+inflates the combined result.  Of the eight observables (of eleven) whose combined value
+falls outside its own FHC--RHC range, six fall \emph{below} both and only two above, which
+is the finite-sample averaging-down expected of statistically limited detector-variation
+samples rather than a recurrence.
+
 \section{Open items}
-
-\subsection{Proton-tagged detector systematics are absent, not merely incomplete}
-
-Of the $51$ current extractions, all $18$ inclusive results carry a detector systematic
-and all $33$ proton-tagged results carry none: the \texttt{detVar} column is \texttt{n/a}
-for every proton-tagged observable in every configuration.  The quoted proton-tagged
-uncertainties are therefore understated by the size of a term that runs between $16.9\%$
-and $42.8\%$ in the inclusive results.
-
-This is why the proton-tagged material is presented as secondary scope in the analysis
-note, and why no proton-tagged result should be quoted as final until the detector
-variations have been propagated through that selection.
 
 \subsection{Superseded values that may still be encountered}
 
