@@ -17,7 +17,9 @@ Production on Argon in the NuMI Beam\par}
 \vspace{0.8cm}
 {\large Companion to the analysis note\par}
 \vspace{0.5cm}
-{\normalsize Draft 1.0, 2026-08-30\par}
+{\normalsize Draft 1.1, 2026-08-31\par}
+\vspace{0.15cm}
+{\footnotesize\ttfamily 0eb3bc4 \textperiodcentered\ 51 extractions \textperiodcentered\ blind\par}
 \vspace{1.5cm}
 {\large Ishanee Pophale, Jarek Nowak\par}
 \vspace{0.5cm}
@@ -844,7 +846,7 @@ discrimination until the binning and response of those two observables are revis
 
 \begin{table}[H]
   \centering
-  \caption{$\chi^2$/ndf of the unfolded fake data against each $A_C$-smeared prediction for
+  \caption{\textbf{[SUPERSEDED --- DO NOT QUOTE.] }These values were computed about detector $z$ while the predictions used the neutrino direction, so measured and predicted were different observables; they additionally carry the double application of $A_C$. Retained only as the record of what the beam-axis error looked like. $\chi^2$/ndf of the unfolded fake data against each $A_C$-smeared prediction for
     the proton-tagged observables (FHC), with the additional-smearing factor $A_C$.}
   \label{tab:chi2_wtki}
   \small
@@ -2043,17 +2045,31 @@ below both inputs ($26.1\%$, $32.5\%$) rather than between them. The remaining f
 bracketed. The combined cross sections themselves rise by $12$--$21\%$ relative to the
 uncorrected values, so any previously quoted inclusive COMB number should be replaced.
 
-\paragraph{An unresolved inconsistency in the $A_C$ normalisation.}
-For \texttt{1p}~$p_\mu$ (FHC5) the fake-data truth integrates to $0.4763$, the
-unfolded result to $0.5528$, and $A_C$ applied to the truth to $0.3761$. If the
-Wiener-SVD estimate satisfies $\hat{x}=A_C x_{\mathrm{true}}$ the unfolded result
-should sit at $0.79\times$ the truth; it sits at $1.16\times$. One caveat limits
-this test: the $A_C$ written to the closure file is restricted to the slice, while
-the smearing is applied in the full true-bin space before slicing, so the operation
-cannot be reproduced exactly from the sidecar file. A related hypothesis --- that
-the fake-data truth is missing the $A_C$ smearing applied to every other prediction
-in \texttt{UnfolderNuMI.C} --- was tested directly and refuted: applying it moves the
-closure ratio from $1.09$--$1.24$ to $1.54$--$1.60$, and the change was reverted.
+\paragraph{The $A_C$ normalisation inconsistency --- resolved.}
+This section previously reported an unresolved discrepancy: for \texttt{1p}~$p_\mu$ (FHC5)
+the fake-data truth integrated to $0.4763$, the unfolded result to $0.5528$, and $A_C$
+applied to the truth to $0.3761$, so the unfolded result sat at $1.16\times$ the truth
+where $\hat{x}=A_C x_{\rm true}$ predicts $0.79\times$.  Two explanations were offered: that
+the sidecar $A_C$ was slice-restricted while the smearing happens in the full true-bin
+space, and that the stored truth was missing its smearing.  The second was tested and
+refuted at the time.
+
+Both were wrong, and so was the framing.  The sidecar $A_C$ is \emph{not} slice-restricted
+in any way that matters: it is bit-identical to the full-space operator, agreeing with the
+independently dumped \texttt{mat\_table\_add\_smear} to $5\times10^{-11}$, and for these
+observables the slice is the full true-bin space.  The actual cause was that model
+predictions were being multiplied by $A_C$ \emph{twice} --- once by the extractor, in
+place, and again on the plotting path --- so the stored curves were $A_C^2$ smeared while
+the arithmetic above assumed one application.  The stored truth, which never went through
+the second multiplication, was the one curve that was right, which is why the second
+hypothesis failed when tested.
+
+With the duplicate application removed, the transformation
+$\left(d\sigma/dx\right)_i = w_i^{-1}\sum_j (A_C)_{ij}\,p_j$ reproduces every released
+generator curve to a worst per-bin deviation of $1.2\times10^{-10}$.  The full account is
+in the change log; the lesson recorded here is that the discrepancy was real and the
+explanations for it were not, and that it took an external-reproduction test rather than
+further internal reasoning to settle.
 
 
 % =============================================================================
