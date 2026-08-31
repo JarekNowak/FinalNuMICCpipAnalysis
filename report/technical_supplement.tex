@@ -780,12 +780,16 @@ $0.550$--$1.000$ & 2933 & 429 & $14.6\%$ \\
 
 \begin{center}
 \fbox{\begin{minipage}{0.94\textwidth}
-\textbf{Withdrawn pending re-extraction.}\medskip
+\textbf{[SUPERSEDED --- DO NOT QUOTE.] Withdrawn; since re-extracted.}\medskip
 
 \noindent Every $\chi^2$ in this subsection compares a measurement of the transverse variables
 taken about the \emph{detector $z$ axis} with generator predictions taken about the
 \emph{neutrino direction} (\noteref{Sec.}{sec:beamdir}). They are not the same variables, and
-the numbers below therefore do not measure model agreement.
+the numbers below therefore do not measure model agreement.  The proton-tagged
+transverse observables have since been re-extracted in the beam frame, with the
+width-aware regularisation, a single application of $A_C$ and full detector covariance;
+those are the current results, and the values in this subsection are retained only as the
+record of what the coordinate error looked like.
 
 The size of the mismatch is not subtle. Under the two conventions the true $\delta p_T$
 distribution over the current bin edges runs
@@ -954,12 +958,17 @@ threshold, which is a defensible trade to state explicitly rather than a criteri
 silently.
 
 The scheme is implemented in \texttt{configs/ccpi1p\_Wpipr\_bin\_config\_2bin.txt}, with the
-reasoning recorded alongside it in a companion \texttt{.README}. At the time of writing the
-universe construction for the FHC configuration is in progress; the extracted cross section,
-its closure and the resulting generator $\chi^2$ are not yet available, and the comparison
-that matters, whether the apparent $W_{\pi p}$ agreement survives a binning the detector can
-actually resolve, remains to be made. The same test has not yet been applied to
-$W_\mathrm{had}$.
+reasoning recorded alongside it in a companion \texttt{.README}.  That test has since been
+made, and it is what settled the question: the two-bin scheme meets the migration
+criterion but leaves only about $137$ selected signal events in the first bin, which the
+Wiener filter then suppresses, driving $A_C$ towards rank one for statistical rather than
+algebraic reasons.  Widening the first bin restores its population at the cost of the
+upper-bin diagonal, and no scanned edge satisfies both requirements at once.
+
+The apparent $W_{\pi p}$ agreement therefore does \emph{not} survive a binning the detector
+can resolve, and the differential shape is withdrawn: at this exposure the proton-tagged
+sample supports an integrated cross section.  $W_\mathrm{had}$ carries the same limitation,
+since it depends on the same pion momentum.
 
 
 
