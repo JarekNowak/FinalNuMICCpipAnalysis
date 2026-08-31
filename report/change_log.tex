@@ -214,6 +214,46 @@ the hadronic mass $W_{\pi p}$, and the event selection are all unaffected.
 this correction are withdrawn, because the measured and predicted quantities were
 different observables.
 
+\subsection{Predictions were smeared by \texorpdfstring{$A_C$}{A C} twice}
+
+Every model prediction plotted or compared against the data was multiplied by the
+additional-smearing matrix twice: once by the extractor, which applies $A_C$ to each entry
+of the prediction map in place, and again on the plotting path.  Confirmed exactly, as
+$A_C^{2}\cdot\text{raw} = \text{plotted}\times\text{width}$ to $1.0000$ in every bin.
+
+\textbf{How it was found.}  By testing whether the released $A_C$ lets an external user
+reproduce a published generator curve.  It did not --- the discrepancy was $31\%$ on the
+integral and varied from $1.21$ to $1.55$ across bins, so it was not a normalisation --- and
+the residual factor turned out to be $A_C$ itself.
+
+\textbf{Effect.}  Model $\chi^2$ values only.  The anomaly the note previously attributed
+to $A_C$ suppression of sharply peaked generators was this bug:
+
+\begin{center}
+\small
+\begin{tabular}{llcc}
+\toprule
+Observable & Model & before & after \\
+\midrule
+FHC $\theta_\mu$      & NEUT  & $40.60/5$ & $8.96/5$ \\
+FHC $\theta_\mu$      & NuWro & $38.62/5$ & $9.43/5$ \\
+FHC $\cos\theta_\mu$  & NEUT  & $29.78/5$ & $4.90/5$ \\
+FHC $\cos\theta_\mu$  & NuWro & $29.10/5$ & $4.93/5$ \\
+FHC $p_\mu$           & GENIE & $5.52/7$  & $0.57/7$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Not affected.}  The unfolded cross sections (FHC $p_\mu$ integrates to $0.8275$
+before and after) and the closure test, because the fake-data truth was the one curve not
+passed through the second multiplication.  The previous table also predated the
+central-value weighting fix, so part of the shift in its ``truth'' column is that
+correction rather than this one.
+
+\textbf{Withdrawn.}  The argument for preferring $\theta$ over $\cos\theta$ on the grounds
+that the $\cos\theta_\mu$ $\chi^2$ was an artefact.  The effect that motivated it does not
+exist.
+
 \section{Systematic covariance}
 
 \subsection{Combined detector-variation exposure double-counted}

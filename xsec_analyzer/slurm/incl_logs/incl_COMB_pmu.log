@@ -1,0 +1,436 @@
+
+Running Unfolder.C with options:
+	XSEC_Config: configs/ccpi_xsec_config_numi_pmu_comb.txt
+	SLICE_Config: configs/ccpi_pmu_slice_config_opt.txt
+	OutputDirectory: /data/uboone/processed/
+	OutputFileName: xsec_COMB_pmu.root
+
+
+Loading default file properties from /home/t2k/nowak/MicroBooNE/working_xsec_analyzer/xsec_analyzer/configs/file_properties.txt
+Loading file properties from configs/file_properties_numi_comb.txt
+CrossSectionExtracter initialised with options:
+	xsec_extract_tconfig_file_name: configs/ccpi_xsec_config_numi_pmu_comb.txt
+	syst_config_file_name: configs/ccpi_systcalc_numi.conf
+	file_properties_config: configs/file_properties_numi_comb.txt
+	unfolding_tech: WienerSVD
+		Option: Second Derivative
+	univ_file_name: /data/uboone/processed/ccpi_COMB_pmu_univmake.root
+	Predictions - 
+		 0 - Prediction uBTune "MicroBooNE Tune" univ CV
+		 1 - Prediction FakeData "Fakedata" univ FakeData
+		 2 - Prediction GENIE "GENIE" file /home/t2k/nowak/MicroBooNE/working_xsec_analyzer/generator_predictions/newg4/genie_comb_fte.root pmu_fte
+		 3 - Prediction GiBUU "GiBUU" file /home/t2k/nowak/MicroBooNE/working_xsec_analyzer/generator_predictions/newg4/gibuu_comb_fte.root pmu_fte
+		 4 - Prediction NEUT "NEUT" file /home/t2k/nowak/MicroBooNE/working_xsec_analyzer/generator_predictions/newg4/neut_comb_fte.root pmu_fte
+		 5 - Prediction NuWro "NuWro" file /home/t2k/nowak/MicroBooNE/working_xsec_analyzer/generator_predictions/newg4/nuwro_comb_fte.root pmu_fte
+
+
+We do get in here but something goes wrong 
+respmat_tdirectoryfile_name given to SystematicsCalculator is empty. Using default: ccpi_CC1mu1piXp_pmu_1D
+
+Initialising SystematicsCalculator with options:
+	syst_config_file_name_: configs/ccpi_systcalc_numi.conf
+	universe_file_name: /data/uboone/processed/ccpi_COMB_pmu_univmake.root
+	fpm_config_file: configs+file_properties_numi_comb.txt
+	tdf_name: ccpi_CC1mu1piXp_pmu_1D
+
+
+Reusing cached universes "total_configs+file_properties_numi_comb.txt" (normalisation key v4-fakedata-unweighted-a1bad4c3404a0dcb).
+******* USING FAKE DATA *******
+using_fake_data = 1
+
+Initialising SliceBinning object
+	config_file_name: configs/ccpi_pmu_slice_config_opt.txt
+	Number of variables used in slicing: 2
+	Number of slices requested: 2
+
+Slice Specifications ---------------- 
+
+Slice Index: 0
+	Active variable: p_{#mu}
+	Number of bins: 7 - 
+		Bin 1: 0.15  (GeV/c) ≤ p_{#mu} < 0.35  (GeV/c)
+		Bin 2: 0.35  (GeV/c) ≤ p_{#mu} < 0.55  (GeV/c)
+		Bin 3: 0.55  (GeV/c) ≤ p_{#mu} < 0.75  (GeV/c)
+		Bin 4: 0.75  (GeV/c) ≤ p_{#mu} < 0.95  (GeV/c)
+		Bin 5: 0.95  (GeV/c) ≤ p_{#mu} < 1.25  (GeV/c)
+		Bin 6: 1.25  (GeV/c) ≤ p_{#mu} < 1.75  (GeV/c)
+		Bin 7: 1.75  (GeV/c) ≤ p_{#mu} < 3  (GeV/c)
+	Bin matching between slice TH1 and global TH1 - 
+		Global bin 0 is matched to 1 in this slice
+		Global bin 1 is matched to 2 in this slice
+		Global bin 2 is matched to 3 in this slice
+		Global bin 3 is matched to 4 in this slice
+		Global bin 4 is matched to 5 in this slice
+		Global bin 5 is matched to 6 in this slice
+		Global bin 6 is matched to 7 in this slice
+
+Slice Index: 1
+	Active variable: bin number
+	Number of bins: 7 - 
+		Bin 1: 0  ≤ bin number < 1 
+		Bin 2: 1  ≤ bin number < 2 
+		Bin 3: 2  ≤ bin number < 3 
+		Bin 4: 3  ≤ bin number < 4 
+		Bin 5: 4  ≤ bin number < 5 
+		Bin 6: 5  ≤ bin number < 6 
+		Bin 7: 6  ≤ bin number < 7 
+	Bin matching between slice TH1 and global TH1 - 
+		Global bin 0 is matched to 1 in this slice
+		Global bin 1 is matched to 2 in this slice
+		Global bin 2 is matched to 3 in this slice
+		Global bin 3 is matched to 4 in this slice
+		Global bin 4 is matched to 5 in this slice
+		Global bin 5 is matched to 6 in this slice
+		Global bin 6 is matched to 7 in this slice
+[REGWIDTH] supplied 7 true-bin widths to the regularisation matrix
+Get covariances statement 1 works
+This is the name fluxThis is the type FluxRW
+Get covariances statement 8 works
+This is the name reintThis is the type RW
+Get covariances statement 8 works
+This is the name xsec_multiThis is the type RW
+Get covariances statement 8 works
+This is the name xsec_AxFFCCQEshapeThis is the type RW
+Get covariances statement 8 works
+This is the name xsec_DecayAngMECThis is the type RW
+Get covariances statement 8 works
+This is the name xsec_NormCCCOHThis is the type RW
+Get covariances statement 8 works
+This is the name xsec_NormNCCOHThis is the type RW
+Get covariances statement 8 works
+This is the name xsec_RPA_CCQEThis is the type RW
+Get covariances statement 8 works
+This is the name xsec_ThetaDelta2NRadThis is the type RW
+Get covariances statement 8 works
+This is the name xsec_Theta_Delta2NpiThis is the type RW
+Get covariances statement 8 works
+This is the name xsec_VecFFCCQEshapeThis is the type RW
+Get covariances statement 8 works
+This is the name xsec_XSecShape_CCMECThis is the type RW
+Get covariances statement 8 works
+This is the name xsec_xsr_scc_Fa3_SCCThis is the type RW
+Get covariances statement 8 works
+This is the name xsec_xsr_scc_Fv3_SCCThis is the type RW
+Get covariances statement 8 works
+This is the name detVarLYdownThis is the type DV
+Get covariances statement 7 works
+This is the name detVarLYraylThis is the type DV
+Get covariances statement 7 works
+This is the name detVarRecomb2This is the type DV
+Get covariances statement 7 works
+This is the name detVarSCEThis is the type DV
+Get covariances statement 7 works
+This is the name detVarWMAngleXZThis is the type DV
+Get covariances statement 7 works
+This is the name detVarWMAngleYZThis is the type DV
+Get covariances statement 7 works
+This is the name detVarWMXThis is the type DV
+Get covariances statement 7 works
+This is the name detVarWMYZThis is the type DV
+Get covariances statement 7 works
+This is the name POTThis is the type MCFullCorr
+Get covariances statement 5 works
+This is the name numTargetsThis is the type MCFullCorr
+Get covariances statement 5 works
+This is the name MCstatsThis is the type MCstat
+Get covariances statement 3 works
+This is the name EXTstatsThis is the type EXTstat
+Get covariances statement 4 works
+This is the name BNBstatsThis is the type BNBstat
+Get covariances statement 4 works
+This is the name xsec_unisimThis is the type sum
+Get covariances statement 2 works
+This is the name xsec_totalThis is the type sum
+Get covariances statement 2 works
+This is the name flux_totalThis is the type sum
+Get covariances statement 2 works
+This is the name detVar_totalThis is the type sum
+Get covariances statement 2 works
+This is the name DataStatsThis is the type sum
+Get covariances statement 2 works
+This is the name SimulationStatsThis is the type sum
+Get covariances statement 2 works
+This is the name PredTotalThis is the type sum
+Get covariances statement 2 works
+This is the name totalThis is the type sum
+Get covariances statement 2 works
+Get covariances statement 11 works
+
+Starting the unfolding -----------------
+Get covariances statement 1 works
+This is the name fluxThis is the type FluxRW
+Get covariances statement 8 works
+This is the name reintThis is the type RW
+Get covariances statement 8 works
+This is the name xsec_multiThis is the type RW
+Get covariances statement 8 works
+This is the name xsec_AxFFCCQEshapeThis is the type RW
+Get covariances statement 8 works
+This is the name xsec_DecayAngMECThis is the type RW
+Get covariances statement 8 works
+This is the name xsec_NormCCCOHThis is the type RW
+Get covariances statement 8 works
+This is the name xsec_NormNCCOHThis is the type RW
+Get covariances statement 8 works
+This is the name xsec_RPA_CCQEThis is the type RW
+Get covariances statement 8 works
+This is the name xsec_ThetaDelta2NRadThis is the type RW
+Get covariances statement 8 works
+This is the name xsec_Theta_Delta2NpiThis is the type RW
+Get covariances statement 8 works
+This is the name xsec_VecFFCCQEshapeThis is the type RW
+Get covariances statement 8 works
+This is the name xsec_XSecShape_CCMECThis is the type RW
+Get covariances statement 8 works
+This is the name xsec_xsr_scc_Fa3_SCCThis is the type RW
+Get covariances statement 8 works
+This is the name xsec_xsr_scc_Fv3_SCCThis is the type RW
+Get covariances statement 8 works
+This is the name detVarLYdownThis is the type DV
+Get covariances statement 7 works
+This is the name detVarLYraylThis is the type DV
+Get covariances statement 7 works
+This is the name detVarRecomb2This is the type DV
+Get covariances statement 7 works
+This is the name detVarSCEThis is the type DV
+Get covariances statement 7 works
+This is the name detVarWMAngleXZThis is the type DV
+Get covariances statement 7 works
+This is the name detVarWMAngleYZThis is the type DV
+Get covariances statement 7 works
+This is the name detVarWMXThis is the type DV
+Get covariances statement 7 works
+This is the name detVarWMYZThis is the type DV
+Get covariances statement 7 works
+This is the name POTThis is the type MCFullCorr
+Get covariances statement 5 works
+This is the name numTargetsThis is the type MCFullCorr
+Get covariances statement 5 works
+This is the name MCstatsThis is the type MCstat
+Get covariances statement 3 works
+This is the name EXTstatsThis is the type EXTstat
+Get covariances statement 4 works
+This is the name BNBstatsThis is the type BNBstat
+Get covariances statement 4 works
+This is the name xsec_unisimThis is the type sum
+Get covariances statement 2 works
+This is the name xsec_totalThis is the type sum
+Get covariances statement 2 works
+This is the name flux_totalThis is the type sum
+Get covariances statement 2 works
+This is the name detVar_totalThis is the type sum
+Get covariances statement 2 works
+This is the name DataStatsThis is the type sum
+Get covariances statement 2 works
+This is the name SimulationStatsThis is the type sum
+Get covariances statement 2 works
+This is the name PredTotalThis is the type sum
+Get covariances statement 2 works
+This is the name totalThis is the type sum
+Get covariances statement 2 works
+Get covariances statement 11 works
+Unfolding completed -----------------
+
+Post-processing covariance matrices..
+Creating Norm/Shape covariance matrices for 1 blocks(s)
+	- Creating Norm/shape decomposition for block: 0
+BNBstats: 0.000160813
+DataStats: 0.000160813
+EXTstats: 6.00844e-06
+MCstats: 1.54842e-05
+POT: 1.89462e-05
+PredTotal: 0.00224486
+SimulationStats: 2.14926e-05
+detVarLYdown: 2.6528e-06
+detVarLYrayl: 2.13627e-07
+detVarRecomb2: 0.000153866
+detVarSCE: 0.000136171
+detVarWMAngleXZ: 0.000133214
+detVarWMAngleYZ: 5.05e-06
+detVarWMX: 0.0001827
+detVarWMYZ: 3.61755e-05
+detVar_total: 0.000650043
+flux: 0.0012828
+flux_total: 0.0012828
+numTargets: 4.73656e-06
+reint: 4.39616e-05
+total: 0.00240568
+total_blockwise_mixed: 0.000377131
+total_blockwise_norm: 0.00181747
+total_blockwise_shape: 0.00021108
+xsec_AxFFCCQEshape: 4.35088e-07
+xsec_DecayAngMEC: 5.88795e-07
+xsec_NormCCCOH: 1.05027e-06
+xsec_NormNCCOH: 7.63341e-07
+xsec_RPA_CCQE: 3.56566e-06
+xsec_ThetaDelta2NRad: 7.55067e-07
+xsec_Theta_Delta2Npi: 5.04661e-05
+xsec_VecFFCCQEshape: 5.83689e-07
+xsec_XSecShape_CCMEC: 2.45982e-05
+xsec_multi: 0.000137075
+xsec_total: 0.000222881
+xsec_unisim: 8.28062e-05
+xsec_xsr_scc_Fa3_SCC: 1.54276e-06
+xsec_xsr_scc_Fv3_SCC: 1.4566e-06
+[IDENTITY] bins 7  max|U*R - A_C| 2.897e-08  rms 5.907e-09  max|A_C| 1.015e+00  relative 2.855e-08
+Key: Fakedata
+Key: GENIE
+Key: GiBUU
+Key: MicroBooNETune
+Key: NEUT
+Key: NuWro
+[SYSTDUMP] sigma_int 7.231e-01
+[SYSTDUMP] BNBstats 1.487e+01
+[SYSTDUMP] DataStats 1.487e+01
+[SYSTDUMP] EXTstats 3.976e+00
+[SYSTDUMP] MCstats 4.622e+00
+[SYSTDUMP] POT 3.168e+00
+[SYSTDUMP] PredTotal 4.060e+01
+[SYSTDUMP] SimulationStats 6.108e+00
+[SYSTDUMP] detVarLYdown 3.422e+00
+[SYSTDUMP] detVarLYrayl 3.370e+00
+[SYSTDUMP] detVarRecomb2 8.274e+00
+[SYSTDUMP] detVarSCE 1.448e+01
+[SYSTDUMP] detVarWMAngleXZ 6.127e+00
+[SYSTDUMP] detVarWMAngleYZ 4.331e+00
+[SYSTDUMP] detVarWMX 1.005e+01
+[SYSTDUMP] detVarWMYZ 1.010e+01
+[SYSTDUMP] detVar_total 2.527e+01
+[SYSTDUMP] flux 2.748e+01
+[SYSTDUMP] flux_total 2.748e+01
+[SYSTDUMP] numTargets 1.584e+00
+[SYSTDUMP] reint 4.969e+00
+[SYSTDUMP] total 4.354e+01
+[SYSTDUMP] total_blockwise_mixed 6.638e+00
+[SYSTDUMP] total_blockwise_norm 3.491e+01
+[SYSTDUMP] total_blockwise_shape 2.177e+01
+[SYSTDUMP] xsec_AxFFCCQEshape 9.113e-01
+[SYSTDUMP] xsec_DecayAngMEC 1.076e+00
+[SYSTDUMP] xsec_NormCCCOH 1.060e+00
+[SYSTDUMP] xsec_NormNCCOH 9.730e-01
+[SYSTDUMP] xsec_RPA_CCQE 1.933e+00
+[SYSTDUMP] xsec_ThetaDelta2NRad 9.856e-01
+[SYSTDUMP] xsec_Theta_Delta2Npi 4.920e+00
+[SYSTDUMP] xsec_VecFFCCQEshape 1.077e+00
+[SYSTDUMP] xsec_XSecShape_CCMEC 2.777e+00
+[SYSTDUMP] xsec_multi 9.138e+00
+[SYSTDUMP] xsec_total 1.191e+01
+[SYSTDUMP] xsec_unisim 6.847e+00
+[SYSTDUMP] xsec_xsr_scc_Fa3_SCC 2.006e+00
+[SYSTDUMP] xsec_xsr_scc_Fv3_SCC 1.976e+00
+[closure-dump] wrote /data/uboone/processed/closure_hists_xsec_COMB_pmu.root
+
+GENIE: χ² = 1.784e+00/7 bins, p-value = 9.708e-01
+GiBUU: χ² = 1.562e+00/7 bins, p-value = 9.801e-01
+MicroBooNE Tune: χ² = 1.388e+00/7 bins, p-value = 9.859e-01
+NEUT: χ² = 1.993e+00/7 bins, p-value = 9.602e-01
+NuWro: χ² = 2.402e+00/7 bins, p-value = 9.343e-01
+truth: χ² = 6.741e-01/7 bins, p-value = 9.985e-01
+Bin: 1, Val = 6.106e-01, Unc = 2.452e-01
+Bin: 2, Val = 5.519e-01, Unc = 2.154e-01
+Bin: 3, Val = 4.881e-01, Unc = 1.857e-01
+Bin: 4, Val = 4.260e-01, Unc = 1.566e-01
+Bin: 5, Val = 3.409e-01, Unc = 1.243e-01
+Bin: 6, Val = 2.188e-01, Unc = 8.609e-02
+Bin: 7, Val = 7.687e-02, Unc = 5.766e-02
+Info in <TCanvas::Print>: pdf file unfold_output/plot_pmu_0.pdf has been created
+Key: Fakedata
+Key: GENIE
+Key: GiBUU
+Key: MicroBooNETune
+Key: NEUT
+Key: NuWro
+
+GENIE: χ² = 1.784e+00/7 bins, p-value = 9.708e-01
+GiBUU: χ² = 1.562e+00/7 bins, p-value = 9.801e-01
+MicroBooNE Tune: χ² = 1.388e+00/7 bins, p-value = 9.859e-01
+NEUT: χ² = 1.993e+00/7 bins, p-value = 9.602e-01
+NuWro: χ² = 2.402e+00/7 bins, p-value = 9.343e-01
+truth: χ² = 6.741e-01/7 bins, p-value = 9.985e-01
+Bin: 1, Val = 1.221e-01, Unc = 4.905e-02
+Bin: 2, Val = 1.104e-01, Unc = 4.307e-02
+Bin: 3, Val = 9.762e-02, Unc = 3.714e-02
+Bin: 4, Val = 8.520e-02, Unc = 3.132e-02
+Bin: 5, Val = 1.023e-01, Unc = 3.730e-02
+Bin: 6, Val = 1.094e-01, Unc = 4.305e-02
+Bin: 7, Val = 9.609e-02, Unc = 7.207e-02
+Info in <TCanvas::Print>: pdf file unfold_output/plot_binnumber_1.pdf has been created
+Error in <TROOT::WriteTObject>: The current directory (RootApp) is not associated with a file. The object (h_A_C) has not been written.
+Info in <TCanvas::Print>: pdf file unfold_output/plot_regularization_matrix.pdf has been created
+Get covariances statement 1 works
+This is the name fluxThis is the type FluxRW
+Get covariances statement 8 works
+This is the name reintThis is the type RW
+Get covariances statement 8 works
+This is the name xsec_multiThis is the type RW
+Get covariances statement 8 works
+This is the name xsec_AxFFCCQEshapeThis is the type RW
+Get covariances statement 8 works
+This is the name xsec_DecayAngMECThis is the type RW
+Get covariances statement 8 works
+This is the name xsec_NormCCCOHThis is the type RW
+Get covariances statement 8 works
+This is the name xsec_NormNCCOHThis is the type RW
+Get covariances statement 8 works
+This is the name xsec_RPA_CCQEThis is the type RW
+Get covariances statement 8 works
+This is the name xsec_ThetaDelta2NRadThis is the type RW
+Get covariances statement 8 works
+This is the name xsec_Theta_Delta2NpiThis is the type RW
+Get covariances statement 8 works
+This is the name xsec_VecFFCCQEshapeThis is the type RW
+Get covariances statement 8 works
+This is the name xsec_XSecShape_CCMECThis is the type RW
+Get covariances statement 8 works
+This is the name xsec_xsr_scc_Fa3_SCCThis is the type RW
+Get covariances statement 8 works
+This is the name xsec_xsr_scc_Fv3_SCCThis is the type RW
+Get covariances statement 8 works
+This is the name detVarLYdownThis is the type DV
+Get covariances statement 7 works
+This is the name detVarLYraylThis is the type DV
+Get covariances statement 7 works
+This is the name detVarRecomb2This is the type DV
+Get covariances statement 7 works
+This is the name detVarSCEThis is the type DV
+Get covariances statement 7 works
+This is the name detVarWMAngleXZThis is the type DV
+Get covariances statement 7 works
+This is the name detVarWMAngleYZThis is the type DV
+Get covariances statement 7 works
+This is the name detVarWMXThis is the type DV
+Get covariances statement 7 works
+This is the name detVarWMYZThis is the type DV
+Get covariances statement 7 works
+This is the name POTThis is the type MCFullCorr
+Get covariances statement 5 works
+This is the name numTargetsThis is the type MCFullCorr
+Get covariances statement 5 works
+This is the name MCstatsThis is the type MCstat
+Get covariances statement 3 works
+This is the name EXTstatsThis is the type EXTstat
+Get covariances statement 4 works
+This is the name BNBstatsThis is the type BNBstat
+Get covariances statement 4 works
+This is the name xsec_unisimThis is the type sum
+Get covariances statement 2 works
+This is the name xsec_totalThis is the type sum
+Get covariances statement 2 works
+This is the name flux_totalThis is the type sum
+Get covariances statement 2 works
+This is the name detVar_totalThis is the type sum
+Get covariances statement 2 works
+This is the name DataStatsThis is the type sum
+Get covariances statement 2 works
+This is the name SimulationStatsThis is the type sum
+Get covariances statement 2 works
+This is the name PredTotalThis is the type sum
+Get covariances statement 2 works
+This is the name totalThis is the type sum
+Get covariances statement 2 works
+Get covariances statement 11 works
+Info in <TCanvas::Print>: pdf file unfold_output/plot_step1_reco_spectrum.pdf has been created
+Info in <TCanvas::Print>: pdf file unfold_output/plot_step2_bkgd_subtraction.pdf has been created
+Info in <TCanvas::Print>: pdf file unfold_output/plot_step3_smearing_matrix.pdf has been created
+[DIAGDUMP] column-normalised response diagonal: 0.809 0.665 0.569 0.479 0.446 0.388 0.321
+Info in <TCanvas::Print>: pdf file unfold_output/plot_step4_efficiency.pdf has been created

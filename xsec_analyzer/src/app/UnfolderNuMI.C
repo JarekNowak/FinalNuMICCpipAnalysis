@@ -624,10 +624,13 @@ void UnfolderNuMI(std::string XSEC_Config, std::string SLICE_Config, std::string
     // peak) are compared against a regularised measurement and the chi^2 is
     // meaningless. This applies uniformly to the MicroBooNE Tune and to every
     // file-based generator prediction (NuWro, ...).
-    const TMatrixD& A_C_smear = *xsec.result_.add_smear_matrix_;
-    auto apply_ac = [&A_C_smear]( const TMatrixD& truth ) {
-      return TMatrixD( A_C_smear, TMatrixD::kMult, truth );
-    };
+    // NOTE: predictions in pred_map_ have ALREADY been multiplied by A_C, in place, by
+    // CrossSectionExtractor (see USE_ADD_SMEAR there). Applying it again here smeared
+    // every model curve TWICE -- verified as A_C^2 . raw == plotted x width to 1.0000 in
+    // every bin -- which biased every generator chi2 in the note while leaving the cross
+    // sections and the data-vs-truth closure untouched (the fake-data truth path below
+    // never called this). The predictions are therefore taken as-is.
+    auto apply_ac = []( const TMatrixD& truth ) { return TMatrixD( truth ); };
 
     TMatrixD genie_cv_truth = apply_ac( genie_cv_it->second->get_prediction() );
 

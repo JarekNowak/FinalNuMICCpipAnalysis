@@ -10,6 +10,7 @@ REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 RELEASE="$(cd "$REPO/../report" && pwd)/data_release"
 PROC=/data/uboone/processed
 SCRATCH=$PROC/unfold_scratch
+SCRIPTDIR_LOGS="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/incl_logs"
 export LD_LIBRARY_PATH="/usr/lib64/flexiblas:$(root-config --libdir):$REPO/lib:${LD_LIBRARY_PATH:-}"
 export XSEC_ANALYZER_DIR="$REPO"
 declare -A TAG=( [fhc5]=FHC5 [rhcfull]=RHCFULL [comb]=COMB )
@@ -49,6 +50,8 @@ for cfg in fhc5 rhcfull comb; do
     done
     [ -f "$W/unfold_output/vec_table_unfolded_signal.txt" ] && cp -p "$W/unfold_output/vec_table_unfolded_signal.txt" "$OUTD/unfolded_signal.txt"
     sig=$(grep 'SYSTDUMP] sigma_int' "$W/run.log" | tail -1 | awk '{print $3}')
+    mkdir -p "$SCRIPTDIR_LOGS"
+    cp -p "$W/run.log" "$SCRIPTDIR_LOGS/incl_${TAG[$cfg]}_${OUTOBS}.log"
     echo "  OK $cfg $OUTOBS  sigma_int=$sig  ($n cov matrices)"
     ok=$((ok+1)); rm -rf "$W"
   done

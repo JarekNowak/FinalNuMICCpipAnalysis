@@ -19,27 +19,15 @@ transformation is required on your side.
 
 ## `A_C_*.tsv` — for smearing your own model
 
-Use these when you have a prediction that is not one of the released curves.
+For a prediction supplied as a per-bin cross section `p[j]` in true bin `j`:
 
-    x_hat[i] = sum_j A_C[i][j] * p[j]      (sum over the TRUE index j)
+    smeared_dsigma_dx[i] = ( sum_j A_C[i][j] * p[j] ) / width[i]
 
-**A caveat you must read before relying on this.** The released `A_C` is bit-identical to
-the operator the analysis code applies internally (verified to 5e-11 against the
-full-space matrix, and the internal identity `U.R = A_C` holds to 4.4e-6). What is *not*
-currently demonstrated is the full path from a raw generator file to a published curve:
-between the two sit a units conversion applied when a prediction is loaded and a
-`1/(conversion_factor * width)` transform applied when it is plotted, and reproducing the
-published curves from a raw generator file plus this matrix alone has not been shown to
-work. Applying `A_C` to a raw generator histogram does **not** reproduce the plotted
-curve for that generator.
+summing over the TRUE index `j`. This reproduces the published generator curves **exactly**
+— worst per-bin deviation 1.2e-10 across the released matrices — so you can verify your
+implementation against any model column of `curves_*.tsv` before trusting it on a new model.
 
-So: `A_C` is correct as an operator, and the smeared curves are correct as results, but
-the release does not yet let you rebuild the second from a raw model file. Until it does,
-compare against `curves_*.tsv`, and treat `A_C` as the right operator for a prediction you
-have already put in the analysis's own true-bin event units.
-
-Do not apply `A_C` to `truth_smeared` or to any model column in `curves_*.tsv` — those are
-smeared already, and smearing them again gives roughly 0.77x the correct answer.
+Do not apply `A_C` to any column of `curves_*.tsv`: those are smeared already.
 
 ## `cov/` — covariance matrices
 
