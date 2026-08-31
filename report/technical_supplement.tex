@@ -718,6 +718,58 @@ the criterion with margin.
 
 
 
+\section{Rejected: extending the pion threshold below 0.175\,GeV/\textit{c}}
+\label{sec:supp_lowppi}
+
+\emph{Historical diagnostic record. The extension described here was REJECTED and is not
+part of the measurement; the analysis threshold is $p_\pi>0.175$~GeV/$c$.}
+
+\paragraph{The low-momentum bin, added.} We have implemented this extension for
+$p_\pi$: a $[0.113,0.175]\GeVc$ bin is prepended to the pion-momentum binning,
+lowering the measured phase space to the $\nu_e$ threshold. The truth-level signal
+below $0.175\GeVc$ is recovered from the stored signal-component branches (the
+reconstruction reproduces \texttt{MC\_Signal} above $0.175\GeVc$ to $0.4\%$, the
+residual being the unstored kaon veto); $3323$ true signal events populate the new
+bin. Its selection efficiency is $2.2\%$; an order of magnitude below the
+$15$--$17\%$ of the standard bins (Table~\ref{tab:pithresh_eff}), as anticipated
+from the reconstruction turn-on. Despite this, the Wiener--SVD extraction remains
+well behaved with the bin included: the $M_A^\mathrm{RES}$ fake-data closure gives
+$\chi^2/\mathrm{ndf}=1.41/6$ ($p=0.97$) and the flux term is unchanged
+($17\%$ reco, $18.4\%$ unfolded, amplification $1.08\times$). The bin therefore
+adds to the measurement, at the price of a large per-bin uncertainty driven by the
+low efficiency.
+
+The generator predictions have been regenerated on the six-bin scheme (the ppi
+histogram uses $p_\pi>0.113$ while the other observables retain $p_\pi>0.175$,
+mirroring the analysis). GENIE, NuWro and NEUT all provide the low bin; GiBUU could
+not be re-binned as its generator-level event record was not retained, so it is
+omitted from the extended $p_\pi$ comparison. Against the (fake) data the
+generators give $\chi^2/\mathrm{ndf} = 11.1/6$ (GENIE, $p=0.09$), $7.0/6$ (NuWro,
+$p=0.33$) and $6.3/6$ (NEUT, $p=0.39$): NEUT and NuWro describe the extended
+spectrum well, while GENIE is mildly disfavoured, consistent with the known GENIE
+over-prediction of low-momentum CC$\pi^{\pm}$ production.
+
+\begin{center}\small
+\captionof{table}{Selection efficiency per true $p_\pi$ bin with the low-momentum
+  bin added. The new $[0.113,0.175]\GeVc$ bin sits at $2.2\%$, an order of
+  magnitude below the standard bins.}
+\label{tab:pithresh_eff}
+\begin{tabular}{lccc}
+\toprule
+True $p_\pi$ [\GeVc] & $N_\mathrm{true}$ & $N_\mathrm{reco}$ & Efficiency \\
+\midrule
+$\mathbf{0.113}$--$\mathbf{0.175}$ (new) & 3323 & 74 & $\mathbf{2.2\%}$ \\
+$0.175$--$0.250$ & 3368 & 526 & $15.6\%$ \\
+$0.250$--$0.320$ & 2190 & 367 & $16.8\%$ \\
+$0.320$--$0.420$ & 2831 & 479 & $16.9\%$ \\
+$0.420$--$0.550$ & 2499 & 410 & $16.4\%$ \\
+$0.550$--$1.000$ & 2933 & 429 & $14.6\%$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% =============================================================================
+
 \section{Hadronic mass, model comparison, and estimator surveys}
 \label{sec:supp_w}
 

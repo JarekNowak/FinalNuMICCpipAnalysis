@@ -1070,51 +1070,12 @@ contain those systematics, or both phase spaces reported; this is a
 systematics-versus-cross-analysis-consistency trade rather than a reconstruction
 limitation.
 
-\paragraph{The low-momentum bin, added.} We have implemented this extension for
-$p_\pi$: a $[0.113,0.175]\GeVc$ bin is prepended to the pion-momentum binning,
-lowering the measured phase space to the $\nu_e$ threshold. The truth-level signal
-below $0.175\GeVc$ is recovered from the stored signal-component branches (the
-reconstruction reproduces \texttt{MC\_Signal} above $0.175\GeVc$ to $0.4\%$, the
-residual being the unstored kaon veto); $3323$ true signal events populate the new
-bin. Its selection efficiency is $2.2\%$; an order of magnitude below the
-$15$--$17\%$ of the standard bins (Table~\ref{tab:pithresh_eff}), as anticipated
-from the reconstruction turn-on. Despite this, the Wiener--SVD extraction remains
-well behaved with the bin included: the $M_A^\mathrm{RES}$ fake-data closure gives
-$\chi^2/\mathrm{ndf}=1.41/6$ ($p=0.97$) and the flux term is unchanged
-($17\%$ reco, $18.4\%$ unfolded, amplification $1.08\times$). The bin therefore
-adds to the measurement, at the price of a large per-bin uncertainty driven by the
-low efficiency.
+\paragraph{Why the threshold was not lowered.} Extending to the sibling $\nu_e$
+threshold was investigated and rejected: the $[0.113,0.175]\GeVc$ region has $2.2\%$
+selection efficiency and a strongly model-dependent reconstruction correction.  The study
+is recorded in the technical supplement.  It is not part of this measurement, and no cross
+section is reported below $p_\pi>0.175\GeVc$.
 
-The generator predictions have been regenerated on the six-bin scheme (the ppi
-histogram uses $p_\pi>0.113$ while the other observables retain $p_\pi>0.175$,
-mirroring the analysis). GENIE, NuWro and NEUT all provide the low bin; GiBUU could
-not be re-binned as its generator-level event record was not retained, so it is
-omitted from the extended $p_\pi$ comparison. Against the (fake) data the
-generators give $\chi^2/\mathrm{ndf} = 11.1/6$ (GENIE, $p=0.09$), $7.0/6$ (NuWro,
-$p=0.33$) and $6.3/6$ (NEUT, $p=0.39$): NEUT and NuWro describe the extended
-spectrum well, while GENIE is mildly disfavoured, consistent with the known GENIE
-over-prediction of low-momentum CC$\pi^{\pm}$ production.
-
-\begin{center}\small
-\captionof{table}{Selection efficiency per true $p_\pi$ bin with the low-momentum
-  bin added. The new $[0.113,0.175]\GeVc$ bin sits at $2.2\%$, an order of
-  magnitude below the standard bins.}
-\label{tab:pithresh_eff}
-\begin{tabular}{lccc}
-\toprule
-True $p_\pi$ [\GeVc] & $N_\mathrm{true}$ & $N_\mathrm{reco}$ & Efficiency \\
-\midrule
-$\mathbf{0.113}$--$\mathbf{0.175}$ (new) & 3323 & 74 & $\mathbf{2.2\%}$ \\
-$0.175$--$0.250$ & 3368 & 526 & $15.6\%$ \\
-$0.250$--$0.320$ & 2190 & 367 & $16.8\%$ \\
-$0.320$--$0.420$ & 2831 & 479 & $16.9\%$ \\
-$0.420$--$0.550$ & 2499 & 410 & $16.4\%$ \\
-$0.550$--$1.000$ & 2933 & 429 & $14.6\%$ \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-% =============================================================================
 \section{Fiducial Volume}
 \label{sec:fv}
 % =============================================================================
@@ -2238,29 +2199,25 @@ second multiplication.
   \centering
   \caption{The same comparison for the muon and pion angle in both parameterisations. The
     $\theta$ bin edges are exactly $\arccos$ of the $\cos\theta$ edges, so the phase space
-    is identical; only the variable differs. \emph{With the width-aware regularisation the
-    two parameterisations now agree}: both disfavour NEUT and NuWro strongly in every beam
-    configuration. Previously FHC $\theta_\mu$ returned $\chi^2\approx2.8$--$2.9/5$ for
-    those models against $\approx26/5$ in $\cos\theta_\mu$, which was the rank-1 artefact,
-    not a property of the variable.}
-  \label{tab:chi2_theta}
+is identical; only the variable differs.  Values are post-fix: a single application of
+$A_C$, on the width-aware regularisation.  The two parameterisations give comparable
+$\chi^2$, and neither shows the order-of-magnitude separation reported in earlier drafts,
+which was the double-$A_C$ bug rather than a property of either variable.}
+\label{tab:chi2_theta}
   \small
   \begin{tabular}{llcccccc}
     \toprule
     Beam & Variable & truth & uB tune & GENIE & GiBUU & NEUT & NuWro \\
-    \midrule
-    FHC & $\cos\theta_\mu$ & $0.59/5$ & $4.41/5$ & $11.27/5$ & $15.68/5$ & $29.78/5$ & $29.10/5$ \\
-    FHC & $\theta_\mu$     & $2.17/5$ & $5.14/5$ & $11.30/5$ & $17.91/5$ & $40.60/5$ & $38.62/5$ \\
-    \midrule
-    RHC & $\cos\theta_\mu$ & $2.99/5$ & $4.79/5$ & $5.31/5$  & $6.21/5$  & $12.95/5$ & $12.16/5$ \\
-    RHC & $\theta_\mu$     & $3.44/5$ & $4.11/5$ & $8.03/5$  & $12.69/5$ & $34.23/5$ & $32.11/5$ \\
-    \midrule
-    Comb & $\cos\theta_\mu$ & $3.08/5$ & $6.22/5$ & $8.69/5$ & $10.56/5$ & $19.49/5$ & $19.63/5$ \\
-    Comb & $\theta_\mu$     & $2.26/5$ & $4.10/5$ & $6.04/5$ & $6.23/5$  & $12.79/5$ & $13.14/5$ \\
-    \midrule
-    FHC & $\cos\theta_\pi$ & $0.56/4$ & $2.40/4$ & $4.70/4$ & $2.27/4$ & $2.31/4$ & $2.71/4$ \\
-    FHC & $\theta_\pi$     & $0.52/4$ & $1.92/4$ & $4.31/4$ & $1.86/4$ & $2.63/4$ & $3.56/4$ \\
-    \bottomrule
+\midrule
+FHC & $\cos\theta_\mu$   & $0.99/5$ & $0.74/5$ & $0.98/5$ & $0.84/5$ & $4.90/5$ & $4.93/5$ \\
+FHC & $\theta_\mu$       & $0.72/5$ & $0.45/5$ & $2.13/5$ & $2.87/5$ & $8.96/5$ & $9.43/5$ \\
+\midrule
+RHC & $\cos\theta_\mu$   & $0.42/5$ & $1.69/5$ & $1.57/5$ & $0.90/5$ & $5.32/5$ & $5.59/5$ \\
+RHC & $\theta_\mu$       & $0.84/5$ & $1.48/5$ & $2.39/5$ & $2.21/5$ & $9.17/5$ & $9.65/5$ \\
+\midrule
+Comb & $\cos\theta_\mu$   & $0.20/5$ & $0.53/5$ & $0.82/5$ & $0.61/5$ & $4.55/5$ & $4.48/5$ \\
+Comb & $\theta_\mu$       & $0.76/5$ & $0.51/5$ & $2.51/5$ & $3.87/5$ & $10.19/5$ & $10.33/5$ \\
+\bottomrule
   \end{tabular}
 \end{table}
 
@@ -2981,6 +2938,15 @@ satisfies both the migration and the statistics requirement.  The proton-tagged 
 supports an integrated cross section, not a resonance-shape measurement.  See
 Sec.~\ref{sec:status_matrix}.
 \end{quote}
+
+\begin{quote}
+\textbf{On the six-bin $W_{\pi p}$ material below.}  Six-bin $W_{\pi p}$ distributions and
+their closure appear in this section.  They are \emph{diagnostic}: they show why the shape
+is not measurable, and they are not a result.  The differential $W_{\pi p}$ shape is
+withdrawn (Sec.~\ref{sec:status_matrix}), and closure against $A_C$-smeared truth cannot
+restore shape information the response does not contain --- the top bin is $2\%$ diagonal
+in that scheme.  The proton-tagged deliverable is the integrated cross section.
+\end{quote}
 % =============================================================================
 
 Requiring an identified proton in the final state, in addition to the muon and charged
@@ -3429,8 +3395,12 @@ observables have been revisited.
 \label{sec:systematics}
 % =============================================================================
 
-Full systematic uncertainty propagation has not yet been performed.
-Table~\ref{tab:systematics} lists the sources and their estimated impacts.
+Full systematic covariance propagation is complete for all fifty-one extractions.
+Every result carries flux, cross-section-model, hadron-reinteraction, detector-variation,
+POT, target-count and statistical terms, propagated through the unfolding by the error
+propagation matrix and released per component (Sec.~\ref{sec:ac_rowsums}).  The
+proton-tagged detector term was the last to be added, on 2026-08-31; before that those
+thirty-three results carried none.  Table~\ref{tab:systematics} lists the sources.
 
 \begin{table}[H]
   \centering
@@ -3597,12 +3567,15 @@ noisiest observable across the entire budget, is where it would matter most.
     Negative tail bins
       & \textbf{Resolved}
       & All bins now positive after EXT cancellation; no longer present \\[4pt]
-    Runs~2, 4, 5 beam-on files not available
-      & Data files needed
-      & $\times5.4$ exposure increase for the real-data measurement \\[4pt]
-    Generator comparisons (GENIE, NuWro)
-      & Blocked by missing AVX on compute nodes
-      & NEUT comparison runnable locally \\[4pt]
+    Beam-on signal region not opened
+      & \textbf{By design}
+      & Blind analysis.  The fake data are thrown at the full per-run data exposure
+        already, so no exposure increase is pending; what unblinding adds is the real
+        data vector, not more POT \\[4pt]
+    Generator comparisons (GENIE, NuWro, NEUT, GiBUU)
+      & \textbf{Resolved}
+      & All four are extracted and compared for every observable
+        (Table~\ref{tab:chi2_incl}), with a single application of $A_C$ \\[4pt]
     CRT veto branches (\texttt{crthitpe}, \texttt{crtveto})
       & Dead (all-zero in NuMI ntuples)
       & Replaced by \texttt{bdt\_cosmic} (disabled at default 0.0) \\[4pt]
@@ -3836,150 +3809,145 @@ swing, because the detector covariance feeds the Wiener filter and therefore the
 regularisation. The detector systematic is not a post-hoc error bar here; it changes
 the central value.
 
-\paragraph{\texorpdfstring{$\theta_\mu$ carries no shape information in FHC.}{theta-mu carries no shape information in FHC.}}
-The additional smearing matrix for FHC $\theta_\mu$ is rank-1 to numerical
-precision: its second singular value is $2.8\times10^{-6}$ of the first, against
-$\sim\!5\times10^{-2}$ for the inputs. Every model and the data are mapped onto one
-curve, so the apparent agreement between them in that observable is by construction
-rather than physical. Any statement that $\theta_\mu$ repairs what $A_C$ does to
-$\cos\theta_\mu$ is withdrawn; the two are not independent tests.
+\paragraph{\texorpdfstring{FHC $\theta_\mu$: a rank-1 collapse, since repaired.}{FHC theta-mu: a rank-1 collapse, since repaired.}}
+Under the original uniform-grid regularisation the additional-smearing matrix for FHC
+$\theta_\mu$ was rank-1 to numerical precision --- its second singular value was
+$2.8\times10^{-6}$ of the first, against $\sim\!5\times10^{-2}$ for the inputs --- so every
+model and the data were mapped onto a single curve and agreed by construction.
+
+The width-aware operator repairs it: $s_2/s_1$ is now $0.51$ for FHC $\theta_\mu$ and
+$0.38$ for the combined configuration, and the observable discriminates between models
+again, preferring the tune that generated the fake data.  The conclusion drawn from the
+collapsed state --- that $\theta_\mu$ repairs what $A_C$ does to $\cos\theta_\mu$ ---
+remains withdrawn, but for the opposite reason to the one first given: the two
+parameterisations are now comparably conditioned, and neither is privileged.
 
 \section{Summary}
 \label{sec:summary}
 % =============================================================================
 
-We have presented a simultaneous measurement of five CC$\pi^{\pm}$ differential cross
-sections on argon using the full MicroBooNE NuMI exposure in three configurations
-FHC ($8.857\times10^{20}$~POT), RHC ($1.108\times10^{21}$~POT), and their
-combination ($1.994\times10^{21}$~POT); the first such multi-observable
-measurement in the MicroBooNE NuMI dataset.
+We have developed a measurement of $\nu_\mu+\bar\nu_\mu$ charged-current single
+charged-pion production on argon using the full \uboone{} NuMI exposure: forward horn
+current ($8.857\times10^{20}$~POT), reverse horn current ($1.1082\times10^{21}$~POT), and
+their combination ($1.9939\times10^{21}$~POT).
 
-\paragraph{Selection.}
-The event selection achieves a signal purity of $\approx\!55\%$ and a flat
-efficiency of $\sim\!13$--$20\%$ in the measured phase space (reference phase space:
-$57.2\%$ purity, $12.1$--$12.6\%$ efficiency; Table~\ref{tab:phasespace}), identical
-across the three configurations since the selection is the same. The blind
-data/prediction ratio of $\approx\!0.75$ is consistent with the known GENIE~v3
-over-prediction of CC$\pi^{\pm}$ production documented in
-MiniBooNE~\cite{miniboone_ccpi}, MINERvA~\cite{minerva_ccpi},
-T2K~\cite{t2k_ccpip}, and the MicroBooNE BNB CC$\pi^+$ measurement~\cite{uboone_bnb2026_ccpi}.
+\textbf{The analysis is blind.}  No beam-on signal region has been opened.  Every ``data''
+point in this note is Poisson-thrown from the central-value Monte Carlo, so the results
+demonstrate that the extraction works; they are not measurements, and no statement here
+about a generator is a statement about nature.
 
-\paragraph{Cross-section results, framework validation, and phase space.}
-Differential cross sections are extracted via a framework-consistent Wiener-SVD
-unfolder using each configuration's own integrated $\nu_\mu + \bar{\nu}_\mu$ flux
-(FHC $\Phi = 6.81159\times10^{-10}$~cm$^{-2}$~POT$^{-1}$, $\bar{\nu}_\mu$ fraction
-$34.9\%$; RHC and combined in Sec.~\ref{sec:flux}).  At a common \emph{reference} phase space ($p_\mu,p_\pi>0.1\GeVc$, reco
-$\thmupM<2.6$~rad), the custom pipeline was validated against the fully
-independent official XSecAnalyzer framework to $\le2\%$ on every observable
-($d\sigma/d\pmuM$: 1.016, $d\sigma/d\ppiM$: 0.979, $d\sigma/d\cthmuM$: 0.987,
-$d\sigma/d\cthpiM$: 1.004, $d\sigma/d\thmupM$: 1.001) after three corrections
-(\suppref{Sec.}{sec:datamc}): importing the full systematic covariance into the
-Wiener filter (a stat-only covariance over-corrects by $\sim26\%$), cancelling the
-EXT subtraction for the pure-MC fake data ($\sim3.7\%$), and matched binning; the
-two pipelines were also shown to select identical events (1914 vs 1913.6 NuWro
-events at the final cut).  The final results (Table~\ref{tab:sigint_all}) then refine
-the \emph{measured phase space} to $p_\mu>0.15$, $p_\pi>0.175\GeVc$,
-$\theta_{\mu\pi}<2.6$~rad, chosen from the efficiency turn-on curves so the
-selection efficiency is flat at $\sim$13--20\% (Section~\ref{sec:signal}): the
-momentum thresholds remove the $\sim$5\% low-momentum bins and the $2.6$~rad cut
-rejects the cosmic-dominated large-angle region.  No lower opening-angle cut is
-applied, since the small-angle region is high-purity.  This raises the efficiency
-from $12.1\%$ to $15.6\%$ at $\sim$55\% purity.  The integrated values are
-correspondingly smaller and, being a different phase space, are not directly
-comparable to the framework's full-$0.1\GeVc$ numbers.
+\paragraph{Measured phase space and selection.}
+$|\mathrm{PDG}_\nu|=14$, charged current, true vertex in the fiducial volume, exactly one
+muon and one charged pion, no neutral pions or kaons, any number of protons, with
+$p_\mu>0.15\GeVc$, $p_\pi>0.175\GeVc$ and $\theta_{\mu\pi}<2.6$~rad.  The selection
+reaches $\approx\!15.6\%$ efficiency at $\approx\!55\%$ purity.  Angles and transverse
+observables are defined about the per-event neutrino direction, not the detector $z$ axis.
 
-\paragraph{Context in the experimental landscape.}
-The unfolded fake data sits at $1.85$--$1.90$ times the $A_C$-smeared GENIE~v3
-curve, averaged over the six inclusive observables and consistent across the three
-configurations. This is a statement about the \emph{injected} sample rather than
-about nature: the fake data is thrown from NuWro, which predicts roughly twice the
-GENIE CC$\pi^{\pm}$ rate in this phase space, and the ratio also carries the
-uniform $13\%$ extraction offset of \S\ref{sec:limitations}. Against the MicroBooNE
-tune the same ratio is $1.35$--$1.45$.
+\paragraph{What is measured.}
+Fifty-one extractions: eighteen inclusive and thirty-three proton-tagged, across the three
+configurations.  The primary scope is the total flux-averaged cross section, $d\sigma/dp_\mu$,
+the muon and pion angular cross sections, $d\sigma/d\theta_{\mu\pi}$, and a deliberately
+coarse two-bin $d\sigma/dp_\pi$.  Inclusive total uncertainties run $33.8$--$59.3\%$, with
+the detector term $16.9$--$42.8\%$ and flux the largest single contribution.
 
-An earlier version of this section reported $\approx0.65$--$0.70$ times GENIE, in
-the opposite direction and described as consistent with generator over-prediction.
-That number cannot be reproduced from any current output and its provenance is not
-established; it is withdrawn rather than restated. No claim about the sign of a
-data-generator discrepancy can be made from this note in any case, because no
-beam-on data is unblinded. This measurement provides:
-\begin{itemize}[noitemsep]
-  \item The first CC$\pi^{\pm}$ differential cross sections from the MicroBooNE
-    NuMI (off-axis) dataset, complementing the existing BNB-beam CC$\pi^+$
-    result~\cite{uboone_bnb2026_ccpi} from the same detector.
-  \item Constraints at lower neutrino energies ($E_\nu \sim 0.1$--$0.5$~GeV)
-    than the previous NuMI CC$\pi^+$ results (ArgoNEUT~\cite{argoneut_ccpi} at
-    $\langle E_\nu \rangle \approx 9.6$~GeV, MINERvA~\cite{minerva_ccpi} at
-    $\langle E_\nu \rangle \approx 3.6$~GeV).
-  \item A measurement on an argon target at the kinematic regime most relevant
-    to the planned DUNE~\cite{dune} oscillation analysis, which operates at a
-    similar beam energy with a LArTPC far detector.
-  \item Sensitivity to the $\bar{\nu}_\mu$ contribution ($\approx 38\%$) in
-    CC$\pi^{\pm}$ production on argon, previously unmeasured.
-\end{itemize}
+The proton-tagged subsample is secondary scope, with total uncertainties $24.3$--$77.2\%$.
+Its systematics are complete, but the exposure does not support a differential $W_{\pi p}$
+shape at any binning, so that result is withdrawn and only the integrated proton-tagged
+cross section is offered.
 
-\paragraph{What the combined configuration required.}
-The combined measurement initially returned an integrated cross section below both
-of its own inputs, which a combined exposure cannot do. The cause was the detector
-systematic: a combined configuration carries one detVar set per horn current, and
-each was independently scaled to the \emph{full} data exposure before the two were
-summed, so the exposure was counted twice and the detector covariance came out
-roughly double ($42.3\%$ of the prediction against $23.2\%$ and $27.4\%$ for its
-inputs). Pooling the detVar POT brings it to $24.6\%$, inside the range spanned by
-the inputs, and restores the closure: the combined truth moves from $0.910$ to
-$1.027$ of the POT-weighted average of its inputs (\suppref{Sec.}{sec:combtruth}). The
-FHC-only and RHC-only cross sections are bit-identical before and after, so only
-the combined configuration was ever affected.
+\paragraph{What limits the measurement.}
+Charged pions interact hadronically before ranging out, so the reconstructed momentum
+saturates near $0.34\GeVc$.  A survey of alternatives --- golden-pion tagging, multiple
+Coulomb scattering, calorimetry, multivariate regression, daughter-energy recovery, and the
+proton-tagged selection --- recovers none of it, and a truth-level golden selection performs
+no better than the classifier, which places the limit in the physics rather than the
+estimator.  This is what reduces $p_\pi$ to two bins and $W_{\pi p}$ to an integrated
+quantity, and it is the single most consequential limitation of the analysis.
 
-\paragraph{Required for publication.}
-The four open items of \S\ref{sec:limitations}, of which the uniform $13\%$
-Wiener--SVD normalisation offset is the most consequential, since it is the same
-order as the physics differences being measured. Beyond those: native systematic
-propagation in the custom pipeline (flux, cross-section, and detector-response
-multisims, currently imported from the framework for the unfolding covariance) and
-inclusion of Runs~2, 4, and~5 beam-on data ($\approx 5.4\times$ additional
-exposure) are needed before a real-data result can be published.  With the EXT cancellation and full covariance in place the unfolded
-spectra are everywhere positive and stable; the remaining $\le2\%$ residual against
-the framework is dominated by the covariance-import approximation
-(\suppref{Sec.}{sec:datamc}).  A comparison with NEUT and GiBUU predictions is also
-planned.
+\paragraph{Validation.}
+The extraction reproduces its own input: the mean closure ratio over the eighteen inclusive
+extractions is $1.001$ with second-derivative regularisation and $1.007$ with the identity.
+The algebraic identity $UR=A_C$ holds to $4.4\times10^{-6}$, which tests the unfolding
+construction rather than only its behaviour on one sample.  D'Agostini iterative unfolding,
+whose integral is flat across observables where the Wiener-SVD spread is large, establishes
+that the observable-to-observable spread of the Wiener-SVD integrals is the additional
+smearing rather than physics or acceptance.
 
-% =============================================================================
+The closure $\chi^2$ values should not be read as agreement: their $p$-values cluster near
+unity because the measurement and the truth it is compared against share their systematics,
+which cancel in the residual while still inflating the covariance used to judge it.
+
+\paragraph{Corrections that changed results.}
+Nine, each recorded in the change log with before-and-after values.  The largest were an
+obsolete flux (a factor ${\sim}3.48$), a double application of the central-value weight to
+the fake data (which moved every cross section by $3.8$--$12.9\%$), a regularisation
+operator that assumed a uniform grid and drove $A_C$ towards rank one, an angular convention
+defined about detector $z$ rather than the beam, and --- most recently --- a double
+application of $A_C$ to every model prediction, which inflated the generator $\chi^2$ and
+produced an apparent anomaly in the muon-angle comparisons that does not exist.
+
+That last one was found by asking whether an external user could reproduce a published
+generator curve from the released matrix.  Internal closure could not have found it: the
+data and the truth were both correct, and only the comparison was wrong.
+
+\paragraph{Before unblinding.}
+Control regions must be opened in data first, with the permitted response to any
+discrepancy fixed beforehand; a clean rebuild from empty caches must reproduce the release;
+and the configuration-to-systematics coupling needs a check that every declared source has
+its expected universes, since it was exactly that interface which allowed the proton-tagged
+detector uncertainty to vanish silently.  An ensemble of throws, rather than the single one
+used here, would turn the closure caveat above into a quantitative coverage statement.
+
+
 \appendix
 
 \section{Observable Binning}
 \label{app:binning}
 
+Generated directly from the released \texttt{curves\_*.tsv} files, so these are by
+construction the bin edges of the published results rather than a transcription.  The
+binnings are identical across the three beam configurations.  Earlier drafts of this
+appendix listed a finer exploratory binning that predates the resolution-driven
+optimisation; that binning is not used for any released result.
+
 \begin{table}[H]
   \centering
-  \caption{Bin edges for all five differential cross-section observables.}
+  \caption{Bin edges of every released observable, read from the data release.}
   \label{tab:binning}
   \small
-  \begin{tabular}{L{1.8cm} p{11cm}}
+  \begin{tabular}{L{3.2cm} c p{8.3cm}}
     \toprule
-    Observable & Bin edges \\
+    Observable & Bins & Edges \\
     \midrule
-    $p_\mu$ (GeV/$c$) &
-      0.15, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90, 1.00,
-      1.10, 1.20, 1.30, 1.40, 1.50, 1.60, 1.70, 1.80, 1.90, 2.00,
-      2.30, 2.60, 3.00 \quad(first edge 0.15 = signal threshold) \\[4pt]
-    $p_\pi$ (GeV/$c$) &
-      \textbf{0.175, 0.205, $\infty$} \quad(first edge 0.175 = signal threshold; second
-      bin open above). The superseded five-bin scheme (0.175, 0.250, 0.320, 0.420,
-      0.550, open) had migration diagonals of $96/35/21/10/6\%$, so only its first bin met
-      the $>68\%$ usable-bin criterion; the two-bin scheme gives $91/76\%$, clearing it in
-      both (\suppref{Sec.}{sec:ppi_bias}).
-      \\[4pt]
-    $\cos\theta_\mu$ &
-      $-1.0$, $-0.5$, 0.0, 0.2, 0.4, 0.55, 0.65, 0.75, 0.82, 0.88, 0.93, 0.97, 1.0 \\[4pt]
-    $\cos\theta_\pi$ &
-      $-1.0$, $-0.7$, $-0.4$, $-0.2$, 0.0, 0.2, 0.35, 0.5, 0.65, 0.78, 0.88, 0.95, 1.0 \\[4pt]
-    $\theta_{\mu\pi}$ (rad) &
-      0.0, 0.314, 0.628, 0.942, 1.257, 1.571, 1.885, 2.199, 2.513, 2.6
-      (9 bins; measured range $\theta_{\mu\pi}<2.6$~rad, no lower cut) \\
+    \multicolumn{3}{l}{\emph{Inclusive}}\\
+    \midrule
+      $p_\mu$ (GeV/$c$) & 7 & 0.15, 0.35, 0.55, 0.75, 0.95, 1.25, 1.75, 3 \\
+      $p_\pi$ (GeV/$c$) & 2 & 0.175, 0.205, 1 \\
+      $\cos\theta_\mu$ & 5 & -1, 0.45, 0.65, 0.8, 0.9, 1 \\
+      $\cos\theta_\pi$ & 4 & -1, -0.1, 0.35, 0.75, 1 \\
+      $\theta_{\mu\pi}$ (rad) & 5 & 0, 0.6, 0.85, 1.3, 1.85, 2.6 \\
+      $\theta_\mu$ (rad) & 5 & 0, 0.43, 0.62, 0.84, 1.17, 3.15 \\
+    \midrule
+    \multicolumn{3}{l}{\emph{Proton-tagged}}\\
+    \midrule
+      $p_\mu$ (GeV/$c$) & 7 & 0.15, 0.35, 0.55, 0.75, 0.95, 1.25, 1.75, 3 \\
+      $p_\pi$ (GeV/$c$) & 2 & 0.175, 0.205, 1 \\
+      $\cos\theta_\mu$ & 5 & -1, 0.45, 0.65, 0.8, 0.9, 1 \\
+      $\cos\theta_\pi$ & 4 & -1, -0.1, 0.35, 0.75, 1 \\
+      $\theta_{\mu\pi}$ (rad) & 5 & 0, 0.6, 0.85, 1.3, 1.85, 2.6 \\
+      $W_{\pi p}$ (GeV/$c^2$) & 6 & 1.08, 1.19, 1.23, 1.27, 1.34, 1.47, 2.9 \\
+      $W_{\rm had}$ (GeV/$c^2$) & 6 & 0, 0.78, 1.08, 1.21, 1.31, 1.44, 2.74 \\
+      $\delta p_T$ (GeV/$c$) & 2 & 0, 0.3, 2.5 \\
+      $\delta\phi_T$ (rad) & 2 & 0, 50, 180 \\
+      $\delta\alpha_T$ (rad) & 2 & 0, 120, 180 \\
+      $p_n$ (GeV/$c$) & 2 & 0, 0.375, 2 \\
     \bottomrule
   \end{tabular}
 \end{table}
+
+The upper edge of the top $p_\pi$ bin is the kinematic limit of the sample rather than a
+chosen boundary: that bin is an inclusive high-momentum region, not a differential point,
+for the reasons set out in the technical supplement.
 
 \section{Selection Cut Parameter Summary}
 \label{app:cutparams}

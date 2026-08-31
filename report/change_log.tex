@@ -306,16 +306,20 @@ the first bin, which the Wiener filter then suppresses, while wider bins restore
 statistics and fail the response.  The proton-tagged sample supports an integrated cross
 section.
 
-\paragraph{External reproduction of the $A_C$-smeared comparison.}
-The released additional-smearing matrix is bit-identical to the operator the code applies,
-and the released covariances reproduce the quoted uncertainties, but the path from a raw
-generator file to a published curve has not been demonstrated end to end: a prediction is
-converted on load and transformed again on plotting, and applying $A_C$ to a raw generator
-histogram does not reproduce that generator's plotted curve.  The smeared curves are
-released so that comparisons against the models shown in the note need no such
-reconstruction, but a reader smearing a \emph{new} model has no worked example to check
-against.  The fix is reference code plus a numerical unit test reproducing one published
-curve bin by bin.
+\paragraph{External reproduction of the $A_C$-smeared comparison --- resolved.}
+This was listed here as open in the previous revision.  It is resolved.  The transformation
+\[
+  \left(d\sigma/dx\right)^{\rm smeared}_i = \frac{1}{w_i}\sum_j (A_C)_{ij}\,p_j ,
+\]
+applied to a prediction supplied as a per-bin cross section, reproduces every released
+generator curve to a worst per-bin deviation of $1.2\times10^{-10}$.  It was the failure of
+this very test that exposed the double-$A_C$ bug, and its success is now the regression
+check against recurrence.
+
+What remains is narrower and is not a numerical question: no packaged reference
+implementation ships with the release, so a user must write the three lines above
+themselves.  They can verify their implementation against any model column of
+\texttt{curves\_*.tsv}.
 
 \paragraph{Everything that requires unblinding.}
 No beam-on signal region has been opened, so the control-region checks in data, the
