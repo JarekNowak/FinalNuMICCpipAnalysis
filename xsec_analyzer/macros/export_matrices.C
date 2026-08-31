@@ -66,8 +66,8 @@ void export_matrices(const char* outdir = "../report/data_release"){
 
   const char* cfgs[3]  = {"FHC5","RHCFULL","COMB"};
   const char* incl[6]  = {"pmu","ppi2bin","costhmu","costhpi","thmupi","thetamu"};
-  const char* p1p[10]  = {"pmu","ppi2bin","costhmu","costhpi","thmupi","Wpipr","Whad",
-                          "dpt2bin","dphit2bin","dalphat2bin"};
+  const char* p1p[11]  = {"pmu","ppi2bin","costhmu","costhpi","thmupi","Wpipr","Whad",
+                          "dpt2bin","dphit2bin","dalphat2bin","pn2bin"};
 
   for (auto c : cfgs) {
     for (auto o : incl) {

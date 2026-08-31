@@ -2569,8 +2569,7 @@ previously only been described qualitatively.
 
 The row sums of $A_C$ are the relevant measure: a row summing to unity passes the
 normalisation of that bin through unchanged, and a row summing to $0.2$ removes four
-fifths of it.  The matrices are released as text (\texttt{report/data\_release/}), so any
-prediction can be smeared and compared directly.
+fifths of it.
 
 \begin{center}
 \small
@@ -2581,6 +2580,7 @@ Observable & FHC & RHC & combined \\
 \multicolumn{4}{l}{\emph{Inclusive}}\\
 \midrule
 $p_\mu$ & $0.66$--$0.91$ & $0.58$--$0.99$ & $0.67$--$0.99$ \\
+$p_\pi$ (2-bin) & $0.37$--$0.53$ & $0.40$--$0.53$ & $0.30$--$0.54$ \\
 $\cos\theta_\mu$ & $0.20$--$0.41$ & $0.05$--$0.41$ & $0.07$--$0.43$ \\
 $\cos\theta_\pi$ & $0.70$--$0.81$ & $0.78$--$0.85$ & $0.79$--$0.92$ \\
 $\theta_{\mu\pi}$ & $0.52$--$1.04$ & $0.59$--$1.16$ & $0.63$--$1.22$ \\
@@ -2598,6 +2598,7 @@ $W_{\rm had}$ & $0.55$--$0.81$ & $0.30$--$0.88$ & $0.20$--$0.87$ \\
 $\delta p_T$ & $0.55$--$0.86$ & $0.45$--$0.82$ & $0.46$--$0.87$ \\
 $\delta\phi_T$ & $0.66$--$0.78$ & $0.54$--$0.73$ & $0.30$--$0.68$ \\
 $\delta\alpha_T$ & $0.59$--$0.98$ & $0.57$--$0.93$ & $0.59$--$0.96$ \\
+$p_n$ & $0.71$--$0.86$ & $0.62$--$0.82$ & $0.61$--$0.87$ \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -2618,13 +2619,15 @@ negative row is a symptom of an ill-conditioned solution in that bin, and predic
 smeared through those rows should be treated with corresponding caution.  Both are RHC
 proton-tagged, the configuration with the fewest selected events.
 
-\paragraph{Coverage.}
-The Wiener filter depends on the data covariance, so $A_C$ depends on the central-value
-weighting fix, and a matrix computed before it is not the released measurement.  Of the
-forty-eight extractions, forty-five are released; the three withheld are the inclusive
-$p_\pi$ matrices, whose sidecars predate the fix and which are pending re-extraction.
-The export refuses to write a matrix whose sidecar is too old, so this cannot be
-forgotten.
+\paragraph{Numerical data release.}
+All fifty-one extractions are released with both their additional-smearing matrix and
+their full covariance decomposition, in \texttt{report/data\_release/}: $A_C$ as a text
+matrix per extraction, and per-component covariances in cross-section units
+(\texttt{flux}, \texttt{reint}, \texttt{xsec\_total}, each detector variation, the
+statistical terms, and the \texttt{PredTotal} and \texttt{total} aggregates), alongside
+the central values they belong to.  A prediction cannot be compared with these results
+without $A_C$, nor used quantitatively without the covariance, so both are part of the
+measurement rather than supporting material.
 
 The practical consequence is stated in the results section and repeated here because it
 is easy to get wrong: quote the physical total from the cut-and-count extraction, which
