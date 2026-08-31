@@ -266,6 +266,17 @@ the first bin, which the Wiener filter then suppresses, while wider bins restore
 statistics and fail the response.  The proton-tagged sample supports an integrated cross
 section.
 
+\paragraph{External reproduction of the $A_C$-smeared comparison.}
+The released additional-smearing matrix is bit-identical to the operator the code applies,
+and the released covariances reproduce the quoted uncertainties, but the path from a raw
+generator file to a published curve has not been demonstrated end to end: a prediction is
+converted on load and transformed again on plotting, and applying $A_C$ to a raw generator
+histogram does not reproduce that generator's plotted curve.  The smeared curves are
+released so that comparisons against the models shown in the note need no such
+reconstruction, but a reader smearing a \emph{new} model has no worked example to check
+against.  The fix is reference code plus a numerical unit test reproducing one published
+curve bin by bin.
+
 \paragraph{Everything that requires unblinding.}
 No beam-on signal region has been opened, so the control-region checks in data, the
 background constraints, and any statement that a result agrees or disagrees with a

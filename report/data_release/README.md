@@ -2,43 +2,46 @@
 
 ## What these are
 
-The Wiener-SVD unfolding in this analysis does not estimate the true distribution.  It
-estimates an *additionally smeared* one,
+The Wiener-SVD unfolding does not estimate the true distribution. It estimates an
+*additionally smeared* one,
 
     x_hat  ~  A_C . x_true
 
-so a theory prediction cannot be compared with the published central values directly.
-It must first be multiplied by the same `A_C`.  Comparing an unsmeared prediction to
-these results is a category error and will produce a meaningless chi-square.
+so a prediction must be transformed by the same `A_C` before it can be compared with the
+published values. Comparing an unsmeared prediction to these results is a category error.
 
-That makes `A_C` part of the measurement rather than an internal detail of it, which is
-why it is released here.
+## Start here: `curves_*.tsv`
 
-## Files
+**If you want to compare against the measurement, use these.** Each file holds, per bin,
+the unfolded data with its uncertainty and every model curve shown in the note — all of
+them *already smeared by `A_C`* and therefore directly comparable bin by bin. No
+transformation is required on your side.
 
-- `A_C_<family>_<config>_<observable>.tsv` — one matrix per extraction.
-  - `family` is `incl` (inclusive) or `1p` (proton-tagged).
-  - `config` is `FHC5`, `RHCFULL` or `COMB`.
-  - Row = smeared bin *i*, column = true bin *j*, value = `A_C[i][j]`.
-  - Apply as `x_hat[i] = sum_j A_C[i][j] * p[j]`, summing over the **true** index.
-- `index_A_C.tsv` — dimensions, row-sum range, and the source ROOT file for each matrix.
+## `A_C_*.tsv` — for smearing your own model
 
-## Read the row sums before using these
+Use these when you have a prediction that is not one of the released curves.
 
-`A_C` is **not** norm preserving, and the departure is large and observable-dependent.
-The row-sum range in `index_A_C.tsv` quantifies it: it runs from `0.046`–`0.412` for
-inclusive RHC `cos(theta_mu)` up to `0.334`–`1.269` for proton-tagged RHC `W_pi p`.
+    x_hat[i] = sum_j A_C[i][j] * p[j]      (sum over the TRUE index j)
 
-Two consequences:
+**A caveat you must read before relying on this.** The released `A_C` is bit-identical to
+the operator the analysis code applies internally (verified to 5e-11 against the
+full-space matrix, and the internal identity `U.R = A_C` holds to 4.4e-6). What is *not*
+currently demonstrated is the full path from a raw generator file to a published curve:
+between the two sit a units conversion applied when a prediction is loaded and a
+`1/(conversion_factor * width)` transform applied when it is plotted, and reproducing the
+published curves from a raw generator file plus this matrix alone has not been shown to
+work. Applying `A_C` to a raw generator histogram does **not** reproduce the plotted
+curve for that generator.
 
-1. **Do not integrate a differential result here and call it a total cross section.**
-   Summing the Wiener-SVD differential result over bins gives an observable-dependent
-   number, because each observable is suppressed differently by its own `A_C`.  The
-   physical total is quoted separately in the analysis note from the cut-and-count
-   extraction, which is not subject to this.
-2. The spread between observables in the published integrated values is this effect, not
-   a physical or acceptance difference.  The D'Agostini cross-check, which is flat across
-   observables, is what establishes that.
+So: `A_C` is correct as an operator, and the smeared curves are correct as results, but
+the release does not yet let you rebuild the second from a raw model file. Until it does,
+compare against `curves_*.tsv`, and treat `A_C` as the right operator for a prediction you
+have already put in the analysis's own true-bin event units.
+
+Do not apply `A_C` to `truth_smeared` or to any model column in `curves_*.tsv` — those are
+smeared already, and smearing them again gives roughly 0.77x the correct answer.
+
+## `cov/` — covariance matrices
 
 ## Coverage
 

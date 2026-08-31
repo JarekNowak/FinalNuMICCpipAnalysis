@@ -16,7 +16,9 @@
   \vspace{0.8cm}
   {\large Analysis Note, Full FHC, RHC, and Combined Exposure\par}
   \vspace{0.5cm}
-  {\normalsize Draft 1.0, 2026-06-09\par}
+  {\normalsize Draft 1.1, 2026-08-31\par}
+\vspace{0.15cm}
+{\footnotesize\ttfamily d5c929d \textperiodcentered\ 51 extractions \textperiodcentered\ blind\par}
   \vspace{1.5cm}
   {\large Ishanee Pophale, Jarek Nowak\par}
   \vspace{0.5cm}
@@ -1035,7 +1037,10 @@ $p_\pi>0.113\GeVc$. Our $p_\pi>0.175\GeVc$ ($\mathrm{KE}_\pi>84$~MeV) is
 therefore a higher threshold. Lowering it toward the $\nu_e$ value is possible,
 the signal definition is a truth-level choice and the unfolding maps reco to truth
 but the pion momentum reconstruction (track range under the muon hypothesis,
-mass-corrected) degrades rapidly below $0.175\GeVc$:
+mass-corrected) degrades rapidly below $0.175\GeVc$.  The table below is the
+study that led to \emph{rejecting} a lower threshold; it is not part of the measurement.
+The measured phase space is $p_\pi > 0.175\GeVc$ throughout this note, and no cross
+section is reported below it:
 
 \begin{center}\small
 \captionof{table}{Pion momentum reconstruction versus true $p_\pi$ (correctly
@@ -2172,21 +2177,24 @@ full covariance is used. The \emph{truth} column is the closure test: it is smal
 throughout, confirming the chain, and is visibly larger for RHC than for FHC, consistent
 with the poorer RHC angular response noted in \suppref{Sec.}{sec:thetavar}.
 
-\paragraph{The $\cos\theta_\mu$ $\chi^2$ is largely an artefact of the variable.}
-One entry stands out: in $\cos\theta_\mu$ the NEUT and NuWro $\chi^2$ reach $26.3/5$ and
-$26.0/5$ for FHC (and $18.4$, $17.4$ for RHC), an order of magnitude above every other
-observable. Taken at face value this would be strong evidence against those two
-generators. It is not. Repeating the identical comparison in $\theta_\mu$; the same
-events, the same data, the same bins mapped through $\arccos$, gives $2.8/5$ and
-$2.9/5$, a factor $\sim\!9$ smaller (Table~\ref{tab:chi2_theta}). The mechanism is the
-$A_C$ suppression discussed in \suppref{Sec.}{sec:thetavar}: in $\cos\theta_\mu$ the additional
-smearing suppresses the sharply peaked external generators by a factor $\sim\!0.33$ while
-leaving the smoother MicroBooNE tune much less affected, so NEUT and NuWro are pushed away
-from the data and the $\chi^2$ inflates. In $\theta_\mu$, where the suppression is
-$\sim\!0.76$, the same models agree well. The pion angle, which is not sharply peaked, is
-essentially unchanged between the two parameterisations. This is a further argument for
-quoting the angular cross sections in $\theta$ rather than $\cos\theta$, and a caution
-against reading model discrimination directly off a $\cos\theta_\mu$ $\chi^2$.
+\paragraph{\texorpdfstring{$\cos\theta_\mu$}{cos theta mu} versus
+\texorpdfstring{$\theta_\mu$}{theta mu}: an earlier interpretation, now withdrawn.}
+Before the regularisation operator was corrected, the $\chi^2$ for NEUT and NuWro in
+$\cos\theta_\mu$ reached $26.3/5$ and $26.0/5$ for FHC, an order of magnitude above every
+other observable, while the identical comparison in $\theta_\mu$ --- the same events, the
+same data, the same bins mapped through $\arccos$ --- gave $2.8/5$ and $2.9/5$.  That was
+read at the time as evidence that the $\cos\theta_\mu$ $\chi^2$ was an artefact of the
+variable, and as an argument for quoting the angular cross sections in $\theta$.
+
+\textbf{That reading is withdrawn.}  The apparent agreement in $\theta_\mu$ was itself
+produced by the defective regularisation: on a grid whose bin widths span a factor of ten,
+the uniform-grid stencil drove $A_C$ towards rank one, which collapses every model onto a
+common shape and makes them agree by construction.  With the width-aware operator the
+conditioning of FHC $\theta_\mu$ improves from $s_2/s_1 = 0.015$ to $0.51$, and
+$\theta_\mu$ again discriminates between models, preferring the tune that generated the
+fake data.  Neither parameterisation is privileged over the other on these grounds, and no
+model conclusion should be drawn from the pre-fix comparison.  The forensics are recorded
+in \suppref{Sec.}{sec:thetavar} and the correction in the change log.
 
 \begin{table}[H]
   \centering
@@ -2668,14 +2676,25 @@ statement about the regularisation and not about the detector.  Treat those two 
 corresponding caution.
 
 \paragraph{Numerical data release.}
-All fifty-one extractions are released with both their additional-smearing matrix and
-their full covariance decomposition, in \texttt{report/data\_release/}: $A_C$ as a text
-matrix per extraction, and per-component covariances in cross-section units
-(\texttt{flux}, \texttt{reint}, \texttt{xsec\_total}, each detector variation, the
-statistical terms, and the \texttt{PredTotal} and \texttt{total} aggregates), alongside
-the central values they belong to.  A prediction cannot be compared with these results
-without $A_C$, nor used quantitatively without the covariance, so both are part of the
-measurement rather than supporting material.
+All fifty-one extractions are released in \texttt{report/data\_release/}, indexed by
+\texttt{index\_extractions.tsv}: for each, the additional-smearing matrix, the full
+per-component covariance in cross-section units, and --- most useful for model
+comparison --- \texttt{curves\_*.tsv}, holding the unfolded data together with every model
+curve shown in this note, already smeared by $A_C$ and therefore directly comparable bin
+by bin.
+
+\textbf{One limitation of the release should be stated plainly.}  The released $A_C$ is
+bit-identical to the operator the code applies, agreeing with the full-space matrix to
+$5\times10^{-11}$, with the internal identity $UR = A_C$ holding to $4.4\times10^{-6}$;
+and the released covariances reproduce the quoted uncertainties to better than $0.5$
+percentage points.  What has \emph{not} been demonstrated is the complete path from a raw
+generator file to a published curve: a prediction passes through a units conversion when
+it is loaded, and a $1/(\text{conversion factor}\times\text{width})$ transform when it is
+plotted, and applying $A_C$ directly to a raw generator histogram does not reproduce that
+generator's plotted curve.  Releasing the smeared curves removes any need to replicate
+that chain for the models shown here, but a reader wishing to smear a \emph{new} model
+cannot yet check their implementation against a worked example.  Closing that gap, by
+shipping reference code with a numerical unit test, is an open item.
 
 The practical consequence is stated in the results section and repeated here because it
 is easy to get wrong: quote the physical total from the cut-and-count extraction, which
