@@ -2258,15 +2258,16 @@ and two of which invalidated conclusions (all recorded, with before-and-after va
 the change log).  This subsection states plainly what each result currently is, so that
 no number in this note has to be interpreted by working out which fixes preceded it.
 
-The division is driven by one fact about the systematic covariance.  Of the fifty-one
-extractions, the eighteen inclusive results carry a full detector systematic and the
-thirty-three proton-tagged results carry \emph{none}: detector variations have not yet
-been propagated through the proton-tagged selection.  The inclusive detector term runs
-between $16.9\%$ and $42.8\%$ depending on observable and configuration, so the quoted
-proton-tagged uncertainties are understated by a term of that order.  That is the reason
-the proton-tagged material is secondary scope here, and it is not a presentational
-choice: those uncertainties are incomplete in a way that would change their
-interpretation.
+All fifty-one extractions now carry a full systematic covariance including detector
+variations.  The proton-tagged results previously carried none --- the detector variation
+samples had been processed but never referenced by the proton-tagged configuration --- and
+were rebuilt and re-unfolded on 2026-08-31 to correct that.  Their detector terms
+($10.5\%$--$64.4\%$, median $23.9\%$) are of the same order as the inclusive ones
+($16.9\%$--$42.8\%$).
+
+The proton-tagged results remain secondary scope for the narrower reason that their model
+comparisons have not been recomputed since, and because the exposure does not support the
+differential $W_{\pi p}$ shape at any binning.
 
 \begin{center}
 \small
@@ -2301,15 +2302,14 @@ $d\sigma/dp_\pi$, two-bin
 \multicolumn{3}{l}{\emph{Secondary scope --- partial covariance}}\\
 \midrule
 Proton-tagged integrated cross section
-  & Provisional
-  & Detector systematics absent \emph{and} central value predates the
-    2026-08-30 weighting fix.  The most defensible proton-tagged quantity
-    once both are addressed. \\
+  & Complete; model comparison pending
+  & Detector systematics now propagated and central value postdates the
+    weighting fix.  $\chi^2$ against models not yet recomputed. \\
 Proton-tagged differential results, including transverse kinematic imbalance
-  & Provisional
-  & Detector systematics absent and central values predate the 2026-08-30
-    weighting fix.  Beam-frame reconstruction is corrected, but neither the
-    covariance nor the normalisation is final. \\
+  & Complete; model comparison pending
+  & Detector systematics now propagated; beam-frame reconstruction corrected;
+    central values postdate the weighting fix.  $\chi^2$ against models not
+    yet recomputed. \\
 \midrule
 \multicolumn{3}{l}{\emph{Withdrawn --- do not quote}}\\
 \midrule
@@ -2569,9 +2569,8 @@ previously only been described qualitatively.
 
 The row sums of $A_C$ are the relevant measure: a row summing to unity passes the
 normalisation of that bin through unchanged, and a row summing to $0.2$ removes four
-fifths of it.  The table covers the extractions whose $A_C$ has been regenerated since
-the central-value weighting fix; the matrices themselves are released as text
-(\texttt{report/data\_release/}), so any prediction can be smeared and compared directly.
+fifths of it.  The matrices are released as text (\texttt{report/data\_release/}), so any
+prediction can be smeared and compared directly.
 
 \begin{center}
 \small
@@ -2579,30 +2578,53 @@ the central-value weighting fix; the matrices themselves are released as text
 \toprule
 Observable & FHC & RHC & combined \\
 \midrule
+\multicolumn{4}{l}{\emph{Inclusive}}\\
+\midrule
 $p_\mu$ & $0.66$--$0.91$ & $0.58$--$0.99$ & $0.67$--$0.99$ \\
 $\cos\theta_\mu$ & $0.20$--$0.41$ & $0.05$--$0.41$ & $0.07$--$0.43$ \\
 $\cos\theta_\pi$ & $0.70$--$0.81$ & $0.78$--$0.85$ & $0.79$--$0.92$ \\
 $\theta_{\mu\pi}$ & $0.52$--$1.04$ & $0.59$--$1.16$ & $0.63$--$1.22$ \\
 $\theta_\mu$ & $0.58$--$0.78$ & $0.17$--$1.14$ & $0.52$--$0.66$ \\
+\midrule
+\multicolumn{4}{l}{\emph{Proton-tagged}}\\
+\midrule
+$p_\mu$ & $0.45$--$1.00$ & $0.55$--$0.89$ & $0.65$--$0.95$ \\
+$p_\pi$ (2-bin) & $0.33$--$0.86$ & $0.43$--$0.45$ & $0.47$--$0.49$ \\
+$\cos\theta_\mu$ & $0.59$--$0.69$ & $-0.15$--$0.58$ & $0.25$--$0.47$ \\
+$\cos\theta_\pi$ & $0.65$--$0.76$ & $0.63$--$0.76$ & $0.64$--$0.75$ \\
+$\theta_{\mu\pi}$ & $0.38$--$0.89$ & $0.32$--$0.78$ & $0.36$--$0.80$ \\
+$W_{\pi p}$ & $0.44$--$1.21$ & $-0.13$--$1.27$ & $0.31$--$1.24$ \\
+$W_{\rm had}$ & $0.55$--$0.81$ & $0.30$--$0.88$ & $0.20$--$0.87$ \\
+$\delta p_T$ & $0.55$--$0.86$ & $0.45$--$0.82$ & $0.46$--$0.87$ \\
+$\delta\phi_T$ & $0.66$--$0.78$ & $0.54$--$0.73$ & $0.30$--$0.68$ \\
+$\delta\alpha_T$ & $0.59$--$0.98$ & $0.57$--$0.93$ & $0.59$--$0.96$ \\
 \bottomrule
 \end{tabular}
 \end{center}
 
+Three features matter for interpretation.
+
+The suppression is large: inclusive $\cos\theta_\mu$ retains as little as $5\%$ of a
+bin's normalisation in RHC.  It also differs strongly between observables, which is
+precisely why the integrated cross section obtained by summing a differential result
+varies from observable to observable while the underlying physical total cannot.  The
+D'Agostini cross-check, whose integral is flat across observables, is what establishes
+that this spread is the smearing rather than a physical or acceptance effect.
+
+Two extractions have \emph{negative} row sums (1p~RHCFULL~costhmu, 1p~RHCFULL~Wpipr), meaning the smeared
+content of a bin is a net-negative combination of the truth distribution.  This is not
+forbidden --- $A_C$ is a regularisation operator, not a probability matrix --- but a
+negative row is a symptom of an ill-conditioned solution in that bin, and predictions
+smeared through those rows should be treated with corresponding caution.  Both are RHC
+proton-tagged, the configuration with the fewest selected events.
+
 \paragraph{Coverage.}
 The Wiener filter depends on the data covariance, so $A_C$ depends on the central-value
-weighting fix and a matrix computed before it is not the released measurement.  Fifteen
-of the thirty-nine extractions have been regenerated since; the remaining twenty-four ---
-$p_\pi$ in all three configurations, and the whole proton-tagged family --- are pending
-re-extraction and are deliberately \emph{not} released.  The export refuses to write a
-matrix whose sidecar predates the fix, so this cannot be forgotten.
-
-Two features matter for interpretation.  The suppression is large --- inclusive
-$\cos\theta_\mu$ retains as little as $5\%$ of a bin's normalisation in RHC --- and it
-differs strongly between observables, which is precisely why the integrated cross section
-obtained by summing a differential result varies from observable to observable while the
-underlying physical total cannot.  The D'Agostini cross-check, whose integral is flat
-across observables, is what establishes that this spread is the smearing rather than a
-physical or acceptance effect.
+weighting fix, and a matrix computed before it is not the released measurement.  Of the
+forty-eight extractions, forty-five are released; the three withheld are the inclusive
+$p_\pi$ matrices, whose sidecars predate the fix and which are pending re-extraction.
+The export refuses to write a matrix whose sidecar is too old, so this cannot be
+forgotten.
 
 The practical consequence is stated in the results section and repeated here because it
 is easy to get wrong: quote the physical total from the cut-and-count extraction, which
@@ -2865,27 +2887,24 @@ through resolution.
 \label{sec:wtki}
 
 \begin{quote}
-\textbf{Scope note.}  This section is secondary scope, for two independent reasons, and
-no number in it should be quoted as final.
+\textbf{Scope note.}  This section is secondary scope, but the reason has changed and
+the change is substantive.
 
-\emph{Detector variations are absent.}  They have not been propagated through the
-proton-tagged selection, so every uncertainty quoted here is missing a term that runs
-between $16.9\%$ and $42.8\%$ in the corresponding inclusive results.
+Detector variations have now been propagated through the proton-tagged selection.  All
+thirty-three proton-tagged extractions were rebuilt on 2026-08-31 with the nine detector
+variation samples included and re-unfolded from those universes, so every uncertainty
+quoted here now carries a detector term.  Those terms run from $10.5\%$ to $64.4\%$ with
+a median of $23.9\%$, against $16.9\%$--$42.8\%$ for the inclusive results: the same
+order, as expected for the same detector.  The central values were regenerated in the
+same pass and therefore also postdate the central-value weighting fix.
 
-\emph{The central values predate the central-value weighting fix.}  The proton-tagged
-extractions in this section were run on 2026-08-18, before the correction of 2026-08-30
-that removed a double application of the central-value weight to the externally-thrown
-fake data (change log, and \S\ref{sec:limitations}).  That correction moved the inclusive
-results by between $3.8\%$ and $12.9\%$, and the proton-tagged results will move by a
-comparable amount when they are re-extracted.  The numbers below are therefore provisional
-in normalisation as well as incomplete in uncertainty.  The corresponding additional
-smearing matrices are withheld from the data release for the same reason.
-
-Both are resolved by the same re-extraction, which rebuilds the proton-tagged universes
-with the detector variations included.  Until it is done, the differential $W_{\pi p}$
-shape is withdrawn entirely --- at this exposure the proton-tagged sample supports an
-integrated cross section, not a resonance-shape measurement.  See
-Sec.~\ref{sec:status_matrix}.
+What remains outstanding is narrower.  The model comparisons ($\chi^2$ against truth,
+tune and generators) have not been recomputed for the proton-tagged sample and are marked
+pending in the results table rather than carried over, since the pre-fix values no longer
+correspond to these central values.  The differential $W_{\pi p}$ shape remains withdrawn
+on binning grounds that the detector systematic does not affect --- at this exposure the
+proton-tagged sample supports an integrated cross section, not a resonance-shape
+measurement.  See Sec.~\ref{sec:status_matrix}.
 \end{quote}
 % =============================================================================
 
