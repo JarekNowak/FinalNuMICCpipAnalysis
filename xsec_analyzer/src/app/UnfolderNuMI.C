@@ -12,6 +12,7 @@
 #include "TAxis.h"
 #include "TCanvas.h"
 #include "TFile.h"
+#include "TSystem.h"
 #include "THStack.h"
 #include "TLegend.h"
 #include "TMatrixD.h"
@@ -510,6 +511,23 @@ void UnfolderNuMI(std::string XSEC_Config, std::string SLICE_Config, std::string
   double conv_factor = extr->conversion_factor();
   const auto& pred_map = extr->get_prediction_map();
   double total_pot = extr->get_data_pot();
+
+  // Dump the unfolded signal, the unfolding/error-propagation/additional-smearing
+  // matrices, and the full covariance decomposition in cross-section units, as text.
+  // These are the numerical data products released with the note: a Wiener-SVD result
+  // cannot be compared with a prediction without A_C, nor used quantitatively without
+  // the covariance.
+  //
+  // dump_overall_results() was written but never called, so none of these files were
+  // ever produced. Anything found under unfold_output/ with an older timestamp comes
+  // from a different build and does NOT correspond to these results.
+  // conversion_factor() returns the DENOMINATOR (integrated flux x argon targets):
+  // everywhere else the code forms a cross section as 1/(conv_factor*width). The dump
+  // helper multiplies instead, so it needs the reciprocal. Passing conv_factor directly
+  // is wrong by conv_factor^2 and still produces plausible-looking matrices.
+  gSystem->mkdir( "unfold_output", true );
+  dump_overall_results( xsec.result_, xsec.unfolded_cov_matrix_map_,
+    1.0 / conv_factor, pred_map );
 
   double A_C_total = 1;
 

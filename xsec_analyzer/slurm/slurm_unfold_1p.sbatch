@@ -72,15 +72,28 @@ sig=$(grep 'SYSTDUMP] sigma_int' slurm-*.out 2>/dev/null | tail -1 | awk '{print
 dv=$(grep 'SYSTDUMP] detVar_total' "$SLURM_SUBMIT_DIR/unf1p_${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}.out" 2>/dev/null | tail -1 | awk '{print $3}')
 
 # Harvest the matrices while they are still this task's own.
-OUTD="$RELEASE/cov/1p_${T}_${OBS}"
+OUTD="$RELEASE/cov/${FAMILY:-1p}_${T}_${OBS}"
 mkdir -p "$OUTD"
+# dump_overall_results() writes mat_table_cov_<name>.txt -- NOT XsecUnits_-prefixed.
+# The XsecUnits_ files that exist under unfold_output/ are 07-23 artefacts from another
+# build; globbing for them harvested nothing from 33 tasks.
 n=0
-for f in unfold_output/XsecUnits_mat_table_cov_*.txt; do
+for f in unfold_output/mat_table_cov_*.txt; do
   [ -f "$f" ] || continue
-  cp -p "$f" "$OUTD/$(basename "$f" | sed 's/^XsecUnits_mat_table_//')"
+  cp -p "$f" "$OUTD/$(basename "$f" | sed 's/^mat_table_//')"
   n=$((n+1))
 done
-[ -f unfold_output/mat_table_add_smear.txt ] && cp -p unfold_output/mat_table_add_smear.txt "$OUTD/add_smear.txt"
+for extra in add_smear unfolding err_prop; do
+  [ -f "unfold_output/mat_table_${extra}.txt" ] \
+    && cp -p "unfold_output/mat_table_${extra}.txt" "$OUTD/${extra}.txt"
+done
+[ -f unfold_output/vec_table_unfolded_signal.txt ] \
+  && cp -p unfold_output/vec_table_unfolded_signal.txt "$OUTD/unfolded_signal.txt"
+if [ "$n" -eq 0 ]; then
+  echo "FAILED $CFG $OBS -- no covariance matrices produced" >&2
+  cd / && rm -rf "$WORK"
+  exit 1
+fi
 echo "  harvested $n covariance matrices -> $OUTD"
 
 cd / && rm -rf "$WORK"

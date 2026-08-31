@@ -59,6 +59,33 @@ smeared content of a bin is a net-negative combination of the truth.  That is pe
 for a regularisation operator but signals an ill-conditioned bin; smear predictions
 through those rows with care.
 
+
+## Covariance matrices
+
+`cov/<family>_<config>_<observable>/` holds, for each extraction:
+
+- `cov_<component>.txt` — covariance in cross-section units, one per systematic
+  component (`flux`, `reint`, `xsec_total`, each `detVar*`, `POT`, `numTargets`, the
+  statistical terms) plus the aggregates `PredTotal` and `total`, and the blockwise
+  shape/norm/mixed decompositions.
+- `unfolded_signal.txt` — the central values these covariances belong to, as
+  `sigma` per bin (multiply-by-width already applied; summing the file gives the
+  integrated cross section).
+- `add_smear.txt`, `unfolding.txt`, `err_prop.txt` — the A_C, unfolding and
+  error-propagation matrices for the same extraction.
+
+Matrix files are `xbin ybin value`, with `numXbins`/`numYbins` on the first two lines.
+
+**Verified**: for all 33 proton-tagged extractions, the mean per-bin fractional
+uncertainty derived from `cov_PredTotal.txt` and `cov_detVar_total.txt` reproduces the
+`PredTotal_pct` and `detVar_pct` columns of `report/current_results.tsv` to better than
+0.1 percentage points.
+
+These were produced by `dump_overall_results()` in `UnfolderNuMI.C`, which had been
+written but never called — no covariance matrices were being produced at all. Any
+`unfold_output/*.txt` file older than 2026-08-31 comes from a different build and does
+not correspond to these results.
+
 ## Scope
 
 `p_pi` matrices are the adopted **two-bin** scheme (`ppi2bin`).  The five-bin `p_pi`
