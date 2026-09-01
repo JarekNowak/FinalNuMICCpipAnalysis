@@ -149,6 +149,71 @@ for cfg in CONFIGS:
     rows.append((cfg, len(xcs), f"{flux:.6g}", f"{pot:.5g}", f"{N_AR:.4g}",
                  uniq_unf[0] if uniq_unf else "?", ";".join(os.path.basename(x) for x in uniq_fp)))
 
+# ---------------------------------------------------------------------------------
+# Systematics/file-list coupling.
+#
+# The proton-tagged detector systematic was absent from all 33 extractions because the
+# detVar SAMPLES existed and were processed, but neither the file_properties table nor
+# the systematics config referenced them. Neither file was wrong on its own; the two
+# simply did not agree, and nothing compared them. A declared source with no files
+# contributes nothing, and files with no declaration are silently ignored -- both are
+# failures, and the second is the one that actually happened.
+SYSTCALC = {"fhc5":  "ccpi_systcalc_numi.conf",
+            "rhcfull":"ccpi_systcalc_numi.conf",
+            "comb":  "ccpi_systcalc_numi.conf"}
+SYSTCALC_1P = "ccpi1p_systcalc_numi.conf"
+
+def declared_dv(conf):
+    """DV sources declared in a systcalc config: '<name> DV <file_type>'."""
+    out = set()
+    p = os.path.join(CFG, conf)
+    if not os.path.exists(p):
+        return None
+    for line in open(p):
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        f = line.split()
+        if len(f) >= 3 and f[1] == "DV":
+            out.add(f[2])
+    return out
+
+def available_dv(fp):
+    """detVar file types present in a file_properties table."""
+    out = {}
+    p = fp if os.path.isabs(fp) else os.path.join(HERE, fp)
+    if not os.path.exists(p):
+        return None
+    for line in open(p):
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        f = line.split()
+        if len(f) >= 3 and f[2].startswith("detVar"):
+            out[f[2]] = out.get(f[2], 0) + 1
+    return out
+
+for cfg in CONFIGS:
+    for conf, fpname, label in [
+        (SYSTCALC[cfg],  f"file_properties_numi_{cfg}.txt",   f"{cfg} inclusive"),
+        (SYSTCALC_1P,    f"file_properties_numi_{cfg}_w.txt", f"{cfg} proton-tagged")]:
+        dec = declared_dv(conf)
+        av  = available_dv(os.path.join(CFG, fpname))
+        if dec is None or av is None:
+            fail(f"[{label}] cannot read {conf} or {fpname}")
+            continue
+        # a declared source with no files contributes nothing
+        for d in sorted(dec - set(av) - {"detVarCV"}):
+            fail(f"[{label}] systematic '{d}' is declared but has NO files")
+        # files with no declaration are silently ignored -- the failure that occurred
+        for a in sorted(set(av) - dec - {"detVarCV"}):
+            fail(f"[{label}] detVar sample '{a}' is present ({av[a]} file(s)) but NOT "
+                 f"declared in {conf} -- it will be silently ignored")
+        if dec and av and "detVarCV" not in av:
+            fail(f"[{label}] detVar sources declared but no detVarCV reference sample")
+        if dec and av:
+            note(f"[{label}] {len(dec)} DV sources declared, all backed by files")
+
 with open(OUT, "w") as fh:
     fh.write("config\tn_xsec_configs\tflux_cm2_per_POT\tdata_POT\tN_Ar\tunfold\tfile_properties\n")
     for r in rows:
