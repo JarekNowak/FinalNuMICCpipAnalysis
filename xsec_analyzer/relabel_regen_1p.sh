@@ -9,9 +9,16 @@ export XSEC_ANALYZER_DIR="$PWD"
 PROC=/data/uboone/processed; FIG=../report/figures; UO=unfold_output; LOG=../logs/relabel
 mkdir -p "$LOG"
 n=0; fail=0
+# The TKI observables are published in the COARSENED two-bin scheme; the fine-binned
+# configs still exist but their univmakes were deliberately not rebuilt, so unfolding
+# them fails and the step figures silently go missing. Draw from the published config
+# while keeping the historical output filename.
 for k in Wpipr Whad dpt dalphat dphit pn; do
-  xc=configs/ccpi1p_xsec_config_numi_${k}_fhc5.txt
-  sc=configs/ccpi1p_${k}_slice_config.txt
+  case "$k" in
+    dpt|dalphat|dphit|pn) src="${k}2bin"; sc=configs/ccpi1p_${k}_slice_config_2bin.txt ;;
+    *)                    src="$k";       sc=configs/ccpi1p_${k}_slice_config.txt ;;
+  esac
+  xc=configs/ccpi1p_xsec_config_numi_${src}_fhc5.txt
   [ -f "$xc" ] && [ -f "$sc" ] || { echo "  MISSING config for $k"; fail=$((fail+1)); continue; }
   rm -f "$UO"/plot_step[1-4]_*.pdf
   bin/UnfolderNuMI "$xc" "$sc" "$PROC/relabel_1p_${k}.root" > "$LOG/1p_${k}.log" 2>&1
