@@ -2363,29 +2363,43 @@ formed against the fixed central-value truth smeared by that member's own $A_C$.
 per-throw \emph{fake-data} truth is not a valid reference: it follows the Poisson draw, so
 numerator and reference fluctuate together and the width comes out too small.)
 
-Measured on $d\sigma/dp_\mu$, against the \emph{statistical} covariance:
+Two observables were run, each with 32 members, chosen to bracket the conditioning: the
+well-behaved $p_\mu$, and $\cos\theta_\mu$, whose $A_C$ row sums fall as low as $0.046$
+so that the regularisation removes up to $95\%$ of a bin's normalisation.  If the
+uncertainties were mis-sized anywhere, the second is where it would show.
+
 \begin{center}
 \small
 \begin{tabular}{lccc}
 \toprule
- & pull mean & pull width & 68\% / 95\% coverage \\
+Reference covariance & pull mean & pull width & 68\% / 95\% coverage \\
 \midrule
-measured (32 members) & $-0.20$ & $1.04$ & $63.8\%$ / $95.5\%$ \\
-expected              & $0$     & $1$    & $68\%$ / $95\%$ \\
+\multicolumn{4}{l}{\emph{statistical only}}\\
+$d\sigma/dp_\mu$        & $-0.20$ & $1.04$ & $63.8\%$ / $95.5\%$ \\
+$d\sigma/d\cos\theta_\mu$ & $-0.18$ & $0.96$ & $73.1\%$ / $94.4\%$ \\
+\midrule
+\multicolumn{4}{l}{\emph{full}}\\
+$d\sigma/dp_\mu$        & $-0.06$ & $0.32$ & $99.6\%$ / $100\%$ \\
+$d\sigma/d\cos\theta_\mu$ & $-0.05$ & $0.31$ & $98.8\%$ / $100\%$ \\
+\midrule
+expected                & $0$     & $1$    & $68\%$ / $95\%$ \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-The width is $1.04$ against an expectation of unity, determined to $\pm13\%$ with this
-many members, and the interval coverage is correct.  \textbf{The statistical
-uncertainties are correctly sized.}
+Against the statistical covariance both widths are consistent with unity --- $1.04$ and
+$0.96$, each determined to $\pm13\%$ with this many members --- and the interval coverage
+is correct.  \textbf{The statistical uncertainties are correctly sized, and the strongly
+suppressed observable behaves no differently from the well-conditioned one.}  That the
+severe $A_C$ suppression in $\cos\theta_\mu$ does not distort its uncertainties is the
+more informative of the two results, since $p_\mu$ passing was the expected outcome.
 
 Two further things the ensemble shows.  Against the \emph{full} covariance the pull width
-is $0.32$ and coverage is essentially $100\%$ --- the quoted uncertainty is about three
-times the throw-to-throw spread, because the ensemble varies only the data statistics
-while the denominator carries flux, detector and cross-section terms that are identical in
-every member.  That is the same effect as the closure $p$-values clustered near unity, now
-measured rather than argued.
+is $0.31$--$0.32$ for both observables and coverage is essentially $100\%$: the quoted
+uncertainty is about three times the throw-to-throw spread, because the ensemble varies
+only the data statistics while the denominator carries flux, detector and cross-section
+terms that are identical in every member.  That is the same effect as the closure
+$p$-values clustered near unity, now measured rather than argued.
 
 Second, the ensemble mean sits $2.5\%$ below the reference ($0.7887$ against $0.8090$),
 a $2.1\sigma$ offset on the mean, and the per-bin pull means are all negative and
@@ -2394,9 +2408,9 @@ extraction, around a fifth of the statistical uncertainty and far inside the $41
 systematic band, but it is a bias rather than a fluctuation and should be quoted as such
 rather than absorbed silently.
 
-The study covers one observable in one configuration.  $\cos\theta_\mu$, whose $A_C$ row
-sums fall to $0.046$, is where a mis-sized uncertainty would bite hardest and is the
-natural next target.
+The study covers two observables in one configuration (FHC).  Extending it to RHC and to
+the proton-tagged family would test whether the same holds where the statistics are
+sparser; the machinery is in place and each observable costs about four hours.
 
 \paragraph{On the blinding status.}
 Every ``data'' point in this note is Poisson-thrown central-value fake data.  No beam-on
