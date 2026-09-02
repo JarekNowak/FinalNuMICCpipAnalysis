@@ -3965,6 +3965,19 @@ That last one was found by asking whether an external user could reproduce a pub
 generator curve from the released matrix.  Internal closure could not have found it: the
 data and the truth were both correct, and only the comparison was wrong.
 
+\paragraph{Reproducibility from raw inputs.}
+All fifty-one extractions were rebuilt from the processed ntuples with every cached
+universe deleted --- new universe files, new unfolding, new covariance --- into a separate
+tree so that a failure could not damage the release it was verifying.  The rebuilt
+spectra agree with the released ones \emph{bin by bin}, with no bin differing by more than
+$10^{-9}$ in any of the fifty-one.  The release is therefore regenerable from the raw
+inputs and the recorded configuration, not merely from a preserved intermediate.
+
+This is worth separating from the closure and ensemble tests.  Those ask whether the
+extraction is right; this asks whether what is published is what the code currently
+produces.  Given that this analysis has twice shipped a downstream product that lagged a
+fix, that is a distinct question and it now has an answer.
+
 \paragraph{Before unblinding.}
 Control regions must be opened in data first, with the permitted response to any
 discrepancy fixed beforehand; a clean rebuild from empty caches must reproduce the release;
