@@ -3033,86 +3033,29 @@ selection efficiency of $11.5\%$ and a purity of $52\%$ (versus $17.5\%$ and $\s
 for the inclusive selection); the proton tag trades signal statistics for a fully
 reconstructed hadronic final state.
 
-\subsection{Selection performance and cut-flow}
+\subsection{Extracted cross sections}
+
+The proton tag costs efficiency and buys exclusivity: it lowers the selection efficiency
+from $\approx\!17.5\%$ to $\approx\!12\%$ and roughly halves the selected signal, while
+leaving purity at $\approx\!47$--$48\%$ under the more restrictive exclusive truth
+definition.  About $87\%$ of tagged events contain a true proton above threshold, so the
+mis-tag rate is $\approx\!13\%$.  Its clearest benefit is cosmic rejection: requiring a
+contained proton above $0.3\GeVc$ removes beam-off background by up to a factor of six.
+The full cut-flow, the per-observable binning study and the response tables are in the
+technical supplement; only the extracted cross sections are given here.
 \label{sec:wtki_cutflow}
 The full-exposure cut-flow of the proton-tagged subsample is the inherited
 $\mathrm{CC}\,1\mu1\pi Xp$ sequence followed by the leading-proton identification
-(``IdentProton''), which defines the subsample. Table~\ref{tab:cutflow_1p} gives the
+(``IdentProton''), which defines the subsample. \suppref{Table}{tab:cutflow_1p} gives the
 per-category, per-cut breakdown for the three beam configurations and
-Figure~\ref{fig:cutflow_1p} the corresponding stacks; both use the same per-run POT
+\suppref{Fig.}{fig:cutflow_1p} the corresponding stacks; both use the same per-run POT
 scaling as the inclusive cut-flow (Table~\ref{tab:cutflow}), and ``signal'' here is the
 proton-tagged signal (inclusive signal plus a true proton above $0.3$~GeV/$c$). The
 proton-identification cut is the key discriminator: at FHC it rejects $\sim\!64\%$ of the
 neutrino background while retaining $\sim\!71\%$ of the signal, lifting the purity from
 $33\%$ at the inclusive final cut (Nonprotons) to $48\%$ in the proton-tagged sample.
 
-\begin{figure}[H]
-  \centering
-  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{cutflow_yields_1p_fhc}\caption{FHC.}\end{subfigure}\hfill
-  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{cutflow_yields_1p_rhc}\caption{RHC.}\end{subfigure}\hfill
-  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{cutflow_yields_1p_comb}\caption{Combined.}\end{subfigure}
-  \caption{Proton-tagged (\texttt{CC1mu1pi1p}) cut-flow yields at full exposure (log
-    scale; MC-prediction stack, Okabe-Ito: signal blue, background orange, EXT grey,
-    dirt green). The last stage, IdentProton, is the leading-proton identification that
-    defines the subsample.}
-  \label{fig:cutflow_1p}
-\end{figure}
 
-\begin{table}[H]
-  \centering
-  \caption{Proton-tagged (\texttt{CC1mu1pi1p}) cut-flow yields at full exposure for
-    FHC, RHC and combined (MC prediction; data blind). Stages None--Nonprotons are the
-    inherited inclusive selection with the proton-tagged signal definition; the final
-    IdentProton stage adds the leading-proton identification. Signal/Bkg from the
-    $\nu_\mu$ overlays POT-scaled per run, EXT by the data/EXT trigger ratio, dirt from
-    the GENIE NuMI dirt overlay. Pred.\ $=$ Signal $+$ Bkg $+$ EXT $+$ Dirt. Eff.\ is the cumulative signal efficiency relative to the generated signal (the None stage, where all true signal is counted); Pur.\ $=$ Signal/Pred.}
-  \label{tab:cutflow_1p}
-  \small
-  \begin{tabular}{lrrrrrrr}
-    \toprule
-    Cut & Signal & Bkg MC & EXT & Dirt & Pred. & Eff. [\%] & Pur. [\%] \\
-    \midrule
-    \multicolumn{8}{l}{\textit{FHC (Runs 1,2,4,5; $8.857\times10^{20}$~POT)}} \\
-    None             & 3\,387 & 281\,372 & 24\,410\,022 & 36\,142 & 24\,730\,924 & 100.0 & 0.01 \\
-    InFiducialVol    & 2\,834 & 63\,944 & 1\,041\,637 & 1\,890 & 1\,110\,306 & 83.7 & 0.26 \\
-    Topological      & 2\,238 & 29\,303 & 35\,184 & 204 & 66\,929 & 66.1 & 3.3 \\
-    MuonCandidate    & 2\,031 & 20\,092 & 15\,516 & 137 & 37\,776 & 60.0 & 5.4 \\
-    ContainedPion    & 852 & 2\,637 & 1\,376 & 25 & 4\,890 & 25.2 & 17.4 \\
-    MuonIn3Planes    & 812 & 2\,499 & 1\,145 & 17 & 4\,473 & 24.0 & 18.2 \\
-    PionIn3Planes    & 754 & 2\,255 & 872 & 7.0 & 3\,888 & 22.3 & 19.4 \\
-    ShowerCut        & 632 & 1\,313 & 569 & 6.2 & 2\,521 & 18.7 & 25.1 \\
-    OpeningAngle     & 628 & 1\,226 & 190 & 2.0 & 2\,045 & 18.5 & 30.7 \\
-    Nonprotons       & 568 & 1\,049 & 130 & 1.3 & 1\,749 & 16.8 & 32.5 \\
-    \textbf{IdentProton} & \textbf{401} & \textbf{373} & \textbf{53} & \textbf{0.4} & \textbf{828} & \textbf{11.8} & \textbf{48.4} \\
-    \midrule
-    \multicolumn{8}{l}{\textit{RHC (Runs 1,2,3,4a,4b,4c; $1.108\times10^{21}$~POT)}} \\
-    None             & 3\,638 & 306\,840 & 25\,344\,643 & 28\,032 & 25\,683\,152 & 100.0 & 0.01 \\
-    InFiducialVol    & 3\,064 & 71\,162 & 1\,081\,520 & 1\,466 & 1\,157\,212 & 84.2 & 0.26 \\
-    Topological      & 2\,455 & 33\,134 & 36\,532 & 158 & 72\,278 & 67.5 & 3.4 \\
-    MuonCandidate    & 2\,234 & 22\,769 & 16\,110 & 106 & 41\,219 & 61.4 & 5.4 \\
-    ContainedPion    & 935 & 3\,291 & 1\,429 & 19 & 5\,674 & 25.7 & 16.5 \\
-    MuonIn3Planes    & 892 & 3\,119 & 1\,189 & 13 & 5\,213 & 24.5 & 17.1 \\
-    PionIn3Planes    & 831 & 2\,835 & 905 & 5.5 & 4\,577 & 22.9 & 18.2 \\
-    ShowerCut        & 687 & 1\,544 & 591 & 4.8 & 2\,827 & 18.9 & 24.3 \\
-    OpeningAngle     & 683 & 1\,444 & 197 & 1.5 & 2\,325 & 18.8 & 29.4 \\
-    Nonprotons       & 611 & 1\,217 & 136 & 1.0 & 1\,964 & 16.8 & 31.1 \\
-    \textbf{IdentProton} & \textbf{436} & \textbf{443} & \textbf{55} & \textbf{0.3} & \textbf{934} & \textbf{12.0} & \textbf{46.6} \\
-    \midrule
-    \multicolumn{8}{l}{\textit{Combined ($1.994\times10^{21}$~POT)}} \\
-    None             & 7\,025 & 588\,212 & 49\,755\,076 & 36\,142 & 50\,386\,456 & 100.0 & 0.01 \\
-    InFiducialVol    & 5\,898 & 135\,106 & 2\,123\,174 & 1\,890 & 2\,266\,069 & 84.0 & 0.26 \\
-    Topological      & 4\,693 & 62\,436 & 71\,717 & 204 & 139\,050 & 66.8 & 3.4 \\
-    MuonCandidate    & 4\,265 & 42\,860 & 31\,627 & 137 & 78\,889 & 60.7 & 5.4 \\
-    ContainedPion    & 1\,787 & 5\,928 & 2\,805 & 25 & 10\,545 & 25.4 & 16.9 \\
-    MuonIn3Planes    & 1\,704 & 5\,618 & 2\,333 & 17 & 9\,672 & 24.3 & 17.6 \\
-    PionIn3Planes    & 1\,585 & 5\,091 & 1\,777 & 7.0 & 8\,460 & 22.6 & 18.7 \\
-    ShowerCut        & 1\,320 & 2\,857 & 1\,161 & 6.2 & 5\,344 & 18.8 & 24.7 \\
-    OpeningAngle     & 1\,310 & 2\,670 & 387 & 2.0 & 4\,369 & 18.7 & 30.0 \\
-    Nonprotons       & 1\,179 & 2\,266 & 266 & 1.3 & 3\,712 & 16.8 & 31.8 \\
-    \textbf{IdentProton} & \textbf{837} & \textbf{816} & \textbf{109} & \textbf{0.4} & \textbf{1\,762} & \textbf{11.9} & \textbf{47.5} \\
-    \bottomrule
-  \end{tabular}
-\end{table}
 
 \paragraph{Proton-tag performance.} Beyond the yields, the leading-proton
 identification (log-likelihood-ratio PID score below the proton cut, $p_p\ge0.3$~GeV/$c$,
@@ -3147,7 +3090,7 @@ adopted after the finer binning was found to sit inside the resolution
 background-subtraction bias that had previously forced a coarser three-bin binning for the
 lower-statistics reverse-horn-current sample, while the five inherited kinematic
 observables use the inclusive-analysis binning (four to seven bins). All bin edges are set
-from the validated true-signal distributions (Table~\ref{tab:wtki_binning}).
+from the validated true-signal distributions (\suppref{Table}{tab:wtki_binning}).
 
 \subsubsection*{Reconstruction from input quantities}
 \label{sec:wtki_reco}
@@ -3204,29 +3147,6 @@ formulated for a single-proton hadronic system and is applied here to the summed
 system with the proton rest mass, an approximation adequate for the leading-order
 kinematics.
 
-\begin{table}[H]
-  \centering
-  \caption{Binning of the six W/TKI proton-tagged observables (six equal-population bins
-    each), chosen from the validated true-signal distributions. The first and last bins
-    are open so the full signal phase space is partitioned. $W_{\pi p}$ brackets the
-    $\Delta(1232)$ peak; the $\delta\alpha_T$ and $\delta\phi_T$ binnings are finer toward
-    $180^\circ$, where final-state interactions pile up. The five inherited kinematic
-    observables ($p_\mu$, $p_\pi$, $\cos\theta_\mu$, $\cos\theta_\pi$, $\theta_{\mu\pi}$)
-    use the inclusive-analysis binning of \S\ref{app:binning} unchanged.}
-  \label{tab:wtki_binning}
-  \begin{tabular}{lll}
-    \toprule
-    Observable & Definition & Bin edges \\
-    \midrule
-    $W_{\pi p}$        & $M(\pi p)$, direct        & $1.08,\,1.19,\,1.23,\,1.27,\,1.34,\,1.47,\,2.00$~GeV/$c^2$ \\
-    $W_\mathrm{had}$   & calorimetric              & $0,\,0.78,\,1.08,\,1.21,\,1.31,\,1.44,\,1.90$~GeV/$c^2$ \\
-    $\delta p_T$       & $|\vec p_T^{\,\mu}+\vec p_T^{\,\mathrm{had}}|$ & $0,\,0.43,\,0.59,\,0.72,\,0.88,\,1.17,\,1.60$~GeV/$c$ \\
-    $\delta\alpha_T$   & TKI angle                 & $0,\,80,\,120,\,142,\,158,\,170,\,180^\circ$ \\
-    $\delta\phi_T$     & TKI angle                 & $0,\,37,\,63,\,84,\,107,\,139,\,180^\circ$ \\
-    $p_n$              & inferred nucleon momentum & $0,\,0.52,\,0.67,\,0.81,\,0.98,\,1.25,\,1.70$~GeV/$c$ \\
-    \bottomrule
-  \end{tabular}
-\end{table}
 
 The pipeline is validated end-to-end on FHC with a fake-data closure: the Poisson-thrown
 central-value pseudo-data are unfolded with the same Wiener-SVD procedure
@@ -3306,7 +3226,7 @@ NEUT from their event vectors inside the SL7 container); the rebinning conserves
 generator's integral to the previous three-bin value (GENIE $0.501$, NuWro $0.646$,
 GiBUU $0.735$, NEUT $0.783\times10^{-38}$~cm$^2$/Ar). All curves, data, tune and
 generators, are $A_C$-smeared, so the comparison is made consistently in the
-measurement space (\S\ref{sec:acwtki}). The predictions are built at truth level from each
+measurement space (\suppref{Sec.}{sec:acwtki}). The predictions are built at truth level from each
 generator's event-level final state, GENIE gst events, GiBUU \texttt{FinalEvents},
 and the NuWro and NEUT event vectors reprocessed in their respective SL7-container
 environments, by applying the inclusive signal plus a leading true proton above
@@ -3376,6 +3296,23 @@ factor.
   \end{tabular}
 \end{table}
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{dsigma_ccpi1p_FHC5}
+  \caption{Proton-tagged (\texttt{CC1mu1pi1p}) differential cross sections for FHC:
+    the $\pi p$ invariant mass $W_{\pi p}$, the calorimetric hadronic mass
+    $W_\mathrm{had}$, and the four transverse-kinematic-imbalance observables
+    $\delta p_T$, $\delta\alpha_T$, $\delta\phi_T$ and $p_n$. Unfolded fake data
+    (black points) are compared to the $A_C$-smeared fake-data truth (grey dashed), the
+    MicroBooNE tune (black), and the GENIE (blue), GiBUU (green), NEUT (purple) and
+    NuWro (orange) predictions built for the same proton-tagged phase space.
+    $W_{\pi p}$ falls from the
+    $\Delta(1232)$ threshold region; $\delta\alpha_T$ rises toward $180^\circ$, the
+    signature of final-state interactions.}
+  \label{fig:dsigma_ccpi1p_fhc}
+\end{figure}
+
+
 With all three configurations in hand, the combined $\sigma_\mathrm{int}$ lies between the
 FHC and RHC values for all eleven observables.  Earlier drafts reported four exceptions,
 at the few-per-cent level; they were artefacts of the pre-rebuild proton-tagged
@@ -3393,80 +3330,6 @@ The spread across observables within a configuration, $0.41$ to $0.51$ for the c
 set, is likewise not a physics spread but the residual of the additional smearing
 discussed in the next section: each observable's $A_C$ rescales the integral by a different
 factor, so the eleven numbers are not eleven independent measurements of the same quantity.
-
-\subsection{Additional smearing in the proton-tagged observables}
-\label{sec:acwtki}
-
-Because the Wiener--SVD additional-smearing matrix $A_C$ is not norm-preserving, each
-observable's predictions are rescaled by a different factor when they are brought into the
-measurement space. Table~\ref{tab:acwtki} gives that factor, measured as the ratio of the
-$A_C$-smeared to the truth-level generator integral, for the six proton-tagged observables.
-It is a property of the response and the binning, not of the model: GENIE and GiBUU agree
-to a few per cent throughout.
-
-The two hadronic-mass variables are the \emph{least} affected in the whole analysis
-($0.77$--$0.88$). This is worth stating explicitly because $W_{\pi p}$ is the sharpest
-distribution measured here; the ratio of its largest to smallest bin is $\sim\!36$,
-against $\sim\!19$ for $\cos\theta_\mu$, whose forward peak is suppressed by a factor
-$\sim\!0.33$ (\suppref{Sec.}{sec:thetavar}). Sharpness alone therefore does not drive the
-suppression: $A_C$ removes structure that the \emph{response} cannot resolve, and
-$W_{\pi p}$ is built from directly measured pion and proton momenta with good resolution
-and equal-population bins that track the $\Delta(1232)$ peak, so the peak survives. No
-reparameterisation of $W$ is required.
-
-Two observables do carry a caveat. $\delta p_T$ is strongly suppressed ($0.43$--$0.45$),
-closer to the $\cos\theta_\mu$ regime than to $W$, and $p_n$ is \emph{enhanced} by a factor
-$\sim\!1.7$. Both effects are applied identically to data, tune and generators, so the
-closure is unaffected, but any model comparison read off the $\delta p_T$ and especially
-the $p_n$ panels is distorted by these factors and should not be interpreted as a direct
-statement about the truth-level predictions until the binning and response for those two
-observables have been revisited.
-
-\begin{table}[H]
-  \centering
-  \caption{Additional-smearing factor $A_C$ for the proton-tagged observables (FHC),
-    measured as the ratio of the $A_C$-smeared to the truth-level generator integral. The
-    inclusive observables are given for scale.}
-  \label{tab:acwtki}
-  \begin{tabular}{lc}
-      \toprule
-      Observable & mean $A_C$ row sum \\
-      \midrule
-      $p_n$              & $0.79$ \\
-      $\delta\alpha_T$   & $0.79$ \\
-      $W_{\pi p}$        & $0.75$ \\
-      $\delta\phi_T$     & $0.72$ \\
-      $\delta p_T$       & $0.70$ \\
-      $W_\mathrm{had}$   & $0.63$ \\
-      \midrule
-      \multicolumn{2}{p{0.72\textwidth}}{\emph{Computed from the released matrices
-        (\texttt{A\_C\_1p\_FHC5\_*.tsv}) after the width-aware regularisation and the
-        removal of the duplicated $A_C$.  The values span $0.63$--$0.79$,
-        a range of $0.16$.  The pre-fix set ($0.88$, $0.78$, $0.63$,
-        $0.61$, $0.43$, $1.71$) spanned a factor of four and amplified $p_n$ above unity;
-        the ordering of the generator $\chi^2$ can no longer be attributed to differences
-        in smearing.}} \\
-      \bottomrule
-    \end{tabular}
-\end{table}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\textwidth]{dsigma_ccpi1p_FHC5}
-  \caption{Proton-tagged (\texttt{CC1mu1pi1p}) differential cross sections for FHC:
-    the $\pi p$ invariant mass $W_{\pi p}$, the calorimetric hadronic mass
-    $W_\mathrm{had}$, and the four transverse-kinematic-imbalance observables
-    $\delta p_T$, $\delta\alpha_T$, $\delta\phi_T$ and $p_n$. Unfolded fake data
-    (black points) are compared to the $A_C$-smeared fake-data truth (grey dashed), the
-    MicroBooNE tune (black), and the GENIE (blue), GiBUU (green), NEUT (purple) and
-    NuWro (orange) predictions built for the same proton-tagged phase space.
-    $W_{\pi p}$ falls from the
-    $\Delta(1232)$ threshold region; $\delta\alpha_T$ rises toward $180^\circ$, the
-    signature of final-state interactions.}
-  \label{fig:dsigma_ccpi1p_fhc}
-\end{figure}
-
-% =============================================================================
 
 \section{Systematic Uncertainties}
 \label{sec:systematics}
