@@ -93,6 +93,18 @@
       never referenced by the proton-tagged configuration.
       Sec.~\ref{sec:status_matrix} gives a per-result status table.
       %
+      \textbf{Validation.}  Two results bound what the extraction can be trusted to do.
+      An ensemble of thirty-two independent Poisson realisations, each carried through the
+      whole chain, gives per-bin pull widths of $1.04$ ($d\sigma/dp_\mu$) and $0.96$
+      ($d\sigma/d\cos\theta_\mu$) against the statistical covariance, with $68\%$ and
+      $95\%$ interval coverage recovered: the statistical uncertainties are correctly
+      sized, and the observable whose additional smearing is most severe behaves no
+      differently from the best-conditioned one.  Separately, all fifty-one extractions
+      rebuild bit-identically from the processed ntuples with every cached universe
+      deleted, so the released numbers are regenerable from the raw inputs rather than
+      from a preserved intermediate.  The same ensemble shows a small negative bias,
+      $2.5\%$ on the integral, which is stated rather than corrected.
+      %
       \textbf{Companion documents.}  This note describes the current state of the analysis.
       The validation and diagnostic studies behind it --- the pion-momentum estimator
       survey, the binning and threshold optimisation, and the closure programme --- are in
@@ -3610,106 +3622,6 @@ therefore the response conditioning (more overlay statistics, or the observable'
 binning and regularisation strength), not the flux model; $\cos\theta_\pi$; the
 noisiest observable across the entire budget, is where it would matter most.
 
-\section{Known Issues and Required Follow-up}
-\label{sec:issues}
-% =============================================================================
-
-\begin{table}[H]
-  \centering
-  \caption{Outstanding issues and their impact on the final result.}
-  \label{tab:issues}
-  \small
-  \begin{tabular}{L{4.5cm} L{2.5cm} L{5.0cm}}
-    \toprule
-    Issue & Status & Impact \\
-    \midrule
-    \texttt{FLUX\_PER\_POT} confirmed
-      & \textbf{Resolved}
-      & $\Phi = 6.81159\times10^{-10}$~cm$^{-2}$~POT$^{-1}$ from NuMI flux histograms \\[4pt]
-    Unfolding covariance (stat-only $\to$ full)
-      & \textbf{Resolved}
-      & Framework \texttt{PredTotal}$+$data Poisson imported; removed $\sim26\%$ bias \\[4pt]
-    EXT subtraction on NuWro fake data
-      & \textbf{Resolved}
-      & Cancelled via \texttt{fake\_data\_ext\_cancel}.
-        \emph{Follow-up:} re-enable before unblinding \\[4pt]
-    $\theta_{\mu\pi}$ binning (10 vs 9, C4)
-      & \textbf{Resolved}
-      & Custom aligned to framework 9-bin scheme \\[4pt]
-    Multisim systematics not propagated (custom)
-      & Not started
-      & Imported from framework for the covariance; full custom propagation pending \\[4pt]
-    Negative tail bins
-      & \textbf{Resolved}
-      & All bins now positive after EXT cancellation; no longer present \\[4pt]
-    Beam-on signal region not opened
-      & \textbf{By design}
-      & Blind analysis.  The fake data are thrown at the full per-run data exposure
-        already, so no exposure increase is pending; what unblinding adds is the real
-        data vector, not more POT \\[4pt]
-    Generator comparisons (GENIE, NuWro, NEUT, GiBUU)
-      & \textbf{Resolved}
-      & All four are extracted and compared for every observable
-        (Table~\ref{tab:chi2_incl}), with a single application of $A_C$ \\[4pt]
-    CRT veto branches (\texttt{crthitpe}, \texttt{crtveto})
-      & Dead (all-zero in NuMI ntuples)
-      & Replaced by \texttt{bdt\_cosmic} (disabled at default 0.0) \\[4pt]
-    Official XSecAnalyzer NuWro closure
-      & \textbf{Done} (all 5 obs)
-      & Cross-validates the unfolding; NuWro $\approx 2\times$ GENIE (\suppref{Sec.}{sec:nuwroclosure}) \\[4pt]
-    Native RHC detector variations
-      & \textbf{Resolved}
-      & Run-4 RHC detVar (8 knobs) now used; replaces the Run-1 FHC stand-in (Sec.~\ref{sec:rhc}) \\[4pt]
-    Run-5 FHC detVar Recomb2/SCE
-      & \textbf{Resolved}
-      & Were intrinsic-$\nu_e$ overlays (0\% $\nu_\mu$); Run-4 FHC used as the stand-in for those two knobs \\[4pt]
-    Combined FHC$+$RHC joint flux systematic
-      & \textbf{Resolved}
-      & Per-universe summing over the shared 600 PPFX universes is correct; the block was a detVar duplicate-file guard, now fixed to accumulate (Sec.~\ref{sec:rhc}) \\[4pt]
-    Combined per-mode normalisation
-      & \textbf{Resolved}
-      & Per-mode \texttt{summed\_pot} so each horn scales to its own data exposure, not MC POT (Sec.~\ref{sec:rhc}) \\[4pt]
-    Beam-frame ($\beta$) re-run
-      & \textbf{Resolved}
-      & All 51 units (17 observables $\times$ 3 configurations) rebuilt and
-        re-extracted with NuMI beam-frame angles and per-run dirt; 0 failures \\[4pt]
-    Stale proton-tagged univmake inputs
-      & \textbf{Resolved}
-      & Stage~2 built only $\cos\theta_\mu,\cos\theta_\pi$ of the seven proton-tagged
-        observables stage~3 unfolds, so $W_{\pi p}$, $W_{\mathrm{had}}$, $p_\mu$,
-        $p_\pi$ and $\theta_{\mu\pi}$ silently used pre-dirt files. Loop extended and
-        a per-unit guard now refuses any input stage~2 did not build
-        (\suppref{Sec.}{sec:combtruth}) \\[4pt]
-    RHC cross section below FHC
-      & \textbf{Understood}
-      & Present in the fake-data truth (ratio $0.785$) and the GENIE tune ($0.779$),
-        so not a normalisation error; POT sums exactly and per-configuration flux is
-        correct (\suppref{Sec.}{sec:combtruth}) \\[4pt]
-    COMB detVar covariance inflated by per-mode accumulation
-      & \textbf{Resolved}
-      & COMB carries two per-mode detVar sets against one for each input, and they are
-        accumulated rather than averaged, giving a detector systematic of $42.3\%$
-        against $23.2\%$ (FHC5) and $27.4\%$ (RHCFULL) for $p_\mu$. The inflated
-        covariance over-regularises the combined configuration: removing the term moves
-        COMB/expected from $0.910$ to $1.019$. Fixed by pooling the detVar POT over
-        all files of each type; COMB/expected now $1.027$ and FHC5/RHCFULL are
-        bit-identical (\suppref{Sec.}{sec:combtruth}) \\[4pt]
-    File list / systcalc coupling unenforced
-      & \textbf{Open}
-      & A systematic declared in the \texttt{SystFile} with no universes in the
-        universe file throws \texttt{std::out\_of\_range} at covariance assembly;
-        nothing checks the two agree (\suppref{Sec.}{sec:combtruth}) \\[4pt]
-    $A_C$ normalisation of the unfolded result
-      & \textbf{Open}
-      & $A_C\!\cdot\!\mathrm{truth}=0.79\times\mathrm{truth}$ while the unfolded result
-        is $1.16\times\mathrm{truth}$; both cannot hold if $\hat{x}=A_C x_{\mathrm{true}}$.
-        The dumped $A_C$ is slice-restricted, so the full-space operation cannot be
-        reproduced from the sidecar file (\suppref{Sec.}{sec:combtruth}) \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-% =============================================================================
 \section{Analysis Pipeline}
 \label{sec:pipeline}
 % =============================================================================
@@ -3733,169 +3645,79 @@ that produces it.  The official-framework cross-check of
 (\texttt{xsec\_analyzer/run\_nuwro\_observables.sh}).
 
 % =============================================================================
-\section{Limitations and Open Questions}
+\section{Limitations}
 \label{sec:limitations}
 % =============================================================================
 
-Four things are not settled. They are collected here rather than left in the
-sections that produced them, because each is large enough to bear on how the
-numbers in this note should be read.
+This section states what limits the measurement as it now stands.  It is deliberately
+about the present, not the past: the corrections that got the analysis here, with their
+before-and-after values, are in the change log, and the studies behind the scope decisions
+are in the technical supplement.  Earlier drafts carried two retrospective sections in
+this position, and a reader looking for the limitations found a catalogue of fixed bugs
+instead.
 
-\paragraph{The normalisation offset: found and fixed.}
-Earlier versions of this note carried an unexplained $\approx\!13\%$ excess of the
-unfolded integral over the fake-data truth, and treated it as the leading open
-question. It has been traced and removed.
+\paragraph{The analysis is blind, and that is the dominant limitation.}
+No beam-on signal region has been opened.  Every ``data'' point is Poisson-thrown from the
+central-value Monte Carlo, so everything demonstrated here concerns the extraction
+machinery rather than nature.  In particular, no statement in this note tests the
+background model against data.  At $\approx\!55\%$ purity, with proton-to-pion
+misidentification the largest neutrino background, the measurement depends on that model
+substantially, and fake-data closure cannot probe it: the same simulation supplies both
+the pseudo-data and the background estimate.  This is the single largest untested
+assumption in the analysis.
 
-The fake data is produced externally by \texttt{throw\_perrun\_*.C}, which samples
-$\mathrm{Poisson}\!\left(w_\mathrm{CV}\,D_\mathrm{run}/\mathrm{POT}_\mathrm{run}\right)$
-copies of each event, with
-$w_\mathrm{CV}=\texttt{tuned\_cv}\times\texttt{ppfx\_cv}\times\texttt{normalisation}$,
-and writes those three weights back as unity. The central-value weight is therefore
-already carried by the event \emph{multiplicity}.
-\texttt{SystematicsCalculator::build\_universes()} then substituted the
-\emph{weighted} central-value histogram for the raw counts whenever the
-\texttt{onBNB} sample was fake data, applying $w_\mathrm{CV}$ a second time --- on
-both the reco side, which is the data, and the true side, which is what the data is
-compared against. Measured in the per-file directories, the reco counts were
-inflated by $1.062$ (FHC), $1.078$ (RHC) and $1.070$ (combined) relative to the
-events actually thrown.
+\paragraph{Pion momentum is not recoverable, and that sets the scope.}
+Charged pions interact hadronically before ranging out, so the reconstructed momentum
+saturates near $0.34\GeVc$ and carries little information above roughly $0.4\GeVc$.  Every
+alternative estimator was tried --- golden-pion tagging, multiple Coulomb scattering,
+calorimetry, multivariate regression, daughter-energy recovery, the proton-tagged
+selection --- and a truth-level golden selection performs no better than the trained
+classifier, which places the limit in the physics rather than the estimator.  This is why
+$p_\pi$ is reported in two coarse bins and why the differential $W_{\pi p}$ shape is
+withdrawn: at this exposure no binning satisfies both the migration and the statistics
+requirement.
 
-An externally thrown sample is data: it is counted, not re-weighted. Both sites now
-take the unweighted histograms. The effect on the closure, over all eighteen
-inclusive extractions:
+\paragraph{The extraction carries a small negative bias.}
+The ensemble of thirty-two throws puts the mean $2.5\%$ below the reference, $2.1\sigma$ on
+the mean, with per-bin pull means consistently negative in both observables tested.  It is
+about a fifth of the statistical uncertainty and far inside the systematic band, but it is
+a bias rather than a fluctuation and is not currently corrected for or assigned an
+uncertainty.
 
-\begin{center}\small
-\begin{tabular}{lcc}
-\toprule
-Regularisation & before & after \\
-\midrule
-identity        & $1.127$ \ ($1.08$--$1.15$) & $1.007$ \ ($0.96$--$1.05$) \\
-second derivative & $1.106$ \ ($0.93$--$1.23$) & $1.001$ \ ($0.85$--$1.10$) \\
-\bottomrule
-\end{tabular}
-\end{center}
+\paragraph{Coverage is demonstrated for two observables, in one configuration.}
+The pull and coverage study covers FHC $p_\mu$ and $\cos\theta_\mu$.  Both give widths
+consistent with unity, and the second was chosen because its $A_C$ suppression is the most
+severe in the analysis, but RHC and the proton-tagged family --- where the statistics are
+sparser --- have not been tested.
 
-\noindent The inclusive closure now returns unity. Every integrated cross section
-in this note moved correspondingly, by $3.8$--$12.9\%$ downward, and the tables
-have been re-derived.
+\paragraph{The proton-tagged results are secondary, and their model comparisons are the
+weakest part.}
+Their systematics are complete and their central values current, but the exposure does not
+support a differential $W_{\pi p}$ shape, and the sample has no dedicated control region
+for the $\approx\!13\%$ proton mis-tag: every existing sideband applies the proton
+requirement rather than inverting it, so nothing directly constrains a wrong-track proton
+assignment, which is exactly what distorts the hadronic observables.
 
-Two things are worth recording about how this was found, because both were wrong
-turnings that looked convincing. The offset was first attributed to the covariance
-entering the Wiener filter, on the evidence that removing the detector systematic
-shifts the ratio by $2$--$12\%$; that evidence was real but was a second-order
-response to a mis-normalised input. It was then attributed to the additional
-smearing $A_C$, which was excluded by running D'Agostini --- a different algorithm
-with a near-normalisation-preserving $A_C$ --- and finding the same offset. The
-diagnostic that actually worked was comparing the number of events in the
-fake-data files ($1621$ selected, FHC) against the number the extraction was using
-($1721.9$).
+\paragraph{$A_C$ is not norm preserving, so two different totals exist.}
+The Wiener-SVD differential result estimates $A_C x_{\rm true}$, and the row sums fall as
+low as $0.046$.  Summing it over bins therefore does not give a physical total cross
+section; the physical total is the cut-and-count value, quoted separately.  Two matrices
+have negative row sums in their least-determined bin.
 
-\paragraph{The proton-tagged residual is throw statistics, not a defect.}
-Removing the double weighting left the proton-tagged family at
-$\approx\!1.09$ rather than unity, and that residual has since been decomposed and
-traced.
+\paragraph{Actions required before unblinding.}
+\begin{itemize}\itemsep2pt
+  \item Open and validate the background control regions in beam-on data, including an
+        inverted proton-PID region for the proton-tagged sample, before the signal region.
+  \item Re-enable the EXT subtraction (\texttt{fake\_data\_ext\_cancel} is a fake-data
+        convenience and must not survive into the real-data measurement).
+  \item Fix the permitted response to any control-region discrepancy in advance, and
+        record it, so that no post-unblinding retuning is possible.
+\end{itemize}
 
-Both ends of the chain verify independently to $0.3\%$. The throw is correct: run~1
-of the FHC fake data holds $252.0$ selected events against a tree-level expectation
-of $251.3$, computed as $\sum(w_\mathrm{CV})\,D/\mathrm{POT}$ over
-\texttt{CC1mu1pi1p}-selected events in the reprocessed MC. The framework's assembly
-is correct: summing the per-file central-value histograms with their own POT scale
-factors gives $714.2$ against an assembled prediction of $716.6$.
+The automated guards that protect against regression --- the normalisation manifest, the
+systematics/file-list coupling assertion and the staleness check --- are described in
+Sec.~\ref{sec:pipeline}.
 
-What remained was the thrown data sitting above the prediction, $755.0$ against
-$714.1$, a ratio of $1.057$ ($+1.5\sigma$) concentrated in run~2 at $+2.2\sigma$.
-That ratio accounts for essentially the whole closure --- $1.057$ against a measured
-$1.067$, leaving $1.009$ unexplained --- which already pointed at the input rather
-than the extraction.
-
-Re-throwing with a different seed confirms it. The per-run excesses reshuffle, which
-a systematic defect would not do: the run~2 excess falls to $1.008$, the excess
-appears instead in run~1 ($1.102$), and run~5 moves the other way ($0.906$). The
-total input ratio moves to $1.032$, and the closure follows it:
-
-\begin{center}\small
-\begin{tabular}{lcc}
-\toprule
-Regularisation & seed 1 & seed 7 \\
-\midrule
-identity          & $1.062$ & $1.026$ \\
-second derivative & $1.062$ & $0.943$ \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\noindent The second derivative lands \emph{below} unity, which is a useful reminder
-of how much observable-level scatter the derivative regularisation contributes on
-top of the normalisation.
-
-The practical consequence is worth stating rather than leaving to be rediscovered: a
-single Poisson throw carries a $\sim\!1.5\sigma$ normalisation wobble at this sample
-size, so a closure of $1.06$ is not evidence of a bias. Quoting the closure with its
-throw-to-throw spread, or averaging several throws, would make that visible.
-
-\paragraph{\texorpdfstring{The $A_C$ ``inconsistency'' was a misreading, now resolved.}{The A-C inconsistency was a misreading, now resolved.}}
-An earlier version of this section reported an inconsistency: for the proton-tagged
-$p_\mu$ in FHC the fake-data truth integrates to $0.476$, the unfolded result to
-$0.553$, and $A_C$ applied to that truth to $0.376$, so that $\hat{x}=A_C
-x_\mathrm{true}$ appeared to predict $0.79\times$ where $1.16\times$ was measured.
-
-That was an error on our part, not a defect in the extraction.
-\texttt{CrossSectionExtractor} applies $A_C$ \emph{in place} to every entry of its
-prediction map, the fake-data truth among them, before any of them is written out.
-The curve stored as the truth is therefore \emph{already} $A_C$-smeared, and
-multiplying it by $A_C$ a second time --- which is what the comparison above did ---
-simply double-smears it. This also explains why explicitly adding a second
-\texttt{apply\_ac} to that curve moved the closure ratio further from unity
-($1.09$--$1.24 \to 1.54$--$1.60$) rather than toward it.
-
-The evidence is unambiguous across all eighteen inclusive extractions. If the stored
-truth were raw, the ratio of integrals would track the $A_C$ row sum, which spans
-$0.24$--$0.97$. It does not: the ratio stays between $0.93$ and $1.23$ while the row
-sum varies by a factor of four, and all eighteen points sit closer to unity than to
-their own row sum. $\cos\theta_\mu$ in RHC is the clearest case, with a row sum of
-$0.24$ and a ratio of $0.98$.
-
-The consequence matters for how the offset above should be read. Unfolded result and
-truth curve live in the \emph{same} space, so comparing their integrals directly is
-correct, and the $11\%$ excess is a genuine normalisation bias in the extraction
-rather than an artefact of comparing quantities in different spaces. Supporting
-numbers in \texttt{report/offset\_vs\_AC.tsv}.
-
-\paragraph{\texorpdfstring{Why the combined detector systematic sits low.}{Why the combined detector systematic sits low.}}
-After the per-mode detVar pooling fix the combined detector uncertainty tends toward
-the \emph{low} end of the band spanned by its two inputs --- on average $39\%$ of the
-way up that range --- and for $\cos\theta_\mu$ it falls just below both ($23.7\%$
-against $26.1\%$ and $32.5\%$). At first sight a combined exposure returning less
-detector uncertainty than either input looks wrong.
-
-It is not. Running the combined extraction with only the FHC detVar set, and then
-with only the RHC set, gives $27.8\%$ and $26.0\%$ for $\cos\theta_\mu$; pooling
-both gives $23.7\%$. Each individual set therefore carries more uncertainty than the
-two together. That is the expected behaviour if each measured detector shift is the
-true shift plus a statistical fluctuation from the finite size of the detVar sample:
-pooling the two samples averages the fluctuation down while leaving the true shift
-alone. On that reading the pooled number is the \emph{better} estimate and the
-single-mode numbers are mildly inflated, which is consistent with the combined value
-sitting low in every observable rather than only in $\cos\theta_\mu$.
-
-One consequence deserves attention. Changing only which detVar files enter the fit
-moves the extracted $\cos\theta_\mu$ cross section from $0.758$ to $0.822$, an $8\%$
-swing, because the detector covariance feeds the Wiener filter and therefore the
-regularisation. The detector systematic is not a post-hoc error bar here; it changes
-the central value.
-
-\paragraph{\texorpdfstring{FHC $\theta_\mu$: a rank-1 collapse, since repaired.}{FHC theta-mu: a rank-1 collapse, since repaired.}}
-Under the original uniform-grid regularisation the additional-smearing matrix for FHC
-$\theta_\mu$ was rank-1 to numerical precision --- its second singular value was
-$2.8\times10^{-6}$ of the first, against $\sim\!5\times10^{-2}$ for the inputs --- so every
-model and the data were mapped onto a single curve and agreed by construction.
-
-The width-aware operator repairs it: $s_2/s_1$ is now $0.51$ for FHC $\theta_\mu$ and
-$0.38$ for the combined configuration, and the observable discriminates between models
-again, preferring the tune that generated the fake data.  The conclusion drawn from the
-collapsed state --- that $\theta_\mu$ repairs what $A_C$ does to $\cos\theta_\mu$ ---
-remains withdrawn, but for the opposite reason to the one first given: the two
-parameterisations are now comparably conditioned, and neither is privileged.
 
 \section{Summary}
 \label{sec:summary}

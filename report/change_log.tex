@@ -295,6 +295,44 @@ falls outside its own FHC--RHC range, six fall \emph{below} both and only two ab
 is the finite-sample averaging-down expected of statistically limited detector-variation
 samples rather than a recurrence.
 
+\section{Development-era corrections}
+
+These predate the framework-based analysis and are recorded for completeness.  They were
+previously listed in a ``Known Issues'' table in the analysis note; that table had become
+thirteen resolved rows against one open one, so it was retired and its contents moved
+here, where a resolved correction belongs.
+
+\begin{center}
+\small
+\begin{tabular}{p{0.36\textwidth}p{0.56\textwidth}}
+\toprule
+Item & Resolution \\
+\midrule
+Unfolding covariance was statistics-only
+  & Replaced by the framework \texttt{PredTotal} plus the data Poisson term, removing a
+    ${\sim}26\%$ bias in the quoted uncertainty. \\
+$\theta_{\mu\pi}$ binning mismatch
+  & A custom 10-bin scheme was aligned to the framework's 9-bin one; the two pipelines had
+    been binning the same observable differently. \\
+Negative tail bins
+  & An artefact of the EXT treatment; all bins positive once the subtraction was
+    corrected. \\
+EXT subtraction on fake data
+  & Cancelled via \texttt{fake\_data\_ext\_cancel}, which is a fake-data convenience only.
+    \textbf{It must be re-enabled before unblinding} and is listed as a required action in
+    the note. \\
+Multisim propagation in the custom pipeline
+  & Never completed, and now moot: the released results come from the framework, which
+    propagates the multisims (\texttt{cov\_xsec\_multi} is in the release).  The row
+    survived in the note as the single ``open'' item long after it had ceased to describe
+    anything. \\
+CRT veto branches
+  & \texttt{crthitpe} and \texttt{crtveto} are all-zero in the NuMI ntuples; replaced by
+    \texttt{bdt\_cosmic}, disabled at its default. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
 \section{Open items}
 
 Two things remain outstanding, and neither is a correction awaiting application: they are
