@@ -140,6 +140,26 @@ for cfg in CONFIGS:
         missing = runs_on - runs_ext
         if missing:
             fail(f"[{cfg}] {os.path.basename(fp)}: runs with onBNB but no extBNB: {sorted(missing)}")
+        # Beam-off pairing (2026-09-03): every (beam-off file, run) pair must enter a
+        # configuration exactly once, every symlink must resolve, and the gate count must be
+        # a gate count -- the 3821593 event count that stood in for one until 2026-09-02 was
+        # a factor 9.7 too small. The combined configuration lists the FHC and RHC runs of the
+        # same period under different run ids, so the check is per (target, run id).
+        seen = {}
+        for line in open(p):
+            f = line.split()
+            if len(f) >= 4 and f[2] == "extBNB" and not line.lstrip().startswith("#"):
+                tgt = os.path.realpath(f[0]) if os.path.exists(f[0]) else None
+                if tgt is None:
+                    fail(f"[{cfg}] {os.path.basename(fp)}: extBNB file missing: {f[0]}"); continue
+                key = (tgt, f[1])
+                if key in seen:
+                    fail(f"[{cfg}] {os.path.basename(fp)}: beam-off sample {os.path.basename(tgt)} "
+                         f"listed twice for run {f[1]} ({os.path.basename(seen[key])} and {os.path.basename(f[0])})")
+                seen[key] = f[0]
+                if float(f[3]) < 1e6:
+                    fail(f"[{cfg}] {os.path.basename(fp)}: extBNB gate count {f[3]} for {os.path.basename(f[0])} "
+                         f"is implausibly small (an event count?)")
 
     for fp, tot in pot_by_fp.items():
         if abs(tot - EXPECT_POT[cfg]) / EXPECT_POT[cfg] > 1e-3:
