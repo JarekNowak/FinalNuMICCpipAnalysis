@@ -15,7 +15,7 @@ void throw_group(std::vector<const char*> infiles, const char* outfile, double d
   TTree* ot=cin.CloneTree(0); float one=1.0f;
   ot->SetBranchAddress("tuned_cv_weight",&one); ot->SetBranchAddress("ppfx_cv_weight",&one); ot->SetBranchAddress("normalisation_weight",&one);
   Long64_t N=cin.GetEntries(); long kept=0;
-  for(Long64_t i=0;i<N;i++){ cin.GetEntry(i); double cv=tcv*pcv*nw; if(!std::isfinite(cv)||cv<0)continue;
+  for(Long64_t i=0;i<N;i++){ cin.GetEntry(i); double cv=tcv*pcv*nw; if(!std::isfinite(cv)||cv<0||cv>30) cv=1.0;  // framework safe_weight rule (2026-09-03): unity, not skipped
     int nc=gRandom->Poisson(cv*potscale); for(int c=0;c<nc;c++){one=1.0f;ot->Fill();kept++;} }
   ot->Write("",TObject::kOverwrite);
   TParameter<float> sp("summed_pot",(float)dpot); sp.Write("summed_pot",TObject::kOverwrite);

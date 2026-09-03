@@ -1,6 +1,8 @@
 // throw_perrun_fhc.C(seed) — per-RUN Poisson CV fake data for FHC, so the fake data
 // is structured like the (per-run) beam-on data. Each run i is thrown at its own
 // data POT: POTSCALE_i = D_i / MC_POT_i(native). Writes one fake-data file per run,
+// Non-finite/negative/>30 CV weights are set to ONE (framework safe_weight), not skipped: the
+// earlier skip left the pseudo-data ~1% (SR) to ~3% (CC0pi region) below the framework prediction.
 // carrying summed_pot = D_i (matches the onBNB convention; framework reads onBNB POT
 // from file_properties, but the parameter must be present). Ready for real data.
 void throw_one(const char* infile, const char* outfile, double dpot, double mcpot, int seed){
@@ -16,7 +18,7 @@ void throw_one(const char* infile, const char* outfile, double dpot, double mcpo
   TTree* ot=cin.CloneTree(0); float one=1.0f;
   ot->SetBranchAddress("tuned_cv_weight",&one); ot->SetBranchAddress("ppfx_cv_weight",&one); ot->SetBranchAddress("normalisation_weight",&one);
   Long64_t N=cin.GetEntries(); long kept=0;
-  for(Long64_t i=0;i<N;i++){ cin.GetEntry(i); double cv=tcv*pcv*nw; if(!std::isfinite(cv)||cv<0)continue;
+  for(Long64_t i=0;i<N;i++){ cin.GetEntry(i); double cv=tcv*pcv*nw; if(!std::isfinite(cv)||cv<0||cv>30) cv=1.0;  // framework safe_weight rule (2026-09-03): unity, not skipped
     int nc=gRandom->Poisson(cv*potscale); for(int c=0;c<nc;c++){one=1.0f;ot->Fill();kept++;} }
   ot->Write("",TObject::kOverwrite);
   TParameter<float> sp("summed_pot",(float)dpot); sp.Write("summed_pot",TObject::kOverwrite);

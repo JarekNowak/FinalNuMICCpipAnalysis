@@ -14,7 +14,8 @@ void sb_overlap(const char* mode="fhc"){
     for(int i=0;i<5;i++) mc.push_back({std::string(P)+"xsec-ana-"+rn[i]+"_new_numi_flux_rhc_pandora_ntuple.root",sc[i]});
     for(auto s:{"aa","ab","ac","ad","ae"}) mc.push_back({std::string(P)+"xsec-ana-Run3_rhc_new_numi_flux_rhc_pandora_ntuple_"+std::string(s)+".root",0.09066});
     for(auto r:{"run1","run2","run3","run4"}) data.push_back(std::string(P)+"xsec-ana-fakedata_rhc_"+r+".root"); }
-  const char* CVW="(TMath::Finite(tuned_cv_weight*ppfx_cv_weight*normalisation_weight)&&(tuned_cv_weight*ppfx_cv_weight*normalisation_weight)>=0?tuned_cv_weight*ppfx_cv_weight*normalisation_weight:0)";
+  // Framework safe_weight rule: non-finite, negative or >30 -> 1 (one authoritative rule, 2026-09-03)
+  const char* CVW="(TMath::Finite(tuned_cv_weight*ppfx_cv_weight*normalisation_weight)&&(tuned_cv_weight*ppfx_cv_weight*normalisation_weight)>=0&&(tuned_cv_weight*ppfx_cv_weight*normalisation_weight)<=30?tuned_cv_weight*ppfx_cv_weight*normalisation_weight:1)";
   const char* reg[5]={"CC1mu1piXp_Selected","CC1mu1piXp_sb_cc0pi","CC1mu1piXp_sb_multipi","CC1mu1piXp_sb_pi0","CC1mu1piXp_sb_cosmic"};
   const char* nm[5]={"SR","CC0pi","multipi","pi0","cosmic"};
   auto wsum=[&](TChain& c,const TString& cut,bool w)->double{ TH1D h("h","",1,-0.5,1.5); c.Draw("0.5>>h",(w?TString(CVW):TString("1"))+"*("+cut+")","goff"); return h.Integral(0,2); };

@@ -4,6 +4,7 @@
 #include "XSecAnalyzer/TreeUtils.hh"
 #include "TStyle.h"
 #include "XSecAnalyzer/Selections/CC1mu1piXp.hh"
+#include "XSecAnalyzer/UniverseMaker.hh"   // safe_weight()
 #include "XSecAnalyzer/NuMIBeamFrame.hh"
 #include "XSecAnalyzer/Selections/EventCategoriesXp.hh"
 
@@ -730,8 +731,11 @@ bool CC1mu1piXp::define_signal( AnalysisEvent* Event ) {
   // spline is 1 in these ntuples but is kept for BNB-style inputs). ppfx_cv averages
   // 0.944 on selected signal, so the earlier spline*tune product left the cut-flow
   // histograms (and everything quoting them) ~5-6% above the unfolding's prediction.
-  const double evt_w = Event->spline_weight_ * Event->tuned_cv_weight_
-    * Event->ppfx_cv_weight_ * Event->normalisation_weight_;
+  // Applied through the framework's safe_weight() (non-finite, negative or >30 -> 1), so
+  // the cut-flow histograms use exactly the rule the universe maker and every count-level
+  // macro use (one authoritative weight rule, review of 2026-09-03).
+  const double evt_w = safe_weight( Event->spline_weight_ * Event->tuned_cv_weight_
+    * Event->ppfx_cv_weight_ * Event->normalisation_weight_ );
 
 
 //TMVA stuff
@@ -942,8 +946,11 @@ bool CC1mu1piXp::selection( AnalysisEvent* Event) {
   // spline is 1 in these ntuples but is kept for BNB-style inputs). ppfx_cv averages
   // 0.944 on selected signal, so the earlier spline*tune product left the cut-flow
   // histograms (and everything quoting them) ~5-6% above the unfolding's prediction.
-  const double evt_w = Event->spline_weight_ * Event->tuned_cv_weight_
-    * Event->ppfx_cv_weight_ * Event->normalisation_weight_;
+  // Applied through the framework's safe_weight() (non-finite, negative or >30 -> 1), so
+  // the cut-flow histograms use exactly the rule the universe maker and every count-level
+  // macro use (one authoritative weight rule, review of 2026-09-03).
+  const double evt_w = safe_weight( Event->spline_weight_ * Event->tuned_cv_weight_
+    * Event->ppfx_cv_weight_ * Event->normalisation_weight_ );
 
 
 //std::cout << "Selection called\n";

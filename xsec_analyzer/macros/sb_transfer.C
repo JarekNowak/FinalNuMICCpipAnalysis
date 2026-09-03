@@ -13,7 +13,8 @@ void sb_transfer(const char* mode="fhc"){
   else { const char* rn[5]={"Run1_rhc","Run2_rhc","Run4a_rhc","Run4b_rhc","Run4c_rhc"}; double sc[5]={0.06728,0.04478,0.08847,0.08847,0.08847};
     for(int i=0;i<5;i++) mc.push_back({std::string(P)+"xsec-ana-"+rn[i]+"_new_numi_flux_rhc_pandora_ntuple.root",sc[i]});
     for(auto s:{"aa","ab","ac","ad","ae"}) mc.push_back({std::string(P)+"xsec-ana-Run3_rhc_new_numi_flux_rhc_pandora_ntuple_"+std::string(s)+".root",0.09066}); }
-  const char* CVW="(TMath::Finite(tuned_cv_weight*ppfx_cv_weight*normalisation_weight)&&(tuned_cv_weight*ppfx_cv_weight*normalisation_weight)>=0?tuned_cv_weight*ppfx_cv_weight*normalisation_weight:0)";
+  // Framework safe_weight rule: non-finite, negative or >30 -> 1 (one authoritative rule, 2026-09-03)
+  const char* CVW="(TMath::Finite(tuned_cv_weight*ppfx_cv_weight*normalisation_weight)&&(tuned_cv_weight*ppfx_cv_weight*normalisation_weight)>=0&&(tuned_cv_weight*ppfx_cv_weight*normalisation_weight)<=30?tuned_cv_weight*ppfx_cv_weight*normalisation_weight:1)";
   const char* NPI="CC1mu1piXp_mc_n_threshold_pionpm", *NPI0="CC1mu1piXp_mc_n_threshold_pion0";  // selection truth counters
   const int NC=8; TString cls[NC]; const char* cln[NC]={"signal","numuCC 0pi","numuCC 1pi+- out-of-PS","numuCC pi0 (any)","numuCC >=2pi+-, no pi0","numuCC other","OOFV","NC + nueCC"};
   cls[0]="CC1mu1piXp_EventCategory==0";

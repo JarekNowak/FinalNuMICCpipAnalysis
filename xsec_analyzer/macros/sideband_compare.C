@@ -85,9 +85,8 @@ void sideband_compare(const char* mode="fhc", const char* datasrc="fake",
   // Per-event finite/non-negative guard on the CV weight, matching the throw macro's
   // `if(!isfinite(cv)||cv<0) continue` -- otherwise a single inf/nan weight makes the
   // whole Draw sum NaN.
-  const char* CVW="(TMath::Finite(tuned_cv_weight*ppfx_cv_weight*normalisation_weight)"
-                  "&&(tuned_cv_weight*ppfx_cv_weight*normalisation_weight)>=0"
-                  "?tuned_cv_weight*ppfx_cv_weight*normalisation_weight:0)";
+  // Framework safe_weight rule: non-finite, negative or >30 -> 1 (one authoritative rule, 2026-09-03)
+  const char* CVW="(TMath::Finite(tuned_cv_weight*ppfx_cv_weight*normalisation_weight)&&(tuned_cv_weight*ppfx_cv_weight*normalisation_weight)>=0&&(tuned_cv_weight*ppfx_cv_weight*normalisation_weight)<=30?tuned_cv_weight*ppfx_cv_weight*normalisation_weight:1)";
   auto wsum=[&](TChain& c,const TString& cut,bool weighted)->double{
     TH1D h("h_ws","",1,-0.5,1.5);
     c.Draw("0.5>>h_ws", (weighted?TString(CVW):TString("1"))+"*("+cut+")","goff");

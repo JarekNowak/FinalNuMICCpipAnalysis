@@ -426,6 +426,27 @@ agrees with \texttt{current\_results.tsv}.
 \textbf{Effect.}  Presentation only; the release files were correct throughout.  The
 tables of the 2026-09-03 build are the first to pass the automated check.
 
+\subsection{Two central-value weight rules were in use; the fake data skipped events the prediction counted}
+
+The framework's \texttt{safe\_weight()} sets a non-finite, negative or $>30$ central-value
+weight to unity. The count-level macros (cut-and-count, cut-flow, sidebands, transfer
+factors) instead zeroed invalid weights and did not clamp, and the per-run fake-data throws
+\emph{skipped} events with a non-finite weight. About $1.15\%$ of overlay events carry a
+non-finite tune weight, concentrated in the non-signal $\nu_\mu$CC classes, so the
+pseudo-data sat below the framework's own prediction by $0.9\%$ in the signal region
+($13$--$14$ events) and by $2.8$--$3.4\%$ in the CC$0\pi$ control region ($341$ FHC,
+$422$ RHC POT-scaled events); the sideband yields of the note differed from the
+systematics tables by the same amounts. Found through the third external review
+(2026-09-03).
+
+\textbf{Correction.} One rule, the safe-weight definition in the Monte Carlo section of the note, is now applied
+everywhere: the selection's cut-flow histograms (reprocessed), every count-level macro,
+and the fake-data throws, which were re-thrown with the same seeds and the events kept at
+unit weight; all fifty-one universe files were rebuilt from the re-thrown fake data.
+\textbf{Effect.} Pseudo-data yields rise by $0.9\%$ (signal region) to $3.4\%$ (CC$0\pi$);
+the fake-data closure ratios and $\sigma_{\rm int}$ move at the per-cent level (see the
+regenerated tables); no covariance changes. The real-data path was never affected.
+
 \subsection{Documentation-only corrections from the 2026-09-02 review}
 
 None of the following moved a released number; they are recorded because a reader of
