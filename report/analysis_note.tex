@@ -42,7 +42,7 @@
     with zero reconstructed electromagnetic showers and a muon--pion opening angle
     less than 2.6~rad. In the measured phase space the selection achieves
     $\approx\!59\%$ signal purity and $\approx\!17\%$ efficiency
-    (Table~\ref{tab:phasespace}).
+    (Table~\ref{tab:cutflow}).
     %
     Differential cross sections are extracted for each configuration via Wiener-SVD
     unfolding in five kinematic quantities: muon momentum~$\pmuM$, pion
@@ -78,7 +78,9 @@
     The extraction is validated by a same-sample self-closure, and cross-checked against
     the D'Agostini iterative-Bayesian method: its flat, iteration-stable integral
     ($27$--$33\%$ above Wiener-SVD, and flat to $\le2.1\%$ across observables where the
-      Wiener-SVD spread is $16$--$37\%$) confirms that the
+      Wiener-SVD spread is $16$--$37\%$; evaluated on the 2026-08-31 release and not re-run
+      after the beam-off correction, which moved the Wiener-SVD integrals by $\le2\%$)
+      confirms that the
     observable-to-observable spread of the Wiener-SVD integrated cross sections is
     the additional-smearing matrix $A_C$, not a physical or acceptance effect
     (\suppref{Sec.}{sec:crosschecks}). All results use the \textsc{XSecAnalyzer}
@@ -108,7 +110,8 @@
       ($d\sigma/d\cos\theta_\mu$) against the statistical covariance, with $68\%$ and
       $95\%$ interval coverage recovered: the statistical uncertainties are correctly
       sized, and the observable whose additional smearing is most severe behaves no
-      differently from the best-conditioned one.  Separately, all fifty-one extractions
+      differently from the best-conditioned one (ensemble of the 2026-08-31 release; the
+      beam-off correction cancels in fake-data closure and does not change it).  Separately, all fifty-one extractions
       rebuild bit-identically from the processed ntuples with every cached universe
       deleted, so the released numbers are regenerable from the raw inputs rather than
       from a preserved intermediate.  The same ensemble shows a small negative bias,
@@ -2090,8 +2093,10 @@ Uncertainties     & Closed-form, linear                 & Correlated across iter
 
 Wiener-SVD is the primary result, for its objective regularisation and its explicit,
 reportable bias $A_C$; D'Agostini serves as the quantitative cross-check
-(\suppref{Sec.}{sec:crosschecks}), where its flat, iteration-stable integral,
-$\sim20$--$40\%$ above Wiener-SVD (config-dependent), confirms that the observable-to-observable spread of the
+(\suppref{Sec.}{sec:crosschecks}; evaluated on the 2026-08-31 release, before the
+beam-off correction, which moved the Wiener-SVD integrals by $\le2\%$), where its flat,
+iteration-stable integral, $\sim20$--$40\%$ above Wiener-SVD (config-dependent), confirms
+that the observable-to-observable spread of the
 Wiener-SVD integrated cross sections (Table~\ref{tab:sigint_all}) is the $A_C$ smearing
 rather than a physical or acceptance effect.
 
