@@ -219,8 +219,8 @@ The items the analysers regard as prerequisites, with their status:
     (\S\ref{sec:cr_transfer}), flux/cross-section/re-interaction terms.
   \item[$\checkmark$] Comparison procedure, thresholds and permitted responses frozen
     (\S\ref{sec:cr_protocol}).
-  \item[$\square$] Cut-flow table regenerated with the full central-value weight
-    (Table~\ref{tab:cutflow}; reprocessing in progress).
+  \item[$\checkmark$] Cut-flow table regenerated with the full central-value weight
+    (Table~\ref{tab:cutflow}).
   \item[$\square$] Detector-variation uncertainties propagated to the control regions.
   \item[$\square$] Flux constants confirmed as PPFX-corrected central values
     (\S\ref{sec:flux_status}).
@@ -1514,15 +1514,11 @@ detailed per-category, per-cut breakdown for each.
   \caption{Cut-flow yields at \emph{full exposure} for FHC, RHC and combined
     (MC prediction; data is blind: the fake-data \emph{expectation} equals the
     central-value prediction by construction, while the realised pseudo-data fluctuate
-    according to the Poisson throw). \textbf{Weight caveat:} the histograms behind this
-    table are filled with the tune weight only; the framework's central-value weight also
-    carries the PPFX central-value flux correction (mean $0.944$ on selected signal,
-    \S\ref{sec:mc}), which the fake-data throw and the unfolding include. The absolute
-    Signal, Bkg~MC, Dirt and Pred.\ columns are therefore $\sim\!3$--$6\%$ above the
-    prediction the unfolding uses (Table~\ref{tab:cutcount} gives the consistent
-    final-cut yields); efficiencies and purities, being ratios, move by $<0.5\%$. The
-    selection code now fills these histograms with the full weight; the table will be
-    regenerated at the next reprocessing. Signal and ``Bkg'' (all non-signal MC: OOFV, NC,
+    according to the Poisson throw). The histograms behind this table carry the
+    framework's full central-value weight, tune $\times$ PPFX $\times$ normalisation
+    (\S\ref{sec:mc}; reprocessed 2026-09-03), the same weight as the fake-data throw and
+    the unfolding, so the final-cut yields agree with the cut-and-count
+    Table~\ref{tab:cutcount} to $<1\%$. Signal and ``Bkg'' (all non-signal MC: OOFV, NC,
     CC1$\pi^0$, CC0$\pi$, CC$N\pi$, CCK, CCother) are from the $\nu_\mu$ overlays,
     POT-scaled \emph{per run} (each run by its own $D_{\text{run}}/\text{MC}_{\text{run}}$,
     Table~\ref{tab:pot}); EXT (beam-off cosmic) is scaled by the (per-run summed)
@@ -1535,40 +1531,40 @@ detailed per-category, per-cut breakdown for each.
     Cut & Signal & Bkg MC & EXT & Dirt & Pred. & Eff. [\%] & Pur. [\%] \\
     \midrule
     \multicolumn{8}{l}{\textit{FHC (Runs 1,2,4,5; $8.857\times10^{20}$~POT)}} \\
-    None & 5\,580 & 279\,180 & 4\,049\,292 & 36\,142 & 4\,370\,194 & 100.0 & 0.1 \\
-    InFiducialVol & 4\,632 & 62\,146 & 153\,533 & 1\,890 & 222\,202 & 83.0 & 2.1 \\
-    Topological & 3\,501 & 28\,040 & 5\,409 & 204 & 37\,153 & 62.7 & 9.4 \\
-    MuonCandidate & 3\,143 & 18\,980 & 2\,363 & 137 & 24\,622 & 56.3 & 12.8 \\
-    ContainedPion & 1\,395 & 2\,094 & 223 & 25 & 3\,737 & 25.0 & 37.3 \\
-    MuonIn3Planes & 1\,336 & 1\,975 & 185 & 17 & 3\,513 & 23.9 & 38.0 \\
-    PionIn3Planes & 1\,239 & 1\,770 & 144 & 7.0 & 3\,160 & 22.2 & 39.2 \\
-    ShowerCut & 1\,048 & 898 & 108 & 6.2 & 2\,060 & 18.8 & 50.9 \\
-    OpeningAngle & 1\,040 & 813 & 41 & 2.0 & 1\,896 & 18.6 & 54.8 \\
-    \textbf{Nonprotons} & \textbf{974} & \textbf{643} & \textbf{30} & \textbf{1.3} & \textbf{1\,648} & \textbf{17.5} & \textbf{59.1} \\
+    None & 5\,411 & 265\,929 & 4\,049\,292 & 32\,872 & 4\,353\,504 & 100.0 & 0.1 \\
+    InFiducialVol & 4\,499 & 59\,472 & 153\,533 & 1\,722 & 219\,227 & 83.1 & 2.1 \\
+    Topological & 3\,403 & 27\,093 & 5\,409 & 187 & 36\,092 & 62.9 & 9.4 \\
+    MuonCandidate & 3\,052 & 18\,368 & 2\,363 & 125 & 23\,908 & 56.4 & 12.8 \\
+    ContainedPion & 1\,357 & 2\,057 & 223 & 23 & 3\,660 & 25.1 & 37.1 \\
+    MuonIn3Planes & 1\,298 & 1\,941 & 185 & 16 & 3\,440 & 24.0 & 37.7 \\
+    PionIn3Planes & 1\,204 & 1\,741 & 144 & 6.6 & 3\,095 & 22.2 & 38.9 \\
+    ShowerCut & 1\,016 & 876 & 108 & 5.8 & 2\,005 & 18.8 & 50.7 \\
+    OpeningAngle & 1\,009 & 793 & 41 & 1.9 & 1\,845 & 18.6 & 54.7 \\
+    \textbf{Nonprotons} & \textbf{943} & \textbf{624} & \textbf{30} & \textbf{1.3} & \textbf{1\,599} & \textbf{17.4} & \textbf{59.0} \\
     \midrule
     \multicolumn{8}{l}{\textit{RHC (Runs 1,2,3,4a,4b,4c; $1.108\times10^{21}$~POT)}} \\
-    None & 6\,130 & 304\,347 & 3\,560\,975 & 28\,032 & 3\,899\,484 & 100.0 & 0.2 \\
-    InFiducialVol & 5\,124 & 69\,102 & 139\,122 & 1\,466 & 214\,814 & 83.6 & 2.4 \\
-    Topological & 3\,960 & 31\,629 & 4\,767 & 158 & 40\,514 & 64.6 & 9.8 \\
-    MuonCandidate & 3\,559 & 21\,443 & 2\,090 & 106 & 27\,198 & 58.1 & 13.1 \\
-    ContainedPion & 1\,577 & 2\,649 & 191 & 19 & 4\,437 & 25.7 & 35.5 \\
-    MuonIn3Planes & 1\,512 & 2\,500 & 158 & 13 & 4\,182 & 24.7 & 36.1 \\
-    PionIn3Planes & 1\,409 & 2\,258 & 121 & 5.5 & 3\,793 & 23.0 & 37.1 \\
-    ShowerCut & 1\,170 & 1\,061 & 86 & 4.8 & 2\,322 & 19.1 & 50.4 \\
-    OpeningAngle & 1\,162 & 965 & 33 & 1.5 & 2\,161 & 19.0 & 53.8 \\
-    \textbf{Nonprotons} & \textbf{1\,081} & \textbf{746} & \textbf{23} & \textbf{1.0} & \textbf{1\,852} & \textbf{17.6} & \textbf{58.4} \\
+    None & 5\,770 & 283\,490 & 3\,560\,975 & 25\,495 & 3\,875\,730 & 100.0 & 0.1 \\
+    InFiducialVol & 4\,821 & 64\,558 & 139\,122 & 1\,336 & 209\,836 & 83.6 & 2.3 \\
+    Topological & 3\,738 & 29\,788 & 4\,767 & 145 & 38\,438 & 64.8 & 9.7 \\
+    MuonCandidate & 3\,358 & 20\,190 & 2\,090 & 97 & 25\,736 & 58.2 & 13.0 \\
+    ContainedPion & 1\,486 & 2\,554 & 191 & 18 & 4\,249 & 25.7 & 35.0 \\
+    MuonIn3Planes & 1\,425 & 2\,410 & 158 & 12 & 4\,005 & 24.7 & 35.6 \\
+    PionIn3Planes & 1\,327 & 2\,177 & 121 & 5.1 & 3\,630 & 23.0 & 36.6 \\
+    ShowerCut & 1\,100 & 1\,011 & 86 & 4.5 & 2\,201 & 19.1 & 50.0 \\
+    OpeningAngle & 1\,092 & 919 & 33 & 1.5 & 2\,045 & 18.9 & 53.4 \\
+    \textbf{Nonprotons} & \textbf{1\,014} & \textbf{706} & \textbf{23} & \textbf{1.0} & \textbf{1\,745} & \textbf{17.6} & \textbf{58.1} \\
     \midrule
     \multicolumn{8}{l}{\textit{Combined FHC$+$RHC ($1.994\times10^{21}$~POT)}} \\
-    None & 11\,710 & 583\,527 & 7\,610\,266 & 64\,174 & 8\,269\,678 & 100.0 & 0.1 \\
-    InFiducialVol & 9\,756 & 131\,248 & 292\,655 & 3\,357 & 437\,016 & 83.3 & 2.2 \\
-    Topological & 7\,461 & 59\,669 & 10\,176 & 362 & 77\,667 & 63.7 & 9.6 \\
-    MuonCandidate & 6\,702 & 40\,423 & 4\,453 & 243 & 51\,820 & 57.2 & 12.9 \\
-    ContainedPion & 2\,972 & 4\,743 & 414 & 44 & 8\,174 & 25.4 & 36.4 \\
-    MuonIn3Planes & 2\,847 & 4\,475 & 343 & 30 & 7\,695 & 24.3 & 37.0 \\
-    PionIn3Planes & 2\,648 & 4\,028 & 266 & 12 & 6\,954 & 22.6 & 38.1 \\
-    ShowerCut & 2\,218 & 1\,959 & 194 & 11 & 4\,382 & 18.9 & 50.6 \\
-    OpeningAngle & 2\,202 & 1\,778 & 74 & 3.5 & 4\,057 & 18.8 & 54.3 \\
-    \textbf{Nonprotons} & \textbf{2\,055} & \textbf{1\,389} & \textbf{53} & \textbf{2.3} & \textbf{3\,500} & \textbf{17.5} & \textbf{58.7} \\
+    None & 11\,181 & 549\,419 & 7\,610\,266 & 58\,367 & 8\,229\,233 & 100.0 & 0.1 \\
+    InFiducialVol & 9\,321 & 124\,030 & 292\,655 & 3\,058 & 429\,063 & 83.4 & 2.2 \\
+    Topological & 7\,140 & 56\,881 & 10\,176 & 331 & 74\,529 & 63.9 & 9.6 \\
+    MuonCandidate & 6\,411 & 38\,558 & 4\,453 & 222 & 49\,644 & 57.3 & 12.9 \\
+    ContainedPion & 2\,842 & 4\,611 & 414 & 41 & 7\,909 & 25.4 & 35.9 \\
+    MuonIn3Planes & 2\,723 & 4\,351 & 343 & 29 & 7\,445 & 24.4 & 36.6 \\
+    PionIn3Planes & 2\,531 & 3\,918 & 266 & 12 & 6\,726 & 22.6 & 37.6 \\
+    ShowerCut & 2\,115 & 1\,886 & 194 & 10 & 4\,206 & 18.9 & 50.3 \\
+    OpeningAngle & 2\,100 & 1\,712 & 74 & 3.3 & 3\,890 & 18.8 & 54.0 \\
+    \textbf{Nonprotons} & \textbf{1\,957} & \textbf{1\,330} & \textbf{53} & \textbf{2.3} & \textbf{3\,344} & \textbf{17.5} & \textbf{58.5} \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -3005,9 +3001,9 @@ selection and for the proton-tagged subsample, produced by
 \texttt{macros/total\_xsec\_counting.C} (\texttt{logs/counting\_review6.log}, 2026-09-02, with the per-run beam-off treatment).
 The MC counts carry the framework's full central-value weight, tune $\times$ PPFX
 $\times$ normalisation (\S\ref{sec:mc}); the PPFX central-value weight averages
-$0.944$ on selected signal, so a count that omits it, as the cut-flow histograms behind
-Table~\ref{tab:cutflow} currently do, sits $3$--$6\%$ above the prediction the unfolding
-actually uses.
+$0.944$ on selected signal, so a count that omits it, as earlier drafts of
+Table~\ref{tab:cutflow} did, sits $3$--$6\%$ above the prediction the unfolding actually
+uses.
 Because the fake data are the central-value prediction, $N_\mathrm{sel}-N_\mathrm{bkg}$
 equals the selected signal exactly and the extracted total is the injected tune,
 $\sigma=N^\mathrm{sig}_\mathrm{gen}/(\Phi N_\mathrm{Ar})$, with a closure ratio of unity
@@ -3036,11 +3032,10 @@ $A_C$-suppressed and observable-dependent.
     $N^\mathrm{sig}_\mathrm{gen}/(\Phi N_\mathrm{Ar})$; ``stat'' is the cut-and-count
     data-statistical term, ``syst'' the prediction-total fraction of the released $p_\mu$
     extraction (see text), ``total'' their quadrature sum. MC counts carry the
-    framework's central-value weight (tune $\times$ PPFX $\times$ normalisation); the
-    yields sit $\sim\!3$--$6\%$ below Table~\ref{tab:cutflow}, whose histograms omit the
-    PPFX central-value weight (see the caption there), and differ by a further
-    $\lesssim1\%$ because the macro uses the Run-1 dirt overlay with per-mode scale
-    factors rather than the per-run dirt files.}
+    framework's central-value weight (tune $\times$ PPFX $\times$ normalisation), the
+    same as Table~\ref{tab:cutflow}; the two differ by $\lesssim1\%$ because the macro
+    uses the Run-1 dirt overlay with per-mode scale factors rather than the per-run dirt
+    files and applies the framework's weight clamp.}
   \label{tab:cutcount}
   \small
   \begin{tabular}{lrrccccccc}
@@ -4157,8 +4152,6 @@ have negative row sums in their least-determined bin.
         Run-1 beam-off sample stands in for Run~2 permanently, \S\ref{sec:mc}).
   \item Confirm that the integrated flux constants are the PPFX-corrected central values
         (\S\ref{sec:flux_status}); the event rate is PPFX-weighted.
-  \item Reprocess the ntuples so that the cut-flow histograms carry the full central-value
-        weight (Table~\ref{tab:cutflow} caveat); the selection code already does.
 \end{itemize}
 
 The automated guards that protect against regression --- the normalisation manifest, the
