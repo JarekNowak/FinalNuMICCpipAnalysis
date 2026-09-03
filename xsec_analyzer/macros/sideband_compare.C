@@ -14,6 +14,22 @@
 #include <vector>
 #include <string>
 struct Src { std::string file; double scale; };
+// Per-run-period beam-off files (both selections, swtrig fail-open build) and the
+// analyser's gate counts (2026-09-02). Run 2 has no beam-off sample and never will: the
+// Run-1 sample stands in, scaled by its own gates.
+static void add_ext(std::vector<Src>& v, const char* m){
+  const char* E="/data/uboone/processed/ext_perrun/xsec-ana-";
+  const char* R1="neutrinoselection_filt_run1_beamoff.root", *R3B="neutrinoselection_filt_run3b_beamoff.root";
+  const char* R4[4]={"numi_pelee_ntuple_beam_off_run4a_rhc_ana.root","numi_pelee_ntuple_beam_off_run4b_rhc_ana.root",
+                     "numi_pelee_ntuple_beam_off_run4c_fhc_ana.root","numi_pelee_ntuple_beam_off_run4d_fhc_ana.root"};
+  const char* R5="numi_pelee_ntuple_beam_off_run5_fhc_ana.root";
+  const double G1=4582248.27, G3=32649128.65, G4=34831148.625, G5=19256341.475, OCCX=0.98;
+  std::string mm=m;
+  if(mm=="fhc"||mm=="comb"){ v.push_back({std::string(E)+R1,OCCX*9846635./G1}); v.push_back({std::string(E)+R1,OCCX*3535129./G1});
+    for(auto f:R4) v.push_back({std::string(E)+f,OCCX*4131149./G4}); v.push_back({std::string(E)+R5,OCCX*5154196./G5}); }
+  if(mm=="rhc"||mm=="comb"){ v.push_back({std::string(E)+R1,OCCX*1458253./G1}); v.push_back({std::string(E)+R1,OCCX*5422907./G1});
+    v.push_back({std::string(E)+R3B,OCCX*10349610./G3}); for(auto f:R4) v.push_back({std::string(E)+f,OCCX*6304167./G4}); }
+}
 
 void sideband_compare(const char* mode="fhc", const char* datasrc="fake",
                       const char* dir="/data/uboone/processed/sb/",
@@ -81,8 +97,12 @@ void sideband_compare(const char* mode="fhc", const char* datasrc="fake",
     double Nsig=0,Nbkg=0;
     for(auto&x:mc){ TChain c("stv_tree"); c.Add(x.file.c_str());
       Nsig+=wsum(c,F+" && "+SIG,true)*x.scale; Nbkg+=wsum(c,F+" && !"+SIG,true)*x.scale; }
-    TChain ce("stv_tree"); ce.Add(Form("%sxsec-ana-beamoff_run1Andrun3.root",P));
-    double Next=wsum(ce,F,false)*sc_ext;
+    // EXT per RUN PERIOD (2026-09-02): cosmic-only beam-off matched by period, horn label
+    // irrelevant; each run's files scaled by bnb_gates[run]/sum(file gates) x 0.98 (see
+    // add_ext), exactly as the framework does. The per-run files carry both selections'
+    // sb_ flags. sc_ext (pooled sample) is no longer used for EXT.
+    std::vector<Src> extv; add_ext(extv, m.c_str());
+    double Next=0; for(auto&x:extv){ TChain ce("stv_tree"); ce.Add(x.file.c_str()); Next+=wsum(ce,F,false)*x.scale; }
     TChain cd("stv_tree"); cd.Add(Form("%sxsec-ana-prodgenie_numi_uboone_overlay_dirt_fhc_mcc9_run1_v28_all_snapshot.root",P));
     double Ndirt=wsum(cd,F,true)*sc_dirt;
     double Ndata=0; for(auto&d:data){ TChain c("stv_tree"); c.Add(d.c_str()); Ndata+=wsum(c,F,false); }

@@ -12,7 +12,7 @@ Production on Argon in the NuMI Beam\par}
 \vspace{0.8cm}
 {\large Corrections that changed a result\par}
 \vspace{0.5cm}
-{\normalsize Draft 1.1, 2026-08-31\par}
+{\normalsize Draft 1.2, 2026-09-02\par}
 \vspace{0.15cm}
 {\footnotesize\ttfamily 0eb3bc4 \textperiodcentered\ 51 extractions \textperiodcentered\ blind\par}
 \vspace{1.5cm}
@@ -140,7 +140,7 @@ $\texttt{onBNB\_reco}-\texttt{extBNB\_reco}$; run~1 gives $558.0$ entries unweig
 against $599.9$ weighted for the same $558$ events; and the throw's own expectation of
 $1567.1$ agrees with the thrown count at $1.3\sigma$.
 
-\textbf{Effect.} The mean inclusive closure ratio moved from $1.106$ to $1.001$, and all
+\textbf{Effect.} The mean inclusive closure ratio moved from $1.106$ to $1.001$ ($1.016$ once the truth-side correction below is included), and all
 $51$ extracted cross sections fell by between $3.8\%$ and $12.9\%$.  Every absolute cross
 section from a draft predating this fix is high by roughly a tenth.
 
@@ -295,6 +295,124 @@ falls outside its own FHC--RHC range, six fall \emph{below} both and only two ab
 is the finite-sample averaging-down expected of statistically limited detector-variation
 samples rather than a recurrence.
 
+\subsection{Cut-and-count uncertainty quoted from a pre-rebuild breakdown}
+
+The total flux-averaged cross sections of the cut-and-count path took their systematic
+fraction from the $p_\mu$ systematic-breakdown tables, which had not been regenerated
+after the detector-variation rebuild of 2026-08-31 (their detector terms were
+$\sim10\%$ against $17$--$43\%$ in the release).  The breakdown tables in the note and the
+supplement were regenerated from the release systematics dumps on 2026-09-02 and the
+cut-and-count uncertainties recomputed from them; the macro also now applies the
+central-value MC weight, which moved the central values by $0.3$--$0.5\%$.
+
+\textbf{Effect.}  Inclusive totals ($10^{-38}$~cm$^2$/Ar): FHC $1.06\pm0.27\to1.03\pm0.43$,
+RHC $0.98\pm0.35\to0.93\pm0.42$, combined $1.02\pm0.30\to0.98\pm0.40$.  The generator
+comparison changes from ``GENIE $\sim1\sigma$ low'' to ``GENIE $0.5$--$0.6\sigma$ low''.
+A proton-tagged cut-and-count total is quoted for the first time (FHC $0.63\pm0.31$,
+RHC $0.55\pm0.21$, combined $0.59\pm0.25$).
+
+\subsection{Fake-data truth still carried the central-value weight}
+
+The 2026-08-30 correction (above) stopped the tune weight being applied a second time
+to the externally thrown fake data on the reconstructed side.  The truth side was
+missed: the throw macro resets only the scalar weight branches, the
+\texttt{weight\_TunedCentralValue\_UBGenie} vector survives, so the universe maker still
+writes a tune-weighted ``CV'' universe for each fake-data file, and the systematics
+calculator took that weighted histogram as the fake-data \emph{truth} whenever it was
+present.  Measured on the FHC $p_\mu$ universe file: weighted/unweighted true-signal
+integrals $1.023$, $1.008$, $1.008$, $1.018$ for Runs~1, 2, 4, 5, about $1.6\%$ overall.
+Every closure ratio was therefore low by that amount and every closure $\chi^2$ slightly
+too small.  Found in the 2026-09-02 code trace; the truth path now uses the same
+external-throw flag as the reco path, and the universe cache key was bumped so the
+stale sums cannot be reused.
+
+\textbf{Effect.}  Unfolded cross sections and covariances are unchanged (FHC $p_\mu$
+integrates to $0.8275$ before and after).  Closure: FHC $p_\mu$ unfolded/truth
+$1.024\to1.041$, $\chi^2$ $0.10/7\to0.13/7$; the mean inclusive closure ratio
+$1.001\to1.016$.  All fifty-one sidecars, the released curves
+(\texttt{truth\_smeared} column), the closure tables and the closure figures were
+regenerated; the ensemble bias is unaffected because its reference is the fixed
+central-value truth, not the thrown one.
+
+\subsection{Beam-off gate count was an event count}
+
+Every live file-properties configuration scaled the pooled Run-1$+$Run-3b beam-off
+sample by $\text{bnb\_trigs}[\text{run}]/3\,821\,593$.  The denominator was inherited from
+the earlier custom selection, where it was the sum $610\,496+3\,211\,097$ of the two
+samples' \emph{event} counts; their gate counts, from the analyser's trigger table
+supplied on 2026-09-02, are $4\,582\,248.27+32\,649\,128.65=37\,231\,376.92$, a factor
+$9.74$ larger.  The selected cosmic rate per gate exposed it: $5.8$ per $10^{6}$ gates for
+the pooled sample against $0.37$--$1.3$ for the dedicated per-period files, versus $0.59$
+with the gate count.  Corrected in all six live configurations and in the counting and
+cut-flow macros; the universes were re-summed (the cache key tracks the file-properties
+contents) and all fifty-one extractions, covariances and the release were regenerated.
+
+\textbf{Effect.}  EXT background at the FHC final cut $128\to13$ events (RHC
+$133\to14$, combined $261\to27$); purity $55.8\to59.7\%$ (FHC).  Fake-data central values
+are unchanged by construction (the same EXT is added and subtracted); the EXT-statistics
+and data-statistics covariance terms shrink, which moves the Wiener-SVD results only
+through the regularisation (see the regenerated tables).  A real-data extraction with the
+old value would have over-subtracted $\approx\!115$ events, $\approx\!12\%$ of the FHC
+signal.  \textbf{Withdrawn:} every beam-off yield, purity and EXT-statistics term quoted
+in drafts before 1.2.  The sideband tables were regenerated with the per-run treatment
+(\texttt{regen\_sidebands.sh}); the cosmic control region, formerly EXT-dominated by
+$4.5:1$, now has $0.7$ EXT events per neutrino-MC event.
+
+\subsection{Beam-off matched by run period instead of one pooled sample}
+
+Beam-off data are cosmic-only, so a sample is matched to a beam-on run by its run period,
+irrespective of the horn polarity it was recorded under (analyser, 2026-09-02).  The
+pooled Run-1$+$Run-3b sample was replaced by the dedicated per-period samples (Run~1;
+Run~3b; Run~4a, 4b, 4c, 4d pooled; Run~5; the Run-1 sample standing in for Run~2), each
+scaled by its own gate count from the analyser's table, and processed with the swtrig
+fail-open build so that the CRT-era samples select cosmics at all.  The selected rate per
+$10^{6}$ gates is $1.75$ (Run~1), $0.43$ (Run~3b), $1.15$ (Run~4), $0.52$ (Run~5), so
+period matching moves the prediction by a factor of about two relative to the pooled
+sample.  All fifty-one universe files were rebuilt (SLURM array 3205007, 51/51), the
+extractions re-unfolded, covariances re-harvested and the release regenerated.
+
+\textbf{Effect.}  EXT background at the final cut (FHC / RHC / combined): pooled
+$13/14/27$ $\to$ per-run $30/23/53$ events, i.e.\ $1.8\%$ of the selected sample; purity
+$59.1\%$ (FHC).  EXT-statistics term on FHC $p_\mu$ $0.4\to0.9\%$.  Unfolded central
+values move by $\lesssim1\%$ through the regularisation.
+
+\subsection{PPFX central-value weight absent from the cut-flow and cut-and-count counts}
+
+The framework's central-value event weight for NuMI is tune $\times$ PPFX~CV $\times$
+normalisation (\texttt{UniverseMaker.cxx}), and the per-run fake data are thrown with
+that product.  The selection's cut-flow histograms and the cut-and-count macro carried
+the tune only.  The PPFX central-value weight averages $0.944$ on selected signal, so
+every absolute yield in the cut-flow table and every cut-and-count total sat $3$--$6\%$
+above the prediction the unfolding uses; efficiencies and purities, being ratios, were
+unaffected at the $0.5\%$ level.  Found in the 2026-09-02 code trace.
+
+\textbf{Effect.}  Cut-and-count totals: FHC $1.06\to1.03$, RHC $0.99\to0.93$, combined
+$1.02\to0.98$ ($10^{-38}$~cm$^2$/Ar), and the RHC/FHC ratio $0.928\to0.901$.  The
+selection now fills the cut-flow histograms with the full weight; the cut-flow table in
+the note keeps the tune-only yields with a caveat until the ntuples are reprocessed.
+No unfolded result is affected.
+
+\subsection{Documentation-only corrections from the 2026-09-02 review}
+
+None of the following moved a released number; they are recorded because a reader of
+Draft~1.1 would otherwise take the printed formulas as the implementation.
+(i)~The differential cross-section equation divided by the efficiency in addition to
+unfolding with the smearceptance matrix $S=\varepsilon M$; the implementation applies
+the correction once, through $S$, and the equation now says so.
+(ii)~The response-matrix figure was described as the column-normalised migration
+matrix; it is $S$, with columns summing to the efficiency.
+(iii)~The muon-candidate cut was described as ``longest qualifying track''; the code
+orders the qualifying set by the muon-BDT score.
+(iv)~Coherent pion production was described as a background; the signal definition is
+topological and includes it.
+(v)~The single-exposure normalisation example ($7.63\times10^{20}$~POT) and a
+pre-rebuild systematic-breakdown table were replaced by the final three-configuration
+values.  (vi)~Flux composition was labelled as integrated above $0.1$~GeV; the
+values are for $60$~MeV.  (vii)~TKI angle units in the binning appendix read rad; they
+are degrees.  (viii)~A $\theta_\pi$ result was listed as final; none is extracted.
+(ix)~The beamline-geometry flux term, quoted at $1.6$--$3.3\%$, is not in the released
+systematics configuration and is now stated as absent.
+
 \section{Development-era corrections}
 
 These predate the framework-based analysis and are recorded for completeness.  They were
@@ -368,7 +486,7 @@ generator remain untested against real data.  Every number in the analysis note 
 property of the injected sample and the extraction machinery.
 
 \paragraph{A caveat that is not an open item but reads like one.}
-The closure $\chi^2$ values have $p$-values clustered near unity (median $0.96$ over the
+The closure $\chi^2$ values have $p$-values clustered near unity (median $0.95$ over the
 fifty-one extractions) because the measurement and the truth it is compared against share
 their systematics, so those terms cancel in the difference while still inflating the
 covariance used to judge it.  Sizing the uncertainty band properly would need a
@@ -382,7 +500,7 @@ test demonstrates, not an error in the values.
 \toprule
 Quantity & superseded value & status \\
 \midrule
-Mean inclusive closure ratio        & $1.106$          & now $1.001$ \\
+Mean inclusive closure ratio        & $1.106$, $1.001$ & now $1.016$ (truth-side correction) \\
 RHC $W_{\pi p}$ cross section       & $-0.194$         & sign was a POT-convention artefact \\
 Combined detector systematic        & $42.3\%$         & now $24.6\%$ \\
 Combined result / expected          & $0.910$          & now $1.027$ \\

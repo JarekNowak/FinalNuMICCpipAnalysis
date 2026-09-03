@@ -9,6 +9,12 @@
 // XSecAnalyzer includes
 #include "XSecAnalyzer/SystematicsCalculator.hh"
 
+// Externally-thrown fake data (macros/throw_perrun_*.C) carries the CV weight in its
+// event multiplicity and is counted UNWEIGHTED, on both the reco and the truth side.
+// Kept as a flag rather than deleted: a fake-data sample produced WITH live weights
+// (rather than an external throw) would still need the weighted path.
+static constexpr bool FAKE_DATA_IS_EXTERNAL_THROW = true;
+
 void set_stats_and_dir( Universe& univ ) {
   univ.hist_reco_->SetStats( false );
   univ.hist_reco_->SetDirectory( nullptr );
@@ -706,7 +712,6 @@ void SystematicsCalculator::build_universes( TDirectoryFile& root_tdir ) {
           //
           // Kept behind a flag rather than deleted: a fake-data sample produced WITH live
           // weights (rather than an external throw) would still need the weighted path.
-          constexpr bool FAKE_DATA_IS_EXTERNAL_THROW = true;
           auto tmp_reco_hist = ( type == NFT::kOnBNB && !FAKE_DATA_IS_EXTERNAL_THROW )
             ? get_object_unique_ptr<TH1D>( (CV_UNIV_NAME + "_0_reco").c_str(), *subdir )
             : nullptr;
@@ -886,11 +891,19 @@ void SystematicsCalculator::build_universes( TDirectoryFile& root_tdir ) {
           // (both in the saved fake data Universe object and in the
           // corresponding "data" histogram of reco event counts
 
-          // check whether weighted CV universes exists for fake data, and use if present
-          const auto tmp_reco_hist = get_object_unique_ptr<TH1D>((CV_UNIV_NAME + "_0_reco").c_str(), *subdir);
+          // check whether weighted CV universes exist for fake data. An externally
+          // thrown sample keeps the weight_TunedCentralValue_UBGenie VECTOR branch (only
+          // the float CV branches are reset to 1 by throw_perrun_*.C), so univmake still
+          // writes a tune-weighted "CV" universe for it. That histogram must NOT be used
+          // for an external throw: the reco side above already counts the sample
+          // unweighted, and taking the weighted truth here applied the tune a second
+          // time to the truth alone. Measured 2026-09-02 on the FHC5 p_mu univmake:
+          // weighted/unweighted true-signal integrals 1.023/1.008/1.008/1.018 for
+          // runs 1/2/4/5 (~1.6% overall), reco 1.03-1.08 -- so every fake-data closure
+          // ratio and the ensemble bias were low by ~1.6%. Same flag as the reco side.
+          const auto tmp_reco_hist = FAKE_DATA_IS_EXTERNAL_THROW ? nullptr
+            : get_object_unique_ptr<TH1D>((CV_UNIV_NAME + "_0_reco").c_str(), *subdir);
           const auto dataContainsWeightedCV = tmp_reco_hist.get() != nullptr;
-          // Same convention as the reco side above: an external throw carries the CV weight
-          // in its multiplicity, so its truth is the unweighted true distribution.
           std::string hist_name_prefix = ( dataContainsWeightedCV ? CV_UNIV_NAME : "unweighted" )
             + "_0";
 

@@ -726,7 +726,12 @@ bool CC1mu1piXp::define_signal( AnalysisEvent* Event ) {
   // the response matrix, were untuned-CV numbers not comparable to anything
   // the Unfolder produces (which applies this same product via UniverseMaker).
   // Both members default to DEFAULT_WEIGHT = 1, so data and EXT are unaffected.
-  const double evt_w = Event->spline_weight_ * Event->tuned_cv_weight_;
+  // NuMI framework CV weight = tune * ppfx_cv * normalisation (UniverseMaker.cxx; the
+  // spline is 1 in these ntuples but is kept for BNB-style inputs). ppfx_cv averages
+  // 0.944 on selected signal, so the earlier spline*tune product left the cut-flow
+  // histograms (and everything quoting them) ~5-6% above the unfolding's prediction.
+  const double evt_w = Event->spline_weight_ * Event->tuned_cv_weight_
+    * Event->ppfx_cv_weight_ * Event->normalisation_weight_;
 
 
 //TMVA stuff
@@ -933,7 +938,12 @@ bool CC1mu1piXp::selection( AnalysisEvent* Event) {
   // the response matrix, were untuned-CV numbers not comparable to anything
   // the Unfolder produces (which applies this same product via UniverseMaker).
   // Both members default to DEFAULT_WEIGHT = 1, so data and EXT are unaffected.
-  const double evt_w = Event->spline_weight_ * Event->tuned_cv_weight_;
+  // NuMI framework CV weight = tune * ppfx_cv * normalisation (UniverseMaker.cxx; the
+  // spline is 1 in these ntuples but is kept for BNB-style inputs). ppfx_cv averages
+  // 0.944 on selected signal, so the earlier spline*tune product left the cut-flow
+  // histograms (and everything quoting them) ~5-6% above the unfolding's prediction.
+  const double evt_w = Event->spline_weight_ * Event->tuned_cv_weight_
+    * Event->ppfx_cv_weight_ * Event->normalisation_weight_;
 
 
 //std::cout << "Selection called\n";

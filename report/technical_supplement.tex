@@ -17,7 +17,7 @@ Production on Argon in the NuMI Beam\par}
 \vspace{0.8cm}
 {\large Companion to the analysis note\par}
 \vspace{0.5cm}
-{\normalsize Draft 1.1, 2026-08-31\par}
+{\normalsize Draft 1.2, 2026-09-02\par}
 \vspace{0.15cm}
 {\footnotesize\ttfamily 0eb3bc4 \textperiodcentered\ 51 extractions \textperiodcentered\ blind\par}
 \vspace{1.5cm}
@@ -256,9 +256,10 @@ no tail to lose, and they now agree with the momenta to better than $0.01\%$.
 
 The effect on the physics conclusions is modest but not negligible: the generator totals
 rise by $4$--$8\%$, which moves each generator closer to the measured cross section. In the
-cut-and-count comparison (Table~\ref{tab:total_xsec}) GENIE goes from $1.0\sigma$ to
-$0.9\sigma$ below the FHC measurement while NEUT goes from $0.8\sigma$ to $1.0\sigma$ above
-it. Had the $p_\pi$ prediction alone been used, the $8\%$ deficit would have appeared as a
+cut-and-count comparison (Table~\ref{tab:total_xsec}) GENIE went from $1.0\sigma$ to
+$0.9\sigma$ below the FHC measurement while NEUT went from $0.8\sigma$ to $1.0\sigma$ above
+it, at the uncertainty band then in use; with the current band these read $0.5\sigma$ and
+$0.6\sigma$. Had the $p_\pi$ prediction alone been used, the $8\%$ deficit would have appeared as a
 data--model disagreement in that one observable and nowhere else.
 
 Two practical notes for anyone repeating this. The NEUT and NuWro event readers cannot be
@@ -1208,6 +1209,33 @@ the total proton-tagged cross section. The corresponding integrated generator pr
 built by \texttt{generator\_predictions/newg4/make\_wpipr\_1bin.C}, summing the per-bin
 cross sections of the six-bin flux-averaged predictions.
 
+\paragraph{Six-bin $W_{\pi p}$ closure, diagnostic only.} For completeness the six-bin
+extraction was carried through the full chain in all three configurations (detector
+variations included, 2026-08-31 pass). It closes against the $A_C$-smeared truth, but that
+closure cannot restore shape information the response does not contain (the top bin is
+$2\%$ diagonal), so these numbers are a check of the machinery and \emph{not} a result;
+they were removed from the analysis note's result tables for that reason. The
+six-bin generator predictions, rebinned from the earlier three-bin ones with integrals
+conserved (GENIE $0.501$, NuWro $0.646$, GiBUU $0.735$, NEUT
+$0.783\times10^{-38}$~cm$^2$/Ar, FHC), exist in the release for the same diagnostic
+purpose.
+
+\begin{center}\small
+\captionof{table}{Six-bin $W_{\pi p}$ fake-data closure, diagnostic only (withdrawn as a
+  differential result). $\sigma_\mathrm{int}$ in $10^{-38}$~cm$^2$/Ar; columns as in the
+  note's proton-tagged closure tables.}
+\label{tab:wpipr_sixbin_closure}
+\begin{tabular}{lccc}
+\toprule
+Config & $\sigma_\mathrm{int}$ & unf./truth & $\chi^2/\mathrm{ndf}$ \\
+\midrule
+FHC      & $0.523$ & $1.11$ & $0.36/6$ \\
+RHC      & $0.437$ & $1.21$ & $1.12/6$ \\
+Combined & $0.467$ & $1.10$ & $0.41/6$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
 \paragraph{The limitation is the pion momentum, and only the pion momentum.} Correlating the
 $W_{\pi p}$ residual against each input residual isolates the cause:
 
@@ -1753,9 +1781,16 @@ Table~\ref{tab:total_xsec} compares the result with the four generator predictio
 each flux-averaged over the corresponding beam. Because the analysis is blind the
 ``measurement'' is here the central-value overlay (the MicroBooNE tune) that the fake
 data is thrown from; at unblinding $N_\mathrm{sel}$ becomes the real beam-on count.
-It agrees with all four generators within $\sim1\sigma$: standalone GENIE sits about
-$1\sigma$ low, while GiBUU, NEUT and NuWro lie within half a sigma. RHC and the
-combined total carry the larger uncertainty, driven by the RHC detector systematic.
+It agrees with all four generators within $0.7\sigma$: standalone GENIE sits
+$0.5$--$0.6\sigma$ low, while GiBUU, NEUT and NuWro lie within $0.7\sigma$. The
+uncertainty is now the prediction total of the released $p_\mu$ extraction
+(\noteref{Table}{tab:systbreak}), which includes the detector-variation rebuild of
+2026-08-31; the previous version of this table used a pre-rebuild breakdown
+($25.5/35.7/28.9\%$) and its uncertainties are superseded. The values are those of
+\texttt{logs/counting\_review3.log} (MC counts carrying the framework's full
+central-value weight, tune $\times$ PPFX $\times$ normalisation; the earlier count used
+the tune alone and sat $3$--$6\%$ higher, and the original unweighted count a further
+$0.3$--$0.5\%$ above that).
 
 \begin{table}[H]
   \centering
@@ -1770,83 +1805,96 @@ combined total carry the larger uncertainty, driven by the RHC detector systemat
     $3$~GeV/$c$, $p_\pi$ at $1$~GeV/$c$) that discarded the tails and made every
     prediction $4$--$8\%$ low (\S\ref{sec:ppi_bias}).}
   \label{tab:total_xsec}
-  \begin{tabular}{lccccc}
-    \toprule
-    Config & Measurement & GENIE & GiBUU & NEUT & NuWro \\
-    \midrule
-    FHC      & $1.06 \pm 0.27$ & $0.82\,(0.9\sigma)$ & $1.13\,(0.3\sigma)$ & $1.32\,(1.0\sigma)$ & $1.25\,(0.7\sigma)$ \\
-    RHC      & $0.98 \pm 0.35$ & $0.67\,(0.9\sigma)$ & $0.94\,(0.1\sigma)$ & $1.11\,(0.3\sigma)$ & $1.04\,(0.2\sigma)$ \\
-    Combined & $1.02 \pm 0.30$ & $0.74\,(0.9\sigma)$ & $1.03\,(0.0\sigma)$ & $1.20\,(0.6\sigma)$ & $1.14\,(0.4\sigma)$ \\
-    \bottomrule
-  \end{tabular}
+  \begin{tabular}{lcccccc}
+\toprule
+Source & $p_\mu$ & $p_\pi$ & $\cos\theta_\mu$ & $\cos\theta_\pi$ & $\theta_{\mu\pi}$ & $\theta_\mu$ \\
+\midrule
+\textbf{Prediction total} & \textbf{40.8} & \textbf{47.9} & \textbf{40.6} & \textbf{37.7} & \textbf{34.7} & \textbf{34.0} \\
+Cross section (GENIE) & 10.7 & 16.1 & 10.0 & 11.9 & 9.9 & 9.4 \\
+Flux (PPFX) & 28.0 & 31.0 & 27.1 & 26.0 & 26.9 & 27.1 \\
+Detector & 24.8 & 28.9 & 27.2 & 21.9 & 18.6 & 16.9 \\
+Reinteraction & 4.4 & 11.4 & 3.5 & 5.0 & 3.8 & 3.9 \\
+MC stat & 4.9 & 6.0 & 5.0 & 4.2 & 2.6 & 3.3 \\
+EXT stat & 0.9 & 2.9 & 2.1 & 1.1 & 1.1 & 1.6 \\
+Data stat & 14.4 & 17.6 & 14.9 & 12.4 & 7.8 & 9.8 \\
+POT $+$ targets & 3.4 & 4.0 & 3.5 & 3.4 & 3.4 & 3.3 \\
+\textbf{Total (incl.\ data stat)} & \textbf{43.5} & \textbf{51.4} & \textbf{43.4} & \textbf{39.8} & \textbf{35.6} & \textbf{35.6} \\
+\bottomrule
+\end{tabular}
 \end{table}
 
 The systematic breakdown by source (bin-averaged fractional uncertainty in cross-section
 space) is given for all three configurations in Tables~\ref{tab:systbreak_fhc}--%
 \ref{tab:systbreak_comb}. The flux (PPFX) term dominates throughout, followed by the
 detector variations; the data-statistical term reflects the fake-data POT of each
-configuration. The RHC detector term is the largest single-configuration entry, reaching $20.5\%$ on
-$p_\pi$; it is no longer the $\cos\theta$ observables that drive it.
+configuration. The RHC detector term is the largest single-configuration entry, reaching $43.1\%$ on
+$p_\pi$ and $40.6\%$ on $\cos\theta_\mu$.
 
 \begin{center}\scriptsize
 \captionof{table}{FHC (\{Run~1,2,4,5\}) systematic breakdown by source, bin-averaged
-  fractional uncertainty (\%).}
+  fractional uncertainty (\%), regenerated on 2026-09-02 from the release systematics
+  dumps of the 2026-08-31 pass (\texttt{logs/systdump}); ``Prediction total'' excludes
+  the data statistics. The previous version of this table predated the detector-variation
+  rebuild (detector terms of $\sim10\%$) and is superseded.}
 \label{tab:systbreak_fhc}
 \begin{tabular}{lcccccc}
 \toprule
 Source & $p_\mu$ & $p_\pi$ & $\cos\theta_\mu$ & $\cos\theta_\pi$ & $\theta_{\mu\pi}$ & $\theta_\mu$ \\
 \midrule
-\textbf{Total}           & \textbf{32.9} & \textbf{38.4} & \textbf{30.8} & \textbf{33.0} & \textbf{29.7} & \textbf{31.4} \\
-Cross section (GENIE)    &    9.2 &   13.4 &    8.2 &   10.8 &    9.1 &    8.1 \\
-Flux (PPFX)              &   24.6 &   26.6 &   25.7 &   26.4 &   25.4 &   25.4 \\
-Detector                 &   12.3 &   10.9 &    9.6 &   10.1 &    8.0 &   10.4 \\
-Reinteraction            &    3.9 &    9.5 &    3.3 &    3.9 &    3.4 &    3.3 \\
-MC stat                  &    3.8 &    5.1 &    3.0 &    3.4 &    2.4 &    3.5 \\
-EXT stat                 &    2.8 &    5.1 &    2.9 &    3.8 &    2.3 &    3.4 \\
-Data stat                &   11.6 &   15.4 &    9.1 &   10.3 &    7.3 &   10.6 \\
-POT $+$ targets          &    2.8 &    3.1 &    2.9 &    3.0 &    2.8 &    2.8 \\
+\textbf{Prediction total} & \textbf{41.1} & \textbf{48.1} & \textbf{40.2} & \textbf{38.3} & \textbf{34.7} & \textbf{33.8} \\
+Cross section (GENIE) & 10.7 & 16.0 & 9.8 & 12.0 & 9.8 & 9.2 \\
+Flux (PPFX) & 28.1 & 31.0 & 26.8 & 26.2 & 26.8 & 26.7 \\
+Detector & 25.0 & 28.8 & 26.8 & 22.2 & 18.6 & 16.9 \\
+Reinteraction & 4.4 & 11.3 & 3.5 & 5.0 & 3.8 & 3.9 \\
+MC stat & 4.8 & 5.9 & 4.8 & 4.2 & 2.5 & 3.3 \\
+EXT stat & 4.0 & 6.1 & 4.7 & 5.1 & 2.5 & 3.8 \\
+Data stat & 14.4 & 17.9 & 14.7 & 12.9 & 7.9 & 10.2 \\
+POT $+$ targets & 3.4 & 4.0 & 3.4 & 3.4 & 3.4 & 3.3 \\
+\textbf{Total (incl.\ data stat)} & \textbf{43.9} & \textbf{51.7} & \textbf{43.0} & \textbf{40.6} & \textbf{35.6} & \textbf{35.5} \\
 \bottomrule
 \end{tabular}
 \end{center}
 
 \begin{center}\scriptsize
 \captionof{table}{RHC (\{Run~1,2,3,4a,4b,4c\}) systematic breakdown by source,
-  bin-averaged fractional uncertainty (\%).}
+  bin-averaged fractional uncertainty (\%); same provenance as Table~\ref{tab:systbreak_fhc}.}
 \label{tab:systbreak_rhc}
 \begin{tabular}{lcccccc}
 \toprule
 Source & $p_\mu$ & $p_\pi$ & $\cos\theta_\mu$ & $\cos\theta_\pi$ & $\theta_{\mu\pi}$ & $\theta_\mu$ \\
 \midrule
-\textbf{Total}           & \textbf{38.1} & \textbf{42.8} & \textbf{33.9} & \textbf{32.1} & \textbf{29.9} & \textbf{29.9} \\
-Cross section (GENIE)    &   10.7 &   14.7 &    9.6 &    9.6 &    9.4 &    8.6 \\
-Flux (PPFX)              &   27.1 &   27.4 &   26.1 &   24.6 &   24.1 &   23.4 \\
-Detector                 &   17.2 &   20.5 &   13.7 &   12.7 &    9.7 &   11.3 \\
-Reinteraction            &    4.2 &    9.4 &    3.8 &    3.6 &    3.5 &    3.4 \\
-MC stat                  &    3.7 &    4.1 &    3.0 &    2.8 &    2.4 &    2.6 \\
-EXT stat                 &    4.0 &    5.3 &    3.7 &    3.8 &    2.9 &    3.3 \\
-Data stat                &   13.7 &   15.2 &   11.1 &   10.2 &    8.8 &    9.7 \\
-POT $+$ targets          &    3.3 &    3.5 &    3.3 &    3.0 &    3.0 &    2.9 \\
+\textbf{Prediction total} & \textbf{44.4} & \textbf{59.3} & \textbf{53.7} & \textbf{44.7} & \textbf{36.6} & \textbf{33.8} \\
+Cross section (GENIE) & 13.9 & 17.9 & 10.6 & 12.8 & 12.2 & 10.0 \\
+Flux (PPFX) & 32.2 & 33.5 & 29.9 & 26.2 & 28.2 & 24.0 \\
+Detector & 25.6 & 43.0 & 40.6 & 31.5 & 18.5 & 21.0 \\
+Reinteraction & 5.1 & 10.7 & 4.7 & 5.9 & 4.2 & 3.4 \\
+MC stat & 5.0 & 4.8 & 5.5 & 3.9 & 2.7 & 2.3 \\
+EXT stat & 1.4 & 1.6 & 1.4 & 1.0 & 0.7 & 0.7 \\
+Data stat & 17.2 & 16.3 & 19.6 & 13.1 & 9.3 & 8.3 \\
+POT $+$ targets & 4.3 & 4.8 & 4.2 & 3.7 & 3.9 & 3.3 \\
+\textbf{Total (incl.\ data stat)} & \textbf{48.4} & \textbf{61.7} & \textbf{57.6} & \textbf{46.7} & \textbf{37.8} & \textbf{34.9} \\
 \bottomrule
 \end{tabular}
 \end{center}
 
 \begin{center}\scriptsize
 \captionof{table}{Combined FHC$+$RHC systematic breakdown by source, bin-averaged
-  fractional uncertainty (\%).}
+  fractional uncertainty (\%); same provenance as Table~\ref{tab:systbreak_fhc}.}
 \label{tab:systbreak_comb}
 \begin{tabular}{lcccccc}
 \toprule
 Source & $p_\mu$ & $p_\pi$ & $\cos\theta_\mu$ & $\cos\theta_\pi$ & $\theta_{\mu\pi}$ & $\theta_\mu$ \\
 \midrule
-\textbf{Total}           & \textbf{42.9} & \textbf{44.4} & \textbf{41.6} & \textbf{36.4} & \textbf{32.4} & \textbf{37.0} \\
-Cross section (GENIE)    &   11.6 &   13.7 &    9.2 &   10.1 &    9.7 &    8.9 \\
-Flux (PPFX)              &   27.4 &   26.7 &   29.1 &   25.5 &   25.3 &   26.5 \\
-Detector                 &   24.6 &   27.9 &   23.0 &   21.3 &   15.4 &   20.3 \\
-Reinteraction            &    4.7 &    9.4 &    4.0 &    3.6 &    3.3 &    3.8 \\
-MC stat                  &    4.4 &    3.3 &    4.1 &    2.3 &    2.0 &    3.1 \\
-EXT stat                 &    3.8 &    3.7 &    4.4 &    2.7 &    1.7 &    3.3 \\
-Data stat                &   14.4 &   10.8 &   13.7 &    7.5 &    6.5 &   10.3 \\
-POT $+$ targets          &    3.2 &    3.3 &    3.5 &    3.0 &    3.0 &    3.1 \\
+\textbf{Prediction total} & \textbf{40.2} & \textbf{52.8} & \textbf{40.1} & \textbf{37.2} & \textbf{35.2} & \textbf{34.4} \\
+Cross section (GENIE) & 12.0 & 17.5 & 11.2 & 12.2 & 10.6 & 9.3 \\
+Flux (PPFX) & 27.4 & 32.7 & 27.6 & 24.9 & 27.2 & 25.3 \\
+Detector & 25.1 & 34.3 & 25.8 & 22.6 & 18.6 & 20.6 \\
+Reinteraction & 5.0 & 12.2 & 4.1 & 4.9 & 3.7 & 3.7 \\
+MC stat & 4.7 & 4.2 & 3.1 & 3.0 & 2.1 & 2.4 \\
+EXT stat & 1.0 & 1.8 & 1.2 & 0.9 & 0.7 & 1.0 \\
+Data stat & 14.9 & 13.4 & 10.1 & 9.5 & 6.6 & 7.7 \\
+POT $+$ targets & 3.5 & 4.5 & 3.8 & 3.4 & 3.6 & 3.3 \\
+\textbf{Total (incl.\ data stat)} & \textbf{43.2} & \textbf{54.6} & \textbf{41.6} & \textbf{38.5} & \textbf{35.8} & \textbf{35.4} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -2065,10 +2113,17 @@ therefore be made observable by observable, and against the fake-data truth
 rather than between measurements.
 
 \paragraph{The RHC deficit is in the input, not the extraction.}
-For the proton-tagged family the measured RHC/FHC ratio is $0.900$. The
-corresponding ratio of the fake-data \emph{truth} integrals is $0.785$ and of the
-GENIE tune $0.779$ --- two independent model inputs that agree with each other and
-disagree with the measurement. The deficit is therefore a property of the sample,
+\textbf{Superseded numbers.} The ratios in this paragraph were measured on 2026-08-28,
+before the detector-variation rebuild and before the fake-data-truth weighting
+correction of 2026-09-02. The cut-and-count totals of the current release
+(\noteref{Table}{tab:cutcount}) give an RHC/FHC ratio of the injected tune of $0.901$
+(inclusive) and $0.878$ (proton-tagged), which is what the unfolded ratios should be
+compared with; the $0.785$/$0.779$ below are not reproduced by the current release and
+should not be quoted until re-derived.
+For the proton-tagged family the measured RHC/FHC ratio was $0.900$. The
+corresponding ratio of the fake-data \emph{truth} integrals was $0.785$ and of the
+GENIE tune $0.779$ --- two independent model inputs that agreed with each other and
+disagreed with the measurement. The deficit is therefore a property of the sample,
 while the extraction distorts the ratio toward unity. Normalisation is not
 implicated: the exposures sum exactly
 ($8.857\times10^{20}+1.1082\times10^{21}=1.9939\times10^{21}$~POT) and the

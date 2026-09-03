@@ -11,21 +11,27 @@
 // observables measured on the proton-tagged selection, which were re-run 2026-08-19)
 void dsigma_ccpi1p(const char* cfg = "FHC5", const char* set = "wtki") {
   const bool incl = ( std::string(set) == "incl" );
+  // "wtki_noW": the five proton-tagged observables that are results (W_had + the four TKI);
+  // the differential W_pipr shape is withdrawn and its panel belongs in the supplement only.
+  const bool noW  = ( std::string(set) == "wtki_noW" );
   const char* PROC = "/data/uboone/processed/";
   const char* obs_wtki[6] = {"Wpipr","Whad","dpt","dalphat","dphit","pn"};
+  const char* obs_noW[6]  = {"Whad","dpt","dalphat","dphit","pn",""};
   const char* obs_incl[6] = {"pmu","ppi2bin","costhmu","costhpi","thmupi","thmupi"};
   // display names: the closure files are keyed on ppi2bin but the panel should read p_pi
   const char* disp_incl[6] = {"pmu","ppi","costhmu","costhpi","thmupi",""};
   const char* obs[6];
-  for ( int i = 0; i < 6; ++i ) obs[i] = incl ? obs_incl[i] : obs_wtki[i];
-  const int n_panel = incl ? 5 : 6;
+  for ( int i = 0; i < 6; ++i ) obs[i] = incl ? obs_incl[i] : ( noW ? obs_noW[i] : obs_wtki[i] );
+  const int n_panel = ( incl || noW ) ? 5 : 6;
   const char* obsX_wtki[6] = {"W_{#pi p} [GeV/c^{2}]","W_{had} [GeV/c^{2}]",
                          "#deltap_{T} [GeV/c]","#delta#alpha_{T} [deg]",
                          "#delta#phi_{T} [deg]","p_{n} [GeV/c]"};
+  const char* obsX_noW[6]  = {"W_{had} [GeV/c^{2}]","#deltap_{T} [GeV/c]",
+                         "#delta#alpha_{T} [deg]","#delta#phi_{T} [deg]","p_{n} [GeV/c]",""};
   const char* obsX_incl[6] = {"p_{#mu} [GeV/c]","p_{#pi} [GeV/c]","cos#theta_{#mu}",
                          "cos#theta_{#pi}","#theta_{#mu#pi} [rad]",""};
   const char* obsX[6];
-  for ( int i = 0; i < 6; ++i ) obsX[i] = incl ? obsX_incl[i] : obsX_wtki[i];
+  for ( int i = 0; i < 6; ++i ) obsX[i] = incl ? obsX_incl[i] : ( noW ? obsX_noW[i] : obsX_wtki[i] );
   gStyle->SetOptStat(0);
   TCanvas c(Form("ds1p_%s",cfg), "", 1800, 1100);
   c.Divide(3, 2);
@@ -104,7 +110,7 @@ void dsigma_ccpi1p(const char* cfg = "FHC5", const char* set = "wtki") {
     mark_xmin(hunf);
     lg->Draw(); keep.push_back(lg);
   }
-  TString out = Form("unfold_output/dsigma_ccpi1p%s_%s.pdf", incl ? "_incl" : "", cfg);
+  TString out = Form("unfold_output/dsigma_ccpi1p%s_%s.pdf", incl ? "_incl" : ( noW ? "_noW" : "" ), cfg);
   c.SaveAs(out);
   printf("wrote %s\n", out.Data());
 }
