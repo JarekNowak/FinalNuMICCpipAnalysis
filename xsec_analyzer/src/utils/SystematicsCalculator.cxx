@@ -7,6 +7,7 @@
 #include "TNamed.h"
 
 // XSecAnalyzer includes
+#include <cstdlib>
 #include "XSecAnalyzer/SystematicsCalculator.hh"
 
 // Externally-thrown fake data (macros/throw_perrun_*.C) carries the CV weight in its
@@ -818,6 +819,24 @@ void SystematicsCalculator::build_universes( TDirectoryFile& root_tdir ) {
             began_checking_for_fake_data = true;
           }
 
+          // BLINDING GUARD. A beam-on file without MC truth is REAL data. The analysis is
+          // blind: refuse to build anything from it unless the operator has explicitly set
+          // XSEC_UNBLIND=1 in the environment. This is the fatal configuration check asked
+          // for at review: the EXT treatment for fake data (EXT added to the pseudo-data,
+          // see the using_fake_data block below) is selected automatically from the same
+          // flag, so with real data the subtraction path is the real one by construction,
+          // and this guard makes an accidental real-data run impossible rather than merely
+          // discouraged.
+          if ( !is_fake_data ) {
+            const char* unblind = std::getenv( "XSEC_UNBLIND" );
+            if ( !unblind || std::string( unblind ) != "1" ) {
+              throw std::runtime_error( "BLINDING GUARD: beam-on file \"" + file_name
+                + "\" carries no MC truth and is therefore real data. Set XSEC_UNBLIND=1"
+                " to proceed (control-region unblinding must be approved first)." );
+            }
+            std::cout << "*** XSEC_UNBLIND=1: processing REAL beam-on data " << file_name
+              << " (no EXT is added to the data; the EXT prediction is subtracted) ***\n";
+          }
           // If we are working with real BNB data, then we don't need to do the
           // other MC-ntuple-specific stuff below, so just move on to the next
           // file

@@ -13,6 +13,7 @@
 //   usage:  root -l -b -q 'macros/sideband_compare.C("fhc","fake")'   // or rhc/comb, beamon
 #include <vector>
 #include <string>
+#include "TRandom3.h"
 struct Src { std::string file; double scale; };
 // Per-run-period beam-off files (both selections, swtrig fail-open build) and the
 // analyser's gate counts (2026-09-02). Run 2 has no beam-off sample and never will: the
@@ -70,6 +71,12 @@ void sideband_compare(const char* mode="fhc", const char* datasrc="fake",
   else {FHCmc();RHCmc();FHCdata();RHCdata();sc_ext=NUMI_EXT_OCC*12.0898;sc_dirt=(0.092402+0.071666)*0.65;}
   // real beam-on files would replace `data` here when unblinding the control regions.
   if(std::string(datasrc)=="beamon"){ printf("  [beamon requested — real-data control-region unblinding; not wired until authorised]\n"); return; }
+  // "fakestack": the full-stack technical test requested at review. The pseudo-data are the
+  // neutrino-MC throw PLUS an independent Poisson throw (fixed seed) of the EXT and dirt
+  // expectations, and are compared with the COMPLETE prediction (nu-MC + EXT + dirt) through
+  // the same code path that real beam-on data will take. It tests bookkeeping, not physics.
+  const bool fakestack = ( std::string(datasrc)=="fakestack" );
+  TRandom3 rng(20260903);
 
   // Weighted event count passing `cut`. MC (numuMC + dirt) carry the CV weight
   // (tuned_cv x ppfx_cv x normalisation) -- the SAME weight the analysis and the
@@ -111,6 +118,9 @@ void sideband_compare(const char* mode="fhc", const char* datasrc="fake",
     // EXT + dirt are the additional components real beam-on data will contain (shown
     // for scale); their model is validated against the FULL stack only after unblinding.
     double Nnu=Nsig+Nbkg;
+    if(fakestack){ double Nfull=Nnu+Next+Ndirt; double Ndat2=Ndata+rng.Poisson(Next)+rng.Poisson(Ndirt);
+      printf("%-12s %9.1f %9.1f %9.1f %9.1f %9.1f %7.1f%% %9.3f  [full stack %9.1f, data/full %.3f +- %.3f]\n",
+             s,Ndat2,Nsig,Nbkg,Next,Ndirt,Nnu>0?100*Nsig/Nnu:0,Nfull>0?Ndat2/Nfull:0,Nfull,Nfull>0?Ndat2/Nfull:0,Nfull>0?sqrt(Ndat2)/Nfull:0); continue; }
     printf("%-12s %9.1f %9.1f %9.1f %9.1f %9.1f %7.1f%% %9.3f\n",
            s,Ndata,Nsig,Nbkg,Next,Ndirt,Nnu>0?100*Nsig/Nnu:0,Nnu>0?Ndata/Nnu:0);
   }

@@ -406,6 +406,24 @@ stale sidecars quarantined, the figure regenerated (2026-09-03).
 \textbf{Effect.}  Figure only; no released number.  In the two-bin scheme the generators
 differ by normalisation ($\times1.6$ GENIE to NEUT) with shapes consistent with the data.
 
+\subsection{Result tables rewritten into the wrong place by the table patcher}
+
+The script that repatched the result tables after each regeneration located a table by
+the \texttt{\textbackslash begin\{tabular\}} nearest its label, falling back to the
+\emph{preceding} tabular whenever the caption between label and tabular exceeded 400
+characters.  Four tables were affected in the committed Draft~1.2: the FHC results table
+received the RHC rows, the RHC table the combined rows, the combined table the rows of the
+integrated-cross-section summary, and in the supplement the cut-and-count comparison was
+overwritten by an FHC systematics breakdown.  Caught by the second external review
+(2026-09-03).  All release-derived tables are now regenerated as whole tabulars by
+\texttt{rebuild\_tables.py} with a locator that requires the tabular to follow the label
+inside the same environment, and \texttt{report/check\_tables.py} asserts, on every build,
+that each table sits under its own label, has the column count its header declares, and
+agrees with \texttt{current\_results.tsv}.
+
+\textbf{Effect.}  Presentation only; the release files were correct throughout.  The
+tables of the 2026-09-03 build are the first to pass the automated check.
+
 \subsection{Documentation-only corrections from the 2026-09-02 review}
 
 None of the following moved a released number; they are recorded because a reader of

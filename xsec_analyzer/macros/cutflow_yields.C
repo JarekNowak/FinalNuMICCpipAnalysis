@@ -9,8 +9,11 @@
 #include <vector>
 #include <string>
 struct Src { std::string file; double scale; };
-void cutflow_yields(const char* mode="fhc") {
-  const char* P="/data/uboone/processed/";
+void cutflow_yields(const char* mode="fhc", const char* P="/data/uboone/processed/", bool dirt_norm_in_weight=false) {
+  // P: directory of the processed files (default live tree; processed/cf/ carries the
+  // cut-flow histograms filled with the FULL CV weight tune*ppfx*normalisation).
+  // dirt_norm_in_weight: the cf/ dirt file already carries the 0.65 normalisation weight
+  // in its histograms, so it must not be applied again here.
   const char* stage[10]={"None","InFiducialVol","Topological","MuonCandidate",
     "ContainedPion","MuonIn3Planes","PionIn3Planes","ShowerCut","OpeningAngle","Nonprotons"};
   // ---- per-config numuMC files + PER-RUN POT scale D_run/MC_run (Table tab:pot) ----
@@ -65,7 +68,7 @@ void cutflow_yields(const char* mode="fhc") {
   // down the FHC branch, leaving combined dirt scaled to FHC exposure alone.
   double sc_dirt = ( (std::string(mode)=="fhc") ? 0.092402
                    : (std::string(mode)=="rhc") ? 0.071666
-                   : (0.092402 + 0.071666) ) * 0.65;
+                   : (0.092402 + 0.071666) ) * ( dirt_norm_in_weight ? 1.0 : 0.65 );
   dirt.push_back({std::string(P)+"xsec-ana-prodgenie_numi_uboone_overlay_dirt_fhc_mcc9_run1_v28_all_snapshot.root", sc_dirt});
 
   double sig[10]={0}, tot[10]={0}, ex[10]={0}, dt[10]={0};
