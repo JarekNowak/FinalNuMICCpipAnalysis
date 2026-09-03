@@ -392,6 +392,20 @@ selection now fills the cut-flow histograms with the full weight; the cut-flow t
 the note keeps the tune-only yields with a caveat until the ntuples are reprocessed.
 No unfolded result is affected.
 
+\subsection{Proton-tagged TKI figure drawn from the withdrawn fine-binned sidecars}
+
+The proton-tagged W/TKI montage macros read closure sidecars keyed \texttt{dpt},
+\texttt{dalphat}, \texttt{dphit}, \texttt{pn}: the withdrawn fine-binned extraction of
+2026-08-18, which predates the beam-axis correction, rather than the released two-bin
+\texttt{*2bin} files.  The figure therefore compared transverse quantities about detector
+$z$ (its ``data'' and tune) with beam-frame generator curves, and showed shape
+disagreements of a factor of several that do not exist in the release.  The staleness
+check maps figures by configuration only and could not catch it.  Macros repointed, the
+stale sidecars quarantined, the figure regenerated (2026-09-03).
+
+\textbf{Effect.}  Figure only; no released number.  In the two-bin scheme the generators
+differ by normalisation ($\times1.6$ GENIE to NEUT) with shapes consistent with the data.
+
 \subsection{Documentation-only corrections from the 2026-09-02 review}
 
 None of the following moved a released number; they are recorded because a reader of

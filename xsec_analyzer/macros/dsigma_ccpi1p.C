@@ -15,8 +15,13 @@ void dsigma_ccpi1p(const char* cfg = "FHC5", const char* set = "wtki") {
   // the differential W_pipr shape is withdrawn and its panel belongs in the supplement only.
   const bool noW  = ( std::string(set) == "wtki_noW" );
   const char* PROC = "/data/uboone/processed/";
-  const char* obs_wtki[6] = {"Wpipr","Whad","dpt","dalphat","dphit","pn"};
-  const char* obs_noW[6]  = {"Whad","dpt","dalphat","dphit","pn",""};
+  // The four TKI observables are RELEASED in the coarsened two-bin scheme; their closure
+  // files are keyed dpt2bin/dalphat2bin/dphit2bin/pn2bin. The un-suffixed names are the
+  // withdrawn fine-binned extraction of 2026-08-18, which predates the beam-axis fix
+  // (TKI about detector z) -- reading them drew a "data" curve that was a different
+  // observable from the generator curves. Those sidecars are quarantined.
+  const char* obs_wtki[6] = {"Wpipr","Whad","dpt2bin","dalphat2bin","dphit2bin","pn2bin"};
+  const char* obs_noW[6]  = {"Whad","dpt2bin","dalphat2bin","dphit2bin","pn2bin",""};
   const char* obs_incl[6] = {"pmu","ppi2bin","costhmu","costhpi","thmupi","thmupi"};
   // display names: the closure files are keyed on ppi2bin but the panel should read p_pi
   const char* disp_incl[6] = {"pmu","ppi","costhmu","costhpi","thmupi",""};
@@ -63,7 +68,9 @@ void dsigma_ccpi1p(const char* cfg = "FHC5", const char* set = "wtki") {
     hunf = (TH1D*)hunf->Clone(); hunf->SetDirectory(0); keep.push_back(hunf);
     if (htru) { htru=(TH1D*)htru->Clone(); htru->SetDirectory(0); keep.push_back(htru); }
     if (htun) { htun=(TH1D*)htun->Clone(); htun->SetDirectory(0); keep.push_back(htun); }
-    hunf->SetTitle(Form("%s;%s;d#sigma/dx [10^{-38} cm^{2}/Ar]", incl ? disp_incl[o] : obs[o], obsX[o]));
+    std::string disp = incl ? disp_incl[o] : obs[o];
+    if ( disp.size() > 4 && disp.substr(disp.size()-4) == "2bin" ) disp = disp.substr(0, disp.size()-4);
+    hunf->SetTitle(Form("%s;%s;d#sigma/dx [10^{-38} cm^{2}/Ar]", disp.c_str(), obsX[o]));
     hunf->SetMarkerStyle(20); hunf->SetMarkerSize(0.8);
     hunf->SetLineColor(kBlack); hunf->SetMarkerColor(kBlack);
     // Axis formatting: the default division count crams too many tick labels into a

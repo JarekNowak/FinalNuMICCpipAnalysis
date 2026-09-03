@@ -16,7 +16,8 @@
 #include <vector>
 void dsigma_build_1p(const char* cfg = "FHC5") {
   const char* PROC = "/data/uboone/processed/";
-  const char* obs[6]  = {"Wpipr","Whad","dpt","dalphat","dphit","pn"};
+  // released two-bin TKI closure files (the un-suffixed names are the withdrawn fine binning)
+  const char* obs[6]  = {"Wpipr","Whad","dpt2bin","dalphat2bin","dphit2bin","pn2bin"};
   const char* obsX[6] = {"W_{#pi p} [GeV/c^{2}]","W_{had} [GeV/c^{2}]",
                          "#deltap_{T} [GeV/c]","#delta#alpha_{T} [deg]",
                          "#delta#phi_{T} [deg]","p_{n} [GeV/c]"};
@@ -75,7 +76,7 @@ void dsigma_build_1p(const char* cfg = "FHC5") {
       for (auto h : gh) if (h) for (int b=1;b<=h->GetNbinsX();++b) ymax=std::max(ymax,h->GetBinContent(b));
 
       // frame: always draw the truth first (step 1 shows it alone)
-      htru->SetTitle(Form("%s;%s;d#sigma/dx [10^{-38} cm^{2}/Ar]", obs[o], obsX[o]));
+      { std::string disp=obs[o]; if(disp.size()>4 && disp.substr(disp.size()-4)=="2bin") disp=disp.substr(0,disp.size()-4); htru->SetTitle(Form("%s;%s;d#sigma/dx [10^{-38} cm^{2}/Ar]", disp.c_str(), obsX[o])); }
       htru->SetLineColor(kGray+2); htru->SetLineWidth(3); htru->SetLineStyle(2);
       htru->SetMarkerSize(0);
       htru->GetXaxis()->SetTitleSize(0.050); htru->GetXaxis()->SetLabelSize(0.042);
