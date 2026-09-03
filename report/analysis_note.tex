@@ -289,13 +289,13 @@ remains poorly constrained: major neutrino interaction generators (GENIE~v3,
 NuWro, NEUT) disagree by 20--30\% in absolute rate and show significant shape
 differences for individual kinematic variables.
 
-\uboone{} is a single-phase liquid argon time-projection chamber (LArTPC) at
+\uboone{} is a single-phase liquid argon time-projection chamber (LArTPC)~\cite{uboone_nim} at
 Fermilab that operated from 2015--2021, providing the world's highest-statistics
 $\nu_\mu$-on-argon dataset below $5$~GeV during its NuMI running period.
 This note presents a simultaneous measurement of differential cross sections in five
 kinematic quantities (six released distributions, the muon polar angle being given in both
 $\cos\theta_\mu$ and $\theta_\mu$) in the CC$\pi^{\pm}$ channel using the full NuMI exposure in FHC, RHC, and combined
-configurations, employing Pandora pattern recognition~\cite{pandora} and
+configurations, employing Pandora pattern recognition~\cite{pandora,uboone_pandora} and
 Wiener-SVD unfolding~\cite{wienervsd}.
 
 \section{Theoretical Background and Prior CC$\pi^+$ Measurements}
@@ -328,7 +328,7 @@ electromagnetic form factors of Graczyk and Sobczyk~\cite{graczyk2008} and
 the improved treatment of the $\Delta$ line shape and the lepton-mass
 effects of Berger and Sehgal~\cite{berger2007}. (Berger and Sehgal also discuss the
 interference between the resonant and non-resonant amplitudes; that interference term is
-not implemented in the GENIE~v3 configuration underlying the \uboone{} tune, where the
+not implemented in the GENIE~v3 configuration underlying the \uboone{} tune~\cite{uboone_tune}, where the
 non-resonant contribution is added incoherently.)  Higher resonances
 ($N(1440)P_{11}$, $N(1520)D_{13}$, etc.) are included up to
 $W \lesssim 2$~GeV and contribute at $E_\nu \gtrsim 1.5$~GeV.
@@ -342,7 +342,7 @@ these processes represent $\sim$20\% of the CC$\pi^{\pm}$ rate in the energy ran
 of this analysis and are modelled in GENIE via the Bodek--Yang formalism.
 
 \textbf{Coherent pion production.}
-The neutrino can scatter coherently off the entire nucleus,
+The neutrino can scatter coherently off the entire nucleus~\cite{rs_coherent,berger_sehgal_coherent},
 $\nu_\mu A \to \mu^- \pi^+ A^*$, leaving the nucleus in its ground state.
 The cross section is small ($\lesssim 10\%$ of the total) below 5~GeV. The signal
 definition of Sec.~\ref{sec:signal} is a final-state topology (one muon, one charged pion,
@@ -386,7 +386,7 @@ Major neutrino event generators reproduce the inclusive CC cross section to
 in the resonance model, the treatment of the transition region between resonance
 and DIS, and the FSI cascade.
 
-\paragraph{GENIE v3~\cite{genie}.}
+\paragraph{GENIE v3~\cite{genie,genie3}.}
 For resonance production GENIE implements the KLN-BS
 model~\cite{kuzmin2004,graczyk2008,berger2007,nowak2009} for the full tower of
 18 baryon resonances up to $W \lesssim 2$~GeV, including the
@@ -410,7 +410,7 @@ GENIE has been reported to over-predict the CC$\pi^{\pm}$ rate by 20--35\% relat
 bubble-chamber and MiniBooNE data in several comparisons when normalised to the BNL
 dataset; the tension is reduced but not eliminated in the AR23 tune.
 
-\paragraph{NuWro.}
+\paragraph{NuWro~\cite{nuwro}.}
 NuWro models resonance production via the $\Delta(1232)$ only;
 no higher baryon resonances are included.
 The $\Delta$ is treated with the Paschos--Yu formalism for the
@@ -431,7 +431,7 @@ NuWro has historically shown better agreement with MiniBooNE and bubble-chamber
 data than GENIE, partly attributable to the absence of overestimated higher-resonance
 contributions.
 
-\paragraph{NEUT~\cite{neut}.}
+\paragraph{NEUT~\cite{neut,neut2021}.}
 NEUT, the generator used by T2K and Super-Kamiokande, implements resonance
 production via a modified Rein--Sehgal model including 18 resonances up to
 $W \lesssim 2$~GeV, with Graczyk--Sobczyk~\cite{graczyk2008} electromagnetic
@@ -448,7 +448,7 @@ hadron through the nucleus using step-by-step interactions sampled from $\pi N$
 cross sections, with nuclear density and mean-free-path corrections derived from
 the optical potential.
 
-\paragraph{GiBUU.}
+\paragraph{GiBUU~\cite{gibuu}.}
 The Giessen Boltzmann--Uehling--Uhlenbeck (GiBUU) generator takes a fundamentally
 different approach: instead of a probabilistic step-by-step cascade, it solves a
 coupled set of kinetic transport equations for the full hadronic system inside the
@@ -566,7 +566,7 @@ The higher beam energy at MINERvA means that the $p_\pi > 0.5$~GeV/$c$ region
 is well-populated, making it complementary to the MicroBooNE NuMI result which
 is statistics-limited at high pion momentum.
 
-\subsubsection*{T2K ND280 ($\nu_\mu$ on CH, off-axis beam, 2017)}
+\subsubsection*{T2K ND280 ($\nu_\mu$ on CH, off-axis beam, 2020)}
 
 T2K measured CC$\pi^+$ at its near detector ND280 in the off-axis T2K beam
 (OAB), which peaks at $\langle E_\nu \rangle \approx 0.85$~GeV~\cite{t2k_ccpip}.
@@ -676,7 +676,7 @@ combining the two-dimensional wire images into a full 3D reconstruction.
 
 \uboone{} operated from October 2015 to July 2021 at the Fermilab Accelerator
 Laboratory, collecting data in both the Booster Neutrino Beam (BNB) and, as a
-parasitic experiment, the NuMI beam~\cite{uboone_nim}.  It was the world's
+parasitic experiment, the NuMI beam~\cite{numi_beam}.  It was the world's
 largest operating LArTPC until the start of SBND and ICARUS data-taking.
 
 \subsection{Active Volume and Electric Field}
@@ -747,10 +747,10 @@ light.  The system serves two purposes in this analysis:
 
 Three independent calibration inputs are used:
 \begin{itemize}[noitemsep]
-  \item \textbf{UV laser system}~\cite{sce}: two pulsed laser beams produce
+  \item \textbf{UV laser system}~\cite{uboone_laser}: two pulsed laser beams produce
     straight ionisation tracks at precisely known locations.  Deviations of the
     reconstructed track positions from the known trajectories are used to build
-    a three-dimensional space-charge distortion map, which is applied to all
+    a three-dimensional space-charge distortion map~\cite{sce}, which is applied to all
     reconstructed hits as a position correction.  Distortions reach $\sim$10~cm
     near the anode and cathode edges.
   \item \textbf{Stopping cosmic-ray muons}: the Bragg peak of cosmic muons
@@ -789,12 +789,12 @@ scintillator panels surrounding the cryostat, provides an additional cosmic
 veto but is not used in the present analysis because the relevant branch variables
 are zero-filled in the NuMI data ntuples.
 
-Reconstruction uses the Pandora~\cite{pandora} multi-algorithm pattern recognition
+Reconstruction uses the Pandora~\cite{pandora,uboone_pandora} multi-algorithm pattern recognition
 framework, which groups hits into PFParticles organised in a hierarchy with the
 neutrino interaction as the top-level particle.  Track candidates are fitted with
 a Kalman-filter-based track fitter to obtain momentum from track curvature
 (negligible for $<$300~MeV/$c$ muons at 273~V/cm) and from range for
-contained tracks.  Log-likelihood ratio particle identification (LLR PID) using
+contained tracks.  Log-likelihood ratio particle identification (LLR PID)~\cite{uboone_llr} using
 the $dE/dx$ profile along the track is the primary tool for muon/pion/proton
 separation (Section~\ref{sec:selection}).
 
@@ -1058,7 +1058,9 @@ each mode's flux and data POT (Table~\ref{tab:pot}).
 \label{sec:mc}
 % =============================================================================
 
-Monte Carlo events are generated with GENIE~v3~\cite{genie} on argon-40 and
+Monte Carlo events are generated with GENIE~v3~\cite{genie,genie3} (the \uboone{}
+tune~\cite{uboone_tune}) on argon-40, propagated through the detector with
+Geant4~\cite{geant4}, and
 overlaid with real cosmic-ray data (the ``overlay'' technique) so that simulated
 events experience in-situ detector noise and cosmogenic activity.
 Table~\ref{tab:samples} summarises the input samples.
@@ -1408,7 +1410,7 @@ cuts.
 \subsection{BDT-based particle identification}
 \label{sec:bdt}
 
-Three gradient-boosted decision trees (TMVA), trained on the MicroBooNE overlay MC,
+Three gradient-boosted decision trees (TMVA~\cite{tmva}), trained on the MicroBooNE overlay MC,
 supply the calorimetric particle identification used in the muon- and pion-candidate
 cuts. All three share a common set of per-track inputs: the three Bragg-peak $dE/dx$
 likelihoods under the proton, muon and MIP hypotheses
@@ -1531,7 +1533,7 @@ the detector, and the multiple-Coulomb-scattering momentum
 \texttt{trk\_mcs\_muon\_mom\_v} when it exits (range is meaningless for an exiting track).
 The reported $p_\mu$ is therefore \texttt{candidate\_muon\_mom\_reco}, not either branch
 alone. In the selected FHC sample the split is $37\%$ contained (range) and
-$63\%$ exiting (MCS), i.e.\ the measurement is \emph{MCS-dominated}: the NuMI muons are
+$63\%$ exiting (MCS~\cite{uboone_mcs}), i.e.\ the measurement is \emph{MCS-dominated}: the NuMI muons are
 energetic and the \uboone{} TPC is small, so most of them leave it. This matters for the
 $p_\mu$ resolution and for the detector systematic, since the range and MCS estimators
 carry different uncertainties.
@@ -2094,7 +2096,7 @@ noise-dominated ones, so no regularisation strength is tuned by hand. The price 
 spectrum $A_C\vec{s}$, where the additional-smearing matrix $A_C$ is published so that
 every theory prediction is smeared by the same $A_C$ before comparison.
 
-\paragraph{D'Agostini iterative Bayesian (cross-check).} Bayes' theorem inverts the
+\paragraph{D'Agostini iterative Bayesian~\cite{dagostini} (cross-check).} Bayes' theorem inverts the
 migration, $P(C_j|E_i)=R_{ij}\pi_j/\sum_l R_{il}\pi_l$, and the unfolded estimate is
 $\hat{s}_j=\varepsilon_j^{-1}\sum_i P(C_j|E_i)(m_i-b_i)$. The MC prior $\pi_j$ is updated
 with the result and iterated; the \emph{number of iterations} is the regularisation knob
@@ -2133,7 +2135,7 @@ rather than a physical or acceptance effect.
 
 The primary method is Wiener-SVD~\cite{wienervsd}, implemented in
 \texttt{xsec/WienerSVD.h} (\texttt{RunWienerSVD\_FW}) as a faithful replica of the
-official XSecAnalyzer \texttt{WienerSVDUnfolder}: Cholesky whitening of the data
+official XSecAnalyzer~\cite{xsec_analyzer,uboone_tki} \texttt{WienerSVDUnfolder}: Cholesky whitening of the data
 covariance, regularisation inside the SVD of $R\,C^{-1}$, and the BNL filter
 (Eq.~3.24 of Ref.~\cite{wienervsd}).  The method applies a Wiener filter in the
 SVD basis, providing adaptive regularisation whose strength is set by the data
@@ -2949,7 +2951,7 @@ Every differential cross section and every integrated value quoted in this note 
 \emph{both} statistical and systematic uncertainties. The error bars on the unfolded points
 are the square root of the diagonal of the \emph{total} covariance matrix, propagated
 through the unfolding: flux (PPFX multisims), cross-section (GENIE multisims and unisims),
-detector variations, hadron re-interaction, POT counting and target number, together with
+detector variations~\cite{uboone_detvar}, hadron re-interaction~\cite{geant4reweight}, POT counting and target number, together with
 the data, MC and EXT statistical terms. For $p_\mu$ in FHC the bin-averaged total is
 $43.9\%$ (Table~\ref{tab:systbreak}), dominated by flux ($28.1\%$) and detector
 ($25.0\%$), with data statistics $14.4\%$ and cross-section $10.7\%$. The cut-and-count
@@ -3747,8 +3749,8 @@ $W_{\pi p}=\big[(E_\pi+E_p)^2-(\vec p_\pi+\vec p_p)^2\big]^{1/2}$, which makes n
 assumption on the neutrino direction, and the \emph{calorimetric} hadronic mass
 $W_\mathrm{had}=\big[m_p^2+2m_p(E_\mathrm{cal}-E_\mu)-Q^2\big]^{1/2}$ built from the
 reconstructed calorimetric energy. The four TKI observables; the transverse-momentum
-imbalance $\delta p_T$, its two angles $\delta\alpha_T$ and $\delta\phi_T$, and the
-STV-inferred nucleon-momentum proxy $p_n$ (an approximation, see below), are computed
+imbalance $\delta p_T$, its two angles $\delta\alpha_T$ and $\delta\phi_T$~\cite{lu_tki}, and the
+STV-inferred nucleon-momentum proxy $p_n$~\cite{furmanski_pn} (an approximation, see below), are computed
 from the muon versus the summed $(\pi+p)$ hadronic system using the framework STV tool.
 Proton momenta are obtained from
 the proton-hypothesis range-based kinetic energy. $W_\mathrm{had}$ is measured
@@ -4568,8 +4570,126 @@ cross sections are given in Table~\ref{tab:ppi_partial}.
 
 \bibitem{sce}
   MicroBooNE Collaboration, P.~Abratenko \textit{et al.},
-  ``Calorimetric reconstruction of interactions with the MicroBooNE LArTPC,''
+  ``Measurement of space charge effects in the MicroBooNE LArTPC using cosmic
+  muons,''
   \textit{JINST} \textbf{15}, P12037 (2020).
+
+\bibitem{uboone_laser}
+  MicroBooNE Collaboration, C.~Adams \textit{et al.},
+  ``A Method to Determine the Electric Field of Liquid Argon Time Projection
+  Chambers Using a UV Laser System and Its Application in MicroBooNE,''
+  \textit{JINST} \textbf{15}, P07010 (2020).
+
+\bibitem{uboone_pandora}
+  MicroBooNE Collaboration, R.~Acciarri \textit{et al.},
+  ``The Pandora multi-algorithm approach to automated pattern recognition of
+  cosmic-ray muon and neutrino events in the MicroBooNE detector,''
+  \textit{Eur.\ Phys.\ J.\ C} \textbf{78}, 82 (2018).
+
+\bibitem{uboone_llr}
+  MicroBooNE Collaboration, P.~Abratenko \textit{et al.},
+  ``Calorimetric classification of track-like signatures in liquid argon TPCs
+  using MicroBooNE data,''
+  \textit{JHEP} \textbf{12}, 153 (2021).
+
+\bibitem{uboone_mcs}
+  MicroBooNE Collaboration, P.~Abratenko \textit{et al.},
+  ``Determination of muon momentum in the MicroBooNE LArTPC using an improved
+  model of multiple Coulomb scattering,''
+  \textit{JINST} \textbf{12}, P10010 (2017).
+
+\bibitem{uboone_detvar}
+  MicroBooNE Collaboration, P.~Abratenko \textit{et al.},
+  ``Novel approach for evaluating detector-related uncertainties in a LArTPC
+  using MicroBooNE data,''
+  \textit{Eur.\ Phys.\ J.\ C} \textbf{82}, 454 (2022).
+
+\bibitem{uboone_tune}
+  MicroBooNE Collaboration, P.~Abratenko \textit{et al.},
+  ``New CC0$\pi$ GENIE model tune for MicroBooNE,''
+  \textit{Phys.\ Rev.\ D} \textbf{105}, 072001 (2022), arXiv:2110.14028 [hep-ex].
+
+\bibitem{uboone_tki}
+  MicroBooNE Collaboration, P.~Abratenko \textit{et al.},
+  ``First double-differential measurement of kinematic imbalance in neutrino
+  interactions with the MicroBooNE detector,''
+  \textit{Phys.\ Rev.\ Lett.} \textbf{131}, 101802 (2023), arXiv:2301.03700 [hep-ex].
+
+\bibitem{xsec_analyzer}
+  S.~Gardiner \textit{et al.},
+  ``XSecAnalyzer: a cross-section analysis framework for MicroBooNE,''
+  \url{https://github.com/uboone/xsec_analyzer} (accessed 2026).
+
+\bibitem{numi_beam}
+  P.~Adamson \textit{et al.},
+  ``The NuMI Neutrino Beam,''
+  \textit{Nucl.\ Instrum.\ Methods A} \textbf{806}, 279--306 (2016).
+
+\bibitem{genie3}
+  L.~Alvarez-Ruso \textit{et al.}\ (GENIE Collaboration),
+  ``Recent highlights from GENIE v3,''
+  \textit{Eur.\ Phys.\ J.\ ST} \textbf{230}, 4449--4467 (2021).
+
+\bibitem{nuwro}
+  T.~Golan, J.~T.~Sobczyk, and J.~\.Zmuda,
+  ``NuWro: the Wroc\l{}aw Monte Carlo generator of neutrino interactions,''
+  \textit{Nucl.\ Phys.\ B Proc.\ Suppl.} \textbf{229--232}, 499 (2012).
+
+\bibitem{gibuu}
+  O.~Buss \textit{et al.},
+  ``Transport-theoretical description of nuclear reactions,''
+  \textit{Phys.\ Rept.} \textbf{512}, 1--124 (2012);
+  U.~Mosel, ``Neutrino event generators: foundation, status and future,''
+  \textit{J.\ Phys.\ G} \textbf{46}, 113001 (2019).
+
+\bibitem{neut2021}
+  Y.~Hayato and L.~Pickering,
+  ``The NEUT neutrino interaction simulation program library,''
+  \textit{Eur.\ Phys.\ J.\ ST} \textbf{230}, 4469--4481 (2021).
+
+\bibitem{geant4}
+  S.~Agostinelli \textit{et al.}\ (GEANT4 Collaboration),
+  ``GEANT4: a simulation toolkit,''
+  \textit{Nucl.\ Instrum.\ Methods A} \textbf{506}, 250--303 (2003).
+
+\bibitem{geant4reweight}
+  J.~Calcutt, C.~Thorpe, K.~Mahn, and L.~Fields,
+  ``Geant4Reweight: a framework for evaluating and propagating hadronic
+  interaction uncertainties in Geant4,''
+  \textit{JINST} \textbf{16}, P08042 (2021).
+
+\bibitem{tmva}
+  A.~Hoecker \textit{et al.},
+  ``TMVA: Toolkit for Multivariate Data Analysis,''
+  PoS \textbf{ACAT}, 040 (2007), arXiv:physics/0703039.
+
+\bibitem{dagostini}
+  G.~D'Agostini,
+  ``A multidimensional unfolding method based on Bayes' theorem,''
+  \textit{Nucl.\ Instrum.\ Methods A} \textbf{362}, 487--498 (1995).
+
+\bibitem{lu_tki}
+  X.-G.~Lu, L.~Pickering, S.~Dolan, G.~Barr, D.~Coplowe, Y.~Uchida, D.~Wark,
+  M.~O.~Wascko, A.~Weber, and T.~Yuan,
+  ``Measurement of nuclear effects in neutrino interactions with minimal
+  dependence on neutrino energy,''
+  \textit{Phys.\ Rev.\ C} \textbf{94}, 015503 (2016).
+
+\bibitem{furmanski_pn}
+  A.~P.~Furmanski and J.~T.~Sobczyk,
+  ``Neutrino energy reconstruction from one-muon and one-proton events,''
+  \textit{Phys.\ Rev.\ C} \textbf{95}, 065501 (2017).
+
+\bibitem{rs_coherent}
+  D.~Rein and L.~M.~Sehgal,
+  ``Coherent $\pi^0$ production in neutrino reactions,''
+  \textit{Nucl.\ Phys.\ B} \textbf{223}, 29--44 (1983).
+
+\bibitem{berger_sehgal_coherent}
+  C.~Berger and L.~M.~Sehgal,
+  ``Partially conserved axial vector current and coherent pion production by
+  low energy neutrinos,''
+  \textit{Phys.\ Rev.\ D} \textbf{79}, 053003 (2009).
 
 \bibitem{genieccpi}
   MicroBooNE Collaboration, P.~Abratenko \textit{et al.},
@@ -4584,9 +4704,8 @@ cross sections are given in Table~\ref{tab:ppi_partial}.
 
 \bibitem{uboone_crt}
   MicroBooNE Collaboration, C.~Adams \textit{et al.},
-  ``A Method to Determine the Electric Field of Liquid Argon Time Projection
-  Chambers Using a UV Laser System and Its Application in MicroBooNE,''
-  \textit{JINST} \textbf{15}, P07010 (2020).
+  ``Design and construction of the MicroBooNE Cosmic Ray Tagger system,''
+  \textit{JINST} \textbf{14}, P04004 (2019).
 
 \bibitem{rs1981}
   D.~Rein and L.~M.~Sehgal,
@@ -4670,9 +4789,9 @@ cross sections are given in Table~\ref{tab:ppi_partial}.
 
 \bibitem{t2k_ccpip}
   K.~Abe \textit{et al.}\ (T2K Collaboration),
-  ``Measurement of $\nu_\mu$ charged-current cross sections on
-  ${}^{12}\mathrm{C}$ by the T2K ND280 detector,''
-  \textit{Phys.\ Rev.\ D} \textbf{95}, 012010 (2017).
+  ``Measurement of the muon neutrino charged-current single $\pi^+$ production
+  on hydrocarbon using the T2K off-axis near detector ND280,''
+  \textit{Phys.\ Rev.\ D} \textbf{101}, 012007 (2020), arXiv:1909.03936 [hep-ex].
 
 \bibitem{argoneut_ccpi}
   R.~Acciarri \textit{et al.}\ (ArgoNEUT Collaboration),
