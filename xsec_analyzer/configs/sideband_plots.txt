@@ -1,14 +1,12 @@
 # sideband_plots.txt -- FROZEN list of the control-region distributions to be examined at
-# sideband unblinding (analysis note, Sec. "Frozen procedure for opening the control regions").
-# Format: region  variable(branch)  nbins  low  high  [notes]
-# Released-observable binnings are those of Appendix A (ccpi_*_bin_config_opt.txt); the
-# others are fixed here and may not be changed after inspection of beam-on data.
+# sideband unblinding (analysis note, "Frozen procedure for opening the control regions").
+# Format: region  variable(branch)  nbins  low  high   # notes
+# Only branches stored in the processed trees are listed; multiplicities (pion candidates,
+# primary tracks, showers) are not stored and would need a reprocess before they could be
+# added, which the frozen procedure forbids after inspection of beam-on data.
 # Regions: sb_cc0pi sb_multipi sb_pi0 sb_cosmic (branches CC1mu1piXp_sb_*). FHC and RHC separately.
-all        CC1mu1piXp_candidate_muon_mom_reco      released   0.15 3.0    # p_mu, Appendix A edges
-all        CC1mu1piXp_candidate_muon_costh_reco    released   -1   1      # cos(theta_mu), Appendix A edges
-all        nPrimaryTracks                          5          0.5  5.5    # reconstructed track multiplicity
-sb_cc0pi   nPrimaryTracks                          5          0.5  5.5
-sb_multipi CC1mu1piXp_pion_number                  4          1.5  5.5    # pion-candidate multiplicity (>=2 by definition)
-sb_pi0     nPrimaryShowers                         4          0.5  4.5    # shower multiplicity
-sb_pi0     shr_energy_tot_cali                     10         0    1.0    # leading shower energy [GeV]
-sb_cosmic  CC1mu1piXp_thmupi_reco                  4          2.6  3.15   # opening angle above the inverted cut [rad]
+all        CC1mu1piXp_candidate_muon_mom_reco    7   0.15 1.75   # p_mu, released edges 0.15,0.35,0.55,0.75,0.95,1.25,1.75 (overflow in last bin)
+all        CC1mu1piXp_candidate_muon_costh_reco  5   -1   1      # cos(theta_mu), released edges -1,0.45,0.65,0.8,0.9,1
+all        CC1mu1piXp_mu_pi_opening_angle        6   0    3.15   # muon-pion opening angle [rad] (undefined -> underflow in CC0pi)
+sb_pi0     shr_energy_cali                       10  0    1.0    # leading shower energy [GeV]
+sb_cosmic  CC1mu1piXp_mu_pi_opening_angle        4   2.6  3.15   # above the inverted cut

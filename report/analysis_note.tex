@@ -143,9 +143,10 @@ here is expanded in \S\ref{sec:sidebands}; the numbers are those of the current 
 \paragraph{Request.}
 We request approval to inspect beam-on data in four control regions of the inclusive
 $\mathrm{CC}\,1\mu1\pi Xp$ selection: CC$0\pi$, multi-$\pi$, $\pi^0$ and large
-muon--pion opening angle (``cosmic''). Each is defined by inverting exactly one signal
-requirement (Table~\ref{tab:cr_defs}); each is disjoint from the signal region at
-reconstruction level (demonstrated event by event, \S\ref{sec:cr_overlap}); their
+muon--pion opening angle (``cosmic''). Each is anchored by the inversion of one nominal signal requirement;
+requirements that become undefined once that inversion is made, or that would sculpt the
+targeted control sample, are explicitly dropped as listed in Table~\ref{tab:cr_defs}. Each
+region is disjoint from the signal region at reconstruction level (demonstrated event by event, \S\ref{sec:cr_overlap}); their
 expected signal contaminations are $8$--$23\%$. The signal region remains inaccessible.
 Before the regions are opened, the selections, the run-dependent normalisation, the
 beam-off scaling, the displayed observables and binning, the covariance construction, the
@@ -194,40 +195,64 @@ are for.
   \end{tabular}
 \end{table}
 
+\noindent The $\pi^0$ region is the furthest from a single inversion: besides the pion
+requirements, which have no meaning once no pion candidate is demanded, it also drops the
+final multiplicity cut. That cut counts primary tracks and non-proton-like tracks, and in
+a $\pi^0$ event the photon showers are frequently reconstructed as additional track-like
+primaries, so retaining it would preferentially remove exactly the multi-shower $\pi^0$
+topologies the region is meant to sample and sculpt its composition towards the
+single-shower events that already resemble the signal region. The size of that effect on
+the region's yield, purity, transfer factor and overlap with multi-$\pi$ cannot be
+quantified after the fact on the present processed files, which do not store the
+multiplicities; it is listed as a diagnostic to be produced with the next reprocessing,
+and the frozen definition is the one in the table.
+
 \paragraph{Expected yields and precision.}
 Table~\ref{tab:sideband_yields} gives the expected composition per region and beam. The
 raw statistical precision of the data samples on the dominant component is $\sim1\%$
 (CC$0\pi$), $\sim1.5\%$ ($\pi^0$), $\sim6\%$ (multi-$\pi$) and $\sim17\%$ on the beam-off
-normalisation (cosmic) for the combined exposure; the \emph{effective} constraint on the
-signal-region background is weaker and set by the transfer factors and their correlated
-model uncertainties of \S\ref{sec:cr_transfer}. The neutrino-MC prediction in each region
+normalisation (cosmic) for the combined exposure. The regions \emph{test} the background
+components they target and provide sensitivity to them; whether a region can be used to
+\emph{constrain} its target in the signal region is decided by the transfer factors and
+their uncertainties (\S\ref{sec:cr_transfer}), and for multi-$\pi$ the answer is already
+no. The neutrino-MC prediction in each region
 carries the flux, cross-section and re-interaction uncertainties of
 Table~\ref{tab:cr_syst} (detector variations are not yet propagated to the control
 regions).
 
 \paragraph{Decision checklist.}
-The items the analysers regard as prerequisites, with their status:
+The prerequisites are split by the decision they gate.
+
+\emph{Required before the control regions are opened} (this request):
 \begin{itemize}\itemsep1pt
   \item[$\checkmark$] Result tables regenerated from one release and checked automatically
-    (\texttt{report/check\_tables.py}, \S\ref{sec:pipeline}).
+    (\texttt{report/check\_tables.py}, \S\ref{sec:pipeline}); cut-flow with the full
+    central-value weight (Table~\ref{tab:cutflow}).
   \item[$\checkmark$] Control-region selections frozen at branch level (Table~\ref{tab:cr_defs});
-    signal-region overlap demonstrated to be zero (\S\ref{sec:cr_overlap}).
+    signal-region overlap demonstrated to be zero (\S\ref{sec:cr_overlap}); displayed
+    distributions and binning frozen (\texttt{configs/sideband\_plots.txt},
+    Figs.~\ref{fig:sb_plots_fhc}--\ref{fig:sb_plots_rhc}).
   \item[$\checkmark$] Beam-off gates and scale factors released per run
-    (\texttt{data\_release/ext\_gates.tsv}) and each (file, run) pair entering the
-    combined configuration once (\S\ref{sec:mc}).
-  \item[$\checkmark$] The beam-on configuration cannot run blind-side: real beam-on files are
-    refused by the framework unless \texttt{XSEC\_UNBLIND=1} is set (\S\ref{sec:pipeline}).
+    (\texttt{data\_release/ext\_gates.tsv}, Fig.~\ref{fig:ext_perrun}), each (file, run) pair
+    entering once, asserted by the normalisation manifest (\S\ref{sec:pipeline}).
+  \item[$\checkmark$] Real beam-on files are refused by the framework unless
+    \texttt{XSEC\_UNBLIND=1} is set (\S\ref{sec:pipeline}).
   \item[$\checkmark$] Full-stack pseudo-data closure (\S\ref{sec:cr_fullstack}).
-  \item[$\checkmark$] Control-region normalisation systematics and transfer factors
-    (\S\ref{sec:cr_transfer}), flux/cross-section/re-interaction terms.
-  \item[$\checkmark$] Comparison procedure, thresholds and permitted responses frozen
-    (\S\ref{sec:cr_protocol}).
-  \item[$\checkmark$] Cut-flow table regenerated with the full central-value weight
-    (Table~\ref{tab:cutflow}).
-  \item[$\square$] Detector-variation uncertainties propagated to the control regions.
-  \item[$\square$] Flux constants confirmed as PPFX-corrected central values
-    (\S\ref{sec:flux_status}).
-  \item[$\square$] Proton-tagged control regions: inverted-proton-PID region implemented
+  \item[$\checkmark$] Control-region uncertainties including detector variations, and
+    transfer-factor uncertainties computed as ratios per universe (\S\ref{sec:cr_transfer}).
+  \item[$\square$] Ratification of the comparison procedure and the decision rule of
+    \S\ref{sec:cr_protocol} by the conveners.
+\end{itemize}
+
+\emph{Required before the signal region is opened} (a later request):
+\begin{itemize}\itemsep1pt
+  \item[$\square$] Confirmation that the flux constants are the PPFX-corrected central values
+    (\S\ref{sec:flux_status}); the control-region comparisons are event-yield comparisons
+    and do not depend on it.
+  \item[$\square$] Documented treatment of any control-region discrepancy under
+    \S\ref{sec:cr_protocol}, with renewed approval where item~4(d) applies.
+  \item[$\square$] A final clean-cache reproduction of the release to be unblinded.
+  \item[$\square$] For any proton-tagged result: the inverted-proton-PID control region
     (\S\ref{sec:cr_1p_scope}).
 \end{itemize}
 
@@ -1136,17 +1161,19 @@ $<-0.5$ & $9.1\%$  & $1.4\%$ & $6.4\times$ \\
 \end{center}
 
 \noindent The enrichment is real but the arithmetic does not support a cut. At the final cut
-the FHC sample is $974$ signal, $128$ EXT and $1\,746$ predicted in total
-(Tab.~\ref{tab:cutflow}). A $\cos\theta_\mu<0$ requirement would remove $\approx41$ EXT
-events and $\approx40$ signal events, close to one for one. Because the beam-off sample is
-subtracted from the data directly, and that subtraction is unbiased by construction, removing
-part of it buys only a reduction in the subtraction's \emph{statistical} uncertainty, from
-$\sqrt{128}\approx11$ to $\sqrt{87}\approx9$ events. Spending $40$ signal events to gain
-$\approx2$ events of uncertainty is a net loss.
+the FHC sample is $943$ signal, $30$ EXT and $1\,599$ predicted in total
+(Tab.~\ref{tab:cutflow}). A $\cos\theta_\mu<0$ requirement would remove $\approx32\%$ of
+the EXT, about $10$ events, and $\approx4\%$ of the signal, about $39$ events. Because the
+beam-off sample is subtracted from the data directly, and that subtraction is unbiased by
+construction, removing part of it buys only a reduction in the subtraction's
+\emph{statistical} uncertainty, from $\sqrt{30}\approx5.5$ to $\sqrt{20}\approx4.5$ events.
+Spending $39$ signal events to gain $\approx1$ event of uncertainty is a net loss.
 
-The same bound applies to any cosmic cut, not just this one: EXT is $7.3\%$ of the selected
+The same bound applies to any cosmic cut, not just this one: EXT is $1.9\%$ of the selected
 sample and is already subtracted without bias, so removing \emph{all} of it for \emph{zero}
-signal loss would gain about $11$ events of statistical uncertainty on a sample of $1\,746$.
+signal loss would gain about $5$ events of statistical uncertainty on a sample of $1\,599$.
+(Earlier drafts, with the beam-off over-scaled by an order of magnitude, made the same
+argument with $128$ EXT events; the conclusion is unchanged and the case is now stronger.)
 Any cut costing more than about $1\%$ of the signal is a net loss regardless of how
 efficiently it tags cosmics. The residual beam-off contribution is therefore left in place
 and handled by subtraction.
@@ -3099,9 +3126,10 @@ procedure of \S\ref{sec:cr_protocol}.
 
 Because the analysis is blind, the background model cannot yet be confronted with
 beam-on data in the signal region. To exercise it before unblinding, four
-signal-depleted control regions (``sidebands'') are defined by inverting exactly one
-signal requirement, leaving the rest of the selection intact (branch-level definitions
-in Table~\ref{tab:cr_defs}):
+signal-depleted control regions (``sidebands'') are defined, each anchored by the
+inversion of one nominal signal requirement, with the requirements that the inversion
+leaves undefined dropped explicitly (branch-level definitions in
+Table~\ref{tab:cr_defs}):
 \begin{itemize}
   \item \textbf{CC$0\pi$}: the muon selection with no reconstructed charged pion
     (charged-current quasi-elastic / $2p2h$-enriched);
@@ -3263,6 +3291,29 @@ compared with the complete prediction. The data/prediction ratios are $0.999$, $
 $0.990$, $0.911$ (FHC; CC$0\pi$, multi-$\pi$, $\pi^0$, cosmic), $0.998$, $1.129$, $1.016$,
 $1.243$ (RHC) and $1.000$, $1.090$, $1.007$, $0.999$ (combined), each within its
 statistical uncertainty ($0.6$--$10\%$). This tests bookkeeping, not physics.
+Figures~\ref{fig:sb_plots_fhc} and~\ref{fig:sb_plots_rhc} show, for every region and both
+beam modes, the frozen distributions of \texttt{configs/sideband\_plots.txt} exactly as
+they will be drawn at unblinding, with the same full-stack pseudo-data in place of the
+beam-on points.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{sideband_plots_fhc}
+  \caption{FHC control-region distributions at the frozen binning
+    (\texttt{configs/sideband\_plots.txt}): by row, CC$0\pi$, multi-$\pi$, $\pi^0$ and
+    cosmic; $p_\mu$, $\cos\theta_\mu$ and, where defined, the muon--pion opening angle or
+    the leading shower energy. Stack: signal contamination, neutrino background, beam-off
+    (per-run scaled) and dirt; points: full-stack pseudo-data (neutrino-MC throw plus a
+    Poisson throw of the beam-off and dirt expectations). These are the plots the
+    collaboration will see with beam-on points after opening; overflow is in the last bin.}
+  \label{fig:sb_plots_fhc}
+\end{figure}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{sideband_plots_rhc}
+  \caption{As Fig.~\ref{fig:sb_plots_fhc}, for RHC.}
+  \label{fig:sb_plots_rhc}
+\end{figure}
 
 \subsection{Transfer factors and control-region uncertainties}
 \label{sec:cr_transfer}
@@ -3352,6 +3403,8 @@ regions and are listed as a prerequisite in \S\ref{sec:request}.
     \bottomrule
   \end{tabular}
 \end{table}
+@@TUNC@@
+
 
 
 \subsection{Frozen procedure for opening the control regions}
@@ -3361,11 +3414,13 @@ ratified it is frozen and any departure from it is itself a change requiring app
 
 \begin{enumerate}\itemsep2pt
   \item \textbf{What is examined.} For each of the four regions: the event total, and the
-    reconstructed distributions of $p_\mu$, $\cos\theta_\mu$, the reconstructed track
-    multiplicity, and the region's own inverted variable (pion-candidate multiplicity,
-    shower multiplicity and energy, $\theta_{\mu\pi}$), at the binning of the released
+    reconstructed distributions of $p_\mu$, $\cos\theta_\mu$ and the muon--pion opening
+    angle, and for the $\pi^0$ region the leading shower energy (multiplicities are not
+    stored in the processed trees and cannot be added without a reprocess, which the
+    frozen procedure forbids after inspection), at the binning of the released
     observables where one exists and otherwise at the binning fixed in
-    \texttt{configs/sideband\_plots.txt}. FHC and RHC are examined separately; the
+    \texttt{configs/sideband\_plots.txt} and shown, with full-stack pseudo-data, in
+    Figs.~\ref{fig:sb_plots_fhc} and~\ref{fig:sb_plots_rhc}. FHC and RHC are examined separately; the
     combined configuration is a cross-check only. Data are compared with the complete
     prediction, neutrino MC $+$ beam-off $+$ dirt, with the run-period beam-off scaling of
     \S\ref{sec:mc}.
@@ -3379,13 +3434,25 @@ ratified it is frozen and any departure from it is itself a change requiring app
     independently. A single-bin excursion beyond $3\sigma$ with a passing total is
     recorded and examined for a reconstruction pathology but does not by itself fail the
     region.
-  \item \textbf{Permitted responses.} (a)~No change. (b)~Assignment of an additional
-    normalisation uncertainty to the class the region targets, equal to the observed
-    discrepancy. (c)~A single normalisation correction to that class, constrained by the
-    region that targets it, propagated to the signal region through the transfer factor
-    of Table~\ref{tab:cr_transfer} with the factor's uncertainty added. (d)~If (a)--(c)
-    are inadequate, revision of the background model, after which renewed collaboration
-    approval is required before the signal region is opened.
+  \item \textbf{Permitted responses and the rule for choosing between them.} For a region
+    that passes: no change (a). For a region that fails: (i)~the pre-declared distributions
+    are first examined for a localised reconstruction failure (a single-bin or single-run
+    excursion), which is treated as a reconstruction issue, not a model correction;
+    (ii)~if the discrepancy is consistent with a pure normalisation shift and the region's
+    target-class purity exceeds $50\%$, a one-parameter normalisation fit of that class is
+    performed, and the fitted correction (c) is applied only if it improves the fit by a
+    likelihood-ratio test at $p<0.01$ and the transfer-factor uncertainty of
+    Table~\ref{tab:cr_transfer_unc} is available and is added to it; (iii)~otherwise the
+    central prediction is left unchanged and an additional normalisation uncertainty
+    covering the discrepancy is assigned to the class (b); (iv)~if neither (b) nor (c)
+    gives acceptable post-treatment agreement, the background model is revised (d), after
+    which renewed collaboration approval is required before the signal region is opened.
+    The pass/fail test of item~3 is always the pre-fit one; any post-treatment goodness of
+    fit is reported separately and labelled as such. If more than one region fails, no
+    independent corrections are combined without accounting for shared events and
+    correlated systematic variations: in particular, multi-$\pi$ and $\pi^0$ share events
+    (\S\ref{sec:cr_overlap}) and are treated jointly, or multi-$\pi$ is designated
+    diagnostic only, which its transfer factor already argues for.
   \item \textbf{Prohibited responses.} Changing any signal-selection cut; changing the
     binning of any released observable; choosing a generator or tune after inspecting the
     regions; bin-by-bin reweighting; and any use of the beam-on signal-region sample.
@@ -3423,7 +3490,7 @@ same regions in the inclusive phase space and a $48\%$ purity in the signal regi
 requiring a proton does not make a pion-less or $\pi^0$ event look like signal. Second, the
 proton requirement costs about a third of the statistics
 (CC$0\pi$: $11\,887\to8\,268$ for FHC) but suppresses the beam-off contribution by roughly
-a factor six ($8\,760\to1\,418$): cosmic-induced events rarely contain a reconstructed
+a factor six ($1\,358\to225$, FHC CC$0\pi$, Table~\ref{tab:sidebands_1p}): cosmic-induced events rarely contain a reconstructed
 proton above threshold, so the proton tag is itself a strong cosmic rejector. This is
 worth noting for the systematic budget; the EXT normalisation matters far less in the
 proton-tagged measurement than in the inclusive one. Third, the pseudo-data to
