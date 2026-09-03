@@ -19,9 +19,9 @@
   \vspace{0.8cm}
   {\large Analysis Note, Full FHC, RHC, and Combined Exposure\par}
   \vspace{0.5cm}
-  {\normalsize Draft 1.2, 2026-09-02\par}
+  {\normalsize Draft 1.3, 2026-09-03\par}
 \vspace{0.15cm}
-{\footnotesize\ttfamily d5c929d \textperiodcentered\ 51 extractions \textperiodcentered\ blind\par}
+{\footnotesize\ttfamily dc0545b \textperiodcentered\ 51 extractions \textperiodcentered\ blind\par}
   \vspace{1.5cm}
   {\large Ishanee Pophale, Jarek Nowak\par}
   \vspace{0.5cm}
@@ -4266,25 +4266,22 @@ section; the physical total is the cut-and-count value, quoted separately.  Two 
 have negative row sums in their least-determined bin.
 
 \paragraph{Actions required before unblinding.}
-\begin{itemize}\itemsep2pt
-  \item Open and validate the background control regions in beam-on data, including an
-        inverted proton-PID region for the proton-tagged sample, before the signal region.
-  \item Nothing to switch for the beam-off treatment: the framework detects fake data
-        by the presence of MC truth in the beam-on file and only then adds the beam-off
-        prediction to the pseudo-data; a real beam-on file takes the subtraction path
-        automatically, and is refused outright unless \texttt{XSEC\_UNBLIND=1} is set
-        (\S\ref{sec:pipeline}).
-  \item Fix the permitted response to any control-region discrepancy in advance, and
-        record it, so that no post-unblinding retuning is possible.
-  \item Take the beam-on gate counts from the real beam-on data at unblinding (the
-        Run-1 beam-off sample stands in for Run~2 permanently, \S\ref{sec:mc}).
-  \item Confirm that the integrated flux constants are the PPFX-corrected central values
-        (\S\ref{sec:flux_status}); the event rate is PPFX-weighted.
-\end{itemize}
+The prerequisites, split by the decision they gate, are the checklist of
+\S\ref{sec:request}. In brief: the four inclusive control regions are to be opened first,
+under the frozen procedure of \S\ref{sec:cr_protocol} once the conveners have ratified it;
+the signal region only after any control-region discrepancy has been treated under that
+procedure, the flux constants have been confirmed as PPFX-corrected central values
+(\S\ref{sec:flux_status}), the real beam-on gate counts have replaced the fake-data ones
+(the Run-1 beam-off sample stands in for Run~2 permanently, \S\ref{sec:mc}), and a final
+clean-cache reproduction has been made; and any proton-tagged result only after the
+inverted-proton-PID control region exists (\S\ref{sec:cr_1p_scope}). Nothing has to be
+switched for the beam-off treatment: the framework detects fake data by the presence of MC
+truth and selects the treatment itself, and refuses a real beam-on file unless
+\texttt{XSEC\_UNBLIND=1} is set.
 
-The automated guards that protect against regression --- the normalisation manifest, the
-systematics/file-list coupling assertion and the staleness check --- are described in
-Sec.~\ref{sec:pipeline}.
+The five automated guards that protect against regression --- the normalisation manifest,
+the systematics/file-list coupling assertion, the staleness check, the table-consistency
+check and the blinding guard --- are described in Sec.~\ref{sec:pipeline}.
 
 
 \section{Summary}
