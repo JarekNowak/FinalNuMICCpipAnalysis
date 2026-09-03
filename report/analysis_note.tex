@@ -1901,7 +1901,7 @@ generators, all $A_C$-smeared into the same space (\S\ref{sec:rhc}). It is worth
 separating two effects that are easily conflated. $A_C$ suppresses the integral of each
 prediction, but it does so by a \emph{common} factor: for FHC $p_\mu$ it is $0.64$, $0.64$,
 $0.59$ and $0.67$ for GENIE, GiBUU, NEUT and NuWro respectively. The truth-level totals of
-those same generators span $0.79$ to $1.26\times10^{-38}$~cm$^2$/Ar, a factor $1.6$. A
+those same generators span $0.82$ to $1.32\times10^{-38}$~cm$^2$/Ar (Table~\ref{tab:cutcount}), a factor $1.6$. A
 common $\simeq\!0.6$ factor cannot produce a $1.6\times$ spread, so the differences between
 the generators are genuine model differences and not an artefact of the regularisation.
 The cut-and-count measurement of \S\ref{sec:total_xsec} provides the independent check,
@@ -2801,17 +2801,19 @@ Run-4 FHC \emph{and} Run-4 RHC as \texttt{detVarCV}). That guard now accumulates
 per-mode detVar samples exactly as it already did for the alternate-CV samples,
 matching its own in-code TODO. With both in place the combined closure passes for
 every observable (Table~\ref{tab:comb}), with an unfolded flux systematic of
-$22$--$27\%$ that sits between the standalone FHC and RHC values, as expected for the
-fluence-weighted mix.
+$25$--$33\%$ of the same size as the standalone FHC ($26$--$31\%$) and RHC ($24$--$33\%$)
+values (Tables~\ref{tab:fhc}--\ref{tab:comb}), as expected for a common flux model
+propagated through three similarly conditioned responses.
 
 The standalone RHC extraction (native Run-4 RHC detector variations) closes cleanly
 for every observable (Table~\ref{tab:rhc}): the $A_C$-smeared truth is recovered with
 $\chi^2/\mathrm{ndf}<0.3$ and $p>0.94$ throughout. Two features stand out. First, the
-reco-level flux systematic is $\sim\!15\%$, genuinely below the FHC $\sim\!17\%$
-floor; the $\bar\nu_\mu$-dominant flux carries a smaller PPFX hadron-production
-uncertainty. Second, the unfolding amplification ($1.29$--$1.99\times$) mirrors
-FHC, so the unfolded flux term ($19.5$--$28\%$) is comparable, again data-statistics
-limited.
+reco-level flux systematic, in the earlier pass in which it was evaluated
+(\S\ref{sec:fluxanatomy}), was $\sim\!15\%$, below the FHC $\sim\!17\%$ floor; the
+$\bar\nu_\mu$-dominant flux carries a smaller PPFX hadron-production uncertainty. Second,
+the unfolding amplifies it in the same way as for FHC, so the unfolded flux term
+($24$--$33\%$, Table~\ref{tab:rhc}) is comparable to the FHC one, again limited by the
+response conditioning and the data statistics.
 
 \begin{center}\small
 \captionof{table}{RHC (Runs 1, 2, 3, 4; data POT $1.1082\times10^{21}$): integrated cross section, the two largest systematic terms, the total, and the fake-data closure against $A_C$-smeared truth. All values are read from the released covariance and results table. The reco-level flux and unfolding-amplification columns of earlier drafts are dropped here and treated in \S\ref{sec:fluxanatomy}, since a reco-level flux is not re-derivable from the current extraction logs and mixing passes in one table is how stale numbers survive. \releasestamp}
@@ -4020,8 +4022,9 @@ Source & Branch / method & Inclusive (\%) & Proton-tagged (\%) \\
 \end{tabular}
   \end{table}
 
-Flux is the largest single term in the inclusive measurement and the detector response the
-largest in the proton-tagged one.  Every entry is propagated into the released covariance;
+Flux and detector response are the two largest terms in both families; which of the two
+leads depends on the observable and configuration (Table~\ref{tab:systbreak};
+\suppref{Table}{tab:systbreak_rhc}--\suppref{Table}{tab:systbreak_comb}).  Every entry is propagated into the released covariance;
 no source declared in the systematics configuration is left unpropagated.
 
 % =============================================================================
