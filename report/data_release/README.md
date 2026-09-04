@@ -33,8 +33,12 @@ Do not apply `A_C` to any column of `curves_*.tsv`: those are smeared already.
 
 ## Coverage
 
-**All 51 extractions are released**, each with both its `A_C` matrix and its full
-covariance decomposition.
+**All 51 differential extractions are released** (release 2026-09-04; `index_extractions.tsv`),
+each with both its `A_C` matrix and its full covariance decomposition. The six one-bin total
+cross sections (inclusive and proton-tagged x FHC/RHC/combined; one true bin over the full
+cos(theta_mu) range, Wiener filter off, `A_C` = 1) are in `total_xsec.tsv` with their
+uncertainty breakdown and realised fake-data truth. The differential W_pi-p shape is withdrawn
+(status column of the index); its files are released for completeness only.
 
 `A_C` depends on the data covariance through the Wiener filter, so it depends on the
 central-value weighting fix (commit `51af326`, 2026-08-30); `export_matrices.C` refuses

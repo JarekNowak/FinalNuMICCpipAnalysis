@@ -10,7 +10,9 @@
 #include <string>
 struct Src { std::string file; double scale; };
 void cutflow_yields_1p(const char* mode="fhc") {
-  const char* P="/data/uboone/processed/w/";
+  // 2026-09-04: read the cf_1p reprocess (CC1mu1pi1p selection, full CV weight tune x ppfx x
+  // normalisation with the safe-weight rule, like the inclusive cf/ files) instead of w/.
+  const char* P="/data/uboone/processed/cf_1p/";
   const char* stage[11]={"None","InFiducialVol","Topological","MuonCandidate",
     "ContainedPion","MuonIn3Planes","PionIn3Planes","ShowerCut","OpeningAngle",
     "Nonprotons","IdentProton"};
@@ -30,13 +32,31 @@ void cutflow_yields_1p(const char* mode="fhc") {
   if(std::string(mode)=="fhc") fhcMC();
   else if(std::string(mode)=="rhc") rhcMC();
   else { fhcMC(); rhcMC(); }
-  // NUMI_EXT_OCC: 2% NuMI beam-occupancy factor the framework applies on top of the
-  // trigger ratio (SystematicsCalculator.cxx); it was missing here, over-counting EXT 2%.
-  const double NUMI_EXT_OCC = 0.98;
-  double sc_ext = NUMI_EXT_OCC * ( (std::string(mode)=="fhc") ? 5.9313 : (std::string(mode)=="rhc") ? 6.1584 : 12.0898 );
-  ext.push_back({std::string(P)+"xsec-ana-beamoff_run1Andrun3.root", sc_ext});
-  // "comb" sums both modes' exposures, as sc_ext does; the old two-branch ternary sent
-  // comb down the FHC branch and scaled combined dirt to FHC exposure alone.
+  // EXT (beam-off cosmic), PER RUN PERIOD, identical to cutflow_yields.C: each run's beam-off
+  // files are scaled by bnb_gates[run] / sum of the files' gate counts x the 0.98 NuMI
+  // occupancy factor; the Run-1 file stands in for Run 2.
+  const char* E="/data/uboone/processed/ext_perrun/xsec-ana-";
+  const char* R1=  "neutrinoselection_filt_run1_beamoff.root";
+  const char* R3B= "neutrinoselection_filt_run3b_beamoff.root";
+  const char* R4[4]={"numi_pelee_ntuple_beam_off_run4a_rhc_ana.root","numi_pelee_ntuple_beam_off_run4b_rhc_ana.root",
+                     "numi_pelee_ntuple_beam_off_run4c_fhc_ana.root","numi_pelee_ntuple_beam_off_run4d_fhc_ana.root"};
+  const char* R5=  "numi_pelee_ntuple_beam_off_run5_fhc_ana.root";
+  const double G1=4582248.27, G3=32649128.65, G4=34831148.625, G5=19256341.475, OCCX=0.98;
+  auto add_ext=[&](std::vector<Src>& v, const char* m){
+    if(std::string(m)=="fhc"||std::string(m)=="comb"){
+      v.push_back({std::string(E)+R1, OCCX*9846635./G1});
+      v.push_back({std::string(E)+R1, OCCX*3535129./G1});
+      for(auto f:R4) v.push_back({std::string(E)+f, OCCX*4131149./G4});
+      v.push_back({std::string(E)+R5, OCCX*5154196./G5});
+    }
+    if(std::string(m)=="rhc"||std::string(m)=="comb"){
+      v.push_back({std::string(E)+R1, OCCX*1458253./G1});
+      v.push_back({std::string(E)+R1, OCCX*5422907./G1});
+      v.push_back({std::string(E)+R3B, OCCX*10349610./G3});
+      for(auto f:R4) v.push_back({std::string(E)+f, OCCX*6304167./G4});
+    }
+  };
+  add_ext(ext, mode);
   double sc_dirt = ( (std::string(mode)=="fhc") ? 0.092402
                    : (std::string(mode)=="rhc") ? 0.071666
                    : (0.092402 + 0.071666) ) * 0.65;

@@ -188,7 +188,7 @@
   \bottomrule
   \end{tabular}\\[4pt]
   \begin{itemize}\itemsep2pt
-    \item the $\sim17\%$ reco-level flux is amplified by the unfolding operator; the lever is response conditioning, not the flux model
+    \item the $\sim17\%$ flux normalisation becomes $\sim30\%$ through the correlated background subtraction, $17\%\times(1+B/S)$; the one-bin total ($30.2\%$, no regularisation) shows it exactly
     \item all 51 extractions carry a full covariance including detector variations; $A_C$ and covariances released as text
   \end{itemize}
   \end{columns}
@@ -202,7 +202,7 @@
   \textbf{Validation}
   \begin{itemize}\itemsep2pt
     \item fake-data closure: unfolded/realised truth $=1.018$ on average over the 18 inclusive extractions; all $p>0.9$
-    \item 32-throw ensemble: pull widths $1.04$ ($p_\mu$), $0.96$ ($\cos\theta_\mu$), 68/95\% coverage recovered; $2.5\%$ negative bias stated, not corrected
+    \item 32-throw ensemble: pull widths $1.04$ ($p_\mu$), $0.96$ ($\cos\theta_\mu$), 68/95\% coverage recovered; $2.5\%$ negative offset, half of it the old throw rule; re-run in progress
     \item clean-cache rebuild of all 51 extractions is bit-identical
     \item five automated guards: normalisation manifest, systematics/file coupling, staleness, table consistency, blinding guard
   \end{itemize}
@@ -243,9 +243,9 @@
   \toprule
   Region & Inversion & Role; $T=N^{\rm SR}/N^{\rm CR}$ of the target class \\
   \midrule
-  CC$0\pi$ & $n_\pi=0$ & tests $0\pi$ feed-in; $T=0.03$, $\delta T/T=31\%$ (detector-limited) \\
+  CC$0\pi$ & $n_\pi=0$ & tests $0\pi$ feed-in; $T=0.03$, $\delta T/T=31$--$34\%$ (detector-limited); target purity $72\%$ \\
   multi-$\pi$ & $n_\pi\ge2$ & diagnostic only; $T=2.5$ \\
-  $\pi^0$ & shower veto fails & $\pi^0$ leakage; $T=0.02$, $\delta T/T=14$--$17\%$: strongest handle \\
+  $\pi^0$ & shower veto fails & $\pi^0$ leakage; $T=0.02$, $\delta T/T=14$--$17\%$; CC$\pi^0$ purity $46\%$, eligible for a fit only as CC$+$NC$\pi^0$ \\
   cosmic & $\theta_{\mu\pi}>2.6$~rad & beam-off norm.\ and shape; $41\%$ EXT purity, no fitted correction \\
   \bottomrule
   \end{tabular}\\[3pt]
@@ -272,7 +272,7 @@
   \textbf{Procedure} (to be ratified)
   \begin{itemize}\itemsep1pt
     \item FHC and RHC separately, combined as cross-check; data vs.\ MC$+$EXT$+$dirt
-    \item pass: normalisation within $2\sigma$ (pre-fit predictive uncertainty) and shape $p>0.05$
+    \item pass: global normalisation $\chi^2$ over the eight (region, mode) totals, $p>0.05$; per-region pulls (full and stat$+$detector) and normalisation-marginalised shape tests as diagnostics
     \item allowed: no change; added uncertainty; one-parameter normalisation of the target class (purity $>50\%$, LR test, transfer uncertainty added); else model revision and renewed approval
     \item forbidden: any signal cut or binning change; generator choice after inspection; bin-by-bin reweighting
   \end{itemize}
@@ -284,6 +284,7 @@
     \item[$\checkmark$] EXT gates released per run; pairings asserted
     \item[$\checkmark$] real beam-on files refused without \texttt{XSEC\_UNBLIND=1}
     \item[$\checkmark$] full-stack closure; region systematics incl.\ detector; transfer uncertainties
+    \item[$\square$] control-region skim of the beam-on files (signal-region events never written)
     \item[$\square$] ratification of the procedure
   \end{itemize}
   Before the signal region: PPFX-corrected flux constants confirmed; discrepancy treatment; clean-cache reproduction.

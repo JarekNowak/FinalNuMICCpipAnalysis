@@ -11,11 +11,11 @@
 // fakedata_truth varies 0.6%.)
 //
 //   root -l -b -q 'macros/ensemble_pulls.C(32)'
-void ensemble_pulls(int nthrow=32){
+void ensemble_pulls(int nthrow=32, const char* obs="pmu"){
   std::vector<std::vector<double>> pulls;   // [bin][throw]
   int nb=0, used=0;
   for(int t=1;t<=nthrow;++t){
-    TFile* f=TFile::Open(Form("/data/uboone/processed/ens/closure_hists_xsec_t%d.root",t));
+    TFile* f=TFile::Open(Form("/data/uboone/processed/ens/closure_hists_xsec_%s_t%d.root",obs,t));
     if(!f||f->IsZombie()) continue;
     TH1* u=(TH1*)f->Get("h_unfolded_nuwro");
     TH1* r=(TH1*)f->Get("h_genie_tune");

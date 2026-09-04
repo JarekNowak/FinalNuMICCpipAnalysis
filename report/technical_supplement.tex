@@ -852,24 +852,26 @@ result warrants.
 
 \begin{table}[H]
   \centering
-  \caption{Binning of the six W/TKI proton-tagged observables (six equal-population bins
-    each), chosen from the validated true-signal distributions. The first and last bins
-    are open so the full signal phase space is partitioned. $W_{\pi p}$ brackets the
-    $\Delta(1232)$ peak; the $\delta\alpha_T$ and $\delta\phi_T$ binnings are finer toward
-    $180^\circ$, where final-state interactions pile up. The five inherited kinematic
+  \caption{Released binning of the six W/TKI proton-tagged observables, read from the
+    data release (\texttt{curves\_1p\_*.tsv}). The two mass variables keep six
+    equal-population bins chosen from the validated true-signal distributions, with the
+    last bin open at truth level (the upper edge listed is the plotting boundary); the four
+    TKI variables use the coarsened two-bin scheme adopted after the six-bin scheme was
+    found to sit inside the resolution (\S\ref{sec:w_binning}). $W_{\pi p}$ brackets the
+    $\Delta(1232)$ peak but its differential shape is withdrawn. The five inherited kinematic
     observables ($p_\mu$, $p_\pi$, $\cos\theta_\mu$, $\cos\theta_\pi$, $\theta_{\mu\pi}$)
     use the inclusive-analysis binning of \S\noteref{Appendix}{app:binning} unchanged.}
   \label{tab:wtki_binning}
   \begin{tabular}{lll}
     \toprule
-    Observable & Definition & Bin edges \\
+    Observable & Definition & Released bin edges \\
     \midrule
-    $W_{\pi p}$        & $M(\pi p)$, direct        & $1.08,\,1.19,\,1.23,\,1.27,\,1.34,\,1.47,\,2.00$~GeV/$c^2$ \\
-    $W_\mathrm{had}$   & calorimetric              & $0,\,0.78,\,1.08,\,1.21,\,1.31,\,1.44,\,1.90$~GeV/$c^2$ \\
-    $\delta p_T$       & $|\vec p_T^{\,\mu}+\vec p_T^{\,\mathrm{had}}|$ & $0,\,0.43,\,0.59,\,0.72,\,0.88,\,1.17,\,1.60$~GeV/$c$ \\
-    $\delta\alpha_T$   & TKI angle                 & $0,\,80,\,120,\,142,\,158,\,170,\,180^\circ$ \\
-    $\delta\phi_T$     & TKI angle                 & $0,\,37,\,63,\,84,\,107,\,139,\,180^\circ$ \\
-    $p_n$              & inferred nucleon momentum & $0,\,0.52,\,0.67,\,0.81,\,0.98,\,1.25,\,1.70$~GeV/$c$ \\
+    $W_{\pi p}$        & $M(\pi p)$, direct        & $1.08,\,1.19,\,1.23,\,1.27,\,1.34,\,1.47,\,2.9$~GeV/$c^2$ (six bins; shape withdrawn) \\
+    $W_\mathrm{had}$   & calorimetric              & $0,\,0.78,\,1.08,\,1.21,\,1.31,\,1.44,\,2.74$~GeV/$c^2$ (six bins) \\
+    $\delta p_T$       & $|\vec p_T^{\,\mu}+\vec p_T^{\,\mathrm{had}}|$ & $0,\,0.3,\,2.5$~GeV/$c$ (two bins) \\
+    $\delta\alpha_T$   & TKI angle                 & $0,\,120,\,180^\circ$ (two bins) \\
+    $\delta\phi_T$     & TKI angle                 & $0,\,50,\,180^\circ$ (two bins) \\
+    $p_n$              & inferred nucleon momentum & $0,\,0.375,\,2$~GeV/$c$ (two bins) \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -2383,9 +2385,12 @@ throw and to the response model, not to the unfolding implementation.
 \label{sec:datamc}
 % =============================================================================
 
-The reported cross sections are the \textsc{XSecAnalyzer} framework extraction
-(GENIE detVar-CV fake data). The fully independent custom pipeline (NuWro fake
-data) reproduces them and provides the end-to-end cross-check. Reaching the
+The reported cross sections are the \textsc{XSecAnalyzer} framework extraction on the
+Poisson-thrown central-value fake data of the analysis note (this section's own
+comparisons were made on the earlier GENIE detector-variation-CV fake data). The fully
+independent custom pipeline (NuWro fake data) reproduced the framework result of that era
+and provided the end-to-end cross-check; it has not been re-run on the released binnings
+and weighting (analysis note, Limitations). Reaching the
 $\le2\%$ cross-pipeline agreement required three normalisation/method corrections
 \emph{to the custom code}, each established by direct comparison of the two
 pipelines' intermediate quantities; with these in place the selection, response,

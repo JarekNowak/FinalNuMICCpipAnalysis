@@ -40,19 +40,19 @@ n=$(grep -c "_t${T}\.root" "$FPM")
 # --- 3. universes from THIS throw ---------------------------------------------------
 U="$PROC/ens/univ_fhc_${OBS}_t${T}.root"
 rm -f "$U"
-./bin/univmake "$FPM" "configs/ccpi_${OBS}_bin_config_opt.txt" "$U" "$FPM" > "$PROC/ens/univ_t${T}.log" 2>&1
+./bin/univmake "$FPM" "configs/ccpi_${OBS}_bin_config_opt.txt" "$U" "$FPM" > "$PROC/ens/univ_${OBS}_t${T}.log" 2>&1
 [ -s "$U" ] || { echo "FAILED univmake throw $T" >&2; exit 1; }
 
 # --- 4. unfold ----------------------------------------------------------------------
 XC="$PROC/ens/xsec_fhc_${OBS}_t${T}.txt"
 sed -E "s#^UnivFile .*#UnivFile $U#; s#^FPFile .*#FPFile $FPM#" \
   "configs/ccpi_xsec_config_numi_${OBS}_fhc5.txt" > "$XC"
-W="$PROC/ens/work_t${T}"; rm -rf "$W"; mkdir -p "$W/unfold_output"
+W="$PROC/ens/work_${OBS}_t${T}"; rm -rf "$W"; mkdir -p "$W/unfold_output"
 ln -s "$REPO/configs" "$W/configs"; ln -s "$REPO/bin" "$W/bin"; ln -s "$REPO/lib" "$W/lib"
 ( cd "$W" && "$REPO/bin/UnfolderNuMI" "$XC" "$REPO/configs/ccpi_${OBS}_slice_config_opt.txt" \
-    "$PROC/ens/xsec_t${T}.root" ) > "$PROC/ens/unfold_t${T}.log" 2>&1
+    "$PROC/ens/xsec_${OBS}_t${T}.root" ) > "$PROC/ens/unfold_${OBS}_t${T}.log" 2>&1
 rc=$?
-SIDE="$PROC/closure_hists_xsec_t${T}.root"
+SIDE="$PROC/closure_hists_xsec_${OBS}_t${T}.root"
 [ $rc -eq 0 ] || { echo "FAILED unfold throw $T rc=$rc" >&2; rm -rf "$W"; exit 1; }
 rm -rf "$W"
-echo "OK throw $T sigma_int=$(grep 'SYSTDUMP] sigma_int' "$PROC/ens/unfold_t${T}.log" | tail -1 | awk '{print $3}')"
+echo "OK throw $T sigma_int=$(grep 'SYSTDUMP] sigma_int' "$PROC/ens/unfold_${OBS}_t${T}.log" | tail -1 | awk '{print $3}')"
