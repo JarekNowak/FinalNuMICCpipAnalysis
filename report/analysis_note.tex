@@ -21,7 +21,7 @@
   \vspace{0.5cm}
   {\normalsize Draft 1.4, 2026-09-04\par}
 \vspace{0.15cm}
-{\footnotesize\ttfamily dc0545b \textperiodcentered\ 51 extractions \textperiodcentered\ blind\par}
+{\footnotesize\ttfamily release 2026-09-04 \textperiodcentered\ 51 differential extractions $+$ 6 one-bin totals \textperiodcentered\ blind\par}
   \vspace{1.5cm}
   {\large Ishanee Pophale, Jarek Nowak\par}
   \vspace{0.5cm}
@@ -123,7 +123,8 @@
       survey, the binning and threshold optimisation, and the closure programme --- are in
       the technical validation supplement.  Every correction that changed a result, with
       the values before and after, is in the change log.  The additional-smearing and
-      covariance matrices for all fifty-one extractions are released as text in
+      covariance matrices for all fifty-one differential extractions, and the six one-bin
+      totals, are released as text in
       \texttt{report/data\_release/}; a prediction cannot be compared with these results
       without the former, nor used quantitatively without the latter.
   \end{abstract}
@@ -131,9 +132,6 @@
   \tableofcontents
 \end{titlepage}
 
-% =============================================================================
-\section{Introduction}
-\label{sec:intro}
 % =============================================================================
 \section{Request to open the background-control regions}
 \label{sec:request}
@@ -274,6 +272,9 @@ The prerequisites are split by the decision they gate.
     (\S\ref{sec:cr_1p_scope}).
 \end{itemize}
 
+% =============================================================================
+\section{Introduction}
+\label{sec:intro}
 % =============================================================================
 
 Charged-current single charged-pion (CC$\pi^{\pm}$) production,
@@ -471,7 +472,7 @@ making it a valuable cross-check of FSI systematics.
 Because the present results are extracted on central-value fake data, no data/MC
 deficit is measured here. What the analysis does provide is the spread of the standalone
 generators in the measured phase space, a factor of $\sim\!1.6$ between GENIE and NEUT
-(Table~\ref{tab:cutcount}), which brackets the injected \uboone{} tune; the over-prediction
+(\suppref{Table}{tab:total_xsec}), which brackets the injected \uboone{} tune; the over-prediction
 observed for several generator configurations in parts of the relevant phase space in the
 measurements surveyed below is the context for that spread, not a result of this note.
 
@@ -579,13 +580,13 @@ $\sim$30\% relative to NEUT.  The carbon target ($A = 12$) differs from argon
 ($A = 40$), but the overlapping beam spectrum enables direct comparison of
 nuclear-mass dependence at fixed neutrino energy.
 
-\subsubsection*{ArgoNEUT ($\nu_\mu + \bar{\nu}_\mu$ on Ar, NuMI, 2017)}
+\subsubsection*{ArgoNEUT ($\nu_\mu + \bar{\nu}_\mu$ on Ar, NuMI, 2018)}
 
 ArgoNEUT~\cite{argoneut_ccpi} was a 175-litre LArTPC placed upstream of the
 MINOS near detector in the NuMI low-energy beam
 ($\langle E_\nu \rangle \approx 9.6$~GeV).  Using $1.25\times10^{20}$~POT,
 ArgoNEUT selected 115~$\nu_\mu$ and 158~$\bar{\nu}_\mu$ CC$\pi^+$ candidate
-events after background subtraction~\cite{uboone_bnb2026_ccpi}, publishing the
+events after background subtraction~\cite{argoneut_ccpi}, publishing the
 first CC$\pi^+$ total cross section on argon as a function of neutrino energy.
 The result was consistent with GENIE predictions at these high energies, where
 sensitivity to the $\Delta(1232)$ resonance is suppressed.  The LArTPC technology
@@ -1048,9 +1049,8 @@ $V_{\mathrm{FV}}=4.1761\times10^{7}$~cm$^3$. Without that subtraction the same
 expression would give $9.705\times10^{29}$. This is the value the code uses, computed
 by \texttt{num\_Ar\_targets\_in\_FV(FV,\,675.1,\,775.1)} in
 \texttt{CrossSectionExtractor.hh}, and it is the value entering the conversion factor
-of \S\ref{sec:unfolding} and the cut-and-count normalisation of
-\S\ref{sec:total_xsec}.
-and the per-configuration normalisation factor is $N_{\mathrm{norm}} =
+of \S\ref{sec:unfolding} and the one-bin total of \S\ref{sec:total_xsec}.
+The per-configuration normalisation factor is $N_{\mathrm{norm}} =
 \Phi_\mathrm{mode}\cdot N_{\mathrm{POT,mode}}\cdot N_{\mathrm{Ar}}$, evaluated with
 each mode's flux and data POT (Table~\ref{tab:pot}).
 
@@ -1194,7 +1194,7 @@ $<-0.5$ & $9.1\%$  & $1.4\%$ & $6.4\times$ \\
 \end{center}
 
 \noindent The enrichment is real but the arithmetic does not support a cut. At the final cut
-the FHC sample is $943$ signal, $30$ EXT and $1\,599$ predicted in total
+the FHC sample is $943$ signal, $30$ EXT and $1\,612$ predicted in total
 (Tab.~\ref{tab:cutflow}). A $\cos\theta_\mu<0$ requirement would remove $\approx32\%$ of
 the EXT, about $10$ events, and $\approx4\%$ of the signal, about $39$ events. Because the
 beam-off sample is subtracted from the data directly, and that subtraction is unbiased by
@@ -1204,7 +1204,7 @@ Spending $39$ signal events to gain $\approx1$ event of uncertainty is a net los
 
 The same bound applies to any cosmic cut, not just this one: EXT is $1.9\%$ of the selected
 sample and is already subtracted without bias, so removing \emph{all} of it for \emph{zero}
-signal loss would gain about $5$ events of statistical uncertainty on a sample of $1\,599$.
+signal loss would gain about $5$ events of statistical uncertainty on a sample of $1\,612$.
 (Earlier drafts, with the beam-off over-scaled by an order of magnitude, made the same
 argument with $128$ EXT events; the conclusion is unchanged and the case is now stronger.)
 Any cut costing more than about $1\%$ of the signal is a net loss regardless of how
@@ -1603,7 +1603,7 @@ detailed per-category, per-cut breakdown for each.
     CC1$\pi^0$, CC0$\pi$, CC$N\pi$, CCK, CCother) are from the $\nu_\mu$ overlays,
     POT-scaled \emph{per run} (each run by its own $D_{\text{run}}/\text{MC}_{\text{run}}$,
     Table~\ref{tab:pot}); EXT (beam-off cosmic) is scaled by the (per-run summed)
-    per-run beam-on/beam-off \emph{gate} ratio times the 2\% NuMI beam-occupancy factor, each run period using the beam-off sample taken in that period (\S\ref{sec:mc}); dirt from the
+    per-run beam-on/beam-off \emph{gate} ratio times the $0.98$ NuMI beam-occupancy factor, each run period using the beam-off sample taken in that period (\S\ref{sec:mc}); dirt from the
     GENIE NuMI dirt overlay. Pred.\ $=$ Signal $+$ Bkg $+$ EXT $+$ Dirt. Eff.\ is the cumulative signal efficiency relative to the generated signal (the None stage, where all true signal is counted); Pur.\ $=$ Signal/Pred. \releasestamp}
   \label{tab:cutflow}
   \small
@@ -1827,27 +1827,29 @@ Table~\ref{tab:bkgcomp} shows the truth-level background breakdown at the final 
 
 \begin{table}[H]
   \centering
-  \caption{Background composition at the final cut (truth-level MC categories,
-    POT-weighted).}
+  \caption{Background composition at the final cut, FHC full exposure (truth classes of
+    the selection's counters, CV-weighted and per-run POT-scaled; the same classes and
+    yields as the signal-region column of Table~\ref{tab:cr_transfer}). Fractions are of
+    the $637$ neutrino-background events; beam-off and dirt are listed for scale.
+    \releasestamp}
   \label{tab:bkgcomp}
   \begin{tabular}{lrr}
     \toprule
     Category & Events & Fraction \\
     \midrule
-    CC0$\pi$ (proton mis-ID as pion)   & $\sim82$  & $\sim41\%$ \\
-    CC$N\pi$ ($\geq2$ pion events)     & $\sim67$  & $\sim34\%$ \\
-    OOFV (vertex outside FV)           & $\sim18$  & $\sim9\%$  \\
-    NC (neutral current)               & $\sim14$  & $\sim7\%$  \\
-    CC1$\pi^0$                         & $\sim8$   & $\sim4\%$  \\
-    CC other / CC kaon                 & $\sim6$   & $\sim3\%$  \\
-    $\nu_e$ / other flavour            & $\sim4$   & $\sim2\%$  \\
-    EXT (cosmic)                       & $40.1$    & n/a \\
-    Dirt                               & $3.8$     & n/a \\
+    $\nu_\mu$CC $0\pi$ (proton or other track as pion) & $244$ & $38\%$ \\
+    $\nu_\mu$CC $\geq2\pi^\pm$, no $\pi^0$            & $145$ & $23\%$ \\
+    NC and $\nu_e$CC                                  & $89.5$ & $14\%$ \\
+    $\nu_\mu$CC with a $\pi^0$                        & $58.0$ & $9\%$ \\
+    $\nu_\mu$CC $1\pi^\pm$ outside the measured phase space & $52.7$ & $8\%$ \\
+    Out of fiducial volume                            & $47.4$ & $7\%$ \\
+    EXT (cosmic)                                      & $30$ & n/a \\
+    Dirt                                              & $1.3$ & n/a \\
     \bottomrule
   \end{tabular}
 \end{table}
 
-The dominant background ($\sim41\%$) is CC0$\pi$ interactions in which a proton
+The dominant background ($38\%$) is CC0$\pi$ interactions in which a proton
 is reconstructed as the pion candidate.  This mis-identification was verified
 directly by 2D event displays (truth-labelled by backtracked PDG): the pion candidate
 track shows a green (proton) truth colour with a stopping Bragg peak, while the
@@ -1931,10 +1933,11 @@ by $A_C$ before being compared with the data.
 The unfolded result is then compared with the MicroBooNE tune and the four external
 generators, all $A_C$-smeared into the same space (\S\ref{sec:rhc}). It is worth
 separating two effects that are easily conflated. $A_C$ suppresses the integral of each
-prediction, but it does so by a \emph{common} factor: for FHC $p_\mu$ it is $0.64$, $0.64$,
-$0.59$ and $0.67$ for GENIE, GiBUU, NEUT and NuWro respectively. The truth-level totals of
-those same generators span $0.82$ to $1.32\times10^{-38}$~cm$^2$/Ar (Table~\ref{tab:cutcount}), a factor $1.6$. A
-common $\simeq\!0.6$ factor cannot produce a $1.6\times$ spread, so the differences between
+prediction, but it does so by a \emph{common} factor: for FHC $p_\mu$ it is $0.78$, $0.78$,
+$0.76$ and $0.79$ for GENIE, GiBUU, NEUT and NuWro respectively (smeared integral over
+truth-level total, from the released curves). The truth-level totals of
+those same generators span $0.82$ to $1.32\times10^{-38}$~cm$^2$/Ar (\suppref{Table}{tab:total_xsec}), a factor $1.6$. A
+common $\simeq\!0.78$ factor cannot produce a $1.6\times$ spread, so the differences between
 the generators are genuine model differences and not an artefact of the regularisation.
 The one-bin total of \S\ref{sec:total_xsec} provides the independent check,
 since with a single bin there is no regularisation and $A_C\equiv1$.
@@ -2461,7 +2464,7 @@ $\theta$ over $\cos\theta$ on $\chi^2$ grounds falls away with the effect that m
 it.
 
 The bug affected only the model comparisons.  The unfolded cross sections are unchanged
-(FHC $p_\mu$ integrates to $0.8275$ before and after), and the closure test was never
+(FHC $p_\mu$ integrated to $0.8275$ before and after, on the release of the time), and the closure test was never
 affected, because the fake-data truth is the one curve that was not passed through the
 second multiplication.
 
@@ -2540,8 +2543,9 @@ All fifty-one extractions now carry a full systematic covariance including detec
 variations.  The proton-tagged results previously carried none --- the detector variation
 samples had been processed but never referenced by the proton-tagged configuration --- and
 were rebuilt and re-unfolded on 2026-08-31 to correct that.  Their detector terms
-($10.8\%$--$65.5\%$, median $24.0\%$) are of the same order as the inclusive ones
-($16.9\%$--$43.1\%$).
+($10.5\%$--$108.5\%$, median $33.0\%$, the largest for the six-bin combined $W_\mathrm{had}$)
+are of the same order as the inclusive ones ($15.6\%$--$35.0\%$) except where a sparse
+six-bin sample amplifies them.
 
 The proton-tagged results remain secondary scope for the narrower reason that their model
 comparisons have not been recomputed since, and because the exposure does not support the
@@ -2650,7 +2654,8 @@ information limit rather than an unrefined estimator is in the technical supplem
 \paragraph{On the closure \texorpdfstring{$\chi^2$}{chi-squared} values.}
 The closure $\chi^2$ quoted for each extraction compares the unfolded result with the
 fake-data truth using the \emph{full} systematic covariance, and the resulting $p$-values
-are almost all above $0.9$ (median $0.95$ across all fifty-one extractions).  That should
+cluster near unity (median $0.98$ across all fifty-one extractions; ten lie below $0.9$
+and the lowest is $0.20$).  That should
 not be read as excellent agreement with the model.  For a self-closure with
 correctly-sized uncertainties the $p$-values would be roughly uniform on $[0,1]$, and
 they are not.
@@ -2660,7 +2665,10 @@ systematics: both come from the same generator, the same flux and the same expos
 the flux, cross-section and exposure terms are common-mode and largely cancel in the
 difference while still inflating the covariance used to judge it.  Recomputing the same
 comparison with the statistical covariance alone raises $\chi^2/\mathrm{ndf}$ from
-$0.02$--$0.2$ to $0.5$--$0.8$, much nearer the expected value:
+$0.02$--$0.2$ to $0.5$--$0.8$, much nearer the expected value (evaluated on the
+2026-08-31 release; the current full-covariance values are those of
+Tables~\ref{tab:fhc}--\ref{tab:comb}, and it is the effect rather than the values that
+matters here):
 
 \begin{center}
 \small
@@ -2832,18 +2840,18 @@ Run-4 FHC \emph{and} Run-4 RHC as \texttt{detVarCV}). That guard now accumulates
 per-mode detVar samples exactly as it already did for the alternate-CV samples,
 matching its own in-code TODO. With both in place the combined closure passes for
 every observable (Table~\ref{tab:comb}), with an unfolded flux systematic of
-$25$--$33\%$ of the same size as the standalone FHC ($26$--$31\%$) and RHC ($24$--$33\%$)
+$24$--$30\%$ of the same size as the standalone FHC ($25$--$33\%$) and RHC ($25$--$28\%$)
 values (Tables~\ref{tab:fhc}--\ref{tab:comb}), as expected for a common flux model
 propagated through three similarly conditioned responses.
 
 The standalone RHC extraction (native Run-4 RHC detector variations) closes cleanly
 for every observable (Table~\ref{tab:rhc}): the realised $A_C$-smeared truth is recovered
-with $\chi^2/\mathrm{ndf}\le0.4$ and $p>0.8$ throughout. Two features stand out. First, the
+with $\chi^2\le0.7$ on four to seven degrees of freedom and $p\ge0.98$ throughout. Two features stand out. First, the
 reco-level flux systematic, in the earlier pass in which it was evaluated
 (\S\ref{sec:fluxanatomy}), was $\sim\!15\%$, below the FHC $\sim\!17\%$ floor; the
 $\bar\nu_\mu$-dominant flux carries a smaller PPFX hadron-production uncertainty. Second,
 the unfolding amplifies it in the same way as for FHC, so the unfolded flux term
-($24$--$33\%$, Table~\ref{tab:rhc}) is comparable to the FHC one, again limited by the
+($25$--$28\%$, Table~\ref{tab:rhc}) is comparable to the FHC one, again limited by the
 response conditioning and the data statistics.
 
 \begin{center}\small
@@ -2913,7 +2921,7 @@ Observable & $\sigma_\mathrm{int}$ & Flux & Detector & Total & Closure $\chi^2/\
   coarsened $\cos\theta_\pi/\theta_{\mu\pi}$ binning, per-configuration flux;
   $10^{-38}$~cm$^2$/Ar). The value differs between observables because the Wiener-SVD
   additional-smearing $A_C$ is not norm-preserving; the D'Agostini cross-check
-  (\suppref{Sec.}{sec:crosschecks}) recovers a flatter, $\sim$20\% higher total, confirming
+  (\suppref{Sec.}{sec:crosschecks}) recovers a flat, $20$--$29\%$ higher total, confirming
   the spread is a smearing effect. All entries were recomputed in a single pass with the
   current code and a forced rebuild of the cached universes. The MC POT normalization
   scales each ntuple file by its own stored POT ($D_\mathrm{run}/\mathrm{POT}_\mathrm{file}$):
@@ -3031,10 +3039,11 @@ statement about the regularisation and not about the detector.  Treat those two 
 corresponding caution.
 
 \paragraph{Numerical data release.}
-All fifty-one extractions are released in \texttt{report/data\_release/}, indexed by
-\texttt{index\_extractions.tsv}: the additional-smearing matrix, the full per-component
-covariance in cross-section units, and \texttt{curves\_*.tsv} holding the unfolded data
-together with every model curve shown here.
+All fifty-one differential extractions are released in \texttt{report/data\_release/},
+indexed by \texttt{index\_extractions.tsv}: the additional-smearing matrix, the full
+per-component covariance in cross-section units, and \texttt{curves\_*.tsv} holding the
+unfolded data together with every model curve shown here. The six one-bin totals, with
+their uncertainty breakdown and realised truth, are in \texttt{total\_xsec.tsv}.
 
 A prediction supplied as a per-bin cross section is compared with these results by
 \[
@@ -3397,7 +3406,7 @@ region by background class and the transfer factors (\texttt{macros/sb\_transfer
     \toprule
     Class & SR & CC$0\pi$ & multi-$\pi$ & $\pi^0$ & cosmic & $T_{\mathrm{CC}0\pi}$ & $T_{\mathrm{multi}}$ & $T_{\pi^0}$ & $T_{\mathrm{cosmic}}$ \\
     \midrule
-    \multicolumn{9}{l}{\emph{FHC}} \\
+    \multicolumn{10}{l}{\emph{FHC}} \\
     signal (contamination) & 943 & 1\,124 & 29.7 & 662 & 6.0 & 0.84 & 32 & 1.43 & 158 \\
     $\nu_\mu$CC $0\pi$ (proton or other track as pion) & 244 & 8\,781 & 2.6 & 1\,011 & 23.2 & 0.03 & 95 & 0.24 & 11 \\
     $\nu_\mu$CC $1\pi^\pm$ outside the measured phase space & 52.7 & 629 & 2.7 & 361 & 14.8 & 0.08 & 19 & 0.15 & 3.57 \\
@@ -3407,7 +3416,7 @@ region by background class and the transfer factors (\texttt{macros/sb\_transfer
     NC and $\nu_e$CC & 89.5 & 549 & 7.1 & 632 & 6.4 & 0.16 & 13 & 0.14 & 14 \\
     total $\nu$-MC & 1\,581 & 12\,192 & 124 & 6\,646 & 75.3 & & & & \\
     \midrule
-    \multicolumn{9}{l}{\emph{RHC}} \\
+    \multicolumn{10}{l}{\emph{RHC}} \\
     signal (contamination) & 1\,015 & 1\,206 & 34.9 & 780 & 6.4 & 0.84 & 29 & 1.30 & 158 \\
     $\nu_\mu$CC $0\pi$ (proton or other track as pion) & 257 & 8\,981 & 2.4 & 1\,117 & 25.7 & 0.03 & 108 & 0.23 & 9.98 \\
     $\nu_\mu$CC $1\pi^\pm$ outside the measured phase space & 49.1 & 678 & 3.4 & 384 & 16.7 & 0.07 & 14 & 0.13 & 2.93 \\
@@ -3669,9 +3678,10 @@ the change is substantive.
 Detector variations have now been propagated through the proton-tagged selection.  All
 thirty-three proton-tagged extractions were rebuilt on 2026-08-31 with the nine detector
 variation samples included and re-unfolded from those universes, so every uncertainty
-quoted here now carries a detector term.  Those terms run from $10.8\%$ to $65.5\%$ with
-a median of $24.0\%$, against $16.9\%$--$43.1\%$ for the inclusive results: the same
-order, as expected for the same detector.  The central values were regenerated in the
+quoted here now carries a detector term.  Those terms run from $10.5\%$ to $108.5\%$ with
+a median of $33.0\%$, against $15.6\%$--$35.0\%$ for the inclusive results: the same
+order, as expected for the same detector, except for the six-bin observables on the
+sparsest samples, where the unfolding amplifies them.  The central values were regenerated in the
 same pass and therefore also postdate the central-value weighting fix.
 
 The closure $\chi^2$ values were recomputed in the same pass, so no quantity in this
@@ -3853,9 +3863,9 @@ central-value pseudo-data are unfolded with the same Wiener-SVD procedure
 shows the result. The bin-by-bin $\chi^2/\mathrm{ndf}$ is well below unity for every
 observable, confirming the unfolded pseudo-data are statistically consistent with truth
 and that the response, background subtraction and normalisation are self-consistent. The
-integrated-cross-section ratios ($0.94$--$1.19$) reflect the same non-norm-preserving
+integrated-cross-section ratios ($0.96$--$1.08$) reflect the same non-norm-preserving
 Wiener-SVD additional smearing $A_C$ seen in the inclusive measurement
-(\suppref{Sec.}{sec:crosschecks}), largest for $\delta\alpha_T$ and $\theta_{\mu\pi}$. The
+(\suppref{Sec.}{sec:crosschecks}), largest for $\cos\theta_\mu$ and $p_\mu$. The
 systematic treatment here includes the flux, cross-section and
 reinteraction and detector-variation terms.  The detector term was added on 2026-08-31,
 when the detector-variation samples were referenced by this selection for the first time
@@ -3864,8 +3874,8 @@ carried none.
 
 The reverse-horn-current measurement is complete at the same binning
 (Table~\ref{tab:wtki_rhc}). All ten released RHC observables close positive, with
-$\sigma_\mathrm{int}$ clustered in $0.38$--$0.49\times10^{-38}$~cm$^2$/Ar, below the
-FHC band ($0.43$--$0.56$), as expected for the $\bar\nu_\mu$-enriched RHC flux; and
+$\sigma_\mathrm{int}$ clustered in $0.31$--$0.44\times10^{-38}$~cm$^2$/Ar, below the
+FHC band ($0.39$--$0.50$), as expected for the $\bar\nu_\mu$-enriched RHC flux; and
 $\chi^2/\mathrm{ndf}\lesssim1$ for almost every observable.
 
 Reaching this point required resolving a normalisation subtlety that is worth recording,
@@ -4021,19 +4031,17 @@ Observable & $\sigma_\mathrm{int}$ & unf./truth & $\chi^2/\mathrm{ndf}$ \\
 
 
 With all three configurations in hand, the combined $\sigma_\mathrm{int}$ lies between the
-FHC and RHC values for all ten released observables.  Earlier drafts reported four exceptions,
-at the few-per-cent level; they were artefacts of the pre-rebuild proton-tagged
-extractions and do not survive the detector-variation rebuild and the correction of the
-duplicated $A_C$.
+FHC and RHC values for eight of the ten released observables; $\delta p_T$ ($0.540$
+against $0.461$ and $0.418$) and $\delta\phi_T$ ($0.503$ against $0.474$ and $0.389$)
+lie above both, by amounts well inside their $\sim\!30\%$ uncertainties.
 
-That the combined result now brackets cleanly is reassuring but should not be
-over-interpreted: the combined measurement is \emph{not} required to lie between the two
+That is not a defect: the combined measurement is \emph{not} required to lie between the two
 single-mode ones.  It is an independent extraction with its own response matrix, its own
 regularisation and its own $A_C$, not a fluence-weighted average, so excursions at the
 few-per-cent level would have been unremarkable against a $\sim\!30\%$ systematic
 uncertainty.
 
-The spread across observables within a configuration, $0.41$ to $0.52$ for the combined
+The spread across observables within a configuration, $0.35$ to $0.54$ for the combined
 set, is likewise not a physics spread but the residual of the additional smearing
 discussed in the next section: each observable's $A_C$ rescales the integral by a different
 factor, so the ten numbers are not ten independent measurements of the same quantity.
@@ -4230,7 +4238,8 @@ Every released number is produced by the \textsc{XSecAnalyzer} chain in
   \item \texttt{univmake} builds, per observable and configuration, the true/reco
     histograms of every systematic universe from the files listed in the configuration's
     \texttt{file\_properties} (\texttt{slurm/slurm\_extfix.sbatch} for a full rebuild on the
-    cluster; the last one, 2026-09-02, rebuilt all 51 in one array job).
+    cluster; the last one, 2026-09-03, SLURM 3205128, rebuilt all 51 from the re-thrown
+    fake data in one array job).
   \item \texttt{UnfolderNuMI} sums the universes with the per-run exposure scaling, builds
     the covariance, unfolds, and writes the closure sidecar, the systematics dump and the
     matrix tables (\texttt{regen\_fdfix.sh} runs all 51; \texttt{slurm/unfold\_incl\_local.sh}
@@ -4265,7 +4274,9 @@ suffered (each is listed with the incident that motivated it in the change log):
 \end{itemize}
 The clean-cache reproducibility test (all 51 extractions rebuilt from the processed
 ntuples with every cached universe deleted, agreeing bin by bin) is recorded in the change
-log and was last repeated on 2026-09-02.
+log and was last repeated on 2026-09-02, before the fake-data re-throw; the 2026-09-04
+release was itself built from empty caches in a single pass (SLURM 3205128), so no
+preserved intermediate exists for it.
 
 % =============================================================================
 \section{Limitations}
@@ -4377,13 +4388,17 @@ reaches $\approx\!17.5\%$ efficiency at $\approx\!59\%$ purity.  Angles and tran
 observables are defined about the per-event neutrino direction, not the detector $z$ axis.
 
 \paragraph{What is measured.}
-Fifty-one extractions: eighteen inclusive and thirty-three proton-tagged, across the three
-configurations.  The primary scope is the total flux-averaged cross section, $d\sigma/dp_\mu$,
-the muon and pion angular cross sections, $d\sigma/d\theta_{\mu\pi}$, and a deliberately
-coarse two-bin $d\sigma/dp_\pi$.  Inclusive total uncertainties run $33.8$--$59.3\%$, with
-the detector term $16.9$--$42.8\%$ and flux the largest single contribution.
+Fifty-one differential extractions, eighteen inclusive and thirty-three proton-tagged,
+across the three configurations, plus six one-bin totals.  The primary scope is the total
+flux-averaged cross section, $d\sigma/dp_\mu$, the muon and pion angular cross sections,
+$d\sigma/d\theta_{\mu\pi}$, and a deliberately coarse two-bin $d\sigma/dp_\pi$.
+Inclusive differential total uncertainties run $32.4$--$53.9\%$, with the detector term
+$15.6$--$35.0\%$ and flux the largest single contribution; the one-bin totals carry
+$38$--$39\%$.
 
-The proton-tagged subsample is secondary scope, with total uncertainties $24.3$--$77.2\%$.
+The proton-tagged subsample is secondary scope, with differential total uncertainties
+$25.1$--$147.7\%$ (the largest for the six-bin combined $W_\mathrm{had}$) and one-bin
+totals of $41$--$47\%$.
 Its systematics are complete, but the exposure does not support a differential $W_{\pi p}$
 shape at any binning, so that result is withdrawn and only the integrated proton-tagged
 cross section is offered.
@@ -4411,7 +4426,7 @@ unity because the measurement and the truth it is compared against share their s
 which cancel in the residual while still inflating the covariance used to judge it.
 
 \paragraph{Corrections that changed results.}
-Nine, each recorded in the change log with before-and-after values.  The largest were an
+Twenty, each recorded in the change log with before-and-after values.  The largest were an
 obsolete flux (a factor ${\sim}3.48$), a double application of the central-value weight to
 the fake data (which moved every cross section by $3.8$--$12.9\%$), a regularisation
 operator that assumed a uniform grid and drove $A_C$ towards rank one, an angular convention
@@ -4438,11 +4453,12 @@ fix, that is a distinct question and it now has an answer.
 
 \paragraph{Before unblinding.}
 Control regions must be opened in data first, with the permitted response to any
-discrepancy fixed beforehand; a clean rebuild from empty caches must reproduce the release;
-and the configuration-to-systematics coupling needs a check that every declared source has
-its expected universes, since it was exactly that interface which allowed the proton-tagged
-detector uncertainty to vanish silently.  An ensemble of throws, rather than the single one
-used here, would turn the closure caveat above into a quantitative coverage statement.
+discrepancy fixed beforehand, and a clean rebuild from empty caches must reproduce the
+release.  The configuration-to-systematics coupling, the interface which allowed the
+proton-tagged detector uncertainty to vanish silently, is now asserted by the framework
+(\S\ref{sec:pipeline}).  The ensemble of throws covers two FHC observables; extending it
+to RHC and to the proton-tagged family would turn the closure caveat above into a coverage
+statement for every result.
 
 
 \appendix
@@ -4560,9 +4576,8 @@ cross sections are given in Table~\ref{tab:ppi_partial}.
 
 \bibitem{dune}
   DUNE Collaboration, B.~Abi \textit{et al.},
-  ``Prospects for Beyond the Standard Model Physics Searches at the Deep
-  Underground Neutrino Experiment,''
-  \textit{Eur.\ Phys.\ J.\ ST} \textbf{231}, 3159--3260 (2022).
+  ``Deep Underground Neutrino Experiment (DUNE), Far Detector Technical Design
+  Report, Volume II: DUNE Physics,'' arXiv:2002.03005 [hep-ex] (2020).
 
 \bibitem{pandora}
   J.~S.~Marshall and M.~A.~Thomson,
