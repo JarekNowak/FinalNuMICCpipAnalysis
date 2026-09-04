@@ -4,9 +4,9 @@
 # the full downstream chain (re-unfold 51, harvest covariances, export release, figures).
 set -uo pipefail
 REPO=/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/xsec_analyzer; cd "$REPO"
-PROC=/data/uboone/processed; RB=$PROC/rebuild_extfix; BK=$PROC/univmake_pooledext_backup_20260902
+PROC=/data/uboone/processed; RB=$PROC/rebuild_extfix; BK=$PROC/univmake_backup_job${EXTFIX_JOB:?}
 S=${FDFIX_SCRATCH:-/tmp/fdfix_work}
-n_ok=$(grep -l '^OK ' slurm/extfix_*.out 2>/dev/null | wc -l)
+JOB=${EXTFIX_JOB:?set EXTFIX_JOB to the SLURM array id}; n_ok=$(grep -l '^OK ' slurm/extfix_${JOB}_*.out 2>/dev/null | wc -l)
 [ "$n_ok" -eq 51 ] || { echo "only $n_ok/51 OK -- not promoting"; exit 1; }
 mkdir -p "$BK"
 for u in "$RB"/*_univmake.root; do b=$(basename "$u"); [ -f "$PROC/$b" ] && mv "$PROC/$b" "$BK/$b"; mv "$u" "$PROC/$b"; done

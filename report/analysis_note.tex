@@ -6,7 +6,7 @@
 \newcommand{\suppref}[2]{#1~\ref{S-#2} of the technical supplement}
 % Stamp appended to every release-derived table caption: the extraction pass and the
 % results file it was generated from (a reviewer's request after stale tables survived).
-\newcommand{\releasestamp}{[release 2026-09-03, \texttt{current\_results.tsv}, per-run EXT]}
+\newcommand{\releasestamp}{[release 2026-09-04, \texttt{current\_results.tsv}, per-run EXT, re-thrown fake data]}
 
 \begin{document}
 
@@ -19,7 +19,7 @@
   \vspace{0.8cm}
   {\large Analysis Note, Full FHC, RHC, and Combined Exposure\par}
   \vspace{0.5cm}
-  {\normalsize Draft 1.3, 2026-09-03\par}
+  {\normalsize Draft 1.4, 2026-09-04\par}
 \vspace{0.15cm}
 {\footnotesize\ttfamily dc0545b \textperiodcentered\ 51 extractions \textperiodcentered\ blind\par}
   \vspace{1.5cm}
@@ -58,10 +58,10 @@
     softer, less intense hadron spectrum at the off-axis \uboone{} location, not because
     the beam is $\bar\nu_\mu$-dominant, which is a composition property.
     The primary total is the cut-and-count flux-averaged cross section
-    (Table~\ref{tab:cutcount}): FHC $1.03\pm0.43$, RHC $0.93\pm0.42$ and combined
-    $0.98\pm0.40$ ($\times10^{-38}$~cm$^2$/Ar), with a cut-and-count RHC/FHC ratio of
+    (Table~\ref{tab:cutcount}): FHC $1.03\pm0.42$, RHC $0.93\pm0.35$ and combined
+    $0.98\pm0.34$ ($\times10^{-38}$~cm$^2$/Ar), with a cut-and-count RHC/FHC ratio of
     $0.901$. The Wiener-SVD integrated cross sections are of order
-    $0.57$--$0.86\times10^{-38}$~cm$^2$/Ar (Table~\ref{tab:sigint_all}); they differ
+    $0.66$--$0.96\times10^{-38}$~cm$^2$/Ar (Table~\ref{tab:sigint_all}); they differ
     between observables because the additional-smearing matrix $A_C$ is not norm
     preserving, so a ratio of two of them is observable-dependent and is not quoted as a
     result. The RHC deficit is a property of the injected sample rather than a
@@ -78,14 +78,15 @@
     The extraction is validated by a same-sample self-closure, and cross-checked against
     the D'Agostini iterative-Bayesian method: its flat, iteration-stable integral
     ($27$--$33\%$ above Wiener-SVD, and flat to $\le2.1\%$ across observables where the
-      Wiener-SVD spread is $16$--$37\%$; evaluated on the 2026-08-31 release and not re-run
-      after the beam-off correction, which moved the Wiener-SVD integrals by $\le2\%$)
+      Wiener-SVD spread is $16$--$37\%$; evaluated on the 2026-08-31 release, before the
+      beam-off correction and the fake-data re-throw, which moved individual Wiener-SVD
+      integrals by up to $20\%$ within their statistical uncertainties)
       confirms that the
     observable-to-observable spread of the Wiener-SVD integrated cross sections is
     the additional-smearing matrix $A_C$, not a physical or acceptance effect
     (\suppref{Sec.}{sec:crosschecks}). All results use the \textsc{XSecAnalyzer}
     framework on the resolution-optimised binning of \suppref{Sec.}{sec:binopt}.
-      The unfolded integral reproduces the realised fake-data truth to $1.016$ on
+      The unfolded integral reproduces the realised fake-data truth to $1.018$ on
       average over the eighteen inclusive extractions (second-derivative regularisation;
       the earlier $1.001$ was measured against a truth that still carried the
       central-value weight once too often, \S\ref{sec:limitations}).  Earlier versions of this note carried a $13\%$ excess whose origin was
@@ -1144,7 +1145,7 @@ and the combined configuration lists each (file, run) pair once. The selected be
 rate per $10^{6}$ gates is $1.75$ (Run~1), $0.43$ (Run~3b), $1.15$ (Run~4) and $0.52$
 (Run~5): the pre-CRT Run~1 sample is roughly three times the CRT-era ones, which is why
 period matching rather than a pooled sample is used. At the FHC final cut the beam-off
-background is $30$ events ($23$ RHC, $53$ combined), $1.8\%$ of the selected sample.
+background is $30$ events ($23$ RHC, $53$ combined), $1.9\%$ of the selected sample.
 Figure~\ref{fig:ext_perrun} shows the per-period rates, scale factors and resulting
 yields; the machine-readable version is \texttt{data\_release/ext\_gates.tsv}, and the
 normalisation manifest (\S\ref{sec:pipeline}) asserts that every (beam-off file, run) pair
@@ -2125,7 +2126,8 @@ Uncertainties     & Closed-form, linear                 & Correlated across iter
 Wiener-SVD is the primary result, for its objective regularisation and its explicit,
 reportable bias $A_C$; D'Agostini serves as the quantitative cross-check
 (\suppref{Sec.}{sec:crosschecks}; evaluated on the 2026-08-31 release, before the
-beam-off correction, which moved the Wiener-SVD integrals by $\le2\%$), where its flat,
+beam-off correction and the fake-data re-throw, which moved individual Wiener-SVD integrals
+by up to $20\%$ within their statistical uncertainties), where its flat,
 iteration-stable integral, $\sim20$--$40\%$ above Wiener-SVD (config-dependent), confirms
 that the observable-to-observable spread of the
 Wiener-SVD integrated cross sections (Table~\ref{tab:sigint_all}) is the $A_C$ smearing
@@ -2475,26 +2477,26 @@ second multiplication.
 \toprule
 Beam & Observable & truth & uB tune & GENIE & GiBUU & NEUT & NuWro \\
 \midrule
-    FHC  & $p_\mu$                & $0.14/7$ & $0.10/7$ & $0.59/7$ & $0.14/7$ & $0.76/7$ & $0.54/7$ \\
-         & $p_\pi$                & $0.12/2$ & $0.10/2$ & $0.48/2$ & $1.17/2$ & $0.58/2$ & $0.45/2$ \\
-         & $\cos\theta_\mu$       & $1.02/5$ & $0.80/5$ & $1.04/5$ & $0.90/5$ & $5.09/5$ & $5.12/5$ \\
-         & $\cos\theta_\pi$       & $0.73/4$ & $0.97/4$ & $1.79/4$ & $3.25/4$ & $2.13/4$ & $2.15/4$ \\
-         & $\theta_{\mu\pi}$      & $0.91/5$ & $0.87/5$ & $2.01/5$ & $2.55/5$ & $1.48/5$ & $0.73/5$ \\
-         & $\theta_\mu$           & $0.78/5$ & $0.46/5$ & $2.37/5$ & $3.15/5$ & $9.26/5$ & $9.86/5$ \\
+    FHC  & $p_\mu$                & $1.45/7$ & $1.54/7$ & $2.51/7$ & $1.69/7$ & $3.08/7$ & $1.42/7$ \\
+         & $p_\pi$                & $0.11/2$ & $0.10/2$ & $0.37/2$ & $1.25/2$ & $0.74/2$ & $0.57/2$ \\
+         & $\cos\theta_\mu$       & $0.67/5$ & $1.09/5$ & $1.67/5$ & $1.27/5$ & $3.88/5$ & $4.04/5$ \\
+         & $\cos\theta_\pi$       & $0.80/4$ & $0.51/4$ & $1.23/4$ & $2.17/4$ & $1.37/4$ & $0.92/4$ \\
+         & $\theta_{\mu\pi}$      & $0.30/5$ & $0.86/5$ & $1.20/5$ & $1.44/5$ & $3.87/5$ & $3.82/5$ \\
+         & $\theta_\mu$           & $1.52/5$ & $2.14/5$ & $5.55/5$ & $6.07/5$ & $8.46/5$ & $9.10/5$ \\
     \midrule
-    RHC  & $p_\mu$                & $1.55/7$ & $2.95/7$ & $2.83/7$ & $2.69/7$ & $2.97/7$ & $3.40/7$ \\
-         & $p_\pi$                & $0.27/2$ & $0.22/2$ & $0.83/2$ & $1.19/2$ & $0.71/2$ & $0.55/2$ \\
-         & $\cos\theta_\mu$       & $0.64/5$ & $1.80/5$ & $1.64/5$ & $0.95/5$ & $5.61/5$ & $5.90/5$ \\
-         & $\cos\theta_\pi$       & $1.54/4$ & $1.29/4$ & $2.77/4$ & $2.49/4$ & $1.94/4$ & $2.90/4$ \\
-         & $\theta_{\mu\pi}$      & $1.99/5$ & $2.53/5$ & $4.89/5$ & $7.48/5$ & $2.94/5$ & $3.20/5$ \\
-         & $\theta_\mu$           & $1.25/5$ & $1.57/5$ & $2.53/5$ & $2.32/5$ & $9.58/5$ & $10.14/5$ \\
+    RHC  & $p_\mu$                & $0.64/7$ & $2.51/7$ & $3.44/7$ & $2.81/7$ & $3.19/7$ & $3.31/7$ \\
+         & $p_\pi$                & $0.02/2$ & $0.01/2$ & $0.56/2$ & $0.30/2$ & $0.25/2$ & $0.11/2$ \\
+         & $\cos\theta_\mu$       & $0.35/5$ & $0.37/5$ & $1.11/5$ & $0.24/5$ & $2.71/5$ & $2.67/5$ \\
+         & $\cos\theta_\pi$       & $0.43/4$ & $0.34/4$ & $0.99/4$ & $2.69/4$ & $1.81/4$ & $0.69/4$ \\
+         & $\theta_{\mu\pi}$      & $0.19/5$ & $0.34/5$ & $2.52/5$ & $3.54/5$ & $0.46/5$ & $1.08/5$ \\
+         & $\theta_\mu$           & $0.12/5$ & $0.21/5$ & $0.78/5$ & $0.34/5$ & $5.60/5$ & $5.76/5$ \\
     \midrule
-    comb & $p_\mu$                & $0.56/7$ & $1.46/7$ & $1.83/7$ & $1.62/7$ & $2.04/7$ & $2.53/7$ \\
-         & $p_\pi$                & $0.30/2$ & $0.25/2$ & $0.78/2$ & $1.82/2$ & $0.83/2$ & $0.70/2$ \\
-         & $\cos\theta_\mu$       & $0.11/5$ & $0.57/5$ & $0.84/5$ & $0.66/5$ & $4.70/5$ & $4.60/5$ \\
-         & $\cos\theta_\pi$       & $1.83/4$ & $1.83/4$ & $3.58/4$ & $4.39/4$ & $2.84/4$ & $3.38/4$ \\
-         & $\theta_{\mu\pi}$      & $2.14/5$ & $2.43/5$ & $4.11/5$ & $7.09/5$ & $3.68/5$ & $2.58/5$ \\
-         & $\theta_\mu$           & $0.71/5$ & $0.53/5$ & $2.72/5$ & $4.20/5$ & $10.46/5$ & $10.61/5$ \\
+    comb & $p_\mu$                & $0.41/7$ & $0.74/7$ & $2.08/7$ & $0.86/7$ & $1.46/7$ & $0.98/7$ \\
+         & $p_\pi$                & $0.01/2$ & $0.01/2$ & $0.45/2$ & $0.92/2$ & $0.47/2$ & $0.30/2$ \\
+         & $\cos\theta_\mu$       & $0.05/5$ & $0.09/5$ & $0.84/5$ & $0.47/5$ & $3.27/5$ & $2.92/5$ \\
+         & $\cos\theta_\pi$       & $1.05/4$ & $0.78/4$ & $1.80/4$ & $3.82/4$ & $2.17/4$ & $0.91/4$ \\
+         & $\theta_{\mu\pi}$      & $0.06/5$ & $0.54/5$ & $1.76/5$ & $2.64/5$ & $2.41/5$ & $2.89/5$ \\
+         & $\theta_\mu$           & $0.56/5$ & $0.83/5$ & $3.16/5$ & $4.71/5$ & $8.20/5$ & $7.87/5$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -2513,14 +2515,14 @@ which was the double-$A_C$ bug rather than a property of either variable. \relea
 \toprule
 Beam & Variable & truth & uB tune & GENIE & GiBUU & NEUT & NuWro \\
 \midrule
-FHC & $\cos\theta_\mu$   & $1.02/5$ & $0.80/5$ & $1.04/5$ & $0.90/5$ & $5.09/5$ & $5.12/5$ \\
-FHC & $\theta_\mu$       & $0.78/5$ & $0.46/5$ & $2.37/5$ & $3.15/5$ & $9.26/5$ & $9.86/5$ \\
+FHC & $\cos\theta_\mu$   & $0.67/5$ & $1.09/5$ & $1.67/5$ & $1.27/5$ & $3.88/5$ & $4.04/5$ \\
+FHC & $\theta_\mu$       & $1.52/5$ & $2.14/5$ & $5.55/5$ & $6.07/5$ & $8.46/5$ & $9.10/5$ \\
 \midrule
-RHC & $\cos\theta_\mu$   & $0.64/5$ & $1.80/5$ & $1.64/5$ & $0.95/5$ & $5.61/5$ & $5.90/5$ \\
-RHC & $\theta_\mu$       & $1.25/5$ & $1.57/5$ & $2.53/5$ & $2.32/5$ & $9.58/5$ & $10.14/5$ \\
+RHC & $\cos\theta_\mu$   & $0.35/5$ & $0.37/5$ & $1.11/5$ & $0.24/5$ & $2.71/5$ & $2.67/5$ \\
+RHC & $\theta_\mu$       & $0.12/5$ & $0.21/5$ & $0.78/5$ & $0.34/5$ & $5.60/5$ & $5.76/5$ \\
 \midrule
-Comb & $\cos\theta_\mu$   & $0.11/5$ & $0.57/5$ & $0.84/5$ & $0.66/5$ & $4.70/5$ & $4.60/5$ \\
-Comb & $\theta_\mu$       & $0.71/5$ & $0.53/5$ & $2.72/5$ & $4.20/5$ & $10.46/5$ & $10.61/5$ \\
+Comb & $\cos\theta_\mu$   & $0.05/5$ & $0.09/5$ & $0.84/5$ & $0.47/5$ & $3.27/5$ & $2.92/5$ \\
+Comb & $\theta_\mu$       & $0.56/5$ & $0.83/5$ & $3.16/5$ & $4.71/5$ & $8.20/5$ & $7.87/5$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -2638,8 +2640,8 @@ through the physical content above $1\GeVc$, which the open true bin already inc
 \toprule
 Region & FHC & RHC & Combined \\
 \midrule
-$\sigma(0.175<p_\pi<0.205\GeVc)$ & $0.062\pm0.041$ & $0.039\pm0.034$ & $0.052\pm0.038$ \\
-$\sigma(p_\pi>0.205\GeVc)$        & $0.792\pm0.293$ & $0.724\pm0.268$ & $0.747\pm0.270$ \\
+$\sigma(0.175<p_\pi<0.205\GeVc)$ & $0.059\pm0.041$ & $0.054\pm0.034$ & $0.062\pm0.038$ \\
+$\sigma(p_\pi>0.205\GeVc)$        & $0.764\pm0.293$ & $0.694\pm0.268$ & $0.713\pm0.270$ \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -2697,7 +2699,7 @@ per-throw \emph{fake-data} truth is not a valid reference: it follows the Poisso
 numerator and reference fluctuate together and the width comes out too small.)
 
 Two observables were run, each with 32 members, chosen to bracket the conditioning: the
-well-behaved $p_\mu$, and $\cos\theta_\mu$, whose $A_C$ row sums fall as low as $0.046$
+well-behaved $p_\mu$, and $\cos\theta_\mu$, whose $A_C$ row sums fall as low as $0.050$
 so that the regularisation removes up to $95\%$ of a bin's normalisation.  If the
 uncertainties were mis-sized anywhere, the second is where it would show.
 
@@ -2769,12 +2771,12 @@ shown in Figs.~\ref{fig:dsigma_current}--\ref{fig:dsigma_comb}.
 \toprule
 Observable & $\sigma_\mathrm{int}$ & Flux & Detector & Total & Closure $\chi^2/\mathrm{ndf}$ \\
 \midrule
-      $p_\mu$            & $0.830$ & $28.0\%$ & $24.8\%$ & $40.8\%$ & $0.14/7$ ($p=1.00$) \\
-      $p_\pi$            & $0.854$ & $31.0\%$ & $28.9\%$ & $47.9\%$ & $0.12/2$ ($p=0.94$) \\
-      $\cos\theta_\mu$   & $0.760$ & $27.1\%$ & $27.2\%$ & $40.6\%$ & $1.02/5$ ($p=0.96$) \\
-      $\cos\theta_\pi$   & $0.759$ & $26.0\%$ & $21.9\%$ & $37.7\%$ & $0.73/4$ ($p=0.95$) \\
-      $\theta_{\mu\pi}$  & $0.850$ & $26.9\%$ & $18.6\%$ & $34.7\%$ & $0.91/5$ ($p=0.97$) \\
-      $\theta_\mu$       & $0.854$ & $27.1\%$ & $16.9\%$ & $34.0\%$ & $0.78/5$ ($p=0.98$) \\
+      $p_\mu$            & $0.838$ & $28.0\%$ & $24.7\%$ & $40.7\%$ & $1.45/7$ ($p=0.98$) \\
+      $p_\pi$            & $0.822$ & $32.5\%$ & $30.3\%$ & $50.2\%$ & $0.11/2$ ($p=0.95$) \\
+      $\cos\theta_\mu$   & $0.754$ & $28.0\%$ & $28.3\%$ & $42.0\%$ & $0.67/5$ ($p=0.98$) \\
+      $\cos\theta_\pi$   & $0.726$ & $26.1\%$ & $20.9\%$ & $36.9\%$ & $0.81/4$ ($p=0.94$) \\
+      $\theta_{\mu\pi}$  & $0.819$ & $28.3\%$ & $19.6\%$ & $36.5\%$ & $0.30/5$ ($p=1.00$) \\
+      $\theta_\mu$       & $0.960$ & $24.7\%$ & $15.6\%$ & $31.0\%$ & $1.52/5$ ($p=0.91$) \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -2853,12 +2855,12 @@ response conditioning and the data statistics.
 \toprule
 Observable & $\sigma_\mathrm{int}$ & Flux & Detector & Total & Closure $\chi^2/\mathrm{ndf}$ \\
 \midrule
-      $p_\mu$            & $0.573$ & $32.2\%$ & $25.6\%$ & $44.4\%$ & $1.55/7$ ($p=0.98$) \\
-      $p_\pi$            & $0.763$ & $33.5\%$ & $43.0\%$ & $59.3\%$ & $0.27/2$ ($p=0.87$) \\
-      $\cos\theta_\mu$   & $0.629$ & $29.9\%$ & $40.6\%$ & $53.7\%$ & $0.64/5$ ($p=0.99$) \\
-      $\cos\theta_\pi$   & $0.684$ & $26.2\%$ & $31.5\%$ & $44.7\%$ & $1.54/4$ ($p=0.82$) \\
-      $\theta_{\mu\pi}$  & $0.760$ & $28.2\%$ & $18.5\%$ & $36.6\%$ & $1.99/5$ ($p=0.85$) \\
-      $\theta_\mu$       & $0.849$ & $24.0\%$ & $21.0\%$ & $33.8\%$ & $1.25/5$ ($p=0.94$) \\
+      $p_\mu$            & $0.690$ & $27.6\%$ & $21.5\%$ & $37.7\%$ & $0.64/7$ ($p=1.00$) \\
+      $p_\pi$            & $0.748$ & $28.4\%$ & $34.7\%$ & $48.6\%$ & $0.01/2$ ($p=0.99$) \\
+      $\cos\theta_\mu$   & $0.733$ & $25.8\%$ & $35.0\%$ & $46.3\%$ & $0.35/5$ ($p=1.00$) \\
+      $\cos\theta_\pi$   & $0.663$ & $24.7\%$ & $26.1\%$ & $39.1\%$ & $0.43/4$ ($p=0.98$) \\
+      $\theta_{\mu\pi}$  & $0.831$ & $25.2\%$ & $16.6\%$ & $32.6\%$ & $0.18/5$ ($p=1.00$) \\
+      $\theta_\mu$       & $0.805$ & $25.6\%$ & $22.4\%$ & $36.1\%$ & $0.12/5$ ($p=1.00$) \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -2870,12 +2872,12 @@ Observable & $\sigma_\mathrm{int}$ & Flux & Detector & Total & Closure $\chi^2/\
 \toprule
 Observable & $\sigma_\mathrm{int}$ & Flux & Detector & Total & Closure $\chi^2/\mathrm{ndf}$ \\
 \midrule
-      $p_\mu$            & $0.726$ & $27.4\%$ & $25.1\%$ & $40.2\%$ & $0.56/7$ ($p=1.00$) \\
-      $p_\pi$            & $0.798$ & $32.7\%$ & $34.3\%$ & $52.8\%$ & $0.30/2$ ($p=0.86$) \\
-      $\cos\theta_\mu$   & $0.753$ & $27.6\%$ & $25.8\%$ & $40.1\%$ & $0.11/5$ ($p=1.00$) \\
-      $\cos\theta_\pi$   & $0.783$ & $24.9\%$ & $22.6\%$ & $37.2\%$ & $1.83/4$ ($p=0.77$) \\
-      $\theta_{\mu\pi}$  & $0.833$ & $27.2\%$ & $18.6\%$ & $35.2\%$ & $2.14/5$ ($p=0.83$) \\
-      $\theta_\mu$       & $0.840$ & $25.3\%$ & $20.6\%$ & $34.4\%$ & $0.71/5$ ($p=0.98$) \\
+      $p_\mu$            & $0.827$ & $24.2\%$ & $21.4\%$ & $34.9\%$ & $0.41/7$ ($p=1.00$) \\
+      $p_\pi$            & $0.775$ & $30.2\%$ & $30.8\%$ & $47.9\%$ & $0.01/2$ ($p=1.00$) \\
+      $\cos\theta_\mu$   & $0.812$ & $25.7\%$ & $23.8\%$ & $37.3\%$ & $0.04/5$ ($p=1.00$) \\
+      $\cos\theta_\pi$   & $0.753$ & $24.6\%$ & $20.6\%$ & $35.3\%$ & $1.05/4$ ($p=0.90$) \\
+      $\theta_{\mu\pi}$  & $0.879$ & $25.7\%$ & $17.7\%$ & $33.2\%$ & $0.06/5$ ($p=1.00$) \\
+      $\theta_\mu$       & $0.851$ & $25.2\%$ & $20.6\%$ & $34.4\%$ & $0.56/5$ ($p=0.99$) \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -2935,13 +2937,13 @@ Observable & $\sigma_\mathrm{int}$ & Flux & Detector & Total & Closure $\chi^2/\
 \toprule
 Observable & FHC & RHC & Combined \\
 \midrule
-$p_\mu$           & $0.830$ & $0.573$ & $0.726$ \\
-$p_\pi$           & $0.854$ & $0.763$ & $0.798$ \\
-$\cos\theta_\mu$  & $0.760$ & $0.629$ & $0.753$ \\
-$\cos\theta_\pi$  & $0.759$ & $0.684$ & $0.783$ \\
-$\theta_{\mu\pi}$ & $0.850$ & $0.760$ & $0.833$ \\
+$p_\mu$           & $0.838$ & $0.690$ & $0.827$ \\
+$p_\pi$           & $0.822$ & $0.748$ & $0.775$ \\
+$\cos\theta_\mu$  & $0.754$ & $0.733$ & $0.812$ \\
+$\cos\theta_\pi$  & $0.726$ & $0.663$ & $0.753$ \\
+$\theta_{\mu\pi}$ & $0.819$ & $0.831$ & $0.879$ \\
 \midrule
-$\theta_\mu$      & $0.854$ & $0.849$ & $0.840$ \\
+$\theta_\mu$      & $0.960$ & $0.805$ & $0.851$ \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -2953,11 +2955,11 @@ are the square root of the diagonal of the \emph{total} covariance matrix, propa
 through the unfolding: flux (PPFX multisims), cross-section (GENIE multisims and unisims),
 detector variations~\cite{uboone_detvar}, hadron re-interaction~\cite{geant4reweight}, POT counting and target number, together with
 the data, MC and EXT statistical terms. For $p_\mu$ in FHC the bin-averaged total is
-$43.9\%$ (Table~\ref{tab:systbreak}), dominated by flux ($28.1\%$) and detector
-($25.0\%$), with data statistics $14.4\%$ and cross-section $10.7\%$. The cut-and-count
+$40.7\%$ (Table~\ref{tab:systbreak}), dominated by flux ($28.0\%$) and detector
+($24.7\%$), with data statistics $14.3\%$ and cross-section $10.7\%$. The cut-and-count
 total cross sections of \S\ref{sec:total_xsec} quote the prediction total of the same
 breakdown, written there as systematic $\oplus$ data-statistical
-(FHC: $41.1\%\oplus4.4\%$).
+(FHC: $40.7\%\oplus4.3\%$).
 
 
 \subsection{How far \texorpdfstring{$A_C$}{A C} is from preserving normalisation}
@@ -2980,26 +2982,26 @@ Observable & FHC & RHC & combined \\
 \midrule
 \multicolumn{4}{l}{\emph{Inclusive}}\\
 \midrule
-$p_\mu$ & $0.66$--$0.91$ & $0.58$--$0.99$ & $0.67$--$0.99$ \\
-$p_\pi$ (2-bin) & $0.37$--$0.53$ & $0.40$--$0.53$ & $0.30$--$0.54$ \\
-$\cos\theta_\mu$ & $0.20$--$0.41$ & $0.05$--$0.41$ & $0.07$--$0.43$ \\
-$\cos\theta_\pi$ & $0.70$--$0.81$ & $0.78$--$0.85$ & $0.79$--$0.92$ \\
-$\theta_{\mu\pi}$ & $0.52$--$1.04$ & $0.59$--$1.16$ & $0.63$--$1.22$ \\
-$\theta_\mu$ & $0.58$--$0.78$ & $0.17$--$1.14$ & $0.52$--$0.66$ \\
+$p_\mu$ & $0.66$--$0.91$ & $0.58$--$0.99$ & $0.68$--$1.01$ \\
+$p_\pi$ (2-bin) & $0.35$--$0.54$ & $0.40$--$0.51$ & $0.29$--$0.54$ \\
+$\cos\theta_\mu$ & $0.17$--$0.39$ & $0.05$--$0.45$ & $0.09$--$0.43$ \\
+$\cos\theta_\pi$ & $0.71$--$0.82$ & $0.79$--$0.86$ & $0.80$--$0.93$ \\
+$\theta_{\mu\pi}$ & $0.52$--$1.03$ & $0.58$--$1.15$ & $0.63$--$1.21$ \\
+$\theta_\mu$ & $0.58$--$0.78$ & $0.22$--$1.16$ & $0.53$--$0.67$ \\
 \midrule
 \multicolumn{4}{l}{\emph{Proton-tagged}}\\
 \midrule
-$p_\mu$ & $0.45$--$1.00$ & $0.55$--$0.89$ & $0.65$--$0.95$ \\
-$p_\pi$ (2-bin) & $0.33$--$0.86$ & $0.43$--$0.45$ & $0.47$--$0.49$ \\
-$\cos\theta_\mu$ & $0.59$--$0.69$ & $-0.15$--$0.58$ & $0.25$--$0.47$ \\
-$\cos\theta_\pi$ & $0.65$--$0.76$ & $0.63$--$0.76$ & $0.64$--$0.75$ \\
-$\theta_{\mu\pi}$ & $0.38$--$0.89$ & $0.32$--$0.78$ & $0.36$--$0.80$ \\
-$W_{\pi p}$ & $0.44$--$1.21$ & $-0.13$--$1.27$ & $0.31$--$1.24$ \\
-$W_{\rm had}$ & $0.55$--$0.81$ & $0.30$--$0.88$ & $0.20$--$0.87$ \\
-$\delta p_T$ & $0.55$--$0.86$ & $0.45$--$0.82$ & $0.46$--$0.87$ \\
-$\delta\phi_T$ & $0.66$--$0.78$ & $0.54$--$0.73$ & $0.30$--$0.68$ \\
-$\delta\alpha_T$ & $0.59$--$0.98$ & $0.57$--$0.93$ & $0.59$--$0.96$ \\
-$p_n$ & $0.71$--$0.86$ & $0.62$--$0.82$ & $0.61$--$0.87$ \\
+$p_\mu$ & $0.46$--$1.00$ & $0.55$--$0.89$ & $0.65$--$0.96$ \\
+$p_\pi$ (2-bin) & $0.34$--$0.84$ & $0.41$--$0.45$ & $0.47$--$0.48$ \\
+$\cos\theta_\mu$ & $0.61$--$0.70$ & $-0.08$--$0.57$ & $0.28$--$0.46$ \\
+$\cos\theta_\pi$ & $0.66$--$0.77$ & $0.62$--$0.77$ & $0.65$--$0.76$ \\
+$\theta_{\mu\pi}$ & $0.37$--$0.87$ & $0.31$--$0.75$ & $0.35$--$0.78$ \\
+$W_{\pi p}$ & $0.45$--$1.22$ & $-0.14$--$1.26$ & $0.32$--$1.24$ \\
+$W_{\rm had}$ & $0.54$--$0.81$ & $0.30$--$0.86$ & $0.18$--$0.87$ \\
+$\delta p_T$ & $0.54$--$0.86$ & $0.45$--$0.82$ & $0.47$--$0.87$ \\
+$\delta\phi_T$ & $0.65$--$0.78$ & $0.53$--$0.72$ & $0.28$--$0.67$ \\
+$\delta\alpha_T$ & $0.59$--$0.98$ & $0.57$--$0.93$ & $0.60$--$0.96$ \\
+$p_n$ & $0.71$--$0.86$ & $0.61$--$0.82$ & $0.59$--$0.86$ \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -3014,11 +3016,12 @@ D'Agostini cross-check, whose integral is flat across observables, is what estab
 that this spread is the smearing rather than a physical or acceptance effect.
 
 Two extractions have \emph{negative} row sums, and the pattern identifies their cause.
-In $W_{\pi p}$ the top bin carries large negative off-diagonal terms in \emph{all three}
-configurations ($-1.08$ FHC, $-0.94$ combined, $-0.84$ RHC); only RHC tips negative
-overall, because its diagonal element is the smallest of the three.  The same happens in
-the first $\cos\theta_\mu$ bin of the proton-tagged RHC sample, whose diagonal is $0.075$
-against off-diagonal terms summing to $-0.89$.
+In $W_{\pi p}$ the top row carries negative off-diagonal terms in \emph{all three}
+configurations (summing to $-0.14$ FHC, $-0.30$ combined, $-0.61$ RHC against diagonals of
+$0.73$, $0.62$ and $0.47$); only RHC tips negative overall (row sum $-0.14$), because its
+diagonal element is the smallest of the three.  The same happens in the first
+$\cos\theta_\mu$ bin of the proton-tagged RHC sample, whose diagonal is $0.079$ against
+off-diagonal terms summing to $-0.16$ (row sum $-0.08$).
 
 So this is not an RHC-specific defect but the regularisation pushing back against the
 least-determined bin of each observable --- for $W_{\pi p}$, the same top bin that is only
@@ -3127,14 +3130,14 @@ $A_C$-suppressed and observable-dependent.
 Config & $N_\mathrm{sel}$ & $N_\mathrm{bkg}$ & $\varepsilon$ [\%] & $\sigma$ & stat [\%] & syst [\%] & total [\%] & truth & $\sigma$/truth \\
 \midrule
     \multicolumn{10}{l}{\emph{Inclusive $\mathrm{CC}\,1\mu1\pi Xp$}} \\
-    FHC      & $1\,612$ & $668$ & $17.4$ & $1.031\pm0.423$ & $4.3$ & $40.8$ & $41.0$ & $1.031$ & $1.000$ \\
-    RHC      & $1\,759$ & $744$ & $17.6$ & $0.928\pm0.414$ & $4.1$ & $44.4$ & $44.6$ & $0.928$ & $1.000$ \\
-    Combined & $3\,371$ & $1\,412$ & $17.5$ & $0.975\pm0.393$ & $3.0$ & $40.2$ & $40.3$ & $0.975$ & $1.000$ \\
+    FHC      & $1\,612$ & $668$ & $17.4$ & $1.031\pm0.422$ & $4.3$ & $40.7$ & $41.0$ & $1.031$ & $1.000$ \\
+    RHC      & $1\,759$ & $744$ & $17.6$ & $0.928\pm0.352$ & $4.1$ & $37.7$ & $37.9$ & $0.928$ & $1.000$ \\
+    Combined & $3\,371$ & $1\,412$ & $17.5$ & $0.975\pm0.342$ & $3.0$ & $34.9$ & $35.0$ & $0.975$ & $1.000$ \\
     \midrule
     \multicolumn{10}{l}{\emph{Proton-tagged $\mathrm{CC}\,1\mu1\pi1p$ ($p_p>0.3$~GeV/$c$)}} \\
-    FHC      & $723$ & $347$ & $11.4$ & $0.627\pm0.308$ & $7.1$ & $48.6$ & $49.1$ & $0.627$ & $1.000$ \\
-    RHC      & $786$ & $395$ & $11.4$ & $0.551\pm0.208$ & $7.2$ & $37.0$ & $37.7$ & $0.551$ & $1.000$ \\
-    Combined & $1\,509$ & $742$ & $11.4$ & $0.586\pm0.247$ & $5.1$ & $41.9$ & $42.2$ & $0.586$ & $1.000$ \\
+    FHC      & $723$ & $347$ & $11.4$ & $0.627\pm0.317$ & $7.1$ & $50.0$ & $50.5$ & $0.627$ & $1.000$ \\
+    RHC      & $786$ & $395$ & $11.4$ & $0.551\pm0.297$ & $7.2$ & $53.5$ & $54.0$ & $0.551$ & $1.000$ \\
+    Combined & $1\,509$ & $742$ & $11.4$ & $0.586\pm0.284$ & $5.1$ & $48.2$ & $48.5$ & $0.586$ & $1.000$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -3267,7 +3270,7 @@ dependent, so the achievable constraint is set by the cross-section and detector
 of that transfer rather than by the sample size. The cosmic region
 would constrain the EXT normalisation only to $\sim\!17\%$ ($94$ EXT events in
 $\sim\!250$ combined), weaker than the $3$--$5\%$ gate-ratio uncertainty already
-assigned; with the beam-off now at $1.8\%$ of the signal-region sample that is
+assigned; with the beam-off now at $1.9\%$ of the signal-region sample that is
 adequate. The multi-$\pi$ region, at $\sim\!300$
 combined events, gives $\sim\!6\%$, useful as a cross-check but not competitive with
 the others. The intended procedure is to unblind the control regions first, use them to
@@ -3890,17 +3893,17 @@ results tables and the data release, and covers all ten released combined proton
 \toprule
 Observable & $\sigma_\mathrm{int}$ & unf./truth & $\chi^2/\mathrm{ndf}$ \\
 \midrule
-      $W_\mathrm{had}$   & $0.474$ & $1.24$ & $3.00/6$ \\
-      $\delta p_T$       & $0.513$ & $1.10$ & $0.07/2$ \\
-      $\delta\alpha_T$   & $0.529$ & $1.07$ & $0.15/2$ \\
-      $\delta\phi_T$     & $0.517$ & $1.09$ & $0.29/2$ \\
-      $p_n$              & $0.553$ & $1.12$ & $0.24/2$ \\
+      $W_\mathrm{had}$   & $0.389$ & $1.00$ & $0.88/6$ \\
+      $\delta p_T$       & $0.461$ & $0.98$ & $0.01/2$ \\
+      $\delta\alpha_T$   & $0.485$ & $0.96$ & $0.02/2$ \\
+      $\delta\phi_T$     & $0.474$ & $0.99$ & $0.11/2$ \\
+      $p_n$              & $0.490$ & $0.98$ & $0.06/2$ \\
       \midrule
-      $p_\mu$            & $0.512$ & $1.11$ & $0.60/7$ \\
-      $p_\pi$            & $0.565$ & $1.13$ & $0.14/2$ \\
-      $\cos\theta_\mu$   & $0.446$ & $1.12$ & $1.16/5$ \\
-      $\cos\theta_\pi$   & $0.429$ & $1.11$ & $2.13/4$ \\
-      $\theta_{\mu\pi}$  & $0.499$ & $1.13$ & $0.49/5$ \\
+      $p_\mu$            & $0.496$ & $1.04$ & $1.89/7$ \\
+      $p_\pi$            & $0.498$ & $0.98$ & $0.01/2$ \\
+      $\cos\theta_\mu$   & $0.445$ & $1.08$ & $0.98/5$ \\
+      $\cos\theta_\pi$   & $0.394$ & $0.99$ & $0.30/4$ \\
+      $\theta_{\mu\pi}$  & $0.469$ & $1.02$ & $0.50/5$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -3947,17 +3950,17 @@ factor.
 \toprule
 Observable & $\sigma_\mathrm{int}$ & unf./truth & $\chi^2/\mathrm{ndf}$ \\
 \midrule
-      $W_\mathrm{had}$   & $0.397$ & $1.19$ & $1.26/6$ \\
-      $\delta p_T$       & $0.426$ & $1.09$ & $0.10/2$ \\
-      $\delta\alpha_T$   & $0.488$ & $1.19$ & $0.29/2$ \\
-      $\delta\phi_T$     & $0.442$ & $1.12$ & $0.09/2$ \\
-      $p_n$              & $0.455$ & $1.14$ & $0.10/2$ \\
+      $W_\mathrm{had}$   & $0.314$ & $0.96$ & $0.69/6$ \\
+      $\delta p_T$       & $0.418$ & $1.10$ & $0.52/2$ \\
+      $\delta\alpha_T$   & $0.438$ & $1.08$ & $0.19/2$ \\
+      $\delta\phi_T$     & $0.389$ & $1.02$ & $0.10/2$ \\
+      $p_n$              & $0.391$ & $1.00$ & $1.06/2$ \\
       \midrule
-      $p_\mu$            & $0.429$ & $1.19$ & $0.35/7$ \\
-      $p_\pi$            & $0.431$ & $1.06$ & $0.78/2$ \\
-      $\cos\theta_\mu$   & $0.467$ & $1.27$ & $1.77/5$ \\
-      $\cos\theta_\pi$   & $0.382$ & $1.14$ & $0.91/4$ \\
-      $\theta_{\mu\pi}$  & $0.464$ & $1.21$ & $0.76/5$ \\
+      $p_\mu$            & $0.380$ & $1.09$ & $3.80/7$ \\
+      $p_\pi$            & $0.429$ & $1.09$ & $1.21/2$ \\
+      $\cos\theta_\mu$   & $0.392$ & $1.11$ & $0.84/5$ \\
+      $\cos\theta_\pi$   & $0.365$ & $1.10$ & $6.01/4$ \\
+      $\theta_{\mu\pi}$  & $0.367$ & $0.96$ & $0.14/5$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -3975,17 +3978,17 @@ Observable & $\sigma_\mathrm{int}$ & unf./truth & $\chi^2/\mathrm{ndf}$ \\
 \toprule
 Observable & $\sigma_\mathrm{int}$ & unf./truth & $\chi^2/\mathrm{ndf}$ \\
 \midrule
-      $W_\mathrm{had}$   & $0.420$ & $1.20$ & $3.65/6$ \\
-      $\delta p_T$       & $0.522$ & $1.04$ & $0.07/2$ \\
-      $\delta\alpha_T$   & $0.507$ & $1.12$ & $0.09/2$ \\
-      $\delta\phi_T$     & $0.477$ & $1.02$ & $0.16/2$ \\
-      $p_n$              & $0.491$ & $1.11$ & $0.12/2$ \\
+      $W_\mathrm{had}$   & $0.345$ & $0.99$ & $0.85/6$ \\
+      $\delta p_T$       & $0.540$ & $1.09$ & $0.17/2$ \\
+      $\delta\alpha_T$   & $0.459$ & $1.01$ & $0.02/2$ \\
+      $\delta\phi_T$     & $0.503$ & $1.09$ & $0.24/2$ \\
+      $p_n$              & $0.449$ & $1.02$ & $0.85/2$ \\
       \midrule
-      $p_\mu$            & $0.487$ & $1.15$ & $0.44/7$ \\
-      $p_\pi$            & $0.497$ & $1.10$ & $0.16/2$ \\
-      $\cos\theta_\mu$   & $0.456$ & $1.15$ & $0.65/5$ \\
-      $\cos\theta_\pi$   & $0.415$ & $1.12$ & $3.31/4$ \\
-      $\theta_{\mu\pi}$  & $0.482$ & $1.14$ & $0.13/5$ \\
+      $p_\mu$            & $0.437$ & $1.03$ & $1.53/7$ \\
+      $p_\pi$            & $0.462$ & $1.03$ & $0.40/2$ \\
+      $\cos\theta_\mu$   & $0.410$ & $1.06$ & $1.52/5$ \\
+      $\cos\theta_\pi$   & $0.382$ & $1.02$ & $3.40/4$ \\
+      $\theta_{\mu\pi}$  & $0.445$ & $1.04$ & $0.26/5$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -4048,19 +4051,19 @@ thirty-three results carried none.  Table~\ref{tab:systematics} lists the source
 \toprule
 Source & Branch / method & Inclusive (\%) & Proton-tagged (\%) \\
 \midrule
-      Flux (PPFX multisims)   & \texttt{weightsFlux}  & $24.0$--$33.5$ & $18.9$--$35.3$ \\
-      Detector response       & Dedicated samples     & $16.9$--$43.0$ & $10.8$--$65.5$ \\
-      Cross-section model     & \texttt{weightsGenie} & $9.3$--$17.9$ & $7.4$--$22.7$ \\
-      Hadron re-interaction   & \texttt{weightsReint} & $3.4$--$12.2$ & $3.0$--$15.6$ \\
-      POT counting            & Beam toroids          & $2.9$--$4.3$ & $2.3$--$4.2$ \\
-      Target count            & FV geometry           & $1.5$--$2.1$ & $1.2$--$2.1$ \\
+      Flux (PPFX multisims)   & \texttt{weightsFlux}  & $24.2$--$32.5$ & $18.3$--$74.6$ \\
+      Detector response       & Dedicated samples     & $15.6$--$35.0$ & $10.5$--$108.5$ \\
+      Cross-section model     & \texttt{weightsGenie} & $8.5$--$16.9$ & $7.3$--$53.8$ \\
+      Hadron re-interaction   & \texttt{weightsReint} & $3.5$--$11.9$ & $3.6$--$24.9$ \\
+      POT counting            & Beam toroids          & $2.7$--$3.8$ & $2.2$--$8.7$ \\
+      Target count            & FV geometry           & $1.4$--$1.9$ & $1.1$--$4.4$ \\
       \midrule
-      MC statistics           & universe spread       & $2.1$--$6.0$ & $2.1$--$10.5$ \\
-      EXT statistics          & beam-off sample       & $0.7$--$2.9$ & $0.4$--$2.3$ \\
-      Data statistics         & thrown fake data      & $6.6$--$19.6$ & $7.1$--$38.0$ \\
+      MC statistics           & universe spread       & $1.9$--$6.3$ & $2.3$--$20.0$ \\
+      EXT statistics          & beam-off sample       & $0.6$--$3.1$ & $0.6$--$4.4$ \\
+      Data statistics         & thrown fake data      & $6.3$--$18.3$ & $7.4$--$62.1$ \\
       \midrule
-      \textbf{Prediction total}& quadrature sum        & $\mathbf{33.8}$--$\mathbf{59.3}$ & $\mathbf{23.8}$--$\mathbf{77.3}$ \\
-      \textbf{Total}          & incl.\ data stats     & $\mathbf{34.9}$--$\mathbf{61.7}$ & $\mathbf{25.8}$--$\mathbf{86.1}$ \\
+      \textbf{Prediction total}& quadrature sum        & $\mathbf{31.0}$--$\mathbf{50.2}$ & $\mathbf{23.2}$--$\mathbf{133.6}$ \\
+      \textbf{Total}          & incl.\ data stats     & $\mathbf{32.4}$--$\mathbf{53.9}$ & $\mathbf{25.1}$--$\mathbf{147.7}$ \\
 \bottomrule
 \end{tabular}
   \end{table}
@@ -4090,16 +4093,16 @@ are the same numbers as Table~\ref{tab:fhc}.)
 \toprule
 Source & $p_\mu$ & $p_\pi$ & $\cos\theta_\mu$ & $\cos\theta_\pi$ & $\theta_{\mu\pi}$ & $\theta_\mu$ \\
 \midrule
-\textbf{Prediction total} & \textbf{40.8} & \textbf{47.9} & \textbf{40.6} & \textbf{37.7} & \textbf{34.7} & \textbf{34.0} \\
-Cross section (GENIE) & 10.7 & 16.1 & 10.0 & 11.9 & 9.9 & 9.4 \\
-Flux (PPFX) & 28.0 & 31.0 & 27.1 & 26.0 & 26.9 & 27.1 \\
-Detector & 24.8 & 28.9 & 27.2 & 21.9 & 18.6 & 16.9 \\
-Reinteraction & 4.4 & 11.4 & 3.5 & 5.0 & 3.8 & 3.9 \\
-MC stat & 4.9 & 6.0 & 5.0 & 4.2 & 2.6 & 3.3 \\
-EXT stat & 0.9 & 2.9 & 2.1 & 1.1 & 1.1 & 1.6 \\
-Data stat & 14.4 & 17.6 & 14.9 & 12.4 & 7.8 & 9.8 \\
-POT $+$ targets & 3.4 & 4.0 & 3.5 & 3.4 & 3.4 & 3.3 \\
-\textbf{Total (incl.\ data stat)} & \textbf{43.5} & \textbf{51.4} & \textbf{43.4} & \textbf{39.8} & \textbf{35.6} & \textbf{35.6} \\
+\textbf{Prediction total} & \textbf{40.7} & \textbf{50.2} & \textbf{42.0} & \textbf{36.9} & \textbf{36.5} & \textbf{31.0} \\
+Cross section (GENIE) & 10.7 & 16.9 & 10.3 & 11.5 & 10.5 & 8.5 \\
+Flux (PPFX) & 28.0 & 32.5 & 28.0 & 26.1 & 28.3 & 24.7 \\
+Detector & 24.7 & 30.3 & 28.3 & 20.9 & 19.6 & 15.6 \\
+Reinteraction & 4.4 & 11.9 & 3.6 & 4.9 & 4.0 & 3.5 \\
+MC stat & 4.9 & 6.3 & 5.3 & 4.1 & 2.7 & 2.9 \\
+EXT stat & 0.9 & 3.1 & 2.3 & 1.1 & 1.2 & 1.4 \\
+Data stat & 14.3 & 18.3 & 15.4 & 12.0 & 8.2 & 8.6 \\
+POT $+$ targets & 3.4 & 4.2 & 3.6 & 3.3 & 3.5 & 3.0 \\
+\textbf{Total (incl.\ data stat)} & \textbf{43.5} & \textbf{53.9} & \textbf{44.9} & \textbf{39.0} & \textbf{37.5} & \textbf{32.4} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -4316,7 +4319,7 @@ assumption is not quantified; $p_n$ should be read as a proxy.
 
 \paragraph{$A_C$ is not norm preserving, so two different totals exist.}
 The Wiener-SVD differential result estimates $A_C x_{\rm true}$, and the row sums fall as
-low as $0.046$.  Summing it over bins therefore does not give a physical total cross
+low as $0.050$.  Summing it over bins therefore does not give a physical total cross
 section; the physical total is the cut-and-count value, quoted separately.  Two matrices
 have negative row sums in their least-determined bin.
 
@@ -4383,7 +4386,7 @@ quantity, and it is the single most consequential limitation of the analysis.
 
 \paragraph{Validation.}
 The extraction reproduces its own input: the mean closure ratio over the eighteen inclusive
-extractions is $1.016$ with second-derivative regularisation (the identity-regularised variant was not re-extracted after the fake-data-truth correction).
+extractions is $1.018$ with second-derivative regularisation (the identity-regularised variant was not re-extracted after the fake-data-truth correction).
 The algebraic identity $UR=A_C$ holds to $4.4\times10^{-6}$, which tests the unfolding
 construction rather than only its behaviour on one sample.  D'Agostini iterative unfolding,
 whose integral is flat across observables where the Wiener-SVD spread is large, establishes
