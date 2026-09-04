@@ -454,6 +454,32 @@ prediction rather than the throw, are unchanged. The D'Agostini cross-check was 
 the new release: its integral is $20$--$29\%$ above Wiener-SVD and flat across observables
 to $\le1.0\%$ (previously $27$--$33\%$ and $\le2.1\%$). The real-data path was never affected.
 
+\subsection{The total cross section borrowed its systematic from the $p_\mu$ extraction}
+
+The headline total was a cut-and-count evaluation whose systematic fraction was taken from
+the prediction total of the released $p_\mu$ extraction of the same configuration. That
+proxy carried the regularisation amplification of the flux and detector terms, and it
+depended on the fake-data throw through the unfolding operator: on the re-throw of
+2026-09-03 alone it moved from $44.4\%$ to $37.7\%$ (RHC) and from $37.0\%$ to $53.5\%$
+(proton-tagged RHC) with no change to the central value.
+
+\textbf{Correction.} The total is now extracted with the framework as a one-bin
+distribution: one true bin containing every signal event, defined on $\cos\theta_\mu$
+over its full range so that no overflow exists, one reconstructed bin, Wiener filter off.
+The response is the efficiency alone, nothing is regularised, $A_C\equiv1$ exactly, and
+the covariance is propagated universe by universe like every other extraction. Six new
+universe files (inclusive and proton-tagged $\times$ FHC/RHC/combined; SLURM 3228639) and
+\texttt{data\_release/total\_xsec.tsv}. The cut-and-count macro is kept as the
+closed-form check and reproduces the one-bin extraction of the central-value prediction to
+four digits.
+\textbf{Effect.} Inclusive totals $1.03\pm0.40$, $0.93\pm0.35$, $0.97\pm0.37$
+(previously $\pm0.42$, $\pm0.35$, $\pm0.34$ with the borrowed systematic); proton-tagged
+$0.62\pm0.26$, $0.53\pm0.25$, $0.57\pm0.24$ (previously $0.63\pm0.32$, $0.55\pm0.30$,
+$0.59\pm0.28$). The central values now fluctuate with the throw (closure $0.98$--$1.00$
+against the realised truth) instead of being the injected tune by construction. The
+generator comparison moves from ``$0.5$--$0.6\sigma$ above GENIE, within $0.7\sigma$ of
+the rest'' to ``$0.5$--$0.8\sigma$ above GENIE, within $0.8\sigma$ of the rest''.
+
 \subsection{Documentation-only corrections from the 2026-09-02 review}
 
 None of the following moved a released number; they are recorded because a reader of

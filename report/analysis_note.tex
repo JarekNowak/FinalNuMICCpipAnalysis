@@ -57,20 +57,22 @@
     $\nu_\mu+\bar\nu_\mu$ integral is lower because the reverse-horn focusing accepts a
     softer, less intense hadron spectrum at the off-axis \uboone{} location, not because
     the beam is $\bar\nu_\mu$-dominant, which is a composition property.
-    The primary total is the cut-and-count flux-averaged cross section
-    (Table~\ref{tab:cutcount}): FHC $1.03\pm0.42$, RHC $0.93\pm0.35$ and combined
-    $0.98\pm0.34$ ($\times10^{-38}$~cm$^2$/Ar), with a cut-and-count RHC/FHC ratio of
-    $0.901$. The Wiener-SVD integrated cross sections are of order
+    The primary total is a one-bin extraction with the same machinery as the differential
+    results: one true bin covering the full $\cos\theta_\mu$ range with no overflow, so
+    the response is the efficiency alone, nothing is regularised and $A_C\equiv1$
+    (Table~\ref{tab:cutcount}): FHC $1.03\pm0.40$, RHC $0.93\pm0.35$ and combined
+    $0.97\pm0.37$ ($\times10^{-38}$~cm$^2$/Ar) on the thrown fake data, closing on the
+    realised truth to $0.98$--$0.99$; the RHC/FHC ratio of the injected tune is $0.901$. The Wiener-SVD integrated cross sections are of order
     $0.66$--$0.96\times10^{-38}$~cm$^2$/Ar (Table~\ref{tab:sigint_all}); they differ
     between observables because the additional-smearing matrix $A_C$ is not norm
     preserving, so a ratio of two of them is observable-dependent and is not quoted as a
     result. The RHC deficit is a property of the injected sample rather than a
     normalisation artefact: the exposures sum exactly and each configuration carries its
-    own flux, and on fake data the cut-and-count total is by construction the
-    central-value tune.
+    own flux, and on the central-value prediction the one-bin total is by construction the
+    central-value tune (the closed-form cut-and-count check reproduces it to four digits).
     %
-    Compared with the standalone generators in the same phase space, the injected
-    central-value tune lies $0.5$--$0.6\sigma$ above GENIE~v3 and within $0.7\sigma$ of
+    Compared with the standalone generators in the same phase space, the one-bin total
+    lies $0.5$--$0.8\sigma$ above GENIE~v3 and within $0.8\sigma$ of
     GiBUU, NEUT and NuWro (Table~\ref{tab:cutcount}; \suppref{Table}{tab:total_xsec}). No beam-on data is unblinded in this note:
     every ``data'' point shown is Poisson-thrown from the central-value Monte Carlo
     (\S\ref{sec:mc}), so no statement here is a measurement of a real deficit or excess.
@@ -1934,8 +1936,8 @@ $0.59$ and $0.67$ for GENIE, GiBUU, NEUT and NuWro respectively. The truth-level
 those same generators span $0.82$ to $1.32\times10^{-38}$~cm$^2$/Ar (Table~\ref{tab:cutcount}), a factor $1.6$. A
 common $\simeq\!0.6$ factor cannot produce a $1.6\times$ spread, so the differences between
 the generators are genuine model differences and not an artefact of the regularisation.
-The cut-and-count measurement of \S\ref{sec:total_xsec} provides the independent check,
-since it involves no unfolding and hence no $A_C$ at all.
+The one-bin total of \S\ref{sec:total_xsec} provides the independent check,
+since with a single bin there is no regularisation and $A_C\equiv1$.
 
 \begin{figure}[H]
   \centering
@@ -2187,7 +2189,7 @@ any released result.) An integrated cross section is computed as the width-weigh
 It is \emph{not} required to agree between observables: the Wiener-SVD result estimates
 $A_C\,x_{\mathrm{true}}$ and $A_C$ is not norm preserving, so $\sigma_{\mathrm{int}}$ is
 observable-dependent (\S\ref{sec:ac_rowsums}). The observable-independent total is the
-cut-and-count value of \S\ref{sec:total_xsec}.
+one-bin total of \S\ref{sec:total_xsec}.
 
 \subsection{Reconstructed spectra and response matrices}
 
@@ -2553,7 +2555,7 @@ Result & Status & Basis \\
 \midrule
 \multicolumn{3}{l}{\emph{Primary scope}}\\
 \midrule
-Total flux-averaged cross section (cut-and-count), all three configurations
+Total flux-averaged cross section (one-bin extraction), all three configurations
   & Final
   & Not suppressed by $A_C$; the most directly interpretable total. \\
 $d\sigma/dp_\mu$
@@ -2952,10 +2954,10 @@ through the unfolding: flux (PPFX multisims), cross-section (GENIE multisims and
 detector variations~\cite{uboone_detvar}, hadron re-interaction~\cite{geant4reweight}, POT counting and target number, together with
 the data, MC and EXT statistical terms. For $p_\mu$ in FHC the bin-averaged total is
 $40.7\%$ (Table~\ref{tab:systbreak}), dominated by flux ($28.0\%$) and detector
-($24.7\%$), with data statistics $14.3\%$ and cross-section $10.7\%$. The cut-and-count
-total cross sections of \S\ref{sec:total_xsec} quote the prediction total of the same
-breakdown, written there as systematic $\oplus$ data-statistical
-(FHC: $40.7\%\oplus4.3\%$).
+($24.7\%$), with data statistics $14.3\%$ and cross-section $10.7\%$. The one-bin total
+cross section of \S\ref{sec:total_xsec} carries its own breakdown from the same universes,
+written there as systematic $\oplus$ data-statistical (FHC: $38.5\%\oplus4.3\%$); without
+regularisation its flux and detector terms are not amplified.
 
 
 \subsection{How far \texorpdfstring{$A_C$}{A C} is from preserving normalisation}
@@ -3049,99 +3051,111 @@ same expression missed the published curves by up to $55\%$, because the plotted
 predictions carried $A_C$ twice.
 
 The practical consequence is stated in the results section and repeated here because it
-is easy to get wrong: quote the physical total from the cut-and-count extraction, which
+is easy to get wrong: quote the physical total from the one-bin extraction, which
 is not subject to $A_C$, and treat the sum of a Wiener-SVD differential result as a
 quantity in smeared space rather than as a cross section.
 
-\subsection{Total flux-averaged cross section (cut-and-count)}
+\subsection{Total flux-averaged cross section (one-bin extraction)}
 \label{sec:total_xsec}
-As a check independent of the unfolding, the total flux-averaged cross section is
-also extracted directly from the selected event counts,
+The total flux-averaged cross section in the measured phase space is extracted with the
+same machinery as the differential results, as a \emph{one-bin distribution}: a single
+true bin containing every signal event, defined on $\cos\theta_\mu$ over its full range
+$[-1,1]$ so that no overflow bin exists, and a single reconstructed bin over the same
+range (\texttt{configs/ccpi\_total\_bin\_config\_opt.txt}; the proton-tagged version uses
+the same construction on the CC$1\mu1\pi1p$ branches). With one bin the response
+$S=\varepsilon M$ reduces to the efficiency, there is nothing to regularise, and the
+Wiener filter is switched off, so the ``unfolding'' is the plain inversion
 \begin{equation}
   \sigma = \frac{N_\mathrm{sel} - N_\mathrm{bkg}}{\epsilon \, \Phi \, N_\mathrm{Ar}},
   \label{eq:countxsec}
 \end{equation}
-where $N_\mathrm{sel}$ is the number of selected events, $N_\mathrm{bkg}$ the predicted
-background ($\nu$-background $+$ EXT $+$ dirt), $\epsilon = N^{\mathrm{sig}}_\mathrm{sel}/
-N^{\mathrm{sig}}_\mathrm{gen}$ the selection efficiency in the measured phase space
-($\simeq 17.5\%$ for all configurations), $\Phi$ the integrated flux
-($\Phi = \text{POT}\times\Phi_\mathrm{POT}$, Table~\ref{tab:flux}) and
-$N_\mathrm{Ar} = 8.71\times10^{29}$ the number of argon nuclei in the fiducial volume
-(the dead $z$ region removed), giving the same normalisation
-$N_\mathrm{Ar}\,\Phi/10^{38}$ used for the differential result. This uses no matrix
-inversion; by avoiding the Wiener--SVD additional smearing it recovers the true
-(un-suppressed) total, consistent with the D'Agostini cross-check
-(\suppref{Sec.}{sec:crosschecks}) and lying above the smearing-suppressed
-$\sigma_\mathrm{int}$ of Table~\ref{tab:sigint_all}, most visibly for RHC. The
-uncertainty is the quadrature of the systematic breakdown
-(\suppref{Table}{tab:systbreak_fhc}--\suppref{Table}{tab:systbreak_comb}, flux-dominated) and the
-cut-and-count data-statistical term $\sqrt{N_\mathrm{sel}}/(N_\mathrm{sel}-N_\mathrm{bkg})$,
-which is smaller ($3$--$7\%$) than the unfolded data-statistical term because no
-regularisation amplifies it.
+with $A_C\equiv1$ exactly (released with the result in
+\texttt{data\_release/total\_xsec.tsv}). Here $N_\mathrm{sel}$ is the selected count,
+$N_\mathrm{bkg}$ the predicted background ($\nu$-background $+$ EXT $+$ dirt),
+$\epsilon = N^{\mathrm{sig}}_\mathrm{sel}/N^{\mathrm{sig}}_\mathrm{gen}$ the selection
+efficiency in the measured phase space ($\simeq 17.5\%$ for all configurations), $\Phi$
+the integrated flux ($\Phi = \text{POT}\times\Phi_\mathrm{POT}$, Table~\ref{tab:flux})
+and $N_\mathrm{Ar} = 8.71\times10^{29}$ the number of argon nuclei in the fiducial volume
+(the dead $z$ region removed), the same normalisation $N_\mathrm{Ar}\,\Phi/10^{38}$ used
+for the differential result. Every term of Eq.~\eqref{eq:countxsec} is evaluated universe
+by universe, so the covariance contains the flux, cross-section, re-interaction and
+detector variations, the POT and target-count terms and the MC, EXT and data statistical
+terms, propagated exactly as for the differential results but without the amplification
+that the regularised inversions suffer: the flux term is $28$--$30\%$ here against
+$24$--$33\%$ bin-averaged after unfolding, the detector term $20$--$22\%$ against
+$16$--$35\%$, and the data-statistical term $3$--$4\%$ ($5$--$7\%$ proton-tagged)
+against $6$--$18\%$. Because no additional smearing is applied the total is the physical
+one: it lies above the $A_C$-suppressed $\sigma_\mathrm{int}$ of
+Table~\ref{tab:sigint_all}, most visibly for RHC, and agrees with the D'Agostini
+cross-check (\suppref{Sec.}{sec:crosschecks}).
 
-Table~\ref{tab:cutcount} is the headline total-cross-section table, for the inclusive
-selection and for the proton-tagged subsample, produced by
-\texttt{macros/total\_xsec\_counting.C} (\texttt{logs/counting\_review6.log}, 2026-09-02, with the per-run beam-off treatment).
-The MC counts carry the framework's full central-value weight, tune $\times$ PPFX
-$\times$ normalisation (\S\ref{sec:mc}); the PPFX central-value weight averages
-$0.944$ on selected signal, so a count that omits it, as earlier drafts of
+The closed-form cut-and-count evaluation of Eq.~\eqref{eq:countxsec} on the
+central-value prediction (\texttt{macros/total\_xsec\_counting.C},
+\texttt{logs/counting\_review5.log}) is retained as the check of the normalisation
+chain: it reproduces the one-bin extraction of the central-value prediction to four digits
+($1.0309$, $0.9285$, $0.9753$ inclusive; $0.6270$, $0.5506$, $0.5856$ proton-tagged) and
+supplies the $N_\mathrm{sel}$, $N_\mathrm{bkg}$ and $\epsilon$ columns of
+Table~\ref{tab:cutcount}. The MC counts carry the framework's full central-value weight,
+tune $\times$ PPFX $\times$ normalisation (\S\ref{sec:mc}); the PPFX central-value weight
+averages $0.944$ on selected signal, so a count that omits it, as earlier drafts of
 Table~\ref{tab:cutflow} did, sits $3$--$6\%$ above the prediction the unfolding actually
 uses.
-Because the fake data are the central-value prediction, $N_\mathrm{sel}-N_\mathrm{bkg}$
-equals the selected signal exactly and the extracted total is the injected tune,
-$\sigma=N^\mathrm{sig}_\mathrm{gen}/(\Phi N_\mathrm{Ar})$, with a closure ratio of unity
-by construction; the table therefore demonstrates the normalisation chain, and the
-uncertainty column is what the measurement will carry at unblinding. The systematic
-fraction is taken, conservatively, as the prediction total of the released $p_\mu$
-extraction of the same configuration (Table~\ref{tab:systbreak};
-\texttt{current\_results.tsv}, \texttt{current\_results\_1p\_new.tsv}), which includes
-the unfolding amplification of the flux and detector terms that a cut-and-count does not
-suffer; a reco-level evaluation of the same covariance would be smaller (the reco-level
-flux term alone is $\sim\!17\%$, \S\ref{sec:fluxanatomy}) and is left for the unblinded
-measurement. The RHC/FHC ratio of the inclusive totals is $0.901$ (proton-tagged
-$0.878$); these are the ratios of the injected tune in the two phase spaces, and are the
-numbers to be compared with data once unblinded. Because the extraction is
-observable-independent, this is also the only proton-tagged total that should be
-quoted: the integrals of Tables~\ref{tab:wtki_fhc}--\ref{tab:wtki_comb} are
+
+Table~\ref{tab:cutcount} is the headline total-cross-section table, for the inclusive
+selection and for the proton-tagged subsample. The $\sigma$ column is the one-bin
+extraction on the Poisson-thrown fake data, so it fluctuates about the injected tune by
+the throw; the realised truth of the throw is listed alongside, and the closure ratio is
+$0.98$--$1.00$ with $\chi^2/1\ll1$ in all six cases. The uncertainty column is what the
+measurement will carry at unblinding. Until Draft~1.4 the systematic of this table was
+borrowed from the released $p_\mu$ extraction of the same configuration; that proxy
+carried the regularisation amplification of the flux and detector terms, and it depended
+on the throw through the unfolding operator (it moved from $37\%$ to $54\%$ for the
+proton-tagged RHC sample on a re-throw alone), so it is withdrawn. The RHC/FHC ratio of
+the injected tune is $0.901$ (proton-tagged $0.878$), the number to be compared with
+data once unblinded; on this throw the extracted ratio is $0.908$ ($0.860$). Because the
+extraction is observable-independent, this is also the only proton-tagged total that
+should be quoted: the integrals of Tables~\ref{tab:wtki_fhc}--\ref{tab:wtki_comb} are
 $A_C$-suppressed and observable-dependent.
 
 \begin{table}[H]
   \centering
-  \caption{Headline cut-and-count total flux-averaged cross sections
-    ($10^{-38}$~cm$^2$/Ar) in the measured phase space, on the Poisson-thrown
-    central-value fake data. $N_\mathrm{sel}$ is the selected (fake-)data count,
-    $N_\mathrm{bkg}$ the predicted background ($\nu$-background $+$ EXT $+$ dirt),
-    $\varepsilon$ the selection efficiency, ``truth'' the injected central-value total
-    $N^\mathrm{sig}_\mathrm{gen}/(\Phi N_\mathrm{Ar})$; ``stat'' is the cut-and-count
-    data-statistical term, ``syst'' the prediction-total fraction of the released $p_\mu$
-    extraction (see text), ``total'' their quadrature sum. MC counts carry the
-    framework's central-value weight (tune $\times$ PPFX $\times$ normalisation), the
-    same as Table~\ref{tab:cutflow}; the two differ by $\lesssim1\%$ because the macro
-    uses the Run-1 dirt overlay with per-mode scale factors rather than the per-run dirt
-    files and applies the framework's weight clamp. \releasestamp}
+  \caption{Headline total flux-averaged cross sections ($10^{-38}$~cm$^2$/Ar) in the
+    measured phase space, from the one-bin extraction (\S\ref{sec:total_xsec}) on the
+    Poisson-thrown central-value fake data. $N_\mathrm{sel}$ and $N_\mathrm{bkg}$ are the
+    predicted selected count and background ($\nu$-background $+$ EXT $+$ dirt) of the
+    central-value prediction and $\varepsilon$ the selection efficiency, from the
+    cut-and-count check; $\sigma$ is the one-bin extraction with its full
+    universe-propagated uncertainty, ``stat'' its data-statistical term, ``syst'' the
+    prediction total (flux, cross section, re-interaction, detector, POT, targets, MC and
+    EXT statistics) and ``total'' their quadrature sum; ``truth'' is the realised truth of
+    the throw and $\chi^2/1$ the closure against it. MC counts carry the framework's
+    central-value weight (tune $\times$ PPFX $\times$ normalisation), the same as
+    Table~\ref{tab:cutflow}; the two differ by $\lesssim1\%$ because the macro uses the
+    Run-1 dirt overlay with per-mode scale factors rather than the per-run dirt files.
+    \releasestamp}
   \label{tab:cutcount}
-  \small
-  \begin{tabular}{lrrccccccc}
+  \footnotesize
+  \begin{tabular}{lrrcccccccc}
 \toprule
-Config & $N_\mathrm{sel}$ & $N_\mathrm{bkg}$ & $\varepsilon$ [\%] & $\sigma$ & stat [\%] & syst [\%] & total [\%] & truth & $\sigma$/truth \\
+Config & $N_\mathrm{sel}$ & $N_\mathrm{bkg}$ & $\varepsilon$ [\%] & $\sigma$ & stat [\%] & syst [\%] & total [\%] & truth & $\sigma$/truth & $\chi^2/1$ \\
 \midrule
-    \multicolumn{10}{l}{\emph{Inclusive $\mathrm{CC}\,1\mu1\pi Xp$}} \\
-    FHC      & $1\,612$ & $668$ & $17.4$ & $1.031\pm0.422$ & $4.3$ & $40.7$ & $41.0$ & $1.031$ & $1.000$ \\
-    RHC      & $1\,759$ & $744$ & $17.6$ & $0.928\pm0.352$ & $4.1$ & $37.7$ & $37.9$ & $0.928$ & $1.000$ \\
-    Combined & $3\,371$ & $1\,412$ & $17.5$ & $0.975\pm0.342$ & $3.0$ & $34.9$ & $35.0$ & $0.975$ & $1.000$ \\
+    \multicolumn{11}{l}{\emph{Inclusive $\mathrm{CC}\,1\mu1\pi Xp$}} \\
+    FHC      & $1\,612$ & $668$ & $17.4$ & $1.026\pm0.397$ & $4.3$ & $38.5$ & $38.7$ & $1.048$ & $0.979$ & $0.003$ \\
+    RHC      & $1\,759$ & $744$ & $17.6$ & $0.932\pm0.350$ & $4.1$ & $37.4$ & $37.6$ & $0.941$ & $0.990$ & $0.001$ \\
+    Combined & $3\,371$ & $1\,412$ & $17.5$ & $0.975\pm0.368$ & $3.0$ & $37.7$ & $37.8$ & $0.990$ & $0.985$ & $0.002$ \\
     \midrule
-    \multicolumn{10}{l}{\emph{Proton-tagged $\mathrm{CC}\,1\mu1\pi1p$ ($p_p>0.3$~GeV/$c$)}} \\
-    FHC      & $723$ & $347$ & $11.4$ & $0.627\pm0.317$ & $7.1$ & $50.0$ & $50.5$ & $0.627$ & $1.000$ \\
-    RHC      & $786$ & $395$ & $11.4$ & $0.551\pm0.297$ & $7.2$ & $53.5$ & $54.0$ & $0.551$ & $1.000$ \\
-    Combined & $1\,509$ & $742$ & $11.4$ & $0.586\pm0.284$ & $5.1$ & $48.2$ & $48.5$ & $0.586$ & $1.000$ \\
+    \multicolumn{11}{l}{\emph{Proton-tagged $\mathrm{CC}\,1\mu1\pi1p$ ($p_p>0.3$~GeV/$c$)}} \\
+    FHC      & $723$ & $347$ & $11.4$ & $0.618\pm0.255$ & $7.2$ & $40.7$ & $41.3$ & $0.633$ & $0.975$ & $0.004$ \\
+    RHC      & $786$ & $395$ & $11.4$ & $0.531\pm0.251$ & $7.4$ & $46.6$ & $47.2$ & $0.532$ & $0.998$ & $0.000$ \\
+    Combined & $1\,509$ & $742$ & $11.4$ & $0.571\pm0.240$ & $5.2$ & $41.8$ & $42.1$ & $0.579$ & $0.986$ & $0.001$ \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 Against the standalone flux-averaged generator totals in the inclusive phase space
 (GENIE $0.82$, GiBUU $1.13$, NEUT $1.32$, NuWro $1.25$ for FHC; \suppref{Table}{tab:total_xsec}
-for all three configurations) the injected tune sits $0.5$--$0.6\sigma$ above GENIE and
-within $0.7\sigma$ of the other three; the generator spread itself, a factor $1.6$, is
+for all three configurations) the one-bin total sits $0.5$--$0.8\sigma$ above GENIE and
+within $0.8\sigma$ of the other three; the generator spread itself, a factor $1.6$, is
 larger than any of these differences. For the proton-tagged phase space the FHC generator
 totals are GENIE $0.50$, NuWro $0.65$, GiBUU $0.74$ and NEUT $0.78$, bracketing the
 injected $0.63$.
@@ -3736,7 +3750,7 @@ are folded into the response matrix and corrected by the unfolding.
 Eleven observables are extracted in the proton-tagged subsample. Ten of them exist as
 differential extractions and are released as \emph{secondary} results with their
 covariances; the robust proton-tagged deliverable proposed as a headline is the
-integrated cut-and-count cross section (Table~\ref{tab:cutcount}). The ten are: the six
+one-bin total cross section (Table~\ref{tab:cutcount}). The ten are: the six
 hadronic-mass and transverse-kinematic-imbalance (W/TKI) variables specific to this
 selection (the differential $W_{\pi p}$ shape being withdrawn and used only through the
 integrated cross section, Table~\ref{tab:cutcount}), plus the five muon/pion kinematic observables of the inclusive analysis
@@ -3922,7 +3936,7 @@ $0.3$~GeV/$c$ and evaluating the six observables with the same formulas as the s
 FHC flux to a per-argon cross section. The four generators span a factor of $\sim1.6$ in
 the integrated proton-tagged cross section, GENIE lowest ($0.50$), then NuWro
 ($0.65$), GiBUU ($0.74$) and NEUT highest ($0.78\times10^{-38}$~cm$^2$/Ar), bracketing
-the injected tune (proton-tagged cut-and-count total, Table~\ref{tab:cutcount}). In
+the injected tune (proton-tagged one-bin total, Table~\ref{tab:cutcount}). In
 the released two-bin TKI scheme the differences between generators are almost entirely
 normalisation: their shapes, and that of the tune, agree with the unfolded points within
 the uncertainties in every panel, so the present exposure does not discriminate between
@@ -4222,7 +4236,10 @@ Every released number is produced by the \textsc{XSecAnalyzer} chain in
     matrix tables (\texttt{regen\_fdfix.sh} runs all 51; \texttt{slurm/unfold\_incl\_local.sh}
     and \texttt{unfold\_1p\_local.sh} harvest the covariances).
   \item \texttt{export\_curves.C} and \texttt{export\_matrices.C} write the data release;
-    the figure macros draw from the closure sidecars; \texttt{total\_xsec\_counting.C},
+    the figure macros draw from the closure sidecars; the one-bin total uses the same
+    \texttt{univmake} and \texttt{UnfolderNuMI} chain with the \texttt{total} bin
+    configurations and is exported by \texttt{total\_export.py} in \texttt{report/tools};
+    \texttt{total\_xsec\_counting.C},
     \texttt{cutflow\_yields.C} and \texttt{sideband\_compare.C} produce the count-level
     tables with the same weights and scalings.
 \end{enumerate}
@@ -4316,7 +4333,7 @@ assumption is not quantified; $p_n$ should be read as a proxy.
 \paragraph{$A_C$ is not norm preserving, so two different totals exist.}
 The Wiener-SVD differential result estimates $A_C x_{\rm true}$, and the row sums fall as
 low as $0.050$.  Summing it over bins therefore does not give a physical total cross
-section; the physical total is the cut-and-count value, quoted separately.  Two matrices
+section; the physical total is the one-bin extraction, quoted separately.  Two matrices
 have negative row sums in their least-determined bin.
 
 \paragraph{Actions required before unblinding.}

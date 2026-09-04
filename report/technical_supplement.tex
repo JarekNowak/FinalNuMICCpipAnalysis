@@ -258,7 +258,7 @@ The effect on the physics conclusions is modest but not negligible: the generato
 rise by $4$--$8\%$, which moves each generator closer to the measured cross section. In the
 cut-and-count comparison (Table~\ref{tab:total_xsec}) GENIE went from $1.0\sigma$ to
 $0.9\sigma$ below the FHC measurement while NEUT went from $0.8\sigma$ to $1.0\sigma$ above
-it, at the uncertainty band then in use; with the current band these read $0.5\sigma$ and
+it, at the uncertainty band then in use; with the current one-bin band these read $0.5\sigma$ and
 $0.6\sigma$. Had the $p_\pi$ prediction alone been used, the $8\%$ deficit would have appeared as a
 data--model disagreement in that one observable and nowhere else.
 
@@ -1201,7 +1201,7 @@ third-bin diagonal never exceeds $0.347$.
 
 \textbf{At the current exposure $W_{\pi p}$ does not support a shape measurement} and is
 quoted as an integrated cross section unless the pion momentum improves. That integrated
-number is a cut-and-count measurement rather than an unfolded one: with a single bin there
+number is a one-bin extraction rather than a regularised unfolding: with a single bin there
 is nothing to unfold, since the response is $1\times1$, $A_C$ is trivially unity and the
 regularisation has no effect. It is reported through the total flux-averaged cross-section
 path of \noteref{Sec.}{sec:total_xsec}, and integrated over the full range it is the same quantity as
@@ -1781,28 +1781,22 @@ carry the caveats recorded here.
   \label{fig:theta_vs_costheta}
 \end{figure}
 
-Table~\ref{tab:total_xsec} compares the result with the four generator predictions,
-each flux-averaged over the corresponding beam. Because the analysis is blind the
-``measurement'' is here the central-value overlay (the MicroBooNE tune) that the fake
-data is thrown from; at unblinding $N_\mathrm{sel}$ becomes the real beam-on count.
-It agrees with all four generators within $0.7\sigma$: standalone GENIE sits
-$0.5$--$0.6\sigma$ low, while GiBUU, NEUT and NuWro lie within $0.7\sigma$. The
-uncertainty is now the prediction total of the released $p_\mu$ extraction
-(\noteref{Table}{tab:systbreak}), which includes the detector-variation rebuild of
-2026-08-31; the previous version of this table used a pre-rebuild breakdown
-($25.5/35.7/28.9\%$) and its uncertainties are superseded. The values are those of
-\texttt{logs/counting\_review3.log} (MC counts carrying the framework's full
-central-value weight, tune $\times$ PPFX $\times$ normalisation; the earlier count used
-the tune alone and sat $3$--$6\%$ higher, and the original unweighted count a further
-$0.3$--$0.5\%$ above that).
+The measurement is the one-bin extraction of \noteref{Sec.}{sec:total_xsec} on the
+Poisson-thrown fake data (one true bin over the full $\cos\theta_\mu$ range, no overflow,
+Wiener filter off, $A_C\equiv1$; \texttt{data\_release/total\_xsec.tsv}), with its full
+universe-propagated uncertainty; at unblinding it becomes the real beam-on extraction.
+It agrees with all four generators within $0.8\sigma$: standalone GENIE sits
+$0.5$--$0.8\sigma$ low, while GiBUU, NEUT and NuWro lie within $0.8\sigma$. Earlier
+versions of this table used the cut-and-count central value with the prediction total of
+the released $p_\mu$ extraction as its uncertainty; that borrowed systematic carried the
+regularisation amplification and is withdrawn (analysis note, change log).
 
 \begin{table}[H]
   \centering
-  \caption{Total flux-averaged cross section from the cut-and-count method
-    (\noteref{Eq.}{eq:countxsec}; $10^{-38}$~cm$^2$/Ar), compared with the flux-averaged
-    generator predictions. The measurement uncertainty is the systematic breakdown
-    (flux/detector/cross-section/reinteraction, Tables~\ref{tab:systbreak_fhc}--%
-    \ref{tab:systbreak_comb}) $\oplus$ cut-and-count data statistics. Values in
+  \caption{Total flux-averaged cross section from the one-bin extraction
+    (\noteref{Sec.}{sec:total_xsec}; $10^{-38}$~cm$^2$/Ar), compared with the flux-averaged
+    generator predictions. The measurement uncertainty is the full one-bin covariance
+    (flux, cross section, re-interaction, detector, POT, targets and statistics). Values in
     parentheses give each generator's deviation from the measurement in units of the
     measurement uncertainty. The generator predictions are integrated over the full
     binning; earlier versions of this table used truncated binnings ($p_\mu$ closed at
@@ -1813,9 +1807,9 @@ $0.3$--$0.5\%$ above that).
 \toprule
 Config & Measurement & GENIE & GiBUU & NEUT & NuWro \\
 \midrule
-    FHC      & $1.03 \pm 0.42$ & $0.82\,(0.5\sigma)$ & $1.13\,(0.2\sigma)$ & $1.32\,(0.7\sigma)$ & $1.25\,(0.5\sigma)$ \\
-    RHC      & $0.93 \pm 0.35$ & $0.67\,(0.7\sigma)$ & $0.94\,(0.0\sigma)$ & $1.10\,(0.5\sigma)$ & $1.04\,(0.3\sigma)$ \\
-    Combined & $0.98 \pm 0.34$ & $0.74\,(0.7\sigma)$ & $1.03\,(0.2\sigma)$ & $1.20\,(0.7\sigma)$ & $1.14\,(0.5\sigma)$ \\
+    FHC      & $1.03 \pm 0.40$ & $0.82\,(+0.5\sigma)$ & $1.13\,(-0.3\sigma)$ & $1.32\,(-0.7\sigma)$ & $1.25\,(-0.6\sigma)$ \\
+    RHC      & $0.93 \pm 0.35$ & $0.67\,(+0.8\sigma)$ & $0.94\,(-0.0\sigma)$ & $1.10\,(-0.5\sigma)$ & $1.04\,(-0.3\sigma)$ \\
+    Combined & $0.97 \pm 0.37$ & $0.74\,(+0.6\sigma)$ & $1.03\,(-0.1\sigma)$ & $1.20\,(-0.6\sigma)$ & $1.14\,(-0.4\sigma)$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -2112,7 +2106,7 @@ rather than between measurements.
 \paragraph{The RHC deficit is in the input, not the extraction.}
 \textbf{Superseded numbers.} The ratios in this paragraph were measured on 2026-08-28,
 before the detector-variation rebuild and before the fake-data-truth weighting
-correction of 2026-09-02. The cut-and-count totals of the current release
+correction of 2026-09-02. The one-bin totals of the current release
 (\noteref{Table}{tab:cutcount}) give an RHC/FHC ratio of the injected tune of $0.901$
 (inclusive) and $0.878$ (proton-tagged), which is what the unfolded ratios should be
 compared with; the $0.785$/$0.779$ below are not reproduced by the current release and

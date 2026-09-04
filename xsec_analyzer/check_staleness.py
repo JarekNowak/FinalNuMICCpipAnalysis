@@ -71,6 +71,9 @@ for p in sorted(glob.glob(os.path.join(FIGS, "*"))):
     # the newest sidecar for that configuration is the right bound: a figure drawn from
     # any extraction of it must postdate the most recent one
     cands = glob.glob(os.path.join(PROC, f"closure_hists_xsec_{'ccpi1p_' if fam=='1p' else ''}{cfg}_*.root"))
+    # The one-bin total extraction (*_total.root) is tabulated, never drawn: it must not
+    # make the differential figures of the same configuration look stale.
+    cands = [c for c in cands if not c.endswith("_total.root")]
     if not cands:
         unmapped.append(b); continue
     check(p, max(cands, key=os.path.getmtime), f"figure/{fam}")

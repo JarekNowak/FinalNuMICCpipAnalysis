@@ -101,7 +101,8 @@ pp={c:part(c) for c in CFS}
 rows=[r"$\sigma(0.175<p_\pi<0.205\GeVc)$ & "+' & '.join(f"${pp[c][0][0]:.3f}\\pm{pp[c][0][1]:.3f}$" for c in CFS)+' \\\\',
       r"$\sigma(p_\pi>0.205\GeVc)$        & "+' & '.join(f"${pp[c][1][0]:.3f}\\pm{pp[c][1][1]:.3f}$" for c in CFS)+' \\\\']
 note=replace(note,'tab:ppi_partial',T('lccc','Region & FHC & RHC & Combined',rows))
-# --- tab:cutcount + supplement tab:total_xsec from the counting log
+# --- tab:cutcount + supplement tab:total_xsec: counts from the counting log (CV prediction),
+#     cross section and uncertainty from the one-bin extraction (data_release/total_xsec.tsv)
 vals=collections.OrderedDict(); cur=None; gens={}
 for line in open(CNT):
     m=re.match(r'=== (CC1mu1piXp|CC1mu1pi1p) (FHC|RHC|Combined) ===',line)
@@ -111,25 +112,28 @@ for line in open(CNT):
             mm=re.search(pat,line)
             if mm: vals[cur][k]=float(mm.group(1))
         if 'generators' in line: gens[cur]={g:float(v) for g,v in re.findall(r'(genie|gibuu|neut|nuwro)=([\d.]+)',line)}
-SY={('CC1mu1piXp','FHC'):DU[('incl','FHC5','pmu')]['PredTotal'],('CC1mu1piXp','RHC'):DU[('incl','RHCFULL','pmu')]['PredTotal'],('CC1mu1piXp','Combined'):DU[('incl','COMB','pmu')]['PredTotal'],
-    ('CC1mu1pi1p','FHC'):DU[('1p','FHC5','pmu')]['PredTotal'],('CC1mu1pi1p','RHC'):DU[('1p','RHCFULL','pmu')]['PredTotal'],('CC1mu1pi1p','Combined'):DU[('1p','COMB','pmu')]['PredTotal']}
+TX={(r['family'],r['config']):r for r in csv.DictReader((l for l in open(R+'data_release/total_xsec.tsv') if not l.startswith('#')),delimiter='\t')}
+FAMK={'CC1mu1piXp':'incl','CC1mu1pi1p':'1p'}; CFGK={'FHC':'fhc5','RHC':'rhcfull','Combined':'comb'}
 def fmt(x):
     if x>=1000: return f"{int(round(x)):,}".replace(',', '\\,')
     return f"{x:.1f}" if x<10 else f"{int(round(x))}"
-rows=['    \\multicolumn{10}{l}{\\emph{Inclusive $\\mathrm{CC}\\,1\\mu1\\pi Xp$}} \\\\']
-TOT={}
-for fam,title in [('CC1mu1piXp',None),('CC1mu1pi1p','    \\multicolumn{10}{l}{\\emph{Proton-tagged $\\mathrm{CC}\\,1\\mu1\\pi1p$ ($p_p>0.3$~GeV/$c$)}} \\\\')]:
+rows=['    \\multicolumn{11}{l}{\\emph{Inclusive $\\mathrm{CC}\\,1\\mu1\\pi Xp$}} \\\\']
+for fam,title in [('CC1mu1piXp',None),('CC1mu1pi1p','    \\multicolumn{11}{l}{\\emph{Proton-tagged $\\mathrm{CC}\\,1\\mu1\\pi1p$ ($p_p>0.3$~GeV/$c$)}} \\\\')]:
     if title: rows.append('    \\midrule'); rows.append(title)
     for cfg in ['FHC','RHC','Combined']:
-        v=vals[(fam,cfg)]; sy=SY[(fam,cfg)]; tot=math.sqrt(sy*sy+v['stat']**2); TOT[(fam,cfg)]=tot
-        rows.append(f"    {cfg:<8} & ${fmt(v['nsel'])}$ & ${fmt(v['bkg'])}$ & ${100*v['eff']:.1f}$ & ${v['sig']:.3f}\\pm{v['sig']*tot/100:.3f}$ & ${v['stat']:.1f}$ & ${sy:.1f}$ & ${tot:.1f}$ & ${v['sig']:.3f}$ & $1.000$ \\\\")
-note=replace(note,'tab:cutcount',T('lrrccccccc','Config & $N_\\mathrm{sel}$ & $N_\\mathrm{bkg}$ & $\\varepsilon$ [\\%] & $\\sigma$ & stat [\\%] & syst [\\%] & total [\\%] & truth & $\\sigma$/truth',rows))
-rows=[]
+        v=vals[(fam,cfg)]; t=TX[(FAMK[fam],CFGK[cfg])]
+        assert abs(float(t['tune_cv'])-v['sig'])<6e-4, (fam,cfg,t['tune_cv'],v['sig'])
+        rows.append(f"    {cfg:<8} & ${fmt(v['nsel'])}$ & ${fmt(v['bkg'])}$ & ${100*v['eff']:.1f}$ & ${float(t['sigma']):.3f}\\pm{float(t['err_total']):.3f}$ & ${float(t['stat_pct']):.1f}$ & ${float(t['syst_pct']):.1f}$ & ${float(t['total_pct']):.1f}$ & ${float(t['truth_realised']):.3f}$ & ${float(t['sigma_over_truth']):.3f}$ & ${float(t['chi2_truth']):.3f}$ \\\\")
+note=replace(note,'tab:cutcount',T('lrrcccccccc','Config & $N_\\mathrm{sel}$ & $N_\\mathrm{bkg}$ & $\\varepsilon$ [\\%] & $\\sigma$ & stat [\\%] & syst [\\%] & total [\\%] & truth & $\\sigma$/truth & $\\chi^2/1$',rows))
+rows=[]; dev={}
 for cfg in ['FHC','RHC','Combined']:
-    v=vals[('CC1mu1piXp',cfg)]; g=gens[('CC1mu1piXp',cfg)]; err=v['sig']*TOT[('CC1mu1piXp',cfg)]/100
-    cells=[f"${g[k]:.2f}\\,({abs(v['sig']-g[k])/err:.1f}\\sigma)$" for k in ['genie','gibuu','neut','nuwro']]
-    rows.append(f"    {cfg:<8} & ${v['sig']:.2f} \\pm {err:.2f}$ & "+' & '.join(cells)+' \\\\')
+    t=TX[('incl',CFGK[cfg])]; g=gens[('CC1mu1piXp',cfg)]; sig=float(t['sigma']); err=float(t['err_total'])
+    cells=[]
+    for k in ['genie','gibuu','neut','nuwro']:
+        dv=(sig-g[k])/err; dev[(cfg,k)]=dv; cells.append(f"${g[k]:.2f}\\,({dv:+.1f}\\sigma)$")
+    rows.append(f"    {cfg:<8} & ${sig:.2f} \\pm {err:.2f}$ & "+' & '.join(cells)+' \\\\')
 supp=replace(supp,'tab:total_xsec',T('lccccc','Config & Measurement & GENIE & GiBUU & NEUT & NuWro',rows))
+print("generator deviations (sigma - gen)/err:", {k:round(v,2) for k,v in dev.items()})
 # --- supplement W_pipr six-bin closure
 rows=[f"{n:<8} & ${DU[('1p',c,'Wpipr')]['sigma_int']:.3f}$ & ${float(CL[('1p',c,'Wpipr')]['unf_over_truth']):.2f}$ & ${float(CL[('1p',c,'Wpipr')]['chi2']):.2f}/6$ \\\\" for n,c in [('FHC','FHC5'),('RHC','RHCFULL'),('Combined','COMB')]]
 supp=replace(supp,'tab:wpipr_sixbin_closure',T('lccc','Config & $\\sigma_\\mathrm{int}$ & unf./truth & $\\chi^2/\\mathrm{ndf}$',rows))
