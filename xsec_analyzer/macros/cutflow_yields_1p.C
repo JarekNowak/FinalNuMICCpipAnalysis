@@ -70,10 +70,15 @@ void cutflow_yields_1p(const char* mode="fhc") {
   addH(mc, tot, "h_cutflow_tot"); addH(mc, sig, "h_cutflow_sig");
   addH(ext, ex, "h_cutflow_tot"); addH(dirt, dt, "h_cutflow_tot");
   // stage 11 (identified proton) from the tree flags
+  // stage 11 carries the same CV weight as the histogram stages: tune x ppfx x normalisation
+  // with the framework's safe-weight rule (non-finite, negative or >30 -> 1). Earlier versions
+  // counted this stage unweighted, which sat ~2.6% above the weighted count.
+  const char* CVW="(TMath::Finite(tuned_cv_weight*ppfx_cv_weight*normalisation_weight)&&(tuned_cv_weight*ppfx_cv_weight*normalisation_weight)>=0&&(tuned_cv_weight*ppfx_cv_weight*normalisation_weight)<=30?tuned_cv_weight*ppfx_cv_weight*normalisation_weight:1)";
+  auto wcount=[&](TTree* t, const char* sel){ TH1D h("hw","",1,-0.5,1.5); t->Draw("0.5>>hw",TString(CVW)+"*("+sel+")","goff"); return h.Integral(0,2); };
   auto addP=[&](std::vector<Src>&v, double* totA, double* sigA){
-    for(auto&s:v){ TChain c("stv_tree"); c.Add(s.file.c_str());
-      totA[10]+=c.GetEntries("CC1mu1pi1p_Selected")*s.scale;
-      if(sigA) sigA[10]+=c.GetEntries("CC1mu1pi1p_Selected && CC1mu1pi1p_MC_Signal")*s.scale; } };
+    for(auto&s:v){ TFile f(s.file.c_str()); TTree* t=(TTree*)f.Get("stv_tree"); if(!t) continue;
+      totA[10]+=wcount(t,"CC1mu1pi1p_Selected")*s.scale;
+      if(sigA) sigA[10]+=wcount(t,"CC1mu1pi1p_Selected && CC1mu1pi1p_MC_Signal")*s.scale; } };
   addP(mc, tot, sig); addP(ext, ex, nullptr); addP(dirt, dt, nullptr);
 
   printf("\n=== %s CC1mu1pi1p cut-flow yields (full exposure) ===\n", mode);

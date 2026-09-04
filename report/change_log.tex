@@ -480,6 +480,73 @@ against the realised truth) instead of being the injected tune by construction. 
 generator comparison moves from ``$0.5$--$0.6\sigma$ above GENIE, within $0.7\sigma$ of
 the rest'' to ``$0.5$--$0.8\sigma$ above GENIE, within $0.8\sigma$ of the rest''.
 
+\subsection{Corrections from the independent review of 2026-09-04}
+
+Two reviewers with no prior contact with the analysis read Draft~1.4 in full, one checking
+every number against the release files and one as a referee. What they found, and what
+changed:
+
+\textbf{Release index.} \texttt{data\_release/index\_extractions.tsv} and \texttt{README.md}
+were the 2026-08-31 files and disagreed with every other release artefact; regenerated
+from the current results (\texttt{report/tools/index\_extractions.py}), with the
+differential $W_{\pi p}$ shape flagged withdrawn.
+
+\textbf{Proton-tagged cut-flow.} The supplement's proton-tagged cut-flow table predated
+the beam-off gate and PPFX-weight corrections, and the note's proton-tagged prose quoted
+it ($47$--$48\%$ purity, $33\to48\%$). The fourteen overlays and the dirt overlay were
+reprocessed with the proton-tagged selection under the unified weight rule
+(\texttt{processed/cf\_1p}); the macro's final stage, which had counted events
+unweighted ($2.6\%$ high), now carries the same weight as the other stages, and its
+final row reproduces the cut-and-count check exactly ($376.4$ signal, $723.0$ predicted,
+FHC). Purity is $52\%$ (FHC), $50\%$ (RHC), $51\%$ (combined); the tag rejects $67\%$ of
+the neutrino background for a $32\%$ signal loss and reduces the beam-off by
+$3.3$--$3.6$ at the final cut, not six.
+
+\textbf{Flux term.} The note attributed the $24$--$33\%$ unfolded flux term to amplification
+by the unfolding operator. The one-bin total, which has no regularisation, carries
+$28$--$30\%$: a flux universe scales signal and background together, so the term is
+$\delta\Phi/\Phi\times(1+B/S)$, $17.7\%\times1.71=30.2\%$ against the one-bin $30.25\%$
+(FHC). The section is rewritten; the reconstructed-level table of the earlier pass is
+dropped.
+
+\textbf{Control-region procedure.} The target class of the $\pi^0$ region as tabulated
+($\nu_\mu$CC with a $\pi^0$) is $46\%$ of the region, below the $50\%$ purity the
+procedure requires for a fitted correction; stated, with the CC$+$NC~$\pi^0$ definition
+to be ratified. The pass/fail criterion is now a global normalisation $\chi^2$ over the
+eight (region, mode) totals; the sixteen independent $2\sigma$ and $p>0.05$ tests of the
+earlier draft (which would have flagged at least one region by chance more often than
+not) are diagnostics, reported with pulls against the statistical$+$detector covariance
+and a normalisation-marginalised shape test. The response to a localised reconstruction
+failure, the joint FHC/RHC treatment and the leverage of the held-fixed signal
+contamination are specified. A control-region skim that never writes signal-region
+events is added to the prerequisites; it does not yet exist.
+
+\textbf{Detector term statistics.} The Monte-Carlo-statistical floor of the
+detector-variation term was measured on split samples
+(\texttt{macros/sb\_detvar\_split.C}): the CC$0\pi$ transfer term ($27\%$ FHC, $31\%$
+RHC) is genuine (floor $9\%$, $6\%$); the $\pi^0$ transfer term ($15\%$, $11\%$) is at or
+below its floor ($13\%$, $17\%$) and is an upper limit; the region-yield terms have floors
+below $2\%$. The procedure now uses the larger of the term and its floor.
+
+\textbf{Ensemble.} The 32-throw ensemble was thrown by a macro that still skipped
+non-finite-weight events, which accounts for $\approx1.4\%$ of its $2.5\%$ negative offset.
+The macro now applies the unified rule and the ensemble is being re-run for $p_\mu$,
+$\cos\theta_\mu$ and the one-bin total (SLURM 3277674, 3277691, 3277692); the offset is
+stated as partly understood until then.
+
+\textbf{Also.} The A_C claims made about proton-tagged closure ratios (which are ratios to
+the $A_C$-smeared truth) are removed; the RHC-below-FHC comparison of $A_C$-suppressed
+integrals is replaced by the one-bin ratio; the reproducibility claim is scoped to the
+2026-09-02 pass; the D'Agostini cross-check is stated to be prior-dominated on
+central-value input; the absence of an alternative-generator fake-data test on the
+released chain, of an MCS momentum systematic and of gate-ratio and Run-2 stand-in
+beam-off terms is stated in the Limitations; the signal definition (one charged pion of
+any momentum, above threshold), the unfolder provenance, the regularisation matrix and
+the proton-tag values ($\mathrm{LLR}<0.05$, $p_p>0.3$~GeV/$c$) are stated precisely; the
+flux mean energies ($0.48$~GeV) and the fraction above $0.3$~GeV ($40\%$) are given, which
+is the origin of the factor $\sim\!3$ against the BNB total. Some twenty further inline
+numbers that had survived from older passes were corrected.
+
 \subsection{Documentation-only corrections from the 2026-09-02 review}
 
 None of the following moved a released number; they are recorded because a reader of
