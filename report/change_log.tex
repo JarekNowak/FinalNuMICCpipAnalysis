@@ -14,7 +14,7 @@ Production on Argon in the NuMI Beam\par}
 \vspace{0.5cm}
 {\normalsize Draft 1.4, 2026-09-04\par}
 \vspace{0.15cm}
-{\footnotesize\ttfamily dc0545b \textperiodcentered\ 51 extractions \textperiodcentered\ blind\par}
+{\footnotesize\ttfamily release 2026-09-04 \textperiodcentered\ 51 differential extractions $+$ 6 one-bin totals \textperiodcentered\ blind\par}
 \vspace{1.5cm}
 {\large Ishanee Pophale, Jarek Nowak\par}
 \vspace{0.5cm}
@@ -140,7 +140,7 @@ $\texttt{onBNB\_reco}-\texttt{extBNB\_reco}$; run~1 gives $558.0$ entries unweig
 against $599.9$ weighted for the same $558$ events; and the throw's own expectation of
 $1567.1$ agrees with the thrown count at $1.3\sigma$.
 
-\textbf{Effect.} The mean inclusive closure ratio moved from $1.106$ to $1.001$ ($1.016$ once the truth-side correction below is included), and all
+\textbf{Effect.} The mean inclusive closure ratio moved from $1.106$ to $1.001$ ($1.016$ once the truth-side correction below is included, $1.018$ on the re-thrown fake data), and all
 $51$ extracted cross sections fell by between $3.8\%$ and $12.9\%$.  Every absolute cross
 section from a draft predating this fix is high by roughly a tenth.
 
@@ -305,7 +305,7 @@ supplement were regenerated from the release systematics dumps on 2026-09-02 and
 cut-and-count uncertainties recomputed from them; the macro also now applies the
 central-value MC weight, which moved the central values by $0.3$--$0.5\%$.
 
-\textbf{Effect.}  Inclusive totals ($10^{-38}$~cm$^2$/Ar): FHC $1.06\pm0.27\to1.03\pm0.43$,
+\textbf{Effect} (values of the time; the current totals are in the one-bin entry below).  Inclusive totals ($10^{-38}$~cm$^2$/Ar): FHC $1.06\pm0.27\to1.03\pm0.43$,
 RHC $0.98\pm0.35\to0.93\pm0.42$, combined $1.02\pm0.30\to0.98\pm0.40$.  The generator
 comparison changes from ``GENIE $\sim1\sigma$ low'' to ``GENIE $0.5$--$0.6\sigma$ low''.
 A proton-tagged cut-and-count total is quoted for the first time (FHC $0.63\pm0.31$,
@@ -372,7 +372,7 @@ sample.  All fifty-one universe files were rebuilt (SLURM array 3205007, 51/51),
 extractions re-unfolded, covariances re-harvested and the release regenerated.
 
 \textbf{Effect.}  EXT background at the final cut (FHC / RHC / combined): pooled
-$13/14/27$ $\to$ per-run $30/23/53$ events, i.e.\ $1.8\%$ of the selected sample; purity
+$13/14/27$ $\to$ per-run $30/23/53$ events, i.e.\ $1.9\%$ of the selected sample; purity
 $59.1\%$ (FHC).  EXT-statistics term on FHC $p_\mu$ $0.4\to0.9\%$.  Unfolded central
 values move by $\lesssim1\%$ through the regularisation.
 
@@ -524,9 +524,11 @@ Negative tail bins
   & An artefact of the EXT treatment; all bins positive once the subtraction was
     corrected. \\
 EXT subtraction on fake data
-  & Cancelled via \texttt{fake\_data\_ext\_cancel}, which is a fake-data convenience only.
-    \textbf{It must be re-enabled before unblinding} and is listed as a required action in
-    the note. \\
+  & The custom pipeline cancelled it via \texttt{fake\_data\_ext\_cancel}, a flag that had
+    to be remembered at unblinding. Superseded: the framework selects the beam-off
+    treatment from the presence of Monte Carlo truth in the beam-on file (added to
+    pseudo-data, subtracted from real data) and refuses a real file unless
+    \texttt{XSEC\_UNBLIND=1}, so no manual switch remains. \\
 Multisim propagation in the custom pipeline
   & Never completed, and now moot: the released results come from the framework, which
     propagates the multisims (\texttt{cov\_xsec\_multi} is in the release).  The row
@@ -574,7 +576,7 @@ generator remain untested against real data.  Every number in the analysis note 
 property of the injected sample and the extraction machinery.
 
 \paragraph{A caveat that is not an open item but reads like one.}
-The closure $\chi^2$ values have $p$-values clustered near unity (median $0.95$ over the
+The closure $\chi^2$ values have $p$-values clustered near unity (median $0.98$ over the
 fifty-one extractions) because the measurement and the truth it is compared against share
 their systematics, so those terms cancel in the difference while still inflating the
 covariance used to judge it.  Sizing the uncertainty band properly would need a
@@ -588,13 +590,13 @@ test demonstrates, not an error in the values.
 \toprule
 Quantity & superseded value & status \\
 \midrule
-Mean inclusive closure ratio        & $1.106$, $1.001$ & now $1.016$ (truth-side correction) \\
+Mean inclusive closure ratio        & $1.106$, $1.001$, $1.016$ & now $1.018$ (truth-side correction; re-thrown fake data) \\
 RHC $W_{\pi p}$ cross section       & $-0.194$         & sign was a POT-convention artefact \\
 Combined detector systematic        & $42.3\%$         & now $24.6\%$ \\
 Combined result / expected          & $0.910$          & now $1.027$ \\
 FHC $\theta_\mu$ $A_C$ conditioning & $0.015$          & now $0.51$ \\
 Mean $\delta p_T$                   & $0.742$~GeV/$c$  & now $0.264$~GeV/$c$ (beam frame) \\
-Proton-tagged \texttt{detVar}       & \texttt{n/a}     & now $10.5$--$64.4\%$ (median $23.9\%$) \\
+Proton-tagged \texttt{detVar}       & \texttt{n/a}, then $10.5$--$64.4\%$ & now $10.5$--$108.5\%$ (median $33.0\%$, 2026-09-04 release) \\
 Proton-tagged $\sigma$, all obs.    & 2026-08-18 values & superseded 2026-08-31 \\
 \bottomrule
 \end{tabular}
