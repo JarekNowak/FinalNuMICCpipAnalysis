@@ -1951,6 +1951,97 @@ $\theta_{\mu\pi}$& 9$\to$7  & 28.4\% & \textbf{23.5\%} \\
 \end{center}
 
 
+\subsection{Re-check of every released binning on the 2026-09-04 release}
+\label{sec:binning_recheck}
+The binnings above were fixed on an earlier release, and the coarsening of $\cos\theta_\pi$
+($5\to4$) and $\theta_{\mu\pi}$ ($7\to5$) was driven by $A_C$ smearing on that release.
+Since then the per-run normalisation, the weights, the beam-off treatment, the fake-data
+throw and the native RHC detector variations all changed, so every released binning was
+re-tested on the current release for whether finer or more bins are admissible. Two
+stages were used. First a pre-screen on the processed files
+(\texttt{macros/binning\_screen.C}): for the released binning and finer candidates of each
+observable, the column-normalised migration diagonal per true bin, the efficiency per
+bin and the selected events per reconstructed bin, with the per-run scales and the
+central-value weight, and the $0.68$ diagonal criterion applied to every bin. Second, the
+candidates that passed were built and unfolded in full (universes, covariance, closure;
+SLURM 3277770 and 3277778) and compared with the released extraction on the $A_C$ row
+sums, the $A_C$ conditioning ($s_{\min}/s_1$), the data-statistical term, the per-bin
+total uncertainties and the closure ratios.
+
+\begin{center}\small
+\captionof{table}{Pre-screen: smallest column-normalised migration diagonal over the true
+  bins of the released binning and of each finer candidate, FHC / RHC. The two-bin $p_\pi$
+  row is evaluated here with a lower edge on the first reconstructed bin, which the
+  released configuration does not have (the framework's own diagonals are $0.91$ and
+  $0.76$); the finer $p_\pi$ candidates fail in their upper bins regardless.}
+\label{tab:binning_screen}
+\begin{tabular}{llcc}
+\toprule
+Observable & Binning & min.\ diagonal FHC / RHC & criterion \\
+\midrule
+$p_\mu$ & released 7 & $0.33$ / $0.31$ & fails already (MCS resolution; \S\ref{sec:binopt}) \\
+        & 8, 9 bins & $0.17$ / $0.18$, $0.22$ / $0.22$ & fail \\
+$\cos\theta_\mu$ & released 5 & $0.68$ / $0.68$ & at the limit \\
+        & 6, 7 bins & $0.64$ / $0.63$, $0.61$ / $0.61$ & fail \\
+$\theta_\mu$ & released 5 & $0.67$ / $0.65$ & at the limit \\
+        & 7 bins & $0.63$ / $0.62$ & fail \\
+$\cos\theta_\pi$ & released 4 & $0.81$ / $0.83$ & pass \\
+        & 5 (backward split) & $0.77$ / $0.77$ & pass \\
+        & 5 (forward split) & $0.74$ / $0.76$ & pass \\
+        & 6 bins & $0.73$ / $0.75$ & pass \\
+$\theta_{\mu\pi}$ & released 5 & $0.79$ / $0.79$ & pass \\
+        & 6, 7 bins & $0.74$ / $0.73$, $0.75$ / $0.73$ & pass \\
+$p_\pi$ & released 2 & $0.58$ / $0.56$ (see caption) & --- \\
+        & 3, 4 bins & $0.39$ / $0.40$, $0.29$ / $0.29$ & fail \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{center}\small
+\captionof{table}{Full extraction of the candidates that passed the pre-screen, FHC / RHC:
+  range of the $A_C$ row sums, $A_C$ conditioning $s_{\min}/s_1$, bin-averaged
+  data-statistical term, range of the per-bin total uncertainty, and range of the per-bin
+  closure ratio to the $A_C$-smeared truth. Backward split: edges $-1,-0.3,0.2,0.5,0.75,1$;
+  forward split: $-1,-0.1,0.35,0.6,0.8,1$; six bins: $-1,-0.4,0,0.3,0.55,0.75,1$;
+  $\theta_{\mu\pi}$ six bins: $0,0.55,0.75,0.95,1.3,1.85,2.6$~rad; seven bins:
+  $0,0.5,0.7,0.9,1.15,1.45,1.9,2.6$~rad.}
+\label{tab:binning_cands}
+\begin{tabular}{llcccc}
+\toprule
+Binning & $A_C$ row sums & $s_{\min}/s_1$ & data stat & per-bin unc. & closure \\
+\midrule
+$\cos\theta_\pi$ released 4 & $0.71$--$0.82$ / $0.79$--$0.86$ & $0.27$ / $0.24$ & $12.0$ / $11.5\%$ & $30$--$49$ / $32$--$55\%$ & $0.95$--$1.09$ / $0.94$--$1.07$ \\
+backward split 5 & $0.65$--$0.76$ / $0.63$--$0.80$ & $0.20$ / $0.27$ & $16.0$ / $15.2\%$ & $29$--$73$ / $34$--$91\%$ & $0.83$--$1.08$ / $0.87$--$1.03$ \\
+forward split 5 & $0.68$--$0.77$ / $0.70$--$0.84$ & $0.46$ / $0.38$ & $12.7$ / $12.3\%$ & $30$--$53$ / $33$--$48\%$ & $0.89$--$1.07$ / $0.90$--$1.05$ \\
+6 bins & $0.73$--$0.84$ / $0.77$--$0.89$ & $0.18$ / $0.15$ & $19.0$ / $16.3\%$ & $32$--$91$ / $32$--$54\%$ & $0.66$--$1.13$ / $0.81$--$1.23$ \\
+\midrule
+$\theta_{\mu\pi}$ released 5 & $0.52$--$1.03$ / $0.58$--$1.15$ & $0.008$ / $0.002$ & $8.2$ / $8.4\%$ & $35$--$40$ / $30$--$39\%$ & $0.95$--$1.06$ / $1.03$--$1.08$ \\
+6 bins & $0.56$--$1.29$ / $0.58$--$1.36$ & $0.002$ / $0.000$ & $8.4$ / $10.2\%$ & $34$--$40$ / $30$--$41\%$ & $0.95$--$1.06$ / $1.03$--$1.11$ \\
+7 bins & $0.63$--$1.41$ / $0.65$--$1.06$ & $0.000$ / $0.000$ & $11.5$ / $11.2\%$ & $37$--$40$ / $32$--$46\%$ & $0.85$--$1.04$ / $0.87$--$1.14$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent Conclusions. $p_\mu$, $\cos\theta_\mu$, $\theta_\mu$ and $p_\pi$ cannot go finer:
+their released binnings already sit at or below the diagonal criterion, set by the MCS
+momentum resolution and the angular resolution against the neutrino direction, and every
+finer candidate fails it. $\theta_{\mu\pi}$ admits six or seven bins by the diagonal and
+closes acceptably, but the additional bins carry no resolved information: the smallest
+singular value of $A_C$, already $0.008$ of the largest at five bins, goes to zero, and
+the row sums overshoot to $1.3$--$1.4$ in the bins the regularisation has to fill in, so
+the released five bins stand. $\cos\theta_\pi$ is the one observable with room, and only
+in the forward hemisphere where the events are: splitting the backward region produces a
+bin of $73$--$91\%$ uncertainty that closes at $0.83$--$0.87$, and six bins do the same,
+whereas the forward split (edges $-1,-0.1,0.35,0.6,0.8,1$) keeps every diagonal above
+$0.74$, keeps the per-bin uncertainties in the released range, raises the data-statistical
+term by only $0.7\%$ and \emph{improves} the conditioning of $A_C$ ($s_{\min}/s_1$ from
+$0.27$ to $0.46$ in FHC, $0.24$ to $0.38$ in RHC) while closing to $0.89$--$1.07$. It is
+admissible and is the only change this re-check supports; adopting it would require the
+generator predictions to be regenerated at the new edges and the three $\cos\theta_\pi$
+extractions and their control-region binning to be re-released, and is offered as a
+decision rather than made here. The released binnings of the proton-tagged observables,
+which are set by the same resolutions on a sample a third the size, were not re-tested.
+
 \section{Multi-run overlay, resonance closure, and configuration closure}
 \label{sec:supp_closure}
 
