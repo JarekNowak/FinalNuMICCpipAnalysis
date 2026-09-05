@@ -107,19 +107,19 @@
       %
       \textbf{Validation.}  Two results bound what the extraction can be trusted to do.
       An ensemble of thirty-two independent Poisson realisations, each carried through the
-      whole chain, gives per-bin pull widths of $1.04$ ($d\sigma/dp_\mu$) and $0.96$
-      ($d\sigma/d\cos\theta_\mu$) against the statistical covariance, with $68\%$ and
-      $95\%$ interval coverage recovered: the statistical uncertainties are correctly
-      sized, and the observable whose additional smearing is most severe behaves no
-      differently from the best-conditioned one (ensemble of the 2026-08-31 release,
-      thrown with the earlier weight rule that dropped non-finite-weight events; a
-      re-run with the unified rule is in progress).  Separately, the 2026-09-02 release rebuilt bit-identically
+      whole chain on the current release, gives per-bin pull widths of $1.08$
+      ($d\sigma/dp_\mu$), $0.97$ ($d\sigma/d\cos\theta_\mu$) and $1.02$ (the one-bin
+      total) against the statistical covariance, with $62$--$71\%$ and $92$--$94\%$
+      interval coverage: the statistical uncertainties are correctly sized, and the
+      observable whose additional smearing is most severe behaves no differently from the
+      best-conditioned one.  Separately, the 2026-09-02 release rebuilt bit-identically
       from the processed ntuples with every cached universe deleted, and the present
       release was built the same way in a single pass, so the released numbers are
-      regenerable from the raw inputs rather than from a preserved intermediate.  The same ensemble shows a $2.5\%$ negative offset
-      of the mean; about $1.4\%$ of it is the throw rule of that pass, which dropped
-      non-finite-weight events, so the residual bias is below one standard deviation of
-      the ensemble mean and is stated rather than corrected until the re-run settles it.
+      regenerable from the raw inputs rather than from a preserved intermediate.  The ensemble
+      means sit below the reference by $0.5\%$ ($p_\mu$), $1.0\%$ (one-bin total) and
+      $2.7\%$ ($\cos\theta_\mu$), $0.4$, $1.3$ and $1.9$ standard deviations of the mean;
+      the $2.5\%$ offset of the earlier ensemble was in part its throw rule. No correction
+      is applied.
       %
       \textbf{Companion documents.}  This note describes the current state of the analysis.
       The validation and diagnostic studies behind it --- the pion-momentum estimator
@@ -2757,10 +2757,14 @@ formed against the fixed central-value truth smeared by that member's own $A_C$.
 per-throw \emph{fake-data} truth is not a valid reference: it follows the Poisson draw, so
 numerator and reference fluctuate together and the width comes out too small.)
 
-Two observables were run, each with 32 members, chosen to bracket the conditioning: the
-well-behaved $p_\mu$, and $\cos\theta_\mu$, whose $A_C$ row sums fall as low as $0.050$
-so that the regularisation removes up to $95\%$ of a bin's normalisation.  If the
-uncertainties were mis-sized anywhere, the second is where it would show.
+Three extractions were run on the current release, each with the same 32 throws
+(\texttt{throw\_ensemble\_fhc.C} under the unified weight rule of
+Eq.~\eqref{eq:safeweight}; SLURM 3277674, 3277691, 3277692), chosen to bracket the
+conditioning: the well-behaved $p_\mu$; $\cos\theta_\mu$, whose $A_C$ row sums fall as
+low as $0.050$ so that the regularisation removes up to $95\%$ of a bin's normalisation;
+and the one-bin total, which has no regularisation at all. If the uncertainties were
+mis-sized anywhere, the second is where it would show; if the extraction carried a bias
+independent of the regularisation, the third is where it would show.
 
 \begin{center}
 \small
@@ -2769,45 +2773,52 @@ uncertainties were mis-sized anywhere, the second is where it would show.
 Reference covariance & pull mean & pull width & 68\% / 95\% coverage \\
 \midrule
 \multicolumn{4}{l}{\emph{statistical only}}\\
-$d\sigma/dp_\mu$        & $-0.20$ & $1.04$ & $63.8\%$ / $95.5\%$ \\
-$d\sigma/d\cos\theta_\mu$ & $-0.18$ & $0.96$ & $73.1\%$ / $94.4\%$ \\
+$d\sigma/dp_\mu$        & $-0.05$ & $1.08$ & $62.1\%$ / $92.0\%$ \\
+$d\sigma/d\cos\theta_\mu$ & $-0.18$ & $0.97$ & $71.2\%$ / $93.1\%$ \\
+one-bin total           & $-0.25$ & $1.02$ & $62.5\%$ / $93.8\%$ \\
 \midrule
 \multicolumn{4}{l}{\emph{full}}\\
-$d\sigma/dp_\mu$        & $-0.06$ & $0.32$ & $99.6\%$ / $100\%$ \\
-$d\sigma/d\cos\theta_\mu$ & $-0.05$ & $0.31$ & $98.8\%$ / $100\%$ \\
+$d\sigma/dp_\mu$        & $-0.01$ & $0.35$ & $99.1\%$ / $100\%$ \\
+$d\sigma/d\cos\theta_\mu$ & $-0.06$ & $0.33$ & $99.4\%$ / $100\%$ \\
+one-bin total           & $-0.03$ & $0.11$ & $100\%$ / $100\%$ \\
 \midrule
 expected                & $0$     & $1$    & $68\%$ / $95\%$ \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-Against the statistical covariance both widths are consistent with unity --- $1.04$ and
-$0.96$, each determined to $\pm13\%$ with this many members --- and the interval coverage
-is correct.  \textbf{The statistical uncertainties are correctly sized, and the strongly
+Against the statistical covariance all three widths are consistent with unity --- $1.08$,
+$0.97$ and $1.02$, each determined to $\pm13\%$ with this many members --- and the
+interval coverage is correct within the same statistics.  \textbf{The statistical uncertainties are correctly sized, and the strongly
 suppressed observable behaves no differently from the well-conditioned one.}  That the
 severe $A_C$ suppression in $\cos\theta_\mu$ does not distort its uncertainties is the
 more informative of the two results, since $p_\mu$ passing was the expected outcome.
 
 Two further things the ensemble shows.  Against the \emph{full} covariance the pull width
-is $0.31$--$0.32$ for both observables and coverage is essentially $100\%$: the quoted
+is $0.33$--$0.35$ for the differential results and $0.11$ for the total, and coverage is
+essentially $100\%$: the quoted
 uncertainty is about three times the throw-to-throw spread, because the ensemble varies
 only the data statistics while the denominator carries flux, detector and cross-section
 terms that are identical in every member.  That is the same effect as the closure
 $p$-values clustered near unity, now measured rather than argued.
 
-Second, the ensemble mean sits $2.5\%$ below the reference ($0.7887$ against $0.8090$),
-a $2.1\sigma$ offset on the mean, and the per-bin pull means are all negative and
-consistent at $-0.10$ to $-0.25$.  Part of this is now understood: the ensemble was thrown
-with the earlier throw macro, which skipped events with a non-finite central-value weight
-(change log), so its pseudo-data sat $0.9\%$ below the prediction in the signal region,
-$\approx1.4\%$ on the extracted cross section after background subtraction. The residual,
-$\approx1\%$, is below one standard deviation of the ensemble mean. The ensemble is being
-re-run with the unified weight rule for $p_\mu$, $\cos\theta_\mu$ and the one-bin total
-(which has no regularisation to hide a bias behind); until then the offset is stated,
-not corrected.
+Second, the ensemble means sit below the reference in all three cases: by $0.5\%$ for
+$p_\mu$ ($0.8074$ against $0.8113$, $0.4\sigma$ on the mean), $1.0\%$ for the one-bin
+total ($1.0206$ against $1.0309$, $1.3\sigma$) and $2.7\%$ for $\cos\theta_\mu$
+($0.7704$ against $0.7918$, $1.9\sigma$), with per-bin pull means of $-0.05$, $-0.25$
+and $-0.18$ (the first $\cos\theta_\mu$ bin at $-0.44$). The three share the same 32
+throws and are therefore correlated, so they are one measurement of a small negative
+offset, not three. The earlier ensemble, on the 2026-08-31 release, showed $2.5\%$ at
+$2.1\sigma$; about $1.4\%$ of that was its throw macro, which skipped events with a
+non-finite central-value weight (change log). What remains is at most two standard
+deviations of the ensemble mean and is largest where the regularisation is strongest,
+but the one-bin total, which has no regularisation, also sits low, so the excess in
+$\cos\theta_\mu$ over the common $\approx1\%$ is the only part that can be attributed
+to $A_C$. No correction is applied and no uncertainty is assigned; a larger ensemble
+would settle whether the common offset is real.
 
-The study covers two observables in one configuration (FHC).  Extending it to RHC and to
-the proton-tagged family would test whether the same holds where the statistics are
+The study covers three extractions in one configuration (FHC).  Extending it to RHC and
+to the proton-tagged family would test whether the same holds where the statistics are
 sparser; the machinery is in place and each observable costs about four hours.
 
 \paragraph{On the blinding status.}
@@ -4389,13 +4400,13 @@ $p_\pi$ is reported in two coarse bins and why the differential $W_{\pi p}$ shap
 withdrawn: at this exposure no binning satisfies both the migration and the statistics
 requirement.
 
-\paragraph{The extraction may carry a small negative bias.}
-The ensemble of thirty-two throws puts the mean $2.5\%$ below the reference, $2.1\sigma$ on
-the mean, with per-bin pull means consistently negative in both observables tested. About
-$1.4\%$ of that is the throw rule of the pass it was run on, which dropped
-non-finite-weight events; the residual is below one standard deviation. The ensemble is
-being re-run with the unified rule, including the one-bin total; no correction or
-uncertainty is assigned meanwhile.
+\paragraph{The extraction may carry a small negative offset.}
+The ensemble of thirty-two throws on the current release puts the mean below the
+reference by $0.5\%$ ($p_\mu$), $1.0\%$ (one-bin total) and $2.7\%$ ($\cos\theta_\mu$),
+at $0.4$, $1.3$ and $1.9$ standard deviations of the mean, all from the same throws. It is
+not significant individually, but it has the same sign everywhere and is largest in the
+most regularised observable. No correction or uncertainty is assigned; a larger ensemble,
+and one on RHC, would resolve it.
 
 \paragraph{No alternative-generator fake-data test exists for the released chain.}
 Every closure in this note is a same-sample self-closure: the fake data are thrown from
@@ -4407,11 +4418,11 @@ whole phase space) and the open-ended $p_\pi>0.205$~GeV/$c$ bin, inside which th
 efficiency varies strongly with the true momentum. A NuWro or GiBUU fake-data pass through
 the released configurations is required before the signal region is opened.
 
-\paragraph{Coverage is demonstrated for two observables, in one configuration.}
-The pull and coverage study covers FHC $p_\mu$ and $\cos\theta_\mu$.  Both give widths
-consistent with unity, and the second was chosen because its $A_C$ suppression is the most
-severe in the analysis, but RHC and the proton-tagged family --- where the statistics are
-sparser --- have not been tested.
+\paragraph{Coverage is demonstrated for three extractions, in one configuration.}
+The pull and coverage study covers FHC $p_\mu$, $\cos\theta_\mu$ and the one-bin total.
+All give widths consistent with unity, and $\cos\theta_\mu$ was chosen because its $A_C$
+suppression is the most severe in the analysis, but RHC and the proton-tagged family ---
+where the statistics are sparser --- have not been tested.
 
 \paragraph{The proton-tagged results are secondary, and their model comparisons are the
 weakest part.}
