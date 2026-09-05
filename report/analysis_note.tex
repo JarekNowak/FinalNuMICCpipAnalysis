@@ -2322,10 +2322,20 @@ individual background components.
 Figure~\ref{fig:response} shows the smearceptance matrices $S$ (\S\ref{sec:unfolding_resp};
 colour scale includes the efficiency, so the columns sum to $\varepsilon_j$, not to unity)
 for the six observables (the $p_\pi$ panel at the superseded five-bin binning, as a
-diagnostic; the rest at the released binning). The angular observables and
-$p_\mu$ are near-diagonal in the column-normalised sense; for $p_\mu$ the width is set
-mainly by the MCS estimator, which reconstructs $63\%$ of the selected sample and is
-intrinsically less precise than range.
+diagnostic; the rest at the released binning). The column-normalised diagonals of the
+released FHC responses (\texttt{[DIAGDUMP]} lines of the extraction logs) are
+$0.89$--$0.95$ for the first bins of the angular observables, $0.67$--$0.88$ elsewhere in
+$\cos\theta_\mu$, $\theta_\mu$, $\cos\theta_\pi$ and $\theta_{\mu\pi}$, and
+$0.81$, $0.65$, $0.57$, $0.50$, $0.45$, $0.38$, $0.33$ for the seven $p_\mu$ bins: $p_\mu$
+is \emph{not} near-diagonal, because its bins ($0.2$--$0.5$~GeV/$c$ wide) are narrower
+than the $30\%$ resolution of the MCS estimator, which reconstructs $63\%$ of the
+selected sample and is intrinsically less precise than range. The $0.68$ diagonal
+criterion quoted for $p_\pi$ below is therefore not a criterion this analysis applies
+uniformly: for $p_\mu$ the Wiener-SVD regularisation absorbs the migration (the released
+$A_C$ row sums stay at $0.66$--$0.91$, \S\ref{sec:ac_rowsums}) and the closure and
+ensemble tests pass, whereas for $p_\pi$ the migration is accompanied by a physical
+saturation of the estimator, which no regularisation recovers. A finer $p_\mu$ binning is
+excluded by the same resolution (\suppref{Sec.}{sec:binopt}).
 
 \emph{$p_\pi$.} At any fine binning the $p_\pi$ response is strongly non-diagonal, because
 the range estimator saturates near $0.34\GeVc$ once pions interact hadronically before
