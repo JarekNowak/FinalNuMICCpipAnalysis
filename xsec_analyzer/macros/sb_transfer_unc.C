@@ -18,8 +18,8 @@ void sb_transfer_unc(const char* mode="fhc"){
     for(int i=0;i<5;i++) mc.push_back({std::string(P)+"xsec-ana-"+rn[i]+"_new_numi_flux_rhc_pandora_ntuple.root",sc[i]});
     for(auto s:{"aa","ab","ac","ad","ae"}) mc.push_back({std::string(P)+"xsec-ana-Run3_rhc_new_numi_flux_rhc_pandora_ntuple_"+std::string(s)+".root",0.09066}); }
   // (region, target class): CC0pi->0pi, multipi->>=2pi no pi0, pi0->pi0 any, plus the total nu-MC
-  const int NT=4; const char* tn[NT]={"CC0pi: numuCC 0pi","multipi: numuCC >=2pi+-","pi0: numuCC pi0 (any)","all: total nu-MC"};
-  const char* creg[NT]={"CC1mu1piXp_sb_cc0pi","CC1mu1piXp_sb_multipi","CC1mu1piXp_sb_pi0","CC1mu1piXp_sb_cc0pi"};
+  const int NT=5; const char* tn[NT]={"CC0pi: numuCC 0pi","multipi: numuCC >=2pi+-","pi0: numuCC pi0 (any)","all: total nu-MC","pi0: CC+NC pi0 (ratified)"};
+  const char* creg[NT]={"CC1mu1piXp_sb_cc0pi","CC1mu1piXp_sb_multipi","CC1mu1piXp_sb_pi0","CC1mu1piXp_sb_cc0pi","CC1mu1piXp_sb_pi0"};
   const char* SY[3]={"weight_ppfx_all","weight_All_UBGenie","weight_reint_all"}; const char* syn[3]={"flux","xsec","reint"};
   std::vector<double> sSR[3][NT], sCR[3][NT]; double cvSR[NT]={0},cvCR[NT]={0},w2SR[NT]={0},w2CR[NT]={0}; int NU[3]={0,0,0};
   double srClamp=0, srRaw=0;
@@ -34,8 +34,8 @@ void sb_transfer_unc(const char* mode="fhc"){
     for(int s=0;s<3;s++) t->SetBranchAddress(SY[s],&wv[s]);
     t->Draw(">>el","CC1mu1piXp_Selected||CC1mu1piXp_sb_cc0pi||CC1mu1piXp_sb_multipi||CC1mu1piXp_sb_pi0","entrylist"); TEntryList* el=(TEntryList*)gDirectory->Get("el");
     for(Long64_t k=0;k<el->GetN();k++){ t->GetEntry(el->GetEntry(k));
-      bool cls[NT]={ cat==3&&npi==0&&npi0==0, cat==3&&npi>=2&&npi0==0, cat==3&&npi0>=1, true };
-      bool inCR[NT]={c0,cm,cp,c0};
+      bool cls[NT]={ cat==3&&npi==0&&npi0==0, cat==3&&npi>=2&&npi0==0, cat==3&&npi0>=1, true, (cat==3||cat==5)&&npi0>=1 };
+      bool inCR[NT]={c0,cm,cp,c0,cp};
       double raw=tune*ppfx*norm, w0=safe(raw);
       if(sel){ srClamp+=w0*x.scale; srRaw+=(std::isfinite(raw)&&raw>=0?raw:0)*x.scale; }
       for(int s=0;s<3;s++){ if(!wv[s]) continue; size_t nu=wv[s]->size(); if(NU[s]==0){NU[s]=nu; for(int j=0;j<NT;j++){sSR[s][j].assign(nu,0.); sCR[s][j].assign(nu,0.);}} }

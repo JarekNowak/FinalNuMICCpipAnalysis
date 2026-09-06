@@ -212,27 +212,29 @@ quantified after the fact on the present processed files, which do not store the
 multiplicities; it is listed as a diagnostic to be produced with the next reprocessing,
 and the frozen definition is the one in the table.
 
-\paragraph{Two points the collaboration is asked to ratify explicitly.}
+\paragraph{One point the collaboration is asked to ratify explicitly, and one already decided.}
 (i)~The $\pi^0$ definition without the final multiplicity cut (Table~\ref{tab:cr_defs} and
 the paragraph above): the comparison with the version retaining that cut is not available
 in the current processed files and will \emph{not} be used to modify the region after
 beam-on inspection. (ii)~The roles the transfer factors of \S\ref{sec:cr_transfer} assign
 to the regions, together with the target-class purities that the fitted-correction rule
-of \S\ref{sec:cr_protocol} depends on: CC$0\pi$ is a quantitative test of the $0\pi$
-background (target-class purity $72\%$ of the neutrino MC, $65\%$ of the full stack)
-whose extrapolation to the signal region carries a $31$--$34\%$ uncertainty, dominated
-by the detector variations; $\pi^0$ has the smallest transfer uncertainty
-($14$--$17\%$, of which most is the finite statistics of the detector-variation samples
-rather than a detector effect, \S\ref{sec:cr_transfer}) but its target class as counted in Table~\ref{tab:cr_transfer},
-$\nu_\mu$CC with a $\pi^0$, is only $46\%$ of the region's neutrino MC ($41\%$ of the
-full stack), because the NC$\pi^0$ events the shower veto is also meant to remove are
-counted under ``NC and $\nu_e$CC''; under the $50\%$ rule as written it is therefore
-diagnostic, and it becomes eligible for a fitted correction only if the collaboration
-ratifies the target class as CC$+$NC~$\pi^0$ (the definition in Table~\ref{tab:cr_defs}),
-whose purity is to be tabulated with the next reprocessing; multi-$\pi$ is diagnostic
-only ($T\simeq2.5$, target purity $47\%$); and cosmic validates the beam-off
-normalisation and shape but, at $34$--$41\%$ beam-off purity, is not eligible for a
-fitted correction.
+of \S\ref{sec:cr_protocol} depends on (purity is defined throughout as the target class's
+share of the \emph{neutrino-MC} prediction in the region, beam-off and dirt being
+separately constrained components): CC$0\pi$ is a quantitative test of the $0\pi$
+background (target-class purity $72\%$; $65\%$ of the full stack) whose extrapolation to
+the signal region carries a $31$--$34\%$ uncertainty, dominated by the detector
+variations; the $\pi^0$ region's target class was ratified by the analysers on
+2026-09-06 as CC$+$NC~$\pi^0$, the definition of Table~\ref{tab:cr_defs}, since the
+NC$\pi^0$ events the shower veto is also meant to remove had been counted under ``NC and
+$\nu_e$CC'' ($\nu_\mu$CC~$\pi^0$ alone is $46\%$ of the region); with that class the
+purity is $50.1\%$ (FHC) and $51.0\%$ (RHC) of the neutrino MC ($45$--$46\%$ of the
+full stack), so the region is eligible for a fitted correction under the $50\%$ rule,
+narrowly, with transfer factor $T=0.019$--$0.020$ and a transfer uncertainty of
+$17$--$19\%$ that is dominated by the Monte-Carlo-statistical floor of the
+detector-variation samples (\S\ref{sec:cr_transfer}); multi-$\pi$ is diagnostic only
+($T\simeq2.5$, target purity $47\%$); and cosmic validates the beam-off normalisation
+and shape but, at $34$--$41\%$ beam-off purity, is not eligible for a fitted
+correction.
 
 \paragraph{Expected yields and precision.}
 Table~\ref{tab:sideband_yields} gives the expected composition per region and beam. The
@@ -3477,7 +3479,8 @@ region by background class and the transfer factors (\texttt{macros/sb\_transfer
     threshold), $1\pi^\pm$ outside the measured phase space, any $\pi^0$, $\geq2\pi^\pm$
     without $\pi^0$, out-of-fiducial-volume, and NC plus $\nu_e$CC. A region constrains a
     class only where $T$ is small: CC$0\pi$ constrains the $0\pi$ class ($T\simeq0.03$) and
-    $\pi^0$ the $\pi^0$ class ($T\simeq0.02$); the multi-$\pi$ region contains
+    $\pi^0$ the $\pi^0$ class ($T\simeq0.02$; the ratified target class CC$+$NC~$\pi^0$,
+    last row of each block, is $50$--$51\%$ of the region's neutrino MC); the multi-$\pi$ region contains
     \emph{fewer} multi-pion events than the signal region ($T\simeq2.5$) and is a weak
     constraint; the cosmic region constrains only the beam-off component (not listed:
     $53$ EXT events in the region against $30$ in the signal region, $T=0.57$, FHC). \releasestamp}
@@ -3496,6 +3499,7 @@ region by background class and the transfer factors (\texttt{macros/sb\_transfer
     out of fiducial volume & 47.4 & 480 & 3.3 & 253 & 18.5 & 0.10 & 14 & 0.19 & 2.56 \\
     NC and $\nu_e$CC & 89.5 & 549 & 7.1 & 632 & 6.4 & 0.16 & 13 & 0.14 & 14 \\
     total $\nu$-MC & 1\,581 & 12\,192 & 124 & 6\,646 & 75.3 & & & & \\
+    \emph{CC$+$NC with a $\pi^0$ (ratified $\pi^0$ target; overlaps two rows above)} & 64.5 & 444 & 21.8 & 3\,331 & 3.2 & 0.15 & 2.96 & 0.019 & 20 \\
     \midrule
     \multicolumn{10}{l}{\emph{RHC}} \\
     signal (contamination) & 1\,015 & 1\,206 & 34.9 & 780 & 6.4 & 0.84 & 29 & 1.30 & 158 \\
@@ -3506,6 +3510,7 @@ region by background class and the transfer factors (\texttt{macros/sb\_transfer
     out of fiducial volume & 54.5 & 511 & 4.9 & 302 & 17.2 & 0.11 & 11 & 0.18 & 3.17 \\
     NC and $\nu_e$CC & 108 & 599 & 12.5 & 857 & 8.9 & 0.18 & 8.59 & 0.13 & 12 \\
     total $\nu$-MC & 1\,735 & 12\,658 & 159 & 8\,080 & 81.8 & & & & \\
+    \emph{CC$+$NC with a $\pi^0$ (ratified $\pi^0$ target; overlaps two rows above)} & 81.0 & 491 & 31.1 & 4\,118 & 3.6 & 0.17 & 2.61 & 0.020 & 22 \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -3566,10 +3571,12 @@ ratio in every universe and variation.
     largest. The detector entries carry the finite statistics of the detector-variation
     samples (a few thousand events per region), so those for the smaller classes are
     upper limits rather than measurements; the multi-$\pi$ transfer is dominated by the
-    Monte-Carlo statistics of the region itself. The last row uses the total neutrino MC of
-    the CC$0\pi$ region as a reference. The Monte-Carlo-statistical floor of the detector
-    entries, estimated from two disjoint halves of the variation samples
-    (\texttt{sb\_detvar\_split.C}), is given in the text. \releasestamp}
+    Monte-Carlo statistics of the region itself. The ``all neutrino MC'' row uses the total
+    neutrino MC of the CC$0\pi$ region as a reference. The Monte-Carlo-statistical floor of
+    the detector entries, estimated from two disjoint halves of the variation samples
+    (\texttt{sb\_detvar\_split.C}), is given in the text; for the ratified CC$+$NC~$\pi^0$
+    class it is quoted in parentheses after the detector entry and, where it exceeds the
+    entry, it replaces it in the total. \releasestamp}
   \label{tab:cr_transfer_unc}
   \small
   \begin{tabular}{lllccccccc}
@@ -3580,11 +3587,13 @@ ratio in every universe and variation.
     FHC & multi-$\pi$ & $\nu_\mu$CC $\geq2\pi^\pm$ & $2.5094$ & $3.0$ & $4.7$ & $2.6$ & $5.1$ & $18.5$ & $20.2$ \\
     FHC & $\pi^0$ & $\nu_\mu$CC with $\pi^0$ & $0.0189$ & $2.6$ & $6.1$ & $1.8$ & $4.4$ & $15.1$ & $17.1$ \\
     FHC & CC$0\pi$ & all neutrino MC & $0.1296$ & $1.7$ & $13.2$ & $2.6$ & $1.0$ & $9.7$ & $16.7$ \\
+    FHC & $\pi^0$ & CC$+$NC with $\pi^0$ (ratified) & $0.0194$ & $2.2$ & $5.8$ & $1.9$ & $4.2$ & $14.9$ ($12.1$) & $16.8$ \\
     \midrule
     RHC & CC$0\pi$ & $\nu_\mu$CC $0\pi$ & $0.0286$ & $3.0$ & $11.5$ & $6.6$ & $2.0$ & $30.6$ & $33.6$ \\
     RHC & multi-$\pi$ & $\nu_\mu$CC $\geq2\pi^\pm$ & $2.4527$ & $1.9$ & $4.0$ & $2.8$ & $3.9$ & $21.3$ & $22.3$ \\
     RHC & $\pi^0$ & $\nu_\mu$CC with $\pi^0$ & $0.0201$ & $1.8$ & $6.3$ & $1.8$ & $3.3$ & $11.5$ & $13.7$ \\
     RHC & CC$0\pi$ & all neutrino MC & $0.1371$ & $2.0$ & $12.5$ & $2.6$ & $0.8$ & $9.8$ & $16.3$ \\
+    RHC & $\pi^0$ & CC$+$NC with $\pi^0$ (ratified) & $0.0197$ & $1.7$ & $6.1$ & $1.6$ & $3.1$ & $11.8$ ($18.0$) & $19.4$ \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -3606,8 +3615,9 @@ CC$0\pi$ and $\pi^0$ regions. For the transfer factors they are not: the CC$0\pi
 target-class term ($27\%$ FHC, $31\%$ RHC) sits well above its floor ($9\%$, $6\%$)
 and is a genuine detector sensitivity, but the $\pi^0$ target-class term ($15\%$ FHC,
 $11\%$ RHC) is comparable to or smaller than its floor ($13\%$, $17\%$), so it is an
-upper limit set by the variation-sample statistics rather than a measurement, and the
-multi-$\pi$ term is noise (floor $260\%$ FHC). Any fitted correction under
+upper limit set by the variation-sample statistics rather than a measurement (the same
+holds for the ratified CC$+$NC~$\pi^0$ class: $15\%$ against a $12\%$ floor in FHC,
+$12\%$ against $18\%$ in RHC), and the multi-$\pi$ term is noise (floor $260\%$ FHC). Any fitted correction under
 item~4(ii) of the procedure must therefore carry the \emph{larger} of the quoted
 transfer uncertainty and its floor; for the $\pi^0$ class that is the floor.
 
@@ -3663,7 +3673,9 @@ ratified it is frozen and any departure from it is itself a change requiring app
     \emph{both} the control-region comparison and the measurement with its exposure
     removed from the normalisation, and to re-approve; no cut or binning may be changed;
     (ii)~if the discrepancy is consistent with a pure normalisation shift and the region's
-    target-class purity exceeds $50\%$, a one-parameter normalisation fit of that class is
+    target-class purity (its share of the neutrino-MC prediction in the region; the target
+    classes are $\nu_\mu$CC~$0\pi$ for CC$0\pi$ and CC$+$NC~$\pi^0$ for $\pi^0$, ratified
+    2026-09-06) exceeds $50\%$, a one-parameter normalisation fit of that class is
     performed, and the fitted correction (c) is applied only if it improves the fit by a
     likelihood-ratio test at $p<0.01$ and the transfer-factor uncertainty of
     Table~\ref{tab:cr_transfer_unc}, or its Monte-Carlo-statistical floor where that is
