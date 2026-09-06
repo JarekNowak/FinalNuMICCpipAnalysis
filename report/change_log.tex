@@ -697,6 +697,31 @@ is introduced as the large-opening-angle, cosmic-enriched region; ``beam-off'', 
 and ``cosmic data'' are declared synonyms at first use; ``signal contamination'' is
 defined as the inclusive signal unless stated otherwise.
 
+\section{Second external review (2026-09-07): a stale figure and three captions}
+
+The external reviewer re-read the 2026-09-06 note and supplement. The 1.13 contradiction is
+confirmed resolved. Found and corrected on 2026-09-07:
+(i)~\textbf{The proton-tagged two-bin $p_\pi$ figure of the supplement was stale}: it
+printed integrals of $0.507/0.447/0.490$ against the table's $0.498/0.429/0.462$. The
+producing macro (\texttt{macros/ppi2bin\_figs.C}) read the 2026-08-30 sidecars
+\texttt{closure\_hists\_xsec1p\_*\_ppi.root} while the tables read the current
+\texttt{closure\_hists\_xsec\_ccpi1p\_*\_ppi2bin.root}; the macro now reads the current
+sidecars for both families and all nine figures are regenerated (inclusive values
+unchanged). The staleness guard could not catch this, since it compares modification
+times and the figure postdated the sidecar; it now also reads the integral printed on
+each two-bin figure and compares it with the sidecar's.
+(ii)~The proton-tagged closure-table caption said the integral ratios ``are the $A_C$
+smearing effect''; both numerator and denominator are in $A_C$-smeared space, so the
+ratios measure the throw's realisation and any residual bias. Corrected.
+(iii)~The bin-integrated two-bin $p_\pi$ table called its uncertainty the data-statistical
+term; it is the total from the released covariance ($1.36\times0.030=0.041$). Corrected.
+(iv)~The inclusive two-bin figure caption named NEUT ``closest''; the closest generator
+changes by bin. Reworded. (v)~The row-sum interpretation is now stated for a flat truth,
+with the model dependence acknowledged; ``retains $5\%$ of a bin's normalisation'' became a
+row sum of $0.05$; the supplement's ``property of the response, not of the model'' is
+qualified to the tested generators. (vi)~The open upper $p_\pi$ bin: the released density
+and the conventional width form a matched representation of the bin integral, stated.
+
 \section{Open items}
 
 The following are outstanding as of 2026-09-06. None is a correction awaiting application;

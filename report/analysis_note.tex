@@ -2766,13 +2766,18 @@ flagged on the axis, so the plotted area does not represent cross section. The
 less ambiguous statement of the same result is the pair of bin-integrated partial cross
 sections, $\sigma_i=(d\sigma/dp_\pi)_i\,\Delta p_{\pi,i}$, which do not depend on the
 choice of plotting boundary for the lower bin and depend on it for the upper bin only
-through the physical content above $1\GeVc$, which the open true bin already includes:
+through the physical content above $1\GeVc$, which the open true bin already includes.
+For the open upper region the released density and the conventional width of
+$0.795\GeVc$ form a matched representation of the extracted bin integral: a user should
+compare bin-integrated predictions after applying $A_C$, not reinterpret the density over a
+different finite upper boundary, since changing the boundary while holding the released
+density fixed would change the product:
 
 \begin{center}\small
 \captionof{table}{Two-bin $p_\pi$ result as bin-integrated partial cross sections
   ($10^{-38}$~cm$^2$/Ar), computed from the released \texttt{curves\_incl\_*\_ppi2bin.tsv}
-  as density $\times$ physical width; the uncertainty is the data-statistical term of the
-  release (the total fractional uncertainties are those of Tables~\ref{tab:fhc}--\ref{tab:comb}).
+  as density $\times$ physical width; the uncertainty is the total uncertainty from the
+  released covariance (the same fractional uncertainties as Tables~\ref{tab:fhc}--\ref{tab:comb}).
   Both bins are $A_C$-smeared like every other unfolded quantity, so a prediction must be
   smeared by the released $A_C$ before comparison. \releasestamp}
 \label{tab:ppi_partial}
@@ -3133,9 +3138,13 @@ and $A_C$ is not norm preserving, summing the differential result over its bins 
 give the physical total cross section.  This subsection quantifies the effect, which has
 previously only been described qualitatively.
 
-The row sums of $A_C$ are the relevant measure: a row summing to unity passes the
-normalisation of that bin through unchanged, and a row summing to $0.2$ removes four
-fifths of it.
+The row sums of $A_C$ are the diagnostic used here: they give the response to a flat
+bin-integrated truth, for which a row summing to unity passes the normalisation of that
+bin through unchanged and a row summing to $0.2$ passes one fifth of it. For a non-flat
+prediction the output of bin $i$ is $\sum_j (A_C)_{ij}\,t_j$, which depends on the
+individual elements and on the shape of $t$; the row sums describe the dominant behaviour,
+and the model-specific integral factors of \S\ref{sec:chain} ($0.76$--$0.79$ for the four
+generators in FHC $p_\mu$) show how far it carries over.
 
 \begin{center}
 \small
@@ -3171,8 +3180,8 @@ $p_n$ & $0.71$--$0.86$ & $0.61$--$0.82$ & $0.59$--$0.86$ \\
 
 Three features matter for interpretation.
 
-The suppression is large: inclusive $\cos\theta_\mu$ retains as little as $5\%$ of a
-bin's normalisation in RHC.  It also differs strongly between observables, which is
+The suppression is large: inclusive $\cos\theta_\mu$ has a row sum as low as $0.05$ in
+RHC, a strong suppression of that output mode for a flat input.  It also differs strongly between observables, which is
 precisely why the integrated cross section obtained by summing a differential result
 varies from observable to observable while the underlying physical total cannot.  The
 D'Agostini cross-check, whose integral is flat across observables, is what establishes
@@ -4372,8 +4381,10 @@ results tables and the data release, and covers all ten released combined proton
     six-bin $W_{\pi p}$ closure rows are diagnostic only and are given in the technical
     supplement (\suppref{Sec.}{sec:w_binning});
     the lower block is the five kinematic observables inherited from the inclusive
-    analysis. The small $\chi^2/\mathrm{ndf}$ validates the chain; the integral ratios are
-    the $A_C$ smearing effect, not a bias. \releasestamp}
+    analysis. The small $\chi^2/\mathrm{ndf}$ validates the chain. The integral ratios compare
+    the unfolded result with the $A_C$-smeared truth, so departures from unity reflect
+    the statistical realisation of the throw and any residual extraction bias; they do
+    not measure the suppression introduced by $A_C$. \releasestamp}
   \label{tab:wtki_fhc}
   \begin{tabular}{lccc}
 \toprule

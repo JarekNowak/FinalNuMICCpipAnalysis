@@ -78,6 +78,32 @@ for p in sorted(glob.glob(os.path.join(FIGS, "*"))):
         unmapped.append(b); continue
     check(p, max(cands, key=os.path.getmtime), f"figure/{fam}")
 
+
+# ---- content check: the two-bin p_pi figures print the integrated sigma; compare it with
+# the sidecar they must be drawn from. An mtime check cannot catch a figure regenerated
+# from an OLD sidecar (2026-09-06: ppi2bin_xsec_1p_* were drawn from the 2026-08-30
+# closure_hists_xsec1p_*_ppi.root while the tables read the current ccpi1p_*_ppi2bin.root).
+import subprocess
+try:
+    import ROOT
+    for fam, pre in (("incl", "xsec_"), ("1p", "xsec_ccpi1p_")):
+        for T, short in (("FHC5", "FHC"), ("RHCFULL", "RHC"), ("COMB", "COMB")):
+            fig = os.path.join(FIGS, f"ppi2bin_xsec{'_1p' if fam=='1p' else ''}_{short}.pdf")
+            sc = os.path.join(PROC, f"closure_hists_{pre}{T}_ppi2bin.root")
+            if not (os.path.exists(fig) and os.path.exists(sc)): continue
+            f = ROOT.TFile.Open(sc); u = f.Get("h_unfolded_nuwro")
+            want = sum(u.GetBinContent(b)*u.GetBinWidth(b) for b in (1, 2)); f.Close()
+            txt = subprocess.run(["gs", "-q", "-sDEVICE=txtwrite", "-o", "-", fig], capture_output=True, text=True).stdout
+            m = re.search(r"=\s*([0-9]+\.[0-9]+)", txt)
+            got = float(m.group(1)) if m else float("nan")
+            if abs(got - want) > 0.0015:
+                stale.append((fig, sc, f"figure-content/{fam}", 0.0))
+                print(f"  CONTENT MISMATCH {os.path.basename(fig)}: prints {got:.3f}, sidecar integral {want:.3f}")
+            else:
+                ok.append((fig, f"figure-content/{fam}"))
+except ImportError:
+    print("  (ROOT not importable: figure content check skipped)")
+
 print(f"  checked {len(ok)+len(stale)} artefacts")
 print(f"    current : {len(ok)}")
 print(f"    STALE   : {len(stale)}")

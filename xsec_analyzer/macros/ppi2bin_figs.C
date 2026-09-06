@@ -47,8 +47,8 @@ static TH1D* equalise(TH1* h, const char* name){
 }
 
 static void one_xsec(const char* cfg, bool proton_tagged){
-  TString tag  = proton_tagged ? "xsec1p" : "xsec";
-  TString path = TString::Format("/data/uboone/processed/closure_hists_%s_%s_ppi.root", tag.Data(), cfg);
+  TString tag  = proton_tagged ? "xsec_ccpi1p" : "xsec";   // the CURRENT sidecars (release 2026-09-06); the old xsec1p_*_ppi.root files are the 2026-08-30 pass
+  TString path = TString::Format("/data/uboone/processed/closure_hists_%s_%s_ppi2bin.root", tag.Data(), cfg);
   auto* f = TFile::Open(path);
   if (!f || f->IsZombie()){ printf("  MISSING %s\n", path.Data()); return; }
 
@@ -102,7 +102,7 @@ static void one_xsec(const char* cfg, bool proton_tagged){
 }
 
 static void one_AC(const char* cfg){
-  TString path = TString::Format("/data/uboone/processed/closure_hists_xsec_%s_ppi.root", cfg);
+  TString path = TString::Format("/data/uboone/processed/closure_hists_xsec_%s_ppi2bin.root", cfg);
   auto* f = TFile::Open(path);
   if (!f || f->IsZombie()){ printf("  MISSING %s\n", path.Data()); return; }
   auto* ac = (TH2D*)f->Get("h_A_C");
