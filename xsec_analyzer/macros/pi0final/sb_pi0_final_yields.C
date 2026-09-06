@@ -34,7 +34,7 @@ void sb_pi0_final_yields(const char* mode="fhc"){
   cls[2]=TString("CC1mu1piXp_EventCategory==3 && ")+NPI+"==0 && "+NPI0+"==0";
   cls[3]=TString("!(")+cls[0]+") && !("+cls[1]+")";
   cls[4]="1";
-  const int ND=2; const char* def[ND]={"CC1mu1piXp_sb_pi0","CC1mu1piXp_sb_pi0_final"}; const char* dn[ND]={"without final cut (frozen)","with final cut"};
+  const int ND=3; const char* def[ND]={"CC1mu1piXp_sb_pi0","CC1mu1piXp_sb_pi0_final","(CC1mu1piXp_sb_pi0 && !CC1mu1piXp_sb_pi0_final)"}; const char* dn[ND]={"without final cut (frozen)","with final cut","removed by the cut"};
   double N[ND][NC]={{0}}, NSR[NC]={0}, Nov[ND]={0}, Next[ND]={0}, Ndirt[ND]={0};
   const int NV=3; const char* var[NV]={"CC1mu1piXp_shr_energy_cali","CC1mu1piXp_sb_nprimtrk","CC1mu1piXp_sb_nnonproton"}; const char* vn[NV]={"E_{shr} [GeV]","N_{primary tracks}","N_{non-proton}"}; int nb[NV]={10,8,8}; double lo[NV]={0,-0.5,-0.5}, hi[NV]={1.0,7.5,7.5};
   TH1D* H[ND][NV]; for(int d=0;d<ND;d++) for(int v=0;v<NV;v++){ H[d][v]=new TH1D(Form("h_%d_%d",d,v),"",nb[v],lo[v],hi[v]); H[d][v]->Sumw2(); }
@@ -48,8 +48,8 @@ void sb_pi0_final_yields(const char* mode="fhc"){
   for(auto&x:ext){ TChain c("stv_tree"); c.Add(x.file.c_str()); for(int d=0;d<ND;d++){ TH1D h("h","",1,-0.5,1.5); c.Draw("0.5>>h",def[d],"goff"); Next[d]+=h.Integral(0,2)*x.scale; } }
   { TChain c("stv_tree"); c.Add(Form("%sxsec-ana-prodgenie_numi_uboone_overlay_dirt_fhc_mcc9_run1_v28_all_snapshot.root",P)); for(int d=0;d<ND;d++){ TH1D h("h","",1,-0.5,1.5); c.Draw("0.5>>h",TString(CVW)+"*("+def[d]+")","goff"); Ndirt[d]+=h.Integral(0,2)*sc_dirt; } }
   printf("\n==== %s: pi0 region, two definitions (CV-weighted, POT/gate-scaled)\n",mode);
-  printf("%-34s %18s %18s\n","", dn[0], dn[1]);
-  for(int k=0;k<NC;k++) printf("%-34s %18.1f %18.1f\n",cln[k],N[0][k],N[1][k]);
+  printf("%-34s %18s %18s %18s\n","", dn[0], dn[1], dn[2]);
+  for(int k=0;k<NC;k++) printf("%-34s %18.1f %18.1f %18.1f\n",cln[k],N[0][k],N[1][k],N[2][k]);
   for(int d=0;d<ND;d++){ double stack=N[d][4]+Next[d]+Ndirt[d]; printf("%s: beam-off %.1f  dirt %.1f  full stack %.1f\n",dn[d],Next[d],Ndirt[d],stack); }
   printf("%-34s %17.1f%% %17.1f%%\n","target purity (of nu-MC)",100*N[0][1]/N[0][4],100*N[1][1]/N[1][4]);
   printf("%-34s %17.1f%% %17.1f%%\n","target share (of full stack)",100*N[0][1]/(N[0][4]+Next[0]+Ndirt[0]),100*N[1][1]/(N[1][4]+Next[1]+Ndirt[1]));
@@ -62,10 +62,12 @@ void sb_pi0_final_yields(const char* mode="fhc"){
   printf("kept fraction with the final cut: nu-MC %.3f, target %.3f, signal %.3f, beam-off %.3f\n",N[1][4]/N[0][4],N[1][1]/N[0][1],N[1][0]/N[0][0],Next[1]/Next[0]);
   // shape comparison: the frozen pi0 distribution and the multiplicities, normalised to unit area
   gStyle->SetOptStat(0); TCanvas cv("cv","",1500,500); cv.Divide(3,1);
-  for(int v=0;v<NV;v++){ cv.cd(v+1); double m=0; for(int d=0;d<ND;d++){ H[d][v]->SetLineColor(d?kRed+1:kBlue+1); H[d][v]->SetLineWidth(2); H[d][v]->GetXaxis()->SetTitle(vn[v]); H[d][v]->GetYaxis()->SetTitle("events (full exposure)"); m=std::max(m,H[d][v]->GetMaximum()); }
+  for(int v=0;v<NV;v++){ cv.cd(v+1); double m=0; for(int d=0;d<2;d++){ H[d][v]->SetLineColor(d?kRed+1:kBlue+1); H[d][v]->SetLineWidth(2); H[d][v]->GetXaxis()->SetTitle(vn[v]); H[d][v]->GetYaxis()->SetTitle("events (full exposure)"); m=std::max(m,H[d][v]->GetMaximum()); }
     H[0][v]->SetMaximum(1.3*m); H[0][v]->Draw("hist"); H[1][v]->Draw("hist same");
     if(v==0){ TLegend* L=new TLegend(0.45,0.7,0.88,0.88); L->AddEntry(H[0][v],"#pi^{0} region, frozen (no final cut)","l"); L->AddEntry(H[1][v],"with final multiplicity cut","l"); L->SetBorderSize(0); L->Draw(); }
-    double chi2=0; int nb2=0; for(int b=1;b<=nb[v];b++){ double a=H[0][v]->GetBinContent(b)/H[0][v]->Integral(), bb=H[1][v]->GetBinContent(b)/H[1][v]->Integral(); double ea=H[0][v]->GetBinError(b)/H[0][v]->Integral(), eb=H[1][v]->GetBinError(b)/H[1][v]->Integral(); if(ea+eb>0){ chi2+=pow(a-bb,2)/(ea*ea+eb*eb); nb2++; } }
-    printf("shape %s: unit-area chi2/nbins = %.2f/%d (MC-stat only; the two samples are nested, so this is indicative)\n",var[v],chi2,nb2); }
+    // kept (with cut) vs removed (frozen && !final): disjoint, independent samples; unit-area chi2 with both MC-stat errors
+    double chi2=0; int nb2=0; for(int b=1;b<=nb[v];b++){ double a=H[1][v]->GetBinContent(b)/H[1][v]->Integral(), bb=H[2][v]->GetBinContent(b)/H[2][v]->Integral(); double ea=H[1][v]->GetBinError(b)/H[1][v]->Integral(), eb=H[2][v]->GetBinError(b)/H[2][v]->Integral(); if(ea+eb>0){ chi2+=pow(a-bb,2)/(ea*ea+eb*eb); nb2++; } }
+    printf("shape %s: kept vs removed, unit-area chi2/nbins = %.2f/%d (independent samples, MC-stat only)\n",var[v],chi2,nb2);
+    if(v==0){ printf("E_shr unit-area shares, kept | removed:"); for(int b=1;b<=nb[v];b++) printf(" %.3f|%.3f",H[1][v]->GetBinContent(b)/H[1][v]->Integral(),H[2][v]->GetBinContent(b)/H[2][v]->Integral()); printf("\n"); } }
   cv.SaveAs(Form("../report/figures/sb_pi0_final_%s.pdf",mode));
 }

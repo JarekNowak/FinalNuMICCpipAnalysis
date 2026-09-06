@@ -16,6 +16,7 @@
 // usage: root -l -b -q 'macros/cr_skim_check.C("skim.root"[, "full.root"])'
 #include "sb_guard.h"
 #include "TChain.h"
+#include "TKey.h"
 #include <vector>
 #include <array>
 #include <cstdio>
@@ -53,11 +54,19 @@ int cr_skim_check(const char* skim, const char* full="", const char* sel="CC1mu1
       printf("      %lld events pass every recorded stage but the (inverted) opening angle: the cosmic region, by construction\n", nall); }
     req(true,"(4) the signal region is not re-derivable: each written event fails >=1 stage (asserted by (2); Selected is the AND of all stages)");
   }
+  // objects in the file other than the tree and the marker: an inventory, so that no summary object (cut-flow histogram, counter) carrying the selected count is present
+  { printf("      file inventory (TKey list):"); int nother=0; for(auto k:*f.GetListOfKeys()){ TString nm=k->GetName(); printf(" %s", nm.Data()); if(nm!="stv_tree" && nm!="XSEC_CR_SKIM") nother++; } printf("\n");
+    bool onlypot=true; for(auto k:*f.GetListOfKeys()){ TString nm=k->GetName(), cl=((TKey*)k)->GetClassName(); if(nm=="stv_tree"||nm=="XSEC_CR_SKIM") continue; if(!(cl.BeginsWith("TParameter"))) onlypot=false; }
+    req(onlypot,"(7) no object other than the tree, the marker and the POT/trigger TParameters (no cut-flow histogram or counter)"); }
   // (5) the framework refuses it, the sideband guard accepts it
   { bool refused=false; try{ TFile g(skim,"read"); if(g.Get("XSEC_CR_SKIM")) refused=true; }catch(...){}
     req(refused,"(5a) UniverseMaker::add_input_file refuses the marker (same test as in the code)");
     bool ok=true; try{ sb_guard_data(skim);}catch(std::exception& e){ ok=false; printf("      %s\n",e.what()); }
     req(ok,"(5b) sb_guard accepts the skim"); }
+  if(full && *full){ // negative test: the ORDINARY processing of a file without MC truth, declared as beam-on, must be refused by sb_guard (unless XSEC_UNBLIND=1)
+    bool refused=false; try{ sb_guard_data(full);}catch(std::exception&){ refused=true; }
+    TFile g(full,"read"); TTree* u=(TTree*)g.Get("stv_tree"); bool ismc=false; if(u){ u->SetBranchStatus("*",0); u->SetBranchStatus("is_mc",1); u->SetBranchAddress("is_mc",&ismc); u->GetEntry(0); }
+    if(!ismc) req(refused,"(5c) sb_guard REFUSES the ordinary (unstripped) file of the same input when it carries no MC truth"); else printf("  [info] (5c) skipped: the ordinary file is Monte Carlo (fake data carries truth and is allowed by design)\n"); }
   if(full && *full){
     TFile g(full,"read"); TTree* u=(TTree*)g.Get("stv_tree"); req(u!=nullptr,"full (unstripped) file opens: MC/beam-off only");
     if(u){ bool s2=false,a=false,b=false,c=false,d=false; float x2=0,y2=0,z2=0; u->SetBranchStatus("*",0);

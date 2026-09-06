@@ -143,7 +143,7 @@
   Comb.& $0.97\pm0.37$ & $0.57\pm0.24$ \\
   \bottomrule
   \end{tabular}\\[3pt]
-  {\footnotesize Extracted on the thrown fake data with the full universe covariance; closes on the realised truth to $0.975$--$0.998$. RHC/FHC of the tune $=0.90$. Generators span $\times1.6$, all within $1\sigma$ of the $\sim\!38\%$ band: no discrimination at this exposure.}
+  {\footnotesize Extracted on the thrown fake data with the complete configured covariance; closes on the realised truth to $0.975$--$0.998$. RHC/FHC of the tune $=0.90$. Generators span $\times1.6$, all within $1\sigma$ of the $\sim\!38\%$ band: no discrimination at this exposure.}
   \end{block}
   \end{columns}
 \end{frame}
@@ -152,7 +152,7 @@
 \begin{frame}{Differential results, FHC}
   \centering
   \includegraphics[width=.80\textwidth]{dsigma_FHC5}\\
-  {\scriptsize Unfolded fake data, $A_C$-smeared truth, tune and the four generators, all in the $A_C$-smeared space. Generators differ by normalisation ($\times1.6$, GENIE to NEUT); shapes agree within the uncertainties. Full covariance: flux, cross section, re-interaction, detector, POT, targets, statistics.}
+  {\scriptsize Unfolded fake data, $A_C$-smeared truth, tune and the four generators, all in the $A_C$-smeared space. Generators differ by normalisation ($\times1.6$, GENIE to NEUT); shapes agree within the uncertainties. Covariance: flux, cross section, re-interaction, detector, POT, targets, statistics.}
 \end{frame}
 
 % ---------------------------------------------------------------------------
@@ -189,7 +189,7 @@
   \end{tabular}\\[4pt]
   \begin{itemize}\itemsep2pt
     \item the $\sim17\%$ flux normalisation becomes $\sim30\%$ through the correlated background subtraction, $17\%\times(1+B/S)$; the one-bin total ($30.2\%$, no regularisation) shows it exactly
-    \item all 51 extractions carry a full covariance including detector variations; $A_C$ and covariances released as text
+    \item all 51 extractions carry the complete configured covariance including detector variations; $A_C$ and covariances released as text
   \end{itemize}
   \end{columns}
 \end{frame}
@@ -245,7 +245,7 @@
   \midrule
   CC$0\pi$ & $n_\pi=0$ & tests $0\pi$ feed-in; $T=0.03$, $\delta T/T=31$--$34\%$ (detector-limited); target purity $72\%$ \\
   multi-$\pi$ & $n_\pi\ge2$ & diagnostic only; $T=2.5$ \\
-  $\pi^0$ & shower veto fails & $\pi^0$ leakage; target CC$+$NC$\pi^0$ (ratified), purity $50$--$51\%$; $T=0.02$, $\delta T/T=17$--$19\%$ (MC-stat limited) \\
+  $\pi^0$ & shower veto fails & $\pi^0$ leakage; target CC$+$NC$\pi^0$ (analyser-adopted; ratification requested), purity $50$--$51\%$; $T=0.02$, $\delta T/T=17$--$19\%$ (MC-stat limited) \\
   cosmic & $\theta_{\mu\pi}>2.6$~rad & beam-off norm.\ and shape; $34$--$41\%$ EXT purity, no fitted correction \\
   \bottomrule
   \end{tabular}\\[3pt]
@@ -273,7 +273,7 @@
   \begin{itemize}\itemsep1pt
     \item FHC and RHC separately, combined as cross-check; data vs.\ MC$+$EXT$+$dirt
     \item pass: global normalisation $\chi^2$ over the eight (region, mode) totals, $p>0.05$; per-region pulls and normalisation-marginalised shape tests as diagnostics. Exercised on full-stack pseudo-data: $\chi^2=0.66/8$; fails a single-region discrepancy beyond $12\%$ (CC$0\pi$, $\pi^0$), a common shift only beyond $58\%$
-    \item allowed: no change; added uncertainty; one-parameter normalisation of the target class (purity $>50\%$, LR test, transfer uncertainty added); else model revision and renewed approval
+    \item allowed: no change; added uncertainty; one-parameter normalisation of the target class (purity $>50\%$ of the $\nu$-MC, LR test, transfer uncertainty $+$ leverage of fixed components): CC$0\pi$ pre-authorised, $\pi^0$ only after the pre-fit result is reviewed; else model revision and renewed approval
     \item forbidden: any signal cut or binning change; generator choice after inspection; bin-by-bin reweighting
   \end{itemize}
   \column{.5\textwidth}
@@ -295,7 +295,7 @@
 \begin{frame}{Summary}
   \small
   \begin{itemize}\itemsep4pt
-    \item A blind, fully validated extraction of $\nu_\mu+\bar\nu_\mu$ CC$1\pi^\pm$ cross sections on argon in the NuMI beam: total and six differential distributions in FHC, RHC and combined, with full covariances and released $A_C$ matrices.
+    \item A blind, fully validated extraction of $\nu_\mu+\bar\nu_\mu$ CC$1\pi^\pm$ cross sections on argon in the NuMI beam: total and six differential distributions in FHC, RHC and combined, with complete configured covariances and released $A_C$ matrices.
     \item Two physics limits set the scope: the pion range saturates (two-bin $p_\pi$; no $W_{\pi p}$ shape), and $A_C$ is not norm preserving (the total is a one-bin extraction).
     \item Fake-data totals $1.03/0.93/0.97\times10^{-38}$~cm$^2$/Ar with $38$--$39\%$ uncertainty, flux- and detector-limited.
     \item A sequence of normalisation and weighting defects was found by review and fixed; automated guards now stop each of them from recurring.
@@ -419,7 +419,7 @@
   \begin{itemize}\itemsep2pt
     \item left to right: reco-level stack with fake data; background-subtracted; the smearceptance $S$; unfolded cross section with the $A_C$-smeared truth and models
     \item the Wiener-SVD regulariser is a second-derivative operator in bin index, corrected for the non-uniform bin widths (\texttt{fw\_regmatrix})
-    \item the released products per extraction: $A_C$, unfolded values, full covariance, and the smeared predictions
+    \item the released products per extraction: $A_C$, unfolded values, the configured covariance, and the smeared predictions
   \end{itemize}
 \end{frame}
 
