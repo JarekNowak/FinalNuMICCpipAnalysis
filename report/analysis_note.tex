@@ -101,7 +101,9 @@
       The proton-tagged subsample is secondary scope because the exposure supports an
       integrated cross section rather than a resonance shape, so the differential
       $W_{\pi p}$ is withdrawn; its systematics are otherwise complete.  All fifty-one
-      extractions carry a full covariance including detector variations, the proton-tagged
+      extractions carry the complete configured covariance (PPFX flux, interaction model,
+      reinteraction, detector variations, normalisation and statistical terms; the identified
+      but unpropagated terms are listed in \S\ref{sec:limitations}), the proton-tagged
       ones having been rebuilt and re-unfolded for that purpose on 2026-08-31 --- they
       previously carried none, the detector variation samples having been processed but
       never referenced by the proton-tagged configuration.
@@ -151,7 +153,7 @@ here is expanded in \S\ref{sec:sidebands}; the numbers are those of the current 
 \paragraph{Request.}
 We request approval to inspect beam-on data in four control regions of the inclusive
 $\mathrm{CC}\,1\mu1\pi Xp$ selection: CC$0\pi$, multi-$\pi$, $\pi^0$ and large
-muon--pion opening angle (``cosmic''). Each is anchored by the inversion of one nominal signal requirement;
+muon--pion opening angle (called ``cosmic'' below for brevity: it is cosmic-\emph{enriched}, $34$--$41\%$ beam-off, not cosmic-pure). Throughout, ``beam-off'', ``EXT'' and ``cosmic data'' name the same data-driven component, the beam-off trigger sample scaled by gate counts; ``signal contamination'' means the inclusive $\mathrm{CC}\,1\mu1\pi Xp$ signal unless the proton-tagged selection is named. Each region is anchored by the inversion of one nominal signal requirement;
 requirements that become undefined once that inversion is made, or that would sculpt the
 targeted control sample, are explicitly dropped as listed in Table~\ref{tab:cr_defs}. Each
 region is disjoint from the signal region at reconstruction level (demonstrated event by event, \S\ref{sec:cr_overlap}); their
@@ -292,15 +294,36 @@ The prerequisites are split by the decision they gate.
     $\chi^2$ $0.66/8$, power and blind spot stated).
   \item[$\checkmark$] Control-region uncertainties including detector variations, and
     transfer-factor uncertainties computed as ratios per universe (\S\ref{sec:cr_transfer}).
-  \item[$\square$] A control-region skim of the beam-on files: the signal-region flag
-    and the control-region flags are branches of the same processed tree, so processing
-    a beam-on file for the control regions would also make its signal-region events
-    available. Before opening, \texttt{ProcessNTuples} is to write beam-on events to a
-    separate skim only if they fail the signal-region selection (the signal-region flag
-    is never set in that file), the sideband macros read that skim only, and the
-    extraction refuses it (no Monte Carlo truth, \texttt{XSEC\_UNBLIND} unset). The
-    skim is produced by one named analyser and the full beam-on processed files are not
-    written until the signal-region approval. This mechanism does not yet exist.
+  \item[$\checkmark$] A control-region skim of the beam-on files, implemented
+    2026-09-06 (\texttt{ProcessNTuples} with \texttt{XSEC\_CR\_SKIM=1}): the
+    signal-region flag and the control-region flags are branches of the same processed
+    tree, so an ordinary processing of a beam-on file would make its signal-region
+    events available. In skim mode an event is written only if it fails the
+    signal-region selection \emph{and} belongs to at least one control region; the
+    signal-region flag is therefore false for every written event and the selection
+    cannot be re-derived from the written cut flags (each written event fails at least
+    one stage); the skim size does not reveal the signal-region count because the bulk
+    of the input (events in no control region) is dropped with it; the selection
+    summary, which prints the selected count, is suppressed; the processed tree carries
+    no run/subrun/event identifier, so no join-back by identifiers is possible; the file
+    carries a \texttt{XSEC\_CR\_SKIM} marker that \texttt{UniverseMaker} refuses
+    regardless of \texttt{XSEC\_UNBLIND}, and the sideband macros refuse any beam-on
+    file that has neither the marker nor Monte Carlo truth (\texttt{macros/sb\_guard.h}).
+    Verified from file contents by \texttt{macros/cr\_skim\_check.C} on a Monte Carlo
+    file and a beam-off file processed both ways: the skim is exactly the ordered subset
+    $\{\lnot\mathrm{Selected} \wedge \text{in a control region}\}$ of the full file
+    (\S\ref{sec:cr_skim_test}). The skim is to be produced by one named analyser from
+    the raw beam-on ntuples; no full beam-on processed file is written until the
+    signal-region approval.
+  \item[$\square$] Independent verification of the skim by a second person, from code
+    and file contents, and the hashes of the skim executable and configuration, the
+    plotting list (\texttt{configs/sideband\_plots.txt}) and the protocol macro
+    (\texttt{macros/sb\_protocol.C}) entered in the approval record: they are frozen
+    at the repository tag \texttt{cr-freeze-2026-09-06}.
+  \item[$\square$] The $\pi^0$-definition comparison with and without the final
+    multiplicity cut (\S\ref{sec:cr_pi0_final}), from the Monte-Carlo-only reprocess
+    scheduled 2026-09-06, to be seen by the collaboration before item~(i) of
+    \S\ref{sec:request} is ratified.
   \item[$\square$] Ratification of the comparison procedure and the decision rule of
     \S\ref{sec:cr_protocol} by the conveners.
 \end{itemize}
@@ -2643,8 +2666,9 @@ and two of which invalidated conclusions (all recorded, with before-and-after va
 the change log).  This subsection states plainly what each result currently is, so that
 no number in this note has to be interpreted by working out which fixes preceded it.
 
-All fifty-one extractions now carry a full systematic covariance including detector
-variations.  The proton-tagged results previously carried none --- the detector variation
+All fifty-one extractions now carry the complete configured systematic covariance,
+detector variations included (``complete'' relative to the configured uncertainty model;
+the identified terms that are not in it are listed in \S\ref{sec:limitations}).  The proton-tagged results previously carried none --- the detector variation
 samples had been processed but never referenced by the proton-tagged configuration --- and
 were rebuilt and re-unfolded on 2026-08-31 to correct that.  Their detector terms
 ($10.5\%$--$108.5\%$, median $33.0\%$, the largest for the six-bin combined $W_\mathrm{had}$)
@@ -3680,6 +3704,139 @@ the signal region ($T=0.03$, detector-dominated); an inverted pion-PID, proton-e
 region would test the misidentification without touching the signal region and is not
 part of this request.
 
+\subsection{Verification of the control-region skim}
+\label{sec:cr_skim_test}
+The skim mechanism of the checklist (\S\ref{sec:request}) was exercised on two inputs that
+are not beam-on: the Run-1 FHC neutrino overlay and the Run-1 beam-off sample, each
+processed once in the ordinary mode and once with \texttt{XSEC\_CR\_SKIM=1}, and the pairs
+compared by \texttt{macros/cr\_skim\_check.C}, which reads the files only. The checks and
+their outcomes are in Table~\ref{tab:cr_skim_test}. The comparison with the ordinary
+processing is possible only because these inputs are simulation and beam-off; for the
+beam-on files no ordinary processing exists to compare with, which is the point.
+\begin{table}[H]
+  \centering
+  \caption{Verification of the control-region skim (\texttt{macros/cr\_skim\_check.C},
+    2026-09-06) on two non-beam-on inputs processed both in the ordinary mode and with
+    \texttt{XSEC\_CR\_SKIM=1}: the Run-1 beam-off sample and the Run-1 FHC neutrino
+    overlay (the ordinary processing of the latter is the sideband-instrumented file of
+    \S\ref{sec:cr_fullstack}; the selection code is unchanged between the two builds).
+    Counts are unweighted events. The last row is an end-to-end run of
+    \texttt{univmake} on a file list in which the skim replaces one beam-on entry.}
+  \label{tab:cr_skim_test}
+  \small
+  \begin{tabular}{lrr}
+    \toprule
+    & beam-off Run 1 & $\nu$ overlay Run 1 FHC \\
+    \midrule
+    input events (ordinary processing)                       & 904\,362 & 705\,700 \\
+    of which signal-region                                    & 8        & 4\,124   \\
+    of which in a control region and not signal-region        & 520      & 46\,858  \\
+    events written by the skim                                & 520      & 46\,858  \\
+    \midrule
+    \texttt{XSEC\_CR\_SKIM} marker present                    & yes & yes \\
+    skim events with the signal-region flag set               & 0   & 0 \\
+    skim events in no control region                          & 0   & 0 \\
+    run/subrun/event identifier branches in the tree          & none & none \\
+    skim $=$ ordered subset $\{\lnot\mathrm{Selected}\wedge\mathrm{CR}\}$ of the full file & pass & pass \\
+    \texttt{sb\_guard} accepts the skim                       & pass & pass \\
+    \texttt{univmake} with the skim in its file list          & \multicolumn{2}{c}{refused (\texttt{BLINDING GUARD}, abort before any histogram is filled)} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\noindent The selection summary that ordinary processing prints (``$N$ events which
+passed'') is absent from the skim logs, which report only the number of control-region
+events written. The skim of the Run-1 beam-off sample is $0.06\%$ of its input, so the
+skim size carries no information on the eight signal-region events removed with the
+$903{,}834$ events in no control region.
+
+\subsection{The $\pi^0$ region with and without the final multiplicity cut}
+\label{sec:cr_pi0_final}
+The frozen $\pi^0$ definition drops the final multiplicity cut (\S\ref{sec:request}). The
+comparison with the definition that retains it, promised there, was produced on 2026-09-06
+from a reprocess of the Monte Carlo, the dirt and the per-run beam-off samples into a
+separate tree (\texttt{/data/uboone/processed/sb\_pi0}; new branches
+\texttt{sb\_pi0\_final}, \texttt{sb\_nprimtrk}, \texttt{sb\_nnonproton}), the eighteen
+Run-4 detector-variation samples included; no beam-on file was touched, and the frozen
+flag re-evaluated on the reprocessed files reproduces the yields of
+Table~\ref{tab:sideband_yields} and the uncertainties of \S\ref{sec:cr_transfer}
+(\texttt{macros/pi0final/}, the \texttt{\_p0} variants). Table~\ref{tab:cr_pi0_final}
+gives the two definitions side by side.
+
+\begin{table}[H]
+  \centering
+  \caption{The $\pi^0$ control region without (frozen) and with the final multiplicity
+    cut, full exposure, CV-weighted and per-run scaled
+    (\texttt{macros/pi0final/sb\_pi0\_final\_yields.C}). Purity and contamination are
+    shares of the neutrino-MC prediction; the target share is of the full stack. The
+    transfer-factor uncertainty is the multisim (flux, cross section, reinteraction) and
+    MC-statistical total of \S\ref{sec:cr_transfer}; the detector term is given with its
+    MC-statistical floor from the split-sample method.}
+  \label{tab:cr_pi0_final}
+  \small
+  \begin{tabular}{lrrrr}
+    \toprule
+    & \multicolumn{2}{c}{FHC} & \multicolumn{2}{c}{RHC} \\
+    & frozen & with cut & frozen & with cut \\
+    \midrule
+    neutrino MC                         & 6646 & 5889 & 8080 & 6942 \\
+    target CC$+$NC~$\pi^0$              & 3331 & 2974 & 4118 & 3567 \\
+    signal                              &  662 &  598 &  780 &  698 \\
+    $\nu_\mu$CC~$0\pi$                  & 1011 &  953 & 1117 & 1041 \\
+    other neutrino background           & 2654 & 2318 & 3183 & 2678 \\
+    beam-off                            &  778 &  733 &  678 &  632 \\
+    dirt                                &   12 &   11 &    9 &    9 \\
+    \midrule
+    target purity (of $\nu$-MC)         & $50.1\%$ & $50.5\%$ & $51.0\%$ & $51.4\%$ \\
+    target share (of full stack)        & $44.8\%$ & $44.8\%$ & $47.0\%$ & $47.0\%$ \\
+    signal contamination                & $10.0\%$ & $10.1\%$ & $9.6\%$ & $10.1\%$ \\
+    beam-off share (of full stack)      & $10.5\%$ & $11.1\%$ & $7.7\%$ & $8.3\%$ \\
+    overlap with multi-$\pi$ ($\nu$-MC events) & 46.9 & 46.9 & 68.1 & 68.1 \\
+    leverage: non-target / target       & 0.80 & 0.78 & 0.77 & 0.75 \\
+    \midrule
+    $T$ (target)                        & 0.0194 & 0.0217 & 0.0197 & 0.0227 \\
+    $T$ uncertainty, multisim$+$MC-stat & $7.8\%$ & $7.6\%$ & $7.3\%$ & $7.1\%$ \\
+    $T$ detector term / floor           & $15.0/12.1\%$ & $15.8/12.5\%$ & $11.6/18.0\%$ & $11.2/17.4\%$ \\
+    \midrule
+    shape of $E_{\rm shr}$ (frozen distribution), unit-area $\chi^2/$bins & \multicolumn{2}{c}{$0.60/10$} & \multicolumn{2}{c}{$8.3/10$} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\noindent The cut removes $11\%$ (FHC) and $14\%$ (RHC) of the region, and it removes
+every component in nearly the same proportion: the target class keeps $89$/$87\%$, the
+signal $90$/$90\%$, the beam-off $94$/$93\%$. The composition is therefore unchanged to
+within half a percent in purity and identical in the target's share of the full stack;
+the leading-shower-energy distribution the comparison will be made on has the same shape
+($\chi^2$ of $0.6$ and $8.3$ on ten bins with the two nested samples' MC statistics), and
+the overlap with multi-$\pi$ is identical because multi-$\pi$ requires the cut anyway.
+The transfer factor rises by $12$/$15\%$ with the smaller denominator, and its
+uncertainties are unchanged within their precision. What the cut changes is the
+multiplicity distributions themselves (Fig.~\ref{fig:cr_pi0_final}): the frozen region
+extends to five and more primary tracks and four and more non-proton-like tracks, the
+topologies the multi-shower argument of \S\ref{sec:request} anticipated, and they are
+$11$--$14\%$ of the region, not a dominant population.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{figures/sb_pi0_final_fhc.pdf}\\[2pt]
+  \includegraphics[width=\linewidth]{figures/sb_pi0_final_rhc.pdf}
+  \caption{The $\pi^0$ region without (blue) and with (red) the final multiplicity cut,
+    FHC (top) and RHC (bottom), neutrino MC at full exposure: the leading shower energy,
+    the number of primary tracks and the number of non-proton-like tracks.}
+  \label{fig:cr_pi0_final}
+\end{figure}
+
+\noindent The frozen definition is kept: it is the larger and more inclusive sample, and
+the study shows that the choice is immaterial to the region's composition, purity,
+transfer uncertainty and frozen shape, so nothing about the eligibility question of
+\S\ref{sec:cr_protocol} item~4(ii) turns on it. The premise that retaining the cut would
+sculpt the region towards single-shower events is not borne out at the level of the
+composition; it holds only for the multiplicity distributions, which are not
+compared. The collaboration is asked to ratify the frozen definition with this comparison
+in view.
+
+
 \subsection{Frozen procedure for opening the control regions}
 \label{sec:cr_protocol}
 The following is the analysers' proposed procedure, to be ratified with the approval; once
@@ -3748,10 +3905,19 @@ ratified it is frozen and any departure from it is itself a change requiring app
     (i)~\emph{Localised reconstruction failure.} If one run period's total in the region
     pulls beyond $3\sigma$ (statistical$+$detector) while the other periods pass, or one
     bin of a pre-declared distribution exceeds $3\sigma$ while the rest of the distribution
-    passes, the excursion is treated as a reconstruction issue, not a model correction:
-    it is documented, the affected run period is excluded from \emph{both} the
-    control-region comparison and the measurement with its exposure removed from the
-    normalisation, and the region is re-tested; no cut or binning may be changed and a
+    passes, the excursion triggers a reconstruction-quality investigation, not a model
+    correction and not an automatic exclusion: a $3\sigma$ excursion is expected to occur
+    by chance somewhere among the periods, regions and bins examined, and a
+    control-region discrepancy alone does not show that the signal region of that
+    period is unusable. The period is excluded only if an independent detector or
+    processing defect is established (detector-quality monitors, an independent
+    inclusive sample, reproduction in more than one pre-declared variable, or a known
+    production or calibration boundary); the exclusion then removes the period from
+    \emph{both} the control-region comparison and the measurement with its exposure
+    removed from the normalisation, changes the flux weighting, the detector covariance
+    and the response, and therefore requires a new frozen release and explicit approval.
+    If no defect is established the period stays in the analysis and the discrepancy is
+    treated through the model responses below. No cut or binning may be changed and a
     single bin is never removed.
     (ii)~\emph{Fitted normalisation correction (c).} Permitted only for CC$0\pi$ and
     $\pi^0$ (target-class purity above $50\%$ of the neutrino-MC prediction; target
@@ -3759,7 +3925,25 @@ ratified it is frozen and any departure from it is itself a change requiring app
     region's shape test 2(b) passes, so that the discrepancy is consistent with a pure
     normalisation shift: a one-parameter fit of the target class, to FHC and RHC
     simultaneously, applied if it improves the fit by a likelihood-ratio test at
-    $p<0.01$. Its uncertainty is the transfer-factor uncertainty of
+    $p<0.01$. The $\pi^0$ region meets the purity rule narrowly ($50.1$/$51.0\%$) and
+    with a class and denominator settled after the purities were known
+    (\S\ref{sec:request}), so its eligibility is \emph{not} pre-authorised by this
+    document: a fitted $\pi^0$ correction may be \emph{proposed} only after the pre-fit
+    control-region result is documented, and the fit model, the leverage of the fixed
+    components, the transfer-factor uncertainty and its Monte-Carlo-statistical floor
+    are reviewed by the collaboration before the correction is propagated to the signal
+    region. CC$0\pi$ ($72\%$) is pre-authorised under the same rule. The two fitted
+    regions are disjoint by construction (CC$0\pi$ requires the shower veto to pass,
+    $\pi^0$ requires it to fail), so a simultaneous fit counts no event twice; the
+    multi-$\pi$/$\pi^0$ overlap ($47/124$ FHC, $68/159$ RHC events) concerns a
+    diagnostic region that is never fitted, and the global test of item~2(c) carries it
+    as a covariance between totals. What the fit updates is stated: the normalisation of
+    the target class only, re-evaluated in every systematic universe so that its
+    correlation with the flux and cross-section terms of the signal-region prediction is
+    unchanged (the $1+B/S$ coherence of \S\ref{sec:fluxanatomy} is retained, with $B$
+    rescaled); the fitted uncertainty below replaces the class's prior normalisation
+    uncertainty and enters as an independent term; the signal/background joint
+    covariance is not otherwise modified. Its uncertainty is the transfer-factor uncertainty of
     Table~\ref{tab:cr_transfer_unc} or its Monte-Carlo-statistical floor, whichever is
     larger (\S\ref{sec:cr_transfer}), added in quadrature to the leverage of the components
     held fixed in the fit: the prediction uncertainties of the non-target neutrino
@@ -4324,7 +4508,11 @@ Source & Branch / method & Inclusive (\%) & Proton-tagged (\%) \\
 Flux and detector response are the two largest terms in both families; which of the two
 leads depends on the observable and configuration (Table~\ref{tab:systbreak};
 \suppref{Table}{tab:systbreak_rhc}--\suppref{Table}{tab:systbreak_comb}).  Every entry is propagated into the released covariance;
-no source declared in the systematics configuration is left unpropagated.
+no source declared in the release systematics configuration is left unpropagated. That is
+a statement about the configured model, not a completeness claim: the beamline-geometry
+flux weights exist in the ntuples but are not in the release configuration, and the
+other identified omissions (MCS momentum scale, beam-off gate ratio, the Run-2 beam-off
+stand-in) are listed in \S\ref{sec:limitations}.
 
 % =============================================================================
 \subsection{Systematic breakdown by source}
@@ -4646,7 +4834,7 @@ quantity, and it is the single most consequential limitation of the analysis.
 \paragraph{Validation.}
 The extraction reproduces its own input: the mean closure ratio over the eighteen inclusive
 extractions is $1.010$ with second-derivative regularisation (the identity-regularised variant was not re-extracted after the fake-data-truth correction).
-The algebraic identity $UR=A_C$ holds to $4.4\times10^{-6}$ (\suppref{Sec.}{sec:crosschecks}), which tests the unfolding
+The algebraic identity $UR=A_C$ holds to $4.4\times10^{-6}$ (\suppref{App.}{sec:identity}), which tests the unfolding
 construction rather than only its behaviour on one sample.  The released $A_C$ row sums establish
 that the observable-to-observable spread of the Wiener-SVD integrals is the additional
 smearing rather than physics or acceptance; D'Agostini iterative unfolding, whose integral

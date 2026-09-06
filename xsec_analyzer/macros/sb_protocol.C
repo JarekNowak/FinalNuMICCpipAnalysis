@@ -15,6 +15,7 @@
 // each region plus Poisson throws of the beam-off and dirt expectations (seed 20260903, as
 // sideband_compare.C mode fakestack).
 //   root -l -b -q macros/sb_protocol.C
+#include "sb_guard.h"   // blinding guard on every beam-on file (2026-09-06)
 #include <vector>
 #include <string>
 #include <cmath>
@@ -90,7 +91,7 @@ void sb_protocol(){
     for(auto& x:mc) loop(x.file.c_str(),x.scale,true,true,m,cvT,w2T,cvH[m],w2H[m]);
     for(auto& x:ext) loop(x.file.c_str(),x.scale,false,false,m,extT,ext2T,extH[m],ext2H[m]);
     loop(Form("%sxsec-ana-prodgenie_numi_uboone_overlay_dirt_fhc_mcc9_run1_v28_all_snapshot.root",P),sc_dirt,true,false,m,dirtT,dirt2T,dirtH[m],dirt2H[m]);
-    double dummy2[NK]={0}; std::vector<double> dh2(NB,0); for(auto& d:data) loop(d.c_str(),1.0,false,false,m,dataT,dummy2,dataH[m],dh2);
+    double dummy2[NK]={0}; std::vector<double> dh2(NB,0); for(auto& d:data){ sb_guard_data(d); loop(d.c_str(),1.0,false,false,m,dataT,dummy2,dataH[m],dh2); }
     // detector variations: CV + 8 knobs (unscaled; only ratios are used)
     double kT[NK]={0}, k2[NK]={0}; std::vector<double> kH(NB,0), kH2(NB,0);
     loop(Form("%sxsec-ana-detvar_%s_CV.root",DV,dvtag[m]),1.0,true,false,m,knCVT,k2,knCVH[m],kH2);

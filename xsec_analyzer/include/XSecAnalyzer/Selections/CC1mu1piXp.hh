@@ -160,6 +160,15 @@ protected:
   bool sb_multipi_;
   bool sb_pi0_;
   bool sb_cosmic_;
+  //  sb_pi0_final: the pi0 region WITH the final multiplicity cut retained
+  //  (pre-ratification comparison of the two definitions; MC-only study)
+  bool sb_pi0_final_;
+  //  the multiplicities the final cut is built from, for the same study
+  int  sb_nprimtrk_;
+  int  sb_nnonproton_;
+  bool is_event_in_control_region() const override {
+    return sb_cc0pi_ || sb_multipi_ || sb_pi0_ || sb_cosmic_;
+  }
   int sig_truevertex_fv = 0;
   int sig_ccnc = 0;
   int sig_numu = 0;

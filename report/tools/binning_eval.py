@@ -14,7 +14,7 @@ def dump(path):
     return d,chi
 def side(path):
     f=ROOT.TFile.Open(path); u=f.Get('h_unfolded_nuwro'); a=f.Get('h_A_C'); nb=u.GetNbinsX()
-    rows=[sum(a.GetBinContent(i,j) for j in range(1,nb+1)) for i in range(1,nb+1)]
+    rows=[sum(a.GetBinContent(j,i) for j in range(1,nb+1)) for i in range(1,nb+1)]  # row i = smeared bin (y), sum over true bins (x)
     rel=[100*u.GetBinError(i)/abs(u.GetBinContent(i)) if u.GetBinContent(i)!=0 else float('nan') for i in range(1,nb+1)]
     f.Close(); return nb,rows,rel
 for base,cands in [('costhpi',['costhpi5','costhpi6']),('thmupi',['thmupi6','thmupi7'])]:

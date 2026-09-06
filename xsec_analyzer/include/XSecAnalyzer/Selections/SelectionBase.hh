@@ -30,6 +30,11 @@ public:
 
   inline bool is_event_mc_signal() { return mc_signal_; }
   inline bool is_event_selected() { return selected_; }
+  // True when the current event belongs to at least one signal-depleted
+  // control region of this selection. Used by the control-region skim of
+  // ProcessNTuples (XSEC_CR_SKIM=1): only such events are written, and only if
+  // they fail the signal-region selection. Default: no control regions.
+  virtual bool is_event_in_control_region() const { return false; }
 
   inline const std::string& name() const { return selection_name_; }
 

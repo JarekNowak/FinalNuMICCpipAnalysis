@@ -2,6 +2,7 @@
 // drawn NOW with full-stack pseudo-data (nu-MC throw + Poisson EXT + dirt, fixed seed) at the
 // frozen binning of configs/sideband_plots.txt. Prediction stack: signal contamination,
 // nu background, beam-off (per-run scaled), dirt.   root -l -b -q 'macros/sb_plots.C("fhc")'
+#include "sb_guard.h"   // blinding guard on every beam-on file (2026-09-06)
 #include <vector>
 #include <string>
 struct Src { std::string file; double scale; };
@@ -46,7 +47,7 @@ void sb_plots(const char* mode="fhc"){
     for(auto&x:mc){ fill(hsig,x.file,x.scale,F+" && CC1mu1piXp_MC_Signal",true); fill(hbkg,x.file,x.scale,F+" && !CC1mu1piXp_MC_Signal",true); }
     for(auto&x:ext) fill(hext,x.file,x.scale,F,false);
     fill(hdirt,std::string(P)+"xsec-ana-prodgenie_numi_uboone_overlay_dirt_fhc_mcc9_run1_v28_all_snapshot.root",sc_dirt,F,true);
-    for(auto&d:data) fill(hdat,d,1.0,F,false);
+    for(auto&d:data){ sb_guard_data(d); fill(hdat,d,1.0,F,false); }
     for(int b=1;b<=hdat->GetNbinsX();b++){ double e=hext->GetBinContent(b)+hdirt->GetBinContent(b); hdat->SetBinContent(b,hdat->GetBinContent(b)+rng.Poisson(e)); hdat->SetBinError(b,sqrt(hdat->GetBinContent(b))); }
     c.cd(++pad); gPad->SetLeftMargin(0.14); gPad->SetBottomMargin(0.14);
     THStack* st=new THStack(Form("st_%s",v.name),""); keep.push_back(st);

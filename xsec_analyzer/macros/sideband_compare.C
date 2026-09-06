@@ -11,6 +11,7 @@
 // Data source:  "fake" (blind, default) uses the per-run fake data; "beamon" uses the
 // real per-run beam-on files (ONLY when explicitly unblinding the control regions).
 //   usage:  root -l -b -q 'macros/sideband_compare.C("fhc","fake")'   // or rhc/comb, beamon
+#include "sb_guard.h"   // blinding guard on every beam-on file (2026-09-06)
 #include <vector>
 #include <string>
 #include "TRandom3.h"
@@ -111,7 +112,7 @@ void sideband_compare(const char* mode="fhc", const char* datasrc="fake",
     double Next=0; for(auto&x:extv){ TChain ce("stv_tree"); ce.Add(x.file.c_str()); Next+=wsum(ce,F,false)*x.scale; }
     TChain cd("stv_tree"); cd.Add(Form("%sxsec-ana-prodgenie_numi_uboone_overlay_dirt_fhc_mcc9_run1_v28_all_snapshot.root",P));
     double Ndirt=wsum(cd,F,true)*sc_dirt;
-    double Ndata=0; for(auto&d:data){ TChain c("stv_tree"); c.Add(d.c_str()); Ndata+=wsum(c,F,false); }
+    double Ndata=0; for(auto&d:data){ sb_guard_data(d); TChain c("stv_tree"); c.Add(d.c_str()); Ndata+=wsum(c,F,false); }
     // The fake data is a Poisson throw of the neutrino MC only, so the machinery/
     // normalisation check compares it to the CV-weighted neutrino MC (sig+nubkg).
     // EXT + dirt are the additional components real beam-on data will contain (shown

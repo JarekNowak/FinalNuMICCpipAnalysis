@@ -3,6 +3,7 @@
 // POT-scaled; plus the per-run fake data, unweighted). Each TTree entry is one event, so an
 // entry passing two flags is one event in both regions.
 //   root -l -b -q 'macros/sb_overlap.C("fhc")'   (rhc)
+#include "sb_guard.h"   // blinding guard on every beam-on file (2026-09-06)
 #include <vector>
 #include <string>
 struct Src { std::string file; double scale; };
@@ -22,7 +23,7 @@ void sb_overlap(const char* mode="fhc"){
   double M[5][5]={{0}}, Dm[5][5]={{0}};
   for(int i=0;i<5;i++) for(int j=i;j<5;j++){ TString cut=TString(reg[i])+" && "+reg[j];
     for(auto&x:mc){ TChain c("stv_tree"); c.Add(x.file.c_str()); M[i][j]+=wsum(c,cut,true)*x.scale; }
-    for(auto&d:data){ TChain c("stv_tree"); c.Add(d.c_str()); Dm[i][j]+=wsum(c,cut,false); } }
+    for(auto&d:data){ sb_guard_data(d); TChain c("stv_tree"); c.Add(d.c_str()); Dm[i][j]+=wsum(c,cut,false); } }
   printf("\n==== %s: region overlaps (MC POT-scaled CV-weighted | fake data raw). Diagonal = region size.\n",mode);
   printf("%-9s","");for(int j=0;j<5;j++)printf("%14s",nm[j]);printf("\n");
   for(int i=0;i<5;i++){ printf("%-9s",nm[i]); for(int j=0;j<5;j++){ if(j<i)printf("%14s",""); else printf("%8.1f|%5.0f",M[i][j],Dm[i][j]); } printf("\n"); }

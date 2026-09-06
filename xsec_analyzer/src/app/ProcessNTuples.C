@@ -7,6 +7,7 @@
 
 // Standard library includes
 #include <cmath>
+#include <cstdlib>
 #include <iostream>
 #include <map>
 #include <memory>
@@ -20,6 +21,7 @@
 #include "TBranch.h"
 #include "TParameter.h"
 #include "TTree.h"
+#include "TNamed.h"
 #include "TVector3.h"
 
 // XSecAnalyzer includes
@@ -102,6 +104,24 @@ void analyze( const std::string& input_filename,
   bool created_output_branches = false;
   long events_entry = 0;
 
+  // CONTROL-REGION SKIM (blinding). With XSEC_CR_SKIM=1 in the environment the
+  // output is a signal-region-stripped skim: an event is written only if it fails
+  // the signal-region selection of EVERY configured selection AND belongs to at
+  // least one of that selection's control regions. Consequences: the Selected flag
+  // is false for every written event; the full signal selection cannot be
+  // reconstructed from the written cut flags (each written event fails at least
+  // one cut); the number of signal-region events is not recoverable from the
+  // skim size because the bulk of the input (events in no control region) is
+  // dropped as well; the selection summary, which would print the number of
+  // selected events, is suppressed; and the file carries a TNamed marker
+  // XSEC_CR_SKIM which UniverseMaker refuses regardless of XSEC_UNBLIND.
+  const char* cr_skim_env = std::getenv( "XSEC_CR_SKIM" );
+  const bool cr_skim = ( cr_skim_env && std::string( cr_skim_env ) == "1" );
+  if ( cr_skim ) {
+    std::cout << "*** XSEC_CR_SKIM=1: writing a signal-region-stripped control-region"
+      " skim (file type " << file_type << ") ***\n";
+  }
+
   while ( true ) {
 
     //if ( events_entry > 1000) break;
@@ -176,17 +196,41 @@ void analyze( const std::string& input_filename,
       sel->apply_selection( &cur_event );
     }
 
+    if ( cr_skim ) {
+      bool in_signal_region = false, in_control_region = false;
+      for ( auto& sel : selections ) {
+        if ( sel->is_event_selected() ) in_signal_region = true;
+        if ( sel->is_event_in_control_region() ) in_control_region = true;
+      }
+      if ( in_signal_region || !in_control_region ) {
+        ++events_entry;
+        continue;
+      }
+    }
+
     // We're done. Save the results and move on to the next event.
     out_tree->Fill();
     ++events_entry;
   }
 
-  for ( auto& sel : selections ) {
+  if ( cr_skim ) {
+    std::cout << "XSEC_CR_SKIM: " << out_tree->GetEntries() << " control-region events"
+      " written; the selection summary is suppressed (it would report the"
+      " signal-region count)\n";
+    out_file->cd();
+    std::string sel_list;
+    for ( auto& sel : selections ) sel_list += sel->name() + ",";
+    TNamed marker( "XSEC_CR_SKIM", ( "signal-region-stripped control-region skim;"
+      " selections=" + sel_list + " file_type=" + file_type + "; source="
+      + input_filename ).c_str() );
+    marker.Write();
+  }
+  else for ( auto& sel : selections ) {
     sel->summary();
   }
   std::cout << "Wrote output to:" << output_filename << std::endl;
 
-  for ( auto& sel : selections ) {
+  if ( !cr_skim ) for ( auto& sel : selections ) {
     sel->final_tasks();
   }
 

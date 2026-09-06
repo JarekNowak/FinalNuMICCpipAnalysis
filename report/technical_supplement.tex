@@ -34,7 +34,10 @@ rejected, and the closure tests that qualify the extraction.  It is separated fr
 the analysis note so that the note describes one current analysis state, while the
 record of how that state was arrived at remains available and citable.
 
-The two documents are consistent by construction, having been split from a single source.
+The two documents were generated from a common source and are checked for numerical
+consistency where current results are duplicated (\texttt{report/tools/check\_tables.py},
+\texttt{check\_staleness.py}); that is a check, not a guarantee, and the change log records
+what each round of review found.
 Superseded material \emph{is} retained here where it is evidence --- pre-fix figures,
 withdrawn model comparisons, rejected binnings --- but only as labelled historical
 diagnostic record, and none of it may be quoted as a current result.  The corrections
@@ -270,6 +273,7 @@ file is the active directory silently sends the histogram to the wrong file, whi
 first attempt at this appeared to succeed while leaving the RHC predictions untouched.
 
 \subsubsection*{Adopted response: a two-bin $p_\pi$ scheme}
+\label{sec:ppi2bin_adopted}
 
 The binning has been changed accordingly. The five-bin scheme is replaced by two bins,
 $[0.175, 0.205]$~GeV/$c$ and everything above, which raises the migration diagonals from
@@ -384,7 +388,7 @@ $\chi^2/\mathrm{ndf}$ & \multicolumn{3}{c|}{$0.11/2$ ($p=0.95$)} & \multicolumn{
 
 \noindent On the current release all three configurations close, with $\chi^2$ of $0.11$,
 $0.02$ and $0.01$ on two bins and unfolded-to-truth integral ratios of $0.997$, $0.981$
-and $0.989$ (analysis note, Tables~\noteref{Table}{tab:fhc}--\noteref{Table}{tab:comb}). The
+and $0.989$ (Tables~\ref{N-tab:fhc}--\ref{N-tab:comb} of the analysis note). The
 four generators bracket the data in both bins of every configuration, NEUT and GiBUU
 highest and GENIE lowest, the same ordering as in the other observables; the released
 $A_C$ for FHC is $\left(\begin{smallmatrix} 0.53 & 0.01 \\ -0.51 & 0.87 \end{smallmatrix}\right)$
@@ -392,11 +396,14 @@ $A_C$ for FHC is $\left(\begin{smallmatrix} 0.53 & 0.01 \\ -0.51 & 0.87 \end{sma
 the two bins are not independent after merging. The total fractional uncertainty is
 $50\%$ (FHC), the largest of the inclusive observables, because the two bins each carry a
 large share of the flux normalisation with little statistical averaging.
-Figure~\ref{fig:ppi2bin_AC} shows $A_C$ for all three configurations. RHC regularises much
-like FHC (diagonal $0.47$ against $0.50$), but the combined fit borrows appreciably more
-(diagonal $0.34$, off-diagonal $-0.53$). The unfolded-to-truth ratio is nonetheless $1.13$
-in all three, so that offset is a normalisation effect and does not track how hard $A_C$
-smears.
+Figure~\ref{fig:ppi2bin_AC} shows $A_C$ for all three configurations (release 2026-09-06).
+RHC regularises a little harder than FHC in the first bin (diagonal $0.38$ against $0.53$,
+off-diagonal $-0.37$ against $-0.51$), and the combined extraction borrows the most
+(diagonal $0.53$, off-diagonal $-0.58$); the second-bin diagonals are $0.87$--$0.88$ in all
+three. Despite the different conditioning the three extractions close in normalisation
+within $2\%$ (the ratios $0.997$, $0.981$ and $0.989$ above), so there is no common
+normalisation offset associated with how hard $A_C$ smears; an earlier draft quoted a
+ratio of $1.13$ here, which belonged to a superseded fake-data pass and is withdrawn.
 
 \begin{figure}[htbp]\centering
   \begin{subfigure}[b]{0.32\textwidth}
@@ -589,6 +596,12 @@ pion threshold toward $0.10$~GeV/$c$ and resolve the region where the estimator 
 adopt a two-bin-plus-overflow $p_\pi$ result and say so, or to replace the range-based
 estimator altogether. The golden-pion BDT is a useful ingredient in any of those, but it is
 not by itself the fix.
+
+\medskip\noindent\fbox{\parbox{0.97\linewidth}{\textbf{Scope of this conclusion.} The
+failure described in this subsection concerns attempts to recover a finer multi-bin $p_\pi$
+spectrum, and its numbers are for the loose truth-matched track sample. It does not
+invalidate the adopted two-bin analysis-sample result (\S\ref{sec:ppi2bin_adopted},
+Table~\ref{tab:ppi2bin}), whose migration diagonals are $91\%$ and $76\%$.}}
 
 \paragraph{Scope of $p_\pi$.} Both candidate routes to a finer $p_\pi$ measurement were
 tried; as the two following paragraphs show, the golden-pion
@@ -2484,7 +2497,7 @@ and every deviation seen in the fake-data closure tests is attributable to the s
 throw and to the response model, not to the unfolding implementation.
 
 % =============================================================================
-\section{Data/MC Normalisation}
+\section{Data/MC normalisation: history of the corrections (superseded record)}
 \label{sec:datamc}
 % =============================================================================
 

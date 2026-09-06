@@ -81,6 +81,15 @@ void UniverseMaker::add_input_file( const std::string& input_file_name )
   // Check to make sure that the input file contains the expected ntuple
   TFile temp_file( input_file_name.c_str(), "read" );
 
+  // BLINDING GUARD: a control-region skim (ProcessNTuples with XSEC_CR_SKIM=1)
+  // carries no signal-region events and must never enter the extraction, with
+  // or without XSEC_UNBLIND. Refuse it outright.
+  if ( temp_file.Get( "XSEC_CR_SKIM" ) ) {
+    throw std::runtime_error( "BLINDING GUARD: " + input_file_name
+      + " is a signal-region-stripped control-region skim (XSEC_CR_SKIM marker)"
+      " and cannot be used by the extraction." );
+  }
+
   // Temporary storage
   TTree* temp_tree;
 

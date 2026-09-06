@@ -1491,6 +1491,11 @@ bool Passed =
   sb_multipi_ = sb_pre && pass_final && ( pion_number >= 2 );
   //  Pi0/shower: a reco shower is present and the shower veto FAILED (pi0-like).
   sb_pi0_     = sb_pre && !pass_shower && ( nPrimaryShowers >= 1 );
+  //  Variant retaining the final multiplicity cut, and the multiplicities themselves,
+  //  for the pre-ratification comparison of the two pi0-region definitions.
+  sb_pi0_final_  = sb_pi0_ && pass_final;
+  sb_nprimtrk_   = nPrimaryTracks;
+  sb_nnonproton_ = nonproton;
   //  Cosmic: the full signal selection but with the opening angle inverted
   //  (theta_mupi > 2.6 rad), the EXT-cosmic--dominated region.
   sb_cosmic_  = sb_pre && pass_pioncontained && pass_muongap && pass_piongap
@@ -2340,6 +2345,9 @@ void CC1mu1piXp::define_output_branches() {
   set_branch( &sb_multipi_, "sb_multipi" );
   set_branch( &sb_pi0_,     "sb_pi0" );
   set_branch( &sb_cosmic_,  "sb_cosmic" );
+  set_branch( &sb_pi0_final_,  "sb_pi0_final" );
+  set_branch( &sb_nprimtrk_,   "sb_nprimtrk" );
+  set_branch( &sb_nnonproton_, "sb_nnonproton" );
   set_branch( &pion_number,             "pion_number_reco" );
   set_branch( &pion_number_noContain_,  "pion_number_noContain" );
   set_branch( &pion_number_noLLR_,      "pion_number_noLLR" );
@@ -2405,6 +2413,7 @@ void CC1mu1piXp::reset() {
   sel_muoncandidate_tracklike_ = false;
   sel_pioncandidate_tracklike_ = false;
   sb_cc0pi_ = false; sb_multipi_ = false; sb_pi0_ = false; sb_cosmic_ = false;
+  sb_pi0_final_ = false; sb_nprimtrk_ = BOGUS_INDEX; sb_nnonproton_ = BOGUS_INDEX;
   //CandidateMuonIndex = BOGUS_INDEX;
   //CandidatePionIndex = BOGUS_INDEX;
   pion_number = 0;
