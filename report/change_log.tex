@@ -36,12 +36,13 @@ The response is \texttt{norm\_manifest.py}, which reads the authoritative config
 files and asserts that they agree, so that a future drift fails a check instead of
 producing a wrong cross section.
 
-Two corrections changed physics conclusions rather than only normalisation, and the
+Three corrections changed physics conclusions rather than only normalisation, and the
 conclusions they invalidated are marked as withdrawn here and in the analysis note: the
 non-uniform-grid regularisation defect, which had collapsed several additional-smearing
-matrices towards rank one, and the beam-axis convention, under which reconstructed
-angular and transverse observables were not the same quantities as the generator
-predictions they were being compared against.
+matrices towards rank one; the beam-axis convention, under which reconstructed angular and
+transverse observables were not the same quantities as the generator predictions they were
+being compared against; and the double application of $A_C$ to the model predictions,
+which invented a muon-angle anomaly.
 \end{abstract}
 \end{titlepage}
 
@@ -228,7 +229,8 @@ reproduce a published generator curve.  It did not --- the discrepancy was $31\%
 integral and varied from $1.21$ to $1.55$ across bins, so it was not a normalisation --- and
 the residual factor turned out to be $A_C$ itself.
 
-\textbf{Effect.}  Model $\chi^2$ values only.  The anomaly the note previously attributed
+\textbf{Effect} (2026-08-31 pass; the current values are in the note's
+$\chi^2$ tables).  Model $\chi^2$ values only.  The anomaly the note previously attributed
 to $A_C$ suppression of sharply peaked generators was this bug:
 
 \begin{center}
@@ -282,18 +284,20 @@ nothing referenced them: the \texttt{\_w} file-properties tables contained no
 \texttt{detVar} lines, and \texttt{ccpi1p\_systcalc\_numi.conf} had no \texttt{DV} block
 at all.  Both were needed; adding either alone does nothing.
 
-\textbf{Effect.}  The thirty-three proton-tagged universes were rebuilt with the nine
-detector variation samples included and re-unfolded from them.  Every extraction in the
-analysis now carries a detector term.  The proton-tagged terms run $10.5\%$--$64.4\%$
-with a median of $23.9\%$, against $16.9\%$--$42.8\%$ for the inclusive results.
+\textbf{Effect} (values of the time).  The thirty-three proton-tagged universes were rebuilt
+with the nine detector variation samples included and re-unfolded from them.  Every
+extraction in the analysis now carries a detector term.  The proton-tagged terms ran
+$10.5\%$--$64.4\%$ with a median of $23.9\%$, against $16.9\%$--$42.8\%$ for the inclusive
+results (current release: $10.5$--$108.5\%$, median $33.0\%$, and $15.6$--$35.0\%$).
 
-\textbf{Check.}  Per-mode detector-variation double counting has occurred in this analysis
-before, and the combined configuration --- which carries two per-mode sets where the
-single-mode configurations carry one --- is the one exposed to it.  Double counting
-inflates the combined result.  Of the eight observables (of eleven) whose combined value
-falls outside its own FHC--RHC range, six fall \emph{below} both and only two above, which
-is the finite-sample averaging-down expected of statistically limited detector-variation
-samples rather than a recurrence.
+\textbf{Check} (of the time).  Per-mode detector-variation double counting has occurred in
+this analysis before, and the combined configuration --- which carries two per-mode sets
+where the single-mode configurations carry one --- is the one exposed to it.  Double
+counting inflates the combined result.  On that pass, of the eight observables (of eleven)
+whose combined value fell outside its own FHC--RHC range, six fell \emph{below} both and
+only two above, the finite-sample averaging-down expected of statistically limited
+detector-variation samples rather than a recurrence; on the current release only two of
+eleven fall outside the range, both above (analysis note).
 
 \subsection{Cut-and-count uncertainty quoted from a pre-rebuild breakdown}
 
@@ -386,7 +390,7 @@ every absolute yield in the cut-flow table and every cut-and-count total sat $3$
 above the prediction the unfolding uses; efficiencies and purities, being ratios, were
 unaffected at the $0.5\%$ level.  Found in the 2026-09-02 code trace.
 
-\textbf{Effect.}  Cut-and-count totals: FHC $1.06\to1.03$, RHC $0.99\to0.93$, combined
+\textbf{Effect.}  Cut-and-count totals: FHC $1.06\to1.03$, RHC $0.98\to0.93$, combined
 $1.02\to0.98$ ($10^{-38}$~cm$^2$/Ar), and the RHC/FHC ratio $0.928\to0.901$.  The
 selection now fills the cut-flow histograms with the full weight and the fourteen
 overlay files and the dirt overlay were reprocessed on 2026-09-03
@@ -500,7 +504,7 @@ unweighted ($2.6\%$ high), now carries the same weight as the other stages, and 
 final row reproduces the cut-and-count check exactly ($376.4$ signal, $723.0$ predicted,
 FHC). Purity is $52\%$ (FHC), $50\%$ (RHC), $51\%$ (combined); the tag rejects $67\%$ of
 the neutrino background for a $32\%$ signal loss and reduces the beam-off by
-$3.3$--$3.6$ at the final cut, not six.
+$3.3$--$3.5$ at the final cut, not six.
 
 \textbf{Flux term.} The note attributed the $24$--$33\%$ unfolded flux term to amplification
 by the unfolding operator. The one-bin total, which has no regularisation, carries
@@ -641,57 +645,63 @@ CRT veto branches
 
 \section{Open items}
 
-Two things remain outstanding, and neither is a correction awaiting application: they are
-limits of the present exposure and of the blinding policy.
+The following are outstanding as of 2026-09-06. None is a correction awaiting application;
+they are prerequisites, limits of the exposure, or tests not yet made. The analysis note's
+request and Limitations sections carry the same list.
 
-\paragraph{The differential $W_{\pi p}$ shape.}
-Withdrawn, and not recoverable by any systematic treatment.  At this exposure no binning
-satisfies both the migration and the statistics requirement simultaneously: a two-bin
-split near $1.15$~GeV/$c^2$ meets the response criterion but leaves about $137$ events in
-the first bin, which the Wiener filter then suppresses, while wider bins restore the
-statistics and fail the response.  The proton-tagged sample supports an integrated cross
-section.
+\begin{itemize}\itemsep2pt
+  \item \textbf{Before the control regions are opened:} ratification of the frozen
+    procedure by the conveners; the control-region skim of the beam-on files (signal-region
+    events never written), which does not yet exist; the $\pi^0$ definition without the
+    final multiplicity cut, whose effect can be quantified with a reprocess of the Monte
+    Carlo only.
+  \item \textbf{Before the signal region is opened:} confirmation that the flux constants
+    are the PPFX-corrected central values; a NuWro or GiBUU fake-data pass through the
+    released configurations (no alternative-generator test exists on the released chain);
+    the clean-cache bit-identical reproduction repeated on the 2026-09-06 release; the
+    ensemble extended to RHC and to the proton-tagged family; the inverted-proton-PID
+    control region for any proton-tagged result.
+  \item \textbf{Systematic terms not in the released covariance:} a dedicated MCS muon
+    momentum term; the beam-off gate-ratio and Run-2 stand-in terms ($\lesssim0.4\%$ of the
+    total); the beamline-geometry flux term ($\lesssim0.2\%$).
+  \item \textbf{Limits of the exposure:} the differential $W_{\pi p}$ shape is withdrawn
+    (no binning satisfies both the migration and the statistics requirement); the
+    proton-tagged sample supports an integrated cross section.
+  \item \textbf{Ensemble offset:} the ensemble means sit $0.5$--$2.7\%$ below the reference
+    at up to $1.9\sigma$ from the same throws; the throw itself is unbiased (mean thrown
+    selected count $0.999$ of the expectation), so the offset, if real, is in the
+    extraction; a larger ensemble would settle it.
+\end{itemize}
 
 \paragraph{External reproduction of the $A_C$-smeared comparison --- resolved.}
-This was listed here as open in the previous revision.  It is resolved.  The transformation
+The transformation
 \[
   \left(d\sigma/dx\right)^{\rm smeared}_i = \frac{1}{w_i}\sum_j (A_C)_{ij}\,p_j ,
 \]
 applied to a prediction supplied as a per-bin cross section, reproduces every released
-generator curve to a worst per-bin deviation of $1.2\times10^{-10}$.  It was the failure of
-this very test that exposed the double-$A_C$ bug, and its success is now the regression
-check against recurrence.
-
-What remains is narrower and is not a numerical question: no packaged reference
-implementation ships with the release, so a user must write the three lines above
-themselves.  They can verify their implementation against any model column of
-\texttt{curves\_*.tsv}.
-
-\paragraph{Everything that requires unblinding.}
-No beam-on signal region has been opened, so the control-region checks in data, the
-background constraints, and any statement that a result agrees or disagrees with a
-generator remain untested against real data.  Every number in the analysis note is a
-property of the injected sample and the extraction machinery.
+generator curve to a worst per-bin deviation of $1.2\times10^{-10}$; it was the failure of
+this test that exposed the double-$A_C$ bug, and its success is now the regression check.
+No packaged reference implementation ships with the release; a user can verify their
+implementation against any model column of \texttt{curves\_*.tsv}.
 
 \paragraph{A caveat that is not an open item but reads like one.}
 The closure $\chi^2$ values have $p$-values clustered near unity (median $0.98$ over the
 fifty-one extractions) because the measurement and the truth it is compared against share
 their systematics, so those terms cancel in the difference while still inflating the
-covariance used to judge it.  Sizing the uncertainty band properly would need a
-restricted covariance or an ensemble of throws.  This is a limitation of what the closure
-test demonstrates, not an error in the values.
+covariance used to judge it. The ensemble of throws sizes the statistical part of the
+band correctly; the systematic part remains untested by construction.
 
 \section{Superseded values that may still be encountered}
 
-\begin{center}
-\begin{tabular}{lll}
+\begin{center}\small\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lp{4.2cm}p{6.2cm}}
 \toprule
 Quantity & superseded value & status \\
 \midrule
-Mean inclusive closure ratio        & $1.106$, $1.001$, $1.016$ & now $1.018$ (truth-side correction; re-thrown fake data) \\
+Mean inclusive closure ratio        & $1.106$, $1.001$, $1.016$, $1.018$ & now $1.010$ (five-bin $\cos\theta_\pi$ release) \\
 RHC $W_{\pi p}$ cross section       & $-0.194$         & sign was a POT-convention artefact \\
-Combined detector systematic        & $42.3\%$         & now $24.6\%$ \\
-Combined result / expected          & $0.910$          & now $1.027$ \\
+Combined detector systematic        & $42.3\%$         & $24.6\%$ at the fix; $21.4\%$ ($p_\mu$) in the current release \\
+Combined result / expected          & $0.910$          & $1.027$ at the fix (2026-08-28 pass) \\
 FHC $\theta_\mu$ $A_C$ conditioning & $0.015$          & now $0.51$ \\
 Mean $\delta p_T$                   & $0.742$~GeV/$c$  & now $0.264$~GeV/$c$ (beam frame) \\
 Proton-tagged \texttt{detVar}       & \texttt{n/a}, then $10.5$--$64.4\%$ & now $10.5$--$108.5\%$ (median $33.0\%$, 2026-09-04 release) \\

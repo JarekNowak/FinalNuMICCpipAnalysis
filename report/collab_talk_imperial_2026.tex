@@ -143,7 +143,7 @@
   Comb.& $0.97\pm0.37$ & $0.57\pm0.24$ \\
   \bottomrule
   \end{tabular}\\[3pt]
-  {\footnotesize Extracted on the thrown fake data with the full universe covariance; closes on the realised truth to $0.98$--$1.00$. RHC/FHC of the tune $=0.90$. GENIE~v3 $0.5$--$0.8\sigma$ below, GiBUU/NEUT/NuWro within $0.8\sigma$.}
+  {\footnotesize Extracted on the thrown fake data with the full universe covariance; closes on the realised truth to $0.975$--$0.998$. RHC/FHC of the tune $=0.90$. Generators span $\times1.6$, all within $1\sigma$ of the $\sim\!38\%$ band: no discrimination at this exposure.}
   \end{block}
   \end{columns}
 \end{frame}
@@ -203,13 +203,13 @@
   \begin{itemize}\itemsep2pt
     \item fake-data closure: unfolded/realised truth $=1.010$ on average over the 18 inclusive extractions; all $p>0.9$
     \item 32-throw ensemble (current release): pull widths $1.08$ ($p_\mu$), $0.97$ ($\cos\theta_\mu$), $1.02$ (one-bin total); 62--71\% / 92--94\% coverage; means $0.5$--$2.7\%$ low, at most $1.9\sigma$, stated not corrected
-    \item clean-cache rebuild of all 51 extractions is bit-identical
+    \item clean-cache rebuild of all 51 extractions bit-identical (2026-09-02 pass; to be repeated before unblinding)
     \item five automated guards: normalisation manifest, systematics/file coupling, staleness, table consistency, blinding guard
   \end{itemize}
   \column{.5\textwidth}
   \textbf{Corrected since August} (all in the change log)
   \begin{itemize}\itemsep2pt
-    \item beam-off scaled by an \emph{event} count instead of gates: EXT was $9.7\times$ too large ($128\to30$ FHC events); now per run period
+    \item beam-off scaled by an \emph{event} count instead of gates: EXT was $9.7\times$ too large ($128\to13$ FHC events), then per run period ($13\to30$)
     \item fake-data truth carried the CV weight twice ($1.6\%$ on closure)
     \item PPFX CV weight missing from count-level tables ($3$--$6\%$)
     \item one safe-weight rule everywhere; fake data re-thrown with it ($1\%$)
@@ -246,12 +246,12 @@
   CC$0\pi$ & $n_\pi=0$ & tests $0\pi$ feed-in; $T=0.03$, $\delta T/T=31$--$34\%$ (detector-limited); target purity $72\%$ \\
   multi-$\pi$ & $n_\pi\ge2$ & diagnostic only; $T=2.5$ \\
   $\pi^0$ & shower veto fails & $\pi^0$ leakage; target CC$+$NC$\pi^0$ (ratified), purity $50$--$51\%$; $T=0.02$, $\delta T/T=17$--$19\%$ (MC-stat limited) \\
-  cosmic & $\theta_{\mu\pi}>2.6$~rad & beam-off norm.\ and shape; $41\%$ EXT purity, no fitted correction \\
+  cosmic & $\theta_{\mu\pi}>2.6$~rad & beam-off norm.\ and shape; $34$--$41\%$ EXT purity, no fitted correction \\
   \bottomrule
   \end{tabular}\\[3pt]
   \begin{itemize}\itemsep1pt
     \item disjoint from the signal region event by event; multi-$\pi$ and $\pi^0$ overlap ($\sim\!40\%$ of multi-$\pi$)
-    \item pseudo-data/prediction $0.99$--$1.10$ everywhere; full-stack test (MC$+$EXT$+$dirt) at unity
+    \item pseudo-data/prediction $0.99$--$1.12$ everywhere; full-stack test (MC$+$EXT$+$dirt) at unity within statistics
     \item per-region systematics incl.\ detector variations; transfer factors as correlated ratios (flux cancels to $2$--$3\%$)
   \end{itemize}
   \column{.45\textwidth}
@@ -263,10 +263,10 @@
 % ---------------------------------------------------------------------------
 \begin{frame}{Request to the collaboration}
   \begin{block}{Open the four inclusive control regions; the signal region and the proton-tagged regions stay blind}
-  \small
+  \footnotesize
   Frozen before opening: selections at branch level, run-dependent normalisation, beam-off scaling, displayed observables and binning, covariance, goodness-of-fit and the permitted responses.
   \end{block}
-  \footnotesize
+  \vspace{-4pt}\scriptsize
   \begin{columns}[T]
   \column{.5\textwidth}
   \textbf{Procedure} (to be ratified)
@@ -376,7 +376,7 @@
   \end{itemize}
   \column{.45\textwidth}
   \includegraphics[width=\textwidth]{ext_perrun_validation}\\
-  {\footnotesize Selected cosmic rate per million gates: pre-CRT Run 1 is $3$--$4\times$ the CRT-era runs, as expected.}
+  {\footnotesize Selected cosmic rate per million gates: pre-CRT Run 1 is $1.5$--$4\times$ the CRT-era runs (rates carry $16$--$35\%$ Poisson errors).}
   \end{columns}
 \end{frame}
 
@@ -413,11 +413,11 @@
   \centering
   \includegraphics[width=.24\textwidth]{step1_reco_pmu}\hfill
   \includegraphics[width=.24\textwidth]{step2_bsub_pmu}\hfill
-  \includegraphics[width=.24\textwidth]{smear_pmu_FHC5}\hfill
-  \includegraphics[width=.24\textwidth]{fw_xsec_pmu}\\[3pt]
+  \includegraphics[width=.24\textwidth]{fw_resp_pmu}\hfill
+  \includegraphics[width=.24\textwidth]{dsigma_build_FHC5_1}\\[3pt]
   \small
   \begin{itemize}\itemsep2pt
-    \item left to right: reco-level stack with fake data; background-subtracted; $A_C$ (additional smearing) matrix; unfolded cross section with the $A_C$-smeared truth and models
+    \item left to right: reco-level stack with fake data; background-subtracted; the smearceptance $S$; unfolded cross section with the $A_C$-smeared truth and models
     \item the Wiener-SVD regulariser is a second-derivative operator in bin index, corrected for the non-uniform bin widths (\texttt{fw\_regmatrix})
     \item the released products per extraction: $A_C$, unfolded values, full covariance, and the smeared predictions
   \end{itemize}
@@ -446,31 +446,27 @@
 % ---------------------------------------------------------------------------
 \begin{frame}{Backup: uncertainty breakdown by observable and configuration}
   \centering
-  \includegraphics[width=.24\textwidth]{fw_systbreak_pmu}\hfill
-  \includegraphics[width=.24\textwidth]{fw_systbreak_costhmu}\hfill
-  \includegraphics[width=.24\textwidth]{fw_systbreak_costhpi}\hfill
-  \includegraphics[width=.24\textwidth]{fw_systbreak_thmupi}\\[2pt]
-  \includegraphics[width=.24\textwidth]{fw_systbreak_ppi}\hfill
-  \includegraphics[width=.24\textwidth]{fw_systbreak_rhc}\hfill
-  \includegraphics[width=.24\textwidth]{fw_systbreak_comb}\hfill
+  \includegraphics[width=.32\textwidth]{fw_systbreak_fhc}\hfill
+  \includegraphics[width=.32\textwidth]{fw_systbreak_rhc}\hfill
+  \includegraphics[width=.32\textwidth]{fw_systbreak_comb}\\[2pt]
   \begin{minipage}[b]{.24\textwidth}\scriptsize
     Flux: 600 PPFX universes.\\ Cross section: GENIE multisim $+$ unisims.\\ Re-interaction: Geant4 reweight.\\ Detector: Run-4 variation samples, FHC and RHC natively; proton-tagged included.\\ POT $2\%$, targets $1\%$, statistics of MC and fake data.\\[3pt]
-    Detector variations are $17$--$43\%$ after unfolding: the response of a $\sim\!5\%$ reco-level shift is amplified by the poorly conditioned $S$.
+    Detector variations are $16$--$35\%$ after unfolding (inclusive; $10$--$109\%$ proton-tagged).
   \end{minipage}\\
-  {\footnotesize Top: FHC by observable. Bottom: two-bin $p_\pi$, then RHC and combined ($p_\mu$).}
+  {\footnotesize Bin-averaged fractional uncertainty by source and observable, FHC, RHC and combined (2026-09-06 release).}
 \end{frame}
 
 % ---------------------------------------------------------------------------
 \begin{frame}{Backup: closure and ensemble tests}
-  \small
+  \footnotesize
   \begin{columns}[T]
   \column{.5\textwidth}
   \textbf{Fake-data closure} (18 inclusive extractions)
   \begin{itemize}\itemsep2pt
     \item fake data: an external Poisson throw of the CV prediction per run, weights reset to one in both reco and truth
     \item unfolded / realised truth $=1.010$ on average; $\chi^2$ probabilities $>0.9$ everywhere
-    \item numuMC self-closure: unfolded/truth $0.94$--$1.06$ for every observable, so the Wiener-SVD is unbiased on the injected model
-    \item the $A_C$-smeared integral is observable-dependent by construction; D'Agostini gives a flat integral $\sim\!30\%$ higher, iteration-stable
+    \item no alternative-generator fake-data test exists on the released chain yet (a NuWro/GiBUU pass is a prerequisite for unblinding)
+    \item the $A_C$-smeared integral is observable-dependent by construction; D'Agostini gives a flat integral $23$--$31\%$ higher, iteration-stable (it returns its prior on CV input)
   \end{itemize}
   \column{.5\textwidth}
   \textbf{32-throw ensemble}
@@ -478,10 +474,10 @@
     \item pull widths $1.08$ ($p_\mu$), $0.97$ ($\cos\theta_\mu$) and $1.02$ (one-bin total); 68\% and 95\% coverage recovered within the ensemble statistics
     \item ensemble means $0.5$--$2.7\%$ below the reference (at most $1.9\sigma$; largest in the most regularised observable), stated and not corrected
     \item $\cos\theta_\mu$: the strongly suppressing $A_C$ does not distort the uncertainties
-    \item FHC $\theta_\mu$: $A_C$ is rank-1 (all models share one shape after smearing), so $\theta_\mu$ carries no shape information and is released as a normalisation check only
+    \item $\theta_\mu$ and $\cos\theta_\mu$ are different partitions of one phase space; after the width-aware regularisation both discriminate, $\theta_\mu$ with systematically larger $\chi^2$ (model statements use $\cos\theta_\mu$)
   \end{itemize}
   \vspace{4pt}
-  \textbf{Reproducibility}: clean-cache rebuild of all 51 extractions is bit-identical; the universe cache is keyed on the normalisation scheme and on the file list.
+  \textbf{Reproducibility}: clean-cache rebuild of all 51 extractions bit-identical on the 2026-09-02 pass, to be repeated on the release before unblinding; the universe cache is keyed on the normalisation scheme and on the file list.
   \end{columns}
 \end{frame}
 
@@ -500,14 +496,15 @@
     out of fiducial volume & 47.4 & 480 & 3.3 & 253 & 18.5 & 0.10 & 14 & 0.19 & 2.56 \\
     NC and $\nu_e$CC & 89.5 & 549 & 7.1 & 632 & 6.4 & 0.16 & 13 & 0.14 & 14 \\
     total $\nu$-MC & 1\,581 & 12\,192 & 124 & 6\,646 & 75.3 & & & & \\
+    \emph{CC$+$NC $\pi^0$ (ratified target)} & 64.5 & 444 & 21.8 & 3\,331 & 3.2 & 0.15 & 2.96 & 0.019 & 20 \\
     \bottomrule
   \end{tabular}\\[3pt]
   \footnotesize
   \begin{itemize}\itemsep1pt
     \item $T=N^{\rm SR}/N^{\rm CR}$ per truth class; a normalisation change of the target class in a region propagates to the signal region by $T$
-    \item CC$0\pi$: $T=0.03$, $\delta T/T=31\%$ (detector-variation limited); $\pi^0$: $T=0.02$, $\delta T/T=15\%$; flux cancels to $2$--$3\%$ in the ratio
-    \item the multi-$\pi$ region has $T=2.5$ and a 41\% signal share: diagnostic only, no correction may be derived from it
-    \item the cosmic region is $41\%$ EXT with the rest dominated by CC$0\pi$; it tests the beam-off normalisation and shape, no fitted correction
+    \item CC$0\pi$: $T=0.03$, $\delta T/T=31$--$34\%$ (genuine detector sensitivity); $\pi^0$ (ratified target CC$+$NC$\pi^0$, purity $50$--$51\%$): $T=0.02$, $\delta T/T=17$--$19\%$, at its MC-statistical floor; flux cancels to $2$--$3\%$ in the ratio
+    \item the multi-$\pi$ region has $T=2.5$ and a 24\% signal share: diagnostic only, no correction may be derived from it
+    \item the cosmic region is $34$--$41\%$ EXT with the rest dominated by CC$0\pi$; it tests the beam-off normalisation and shape, no fitted correction
   \end{itemize}
 \end{frame}
 
@@ -515,7 +512,7 @@
 \begin{frame}{Backup: control regions, RHC}
   \centering
   \includegraphics[width=.6\textwidth]{sideband_plots_rhc}\\
-  {\footnotesize Frozen distributions ($p_\mu$, $\cos\theta_\mu$, opening angle, shower energy) and binning for the four RHC regions; full-stack pseudo-data (MC$+$EXT$+$dirt, Poisson-thrown) in place of beam-on points. Pseudo-data/prediction $0.99$--$1.10$.}
+  {\footnotesize Frozen distributions ($p_\mu$, $\cos\theta_\mu$, opening angle, shower energy) and binning for the four RHC regions; full-stack pseudo-data (MC$+$EXT$+$dirt, Poisson-thrown) in place of beam-on points. Pseudo-data/prediction $0.99$--$1.12$.}
 \end{frame}
 
 % ---------------------------------------------------------------------------
@@ -538,9 +535,9 @@
 \begin{frame}{Backup: angles in the beam frame}
   \begin{columns}[T]
   \column{.5\textwidth}\centering
-  \includegraphics[width=.49\textwidth]{theta_vs_costheta_FHC}\hfill
-  \includegraphics[width=.49\textwidth]{thetamu_vs_costhmu}\\
-  {\footnotesize Left: $\theta_\mu$ vs.\ $\cos\theta_\mu$ in the beam frame. Right: the two released $\theta_\mu$ observables are the same data with different binning.}
+  \includegraphics[width=.49\textwidth]{fw_resp_costhmu}\hfill
+  \includegraphics[width=.49\textwidth]{fw_resp_thetamu}\\
+  {\footnotesize Smearceptance of $\cos\theta_\mu$ (left) and $\theta_\mu$ (right), beam frame, current release: two partitions of the same phase space (the $\theta_\mu$ edges are not the arccos images of the $\cos\theta_\mu$ edges).}
   \column{.5\textwidth}\small
   \begin{itemize}\itemsep3pt
     \item beam direction: truth uses the per-event neutrino direction; reco uses target-to-vertex, with the convention of the NuMI $\nu_e$ analysis

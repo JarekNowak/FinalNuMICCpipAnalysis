@@ -33,7 +33,7 @@ Do not apply `A_C` to any column of `curves_*.tsv`: those are smeared already.
 
 ## Coverage
 
-**All 51 differential extractions are released** (release 2026-09-04; `index_extractions.tsv`),
+**All 51 differential extractions are released** (release 2026-09-06; `index_extractions.tsv`),
 each with both its `A_C` matrix and its full covariance decomposition. The six one-bin total
 cross sections (inclusive and proton-tagged x FHC/RHC/combined; one true bin over the full
 cos(theta_mu) range, Wiener filter off, `A_C` = 1) are in `total_xsec.tsv` with their
@@ -55,8 +55,9 @@ through those rows with care.
 `p_pi` matrices are the adopted **two-bin** scheme (`ppi2bin`).  The five-bin `p_pi`
 binning is withdrawn and is deliberately not released.
 
-Proton-tagged (`1p`) matrices correspond to results whose uncertainties do **not** yet
-include detector variations; see the analysis note's status table before using them.
+Proton-tagged (`1p`) matrices carry the full covariance including detector variations
+(all 51 extractions, rebuilt 2026-08-31); the differential W_pi-p shape is withdrawn (status
+column of `index_extractions.tsv`).
 
 ## Regenerating
 

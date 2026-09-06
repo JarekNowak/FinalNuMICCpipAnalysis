@@ -170,12 +170,12 @@ and the top three fail it by a wide margin. Our edges ($0.175$--$0.550$ in five 
 above) put four boundaries inside precisely the region where the reconstructed momentum has
 saturated.
 
-\paragraph{Consequences, and what would improve it.}\paragraph{Consequences, and what would improve it.}
+\paragraph{Consequences, and what would improve it.}
 This is not a bias on the extracted cross section; the response matrix contains it and
 the unfolding inverts it, but it is the reason the $p_\pi$ result leans harder on the
-regularisation than any other observable, and it explains the $A_C$ survey result that the
-momentum observables retain only $11$--$21\%$ of their truth-level model discrimination
-(Table~\ref{tab:ac_survey}) while $\theta_{\mu\pi}$ retains $58$--$93\%$. With $6\%$
+regularisation than any other observable (the pre-fix $A_C$ survey of
+Table~\ref{tab:ac_survey}, superseded in its numbers, showed the momentum observables
+retaining the least model discrimination through $A_C$). With $6\%$
 diagonal strength in the top bin, the measurement above $\sim\!0.5$~GeV/$c$ is effectively
 inferred from the response model rather than measured.
 
@@ -259,7 +259,7 @@ rise by $4$--$8\%$, which moves each generator closer to the measured cross sect
 cut-and-count comparison (Table~\ref{tab:total_xsec}) GENIE went from $1.0\sigma$ to
 $0.9\sigma$ below the FHC measurement while NEUT went from $0.8\sigma$ to $1.0\sigma$ above
 it, at the uncertainty band then in use; with the current one-bin band these read $0.5\sigma$ and
-$0.6\sigma$. Had the $p_\pi$ prediction alone been used, the $8\%$ deficit would have appeared as a
+$0.7\sigma$. Had the $p_\pi$ prediction alone been used, the $8\%$ deficit would have appeared as a
 data--model disagreement in that one observable and nowhere else.
 
 Two practical notes for anyone repeating this. The NEUT and NuWro event readers cannot be
@@ -319,7 +319,9 @@ divides one poorly-measured region into two equally poor halves. The same orderi
 under a golden-pion cut ($67/52/46\%$), so it is not an artefact of the selection.
 
 \paragraph{Closure with the new binning (FHC).} The two-bin scheme was run through the full
-chain, universe construction, Wiener--SVD unfolding, systematics, and closes cleanly:
+chain, universe construction, Wiener--SVD unfolding, systematics, and closed cleanly on
+the release of the time (2026-08-17; the current values are those of
+Table~\ref{tab:ppi2bin} below and of the analysis note):
 
 \begin{center}\small
 \begin{tabular}{lcccc}
@@ -335,23 +337,25 @@ old five-bin & $0.964$ & $1.96/5$ & $0.85$ & $32.3\%$ \\
 \caption{Two-bin $p_\pi$ result for all three beam configurations, $d\sigma/dp_\pi$ in
   $10^{-38}$~cm$^2$/(GeV/$c$)/Ar. Bin~1 is $[0.175,0.205]$~GeV/$c$, bin~2 everything above.
   All curves are $A_C$-smeared, so they live in the same space as the measurement.
-  Generator predictions use the corrected (untruncated) FTE files.}
+  Generator predictions use the corrected (untruncated) FTE files. Regenerated from the
+  2026-09-06 release (\texttt{report/tools/ppi2bin\_tables.py}: closure sidecars and
+  \texttt{curves\_incl\_*\_ppi2bin.tsv}); the uncertainty row is the total.}
 \label{tab:ppi2bin}
 \begin{tabular}{lccc|ccc|ccc}
 \toprule
  & \multicolumn{3}{c|}{FHC} & \multicolumn{3}{c|}{RHC} & \multicolumn{3}{c}{Combined} \\
  & bin 1 & bin 2 & $\sigma_\mathrm{int}$ & bin 1 & bin 2 & $\sigma_\mathrm{int}$
  & bin 1 & bin 2 & $\sigma_\mathrm{int}$ \\\midrule
-unfolded data & $2.68$ & $1.06$ & $0.923$ & $1.71$ & $1.00$ & $0.850$ & $2.31$ & $1.01$ & $0.875$ \\
-uncertainty   & $\pm1.36$ & $\pm0.37$ & & $\pm1.11$ & $\pm0.34$ & & $\pm1.26$ & $\pm0.34$ & \\
-$A_C$ truth   & $2.27$ & $0.94$ & & $1.74$ & $0.88$ & & $2.17$ & $0.89$ & \\
-uB tune       & $1.47$ & $0.77$ & & $1.07$ & $0.75$ & & $1.41$ & $0.73$ & \\\midrule
-GENIE & $1.17$ & $0.62$ & & $0.79$ & $0.54$ & & $1.09$ & $0.55$ & \\
-GiBUU & $1.97$ & $0.76$ & & $1.25$ & $0.70$ & & $1.86$ & $0.68$ & \\
-NEUT  & $1.95$ & $0.97$ & & $1.34$ & $0.87$ & & $1.85$ & $0.88$ & \\
-NuWro & $1.88$ & $0.92$ & & $1.26$ & $0.82$ & & $1.76$ & $0.83$ & \\\midrule
-$\chi^2/\mathrm{ndf}$ & \multicolumn{3}{c|}{$0.14/2$ ($p=0.93$)}
- & \multicolumn{3}{c|}{$0.16/2$ ($p=0.92$)} & \multicolumn{3}{c}{$0.13/2$ ($p=0.94$)} \\
+unfolded data & $1.96$ & $0.96$ & $0.822$ & $1.79$ & $0.87$ & $0.748$ & $2.06$ & $0.90$ & $0.775$ \\
+uncertainty   & $\pm1.36$ & $\pm0.37$ &  & $\pm1.12$ & $\pm0.34$ &  & $\pm1.26$ & $\pm0.34$ &  \\
+$A_C$ truth   & $2.34$ & $0.95$ &  & $1.71$ & $0.89$ &  & $2.17$ & $0.90$ &  \\
+uB tune       & $2.29$ & $0.93$ &  & $1.72$ & $0.88$ &  & $2.15$ & $0.89$ &  \\\midrule
+GENIE & $1.82$ & $0.75$ &  & $1.29$ & $0.63$ &  & $1.67$ & $0.67$ &  \\
+GiBUU & $3.28$ & $0.94$ &  & $2.27$ & $0.82$ &  & $3.03$ & $0.85$ &  \\
+NEUT  & $3.09$ & $1.18$ &  & $2.24$ & $1.02$ &  & $2.87$ & $1.07$ &  \\
+NuWro & $2.98$ & $1.12$ &  & $2.11$ & $0.96$ &  & $2.74$ & $1.01$ &  \\
+\midrule
+$\chi^2/\mathrm{ndf}$ & \multicolumn{3}{c|}{$0.11/2$ ($p=0.95$)} & \multicolumn{3}{c|}{$0.01/2$ ($p=0.99$)} & \multicolumn{3}{c}{$0.01/2$ ($p=1.00$)} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -378,31 +382,16 @@ $\chi^2/\mathrm{ndf}$ & \multicolumn{3}{c|}{$0.14/2$ ($p=0.93$)}
   \label{fig:ppi2bin_xsec}
 \end{figure}
 
-\noindent All three configurations close well, with $\chi^2$ of $0.15$, $0.24$ and $0.13$ on
-two bins. The unfolded-to-truth ratio is $1.13$ in all three configurations, the same
-Wiener--SVD normalisation offset seen in the other observables and now identical across
-beams, which it was not with the five-bin scheme. The four generators bracket the data in
-every bin of every configuration, NEUT closest and GENIE lowest throughout, so the ordering
-is stable against the change of beam as well as of binning.
-
-\noindent The four generators bracket the data in both bins, spanning $0.59$--$0.93$ against
-the measured $0.976$, with NEUT closest and GENIE lowest; the same ordering seen in the
-other observables, which is the reassuring outcome: with the binning fixed and the
-truncation corrected, $p_\pi$ no longer stands apart from the rest of the analysis.
-
-\noindent Bin by bin the unfolded fake data are
-$2.880\pm1.318$ and $1.105\pm0.344$ against an $A_C$-smeared truth of $2.512$ and $0.982$,
-i.e.\ ratios of $1.15$ and $1.13$; the usual Wiener--SVD normalisation offset, consistent
-across both bins rather than varying with momentum as it did before. The integrated
-$\sigma$ moves by under $1\%$ ($0.964\to0.965$), so the change of binning does not move the
-measurement, only how finely it is reported.
-
-The additional-smearing matrix is
-$A_C = \left(\begin{smallmatrix} 0.50 & 0.02 \\ -0.38 & 0.90 \end{smallmatrix}\right)$.
-The off-diagonal $-0.38$ is a reminder that the two bins are not independent even after
-merging: the regularisation still borrows between them. The total systematic rises from
-$32.3\%$ to $36.5\%$, which is expected; with fewer bins each carries a larger share of
-the flux normalisation and less statistical averaging.
+\noindent On the current release all three configurations close, with $\chi^2$ of $0.11$,
+$0.02$ and $0.01$ on two bins and unfolded-to-truth integral ratios of $0.997$, $0.981$
+and $0.989$ (analysis note, Tables~\noteref{Table}{tab:fhc}--\noteref{Table}{tab:comb}). The
+four generators bracket the data in both bins of every configuration, NEUT and GiBUU
+highest and GENIE lowest, the same ordering as in the other observables; the released
+$A_C$ for FHC is $\left(\begin{smallmatrix} 0.53 & 0.01 \\ -0.51 & 0.87 \end{smallmatrix}\right)$
+(\texttt{A\_C\_incl\_FHC5\_ppi2bin.tsv}), whose off-diagonal element is the reminder that
+the two bins are not independent after merging. The total fractional uncertainty is
+$50\%$ (FHC), the largest of the inclusive observables, because the two bins each carry a
+large share of the flux normalisation with little statistical averaging.
 Figure~\ref{fig:ppi2bin_AC} shows $A_C$ for all three configurations. RHC regularises much
 like FHC (diagonal $0.47$ against $0.50$), but the combined fit borrows appreciably more
 (diagonal $0.34$, off-diagonal $-0.53$). The unfolded-to-truth ratio is nonetheless $1.13$
@@ -601,10 +590,8 @@ adopt a two-bin-plus-overflow $p_\pi$ result and say so, or to replace the range
 estimator altogether. The golden-pion BDT is a useful ingredient in any of those, but it is
 not by itself the fix.
 
-\paragraph{Planned change of scope for $p_\pi$.} On the strength of the numbers above, the
-current intention is to \emph{withdraw the pion-momentum differential cross section from the
-inclusive selection} and to quote it instead on the \emph{proton-tagged} subsample. Both
-candidate routes were tried; as the two following paragraphs show, the golden-pion
+\paragraph{Scope of $p_\pi$.} Both candidate routes to a finer $p_\pi$ measurement were
+tried; as the two following paragraphs show, the golden-pion
 classifier does not repair the response even at perfect truth-level selection, whereas the
 proton tag does not change the response appreciably either way. At the two-bin scheme the
 inclusive selection already satisfies the binning criterion, so $p_\pi$ need not be withdrawn
@@ -659,21 +646,20 @@ defensible on the response test.
   configurations. $d\sigma/dp_\pi$ in $10^{-38}$~cm$^2$/(GeV/$c$)/Ar; bin~1 is
   $[0.175,0.205]$~GeV/$c$, bin~2 everything above. All curves are $A_C$-smeared. The
   proton-tagged \texttt{xsec} configs declare only the tune and the fake data, so no
-  generator rows appear.}
+  generator rows appear. Regenerated from the 2026-09-06 release
+  (\texttt{report/tools/ppi2bin\_tables.py}); the uncertainty row is the total.}
 \label{tab:ppi2bin_1p}
 \begin{tabular}{lcc|cc|cc}
 \toprule
  & \multicolumn{2}{c|}{FHC} & \multicolumn{2}{c|}{RHC} & \multicolumn{2}{c}{Combined} \\
  & bin 1 & bin 2 & bin 1 & bin 2 & bin 1 & bin 2 \\\midrule
-unfolded data & $1.554$ & $0.691$ & $2.448$ & $0.533$ & $2.358$ & $0.589$ \\
-uncertainty   & $\pm0.896$ & $\pm0.243$ & $\pm0.780$ & $\pm0.202$ & $\pm0.832$ & $\pm0.212$ \\
-$A_C$ truth   & $1.450$ & $0.598$ & $1.300$ & $0.522$ & $1.537$ & $0.544$ \\
-uB tune       & $0.926$ & $0.497$ & $0.799$ & $0.437$ & $1.032$ & $0.445$ \\\midrule
-unfolded/truth & $1.07$ & $1.16$ & $1.88$ & $1.02$ & $1.53$ & $1.08$ \\\midrule
-$\sigma_\mathrm{int}$ & \multicolumn{2}{c|}{$0.596$} & \multicolumn{2}{c|}{$0.497$}
- & \multicolumn{2}{c}{$0.539$} \\
-$\chi^2/\mathrm{ndf}$ & \multicolumn{2}{c|}{$0.15/2$ ($p=0.93$)}
- & \multicolumn{2}{c|}{$2.36/2$ ($p=0.31$)} & \multicolumn{2}{c}{$1.01/2$ ($p=0.60$)} \\
+unfolded data & $1.086$ & $0.586$ & $0.386$ & $0.525$ & $0.810$ & $0.551$ \\
+uncertainty   & $\pm0.836$ & $\pm0.250$ & $\pm0.796$ & $\pm0.222$ & $\pm0.851$ & $\pm0.221$ \\
+$A_C$ truth   & $1.145$ & $0.598$ & $1.056$ & $0.458$ & $1.243$ & $0.518$ \\
+uB tune       & $1.139$ & $0.591$ & $1.135$ & $0.469$ & $1.287$ & $0.521$ \\\midrule
+unfolded/truth & $0.95$ & $0.98$ & $0.37$ & $1.15$ & $0.65$ & $1.06$ \\\midrule
+$\sigma_\mathrm{int}$ & \multicolumn{2}{c|}{$0.498$} & \multicolumn{2}{c|}{$0.429$} & \multicolumn{2}{c}{$0.462$} \\
+$\chi^2/\mathrm{ndf}$ & \multicolumn{2}{c|}{$0.01/2$ ($p=1.00$)} & \multicolumn{2}{c|}{$1.21/2$ ($p=0.55$)} & \multicolumn{2}{c}{$0.40/2$ ($p=0.82$)} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -695,22 +681,20 @@ $\chi^2/\mathrm{ndf}$ & \multicolumn{2}{c|}{$0.15/2$ ($p=0.93$)}
   \label{fig:ppi2bin_1p}
 \end{figure}
 
-All three extractions close, with $\chi^2$ of $0.15$, $2.37$ and $1.01$ on two bins
-($p = 0.93$, $0.31$, $0.60$). The $p_\pi$ differential cross section satisfies the field's
+All three extractions close, with $\chi^2$ of $0.01$, $1.21$ and $0.40$ on two bins on the
+current release. The $p_\pi$ differential cross section satisfies the field's
 binning criterion in every bin of every beam configuration here, as it does on the inclusive
 selection; the two are equivalent on that test, and the proton-tagged version is reported
 because it belongs to the exclusive final state, not because it is required to make $p_\pi$
 measurable.
 
-\paragraph{One number that needs stating plainly.} The RHC first bin unfolds to $1.88$ times
-its $A_C$-smeared truth, against $1.07$ for FHC and $1.53$ for combined. Quoted as a ratio
-that looks alarming, but the denominator is small and the absolute discrepancy is
-$2.448-1.300=1.15$ against an uncertainty of $0.78$, i.e.\ $1.5\sigma$; the closure $\chi^2$
-of $2.37/2$ ($p=0.31$) is unremarkable. The combined value sits between the two, as it must,
-being dominated by neither. The honest reading is an upward fluctuation in the
-least-populated bin of this fake-data throw rather than a defect in the extraction, but it
-is the one place in the proton-tagged set where the central value is not close to truth, and
-it should be watched when the throw is repeated.
+\paragraph{The least-populated bin.} On the release of 2026-08-17 the RHC first bin
+unfolded to $1.88$ times its $A_C$-smeared truth; on the current release, after the
+re-throw, it sits at $0.37$ times it ($0.386\pm0.796$ against $1.056$), with the closure
+$\chi^2$ of $1.21/2$ unremarkable either way. That the same bin swings from $+1.1\sigma$
+to $-0.8\sigma$ between two independent throws is the honest description of it: the bin
+holds too few events to say anything, and any real-data value in it should be read with
+its uncertainty and not its central value.
 
 \noindent One caveat remains. The split at $0.205$ was inherited from the inclusive
 optimisation rather than re-derived for this selection, so it is a working point that passes
@@ -891,23 +875,19 @@ $A_C$-smeared to the truth-level generator integral, for the six proton-tagged o
 It is a property of the response and the binning, not of the model: GENIE and GiBUU agree
 to a few per cent throughout.
 
-The two hadronic-mass variables are the \emph{least} affected in the whole analysis
-($0.77$--$0.88$). This is worth stating explicitly because $W_{\pi p}$ is the sharpest
-distribution measured here; the ratio of its largest to smallest bin is $\sim\!36$,
-against $\sim\!19$ for $\cos\theta_\mu$, whose forward peak is suppressed by a factor
-$\sim\!0.33$ (Sec.~\ref{sec:thetavar}). Sharpness alone therefore does not drive the
-suppression: $A_C$ removes structure that the \emph{response} cannot resolve, and
-$W_{\pi p}$ is built from directly measured pion and proton momenta with good resolution
-and equal-population bins that track the $\Delta(1232)$ peak, so the peak survives. No
-reparameterisation of $W$ is required.
-
-Two observables do carry a caveat. $\delta p_T$ is strongly suppressed ($0.43$--$0.45$),
-closer to the $\cos\theta_\mu$ regime than to $W$, and $p_n$ is \emph{enhanced} by a factor
-$\sim\!1.7$. Both effects are applied identically to data, tune and generators, so the
-closure is unaffected, but any model comparison read off the $\delta p_T$ and especially
-the $p_n$ panels is distorted by these factors and should not be interpreted as a direct
-statement about the truth-level predictions until the binning and response for those two
-observables have been revisited.
+On the current release the six proton-tagged observables are suppressed by similar
+amounts, $0.63$--$0.79$ (Table~\ref{tab:acwtki}): the two-bin TKI variables and
+$W_{\pi p}$ sit at $0.70$--$0.79$ and the six-bin $W_\mathrm{had}$, the most affected, at
+$0.63$. Sharpness alone does not drive the suppression: $W_{\pi p}$ is the sharpest
+distribution measured here (the ratio of its largest to smallest bin is $\sim\!36$) yet is
+suppressed no more than the TKI variables, because $A_C$ removes structure that the
+\emph{response} cannot resolve and $W_{\pi p}$ is built from directly measured pion and
+proton momenta with equal-population bins that track the $\Delta(1232)$ peak. No observable
+is enhanced by $A_C$ any more: the pre-fix set, in which $\delta p_T$ was suppressed to
+$0.43$ and $p_n$ amplified to $1.7$, was an artefact of the uniform-grid regularisation
+(footnote to the table), and the caveat that once attached to those two panels no longer
+applies. The suppression is applied identically to data, tune and generators, so model
+comparisons read off any panel are made on equal footing.
 
 \begin{table}[H]
   \centering
@@ -1216,7 +1196,7 @@ cross sections of the six-bin flux-averaged predictions.
 
 \paragraph{Six-bin $W_{\pi p}$ closure, diagnostic only.} For completeness the six-bin
 extraction was carried through the full chain in all three configurations (detector
-variations included, 2026-09-04 release). It closes against the $A_C$-smeared truth, but that
+variations included, 2026-09-06 release). It closes against the $A_C$-smeared truth, but that
 closure cannot restore shape information the response does not contain (the top bin is
 $2\%$ diagonal), so these numbers are a check of the machinery and \emph{not} a result;
 they were removed from the analysis note's result tables for that reason. The
@@ -1521,9 +1501,11 @@ for how the measurement compares to models.
 
 In $\cos\theta_\mu$ the signal is sharply forward-peaked: the last two bins
 ($\cos\theta_\mu>0.8$) hold most of the rate, and $A_C$ suppresses the integral of any
-truth-level prediction by a factor $\sim\!0.33$, against $\sim\!0.6$ for the momentum
-observables. The four generators are pushed $2$--$3\times$ below the tune and the data even
-though their truth-level total cross sections agree to within tens of percent.
+truth-level prediction strongly (row sums $0.17$--$0.39$ in FHC on the current release,
+against $0.66$--$0.91$ for $p_\mu$). Because the same $A_C$ is applied to the data, the tune
+and every generator, they are compared on equal footing; the $2$--$3\times$ deficit of the
+generators reported in earlier drafts was the duplicated $A_C$ (change log), not a property
+of the comparison.
 
 An earlier version of this note attributed both effects to the sharpness of the peak,
 $A_C$ smearing away an unresolvable feature, and thereby penalising the peaked generators
@@ -1633,30 +1615,32 @@ $p_n$                & --- & \multicolumn{4}{c}{} & $0.21 \to 0.88$ \\
 \end{tabular}
 \end{table}
 
-\paragraph{$\theta_\mu$ is reinstated, and the validation is decisive.} The fake data are
-Poisson throws from the MicroBooNE tune, so the tune is the model that \emph{ought} to fit
-best. Before the fix it did not stand out, because every model had been mapped onto the same
-curve; after it, it does:
+\paragraph{$\theta_\mu$ is reinstated.} The fake data are Poisson throws from the
+MicroBooNE tune, so the tune is the model that \emph{ought} to fit best. Before the fix it
+did not stand out, because every model had been mapped onto the same curve; after it, it
+does, though less dramatically than the first post-fix numbers suggested, which still
+carried the duplicated $A_C$ (change log). On the current release:
 
 \begin{center}\small
 \begin{tabular}{lcc}
 \toprule
-FHC $\theta_\mu$, $\chi^2/5$ bins & before (rank-1) & after \\\midrule
-MicroBooNE tune & $3.07$ ($p=0.69$) & $\mathbf{5.14}$ ($p=0.40$) \\
-GENIE           & $4.73$ ($p=0.45$) & $11.3$ ($p=0.046$) \\
-GiBUU           & $3.03$ ($p=0.70$) & $17.9$ ($p=0.003$) \\
-NuWro           & $2.90$ ($p=0.72$) & $38.6$ ($p=2.8\times10^{-7}$) \\
-NEUT            & $2.82$ ($p=0.73$) & $40.6$ ($p=1.1\times10^{-7}$) \\
+FHC $\theta_\mu$, $\chi^2/5$ bins & before the fix (rank-1) & current release \\\midrule
+MicroBooNE tune & $3.07$ ($p=0.69$) & $\mathbf{2.14}$ ($p=0.83$) \\
+GENIE           & $4.73$ ($p=0.45$) & $5.55$ ($p=0.35$) \\
+GiBUU           & $3.03$ ($p=0.70$) & $6.07$ ($p=0.30$) \\
+NuWro           & $2.90$ ($p=0.72$) & $9.10$ ($p=0.11$) \\
+NEUT            & $2.82$ ($p=0.73$) & $8.46$ ($p=0.13$) \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-\noindent The closure itself is unaffected and remains good, $\chi^2 = 2.17/5$ ($p=0.83$).
-The $\theta_\mu$ measurement is therefore no longer withdrawn: it carries genuine
-discriminating power, and on this fake data it correctly identifies the model the data were
-generated from. What must be withdrawn instead is the earlier \emph{explanation} that
-$\theta_\mu$ ``fixes'' the $\cos\theta_\mu$ tension; both parameterisations are now properly
-conditioned and should be read together.
+\noindent The closure is $1.52/5$ ($p=0.91$). The $\theta_\mu$ measurement is therefore no
+longer withdrawn: the tune fits best and the generators are separated from it, though at
+this exposure only at the $1$--$2\sigma$ level. What must be withdrawn instead is the earlier
+\emph{explanation} that $\theta_\mu$ ``fixes'' the $\cos\theta_\mu$ tension; both
+parameterisations are now properly conditioned and should be read together (the
+$\theta_\mu$ $\chi^2$ are systematically the larger, analysis note
+\noteref{Table}{tab:chi2_theta}).
 
 \paragraph{A correction to the survey below.} The survey of eighteen extractions reported
 that FHC $\theta_\mu$ was the only rank-deficient case. That was wrong in two ways. Combined
@@ -1677,7 +1661,8 @@ present in the truth-level predictions survives the smearing: the largest pairwi
 difference between normalised generator shapes before and after $A_C$, and their ratio.
 
 \begin{table}[htbp]\centering
-\caption{Retention of model discrimination through $A_C$. ``Before'' and ``after'' are the
+\caption{\textbf{[SUPERSEDED --- 2026-08 survey, before the width-aware regularisation.]}
+Retention of model discrimination through $A_C$. ``Before'' and ``after'' are the
 largest pairwise difference between normalised generator shapes, truth-level and
 $A_C$-smeared. A ratio near zero means the predictions have been collapsed onto a common
 curve and can no longer be told apart by the measurement; a ratio above unity means $A_C$
@@ -1745,14 +1730,16 @@ carry the caveats recorded here.
 
 \begin{table}[H]
   \centering
-  \caption{Integrated cross section ($10^{-38}$~cm$^2$/Ar) for the unfolded fake data, the
-    MicroBooNE tune and the four generators, in $\cos\theta_\mu$ and in $\theta_\mu$. All
-    entries are $A_C$-smeared, i.e.\ live in the same space as the measurement. ``$A_C$
-    supp.'' is the mean ratio of the $A_C$-smeared to the truth-level generator integral;
-    the momentum observable $p_\mu$ is shown for reference. \textbf{The FHC $\theta_\mu$
-    row is retained for the record only and must not be used for model comparison}: $A_C$
-    is rank-1 for that config, so every entry in the row is the same shape rescaled and the
-    apparent agreement is by construction (Table~\ref{tab:thetamu_rank1}).}
+  \caption{\textbf{[SUPERSEDED --- 2026-08-18 pass, retained for the record.]} Integrated
+    cross section ($10^{-38}$~cm$^2$/Ar) for the unfolded fake data, the MicroBooNE tune and
+    the four generators, in $\cos\theta_\mu$ and in $\theta_\mu$, as measured before the
+    regularisation fix, the removal of the duplicated $A_C$ (which is why the generator
+    columns sit far below the tune), the beam-off corrections and the re-throw. On the
+    current release the unfolded integrals are $0.754$ ($\cos\theta_\mu$) and $0.960$
+    ($\theta_\mu$) for FHC and $0.733$ and $0.805$ for RHC (analysis note,
+    \noteref{Table}{tab:sigint_all}), and the generator comparison is
+    \noteref{Table}{tab:chi2_theta}. The FHC $\theta_\mu$ row of this table was made under
+    a rank-1 $A_C$ and carries no shape information.}
   \label{tab:theta_vs_costheta}
   \begin{tabular}{llcccccc}
     \toprule
@@ -1778,11 +1765,12 @@ carry the caveats recorded here.
     points), the MicroBooNE tune (black line) and the four generators are all
     $A_C$-smeared. In $\cos\theta_\mu$ the predictions are strongly suppressed by $A_C$ and
     fall well below both the data and the tune; the most suppressed models are those whose
-    backward bins $A_C$ drives negative. \textbf{The FHC $\theta_\mu$ panel in this figure
-    predates the regularisation fix}: $A_C$ was rank-1 there, so the data and every
-    prediction are the same curve up to normalisation and their apparent agreement carries no
-    shape information. With the width-aware regularisation $\theta_\mu$ discriminates
-    normally (Sec.~\ref{sec:thetavar}).}
+    backward bins $A_C$ drives negative. \textbf{Historical figure (2026-08-18, not
+    regenerated)}: every panel predates the regularisation fix, the removal of the
+    duplicated $A_C$, the beam-off corrections and the fake-data re-throw; the FHC
+    $\theta_\mu$ panel in particular was made under a rank-1 $A_C$. The current
+    distributions are Figs.~\noteref{Fig.}{fig:dsigma_current}--\noteref{Fig.}{fig:dsigma_comb}
+    of the analysis note.}
   \label{fig:theta_vs_costheta}
 \end{figure}
 
@@ -1828,7 +1816,7 @@ $p_\pi$ and $35.0\%$ on $\cos\theta_\mu$.
 
 \begin{center}\scriptsize
 \captionof{table}{FHC (\{Run~1,2,4,5\}) systematic breakdown by source, bin-averaged
-  fractional uncertainty (\%), regenerated from the systematics dumps of the 2026-09-04
+  fractional uncertainty (\%), regenerated from the systematics dumps of the 2026-09-06
   release (\texttt{logs/systdump}); ``Prediction total'' excludes
   the data statistics. The previous version of this table predated the detector-variation
   rebuild (detector terms of $\sim10\%$) and is superseded.}
@@ -1901,10 +1889,11 @@ POT $+$ targets & 3.1 & 4.1 & 3.5 & 3.4 & 3.4 & 3.3 \\
 \label{sec:binopt}
 % =============================================================================
 
-The reconstructed spectra, response matrices, efficiencies, and differential
-cross sections shown throughout this note are the \textsc{XSecAnalyzer} framework
-outputs on the \emph{optimised} binning defined here; the four-generator
-comparisons of Fig.~\ref{fig:nuwro_closure} onward likewise use it.
+This section records the 2026-08 binning optimisation on which the released binnings
+were based; its table ends at the binnings of that time ($p_\pi$ five bins, $\theta_{\mu\pi}$
+seven, $\cos\theta_\pi$ five), which were subsequently coarsened and, for $\cos\theta_\pi$,
+re-binned on the current release (\S\ref{sec:binning_recheck}). The released binnings are
+those of the analysis note's appendix.
 
 \subsection{Momentum-threshold validation}
 The two signal-definition momentum thresholds sit at the selection efficiency
@@ -2053,6 +2042,13 @@ which are set by the same resolutions on a sample a third the size, were not re-
 \subsection{Multi-run overlay and a resonance-model closure}
 \label{sec:multirun}
 
+\noindent\emph{Provenance.} This section records the 2026-08 pass in which the multi-run
+overlay was assembled; its flux-term numbers and its description of the unfolded flux term
+as ``amplified by the Wiener--SVD propagation'' are of that pass. The analysis note
+(\noteref{Sec.}{sec:fluxanatomy}) now attributes the $17\%\to30\%$ growth to the correlated
+background subtraction, $\delta\Phi/\Phi\,(1+B/S)$, demonstrated by the one-bin total; the
+operator-amplification reading is superseded.
+
 Two facts frame what more statistics can and cannot do for the flux term. First,
 the flux \emph{systematic} is a normalisation-and-shape model uncertainty and is
 therefore POT-independent: adding data or overlay does not change it. Second,
@@ -2193,6 +2189,12 @@ RHC, and their combination.
 % =============================================================================
 \section{Configuration closure: is COMB the combination of its own inputs?}
 \label{sec:combtruth}
+
+\noindent\emph{Provenance.} This section records the 2026-08-28 pass on which the
+combined-configuration defect was found and fixed. Its yields and the ``no detVar
+systematic'' remarks about the proton-tagged family are of that pass; since 2026-08-31 all
+proton-tagged extractions carry detector variations and the combined $p_\mu$ detector term
+is $21.4\%$ (analysis note).
 
 The integrated cross section extracted from a given configuration is not a
 configuration-independent number: it depends on the additional smearing matrix
@@ -2422,9 +2424,11 @@ which would bias every extracted cross section by a fixed factor while leaving t
 $\chi^2$ untouched.
 
 The check is implemented inside \texttt{UnfolderNuMI} and runs on every extraction, printing
-a \texttt{[IDENTITY]} line. Table~\ref{tab:identity} collects it for all $39$ extractions in
-this analysis: six inclusive observables and seven proton-tagged ones, each in three beam
-configurations.
+a \texttt{[IDENTITY]} line. Table~\ref{tab:identity} collects it for the $39$ extractions
+of the pass on which it was compiled (six inclusive observables and seven proton-tagged ones
+at their six-bin binnings, each in three beam configurations); the current release has $51$
+(eleven proton-tagged observables, the TKI variables at two bins) and every one of them
+passes the same check.
 
 \begin{table}[htbp]\centering
 \caption{Identity closure for every extraction, \emph{as measured before the regularisation
@@ -2463,8 +2467,9 @@ comb & $\theta_\mu$  & 5 & $2.9\times10^{-10}$ & comb & $p_n$        & 6 & $8.7\
 \end{tabular}
 \end{table}
 
-\noindent The worst deviation over all $39$ extractions is $4.4\times10^{-6}$ relative, on
-FHC $W_{\pi p}$; the inclusive observables are all below $2.5\times10^{-7}$. These are the
+\noindent The worst deviation over the $39$ extractions of that pass, and over the $51$ of
+the current release, is $4.4\times10^{-6}$ relative, on FHC $W_{\pi p}$; the inclusive
+observables are all below $2.5\times10^{-7}$. These are the
 rounding errors of the singular-value decomposition and the matrix products that follow it,
 not physical effects: they remain five orders of magnitude below the smallest systematic
 uncertainty in the analysis.
@@ -2557,9 +2562,10 @@ raw MC events failing \texttt{swtrig} also fail the topological cut.
 The cut has been retained for formal correctness but contributes nothing to the
 current normalisation.
 
-\medskip\noindent\textbf{Detector variations.}  The detector systematic in
-\noteref{Table}{tab:systbreak} ($9.6$--$14.6\%$) was built from the Run-1 FHC detector
-variations applied globally.  The multi-run FHC, RHC, and combined results instead
+\medskip\noindent\textbf{Detector variations.}  The detector systematic of the pass
+described here ($9.6$--$14.6\%$; the current values are $15.6$--$35.0\%$,
+\noteref{Table}{tab:systbreak}) was built from the Run-1 FHC detector variations applied
+globally.  The multi-run FHC, RHC, and combined results instead
 use \emph{native} Run-4 detector variations per horn mode (the standard eight-knob
 set), with the combined result accumulating the Run-4 FHC \emph{and} Run-4 RHC detVar
 samples, each scaled to its own mode's data exposure, which the framework now
@@ -2654,10 +2660,15 @@ subtracts \textsc{Genie}-predicted rather than NuWro backgrounds.
 
 \begin{table}[H]
   \centering
-  \caption{NuWro fake-data closure: ratio of integrated cross sections and the
-    $\chi^2$ of the unfolded NuWro result relative to the \textsc{Genie} tune.
-    The $\pmuM$ $\chi^2$ is undefined because its 22-bin Wiener-SVD covariance is
-    numerically singular (condition number $\sim4\times10^{13}$).}
+  \caption{\textbf{[HISTORICAL, 2026-07; ratio column not trustworthy.]} NuWro fake-data
+    closure: ratio of integrated cross sections and the $\chi^2$ of the unfolded NuWro
+    result relative to the \textsc{Genie} tune. The ratio column was found on 2026-09-06 to
+    be identical to the identity-regularised self-closure column of
+    Table~\ref{tab:selfclose}, so it does not show the NuWro/\textsc{Genie} ratio of
+    order two that the text and Fig.~\ref{fig:nuwro_closure} describe; the original values
+    are not recoverable from the repository. The $\pmuM$ $\chi^2$ is undefined because its
+    22-bin Wiener-SVD covariance is numerically singular (condition number
+    $\sim4\times10^{13}$).}
   \label{tab:nuwroclosure}
   \begin{tabular}{l r r}
     \toprule
