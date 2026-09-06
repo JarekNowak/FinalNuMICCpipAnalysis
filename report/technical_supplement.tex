@@ -17,9 +17,9 @@ Production on Argon in the NuMI Beam\par}
 \vspace{0.8cm}
 {\large Companion to the analysis note\par}
 \vspace{0.5cm}
-{\normalsize Draft 1.4, 2026-09-04\par}
+{\normalsize Draft 1.5, 2026-09-06\par}
 \vspace{0.15cm}
-{\footnotesize\ttfamily release 2026-09-04 \textperiodcentered\ 51 differential extractions $+$ 6 one-bin totals \textperiodcentered\ blind\par}
+{\footnotesize\ttfamily release 2026-09-06 \textperiodcentered\ 51 differential extractions $+$ 6 one-bin totals \textperiodcentered\ blind\par}
 \vspace{1.5cm}
 {\large Ishanee Pophale, Jarek Nowak\par}
 \vspace{0.5cm}
@@ -1436,7 +1436,7 @@ and that both are limited by physics rather than by analysis choices.
 \label{sec:crosschecks}
 
 \noindent\emph{Provenance.} The D'Agostini cross-check of this section was re-evaluated on
-the 2026-09-04 release (per-run beam-off, re-thrown fake data); Table~\ref{tab:dagostini}
+the 2026-09-06 release (per-run beam-off, re-thrown fake data, five-bin $\cos\theta_\pi$); Table~\ref{tab:dagostini}
 and the numbers quoted around it are from that run. The closure figures of the other
 methods were evaluated on the 2026-08-31 release and not re-run; the comparison they
 support is a property of the operators and is unaffected by the re-throw.
@@ -1470,11 +1470,11 @@ additional-smearing matrix $A_C$, its unfolded total is free of the
 (non-norm-preserving) $A_C$ suppression and is stable against the iteration count.
 Table~\ref{tab:dagostini} compares the two integrated totals for all three
 configurations: the D'Agostini result sits above the Wiener-SVD total by
-$29\%$ (FHC), $27\%$ (RHC) and $20\%$ (Combined), equivalently $A_C$ suppresses the
-quoted Wiener-SVD integral by $22\%$, $21\%$ and $17\%$, and it varies by $\le0.3\%$
+$31\%$ (FHC), $29\%$ (RHC) and $23\%$ (Combined), equivalently $A_C$ suppresses the
+quoted Wiener-SVD integral by $23\%$, $23\%$ and $19\%$, and it varies by $\le0.3\%$
 across 1, 2 and 4 iterations. The D'Agostini integral is flat across the five observables
-to $0.9\%$ (FHC, $1.017$--$1.026$), $1.0\%$ (RHC, $0.930$--$0.939$) and $0.3\%$
-(Combined, $0.972$--$0.975$), against Wiener-SVD spreads of $15\%$, $25\%$ and $17\%$,
+to $1.2\%$ (FHC, $1.017$--$1.028$), $0.9\%$ (RHC, $0.930$--$0.939$) and $0.5\%$
+(Combined, $0.972$--$0.976$), against Wiener-SVD spreads of $24\%$, $35\%$ and $34\%$,
 directly confirming that the observable-to-observable spread in the Wiener-SVD integrated
 cross sections (\noteref{Table}{tab:sigint_all}) is the $A_C$ smearing rather than a
 physical or acceptance effect.
@@ -1484,9 +1484,9 @@ physical or acceptance effect.
   \caption{Wiener-SVD vs.\ D'Agostini (iterative Bayesian, 4~iterations) integrated
     cross section, averaged over the five inclusive observables ($p_\mu$, two-bin $p_\pi$,
     $\cos\theta_\mu$, $\cos\theta_\pi$, $\theta_{\mu\pi}$; $10^{-38}$~cm$^2$/Ar), on
-    the 2026-09-04 release. D'Agostini carries no $A_C$ smearing, so it recovers a
-    $20$--$29\%$ higher total, and it is flat across observables (spread $0.9\%$ FHC,
-    $1.0\%$ RHC, $0.3\%$ combined) where the Wiener-SVD integrals spread by $15$--$25\%$,
+    the 2026-09-06 release. D'Agostini carries no $A_C$ smearing, so it recovers a
+    $23$--$31\%$ higher total, and it is flat across observables (spread $1.2\%$ FHC,
+    $0.9\%$ RHC, $0.5\%$ combined) where the Wiener-SVD integrals spread by $24$--$35\%$,
     confirming that the observable-to-observable variation of $\sigma_\mathrm{int}$ in
     \noteref{Table}{tab:sigint_all} is the $A_C$ smearing rather than a physical or
     normalisation effect. The last column is the change of the D'Agostini integral between
@@ -1497,9 +1497,9 @@ physical or acceptance effect.
     Config & $\langle\sigma\rangle_\mathrm{WSVD}$ & $\langle\sigma\rangle_\mathrm{DAg}$
       & DAg/WSVD & DAg 1$\to$4~iter \\
     \midrule
-    FHC      & $0.792$ & $1.021$ & $1.29$ & $\le0.3\%$ \\
-    RHC      & $0.733$ & $0.933$ & $1.27$ & $\le0.3\%$ \\
-    Combined & $0.809$ & $0.974$ & $1.20$ & $\le0.1\%$ \\
+    FHC      & $0.782$ & $1.022$ & $1.31$ & $\le0.3\%$ \\
+    RHC      & $0.723$ & $0.933$ & $1.29$ & $\le0.3\%$ \\
+    Combined & $0.790$ & $0.974$ & $1.23$ & $\le0.1\%$ \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -1837,16 +1837,16 @@ $p_\pi$ and $35.0\%$ on $\cos\theta_\mu$.
 \toprule
 Source & $p_\mu$ & $p_\pi$ & $\cos\theta_\mu$ & $\cos\theta_\pi$ & $\theta_{\mu\pi}$ & $\theta_\mu$ \\
 \midrule
-\textbf{Prediction total} & \textbf{40.7} & \textbf{50.2} & \textbf{42.0} & \textbf{36.9} & \textbf{36.5} & \textbf{31.0} \\
-Cross section (GENIE) & 10.7 & 16.9 & 10.3 & 11.5 & 10.5 & 8.5 \\
-Flux (PPFX) & 28.0 & 32.5 & 28.0 & 26.1 & 28.3 & 24.7 \\
-Detector & 24.7 & 30.3 & 28.3 & 20.9 & 19.6 & 15.6 \\
-Reinteraction & 4.4 & 11.9 & 3.6 & 4.9 & 4.0 & 3.5 \\
-MC stat & 4.9 & 6.3 & 5.3 & 4.1 & 2.7 & 2.9 \\
-EXT stat & 0.9 & 3.1 & 2.3 & 1.1 & 1.2 & 1.4 \\
-Data stat & 14.3 & 18.3 & 15.4 & 12.0 & 8.2 & 8.6 \\
-POT $+$ targets & 3.4 & 4.2 & 3.6 & 3.3 & 3.5 & 3.0 \\
-\textbf{Total (incl.\ data stat)} & \textbf{43.5} & \textbf{53.9} & \textbf{44.9} & \textbf{39.0} & \textbf{37.5} & \textbf{32.4} \\
+\textbf{Prediction total} & \textbf{40.7} & \textbf{50.2} & \textbf{42.0} & \textbf{38.8} & \textbf{36.5} & \textbf{31.0} \\
+Cross section (GENIE) & 10.7 & 16.9 & 10.3 & 11.3 & 10.5 & 8.5 \\
+Flux (PPFX) & 28.0 & 32.5 & 28.0 & 27.0 & 28.3 & 24.7 \\
+Detector & 24.7 & 30.3 & 28.3 & 22.9 & 19.6 & 15.6 \\
+Reinteraction & 4.4 & 11.9 & 3.6 & 5.2 & 4.0 & 3.5 \\
+MC stat & 4.9 & 6.3 & 5.3 & 4.3 & 2.7 & 2.9 \\
+EXT stat & 0.9 & 3.1 & 2.3 & 1.5 & 1.2 & 1.4 \\
+Data stat & 14.3 & 18.3 & 15.4 & 12.7 & 8.2 & 8.6 \\
+POT $+$ targets & 3.4 & 4.2 & 3.6 & 3.4 & 3.5 & 3.0 \\
+\textbf{Total (incl.\ data stat)} & \textbf{43.5} & \textbf{53.9} & \textbf{44.9} & \textbf{41.0} & \textbf{37.5} & \textbf{32.4} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -1859,16 +1859,16 @@ POT $+$ targets & 3.4 & 4.2 & 3.6 & 3.3 & 3.5 & 3.0 \\
 \toprule
 Source & $p_\mu$ & $p_\pi$ & $\cos\theta_\mu$ & $\cos\theta_\pi$ & $\theta_{\mu\pi}$ & $\theta_\mu$ \\
 \midrule
-\textbf{Prediction total} & \textbf{37.7} & \textbf{48.6} & \textbf{46.3} & \textbf{39.1} & \textbf{32.6} & \textbf{36.1} \\
-Cross section (GENIE) & 12.0 & 14.4 & 9.1 & 11.1 & 10.7 & 10.7 \\
-Flux (PPFX) & 27.6 & 28.4 & 25.8 & 24.7 & 25.2 & 25.6 \\
-Detector & 21.5 & 34.7 & 35.0 & 26.1 & 16.6 & 22.4 \\
+\textbf{Prediction total} & \textbf{37.7} & \textbf{48.6} & \textbf{46.3} & \textbf{38.5} & \textbf{32.6} & \textbf{36.1} \\
+Cross section (GENIE) & 12.0 & 14.4 & 9.1 & 10.8 & 10.7 & 10.7 \\
+Flux (PPFX) & 27.6 & 28.4 & 25.8 & 25.2 & 25.2 & 25.6 \\
+Detector & 21.5 & 34.7 & 35.0 & 25.5 & 16.6 & 22.4 \\
 Reinteraction & 4.2 & 8.6 & 4.1 & 5.1 & 3.7 & 3.6 \\
-MC stat & 3.8 & 3.7 & 4.8 & 3.3 & 2.4 & 2.5 \\
-EXT stat & 1.0 & 1.2 & 1.2 & 0.9 & 0.6 & 0.7 \\
-Data stat & 13.0 & 13.0 & 16.7 & 11.5 & 8.4 & 9.0 \\
-POT $+$ targets & 3.8 & 4.0 & 3.6 & 3.4 & 3.5 & 3.5 \\
-\textbf{Total (incl.\ data stat)} & \textbf{40.5} & \textbf{50.5} & \textbf{49.5} & \textbf{40.9} & \textbf{33.7} & \textbf{37.2} \\
+MC stat & 3.8 & 3.7 & 4.8 & 3.6 & 2.4 & 2.5 \\
+EXT stat & 1.0 & 1.2 & 1.2 & 1.0 & 0.6 & 0.7 \\
+Data stat & 13.0 & 13.0 & 16.7 & 12.3 & 8.4 & 9.0 \\
+POT $+$ targets & 3.8 & 4.0 & 3.6 & 3.5 & 3.5 & 3.5 \\
+\textbf{Total (incl.\ data stat)} & \textbf{40.5} & \textbf{50.5} & \textbf{49.5} & \textbf{40.5} & \textbf{33.7} & \textbf{37.2} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -1881,16 +1881,16 @@ POT $+$ targets & 3.8 & 4.0 & 3.6 & 3.4 & 3.5 & 3.5 \\
 \toprule
 Source & $p_\mu$ & $p_\pi$ & $\cos\theta_\mu$ & $\cos\theta_\pi$ & $\theta_{\mu\pi}$ & $\theta_\mu$ \\
 \midrule
-\textbf{Prediction total} & \textbf{34.9} & \textbf{47.9} & \textbf{37.3} & \textbf{35.3} & \textbf{33.2} & \textbf{34.4} \\
-Cross section (GENIE) & 10.3 & 15.7 & 10.4 & 11.2 & 10.0 & 9.3 \\
-Flux (PPFX) & 24.2 & 30.2 & 25.7 & 24.6 & 25.7 & 25.2 \\
-Detector & 21.4 & 30.8 & 23.8 & 20.6 & 17.7 & 20.6 \\
-Reinteraction & 4.4 & 10.8 & 3.8 & 4.6 & 3.5 & 3.7 \\
-MC stat & 3.9 & 3.7 & 2.9 & 2.8 & 1.9 & 2.4 \\
-EXT stat & 0.8 & 1.6 & 1.2 & 0.8 & 0.6 & 1.0 \\
-Data stat & 12.4 & 11.8 & 9.3 & 9.0 & 6.3 & 7.7 \\
-POT $+$ targets & 3.1 & 4.1 & 3.5 & 3.3 & 3.4 & 3.3 \\
-\textbf{Total (incl.\ data stat)} & \textbf{37.2} & \textbf{49.5} & \textbf{38.6} & \textbf{36.5} & \textbf{33.8} & \textbf{35.4} \\
+\textbf{Prediction total} & \textbf{34.9} & \textbf{47.9} & \textbf{37.3} & \textbf{37.1} & \textbf{33.2} & \textbf{34.4} \\
+Cross section (GENIE) & 10.3 & 15.7 & 10.4 & 10.6 & 10.0 & 9.3 \\
+Flux (PPFX) & 24.2 & 30.2 & 25.7 & 25.6 & 25.7 & 25.2 \\
+Detector & 21.4 & 30.8 & 23.8 & 22.5 & 17.7 & 20.6 \\
+Reinteraction & 4.4 & 10.8 & 3.8 & 5.1 & 3.5 & 3.7 \\
+MC stat & 3.9 & 3.7 & 2.9 & 2.9 & 1.9 & 2.4 \\
+EXT stat & 0.8 & 1.6 & 1.2 & 1.0 & 0.6 & 1.0 \\
+Data stat & 12.4 & 11.8 & 9.3 & 9.3 & 6.3 & 7.7 \\
+POT $+$ targets & 3.1 & 4.1 & 3.5 & 3.4 & 3.4 & 3.3 \\
+\textbf{Total (incl.\ data stat)} & \textbf{37.2} & \textbf{49.5} & \textbf{38.6} & \textbf{38.3} & \textbf{33.8} & \textbf{35.4} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -2038,10 +2038,13 @@ whereas the forward split (edges $-1,-0.1,0.35,0.6,0.8,1$) keeps every diagonal 
 $0.74$, keeps the per-bin uncertainties in the released range, raises the data-statistical
 term by only $0.7\%$ and \emph{improves} the conditioning of $A_C$ ($s_{\min}/s_1$ from
 $0.27$ to $0.46$ in FHC, $0.24$ to $0.38$ in RHC) while closing to $0.89$--$1.07$. It is
-admissible and is the only change this re-check supports; adopting it would require the
-generator predictions to be regenerated at the new edges and the three $\cos\theta_\pi$
-extractions and their control-region binning to be re-released, and is offered as a
-decision rather than made here. The released binnings of the proton-tagged observables,
+the only change this re-check supports, and it was adopted on 2026-09-06: the generator
+predictions were regenerated at the new edges from the event-level files (the unchanged
+observables reproduce the previous prediction files to machine precision, which also
+verifies the generator chain end to end), the three inclusive $\cos\theta_\pi$
+extractions were rebuilt and re-released, and the D'Agostini cross-check was re-run. No
+control-region distribution uses $\cos\theta_\pi$, so the frozen sideband binning is
+unaffected. The proton-tagged $\cos\theta_\pi$ keeps its four bins. The released binnings of the proton-tagged observables,
 which are set by the same resolutions on a sample a third the size, were not re-tested.
 
 \section{Multi-run overlay, resonance closure, and configuration closure}

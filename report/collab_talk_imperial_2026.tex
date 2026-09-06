@@ -129,7 +129,7 @@
     \item Wiener-SVD (\textsc{XSecAnalyzer}), second-derivative regularisation aware of the non-uniform bin widths
     \item the result is $A_C\,x_{\rm true}$; every prediction is smeared by the released $A_C$ before comparison
     \item $A_C$ is \emph{not} norm preserving: the integral of a differential result is observable-dependent
-      ($0.66$--$0.96\times10^{-38}$~cm$^2$/Ar); D'Agostini gives a flat, $20$--$29\%$ higher integral
+      ($0.62$--$0.96\times10^{-38}$~cm$^2$/Ar); D'Agostini gives a flat, $23$--$31\%$ higher integral
     \item \alert{the physical total is a one-bin extraction: full $\cos\theta_\mu$ range, $A_C\equiv1$}
   \end{itemize}
   \column{.45\textwidth}
@@ -201,7 +201,7 @@
   \column{.5\textwidth}
   \textbf{Validation}
   \begin{itemize}\itemsep2pt
-    \item fake-data closure: unfolded/realised truth $=1.018$ on average over the 18 inclusive extractions; all $p>0.9$
+    \item fake-data closure: unfolded/realised truth $=1.010$ on average over the 18 inclusive extractions; all $p>0.9$
     \item 32-throw ensemble (current release): pull widths $1.08$ ($p_\mu$), $0.97$ ($\cos\theta_\mu$), $1.02$ (one-bin total); 62--71\% / 92--94\% coverage; means $0.5$--$2.7\%$ low, at most $1.9\sigma$, stated not corrected
     \item clean-cache rebuild of all 51 extractions is bit-identical
     \item five automated guards: normalisation manifest, systematics/file coupling, staleness, table consistency, blinding guard
@@ -302,7 +302,7 @@
     \item \alert{We ask to open the four inclusive control regions under the frozen procedure.}
   \end{itemize}
   \vspace{4pt}
-  \footnotesize Documents: analysis note (Draft 1.4), technical supplement, change log; data release in \texttt{report/data\_release/}.
+  \footnotesize Documents: analysis note (Draft 1.5), technical supplement, change log; data release in \texttt{report/data\_release/}.
 \end{frame}
 
 % ===========================================================================
@@ -468,7 +468,7 @@
   \textbf{Fake-data closure} (18 inclusive extractions)
   \begin{itemize}\itemsep2pt
     \item fake data: an external Poisson throw of the CV prediction per run, weights reset to one in both reco and truth
-    \item unfolded / realised truth $=1.018$ on average; $\chi^2$ probabilities $>0.9$ everywhere
+    \item unfolded / realised truth $=1.010$ on average; $\chi^2$ probabilities $>0.9$ everywhere
     \item numuMC self-closure: unfolded/truth $0.94$--$1.06$ for every observable, so the Wiener-SVD is unbiased on the injected model
     \item the $A_C$-smeared integral is observable-dependent by construction; D'Agostini gives a flat integral $\sim\!30\%$ higher, iteration-stable
   \end{itemize}
@@ -546,7 +546,7 @@
     \item beam direction: truth uses the per-event neutrino direction; reco uses target-to-vertex, with the convention of the NuMI $\nu_e$ analysis
     \item $64.6\%$ of events changed $\cos\theta_\mu$ bin when the axis was corrected from detector $z$ to the beam
     \item $p_\mu$, $p_\pi$, $\theta_{\mu\pi}$ and the selection are frame-independent and were unaffected
-    \item $\cos\theta_\pi$ coarsened $5\to4$ and $\theta_{\mu\pi}$ $7\to5$ bins to limit $A_C$ smearing
+    \item $\theta_{\mu\pi}$ coarsened $7\to5$ bins to limit $A_C$ smearing; $\cos\theta_\pi$ re-binned to five forward-split bins ($-1,-0.1,0.35,0.6,0.8,1$) after the 2026-09-05 re-check: better-conditioned $A_C$, same per-bin uncertainties
   \end{itemize}
   \end{columns}
 \end{frame}

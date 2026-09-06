@@ -12,9 +12,9 @@ Production on Argon in the NuMI Beam\par}
 \vspace{0.8cm}
 {\large Corrections that changed a result\par}
 \vspace{0.5cm}
-{\normalsize Draft 1.4, 2026-09-04\par}
+{\normalsize Draft 1.5, 2026-09-06\par}
 \vspace{0.15cm}
-{\footnotesize\ttfamily release 2026-09-04 \textperiodcentered\ 51 differential extractions $+$ 6 one-bin totals \textperiodcentered\ blind\par}
+{\footnotesize\ttfamily release 2026-09-06 \textperiodcentered\ 51 differential extractions $+$ 6 one-bin totals \textperiodcentered\ blind\par}
 \vspace{1.5cm}
 {\large Ishanee Pophale, Jarek Nowak\par}
 \vspace{0.5cm}
@@ -558,6 +558,25 @@ the proton-tag values ($\mathrm{LLR}<0.05$, $p_p>0.3$~GeV/$c$) are stated precis
 flux mean energies ($0.48$~GeV) and the fraction above $0.3$~GeV ($40\%$) are given, which
 is the origin of the factor $\sim\!3$ against the BNB total. Some twenty further inline
 numbers that had survived from older passes were corrected.
+
+\subsection{Inclusive $\cos\theta_\pi$ re-binned to five forward-split bins}
+
+The binning re-check of 2026-09-05 (technical supplement) found that every released binning
+except $\cos\theta_\pi$ is at its resolution limit, and that $\cos\theta_\pi$ admits a fifth
+bin in the forward hemisphere. Adopted on 2026-09-06: edges $-1,-0.1,0.35,0.6,0.8,1$
+replace $-1,-0.1,0.35,0.75,1$ for the three inclusive extractions (the proton-tagged
+$\cos\theta_\pi$ keeps four bins). The four generator predictions were regenerated at the
+new edges from the event-level files (\texttt{generator\_predictions/costhpi5}); the
+unchanged observables reproduce the previous prediction files to machine precision. The
+three universe files were rebuilt (SLURM 3277974), all extractions re-unfolded and the
+release regenerated; the D'Agostini cross-check was re-run.
+
+\textbf{Effect.} FHC $\cos\theta_\pi$: $\sigma_\mathrm{int}$ $0.726\to0.674$, closure
+$\chi^2$ $0.80/4\to0.68/5$, $A_C$ row sums $0.71$--$0.82\to0.68$--$0.77$,
+$s_{\min}/s_1$ $0.27\to0.46$; RHC $0.663\to0.615$, $0.43/4\to0.49/5$; combined
+$0.753\to0.658$, $1.05/4\to0.74/5$. The inclusive closure mean moves from $1.018$ to
+$1.010$, the range of inclusive integrals to $0.62$--$0.96$, and the D'Agostini-to-Wiener-SVD
+ratio to $1.23$--$1.31$ (flat to $\le1.2\%$). No other extraction changes.
 
 \subsection{Documentation-only corrections from the 2026-09-02 review}
 

@@ -6,7 +6,7 @@
 \newcommand{\suppref}[2]{#1~\ref{S-#2} of the technical supplement}
 % Stamp appended to every release-derived table caption: the extraction pass and the
 % results file it was generated from (a reviewer's request after stale tables survived).
-\newcommand{\releasestamp}{[release 2026-09-04, \texttt{current\_results.tsv}, per-run EXT, re-thrown fake data]}
+\newcommand{\releasestamp}{[release 2026-09-06, \texttt{current\_results.tsv}, per-run EXT, re-thrown fake data, five-bin $\cos\theta_\pi$]}
 
 \begin{document}
 
@@ -19,9 +19,9 @@
   \vspace{0.8cm}
   {\large Analysis Note, Full FHC, RHC, and Combined Exposure\par}
   \vspace{0.5cm}
-  {\normalsize Draft 1.4, 2026-09-04\par}
+  {\normalsize Draft 1.5, 2026-09-06\par}
 \vspace{0.15cm}
-{\footnotesize\ttfamily release 2026-09-04 \textperiodcentered\ 51 differential extractions $+$ 6 one-bin totals \textperiodcentered\ blind\par}
+{\footnotesize\ttfamily release 2026-09-06 \textperiodcentered\ 51 differential extractions $+$ 6 one-bin totals \textperiodcentered\ blind\par}
   \vspace{1.5cm}
   {\large Ishanee Pophale, Jarek Nowak\par}
   \vspace{0.5cm}
@@ -63,7 +63,7 @@
     (Table~\ref{tab:cutcount}): FHC $1.03\pm0.40$, RHC $0.93\pm0.35$ and combined
     $0.97\pm0.37$ ($\times10^{-38}$~cm$^2$/Ar) on the thrown fake data, closing on the
     realised truth to $0.975$--$0.99$; the RHC/FHC ratio of the injected tune is $0.901$. The Wiener-SVD integrated cross sections are of order
-    $0.66$--$0.96\times10^{-38}$~cm$^2$/Ar (Table~\ref{tab:sigint_all}); they differ
+    $0.62$--$0.96\times10^{-38}$~cm$^2$/Ar (Table~\ref{tab:sigint_all}); they differ
     between observables because the additional-smearing matrix $A_C$ is not norm
     preserving, so a ratio of two of them is observable-dependent and is not quoted as a
     result. The RHC deficit is a property of the injected sample rather than a
@@ -79,14 +79,14 @@
     %
     The extraction is validated by a same-sample self-closure, and cross-checked against
     the D'Agostini iterative-Bayesian method: its flat, iteration-stable integral
-    ($20$--$29\%$ above Wiener-SVD, and flat to $\le1.0\%$ across observables where the
-      Wiener-SVD spread is $15$--$25\%$; re-evaluated on this release)
+    ($23$--$31\%$ above Wiener-SVD, and flat to $\le1.2\%$ across observables where the
+      Wiener-SVD spread is $24$--$35\%$; re-evaluated on this release)
       confirms that the
     observable-to-observable spread of the Wiener-SVD integrated cross sections is
     the additional-smearing matrix $A_C$, not a physical or acceptance effect
     (\suppref{Sec.}{sec:crosschecks}). All results use the \textsc{XSecAnalyzer}
     framework on the resolution-optimised binning of \suppref{Sec.}{sec:binopt}.
-      The unfolded integral reproduces the realised fake-data truth to $1.018$ on
+      The unfolded integral reproduces the realised fake-data truth to $1.010$ on
       average over the eighteen inclusive extractions (second-derivative regularisation;
       the earlier $1.001$ was measured against a truth that still carried the
       central-value weight once too often, \S\ref{sec:limitations}).  Earlier versions of this note carried a $13\%$ excess whose origin was
@@ -2175,7 +2175,7 @@ Uncertainties     & Closed-form, linear                 & Correlated across iter
 Wiener-SVD is the primary result, for its objective regularisation and its explicit,
 reportable bias $A_C$; D'Agostini serves as the quantitative cross-check
 (\suppref{Sec.}{sec:crosschecks}; re-evaluated on this release), where its flat,
-iteration-stable integral, $20$--$29\%$ above Wiener-SVD (config-dependent), confirms
+iteration-stable integral, $23$--$31\%$ above Wiener-SVD (config-dependent), confirms
 that the observable-to-observable spread of the
 Wiener-SVD integrated cross sections (Table~\ref{tab:sigint_all}) is the $A_C$ smearing
 rather than a physical or acceptance effect. That is all it can establish here: with
@@ -2326,7 +2326,7 @@ colour scale includes the efficiency, so the columns sum to $\varepsilon_j$, not
 for the six observables (the $p_\pi$ panel at the superseded five-bin binning, as a
 diagnostic; the rest at the released binning). The column-normalised diagonals of the
 released FHC responses (\texttt{[DIAGDUMP]} lines of the extraction logs) are
-$0.89$--$0.95$ for the first bins of the angular observables, $0.67$--$0.88$ elsewhere in
+$0.87$--$0.95$ for the first bins of the angular observables, $0.67$--$0.88$ elsewhere in
 $\cos\theta_\mu$, $\theta_\mu$, $\cos\theta_\pi$ and $\theta_{\mu\pi}$, and
 $0.81$, $0.65$, $0.57$, $0.50$, $0.45$, $0.38$, $0.33$ for the seven $p_\mu$ bins: $p_\mu$
 is \emph{not} near-diagonal, because its bins ($0.2$--$0.5$~GeV/$c$ wide) are narrower
@@ -2546,21 +2546,21 @@ Beam & Observable & truth & uB tune & GENIE & GiBUU & NEUT & NuWro \\
     FHC  & $p_\mu$                & $1.45/7$ & $1.54/7$ & $2.51/7$ & $1.69/7$ & $3.08/7$ & $1.42/7$ \\
          & $p_\pi$                & $0.11/2$ & $0.10/2$ & $0.37/2$ & $1.25/2$ & $0.74/2$ & $0.57/2$ \\
          & $\cos\theta_\mu$       & $0.67/5$ & $1.09/5$ & $1.67/5$ & $1.27/5$ & $3.88/5$ & $4.04/5$ \\
-         & $\cos\theta_\pi$       & $0.80/4$ & $0.51/4$ & $1.23/4$ & $2.17/4$ & $1.37/4$ & $0.92/4$ \\
+         & $\cos\theta_\pi$       & $0.68/5$ & $0.69/5$ & $1.68/5$ & $1.91/5$ & $1.26/5$ & $1.42/5$ \\
          & $\theta_{\mu\pi}$      & $0.30/5$ & $0.86/5$ & $1.20/5$ & $1.44/5$ & $3.87/5$ & $3.82/5$ \\
          & $\theta_\mu$           & $1.52/5$ & $2.14/5$ & $5.55/5$ & $6.07/5$ & $8.46/5$ & $9.10/5$ \\
     \midrule
     RHC  & $p_\mu$                & $0.64/7$ & $2.51/7$ & $3.44/7$ & $2.81/7$ & $3.19/7$ & $3.31/7$ \\
          & $p_\pi$                & $0.02/2$ & $0.01/2$ & $0.56/2$ & $0.30/2$ & $0.25/2$ & $0.11/2$ \\
          & $\cos\theta_\mu$       & $0.35/5$ & $0.37/5$ & $1.11/5$ & $0.24/5$ & $2.71/5$ & $2.67/5$ \\
-         & $\cos\theta_\pi$       & $0.43/4$ & $0.34/4$ & $0.99/4$ & $2.69/4$ & $1.81/4$ & $0.69/4$ \\
+         & $\cos\theta_\pi$       & $0.49/5$ & $0.43/5$ & $1.27/5$ & $2.86/5$ & $1.79/5$ & $1.08/5$ \\
          & $\theta_{\mu\pi}$      & $0.19/5$ & $0.34/5$ & $2.52/5$ & $3.54/5$ & $0.46/5$ & $1.08/5$ \\
          & $\theta_\mu$           & $0.12/5$ & $0.21/5$ & $0.78/5$ & $0.34/5$ & $5.60/5$ & $5.76/5$ \\
     \midrule
     comb & $p_\mu$                & $0.41/7$ & $0.74/7$ & $2.08/7$ & $0.86/7$ & $1.46/7$ & $0.98/7$ \\
          & $p_\pi$                & $0.01/2$ & $0.01/2$ & $0.45/2$ & $0.92/2$ & $0.47/2$ & $0.30/2$ \\
          & $\cos\theta_\mu$       & $0.05/5$ & $0.09/5$ & $0.84/5$ & $0.47/5$ & $3.27/5$ & $2.92/5$ \\
-         & $\cos\theta_\pi$       & $1.05/4$ & $0.78/4$ & $1.80/4$ & $3.82/4$ & $2.17/4$ & $0.91/4$ \\
+         & $\cos\theta_\pi$       & $0.73/5$ & $0.54/5$ & $1.84/5$ & $2.72/5$ & $1.43/5$ & $1.23/5$ \\
          & $\theta_{\mu\pi}$      & $0.06/5$ & $0.54/5$ & $1.76/5$ & $2.64/5$ & $2.41/5$ & $2.89/5$ \\
          & $\theta_\mu$           & $0.56/5$ & $0.83/5$ & $3.16/5$ & $4.71/5$ & $8.20/5$ & $7.87/5$ \\
 \bottomrule
@@ -2860,7 +2860,7 @@ Observable & $\sigma_\mathrm{int}$ & Flux & Detector & Total & Closure $\chi^2/\
       $p_\mu$            & $0.838$ & $28.0\%$ & $24.7\%$ & $40.7\%$ & $1.45/7$ ($p=0.98$) \\
       $p_\pi$            & $0.822$ & $32.5\%$ & $30.3\%$ & $50.2\%$ & $0.11/2$ ($p=0.95$) \\
       $\cos\theta_\mu$   & $0.754$ & $28.0\%$ & $28.3\%$ & $42.0\%$ & $0.67/5$ ($p=0.98$) \\
-      $\cos\theta_\pi$   & $0.726$ & $26.1\%$ & $20.9\%$ & $36.9\%$ & $0.81/4$ ($p=0.94$) \\
+      $\cos\theta_\pi$   & $0.674$ & $27.0\%$ & $22.9\%$ & $38.8\%$ & $0.68/5$ ($p=0.98$) \\
       $\theta_{\mu\pi}$  & $0.819$ & $28.3\%$ & $19.6\%$ & $36.5\%$ & $0.30/5$ ($p=1.00$) \\
       $\theta_\mu$       & $0.960$ & $24.7\%$ & $15.6\%$ & $31.0\%$ & $1.52/5$ ($p=0.91$) \\
 \bottomrule
@@ -2944,7 +2944,7 @@ Observable & $\sigma_\mathrm{int}$ & Flux & Detector & Total & Closure $\chi^2/\
       $p_\mu$            & $0.690$ & $27.6\%$ & $21.5\%$ & $37.7\%$ & $0.64/7$ ($p=1.00$) \\
       $p_\pi$            & $0.748$ & $28.4\%$ & $34.7\%$ & $48.6\%$ & $0.01/2$ ($p=0.99$) \\
       $\cos\theta_\mu$   & $0.733$ & $25.8\%$ & $35.0\%$ & $46.3\%$ & $0.35/5$ ($p=1.00$) \\
-      $\cos\theta_\pi$   & $0.663$ & $24.7\%$ & $26.1\%$ & $39.1\%$ & $0.43/4$ ($p=0.98$) \\
+      $\cos\theta_\pi$   & $0.615$ & $25.2\%$ & $25.5\%$ & $38.5\%$ & $0.49/5$ ($p=0.99$) \\
       $\theta_{\mu\pi}$  & $0.831$ & $25.2\%$ & $16.6\%$ & $32.6\%$ & $0.18/5$ ($p=1.00$) \\
       $\theta_\mu$       & $0.805$ & $25.6\%$ & $22.4\%$ & $36.1\%$ & $0.12/5$ ($p=1.00$) \\
 \bottomrule
@@ -2961,7 +2961,7 @@ Observable & $\sigma_\mathrm{int}$ & Flux & Detector & Total & Closure $\chi^2/\
       $p_\mu$            & $0.827$ & $24.2\%$ & $21.4\%$ & $34.9\%$ & $0.41/7$ ($p=1.00$) \\
       $p_\pi$            & $0.775$ & $30.2\%$ & $30.8\%$ & $47.9\%$ & $0.01/2$ ($p=1.00$) \\
       $\cos\theta_\mu$   & $0.812$ & $25.7\%$ & $23.8\%$ & $37.3\%$ & $0.04/5$ ($p=1.00$) \\
-      $\cos\theta_\pi$   & $0.753$ & $24.6\%$ & $20.6\%$ & $35.3\%$ & $1.05/4$ ($p=0.90$) \\
+      $\cos\theta_\pi$   & $0.658$ & $25.6\%$ & $22.5\%$ & $37.1\%$ & $0.73/5$ ($p=0.98$) \\
       $\theta_{\mu\pi}$  & $0.879$ & $25.7\%$ & $17.7\%$ & $33.2\%$ & $0.06/5$ ($p=1.00$) \\
       $\theta_\mu$       & $0.851$ & $25.2\%$ & $20.6\%$ & $34.4\%$ & $0.56/5$ ($p=0.99$) \\
 \bottomrule
@@ -2998,10 +2998,10 @@ Observable & $\sigma_\mathrm{int}$ & Flux & Detector & Total & Closure $\chi^2/\
 \begin{center}\small
 \captionof{table}{Integrated (unfolded) cross section $\sigma_\mathrm{int}$ over the
   measured phase space, for each observable and configuration (current fake data,
-  coarsened $\cos\theta_\pi/\theta_{\mu\pi}$ binning, per-configuration flux;
+  five-bin forward-split $\cos\theta_\pi$ and coarsened $\theta_{\mu\pi}$ binning, per-configuration flux;
   $10^{-38}$~cm$^2$/Ar). The value differs between observables because the Wiener-SVD
   additional-smearing $A_C$ is not norm-preserving; the D'Agostini cross-check
-  (\suppref{Sec.}{sec:crosschecks}) recovers a flat, $20$--$29\%$ higher total, confirming
+  (\suppref{Sec.}{sec:crosschecks}) recovers a flat, $23$--$31\%$ higher total, confirming
   the spread is a smearing effect. All entries were recomputed in a single pass with the
   current code and a forced rebuild of the cached universes. The MC POT normalization
   scales each ntuple file by its own stored POT ($D_\mathrm{run}/\mathrm{POT}_\mathrm{file}$):
@@ -3026,7 +3026,7 @@ Observable & FHC & RHC & Combined \\
 $p_\mu$           & $0.838$ & $0.690$ & $0.827$ \\
 $p_\pi$           & $0.822$ & $0.748$ & $0.775$ \\
 $\cos\theta_\mu$  & $0.754$ & $0.733$ & $0.812$ \\
-$\cos\theta_\pi$  & $0.726$ & $0.663$ & $0.753$ \\
+$\cos\theta_\pi$  & $0.674$ & $0.615$ & $0.658$ \\
 $\theta_{\mu\pi}$ & $0.819$ & $0.831$ & $0.879$ \\
 \midrule
 $\theta_\mu$      & $0.960$ & $0.805$ & $0.851$ \\
@@ -3071,7 +3071,7 @@ Observable & FHC & RHC & combined \\
 $p_\mu$ & $0.66$--$0.91$ & $0.58$--$0.99$ & $0.68$--$1.01$ \\
 $p_\pi$ (2-bin) & $0.35$--$0.54$ & $0.40$--$0.51$ & $0.29$--$0.54$ \\
 $\cos\theta_\mu$ & $0.17$--$0.39$ & $0.05$--$0.45$ & $0.09$--$0.43$ \\
-$\cos\theta_\pi$ & $0.71$--$0.82$ & $0.79$--$0.86$ & $0.80$--$0.93$ \\
+$\cos\theta_\pi$ & $0.68$--$0.77$ & $0.70$--$0.84$ & $0.71$--$0.83$ \\
 $\theta_{\mu\pi}$ & $0.52$--$1.03$ & $0.58$--$1.15$ & $0.63$--$1.21$ \\
 $\theta_\mu$ & $0.58$--$0.78$ & $0.22$--$1.16$ & $0.53$--$0.67$ \\
 \midrule
@@ -4259,16 +4259,16 @@ are the same numbers as Table~\ref{tab:fhc}.)
 \toprule
 Source & $p_\mu$ & $p_\pi$ & $\cos\theta_\mu$ & $\cos\theta_\pi$ & $\theta_{\mu\pi}$ & $\theta_\mu$ \\
 \midrule
-\textbf{Prediction total} & \textbf{40.7} & \textbf{50.2} & \textbf{42.0} & \textbf{36.9} & \textbf{36.5} & \textbf{31.0} \\
-Cross section (GENIE) & 10.7 & 16.9 & 10.3 & 11.5 & 10.5 & 8.5 \\
-Flux (PPFX) & 28.0 & 32.5 & 28.0 & 26.1 & 28.3 & 24.7 \\
-Detector & 24.7 & 30.3 & 28.3 & 20.9 & 19.6 & 15.6 \\
-Reinteraction & 4.4 & 11.9 & 3.6 & 4.9 & 4.0 & 3.5 \\
-MC stat & 4.9 & 6.3 & 5.3 & 4.1 & 2.7 & 2.9 \\
-EXT stat & 0.9 & 3.1 & 2.3 & 1.1 & 1.2 & 1.4 \\
-Data stat & 14.3 & 18.3 & 15.4 & 12.0 & 8.2 & 8.6 \\
-POT $+$ targets & 3.4 & 4.2 & 3.6 & 3.3 & 3.5 & 3.0 \\
-\textbf{Total (incl.\ data stat)} & \textbf{43.5} & \textbf{53.9} & \textbf{44.9} & \textbf{39.0} & \textbf{37.5} & \textbf{32.4} \\
+\textbf{Prediction total} & \textbf{40.7} & \textbf{50.2} & \textbf{42.0} & \textbf{38.8} & \textbf{36.5} & \textbf{31.0} \\
+Cross section (GENIE) & 10.7 & 16.9 & 10.3 & 11.3 & 10.5 & 8.5 \\
+Flux (PPFX) & 28.0 & 32.5 & 28.0 & 27.0 & 28.3 & 24.7 \\
+Detector & 24.7 & 30.3 & 28.3 & 22.9 & 19.6 & 15.6 \\
+Reinteraction & 4.4 & 11.9 & 3.6 & 5.2 & 4.0 & 3.5 \\
+MC stat & 4.9 & 6.3 & 5.3 & 4.3 & 2.7 & 2.9 \\
+EXT stat & 0.9 & 3.1 & 2.3 & 1.5 & 1.2 & 1.4 \\
+Data stat & 14.3 & 18.3 & 15.4 & 12.7 & 8.2 & 8.6 \\
+POT $+$ targets & 3.4 & 4.2 & 3.6 & 3.4 & 3.5 & 3.0 \\
+\textbf{Total (incl.\ data stat)} & \textbf{43.5} & \textbf{53.9} & \textbf{44.9} & \textbf{41.0} & \textbf{37.5} & \textbf{32.4} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -4551,7 +4551,7 @@ quantity, and it is the single most consequential limitation of the analysis.
 
 \paragraph{Validation.}
 The extraction reproduces its own input: the mean closure ratio over the eighteen inclusive
-extractions is $1.018$ with second-derivative regularisation (the identity-regularised variant was not re-extracted after the fake-data-truth correction).
+extractions is $1.010$ with second-derivative regularisation (the identity-regularised variant was not re-extracted after the fake-data-truth correction).
 The algebraic identity $UR=A_C$ holds to $4.4\times10^{-6}$ (\suppref{Sec.}{sec:crosschecks}), which tests the unfolding
 construction rather than only its behaviour on one sample.  D'Agostini iterative unfolding,
 whose integral is flat across observables where the Wiener-SVD spread is large, establishes
@@ -4606,7 +4606,9 @@ statement for every result.
 
 Generated directly from the released \texttt{curves\_*.tsv} files, so these are by
 construction the bin edges of the published results rather than a transcription.  The
-binnings are identical across the three beam configurations.  Earlier drafts of this
+binnings are identical across the three beam configurations; the inclusive
+$\cos\theta_\pi$ binning was changed on 2026-09-06 to the forward-split five bins
+below, while the proton-tagged $\cos\theta_\pi$ keeps its four bins.  Earlier drafts of this
 appendix listed a finer exploratory binning that predates the resolution-driven
 optimisation; that binning is not used for any released result.
 
@@ -4624,7 +4626,7 @@ optimisation; that binning is not used for any released result.
       $p_\mu$ (GeV/$c$) & 7 & 0.15, 0.35, 0.55, 0.75, 0.95, 1.25, 1.75, 3 \\
       $p_\pi$ (GeV/$c$) & 2 & 0.175, 0.205, 1 \\
       $\cos\theta_\mu$ & 5 & -1, 0.45, 0.65, 0.8, 0.9, 1 \\
-      $\cos\theta_\pi$ & 4 & -1, -0.1, 0.35, 0.75, 1 \\
+      $\cos\theta_\pi$ & 5 & -1, -0.1, 0.35, 0.6, 0.8, 1 \\
       $\theta_{\mu\pi}$ (rad) & 5 & 0, 0.6, 0.85, 1.3, 1.85, 2.6 \\
       $\theta_\mu$ (rad) & 5 & 0, 0.43, 0.62, 0.84, 1.17, 3.15 \\
     \midrule
@@ -4650,7 +4652,9 @@ more bins are admissible (\suppref{Sec.}{sec:binning_recheck}): $p_\mu$, $\cos\t
 $\theta_\mu$ and $p_\pi$ cannot go finer, $\theta_{\mu\pi}$ gains bins but no resolved
 information, and $\cos\theta_\pi$ admits a fifth bin in the forward hemisphere (edges
 $-1,-0.1,0.35,0.6,0.8,1$) with better-conditioned $A_C$ and unchanged per-bin
-uncertainties; that change is not made in this release.
+uncertainties; that change was adopted on 2026-09-06 and this release carries it
+(generator predictions regenerated at the new edges from the event-level files, the
+other observables reproducing the previous predictions to machine precision).
 
 The top $p_\pi$ bin is defined at truth level as $p_\pi>0.205$~GeV/$c$ with no upper
 edge (\texttt{ccpi\_ppi\_bin\_config\_2bin.txt}); the $1$~GeV/$c$ listed above is the
