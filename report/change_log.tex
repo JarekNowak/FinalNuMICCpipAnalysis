@@ -531,6 +531,16 @@ transfer uncertainty $17$--$19\%$, floor-limited); the class was added to the tr
 transfer-uncertainty and detector-variation macros and to the note's tables, and the
 purity denominator of the procedure is now defined as the neutrino-MC prediction.
 
+\textbf{Protocol statistics (2026-09-06).} The three statistics of the frozen procedure
+(global $8\times8$ normalisation $\chi^2$, per-region pulls against the full and the
+statistical$+$detector covariance, normalisation-marginalised shape tests) were implemented
+(\texttt{macros/sb\_protocol.C}) and exercised on the full-stack pseudo-data: $\chi^2$
+$0.66/8$, pulls within $\pm0.5$, shape $p>0.47$; power $12\%$ (CC$0\pi$, $\pi^0$) and
+$50$--$62\%$ (multi-$\pi$, cosmic) for a single-region shift, $58\%$ for a common shift.
+The response tree was rewritten as an explicit flow (trigger, order of regions, numeric
+criterion for a localised reconstruction failure, size of the added uncertainty, leverage
+of the held-fixed components in a fitted correction, post-treatment criterion).
+
 \textbf{Detector term statistics.} The Monte-Carlo-statistical floor of the
 detector-variation term was measured on split samples
 (\texttt{macros/sb\_detvar\_split.C}): the CC$0\pi$ transfer term ($27\%$ FHC, $31\%$

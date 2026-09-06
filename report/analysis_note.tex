@@ -212,8 +212,9 @@ topologies the region is meant to sample and sculpt its composition towards the
 single-shower events that already resemble the signal region. The size of that effect on
 the region's yield, purity, transfer factor and overlap with multi-$\pi$ cannot be
 quantified after the fact on the present processed files, which do not store the
-multiplicities; it is listed as a diagnostic to be produced with the next reprocessing,
-and the frozen definition is the one in the table.
+multiplicities; it can be produced with a reprocessing of the Monte Carlo alone, which
+touches no beam-on data, and that reprocessing is scheduled before the ratification of
+item~(i) below. The frozen definition is the one in the table.
 
 \paragraph{One point the collaboration is asked to ratify explicitly, and one already decided.}
 (i)~The $\pi^0$ definition without the final multiplicity cut (Table~\ref{tab:cr_defs} and
@@ -262,12 +263,12 @@ the detector variations, so the region is primarily a high-statistics validation
 rather than a per-cent-level signal-region constraint. The neutrino-MC prediction in each region
 carries the flux, cross-section and re-interaction uncertainties of
 Table~\ref{tab:cr_syst}, including the detector variations. The regions also carry a
-few-per-cent sensitivity to the signal normalisation: the CC$0\pi$ region holds $1\,124$
-signal events ($9\%$ of its neutrino MC), so a $30\%$ signal excess would appear as a
-$2.8\%$ excess in a region of $1\%$ statistical precision, invisible to the
-full-covariance pull but visible at $\sim3\sigma$ to the statistical-plus-detector pull;
-the response tree holds the signal at its central value and records such an excursion
-without correcting for it.
+few-per-cent sensitivity to the signal normalisation in principle: the CC$0\pi$ region
+holds $1\,124$ signal events ($9\%$ of its neutrino MC), so a $30\%$ signal excess would
+appear as a $2.8\%$ excess in a region of $1\%$ statistical precision. In practice that
+is inside the $9$--$24\%$ detector-variation uncertainty on the region prediction and so
+invisible to every pull of \S\ref{sec:cr_protocol}, which is what keeps the regions blind
+to the signal; the response tree holds the signal at its central value in any case.
 
 \paragraph{Decision checklist.}
 The prerequisites are split by the decision they gate.
@@ -286,7 +287,9 @@ The prerequisites are split by the decision they gate.
     entering once, asserted by the normalisation manifest (\S\ref{sec:pipeline}).
   \item[$\checkmark$] Real beam-on files are refused by the framework unless
     \texttt{XSEC\_UNBLIND=1} is set (\S\ref{sec:pipeline}).
-  \item[$\checkmark$] Full-stack pseudo-data closure (\S\ref{sec:cr_fullstack}).
+  \item[$\checkmark$] Full-stack pseudo-data closure (\S\ref{sec:cr_fullstack}); the three
+    protocol statistics implemented and exercised on it (\S\ref{sec:cr_protocol}: global
+    $\chi^2$ $0.66/8$, power and blind spot stated).
   \item[$\checkmark$] Control-region uncertainties including detector variations, and
     transfer-factor uncertainties computed as ratios per universe (\S\ref{sec:cr_transfer}).
   \item[$\square$] A control-region skim of the beam-on files: the signal-region flag
@@ -3691,7 +3694,9 @@ ratified it is frozen and any departure from it is itself a change requiring app
     observables where one exists and otherwise at the binning fixed in
     \texttt{configs/sideband\_plots.txt} and shown, with full-stack pseudo-data, in
     Figs.~\ref{fig:sb_plots_fhc} and~\ref{fig:sb_plots_rhc}. FHC and RHC are examined separately; the
-    combined configuration is a cross-check only. Data are compared with the complete
+    combined configuration is a cross-check only, and within each mode the event total is
+    also compared per run period (FHC Runs~1, 2, 4, 5; RHC Runs~1, 2, 3, 4), which is what
+    makes a single-run excursion detectable. Data are compared with the complete
     prediction, neutrino MC $+$ beam-off $+$ dirt, with the run-period beam-off scaling of
     \S\ref{sec:mc}.
   \item \textbf{Statistics.} Three quantities are computed for each region and beam
@@ -3703,15 +3708,28 @@ ratified it is frozen and any departure from it is itself a change requiring app
     correlations among the prediction components). Because $V_{\rm pred}$ carries the
     $21$--$35\%$ prediction systematics of Table~\ref{tab:cr_syst}, this pull cannot
     fail a discrepancy smaller than about $40$--$60\%$; it is therefore reported
-    \emph{together with} the pull against the statistical and detector terms alone, which
-    is the sensitive quantity for the high-statistics regions. (b)~A shape $\chi^2$ in
+    \emph{together with} the pull against the statistical and detector terms alone, whose
+    resolution ($9$--$24\%$) is set by the detector term. (b)~A shape $\chi^2$ in
     the pre-declared distributions with the normalisation marginalised: the prediction is
     scaled to the data total and the covariance is projected onto shape (the
     normalisation mode removed), so that the common-mode flux and cross-section terms do
     not make the test powerless, as the closure $\chi^2$ of \S\ref{sec:chi2} shows
     they otherwise would. (c)~A \emph{global} normalisation $\chi^2$ over the eight
     (region, mode) totals with the full $8\times8$ pre-fit covariance, which is the
-    single pass/fail statistic.
+    single pass/fail statistic. All three are implemented in
+    \texttt{macros/sb\_protocol.C} (flux, cross-section and re-interaction multisims
+    index-matched across the two modes, the eight detector knobs as correlated unisims,
+    MC, beam-off, dirt and data statistics) and were exercised on the full-stack
+    pseudo-data of \S\ref{sec:cr_fullstack}: the global $\chi^2$ is $0.66/8$ ($p=1.00$),
+    the sixteen pulls lie within $\pm0.5$ and all twenty-two shape tests have $p>0.47$
+    (\texttt{logs/sidebands\_perrun/protocol.log}). The same run gives the power of the
+    test: a discrepancy confined to one region fails the set at $95\%$ confidence beyond
+    $12\%$ of the CC$0\pi$ or $\pi^0$ total and beyond $50$--$62\%$ of the multi-$\pi$
+    or cosmic total, while a \emph{common} normalisation shift of all eight totals, which
+    the $40$--$91\%$ correlated flux, cross-section and detector terms absorb, fails it
+    only beyond $58\%$. That is the test's blind spot, stated: it is a test of the
+    background model region by region, not of the overall normalisation, which the
+    signal-region measurement carries as its flux and cross-section uncertainty.
   \item \textbf{Acceptable agreement.} The control regions pass as a set if the global
     $\chi^2$ of item~2(c) has $p>0.05$; the expected false-failure rate is then $5\%$ by
     construction. The per-region pulls and shape tests of items~2(a) and 2(b) are
@@ -3721,39 +3739,53 @@ ratified it is frozen and any departure from it is itself a change requiring app
     thresholds one false flag is expected more often than not). A single-bin excursion
     beyond $3\sigma$ with a passing total is recorded and examined for a reconstruction
     pathology but does not by itself flag the region.
-  \item \textbf{Permitted responses and the rule for choosing between them.} For a region
-    that passes: no change (a). For a region that fails: (i)~the pre-declared distributions
-    are first examined for a localised reconstruction failure (a single-bin or single-run
-    excursion), which is treated as a reconstruction issue, not a model correction: the
-    permitted response is to document it, to exclude the affected run period from
-    \emph{both} the control-region comparison and the measurement with its exposure
-    removed from the normalisation, and to re-approve; no cut or binning may be changed;
-    (ii)~if the discrepancy is consistent with a pure normalisation shift and the region's
-    target-class purity (its share of the neutrino-MC prediction in the region; the target
-    classes are $\nu_\mu$CC~$0\pi$ for CC$0\pi$ and CC$+$NC~$\pi^0$ for $\pi^0$, ratified
-    2026-09-06) exceeds $50\%$, a one-parameter normalisation fit of that class is
-    performed, and the fitted correction (c) is applied only if it improves the fit by a
-    likelihood-ratio test at $p<0.01$ and the transfer-factor uncertainty of
-    Table~\ref{tab:cr_transfer_unc}, or its Monte-Carlo-statistical floor where that is
-    larger (\S\ref{sec:cr_transfer}), is added to it; (iii)~otherwise the
-    central prediction is left unchanged and an additional normalisation uncertainty
-    covering the discrepancy is assigned to the class (b); (iv)~if neither (b) nor (c)
-    gives acceptable post-treatment agreement, the background model is revised (d), after
-    which renewed collaboration approval is required before the signal region is opened.
+  \item \textbf{Permitted responses and the rule for choosing between them.} The response
+    tree is entered when the global test of item~3 fails \emph{or} a region is flagged; a
+    flagged region within a passing set may receive at most response (b) below, never a
+    fitted correction. Regions are treated in the order CC$0\pi$, $\pi^0$, then the two
+    diagnostic regions, because the CC$0\pi$ class is $15\%$ of the $\pi^0$ region and a
+    CC$0\pi$ treatment changes the $\pi^0$ prediction before it is judged.
+    (i)~\emph{Localised reconstruction failure.} If one run period's total in the region
+    pulls beyond $3\sigma$ (statistical$+$detector) while the other periods pass, or one
+    bin of a pre-declared distribution exceeds $3\sigma$ while the rest of the distribution
+    passes, the excursion is treated as a reconstruction issue, not a model correction:
+    it is documented, the affected run period is excluded from \emph{both} the
+    control-region comparison and the measurement with its exposure removed from the
+    normalisation, and the region is re-tested; no cut or binning may be changed and a
+    single bin is never removed.
+    (ii)~\emph{Fitted normalisation correction (c).} Permitted only for CC$0\pi$ and
+    $\pi^0$ (target-class purity above $50\%$ of the neutrino-MC prediction; target
+    classes $\nu_\mu$CC~$0\pi$ and CC$+$NC~$\pi^0$, ratified 2026-09-06) and only if the
+    region's shape test 2(b) passes, so that the discrepancy is consistent with a pure
+    normalisation shift: a one-parameter fit of the target class, to FHC and RHC
+    simultaneously, applied if it improves the fit by a likelihood-ratio test at
+    $p<0.01$. Its uncertainty is the transfer-factor uncertainty of
+    Table~\ref{tab:cr_transfer_unc} or its Monte-Carlo-statistical floor, whichever is
+    larger (\S\ref{sec:cr_transfer}), added in quadrature to the leverage of the components
+    held fixed in the fit: the prediction uncertainties of the non-target neutrino
+    background, the beam-off and the signal contamination, each multiplied by its share
+    of the target class ($0.80$, $0.23$ and $0.20$ in the $\pi^0$ region; $0.26$, $0.15$
+    and $0.13$ in CC$0\pi$; \S\ref{sec:request}).
+    (iii)~\emph{Added uncertainty (b).} Otherwise the central prediction is left
+    unchanged and the full observed discrepancy, as a fraction of the target class in the
+    region, is assigned as a one-standard-deviation normalisation uncertainty on that
+    class in the signal region through its transfer factor.
+    (iv)~\emph{Model revision (d).} If, with the treatment applied, the global test of
+    item~3 does not pass or a flag remains, the background model is revised and renewed
+    collaboration approval is required before the signal region is opened.
     The pass/fail test of item~3 is always the pre-fit one; any post-treatment goodness of
     fit is reported separately and labelled as such. FHC and RHC share one background
-    model: a correction of class~(c) is fitted to both modes simultaneously and applied to
-    both, and a class that passes in one mode and fails in the other is treated under
-    (b), never corrected in one mode alone. The signal contamination of each region
+    model: a class that passes in one mode and fails in the other is treated under (b),
+    never corrected in one mode alone. The signal contamination of each region
     ($1\,124$ events in CC$0\pi$ and $662$ in $\pi^0$ for FHC, more than the $943$
-    signal events of the signal region) is held at the central-value tune in any fit; a
-    signal mismodelling of $x$ therefore biases a fitted target-class correction by about
-    $0.1x$ (CC$0\pi$) and $0.2x$ ($\pi^0$), which is stated with the result. If more
-    than one region is flagged, no independent corrections are combined without
-    accounting for shared events and correlated systematic variations: in particular,
-    multi-$\pi$ and $\pi^0$ share events (\S\ref{sec:cr_overlap}) and are treated
-    jointly, or multi-$\pi$ is designated diagnostic only, which its transfer factor
-    already argues for.
+    signal events of the signal region) is held at the central-value tune in any fit,
+    which is what keeps the regions blind to the signal: a $30\%$ signal excess would
+    move the CC$0\pi$ total by $2.8\%$, well inside the $9$--$24\%$ detector-limited
+    resolution of every pull. If more than one region is flagged, no independent
+    corrections are combined without accounting for shared events and correlated
+    systematic variations: in particular, multi-$\pi$ and $\pi^0$ share events
+    (\S\ref{sec:cr_overlap}) and are treated jointly, or multi-$\pi$ is designated
+    diagnostic only, which its transfer factor already argues for.
   \item \textbf{Prohibited responses.} Changing any signal-selection cut; changing the
     binning of any released observable; choosing a generator or tune after inspecting the
     regions; bin-by-bin reweighting; and any use of the beam-on signal-region sample.
