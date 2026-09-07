@@ -1355,6 +1355,7 @@ available for cosmic rejection but is disabled by default (no benefit in an A/B 
 the Pandora topological score already provides the cosmic rejection at Cut~3).
 
 \subsection{Cut definitions}
+\label{sec:cutdefs}
 
 \begin{description}[style=nextline, leftmargin=1.5cm, labelwidth=1.3cm]
   \item[\textbf{Cut 0.}] \textbf{EventsInTrueFV.}
@@ -1486,6 +1487,57 @@ reconstructed track directions and, being an angle between two measured tracks, 
 independent of this choice.
 
 % =============================================================================
+\subsection{Proton-tagged selection}
+\label{sec:selection_1p}
+\label{sec:wtki_cutflow}
+
+A second selection, the \emph{proton-tagged} one, is applied to the same events. It is
+used for the secondary-scope results of \S\ref{sec:wtki}: with an identified proton the
+full visible hadronic system is reconstructed, which opens the hadronic invariant mass
+and the transverse kinematic imbalance between the muon and the hadronic system. It is
+defined here, next to the inclusive selection it extends, so that the two can be read
+together.
+
+\paragraph{Definition.} The proton-tagged selection applies the ten inclusive cuts of
+\S\ref{sec:cutdefs} unchanged and adds an eleventh, the leading-proton identification
+(``IdentProton''), which defines the subsample:
+\begin{center}\small
+\begin{tabular}{lcl}
+\toprule
+Requirement & Threshold & Description \\
+\midrule
+Candidate set & --- & track-like primaries other than the muon and pion candidates \\
+Proton likeness & LLR PID $<0.05$ & the most proton-like of the set is the candidate \\
+Containment & end point in FV & range-based momentum is meaningful only if contained \\
+Momentum & $p_p\ge0.3\GeVc$ & tracking threshold; below it protons are not reconstructed reliably \\
+\bottomrule
+\end{tabular}
+\end{center}
+\noindent The proton momentum is taken from the proton-hypothesis calorimetric kinetic
+energy, $p_p=\sqrt{T_p^2+2m_pT_p}$; truth-matched on the FHC overlay it carries a $-9\%$
+bias (underestimate) and a $21\%$ resolution, both folded into the response matrix and
+corrected by the unfolding. The signal definition is correspondingly narrowed to the
+inclusive signal of \S\ref{sec:signal} plus at least one true proton above $0.3\GeVc$;
+the muon and pion phase space is unchanged.
+
+\paragraph{Performance.} At full exposure the proton tag yields a selection efficiency
+of $11.4\%$ and a purity of $52\%$ in FHC ($50\%$ RHC, $51\%$ combined), against
+$17.5\%$ and $\sim59\%$ for the inclusive selection. Relative to the inclusive final cut
+evaluated under the proton-tagged signal definition, the tag rejects $67\%$ of the
+neutrino background for a $32\%$ signal loss, lifting the purity from $34\%$ to $52\%$
+and improving $S/\sqrt{B}$ by $\sim\!20\%$ ($17.1\to20.5$, FHC). Truth-matched, $87\%$
+of tagged events contain a true proton above threshold; the $\sim\!13\%$ mis-tag is
+dominated by a charged pion or other track taken for the proton, which is why the
+proton-tagged results need a control region of their own before they are promoted
+(\S\ref{sec:cr_1p_scope}). Its clearest benefit is cosmic rejection: requiring a
+contained proton above $0.3\GeVc$ removes beam-off background by a factor $3.3$--$3.6$
+at the final cut and by up to a factor of six in the CC$0\pi$ control region
+(\S\ref{sec:sidebands_1p}). The full-exposure cut-flow, stage by stage and per
+category, is \suppref{Table}{tab:cutflow_1p} (stacks in \suppref{Fig.}{fig:cutflow_1p});
+it uses the same per-run exposure scaling as the inclusive cut-flow of
+Table~\ref{tab:cutflow}, and its final row is the proton-tagged cut-and-count entry of
+Table~\ref{tab:cutcount}.
+
 \section{Cut-Flow and Selection Performance}
 \label{sec:cutflow}
 % =============================================================================
@@ -3872,58 +3924,13 @@ pion, reconstructs the full visible hadronic system and opens two classes of obs
 inaccessible to the inclusive $\mathrm{CC}\,1\mu1\pi Xp$ measurement: the \emph{hadronic
 invariant mass}, which probes the $\Delta(1232)$ and higher resonances directly, and the
 \emph{transverse kinematic imbalance} (TKI) between the muon and the hadronic system,
-which is sensitive to Fermi motion and final-state interactions. This subsample is
-implemented as a dedicated selection that inherits the full
-$\mathrm{CC}\,1\mu1\pi Xp$ selection (\S\ref{sec:selection}) and additionally requires a
-leading proton candidate: the most proton-like track (lowest log-likelihood-ratio PID
-score, required to be below $0.05$) among the track-like
-primaries other than the muon and pion candidates, with its end point inside the
-fiducial volume and its proton-hypothesis momentum above the $0.3$~GeV/$c$ tracking
-threshold. The signal is correspondingly narrowed to the inclusive signal plus
-at least one true proton above $0.3$~GeV/$c$. At full exposure this yields a selection
-efficiency of $11.4\%$ and a purity of $52\%$ in FHC ($50\%$ RHC, $51\%$ combined;
-\suppref{Table}{tab:cutflow_1p}, Table~\ref{tab:cutcount}), versus $17.5\%$ and
-$\sim59\%$ for the inclusive selection; the proton tag trades signal statistics for a
-fully reconstructed hadronic final state.
+which is sensitive to Fermi motion and final-state interactions. The proton-tagged
+selection, its signal definition and its performance are given in
+\S\ref{sec:selection_1p}; in brief, it adds a leading-proton identification to the
+inclusive selection, at an efficiency of $11.4\%$ and a purity of $50$--$52\%$, and
+trades signal statistics for a fully reconstructed hadronic final state.
 
 \subsection{Extracted cross sections}
-
-The proton tag costs efficiency and buys exclusivity: it lowers the selection efficiency
-from $\approx\!17.5\%$ to $11.4\%$ and removes $60\%$ of the inclusive selected signal
-(the proton-tagged signal definition is narrower and the tag keeps $68\%$ of it), while
-raising the purity to $50$--$52\%$ under the more restrictive exclusive truth definition.
-About $87\%$ of tagged events contain a true proton above threshold, so the mis-tag rate is
-$\approx\!13\%$.  Its clearest benefit is cosmic rejection: requiring a contained proton
-above $0.3\GeVc$ removes beam-off background by a factor $3.3$--$3.6$ at the final cut and
-by up to a factor of six in the CC$0\pi$ control region (\S\ref{sec:sidebands_1p}).
-The full cut-flow, the per-observable binning study and the response tables are in the
-technical supplement; only the extracted cross sections are given here.
-\label{sec:wtki_cutflow}
-The full-exposure cut-flow of the proton-tagged subsample is the inherited
-$\mathrm{CC}\,1\mu1\pi Xp$ sequence followed by the leading-proton identification
-(``IdentProton''), which defines the subsample. \suppref{Table}{tab:cutflow_1p} gives the
-per-category, per-cut breakdown for the three beam configurations and
-\suppref{Fig.}{fig:cutflow_1p} the corresponding stacks; both use the same per-run POT
-scaling as the inclusive cut-flow (Table~\ref{tab:cutflow}), and ``signal'' here is the
-proton-tagged signal (inclusive signal plus a true proton above $0.3$~GeV/$c$). The
-proton-identification cut is the key discriminator: at FHC it rejects $67\%$ of the
-neutrino background while retaining $68\%$ of the signal, lifting the purity from
-$34\%$ at the inclusive final cut (Nonprotons, under the proton-tagged signal
-definition) to $52\%$ in the proton-tagged sample.
-
-
-
-\paragraph{Proton-tag performance.} Beyond the yields, the leading-proton
-identification (LLR PID score $<0.05$, $p_p\ge0.3$~GeV/$c$, end point in the fiducial
-volume) is a reliable tag. Truth-matched on the FHC $\nu_\mu$ overlay, $87\%$ of the
-tagged events contain an energetic true proton ($p_p>0.3$~GeV/$c$); a $\sim\!13\%$
-mis-tag rate, dominated by a charged pion or other track being taken for the proton,
-and $52\%$ are the full $\mu\pi p$ signal topology. The reconstructed proton momentum,
-from the proton-hypothesis range kinetic energy, carries a $-9\%$ bias (underestimate)
-and a $21\%$ resolution. In cross-section terms the tag rejects $67\%$ of the
-neutrino background for a $32\%$ signal loss, improving the signal-to-background
-figure of merit $S/\sqrt{B}$ by $\sim\!20\%$ ($17.1\to20.5$, FHC); the residual mis-tag and momentum smearing
-are folded into the response matrix and corrected by the unfolding.
 
 Eleven observables are extracted in the proton-tagged subsample; ten are released as
 \emph{secondary} differential results with their covariances, the eleventh, the
@@ -4705,6 +4712,11 @@ cross sections are given in Table~\ref{tab:ppi_partial}.
     Primary track multiplicity  & $<5$           & \\
     Cosmic BDT                  & $>0.0$ (disabled) & TMVA BDT \\
     Software trigger            & $=1$           & \\
+    \midrule
+    \multicolumn{3}{l}{\emph{Proton-tagged selection only (\S\ref{sec:selection_1p})}} \\
+    Leading-proton LLR PID      & $<0.05$        & most proton-like non-$\mu$/$\pi$ primary \\
+    Proton end point            & in FV          & \\
+    Proton momentum             & $\ge0.3\GeVc$  & proton-hypothesis calorimetric KE \\
     \bottomrule
   \end{tabular}
 \end{table}
