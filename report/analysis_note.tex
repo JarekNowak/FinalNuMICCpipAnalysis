@@ -81,7 +81,7 @@
 \newcommand{\suppref}[2]{#1~\ref{S-#2} of the technical supplement}
 % Stamp appended to every release-derived table caption: the extraction pass and the
 % results file it was generated from (a reviewer's request after stale tables survived).
-\newcommand{\releasestamp}{[release 2026-09-06, \texttt{current\_results.tsv}, per-run EXT, re-thrown fake data, five-bin $\cos\theta_\pi$]}
+\newcommand{\releasestamp}{[current frozen release]}
 
 \begin{document}
 
@@ -210,28 +210,98 @@
 \label{sec:request}
 % =============================================================================
 
-This section is the concise, self-contained case for the one decision requested of the
+This section is the self-contained case for the one decision requested of the
 collaboration at this stage: permission to inspect beam-on data in four
-reconstruction-level control regions while the signal region stays blind. Everything
-here is expanded in \S\ref{sec:sidebands}; the numbers are those of the current release.
+reconstruction-level control regions of the inclusive $\mathrm{CC}\,1\mu1\pi Xp$
+selection while the signal region stays blind. Everything here is expanded in
+\S\ref{sec:sidebands}; the numbers are those of the frozen release identified in the box
+below.
+
+\medskip\noindent\fbox{\parbox{0.97\linewidth}{\textbf{Analysis state.} Numerical release
+2026-09-06 (document revision 2026-09-07); repository tag \texttt{cr-freeze-2026-09-06};
+fake data: one Poisson throw per run of the central-value prediction with the unified
+weight rule (\S\ref{sec:mc}); binning: the released edges of Appendix~\ref{app:binning}
+(five-bin forward-split $\cos\theta_\pi$, two-bin $p_\pi$); normalisation: per-run
+exposure, per-run beam-off gate ratios, per-configuration flux; detector variations:
+native Run-4 FHC and RHC samples; data release: \texttt{report/data\_release/}, checksum
+manifest \texttt{MANIFEST.sha256} (\texttt{b8ebc69e3bc91434}). Every table marked
+``current frozen release'' is generated from this state.}}
+\medskip
 
 \paragraph{Request.}
-We request approval to inspect beam-on data in four control regions of the inclusive
-$\mathrm{CC}\,1\mu1\pi Xp$ selection: CC$0\pi$, multi-$\pi$, $\pi^0$ and large
-muon--pion opening angle (called ``cosmic'' below for brevity: it is cosmic-\emph{enriched}, $34$--$41\%$ beam-off, not cosmic-pure). Throughout, ``beam-off'', ``EXT'' and ``cosmic data'' name the same data-driven component, the beam-off trigger sample scaled by gate counts; ``signal contamination'' means the inclusive $\mathrm{CC}\,1\mu1\pi Xp$ signal unless the proton-tagged selection is named. Each region is anchored by the inversion of one nominal signal requirement;
-requirements that become undefined once that inversion is made, or that would sculpt the
-targeted control sample, are explicitly dropped as listed in Table~\ref{tab:cr_defs}. Each
-region is disjoint from the signal region at reconstruction level (demonstrated event by event, \S\ref{sec:cr_overlap}); their
-expected signal contaminations are $8$--$24\%$. The signal region remains inaccessible.
-Before the regions are opened, the selections, the run-dependent normalisation, the
-beam-off scaling, the displayed observables and binning, the covariance construction, the
-goodness-of-fit tests and the permitted responses to a discrepancy are frozen as written
-in \S\ref{sec:cr_protocol}. Control-region data will be compared with the complete
-prediction (neutrino MC $+$ beam-off $+$ dirt) separately in FHC and RHC, with the
-combined configuration as a cross-check. Any discrepancy beyond the pre-declared
-criteria requires a documented treatment and renewed approval before the signal region
-is opened. The proton-tagged control regions are \emph{not} part of this request
-(\S\ref{sec:cr_1p_scope}).
+We request approval to inspect beam-on data in four control regions: CC$0\pi$,
+multi-$\pi$, $\pi^0$ and large muon--pion opening angle (called ``cosmic'' below for
+brevity: it is cosmic-\emph{enriched}, $34$--$41\%$ beam-off, not cosmic-pure).
+Throughout, ``beam-off'', ``EXT'' and ``cosmic data'' name the same data-driven
+component, the beam-off trigger sample scaled by gate counts; ``signal contamination''
+means the inclusive signal unless the proton-tagged selection is named. Each region is
+anchored by the inversion of one nominal signal requirement; requirements that become
+undefined once that inversion is made, or that would sculpt the targeted control sample,
+are dropped as listed in Table~\ref{tab:cr_defs}. Each region is disjoint from the
+signal region at reconstruction level (demonstrated event by event,
+\S\ref{sec:cr_overlap}); their expected signal contaminations are $8$--$24\%$. The
+signal region remains blind. Before the regions are opened, the selections, the
+run-dependent normalisation, the beam-off scaling, the displayed observables and binning,
+the covariance construction, the goodness-of-fit tests and the permitted responses to a
+discrepancy are frozen as written in \S\ref{sec:cr_protocol}. Control-region data will be
+compared with the complete prediction (neutrino MC $+$ beam-off $+$ dirt) separately in
+FHC and RHC, with the combined configuration as a cross-check. Any discrepancy beyond
+the pre-declared criteria requires a documented treatment and renewed approval before
+the signal region is opened. The proton-tagged control regions are \emph{not} part of
+this request (\S\ref{sec:cr_1p_scope}).
+
+\paragraph{What each region can and cannot do.} The physics roles, which the
+transfer factors of \S\ref{sec:cr_transfer} decide, are these.
+\begin{itemize}\itemsep2pt
+  \item \textbf{CC$0\pi$} is the high-statistics validation of the dominant neutrino
+    background class: CC$0\pi$ events with a proton or other track taken as the pion are
+    $244$ of the $637$ FHC neutrino-background events ($38\%$). The region has $72\%$
+    target purity ($65\%$ of the full stack) and $0.6\%$ raw statistical precision. It
+    validates the normalisation and kinematics of the underlying CC$0\pi$ population,
+    \emph{not} the proton-to-pion misidentification probability that transfers that
+    population into the signal region: the transfer carries a $31$--$34\%$ uncertainty
+    dominated by the detector variations. It is therefore a validation test rather than
+    a per-cent-level constraint, and it is conditionally eligible for a fitted
+    normalisation correction under \S\ref{sec:cr_protocol}. The direct test of the
+    misidentification probability is an inverted pion-PID region, which does not exist
+    yet and is listed among the prerequisites for opening the signal region.
+  \item \textbf{$\pi^0$} tests the shower veto and the CC$+$NC~$\pi^0$ background. Its
+    target purity is $50.1\%$ (FHC) and $51.0\%$ (RHC) of the neutrino MC, its transfer
+    factor $0.02$ with a $17$--$19\%$ uncertainty set by the Monte-Carlo-statistical
+    floor of the detector-variation samples. \textbf{For this opening the region is
+    diagnostic only.} Approval to inspect it does not authorise a fitted correction; a
+    proposal to fit the CC$+$NC~$\pi^0$ normalisation would require a separate
+    documented review after the pre-fit result has been recorded, with the fit model,
+    the leverage of the fixed components, the transfer uncertainty and its floor, and
+    the expected effect on the signal-region prediction.
+  \item \textbf{Multi-$\pi$} is diagnostic only. Its transfer factor is $\simeq2.5$
+    (the signal region holds more of the target class than the region does) and its
+    target purity $47\%$; it is not used to fit or constrain the signal-region
+    normalisation, and exposes gross modelling failures and shape discrepancies.
+  \item \textbf{Cosmic} validates the beam-off normalisation and shape to $\sim\!50\%$
+    once the prediction uncertainties of its neutrino component are included ($17\%$
+    from data statistics alone). That is sufficient because beam-off is $1.9\%$ of the
+    selected signal-region prediction: a $50\%$ uncertainty on it is an effect of order
+    $1\%$ on the selected sample. It is not eligible for a fitted correction.
+\end{itemize}
+About $29\%$ of the FHC neutrino background has no region of its own: NC and
+$\nu_e$CC without a $\pi^0$, out-of-fiducial-volume events and CC$1\pi^\pm$ outside the
+measured phase space (\S\ref{sec:cr_transfer}). These components keep their model
+uncertainties unchanged; the CC$0\pi$ and $\pi^0$ distributions carry indirect
+sensitivity to the first two through the shared reconstruction, and each is small
+enough individually that no dedicated region is justified at this exposure.
+
+\paragraph{What the test detects, and its blind direction.} The pass/fail statistic is
+a global normalisation $\chi^2$ over the eight (region, mode) totals with the full
+pre-fit covariance (\S\ref{sec:cr_protocol}). It detects a discrepancy confined to one
+region beyond $12\%$ of the CC$0\pi$ or $\pi^0$ total and beyond $50$--$62\%$ of the
+multi-$\pi$ or cosmic total, an FHC/RHC inconsistency, and, through the
+normalisation-marginalised shape tests, a shape difference; a \emph{common}
+normalisation shift of all regions fails it only beyond $58\%$, because the correlated
+flux, cross-section and detector terms absorb it. That blind direction is acceptable
+because it is the direction the signal-region measurement already carries as its flux
+and cross-section uncertainty: the control regions test the background model region by
+region, not the overall normalisation.
 
 \paragraph{What the present pseudo-data studies do and do not show.}
 The sideband machinery has been exercised on Poisson-thrown central-value pseudo-data.
@@ -241,7 +311,9 @@ exact bookkeeping path that beam-on data will follow. They do \emph{not} validat
 background model: the pseudo-data are drawn from the same simulation that supplies the
 prediction, so agreement is guaranteed up to statistics. The background model is the
 largest untested assumption in the analysis, and testing it is what the control regions
-are for.
+are for. The control-region comparison is made at reconstruction level, so it does not
+depend on the unfolding or on the alternative-generator closure that is required before
+the signal region is opened (\S\ref{sec:limitations}).
 
 \begin{table}[H]
   \centering
@@ -273,74 +345,70 @@ are for.
 
 \noindent The $\pi^0$ region is the furthest from a single inversion: besides the pion
 requirements, which have no meaning once no pion candidate is demanded, it also drops the
-final multiplicity cut. That cut counts primary tracks and non-proton-like tracks, and in
-a $\pi^0$ event the photon showers are frequently reconstructed as additional track-like
-primaries, so retaining it would preferentially remove exactly the multi-shower $\pi^0$
-topologies the region is meant to sample and sculpt its composition towards the
-single-shower events that already resemble the signal region. That was the reason the cut was dropped when the region was defined. The expectation was
-then tested on the Monte Carlo alone
-(\S\ref{sec:cr_pi0_final}): the cut removes $11$--$14\%$ of the region uniformly across
-its components, leaving purity, target share, transfer uncertainty and the overlap with
-multi-$\pi$ unchanged; the sculpting anticipated above appears in the multiplicity
-distributions themselves and nowhere else. The frozen definition, the one in the table, is kept because it is the larger and more
-inclusive sample, not because a material bias was demonstrated.
+final multiplicity cut. The cut was dropped when the region was defined to avoid a
+plausible topology-dependent sculpting (photon showers reconstructed as additional
+track-like primaries). The dedicated comparison of \S\ref{sec:cr_pi0_final} subsequently
+found no material change in target purity, transfer uncertainty or the frozen
+leading-shower-energy shape. The no-cut definition is retained because it provides
+$11$--$14\%$ more events, not because the study demonstrated a material bias from the
+cut.
 
-\paragraph{One point the collaboration is asked to ratify explicitly, and one adopted by the analysers subject to the qualification in item~4(ii) of \S\ref{sec:cr_protocol}.}
-(i)~The $\pi^0$ definition without the final multiplicity cut (Table~\ref{tab:cr_defs} and
-the paragraph above): the comparison with the version retaining that cut is in
-\S\ref{sec:cr_pi0_final} and will \emph{not} be used to modify the region after
-beam-on inspection. (ii)~The roles the transfer factors of \S\ref{sec:cr_transfer} assign
-to the regions, together with the target-class purities that the fitted-correction rule
-of \S\ref{sec:cr_protocol} depends on (purity is defined throughout as the target class's
-share of the \emph{neutrino-MC} prediction in the region, beam-off and dirt being
-separately constrained components): CC$0\pi$ is a quantitative test of the $0\pi$
-background (target-class purity $72\%$; $65\%$ of the full stack) whose extrapolation to
-the signal region carries a $31$--$34\%$ uncertainty, dominated by the detector
-variations; the $\pi^0$ region's target class was adopted by the analysers on
-2026-09-06 as CC$+$NC~$\pi^0$, the definition of Table~\ref{tab:cr_defs}, since the
-NC$\pi^0$ events the shower veto is also meant to remove had been counted under ``NC and
-$\nu_e$CC'' ($\nu_\mu$CC~$\pi^0$ alone is $46\%$ of the region); with that class the
-purity is $50.1\%$ (FHC) and $51.0\%$ (RHC) of the neutrino MC ($45$--$47\%$ of the
-full stack), so the region meets the $50\%$ purity threshold, narrowly; because it does
-so narrowly, and with a class and denominator settled after the purities were known, a
-fitted $\pi^0$ correction is \emph{not} pre-authorised by this document (item~4(ii) of
-\S\ref{sec:cr_protocol}). Its transfer factor is $T=0.019$--$0.020$ with a transfer uncertainty of
-$17$--$19\%$ that is dominated by the Monte-Carlo-statistical floor of the
-detector-variation samples (\S\ref{sec:cr_transfer}). It should be noted that both
-the class definition and the denominator were settled after the purities were known.
-Purity is in any case a proxy for what matters in a one-parameter fit with everything
-else held fixed, the leverage of the fixed components, which is stated directly: in the
-$\pi^0$ region the non-target neutrino background is $0.80$ of the target class ($0.26$ in
-CC$0\pi$), the beam-off $0.23$ ($0.15$) and the signal $0.20$ ($0.13$), so a $10\%$
-mismodelling of the non-target background would bias a fitted $\pi^0$ correction by $8\%$;
-that leverage is propagated into the uncertainty of any fitted correction
-(\S\ref{sec:cr_protocol}); multi-$\pi$ is diagnostic only
-($T\simeq2.5$, target purity $47\%$); and cosmic validates the beam-off normalisation
-and shape but, at $34$--$41\%$ beam-off purity, is not eligible for a fitted
-correction.
+\paragraph{Points the collaboration is asked to ratify.}
+(i)~The $\pi^0$ definition without the final multiplicity cut (Table~\ref{tab:cr_defs});
+the comparison with the version retaining it is in \S\ref{sec:cr_pi0_final} and will
+\emph{not} be used to modify the region after beam-on inspection. (ii)~The $\pi^0$
+target class CC$+$NC~$\pi^0$, adopted by the analysers on 2026-09-06 (the NC$\pi^0$
+events the shower veto is also meant to remove had been counted under ``NC and
+$\nu_e$CC''; $\nu_\mu$CC~$\pi^0$ alone is $46\%$ of the region), together with the
+region's diagnostic-only status for this opening. Purity is defined throughout as the
+target class's share of the \emph{neutrino-MC} prediction in the region, beam-off and
+dirt being separately constrained components; both the class definition and the
+denominator were settled after the purities were known, which is one reason the region
+is diagnostic-only. (iii)~The roles of the other three regions as stated above, and the
+frozen procedure of \S\ref{sec:cr_protocol}.
+
+\paragraph{Approval checklist.}
+\begin{center}\small
+\begin{tabular}{p{7.2cm}p{4.6cm}p{2.6cm}}
+\toprule
+Item & Status / evidence & Sign-off \\
+\midrule
+\multicolumn{3}{l}{\emph{Required before the control regions are opened}}\\
+\midrule
+Control-region definitions frozen & Table~\ref{tab:cr_defs} & \\
+Signal-region overlap zero, event by event & \S\ref{sec:cr_overlap} & \\
+Plot list and binning frozen & \S\ref{sec:cr_protocol} item~1 & \\
+Pre-fit covariance, global statistic and thresholds frozen & \S\ref{sec:cr_protocol} items~2--3; null calibration Fig.~\ref{fig:cr_null_calibration} & \\
+Response to a discrepancy frozen & \S\ref{sec:cr_protocol} item~4 & \\
+$\pi^0$ definition and target class ratified; diagnostic-only status recorded & this section, (i)--(ii) & conveners \\
+Flux and detector-systematics contacts have reviewed their parts & pending & contacts \\
+Repository tag and release checksum recorded & analysis-state box above & \\
+\midrule
+\multicolumn{3}{l}{\emph{Required later, before the signal region is opened}}\\
+\midrule
+Control-region results reviewed; any discrepancy treated under \S\ref{sec:cr_protocol} & pending & conveners \\
+Alternative-generator (NuWro or GiBUU) fake-data closure on the released chain & pending, \S\ref{sec:limitations} & \\
+Flux constants confirmed as PPFX-corrected central values & pending, \S\ref{sec:flux_status} & flux contact \\
+MCS muon-momentum uncertainty bounded or propagated & pending, \S\ref{sec:limitations} & \\
+Final empty-cache reproduction of the release to be unblinded & pending, \S\ref{sec:pipeline} & \\
+Inverted pion-PID region for the CC$0\pi$ misidentification transfer & pending & \\
+Inverted-proton-PID region before any proton-tagged result & pending, \S\ref{sec:cr_1p_scope} & \\
+\bottomrule
+\end{tabular}
+\end{center}
 
 \paragraph{Expected yields and precision.}
 Table~\ref{tab:sideband_yields} gives the expected composition per region and beam. The
 raw statistical precision of the data samples is $0.6\%$ (CC$0\pi$), $0.8\%$ ($\pi^0$)
-and $6\%$ (multi-$\pi$) for the combined exposure; the cosmic region constrains the
-beam-off normalisation only to $\sim\!50\%$ once the prediction systematics of its
-neutrino-MC component are included ($\sim\!17\%$ from data statistics alone). The regions \emph{test} the background
-components they target and provide sensitivity to them; whether a region can be used to
-\emph{constrain} its target in the signal region is decided by the transfer factors and
-their uncertainties (\S\ref{sec:cr_transfer}), and for multi-$\pi$ the answer is already
-no. Although the combined CC$0\pi$ sample has $\sim1\%$ raw statistical precision, its
-target-class transfer to the signal region has a $31$--$34\%$ uncertainty, dominated by
-the detector variations, so the region is primarily a high-statistics validation test
-rather than a per-cent-level signal-region constraint. The neutrino-MC prediction in each region
-carries the flux, cross-section and re-interaction uncertainties of
-Table~\ref{tab:cr_syst}, including the detector variations. The regions also carry a
-few-per-cent sensitivity to the signal normalisation in principle: the CC$0\pi$ region
-holds $1\,124$ signal events ($9\%$ of its neutrino MC), so a $30\%$ signal excess would
-appear as a $2.8\%$ excess in a region of $1\%$ statistical precision. In practice that
-is inside the $9$--$24\%$ detector-variation uncertainty on the region prediction and so
-invisible to every pull of \S\ref{sec:cr_protocol}, which is what keeps the regions blind
-to the signal; the response tree holds the signal at its central value in any case.
-
+and $6\%$ (multi-$\pi$) for the combined exposure. The neutrino-MC prediction in each
+region carries the flux, cross-section and re-interaction uncertainties of
+Table~\ref{tab:cr_syst}, including the detector variations. The regions carry a
+few-per-cent sensitivity to the signal normalisation in principle (the CC$0\pi$ region
+holds $1\,124$ signal events, $9\%$ of its neutrino MC, so a $30\%$ signal excess would
+appear as a $2.8\%$ excess), which is inside the $9$--$24\%$ detector-variation
+uncertainty on the region prediction and so invisible to every pull of
+\S\ref{sec:cr_protocol}; that is what keeps the regions blind to the signal, and the
+response tree holds the signal at its central value in any case.
 
 % =============================================================================
 \section{Introduction}
@@ -370,187 +438,76 @@ $\cos\theta_\mu$ and $\theta_\mu$) in the CC$\pi^{\pm}$ channel using the full N
 configurations, employing Pandora pattern recognition~\cite{pandora,uboone_pandora} and
 Wiener-SVD unfolding~\cite{wienervsd}.
 
-\section{Theoretical Background and Prior CC$\pi^+$ Measurements}
+\section{Physics Context}
 \label{sec:theory}
 % =============================================================================
 
-\subsection{Production Mechanisms}
+\subsection{Production mechanisms and nuclear effects}
 \label{sec:prod_mechanisms}
-
-At neutrino energies of 0.5--5~GeV, charged-current single charged-pion
-production proceeds through three mechanisms.
-
-\textbf{Baryon resonance production} dominates at $E_\nu \lesssim 2$~GeV.
-The neutrino excites the struck nucleon to a baryon resonance, most prominently
-the $\Delta(1232)$ isobar, which then decays to a nucleon and pion:
-\begin{equation}
-  \nu_\mu n \;\to\; \mu^- \Delta^{++} \;\to\; \mu^- \pi^+ p, \qquad
-  \nu_\mu p \;\to\; \mu^- \Delta^{+} \;\to\; \mu^- \pi^0 p
-    \;\text{(or }\pi^+ n\text{)}.
-\end{equation}
-The standard model is due to Rein and Sehgal~\cite{rs1981}, which uses the
-Feynman--Kislinger--Ravndal (FKR) quark model to compute form factors for all
-baryon resonances up to $W \lesssim 2$~GeV.  The modern implementation used in
-GENIE for resonance (RES) production is the
-Kuzmin--Lyubushkin--Naumov Berger--Sehgal (KLN-BS)
-model~\cite{kuzmin2004,graczyk2008,berger2007,nowak2009}, which combines
-the lepton-mass-corrected vector and axial form factors of
-Kuzmin \textit{et al.}~\cite{kuzmin2004} with the updated $\Delta(1232)$
-electromagnetic form factors of Graczyk and Sobczyk~\cite{graczyk2008} and
-the improved treatment of the $\Delta$ line shape and the lepton-mass
-effects of Berger and Sehgal~\cite{berger2007}. (Berger and Sehgal also discuss the
-interference between the resonant and non-resonant amplitudes; that interference term is
-not implemented in the GENIE~v3 configuration underlying the \uboone{} tune~\cite{uboone_tune}, where the
-non-resonant contribution is added incoherently.)  Higher resonances
-($N(1440)P_{11}$, $N(1520)D_{13}$, etc.) are included up to
-$W \lesssim 2$~GeV and contribute at $E_\nu \gtrsim 1.5$~GeV.
-
-\textbf{Non-resonant and DIS backgrounds.}
-A non-resonant continuum contributes at all $W$; in a full amplitude-level
-treatment it interferes (constructively or destructively by isospin) with the resonant
-amplitude, although the generators used here add it incoherently.  Deep-inelastic
-scattering (DIS) becomes significant above $W \approx 1.6$~GeV.  Together
-these processes represent $\sim$20\% of the CC$\pi^{\pm}$ rate in the energy range
-of this analysis and are modelled in GENIE via the Bodek--Yang formalism.
-
-\textbf{Coherent pion production.}
-The neutrino can scatter coherently off the entire nucleus~\cite{rs_coherent,berger_sehgal_coherent},
-$\nu_\mu A \to \mu^- \pi^+ A^*$, leaving the nucleus in its ground state.
-The cross section is small ($\lesssim 10\%$ of the total) below 5~GeV. The signal
-definition of Sec.~\ref{sec:signal} is a final-state topology (one muon, one charged pion,
-no other mesons) and carries no truth-level veto on the interaction mode, so coherent
-$\mathrm{CC}\pi^{\pm}$ events that satisfy it are \emph{included in the signal}; they are
-a small signal component, not a background.
-
-\subsection{Nuclear Effects and Final-State Interactions}
 \label{sec:fsi}
 
-On a heavy nucleus such as argon ($A = 40$), two classes of nuclear correction
-modify the CC$\pi^{\pm}$ rate and kinematics significantly.
+At $0.5$--$5$~GeV charged-current single charged-pion production proceeds through baryon
+resonance production, dominated by the $\Delta(1232)$ and modelled by Rein--Sehgal-type
+form factors~\cite{rs1981,kuzmin2004,graczyk2008,berger2007,nowak2009}; a non-resonant
+continuum and deep-inelastic scattering, together $\sim\!20\%$ of the rate here and added
+incoherently by every generator used; and coherent production off the whole nucleus
+($\lesssim10\%$), which satisfies the topological signal definition of \S\ref{sec:signal}
+and is therefore part of the signal, not a background. On argon, Fermi motion, Pauli
+blocking and binding modify the kinematics, and final-state interactions (absorption at
+$\sim\!25$--$30\%$, charge exchange, quasi-elastic scattering) mix the CC$\pi^{\pm}$,
+CC$\pi^0$ and CC$0\pi$ topologies at the $30\%$ level. That mixing is why the signal is
+defined by the final-state particle content and not by the production process, and why
+CC$0\pi$ is the largest background: pion absorption and a proton taken for the pion feed
+it into the selection (\S\ref{sec:request}).
 
-\textbf{Initial-state effects.} Fermi motion of the struck nucleon broadens
-kinematic distributions, and Pauli blocking suppresses transitions to low-momentum
-nucleon final states near threshold.  Nuclear binding also shifts the effective
-nucleon mass relative to free-nucleon predictions.
-
-\textbf{Final-state interactions (FSI).}  The produced pion must traverse the
-nuclear medium before being detected.  Intranuclear rescattering occurs via:
-\begin{itemize}[noitemsep]
-  \item \textit{Pion absorption} ($\pi A \to NN\ldots$): probability $\sim$25--30\%
-    on Ar; converts CC$\pi^{\pm}$ events into CC0$\pi$ topology.
-  \item \textit{Charge exchange} ($\pi^+ n \to \pi^0 p$): produces a CC$\pi^0$ event.
-  \item \textit{Quasi-elastic scattering}: pion survives but changes direction;
-    modifies $p_\pi$ and $\theta_\pi$ distributions.
-  \item \textit{Inelastic production} ($\pi N \to \pi\pi N$): rare below
-    $p_\pi \approx 400$~MeV/$c$.
-\end{itemize}
-FSI are modelled in GENIE via the INTRANUKE (hA) cascade.  Because absorption and
-charge exchange mix CC$\pi^{\pm}$, CC$\pi^0$, and CC0$\pi$ topologies at the
-$\sim$30\% level, the signal in any CC$\pi$ analysis is necessarily defined by
-the final-state particle content observed in the detector, not by the underlying
-production process (Section~\ref{sec:signal}).
-
-\subsection{Generator Predictions and Known Tensions}
+\subsection{Generators compared}
 \label{sec:generators}
 
-Major neutrino event generators reproduce the inclusive CC cross section to
-10--15\% but show systematic spread in the CC$\pi^{\pm}$ rate, owing to differences
-in the resonance model, the treatment of the transition region between resonance
-and DIS, and the FSI cascade.
+Four generators are compared with the results; their relevant model choices are
+summarised in Table~\ref{tab:gen_config}. The injected model and the source of the
+response is the \uboone{} tune of GENIE~v3~\cite{uboone_tune}. In the measured phase
+space the standalone generators span a factor of $\sim\!1.6$ in the total cross section,
+GENIE lowest and NEUT highest (\suppref{Table}{tab:total_xsec}), bracketing the tune;
+because the present results are extracted on central-value fake data, that spread is the
+context for the model comparisons, not a measured tension.
 
-\paragraph{GENIE v3~\cite{genie,genie3}.}
-For resonance production GENIE implements the KLN-BS
-model~\cite{kuzmin2004,graczyk2008,berger2007,nowak2009} for the full tower of
-18 baryon resonances up to $W \lesssim 2$~GeV, including the
-$\Delta(1232)P_{33}$, $N(1440)P_{11}$ (Roper), $N(1520)D_{13}$,
-$N(1535)S_{11}$, $\Delta(1620)S_{31}$, $\Delta(1700)D_{33}$,
-$N(1680)F_{15}$, $\Delta(1950)F_{37}$, and their isospin partners.
-The hadronic invariant mass range $1.0 < W < 1.7$~GeV is bridged by a
-resonance--DIS transition using the AGKY (Andreopoulos--Gallagher--Kehayias--Yang)
-model, which applies KNO scaling in the transition region and the Bodek--Yang
-DIS model above $W \approx 1.7$~GeV.
-Non-resonant single-pion production is included through the low-$W$ extension of
-the Bodek--Yang DIS model and is added incoherently to the resonant contribution; no
-resonant/non-resonant interference is implemented.
-Coherent $\pi^+$ production uses the Rein--Sehgal coherent model.
-FSI are handled by the INTRANUKE \textit{hA} empirical model, in which each hadron
-undergoes at most one effective interaction whose probability and outcome are tuned to
-hadron--nucleus data; it is the alternative \textit{hN} microscopic cascade, also
-available in GENIE, that propagates hadrons step-by-step using free-nucleon $\pi N$ and
-$NN$ cross sections.
-GENIE has been reported to over-predict the CC$\pi^{\pm}$ rate by 20--35\% relative to
-bubble-chamber and MiniBooNE data in several comparisons when normalised to the BNL
-dataset; the tension is reduced but not eliminated in the AR23 tune.
+\begin{table}[H]
+  \centering
+  \caption{Model content of the generators compared, restricted to what matters for
+    interpreting this measurement.}
+  \label{tab:gen_config}
+  \small
+  \begin{tabular}{L{2.0cm} L{4.6cm} L{3.4cm} L{4.2cm}}
+    \toprule
+    Generator & Resonance model & Non-resonant / DIS & Final-state interactions \\
+    \midrule
+    GENIE v3~\cite{genie,genie3} & KLN--BS, 18 resonances to $W\lesssim2$~GeV & Bodek--Yang, incoherent; AGKY transition & INTRANUKE hA (one effective interaction) \\
+    NuWro~\cite{nuwro} & $\Delta(1232)$ only (Paschos--Yu) & separate amplitude; smooth transition to Bodek--Yang & Salcedo--Oset (in-medium $\Delta$, two-body absorption) \\
+    NEUT~\cite{neut,neut2021} & modified Rein--Sehgal, 18 resonances, Graczyk--Sobczyk $\Delta$ form factors & GRV98 with Bodek--Yang above $W\approx2$~GeV & step-by-step intranuclear cascade \\
+    GiBUU~\cite{gibuu} & $\Delta$ and higher resonances with in-medium spectral functions & PYTHIA fragmentation above $W\approx1.6$~GeV & transport equations with pion optical potential \\
+    \bottomrule
+  \end{tabular}
+\end{table}
 
-\paragraph{NuWro~\cite{nuwro}.}
-NuWro models resonance production via the $\Delta(1232)$ only;
-no higher baryon resonances are included.
-The $\Delta$ is treated with the Paschos--Yu formalism for the
-$\Delta$ excitation amplitude, retaining the full angular structure of the
-pion decay.
-A smooth analytic interpolation connects the single-$\Delta$ resonance
-region to the DIS regime at higher hadronic invariant mass
-($W \gtrsim 1.4$~GeV), using Bodek--Yang structure functions for the deep
-inelastic contribution; the transition avoids a hard boundary between
-resonance and continuum.
-Non-resonant single-pion production is included as a separate amplitude.
-FSI are implemented using the microscopic Salcedo--Oset model, which treats
-pion propagation in nuclear matter through the pion self-energy in the
-random-phase approximation, naturally accounting for medium modifications
-such as $\Delta$ broadening and pion absorption via two-body processes
-($\pi N N \to N N$) that are absent in purely cascade-based approaches.
-NuWro has historically shown better agreement with MiniBooNE and bubble-chamber
-data than GENIE, partly attributable to the absence of overestimated higher-resonance
-contributions.
-
-\paragraph{NEUT~\cite{neut,neut2021}.}
-NEUT, the generator used by T2K and Super-Kamiokande, implements resonance
-production via a modified Rein--Sehgal model including 18 resonances up to
-$W \lesssim 2$~GeV, with Graczyk--Sobczyk~\cite{graczyk2008} electromagnetic
-form factors for the $\Delta(1232)$.
-The axial mass $M_A^{\rm RES}$ is a tunable parameter; T2K applies a data-driven
-tune that reduces the overall CC$\pi^{\pm}$ normalisation by $\sim$10--20\% relative
-to the default.
-The transition to DIS is handled similarly to GENIE, using GRV98 LO parton
-distribution functions with Bodek--Yang corrections above $W \approx 2$~GeV.
-Coherent pion production follows the Rein--Sehgal coherent model with a
-Berger--Sehgal-style correction for finite lepton mass.
-FSI are modelled by a custom NEUT intranuclear cascade that tracks each produced
-hadron through the nucleus using step-by-step interactions sampled from $\pi N$
-cross sections, with nuclear density and mean-free-path corrections derived from
-the optical potential.
-
-\paragraph{GiBUU~\cite{gibuu}.}
-The Giessen Boltzmann--Uehling--Uhlenbeck (GiBUU) generator takes a fundamentally
-different approach: instead of a probabilistic step-by-step cascade, it solves a
-coupled set of kinetic transport equations for the full hadronic system inside the
-nuclear medium.
-Resonance production includes the $\Delta(1232)$ and higher resonances whose
-in-medium spectral functions are broadened by collisional damping; the $\Delta$
-width in the nuclear medium is substantially larger than its free-space value of
-$\Gamma_0 \approx 118$~MeV, suppressing threshold production.
-Pion propagation after production is governed by a mean-field potential (the pion
-optical potential), which shifts pion momenta as they traverse the nucleus -- an
-effect absent in cascade models and particularly important for low-momentum pions
-($p_\pi \lesssim 200$~MeV/$c$) near the pion production threshold.
-The transition to DIS uses PYTHIA for string fragmentation above
-$W \approx 1.6$~GeV.
-GiBUU predictions for pion angular distributions and for the backward-hemisphere
-$d\sigma/d\cos\theta_\pi$ can differ substantially from cascade-based generators,
-making it a valuable cross-check of FSI systematics.
-
-Because the present results are extracted on central-value fake data, no data/MC
-deficit is measured here. What the analysis does provide is the spread of the standalone
-generators in the measured phase space, a factor of $\sim\!1.6$ between GENIE and NEUT
-(\suppref{Table}{tab:total_xsec}), which brackets the injected \uboone{} tune; the over-prediction
-observed for several generator configurations in parts of the relevant phase space in the
-measurements surveyed below is the context for that spread, not a result of this note.
-
-\subsection{Previous Experimental Measurements}
+\subsection{Previous measurements}
 \label{sec:prev_meas}
 
-Table~\ref{tab:prev_meas} summarises published CC$\pi^+$ measurements on nuclear
-targets ordered chronologically.
+Table~\ref{tab:prev_meas} lists the published CC$\pi^+$ measurements on nuclear targets.
+The two most directly relevant are MicroBooNE's own: the BNB
+measurement~\cite{uboone_bnb2026_ccpi}, on the same detector with an on-axis spectrum
+peaked at $0.7$~GeV and negligible $\bar\nu_\mu$ content, gives
+$\sigma=(3.75\pm0.07_{\rm stat}\pm0.80_{\rm syst})\times10^{-38}$~cm$^2$/Ar and finds
+all tested generators above the data at very forward muon angles; and the NuMI
+$\nu_e+\bar\nu_e$ CC$\pi^+$ measurement~\cite{uboone_nue_ccpi}, on the same beam and
+reconstruction, which shares this analysis's extraction framework and conventions
+(\suppref{Sec.}{sec:nueconsistency}). The NuMI off-axis flux used here is softer and
+broader than the BNB one with a $\sim\!35\%$ $\bar\nu_\mu$ admixture in FHC, and the
+flux-averaged total is divided by the whole flux above $60$~MeV while pion production
+opens near $0.3$~GeV, so the $\sim\!1.0\times10^{-38}$~cm$^2$/Ar found here is not to be
+compared directly with the BNB value (\S\ref{sec:flux_status}). The T2K off-axis
+measurement on carbon~\cite{t2k_ccpip} overlaps this spectrum most closely among the
+other experiments. The extended survey is in the technical supplement
+(\suppref{App.}{sec:supp_physics}).
 
 \begin{table}[H]
   \centering
@@ -577,150 +534,6 @@ targets ordered chronologically.
     \bottomrule
   \end{tabular}
 \end{table}
-
-\subsubsection*{Deuterium bubble chambers: ANL and BNL (1979--1986)}
-
-The ANL 12-foot bubble chamber~\cite{anl_radecky1982} and BNL 7-foot bubble
-chamber~\cite{bnl_kitagaki1986} provided the first high-statistics measurements of
-$\nu_\mu d \to \mu^- \pi^+ pp$ in the 1--3~GeV range.  These measurements are
-important because the deuterium target is close to a free nucleon, minimising
-nuclear corrections relative to heavier targets.  The ANL and BNL total cross
-sections disagree by $\sim$15\% in absolute normalisation, a discrepancy long
-attributed to flux uncertainties; the BNL flux is now believed to be better
-constrained.  This ANL--BNL tension directly propagated into the spread of
-generator predictions: models tuned to ANL tend to predict lower rates than
-those tuned to BNL.  The MINERvA experiment~\cite{minerva_lownu} subsequently
-resolved much of this tension by simultaneously constraining the flux and the
-cross section.
-
-\subsubsection*{K2K near detector (2008)}
-
-The K2K experiment~\cite{k2k_rodriguez2008} made the first accelerator-based
-total CC$\pi^+$ cross-section measurement on a carbon target at
-$\langle E_\nu \rangle = 1.3$~GeV using its fine-grained near detector.  The
-result was consistent with NEUT predictions and established the nuclear-target
-correction from deuterium to carbon at intermediate energies.
-
-\subsubsection*{MiniBooNE ($\nu_\mu$ on CH$_2$, BNB beam, 2011)}
-
-The MiniBooNE detector (818-tonne mineral-oil Cherenkov detector) published
-differential CC$\pi^+$ cross sections on CH$_2$ in the Booster Neutrino Beam
-($E_\nu^{\rm peak} \approx 0.7$~GeV)~\cite{miniboone_ccpi}.  MiniBooNE was the
-first experiment to provide high-statistics differential distributions as a
-function of $Q^2$, the invariant hadronic mass $W$, and the outgoing muon and
-pion kinematics.  The flux-integrated total cross section was measured to be
-$\sigma \approx 3.4\times10^{-38}$~cm$^2$ per CH$_2$ molecule, or equivalently
-$\sim2.0\times10^{-38}$~cm$^2$ per carbon nucleus at $\langle E_\nu \rangle
-\approx 1$~GeV~\cite{uboone_bnb2026_ccpi}.  The measured rate exceeded the NUANCE
-prediction by $\sim$20\%, i.e.\ that model \emph{under}-predicted the data; the
-``generator over-prediction'' discussed in the later literature refers to the opposite
-tension, in which GENIE-based predictions lie above subsequent measurements in parts of
-the phase space, and is generator- and phase-space-dependent rather than universal.  The hydrogen content of
-CH$_2$ complicates the extraction of the carbon-only cross section, and the
-spherical Cherenkov geometry makes it difficult to measure low-energy pions
-or reconstruct proton recoils.  These limitations drove subsequent adoption of
-finer-grained tracking detectors and liquid-argon targets.
-
-\subsubsection*{MINERvA ($\nu_\mu$ on CH, NuMI medium energy, 2015--)}
-
-The MINERvA experiment~\cite{minerva_ccpi} uses a finely-segmented
-scintillator-strip tracking calorimeter in the NuMI medium-energy beam
-($\langle E_\nu \rangle \approx 3.6$~GeV).  It has published the most
-kinematically complete CC$\pi^+$ measurements to date, reporting differential
-cross sections as a function of: pion momentum $p_\pi$, pion angle $\theta_\pi$,
-muon momentum $p_\mu$, muon angle $\theta_\mu$, and the full set of Adler
-angles describing the pion in the hadronic centre-of-mass frame.  MINERvA also
-measured CC$\pi^+$ on iron and lead targets~\cite{minerva_fe}, providing direct
-constraints on nuclear $A$-dependence at the same beam energy.  GENIE
-consistently over-predicts MINERvA by 20--35\% across all kinematic variables
-in the $\Delta(1232)$ peak, the same qualitative tension seen at lower energies.
-The higher beam energy at MINERvA means that the $p_\pi > 0.5$~GeV/$c$ region
-is well-populated, making it complementary to the MicroBooNE NuMI result which
-is statistics-limited at high pion momentum.
-
-\subsubsection*{T2K ND280 ($\nu_\mu$ on CH, off-axis beam, 2020)}
-
-T2K measured CC$\pi^+$ at its near detector ND280 in the off-axis T2K beam
-(OAB), which peaks at $\langle E_\nu \rangle \approx 0.85$~GeV~\cite{t2k_ccpip}.
-The T2K OAB spectrum closely overlaps with the MicroBooNE NuMI off-axis spectrum
-in the kinematically-sensitive 0.3--1.5~GeV range, making this the most directly
-comparable prior measurement to the present work.  T2K reported differential
-cross sections in $p_\mu$ and $\cos\theta_\mu$, finding a data/MC deficit of
-$\sim$30\% relative to NEUT.  The carbon target ($A = 12$) differs from argon
-($A = 40$), but the overlapping beam spectrum enables direct comparison of
-nuclear-mass dependence at fixed neutrino energy.
-
-\subsubsection*{ArgoNEUT ($\nu_\mu + \bar{\nu}_\mu$ on Ar, NuMI, 2018)}
-
-ArgoNEUT~\cite{argoneut_ccpi} was a 175-litre LArTPC placed upstream of the
-MINOS near detector in the NuMI low-energy beam
-($\langle E_\nu \rangle \approx 9.6$~GeV).  Using $1.25\times10^{20}$~POT,
-ArgoNEUT selected 115~$\nu_\mu$ and 158~$\bar{\nu}_\mu$ CC$\pi^+$ candidate
-events after background subtraction~\cite{argoneut_ccpi}, publishing the
-first CC$\pi^+$ total cross section on argon as a function of neutrino energy.
-The result was consistent with GENIE predictions at these high energies, where
-sensitivity to the $\Delta(1232)$ resonance is suppressed.  The LArTPC technology
-and argon target make ArgoNEUT the direct predecessor to MicroBooNE, but the
-factor $\sim$10 higher beam energy means that extrapolation to the
-$E_\nu < 2$~GeV regime relevant for oscillation experiments requires generator
-assumptions and limits the constraining power on FSI models in the resonance
-region.
-
-\subsubsection*{MicroBooNE BNB channel: inclusive precedent (2022)}
-
-The same MicroBooNE detector used in this analysis published the first
-measurement of energy-dependent inclusive $\nu_\mu$ charged-current cross
-sections on argon in the Booster Neutrino Beam~\cite{genieccpi}
-($E_\nu^{\rm peak} \approx 0.7$~GeV), establishing the detector's absolute
-cross-section capability on argon together with the BNB flux modelling and
-reconstruction performance relevant to the present work.  The dedicated
-exclusive CC$\pi^+$ measurement in the same beam followed on the full BNB
-dataset (below), and it is that exclusive result to which the present NuMI
-CC$\pi^+$ measurement is most directly compared.
-
-\subsubsection*{MicroBooNE BNB channel: full dataset (2026)}
-
-Reference~\cite{uboone_bnb2026_ccpi} reports CC$\pi^+$ differential cross
-sections using the complete MicroBooNE BNB dataset of
-$1.11\times10^{21}$~POT~\cite{uboone_bnb2026_ccpi}, selecting 6816 events after
-background subtraction and measuring differential cross sections in muon momentum,
-muon angle, pion momentum, and pion angle -- the same four observables as the
-present analysis.  The flux-integrated total cross section is
-\begin{equation*}
-  \sigma = (3.75 \pm 0.07_{\rm stat} \pm 0.80_{\rm syst})\times10^{-38}~\text{cm}^2/\text{Ar}
-\end{equation*}
-at mean neutrino energy $\langle E_\nu \rangle \approx 0.8$~GeV.  Most generators
-reproduce the data within uncertainties; a notable exception is the muon angle with
-respect to the beam, where all tested generators overestimate the cross section at
-very forward angles ($\cos\theta_\mu \to 1$)~\cite{uboone_bnb2026_ccpi}.  The
-pion momentum differential cross section reported in this analysis represents the
-first such measurement on an argon target.
-
-The BNB and NuMI analyses probe complementary phase space: BNB is on-axis with a
-narrow $\nu_\mu$ spectrum peaked at $\sim$700~MeV and negligible $\bar{\nu}_\mu$
-content, while NuMI FHC at 135~mrad off-axis provides a softer, broader spectrum
-with a $\sim$35\% $\bar{\nu}_\mu$ admixture and extends sensitivity to
-$E_\nu \sim 0.1$--$0.5$~GeV.
-
-\subsubsection*{MicroBooNE NuMI $\nu_e + \bar{\nu}_e$ CC$\pi^+$ (2025)}
-
-Reference~\cite{uboone_nue_ccpi} presents the first measurement of
-$\nu_e + \bar{\nu}_e$ CC single charged-pion differential cross sections on argon,
-using the full MicroBooNE NuMI dataset ($2.0\times10^{21}$~POT, FHC and
-RHC combined).  The observable set -- electron energy $E_e$, electron angle
-$\theta_e$, pion angle $\theta_\pi$, and electron--pion opening angle
-$\theta_{e\pi}$ -- mirrors the muonic observables of the present analysis.
-The flux-integrated total cross section is measured to be
-\begin{equation*}
-  \sigma = (0.93 \pm 0.13_{\rm stat} \pm 0.27_{\rm syst})
-  \times10^{-39}~\text{cm}^2/\text{nucleon}
-\end{equation*}
-at a mean $\nu_e$ energy of 730~MeV, in good agreement with all tested generator
-predictions (GENIE, NuWro, NEUT, GiBUU) within the combined uncertainties.
-Prior to this measurement, CC$\pi^+$ production by electron neutrinos on argon
-had never been measured; the result is a key input to the DUNE $\nu_e$-appearance
-analysis, where CC$\pi^+$ events are a background to the $\nu_e$ quasi-elastic
-signal.
 
 % =============================================================================
 
@@ -921,7 +734,7 @@ absolute flux than FHC, each configuration uses its \emph{own} integrated flux:
 
 \begin{table}[H]
   \centering
-  \caption{Authoritative integrated $\nu_\mu$ and $\bar{\nu}_\mu$ fluxes per POT
+  \caption{Integrated $\nu_\mu$ and $\bar{\nu}_\mu$ fluxes per POT used by the analysis
     (new-G4 flux, $E_\nu > 60$~MeV), and the combined $\nu_\mu+\bar{\nu}_\mu$ value
     used as the per-configuration normalisation. The combined row is the
     data-POT-weighted average of the two modes (weights $8.857 : 11.082$;
@@ -959,7 +772,11 @@ PPFX-corrected central value, not the raw GEANT4 flux; the central-value histogr
 to be that central value, 
 and this should be confirmed
 with the flux author before unblinding\todo{ask flux expert}, since a raw-G4 integral would put every absolute
-cross section $\sim\!5$--$6\%$ low. The integrated values were validated four independent
+cross section $\sim\!5$--$6\%$ low. \textbf{Open normalisation sign-off} (not required
+for the control-region opening, required before the signal region is opened): written
+confirmation by the NuMI flux contact that the integrated constants of
+Table~\ref{tab:flux} are PPFX-corrected central values consistent with the per-event
+PPFX central-value weighting. The integrated values were validated four independent
 ways: standalone NuWro and GENIE event generation on the same flux, the flux author's
 numbers, and a GENIE closure.
 
@@ -1094,48 +911,12 @@ count is a gate count.
   \label{fig:ext_perrun}
 \end{figure}
 
-\paragraph{A directional cut against residual cosmics: considered and rejected.} Part of the
-surviving beam-off sample is thought to be broken cosmic muon tracks, where the break is
-reconstructed as a vertex and the track direction bears no relation to it. That leaves a
-directional signature, and it is present in the data: among selected events the beam-off
-sample is enriched at backward reconstructed muon angles by nearly an order of magnitude
-relative to signal.
-
-\begin{center}\small
-\begin{tabular}{lccc}
-\toprule
-reco $\cos\theta_\mu$ & EXT (beam-off) & MC signal & enrichment \\\midrule
-$<0$    & $31.8\%$ & $4.1\%$ & $7.8\times$ \\
-$<-0.5$ & $9.1\%$  & $1.4\%$ & $6.4\times$ \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\noindent The enrichment is real but the arithmetic does not support a cut. At the final cut
-the FHC sample is $943$ signal, $30$ EXT and $1\,612$ predicted in total
-(Tab.~\ref{tab:cutflow}). A $\cos\theta_\mu<0$ requirement would remove $\approx32\%$ of
-the EXT, about $10$ events, and $\approx4\%$ of the signal, about $39$ events. Because the
-beam-off sample is subtracted from the data directly, and that subtraction is unbiased by
-construction, removing part of it buys only a reduction in the subtraction's
-\emph{statistical} uncertainty, which is dominated by the $8$ raw Run-1 events scaled by
-$2.1$ ($\approx6$ events for the $30$), to $\approx5$ events. Spending $39$ signal events to
-gain $\approx1$ event of uncertainty is a net loss.
-
-The same bound applies to any cosmic cut, not just this one: EXT is $1.9\%$ of the selected
-sample and is already subtracted without bias, so removing \emph{all} of it for \emph{zero}
-signal loss would gain about $6$ events of statistical uncertainty on a sample of $1\,612$.
-Any cut costing more than about $1\%$ of the signal is a net loss regardless of how
-efficiently it tags cosmics. The residual beam-off contribution is therefore left in place
-and handled by subtraction.
-
-A more surgical variant remains untested. The CC0$\pi$ analysis tags mis-directed tracks with
-a calorimetric direction-preference flag in coincidence with a poor
-forward-muon fit, $\chi^2_\mu>6$, which fires on tracks whose $dE/dx$ profile disagrees with
-the assigned direction rather than on backward-going tracks as such. That would not cut
-genuine backward muons, which outnumber mis-reconstructed ones here by roughly $8{:}1$. Both
-quantities exist in the input ntuples but are not carried into the processed files. It is
-bounded by the same $\approx6$-event ceiling on the EXT statistical uncertainty, so it is worth measuring but cannot become a
-significant improvement.
+\paragraph{No further cosmic-rejection cut.} Further cosmic-rejection cuts were not
+adopted because the beam-off contribution is $1.9\%$ of the selected prediction and is
+removed by an unbiased data-driven subtraction, so a cut can only reduce the
+subtraction's statistical uncertainty, about six events on a sample of $1\,612$; every
+plausible cut loses more signal than that. The directional and calorimetric variants
+that were considered are in \suppref{Sec.}{sec:supp_cosmiccut}.
 
 \paragraph{Software trigger.}
 Data and EXT files are pre-filtered to require the software trigger; the CRT-era
@@ -1619,79 +1400,20 @@ detailed per-category, per-cut breakdown for each.
   \end{tabular}
 \end{table}
 
-\paragraph{Why the phase space and the opening-angle cut are what they are.} The
-measured phase space and the $\theta_{\mu\pi}<2.6$~rad cut were chosen on the Run-1 FHC
-sample with a reference phase space of $p_\mu,p_\pi>0.1\GeVc$; the numbers in this
-paragraph and in Table~\ref{tab:phasespace} are that study and document the choice. The
-full-exposure yields, efficiency and purity of the released measurement are those of
-Table~\ref{tab:cutflow} above and are quoted from there.
-\begin{itemize}[noitemsep]
-  \item Signal MC (POT-weighted): 324.7 events
-  \item Total background: $243.6$ ($\approx199.7~\nu\text{-bkg} + 40.1~\mathrm{EXT} + 3.8~\mathrm{dirt}$)
-  \item True signal generated (efficiency denominator): 2577--2684 events (observable-dependent)
-  \item \textbf{Signal purity: 57.1\%}
-  \item \textbf{Signal efficiency: 12.1--12.6\%}
-  \item \textbf{Measured phase space (reported result): efficiency $15.6\%$,
-    purity $54.9\%$} (reference phase-space study: selected signal 311.9, generated
-    1999, background 256.4; Table~\ref{tab:phasespace})
-\end{itemize}
-
-\noindent\emph{Per-run scaling.} The yields above and in Table~\ref{tab:cutflow} use
-the per-run POT factors of Table~\ref{tab:pot} (each run scaled by its own
-$D_{\text{run}}/\text{MC}_{\text{run}}$), and the EXT by the per-run trigger ratios
-(per-run gate ratios, \S\ref{sec:mc}). A single per-mode factor would differ from the
-per-run scheme by about $2\%$ in the FHC final-cut signal, a small and nearly uniform
-re-weighting of the run mixture that moves efficiency and purity by $<0.5\%$; the per-run
-scheme is used because it is what real beam-on data require. The fake data are thrown
-from the same per-run-scaled prediction, so the closure tests the bookkeeping of the
-scheme, not its correctness against data.
-
-\paragraph{Measured phase space and efficiency turn-on.}
-The reference selection above has near-dead efficiency at low momentum and at the
-large opening-angle extreme: from the fine truth distributions, the per-bin
-efficiency is only $\sim$2--5\% for $p_\mu,p_\pi<0.15\GeVc$ (the 10/20~cm
-track-length cuts) and the region above the reco $\theta_{\mu\pi}=2.6$~rad cut is
-dominated by cosmics ($\sim$7\% purity).  The measured phase space
-$p_\mu>0.15$, $p_\pi>0.175\GeVc$, $\theta_{\mu\pi}<2.6$~rad
-(Section~\ref{sec:signal}) raises and flattens the efficiency to $\sim$13--20\%
-(Fig.~\ref{fig:efficiency}).  Table~\ref{tab:phasespace} compares the selection
-across the iterations. Two conclusions: (i) the $2.6$~rad \emph{upper} cut is kept: on
-the full exposure the events it removes are exactly those of the cosmic control region
-(Table~\ref{tab:sideband_yields}), in FHC $6.0$ signal, $69$ neutrino background, $53$
-beam-off and $2.2$ dirt, a signal purity of $4.6\%$; dropping it would lower the
-signal-region purity from $58.5\%$ to $54.5\%$, raise its beam-off content from $30$ to
-$83$ events and recover only $2.7\%$ of the generated signal ($2055\to1999$ in the
-table), and the region it removes is more useful as the beam-off control region;
-(ii) a \emph{lower} opening-angle cut is counterproductive, the small-angle region is
-high-purity ($\sim$58\%), so cutting it lowers the selected signal without improving
-purity, which is why no lower cut is used.
-
-\begin{table}[H]
-  \centering
-  \caption{Selection-optimisation study across the phase-space iterations, on the Run-1
-    FHC sample. Every entry is Monte-Carlo derived (GENIE overlay signal and background,
-    EXT, dirt); the thresholds chosen here are those of the full-exposure selection of
-    Table~\ref{tab:cutflow}. The beam-off column uses the pooled beam-off scaling of that
-    study, so its absolute values are not those of the full exposure; the ranking of the
-    options is unaffected.  ``no upper cut'' drops the
-    $\theta_{\mu\pi}<2.6$ cut; ``$[0.314,2.6]$'' adds a lower OA cut.  The final choice
-    keeps the $2.6$~rad upper cut with no lower cut.}
-  \label{tab:phasespace}
-  \begin{tabular}{lcccc}
-    \toprule
-    & Reference & no upper cut & $[0.314,2.6]$ & \textbf{Final} \\
-    & ($p{>}0.1$) & ($p{>}.15/.175$) & (lower cut) & ($\theta{<}2.6$) \\
-    \midrule
-    Generated signal       & 2684  & 2055  & 1916  & 1999 \\
-    Selected signal        & 324.7 & 320.3 & 301.8 & 311.9 \\
-    Efficiency             & 12.1\% & 15.6\% & 15.8\% & \textbf{15.6\%} \\
-    EXT (cosmic)           & 40.1  & 136.2 & 38.0  & 40.1 \\
-    Total bkg              & 243.6 & 385.4 & 252.3 & 256.4 \\
-    \textbf{Purity}        & \textbf{57.1\%} & 45.4\% & 54.5\% & \textbf{54.9\%} \\
-    sig\,$\times$\,purity  & 185.6 & 145.4 & 164.4 & \textbf{171.2} \\
-    \bottomrule
-  \end{tabular}
-\end{table}
+\paragraph{Why the phase space and the opening-angle cut are what they are.}
+The thresholds were chosen from the efficiency turn-ons and purity studies on the Run-1
+FHC sample (\suppref{Sec.}{sec:supp_optim}); the measured phase space removes the
+near-zero-efficiency momentum regions and the low-purity large-opening-angle region. On
+the full exposure the events the $\theta_{\mu\pi}<2.6$~rad cut removes are exactly those
+of the cosmic control region (Table~\ref{tab:sideband_yields}): in FHC $6.0$ signal, $69$
+neutrino background, $53$ beam-off and $2.2$ dirt, a signal purity of $4.6\%$. Dropping
+the cut would lower the signal-region purity from $58.5\%$ to $54.5\%$, raise its
+beam-off content from $30$ to $83$ events and recover only $2.7\%$ of the generated
+signal. No lower opening-angle cut is used because the small-angle region is high-purity
+($\sim\!58\%$), so cutting it lowers the selected signal without improving purity. The
+per-run exposure scaling of the yields differs from a single per-mode factor by about
+$2\%$ in the final-cut signal, a nearly uniform re-weighting that moves efficiency and
+purity by $<0.5\%$.
 
 \subsection{Key N$-$1 distributions}
 
@@ -1749,32 +1471,30 @@ protons at the final cut stage, used to tune the working-point thresholds.
 
 Figures~\ref{fig:final_mu} and~\ref{fig:final_pi} show the candidate-level
 distributions at the final selection cut for the four instrumented PID and
-track-length variables, for all three configurations. Signal (blue) and
+track-length variables, for FHC and RHC. Signal (blue) and
 background (orange) are stacked (colourblind-safe Okabe-Ito palette).
 
 \begin{figure}[H]
   \centering
   \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{final_mupid_fhc}\caption{Muon LLR PID, FHC.}\end{subfigure}\hfill
-  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{final_mupid_rhc}\caption{Muon LLR PID, RHC.}\end{subfigure}\hfill
-  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{final_mupid_comb}\caption{Muon LLR PID, comb.}\end{subfigure}\\[6pt]
+  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{final_mupid_rhc}\caption{Muon LLR PID, RHC.}\end{subfigure}\hfill\\[6pt]
   \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{final_mulen_fhc}\caption{Muon length, FHC.}\end{subfigure}\hfill
   \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{final_mulen_rhc}\caption{Muon length, RHC.}\end{subfigure}\hfill
-  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{final_mulen_comb}\caption{Muon length, comb.}\end{subfigure}
   \caption{Muon-candidate LLR PID (top) and track length (bottom) at the final
-    cut, for FHC, RHC and combined. Signal (blue) / background (orange) stacked.}
+    cut, for FHC and RHC (the combined configuration is consistent with both and is not
+    shown). Signal (blue) / background (orange) stacked.}
   \label{fig:final_mu}
 \end{figure}
 
 \begin{figure}[H]
   \centering
   \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{final_pipid_fhc}\caption{Pion LLR PID, FHC.}\end{subfigure}\hfill
-  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{final_pipid_rhc}\caption{Pion LLR PID, RHC.}\end{subfigure}\hfill
-  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{final_pipid_comb}\caption{Pion LLR PID, comb.}\end{subfigure}\\[6pt]
+  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{final_pipid_rhc}\caption{Pion LLR PID, RHC.}\end{subfigure}\hfill\\[6pt]
   \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{final_pilen_fhc}\caption{Pion length, FHC.}\end{subfigure}\hfill
   \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{final_pilen_rhc}\caption{Pion length, RHC.}\end{subfigure}\hfill
-  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{final_pilen_comb}\caption{Pion length, comb.}\end{subfigure}
   \caption{Pion-candidate LLR PID (top) and track length (bottom) at the final
-    cut, for FHC, RHC and combined. Signal (blue) / background (orange) stacked.}
+    cut, for FHC and RHC (the combined configuration is consistent with both and is not
+    shown). Signal (blue) / background (orange) stacked.}
   \label{fig:final_pi}
 \end{figure}
 
@@ -1927,7 +1647,7 @@ since with a single bin there is no regularisation and $A_C\equiv1$.
   \caption{Stage 1, FHC: selected reconstructed spectra scaled to the full exposure, with
     the MC split into signal and background. Points are the Poisson-thrown fake data.
     The RHC and combined equivalents are Figs.~\ref{fig:chain_reco_rhc}
-    and~\ref{fig:chain_reco_comb}.}
+    (the combined configuration is in \suppref{Fig.}{fig:chain_reco_comb}).}
   \label{fig:chain_reco}
 \end{figure}
 
@@ -1943,7 +1663,7 @@ since with a single bin there is no regularisation and $A_C\equiv1$.
   \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{step2_bsub_thetamu}\caption{$\theta_\mu$}\end{subfigure}
   \caption{Stage 2, FHC: background-subtracted data compared with the central-value MC
     signal; the input to the unfolding. RHC and combined: Figs.~\ref{fig:chain_bsub_rhc}
-    and~\ref{fig:chain_bsub_comb}.}
+    (combined: \suppref{Fig.}{fig:chain_bsub_comb}).}
   \label{fig:chain_bsub}
 \end{figure}
 
@@ -1975,33 +1695,7 @@ since with a single bin there is no regularisation and $A_C\equiv1$.
   \label{fig:chain_bsub_rhc}
 \end{figure}
 
-\begin{figure}[H]
-  \centering
-  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{step1_reco_pmu_COMB}\caption{$p_\mu$}\end{subfigure}\hfill
-  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{step1_reco_ppi_COMB}\caption{$p_\pi$}\end{subfigure}\hfill
-  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{step1_reco_costhmu_COMB}\caption{$\cos\theta_\mu$}\end{subfigure}
 
-  \vspace{3mm}
-  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{step1_reco_costhpi_COMB}\caption{$\cos\theta_\pi$}\end{subfigure}\hfill
-  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{step1_reco_thmupi_COMB}\caption{$\theta_{\mu\pi}$}\end{subfigure}\hfill
-  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{step1_reco_thetamu_COMB}\caption{$\theta_\mu$}\end{subfigure}
-  \caption{Stage 1, combined: selected reconstructed spectra at the combined FHC$+$RHC exposure.}
-  \label{fig:chain_reco_comb}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
-  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{step2_bsub_pmu_COMB}\caption{$p_\mu$}\end{subfigure}\hfill
-  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{step2_bsub_ppi_COMB}\caption{$p_\pi$}\end{subfigure}\hfill
-  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{step2_bsub_costhmu_COMB}\caption{$\cos\theta_\mu$}\end{subfigure}
-
-  \vspace{3mm}
-  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{step2_bsub_costhpi_COMB}\caption{$\cos\theta_\pi$}\end{subfigure}\hfill
-  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{step2_bsub_thmupi_COMB}\caption{$\theta_{\mu\pi}$}\end{subfigure}\hfill
-  \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{step2_bsub_thetamu_COMB}\caption{$\theta_\mu$}\end{subfigure}
-  \caption{Stage 2, combined: background-subtracted data compared with the central-value MC signal.}
-  \label{fig:chain_bsub_comb}
-\end{figure}
 
 \subsection{Signal extraction}
 
@@ -2117,8 +1811,8 @@ $R\,C^{-1}$, and the Wiener filter of Eq.~3.24 of Ref.~\cite{wienervsd}, whose
 strength is set by the data covariance rather than by hand. The regularisation matrix
 $C$ is the second-derivative operator on the \emph{density}, corrected for the
 non-uniform bin widths, with one-sided first-derivative rows at the ends. The
-width correction matters: on these binnings, whose widths vary by up to a factor of
-seven, a uniform-grid stencil penalises the density's curvature by the wrong weights
+width correction matters: on these binnings, whose widths vary by up to a factor of $14$ ($\cos\theta_\mu$; $10$ for
+$\theta_\mu$, $6$ for $p_\mu$), a uniform-grid stencil penalises the density's curvature by the wrong weights
 and drives $A_C$ towards rank one, so that every model is smeared onto one shape and
 the measurement carries no shape information (\suppref{Sec.}{sec:thetavar}). A
 standalone replica of the unfolder exists for cross-pipeline checks; it imports the framework's
@@ -2243,8 +1937,7 @@ individual background components.
 
 Figure~\ref{fig:response} shows the smearceptance matrices $S$ (\S\ref{sec:unfolding_resp};
 colour scale includes the efficiency, so the columns sum to $\varepsilon_j$, not to unity)
-for the six observables (the $p_\pi$ panel at the rejected five-bin binning, as a
-diagnostic; the rest at the released binning). The column-normalised diagonals of the
+for the six observables at the released binning. The column-normalised diagonals of the
 released FHC responses are
 $0.86$--$0.95$ for the best-resolved bin of each angular observable (the forward bin of
 $\cos\theta_\mu$, the first bin of the others), $0.67$--$0.88$ elsewhere in
@@ -2276,7 +1969,7 @@ bin is an inclusive region, not a resolved spectral point (\S\ref{sec:status_mat
   \end{subfigure}
   \hfill
   \begin{subfigure}[b]{0.32\textwidth}
-    \includegraphics[width=\textwidth]{fw_resp_ppi}
+    \includegraphics[width=\textwidth]{fw_resp_ppi2bin}
     \caption{$p_\pi$}
   \end{subfigure}
   \hfill
@@ -2300,14 +1993,9 @@ bin is an inclusive region, not a resolved spectral point (\S\ref{sec:status_mat
   \end{subfigure}
   \caption{Smearceptance matrices $S_{ij}=\varepsilon_j M_{ij}$, FHC, exactly as passed to
     the unfolder. Five panels are at the released
-    binning; the $p_\pi$ panel is deliberately the \emph{rejected five-bin} response, kept as the diagnostic that shows reconstructed events piling into the lowest bin from
-    every true bin and motivated the two-bin scheme (the released two-bin $S$ is
-    $2\times2$ with column-normalised diagonals $91\%$ and $76\%$).
-    The colour scale is $P(\mathrm{reco}=i\,|\,\mathrm{true}=j)\times\varepsilon_j$, so
-    each column sums to the selection efficiency of that true bin ($\sim0.1$--$0.2$),
-    \emph{not} to unity; the column-normalised migration matrix $M$ is obtained by
-    dividing each column by its sum, and the diagonals quoted in the text are of $M$.
-    Axes are flat bin numbers (true on $x$, reco on $y$).}
+    binning, including the released two-bin $p_\pi$ response ($91\%$ and $76\%$ column-normalised
+    diagonals); the rejected five-bin $p_\pi$ response, which shows the reconstructed events
+    piling into the lowest bin from every true bin, is \suppref{Fig.}{fig:resp_ppi5}.}
   \label{fig:response}
 \end{figure}
 
@@ -2530,23 +2218,23 @@ Result & Status & Basis \\
 \multicolumn{3}{l}{\emph{Primary scope}}\\
 \midrule
 Total flux-averaged cross section (one-bin extraction), all three configurations
-  & Final
+  & Analysis definition final; result blinded
   & Not suppressed by $A_C$; the most directly interpretable total. \\
 $d\sigma/dp_\mu$
-  & Final
+  & Analysis definition final; result blinded
   & Complete configured covariance including detector variations. \\
 $d\sigma/d\cos\theta_\mu$ and $d\sigma/d\theta_\mu$
-  & Final
+  & Analysis definition final; result blinded
   & Complete configured covariance; discriminates between models. \\
 $d\sigma/d\cos\theta_\pi$
-  & Final
+  & Analysis definition final; result blinded
   & Complete configured covariance. (No $\theta_\pi$ parameterisation is extracted; only the muon angle
     is released in both forms.) \\
 $d\sigma/d\theta_{\mu\pi}$
-  & Final
+  & Analysis definition final; result blinded
   & Complete configured covariance; the best-conditioned shape observable. \\
 $d\sigma/dp_\pi$, two-bin
-  & Final, coarse
+  & Analysis definition final, coarse; result blinded
   & Complete configured covariance, but a two-region partition rather than a spectrum: one
     near-threshold interval and one broad inclusive interval above
     $0.205$~GeV/$c$.  See below. \\
@@ -2558,8 +2246,7 @@ Proton-tagged integrated cross section
   & Detector systematics propagated, closure $\chi^2$ recomputed, $A_C$ and covariance
     released. \\
 Proton-tagged differential results, including transverse kinematic imbalance
-  & Released as secondary; binning validation incomplete
-  & Detector systematics propagated; angles and transverse quantities in the beam frame;
+  & Validation products, not proposed for approval in this review & Detector systematics propagated; angles and transverse quantities in the beam frame;
     $A_C$ and covariance released; the
     $W_\mathrm{had}$ edge scan has not been run (\S\ref{sec:limitations}) and the
     differential $W_{\pi p}$ shape is withdrawn. \\
@@ -2664,82 +2351,43 @@ of the next subsection for three representative FHC extractions.
 
 \paragraph{Ensemble coverage: are the uncertainties the right size?}
 \label{par:ensemble}
-The closure test above uses a single throw.  It can show that the extraction reproduces
-its input, but a single residual has no width, so it cannot say whether the quoted
-uncertainty is correctly sized.  To answer that, thirty-two statistically independent
-Poisson realisations of the FHC data were each put through the \emph{whole} chain ---
-thrown, universes rebuilt from that throw, unfolded --- and the per-bin pull
-\[
-  p_i \;=\; \frac{\hat{x}_i - \left(A_C\,x_{\rm CV}\right)_i}{\sigma_i}
-\]
-formed against the fixed central-value truth smeared by that member's own $A_C$.  (The
-per-throw \emph{fake-data} truth is not a valid reference: it follows the Poisson draw, so
-numerator and reference fluctuate together and the width comes out too small.)
-
-Three extractions were run on the current release, each with the same 32 throws
-(with the weight rule of Eq.~\eqref{eq:safeweight}),
-chosen to bracket the
-conditioning: the well-behaved $p_\mu$; $\cos\theta_\mu$, whose $A_C$ row sums fall as
-low as $0.17$ in FHC ($0.050$ in RHC) so that the regularisation removes up to $83\%$
-($95\%$) of a bin's normalisation;
-and the one-bin total, which has no regularisation at all. If the uncertainties were
-mis-sized anywhere, the second is where it would show; if the extraction carried a bias
-independent of the regularisation, the third is where it would show.
+A single closure throw cannot say whether the quoted uncertainty is correctly sized, so
+thirty-two statistically independent Poisson realisations of the FHC data were each put
+through the whole chain, universes rebuilt from that throw, and the per-bin pull
+$p_i=(\hat{x}_i-(A_C x_{\rm CV})_i)/\sigma_i$ formed against the fixed central-value
+truth smeared by that member's own $A_C$, for three extractions chosen to bracket the
+conditioning: $p_\mu$, $\cos\theta_\mu$ (whose $A_C$ row sums fall to $0.17$ in FHC) and
+the one-bin total (no regularisation).
 
 \begin{center}
 \small
 \begin{tabular}{lccc}
 \toprule
-Reference covariance & pull mean & pull width & 68\% / 95\% coverage \\
+Reference: statistical covariance & pull mean & pull width & 68\% / 95\% coverage \\
 \midrule
-\multicolumn{4}{l}{\emph{statistical only}}\\
 $d\sigma/dp_\mu$        & $-0.05$ & $1.08$ & $62.1\%$ / $92.0\%$ \\
 $d\sigma/d\cos\theta_\mu$ & $-0.18$ & $0.97$ & $71.2\%$ / $93.1\%$ \\
 one-bin total           & $-0.25$ & $1.02$ & $62.5\%$ / $93.8\%$ \\
-\midrule
-\multicolumn{4}{l}{\emph{full}}\\
-$d\sigma/dp_\mu$        & $-0.01$ & $0.35$ & $99.1\%$ / $100\%$ \\
-$d\sigma/d\cos\theta_\mu$ & $-0.06$ & $0.33$ & $99.4\%$ / $100\%$ \\
-one-bin total           & $-0.03$ & $0.11$ & $100\%$ / $100\%$ \\
-\midrule
 expected                & $0$     & $1$    & $68\%$ / $95\%$ \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-Against the statistical covariance all three widths are consistent with unity --- $1.08$,
-$0.97$ and $1.02$, each determined to $\pm13\%$ ($1/\sqrt{2\times32}$) with this many members --- and the
-interval coverage is correct within the same statistics.  \textbf{The statistical uncertainties are correctly sized, and the strongly
-suppressed observable behaves no differently from the well-conditioned one.}  That the
-severe $A_C$ suppression in $\cos\theta_\mu$ does not distort its uncertainties is the
-more informative of the two results, since $p_\mu$ passing was the expected outcome.
-
-Two further things the ensemble shows.  Against the \emph{full} covariance the pull width
-is $0.33$--$0.35$ for the differential results and $0.11$ for the total, and coverage is
-essentially $100\%$: the quoted
-uncertainty is about three times the throw-to-throw spread, because the ensemble varies
-only the data statistics while the denominator carries flux, detector and cross-section
-terms that are identical in every member.  That is the same effect as the closure
-$p$-values clustered near unity, now measured rather than argued.
-
-Second, the ensemble means sit below the reference in all three cases: by $0.5\%$ for
-$p_\mu$ ($0.8074$ against $0.8113$, $0.4\sigma$ on the mean), $1.0\%$ for the one-bin
-total ($1.0206$ against $1.0309$, $1.3\sigma$) and $2.7\%$ for $\cos\theta_\mu$
-($0.7704$ against $0.7918$, $1.9\sigma$), with per-bin pull means of $-0.05$, $-0.25$
-and $-0.18$ (the first $\cos\theta_\mu$ bin at $-0.44$). The three share the same 32
-throws and are therefore correlated, so they are one measurement of a small negative
-offset, not three. The throw itself is unbiased: the mean selected count over the 32
-members is $1578.7$ against the neutrino-MC expectation of $1580.6$ (ratio $0.999$), so
-whatever offset remains is in the extraction, not in the pseudo-data. The offset is at most two standard
-deviations of the ensemble mean and is largest where the regularisation is strongest,
-but the one-bin total, which has no regularisation, also sits low, so the excess in
-$\cos\theta_\mu$ over the common $\approx1\%$ is the only part that can be attributed
-to $A_C$. No correction is applied and no uncertainty is assigned; a larger ensemble
-would settle whether the common offset is real.
-
-The study covers three extractions in one configuration (FHC).  Extending it to RHC and
-to the proton-tagged family would test whether the same holds where the statistics are
-sparser; the machinery is in place.
+The widths are consistent with unity, each determined to $\pm13\%$ with this many
+members, and the coverage is correct within the same statistics: \textbf{the statistical
+uncertainties are correctly sized, and the strongly suppressed observable behaves no
+differently from the well-conditioned one.} Against the full covariance the pull widths
+are $0.33$--$0.35$ (total: $0.11$) with essentially $100\%$ coverage, because the ensemble
+varies only the data statistics while the quoted uncertainty carries the flux, detector
+and cross-section terms that are identical in every member; that is the measured form of
+the closure $p$-values clustered near unity. The ensemble means sit below the reference by
+$0.5\%$ ($p_\mu$), $1.0\%$ (total) and $2.7\%$ ($\cos\theta_\mu$), at $0.4$, $1.3$ and
+$1.9$ standard deviations of the mean, all from the same throws: one measurement of a
+small negative offset, not three, not significant, and not corrected. The throw itself is
+unbiased (mean selected count $0.999$ of the expectation). The study covers three
+extractions in one configuration; RHC and the proton-tagged family have not been tested.
+The reference construction and the full-covariance pulls are discussed in
+\suppref{Sec.}{sec:supp_ensemble}.
 
 \paragraph{On the blinding status.}
 Every ``data'' point in this note is Poisson-thrown central-value fake data.  No beam-on
@@ -2786,7 +2434,7 @@ computation reproduces the authoritative FHC values exactly). The \emph{measured
 event rate}, however, remains $\nu_\mu$-dominant ($76\%$ $\nu_\mu$, $20\%$
 $\bar\nu_\mu$) because the $\nu_\mu$ cross section is $\sim\!2$--$3\times$ larger
 than the $\bar\nu_\mu$ one. The RHC overlays (Runs~1, 2, 3, 4a, 4b, 4c) are all
-verified as genuine $\nu_\mu$ overlays and processed, $4.05\times10^{6}$ events,
+verified as genuine $\nu_\mu$ overlays (flavour composition $100\%$ $\nu_\mu+\bar\nu_\mu$ at truth level, events per POT uniform across files) and processed, $4.05\times10^{6}$ events,
 combined MC POT $1.546\times10^{22}$, mutually consistent
 ($2.62\times10^{-16}$ events/POT) with the PPFX weights, covering the full RHC
 exposure (Run~3 is the largest period, $5.52\times10^{21}$~MC~POT and $1.44\times10^{6}$
@@ -2818,8 +2466,8 @@ fourteen numuMC files carry the \emph{same} $600$ PPFX multisim universes, which
 modes in a single chain, so universe $u$ is the same hadron-production draw in FHC
 and RHC. Per-universe summing therefore propagates one parameter draw through both
 beam configurations and lets each mode's flux response set the result, capturing the
-physical (not unit) cross-horn correlation automatically; this is the rigorously
-correct multisim treatment, superior to any hand-built block covariance. The detector
+physical (not unit) cross-horn correlation automatically; universe indices are shared across FHC and RHC and summed index by index, which preserves
+the implemented cross-horn correlations without a hand-built block covariance. The detector
 variations are carried per mode, the Run-4 FHC and Run-4 RHC samples of each knob
 accumulated under one label, so the combined detector term is exposure-weighted like the
 central value. The combined closure passes for every observable (Table~\ref{tab:comb}), with an unfolded flux systematic of
@@ -2967,57 +2615,26 @@ generators in FHC $p_\mu$) show how far it carries over.
 \toprule
 Observable & FHC & RHC & combined \\
 \midrule
-\multicolumn{4}{l}{\emph{Inclusive}}\\
-\midrule
 $p_\mu$ & $0.66$--$0.91$ & $0.58$--$0.99$ & $0.68$--$1.01$ \\
 $p_\pi$ (2-bin) & $0.35$--$0.54$ & $0.40$--$0.51$ & $0.29$--$0.54$ \\
 $\cos\theta_\mu$ & $0.17$--$0.39$ & $0.05$--$0.45$ & $0.09$--$0.43$ \\
 $\cos\theta_\pi$ & $0.68$--$0.77$ & $0.70$--$0.84$ & $0.71$--$0.83$ \\
 $\theta_{\mu\pi}$ & $0.52$--$1.03$ & $0.58$--$1.15$ & $0.63$--$1.21$ \\
 $\theta_\mu$ & $0.58$--$0.78$ & $0.22$--$1.16$ & $0.53$--$0.67$ \\
-\midrule
-\multicolumn{4}{l}{\emph{Proton-tagged}}\\
-\midrule
-$p_\mu$ & $0.46$--$1.00$ & $0.55$--$0.89$ & $0.65$--$0.96$ \\
-$p_\pi$ (2-bin) & $0.34$--$0.84$ & $0.41$--$0.45$ & $0.47$--$0.48$ \\
-$\cos\theta_\mu$ & $0.61$--$0.70$ & $-0.08$--$0.57$ & $0.28$--$0.46$ \\
-$\cos\theta_\pi$ & $0.66$--$0.77$ & $0.62$--$0.77$ & $0.65$--$0.76$ \\
-$\theta_{\mu\pi}$ & $0.37$--$0.87$ & $0.31$--$0.75$ & $0.35$--$0.78$ \\
-$W_{\pi p}$ & $0.45$--$1.22$ & $-0.14$--$1.26$ & $0.32$--$1.24$ \\
-$W_{\rm had}$ & $0.54$--$0.81$ & $0.30$--$0.86$ & $0.18$--$0.87$ \\
-$\delta p_T$ & $0.54$--$0.86$ & $0.45$--$0.82$ & $0.47$--$0.87$ \\
-$\delta\phi_T$ & $0.65$--$0.78$ & $0.53$--$0.72$ & $0.28$--$0.67$ \\
-$\delta\alpha_T$ & $0.59$--$0.98$ & $0.57$--$0.93$ & $0.60$--$0.96$ \\
-$p_n$ & $0.71$--$0.86$ & $0.61$--$0.82$ & $0.59$--$0.86$ \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-Three features matter for interpretation.
-
-The suppression is large: inclusive $\cos\theta_\mu$ has a row sum as low as $0.05$ in
-RHC, a strong suppression of that output mode for a flat input.  It also differs strongly between observables, which is
-precisely why the integrated cross section obtained by summing a differential result
-varies from observable to observable while the underlying physical total cannot.  The
-D'Agostini cross-check, whose integral is flat across observables, is what establishes
-that this spread is the smearing rather than a physical or acceptance effect.
-
-Two extractions have \emph{negative} row sums, and the pattern identifies their cause.
-In $W_{\pi p}$ the top row carries negative off-diagonal terms in \emph{all three}
-configurations (summing to $-0.14$ FHC, $-0.30$ combined, $-0.61$ RHC against diagonals of
-$0.73$, $0.62$ and $0.47$); only RHC tips negative overall (row sum $-0.14$), because its
-diagonal element is the smallest of the three.  The same happens in the first
-$\cos\theta_\mu$ bin of the proton-tagged RHC sample, whose diagonal is $0.079$ against
-off-diagonal terms summing to $-0.16$ (row sum $-0.08$).
-
-So this is not an RHC-specific defect but the regularisation pushing back against the
-least-determined bin of each observable --- for $W_{\pi p}$, the same top bin that is only
-$2\%$ diagonal in the six-bin response and that already led to withdrawing the
-differential shape.  A negative row is not forbidden, since $A_C$ is a regularisation
-operator rather than a probability matrix, but a prediction smeared through one is being
-told that raising the truth in that bin \emph{lowers} the measured content, which is a
-statement about the regularisation and not about the detector.  Treat those two rows with
-corresponding caution.
+\noindent The suppression is large (inclusive $\cos\theta_\mu$ has a row sum as low as
+$0.05$ in RHC) and differs strongly between observables, which is why the integrated
+cross section obtained by summing a differential result varies from observable to
+observable while the physical total cannot; the D'Agostini cross-check, whose integral
+is flat across observables, confirms that the spread is the smearing
+(\suppref{Sec.}{sec:crosschecks}). The proton-tagged row sums, and the two matrices whose
+least-determined row sums to a small negative value (RHC $W_{\pi p}$ and the first
+$\cos\theta_\mu$ bin of the proton-tagged RHC sample), are tabulated and discussed in
+\suppref{Sec.}{sec:supp_ac}; a negative row is not forbidden for a regularisation
+operator, but those two rows should be read with corresponding caution.
 
 \paragraph{Numerical data release.}
 All fifty-one differential extractions are released in \texttt{report/data\_release/},
@@ -3036,8 +2653,8 @@ This reproduces the published generator curves exactly --- the worst per-bin dev
 over the released matrices is $1.2\times10^{-10}$ --- so an external user can verify their
 implementation against any \texttt{curves\_*.tsv} column before applying it to a new model.
 
-The check is sensitive: a curve that carried $A_C$ twice would miss this expression by
-up to $55\%$, which is why it is part of the release procedure.
+The check is part of the release procedure because it is sensitive to the one error an
+internal closure cannot see, a prediction smeared twice, which would miss it by up to $55\%$.
 
 The practical consequence is stated in the results section and repeated here because it
 is easy to get wrong: quote the physical total from the one-bin extraction, which
@@ -3932,8 +3549,10 @@ trades signal statistics for a fully reconstructed hadronic final state.
 
 \subsection{Extracted cross sections}
 
-Eleven observables are extracted in the proton-tagged subsample; ten are released as
-\emph{secondary} differential results with their covariances, the eleventh, the
+Eleven observables are extracted in the proton-tagged subsample; ten are carried as
+\emph{secondary validation products}, with their covariances but not proposed for
+approval in this review (the binning validation of $W_\mathrm{had}$ and the dedicated
+control region are incomplete, \S\ref{sec:limitations}); the eleventh, the
 differential $W_{\pi p}$ shape, is withdrawn (its files are in the release for
 completeness, flagged as such in \texttt{index\_extractions.tsv}), and the robust
 proton-tagged deliverable proposed as a headline is the one-bin total cross section
@@ -4412,8 +4031,9 @@ each):
 \end{itemize}
 The release was built from the processed ntuples with every cached universe deleted, in
 a single pass, so no preserved intermediate exists; a clean-cache rebuild of the same
-kind reproduced an earlier release bit by bit, and repeating that comparison on the
-release to be unblinded is on the pre-unblinding list (\S\ref{sec:limitations}).
+kind reproduced an earlier release bin by bin to $10^{-9}$ (the comparison record is
+in the change log), and repeating that comparison on the release to be unblinded is on
+the pre-unblinding list (\S\ref{sec:limitations}).
 
 % =============================================================================
 \section{Limitations}
@@ -4464,8 +4084,9 @@ Every closure in this note is a same-sample self-closure: the fake data are thro
 the central-value tune that also supplies the response. The model dependence of the efficiency is therefore
 untested where it matters most: the one-bin total (a single efficiency averaged over the
 whole phase space) and the open-ended $p_\pi>0.205$~GeV/$c$ bin, inside which the
-efficiency varies strongly with the true momentum. A NuWro or GiBUU fake-data pass through
-the released configurations is required before the signal region is opened.
+efficiency varies strongly with the true momentum. A NuWro or GiBUU fake-data pass through the released configurations is required before
+the signal region is opened; it is not required for the control-region opening, which
+compares reconstruction-level yields and does not involve the unfolding.
 
 \paragraph{Coverage is demonstrated for three extractions, in one configuration.}
 The pull and coverage study covers FHC $p_\mu$, $\cos\theta_\mu$ and the one-bin total.
@@ -4496,7 +4117,13 @@ Sixty-three per cent of the selected muons exit the detector and take their mome
 multiple Coulomb scattering, whose scale and resolution are not varied by the eight
 detector-variation knobs; the estimator enters only through the response matrix. A
 data-driven MCS-versus-range comparison on contained muons is the standard way to bound
-it and has not been done here.
+it and has not been done here. Before the signal region is opened one of three things is
+required: that comparison, on contained muons in the beam-off and overlay samples; a
+propagated MCS scale and resolution variation through the response; or a quantitative
+argument that the existing detector variations, several of which change the MCS
+estimate through the space-charge and recombination models, already cover it. The
+control-region comparison does not depend on it, since it is made at reconstruction
+level with the same estimator on both sides.
 
 \paragraph{Two beam-off terms are not in the covariance.}
 The released covariance carries the beam-off statistical term but no uncertainty on the
