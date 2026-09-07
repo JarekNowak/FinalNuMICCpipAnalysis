@@ -212,13 +212,13 @@ final multiplicity cut. That cut counts primary tracks and non-proton-like track
 a $\pi^0$ event the photon showers are frequently reconstructed as additional track-like
 primaries, so retaining it would preferentially remove exactly the multi-shower $\pi^0$
 topologies the region is meant to sample and sculpt its composition towards the
-single-shower events that already resemble the signal region. That expectation was
-tested on 2026-09-06 with a reprocess of the Monte Carlo alone
+single-shower events that already resemble the signal region. That was the reason the cut was dropped when the region was defined. The expectation was
+then tested on 2026-09-06 with a reprocess of the Monte Carlo alone
 (\S\ref{sec:cr_pi0_final}): the cut removes $11$--$14\%$ of the region uniformly across
 its components, leaving purity, target share, transfer uncertainty and the overlap with
 multi-$\pi$ unchanged; the sculpting anticipated above appears in the multiplicity
-distributions themselves and nowhere else. The frozen definition, the one in the table,
-is kept as the larger and more inclusive sample.
+distributions themselves and nowhere else. The frozen definition, the one in the table, is kept because it is the larger and more
+inclusive sample, not because a material bias was demonstrated.
 
 \paragraph{One point the collaboration is asked to ratify explicitly, and one adopted by the analysers subject to the qualification in item~4(ii) of \S\ref{sec:cr_protocol}.}
 (i)~The $\pi^0$ definition without the final multiplicity cut (Table~\ref{tab:cr_defs} and
@@ -2734,16 +2734,18 @@ $d\sigma/dp_\pi$, two-bin
     near-threshold interval and one broad inclusive interval above
     $0.205$~GeV/$c$.  See below. \\
 \midrule
-\multicolumn{3}{l}{\emph{Secondary scope --- complete covariance, secondary results}}\\
+\multicolumn{3}{l}{\emph{Secondary scope --- complete configured covariance, secondary results}}\\
 \midrule
 Proton-tagged integrated cross section
-  & Complete
+  & Complete (configured covariance)
   & Detector systematics propagated, central value postdates the weighting
     fix, closure $\chi^2$ recomputed, $A_C$ and covariance released. \\
 Proton-tagged differential results, including transverse kinematic imbalance
-  & Complete
+  & Released as secondary; binning validation incomplete
   & Detector systematics propagated; beam-frame reconstruction corrected;
-    central values postdate the weighting fix; $A_C$ and covariance released. \\
+    central values postdate the weighting fix; $A_C$ and covariance released; the
+    $W_\mathrm{had}$ edge scan has not been run (\S\ref{sec:limitations}) and the
+    differential $W_{\pi p}$ shape is withdrawn. \\
 \midrule
 \multicolumn{3}{l}{\emph{Withdrawn --- do not quote}}\\
 \midrule
@@ -2776,9 +2778,9 @@ appears in the data release and in Appendix~\ref{app:binning} is only the finite
 adopted to assign the bin a width for plotting, not a kinematic limit. The released
 $d\sigma/dp_\pi$ values are therefore bin-averaged densities over very different
 intervals ($0.030$ and $0.795\GeVc$), and the panel draws the two at equal visual width,
-flagged on the axis, so the plotted area does not represent cross section. The
-less ambiguous statement of the same result is the pair of bin-integrated partial cross
-sections, $\sigma_i=(d\sigma/dp_\pi)_i\,\Delta p_{\pi,i}$, which do not depend on the
+flagged on the axis, so the plotted area does not represent cross section. The primary statement of the result is the pair of bin-integrated partial cross sections
+(Table~\ref{tab:ppi_partial}); the density representation is secondary, since it depends
+on the conventional plotting width of the open bin. These are the partial cross sections, $\sigma_i=(d\sigma/dp_\pi)_i\,\Delta p_{\pi,i}$, which do not depend on the
 choice of plotting boundary for the lower bin and depend on it for the upper bin only
 through the physical content above $1\GeVc$, which the open true bin already includes.
 For the open upper region the released density and the conventional width of
@@ -2843,9 +2845,11 @@ proton-tagged comb $W_{\pi p}$ & $0.48/6$ & $0.77/6$ & $4.88/6$ \\
 
 The closure $\chi^2$ is therefore a check that the extraction does not \emph{disagree}
 with its input beyond the quoted band, which it passes, and not a measure of how well the
-band is sized.  A test of the latter needs either a covariance restricted to the terms
-that differ between measurement and reference, or an ensemble of throws.  Neither is done
-here, and the $p$-values should be read with that limitation in mind.
+band is sized.  A test of the latter needs either a covariance restricted to the terms that differ
+between measurement and reference, or an ensemble of throws. The restricted covariance is
+not used for the released closure tables, whose $p$-values should be read with that
+limitation in mind; the sizing is tested instead with the 32-member statistical ensemble
+of the next subsection for three representative FHC extractions.
 
 \paragraph{Ensemble coverage: are the uncertainties the right size?}
 \label{par:ensemble}
@@ -3895,6 +3899,18 @@ compared. The collaboration is asked to ratify the frozen definition with this c
 in view.
 
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.6\linewidth]{figures/cr_null_calibration.pdf}
+  \caption{Null calibration of the global normalisation $\chi^2$ over the eight (region,
+    mode) totals: $2\times10^5$ pseudo-experiments with the prediction drawn from its
+    pre-fit covariance and Poisson-fluctuated data, against the $\chi^2_8$ density. The
+    full-stack pseudo-data value $0.66$ is marked; it is low because the pseudo-data is a
+    Poisson throw of the same prediction and carries none of the prediction's systematic
+    variation.}
+  \label{fig:cr_null_calibration}
+\end{figure}
+
 \subsection{Frozen procedure for opening the control regions}
 \label{sec:cr_protocol}
 The following is the analysers' proposed procedure, to be ratified with the approval; once
@@ -3946,9 +3962,15 @@ ratified it is frozen and any departure from it is itself a change requiring app
     only beyond $58\%$. That is the test's blind spot, stated: it is a test of the
     background model region by region, not of the overall normalisation, which the
     signal-region measurement carries as its flux and cross-section uncertainty.
-  \item \textbf{Acceptable agreement.} The control regions pass as a set if the global
-    $\chi^2$ of item~2(c) has $p>0.05$; the expected false-failure rate is then $5\%$ by
-    construction. The per-region pulls and shape tests of items~2(a) and 2(b) are
+  \item \textbf{Acceptable agreement.} The control regions pass as a set if the global $\chi^2$ of item~2(c) has $p>0.05$; the
+    expected false-failure rate is then $5\%$ by construction, and it has been calibrated:
+    $2\times10^5$ pseudo-experiments under the null (prediction drawn from its pre-fit
+    covariance, data Poisson-fluctuated, $\chi^2$ with the nominal covariance) fail the
+    nominal $p<0.05$ threshold in $5.1\%$ of cases and $p<0.01$ in $1.1\%$
+    (Fig.~\ref{fig:cr_null_calibration}; \texttt{logs/sidebands\_perrun/protocol\_null\_calibration.txt}).
+    The calibration treats the covariance as known; the finite-universe and
+    detector-unisim sampling noise is not re-thrown, which is the residual approximation
+    in the declared threshold. The per-region pulls and shape tests of items~2(a) and 2(b) are
     diagnostic: a region with $|{\rm pull}|>2$ (complete prediction covariance) or shape $p<0.05$ is
     flagged for the response tree of item~4 even when the set passes, but the eight
     independent flags are not themselves pass/fail criteria (with sixteen pulls and
@@ -4655,6 +4677,15 @@ breakdowns are shown in Fig.~\ref{fig:systbreak}.
 
 \subsection{Anatomy of the flux term: why $17\%$ becomes $30\%$}
 \label{sec:fluxanatomy}
+
+\noindent\fbox{\parbox{0.97\linewidth}{\textbf{Why a $17\%$ flux uncertainty becomes
+$28$--$30\%$ on the total.} A flux universe scales signal and neutrino background together,
+and the extracted signal is $(N_{\rm pred}-B)/(\varepsilon\Phi N_{\rm Ar})$, so its
+fractional flux variation is $\delta\Phi/\Phi\times(1+B/S)$: $17.7\%\times(1+637/943)=29.7\%$
+for FHC against the one-bin value $30.25\%$. The one-bin total has no regularisation, so
+this is background subtraction, not unfolding amplification. The lever is purity or a
+data-driven background constraint (\S\ref{sec:sidebands}).}}
+\medskip
 
 The unfolded PPFX term is $24$--$33\%$ (Tables~\ref{tab:fhc}--\ref{tab:comb}) and the
 one-bin total carries $28$--$30\%$ (Table~\ref{tab:cutcount}), against the $\sim\!17\%$
