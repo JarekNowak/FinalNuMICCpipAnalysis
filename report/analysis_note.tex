@@ -100,7 +100,8 @@
       observables, $d\sigma/dp_\mu$, and a deliberately coarse two-bin $d\sigma/dp_\pi$.
       The proton-tagged subsample is secondary scope because the exposure supports an
       integrated cross section rather than a resonance shape, so the differential
-      $W_{\pi p}$ is withdrawn; its systematics are otherwise complete.  All fifty-one
+      $W_{\pi p}$ is withdrawn; its covariance is otherwise complete with respect to the
+      configured model.  All fifty-one
       extractions carry the complete configured covariance (PPFX flux, interaction model,
       reinteraction, detector variations, normalisation and statistical terms; the identified
       but unpropagated terms are listed in \S\ref{sec:limitations}), the proton-tagged
@@ -1642,10 +1643,16 @@ systematic is assigned; the MCS estimator's $-10\%$ bias and $30\%$ resolution
 listed in \S\ref{sec:limitations}.
 
 \paragraph{Pion momentum.}
-Taken from the \emph{muon-hypothesis} range momentum
-(\texttt{trk\_range\_muon\_mom\_v}). The muon mass ($105.7$~MeV) is close to the pion
-mass ($139.6$~MeV), so the range-to-momentum conversion is a good proxy, and, crucially
-it is a \emph{momentum}, directly comparable to the true $p_\pi$ it is binned against.
+The starting estimator is the \emph{muon-hypothesis} range momentum
+(\texttt{trk\_range\_muon\_mom\_v}). Before a reconstructed $p_\pi$ bin is assigned it
+is converted to the pion hypothesis by preserving the inferred kinetic energy,
+$T=\sqrt{p_{\mu\text{-hyp}}^2+m_\mu^2}-m_\mu$ and $p_\pi=\sqrt{(T+m_\pi)^2-m_\pi^2}$;
+the stored branch is not modified, the conversion is written into the reconstructed-bin
+definition of the bin configuration (\suppref{Sec.}{sec:ppi_bias}, where it raises the
+lowest-bin reconstructed-to-true ratio from $0.888$ to $0.976$). The muon mass
+($105.7$~MeV) is close to the pion mass ($139.6$~MeV), so the range-to-momentum
+conversion is a good proxy, and, crucially, the result is a \emph{momentum}, directly
+comparable to the true $p_\pi$ it is binned against.
 An earlier version of this analysis used the proton-hypothesis range \emph{kinetic energy}
 (\texttt{trk\_energy\_proton\_v}) instead. That is a different physical quantity from the
 momentum used for the true axis with the same bin edges, so the migration matrix was
@@ -4268,8 +4275,10 @@ the muon-hypothesis range and multiple-scattering momenta (\texttt{track\_range\
 \emph{Candidate three-momenta.} The muon momentum magnitude is range-based when the muon
 track ends inside the containment volume (\S\ref{sec:fv_where}), $p_\mu=\texttt{track\_range\_mom\_mu}[\mu]$, and
 multiple-Coulomb-scattering based otherwise, $p_\mu=\texttt{track\_mcs\_mom\_mu}[\mu]$.
-The charged pion, being minimum-ionising, is assigned the muon-hypothesis range momentum
-$p_\pi=\texttt{track\_range\_mom\_mu}[\pi]$. The proton momentum follows from its
+The charged pion, being minimum-ionising, starts from the muon-hypothesis range momentum
+$\texttt{track\_range\_mom\_mu}[\pi]$, converted to the pion hypothesis at fixed kinetic
+energy in the reconstructed-bin definition exactly as in the inclusive analysis
+(\S\ref{sec:selection}); the same two-bin configuration formula is used. The proton momentum follows from its
 calorimetric kinetic energy under the proton hypothesis,
 $p_p=\sqrt{T_p^2+2m_pT_p}$ with $T_p=\texttt{track\_kinetic\_energy\_p}[p]$. Each
 three-momentum is $\vec p_i=p_i\,\hat n_i$, and the energies are
@@ -4783,7 +4792,8 @@ where the statistics are sparser --- have not been tested.
 
 \paragraph{The proton-tagged results are secondary, and their model comparisons are the
 weakest part.}
-Their systematics are complete and their central values current, but the exposure does not
+Their covariance is complete with respect to the configured model and their central
+values current, but the exposure does not
 support a differential $W_{\pi p}$ shape, and the sample has no dedicated control region
 for the $\approx\!13\%$ proton mis-tag: every existing sideband applies the proton
 requirement rather than inverting it, so nothing directly constrains a wrong-track proton
@@ -4871,7 +4881,7 @@ $37.6$--$38.7\%$.
 The proton-tagged subsample is secondary scope, with differential total uncertainties
 $25.1$--$147.7\%$ (the largest for the six-bin combined $W_\mathrm{had}$) and one-bin
 totals of $41$--$47\%$.
-Its systematics are complete, but the exposure does not support a differential $W_{\pi p}$
+Its covariance is complete with respect to the configured model, but the exposure does not support a differential $W_{\pi p}$
 shape at any binning, so that result is withdrawn and only the integrated proton-tagged
 cross section is offered.
 
@@ -4899,8 +4909,10 @@ unity because the measurement and the truth it is compared against share their s
 which cancel in the residual while still inflating the covariance used to judge it.
 
 \paragraph{Corrections that changed results.}
-Twenty-one, counting the $\cos\theta_\pi$ re-binning, each recorded in the change log with
-before-and-after values.  The largest were an
+Twenty-one result-affecting corrections, counting the $\cos\theta_\pi$ re-binning and
+counting a bundled entry once, each recorded in the change log with before-and-after
+values; the change log also records presentation and documentation repairs, labelled as
+such, which are not counted.  The largest were an
 obsolete flux (a factor ${\sim}3.48$), a double application of the central-value weight to
 the fake data (which moved every cross section by $3.8$--$12.9\%$), a regularisation
 operator that assumed a uniform grid and drove $A_C$ towards rank one, an angular convention
@@ -4962,7 +4974,7 @@ optimisation; that binning is not used for any released result.
     \multicolumn{3}{l}{\emph{Inclusive}}\\
     \midrule
       $p_\mu$ (GeV/$c$) & 7 & 0.15, 0.35, 0.55, 0.75, 0.95, 1.25, 1.75, 3 \\
-      $p_\pi$ (GeV/$c$) & 2 & 0.175, 0.205, 1 \\
+      $p_\pi$ (GeV/$c$) & 2 & 0.175, 0.205, 1$^{*}$ \\
       $\cos\theta_\mu$ & 5 & -1, 0.45, 0.65, 0.8, 0.9, 1 \\
       $\cos\theta_\pi$ & 5 & -1, -0.1, 0.35, 0.6, 0.8, 1 \\
       $\theta_{\mu\pi}$ (rad) & 5 & 0, 0.6, 0.85, 1.3, 1.85, 2.6 \\
@@ -4971,7 +4983,7 @@ optimisation; that binning is not used for any released result.
     \multicolumn{3}{l}{\emph{Proton-tagged}}\\
     \midrule
       $p_\mu$ (GeV/$c$) & 7 & 0.15, 0.35, 0.55, 0.75, 0.95, 1.25, 1.75, 3 \\
-      $p_\pi$ (GeV/$c$) & 2 & 0.175, 0.205, 1 \\
+      $p_\pi$ (GeV/$c$) & 2 & 0.175, 0.205, 1$^{*}$ \\
       $\cos\theta_\mu$ & 5 & -1, 0.45, 0.65, 0.8, 0.9, 1 \\
       $\cos\theta_\pi$ & 4 & -1, -0.1, 0.35, 0.75, 1 \\
       $\theta_{\mu\pi}$ (rad) & 5 & 0, 0.6, 0.85, 1.3, 1.85, 2.6 \\
@@ -4983,6 +4995,8 @@ optimisation; that binning is not used for any released result.
       $p_n$ (GeV/$c$) & 2 & 0, 0.375, 2 \\
     \bottomrule
   \end{tabular}
+  \par\smallskip\noindent{\footnotesize $^{*}$ Numerical plotting boundary only; the upper truth bin is open-ended ($p_\pi>0.205$~GeV/$c$), and the released density over the conventional width $0.795$~GeV/$c$ represents the bin integral (Table~\ref{tab:ppi_partial}).}
+
 \end{table}
 
 Every released binning was re-tested on the 2026-09-04 release for whether finer or
