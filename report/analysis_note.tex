@@ -316,7 +316,8 @@ The prerequisites are split by the decision they gate.
     regardless of \texttt{XSEC\_UNBLIND}, and the sideband macros refuse any beam-on
     file that has neither the marker nor Monte Carlo truth (\texttt{macros/sb\_guard.h}).
     Verified from file contents by \texttt{macros/cr\_skim\_check.C} on a Monte Carlo
-    file and a beam-off file processed both ways: the skim is exactly the ordered subset
+    file (Run-1 FHC overlay) and two beam-off files (Run 1, pre-CRT; Run 4c, CRT-era)
+    processed both ways: the skim is exactly the ordered subset
     $\{\lnot\mathrm{Selected} \wedge \text{in a control region}\}$ of the full file
     (\S\ref{sec:cr_skim_test}). The skim is to be produced by one named analyser from
     the raw beam-on ntuples; no full beam-on processed file is written until the
@@ -867,8 +868,11 @@ Cosmic rejection proceeds in stages:
 \end{enumerate}
 The CRT (Cosmic Ray Tagger) sub-detector~\cite{uboone_crt}, consisting of
 scintillator panels surrounding the cryostat, provides an additional cosmic
-veto but is not used in the present analysis because the relevant branch variables
-are zero-filled in the NuMI data ntuples.
+veto but is not used as a cut in the present analysis: the CRT branches are carried
+through \texttt{ProcessNTuples} as pass-through quantities only, they are populated only
+for the CRT-era data (Runs 3--5) and zero for the pre-CRT Run-1 exposure, and a cut would
+require a data/MC tagging systematic; the residual beam-off background is subtracted
+instead (\S\ref{sec:mc}).
 
 Reconstruction uses the Pandora~\cite{pandora,uboone_pandora} multi-algorithm pattern recognition
 framework, which groups hits into PFParticles organised in a hierarchy with the
@@ -1192,7 +1196,9 @@ independently to its own data exposure, so the prediction reproduces the data-PO
 mixture of runs rather than the MC-statistics mixture (see the caption of
 Table~\ref{tab:pot}). Operationally this is exactly what the framework does natively
 each overlay file carries its run's data POT via a matching per-run beam-on
-(here, per-run fake-data) sample, and is scaled by $\text{run\_bnb\_pot}/\text{summed\_pot}$.
+(here, per-run fake-data) sample, and is scaled by $\text{run\_bnb\_pot}$ divided by that run's MC exposure, taken as the
+sum of the \emph{distinct} \texttt{summed\_pot} values stored by the run's files (the run
+total under both processed-file conventions; caption of Table~\ref{tab:sigint_all}).
 $w_{\mathrm{PPFX}}$ is the PPFX central-value flux correction
 (\texttt{ppfx\_cv}) and $w_{\mathrm{tune}}$ is the GENIE/GEANT4 reweighting
 correction (\texttt{weightTune}). One weight rule is used everywhere
@@ -2581,7 +2587,7 @@ true bin; the quoted numbers are the overall mean (bias) and RMS (resolution).
 Table~\ref{tab:chi2_incl} collects the bin-by-bin $\chi^2$ of the unfolded fake data
 against each prediction, for every observable and every beam configuration. All
 predictions are $A_C$-smeared, so the comparison is made in the measurement space, and the
-full covariance is used. The \emph{truth} column is the closure test: it is small
+the complete configured covariance is used. The \emph{truth} column is the closure test: it is small
 throughout (with the caveat on its $p$-values in \S\ref{sec:status_matrix}).
 
 \paragraph{An anomaly that turned out to be a bug.}
@@ -2804,7 +2810,7 @@ information limit rather than an unrefined estimator is in the technical supplem
 
 \paragraph{On the closure \texorpdfstring{$\chi^2$}{chi-squared} values.}
 The closure $\chi^2$ quoted for each extraction compares the unfolded result with the
-fake-data truth using the \emph{full} systematic covariance, and the resulting $p$-values
+fake-data truth using the complete configured systematic covariance, and the resulting $p$-values
 cluster near unity (median $0.98$ across all fifty-one extractions; ten lie below $0.9$
 and the lowest is $0.20$).  That should
 not be read as excellent agreement with the model.  For a self-closure with
@@ -2817,7 +2823,7 @@ the flux, cross-section and exposure terms are common-mode and largely cancel in
 difference while still inflating the covariance used to judge it.  Recomputing the same
 comparison with the statistical covariance alone raises $\chi^2/\mathrm{ndf}$ from
 $0.02$--$0.2$ to $0.5$--$0.8$, much nearer the expected value (evaluated on the
-2026-08-31 release; the current full-covariance values are those of
+2026-08-31 release; the current values with the complete configured covariance are those of
 Tables~\ref{tab:fhc}--\ref{tab:comb}, and it is the effect rather than the values that
 matters here):
 
@@ -3943,7 +3949,7 @@ ratified it is frozen and any departure from it is itself a change requiring app
   \item \textbf{Acceptable agreement.} The control regions pass as a set if the global
     $\chi^2$ of item~2(c) has $p>0.05$; the expected false-failure rate is then $5\%$ by
     construction. The per-region pulls and shape tests of items~2(a) and 2(b) are
-    diagnostic: a region with $|{\rm pull}|>2$ (full covariance) or shape $p<0.05$ is
+    diagnostic: a region with $|{\rm pull}|>2$ (complete prediction covariance) or shape $p<0.05$ is
     flagged for the response tree of item~4 even when the set passes, but the eight
     independent flags are not themselves pass/fail criteria (with sixteen pulls and
     twenty-two shape tests at these thresholds about two false flags are expected, and at
@@ -4150,8 +4156,9 @@ variation samples included and re-unfolded from those universes, so every uncert
 quoted here now carries a detector term.  Those terms run from $10.5\%$ to $108.5\%$ with
 a median of $33.0\%$, against $15.6\%$--$35.0\%$ for the inclusive results: the same
 order, as expected for the same detector, except for the six-bin observables on the
-sparsest samples, where the unfolding amplifies them.  The central values were regenerated in the
-same pass and therefore also postdate the central-value weighting fix.
+sparsest samples, where the unfolding amplifies them.  The central values were regenerated in that pass and again from the re-thrown fake data of
+the 2026-09-04 pass that the present release carries, so they postdate the central-value
+weighting fix.
 
 The closure $\chi^2$ values were recomputed in the same pass, so no quantity in this
 section is carried over from before the fix, and the additional-smearing and covariance
@@ -4531,7 +4538,10 @@ factor, so the ten numbers are not ten independent measurements of the same quan
 \label{sec:systematics}
 % =============================================================================
 
-Full systematic covariance propagation is complete for all fifty-one extractions.
+The configured systematic covariance is propagated for all fifty-one extractions,
+complete with respect to the configured model (the identified unpropagated terms, the
+MCS momentum scale, the beamline geometry, the beam-off gate ratios and the Run-2
+beam-off stand-in, are listed in \S\ref{sec:limitations}).
 Every result carries flux, cross-section-model, hadron-reinteraction, detector-variation,
 POT, target-count and statistical terms, propagated through the unfolding by the error
 propagation matrix and released per component (Sec.~\ref{sec:ac_rowsums}).  The
@@ -4774,6 +4784,12 @@ not significant individually, but it has the same sign everywhere and is largest
 most regularised observable. No correction or uncertainty is assigned; a larger ensemble,
 and one on RHC, would resolve it.
 
+\paragraph{The $W_\mathrm{had}$ binning has not been edge-scanned.} The migration-level edge
+scan that fixed the $p_\pi$ boundary (\suppref{Sec.}{sec:ppi_bias}) was not run for
+$W_\mathrm{had}$, whose upper bins are narrower than its resolution half-width; the six-bin
+$W_\mathrm{had}$ result is released with its closure and generator overlays, and its shape
+should be read with that caveat until the scan is made (not gating).
+
 \paragraph{No alternative-generator fake-data test exists for the released chain.}
 Every closure in this note is a same-sample self-closure: the fake data are thrown from
 the central-value tune that also supplies the response. The NuWro fake-data study of the
@@ -4909,8 +4925,8 @@ unity because the measurement and the truth it is compared against share their s
 which cancel in the residual while still inflating the covariance used to judge it.
 
 \paragraph{Corrections that changed results.}
-Twenty-one result-affecting corrections, counting the $\cos\theta_\pi$ re-binning and
-counting a bundled entry once, each recorded in the change log with before-and-after
+Twenty result-affecting entries, counting the $\cos\theta_\pi$ re-binning and counting
+a bundled entry once, each recorded in the change log with before-and-after
 values; the change log also records presentation and documentation repairs, labelled as
 such, which are not counted.  The largest were an
 obsolete flux (a factor ${\sim}3.48$), a double application of the central-value weight to

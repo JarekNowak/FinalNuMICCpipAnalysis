@@ -31,10 +31,23 @@ Do not apply `A_C` to any column of `curves_*.tsv`: those are smeared already.
 
 ## `cov/` — covariance matrices
 
+One directory per extraction (51, named as the `tag` column of `index_extractions.tsv`), each
+with 42 files: `cov_total.txt`, `cov_PredTotal.txt`, the per-source terms (`cov_flux*`,
+`cov_detVar*`, `cov_xsec_*`, `cov_reint`, `cov_POT`, `cov_numTargets`, `cov_MCstats`,
+`cov_EXTstats`, `cov_DataStats`), the blockwise norm/shape/mixed decompositions, `err_prop.txt`,
+`unfolding.txt`, `add_smear.txt` and `unfolded_signal.txt`. The covariance is the complete
+configured covariance; the identified omissions (MCS momentum, beam-off gate-ratio and Run-2
+stand-in terms, beamline-geometry flux) are listed in the note's Limitations.
+
+Other files: `total_xsec.tsv` (the six one-bin totals with their own covariance breakdown),
+`ensemble_2026-09-05.tsv` (Poisson-ensemble pull widths and offsets), `index_A_C.tsv` (row sums
+and conditioning of every released `A_C`), `index_curves.tsv`, `ext_gates.tsv` (per-run beam-off
+gate counts and scale factors).
+
 ## Coverage
 
 **All 51 differential extractions are released** (release 2026-09-06; `index_extractions.tsv`),
-each with both its `A_C` matrix and its full covariance decomposition. The six one-bin total
+each with both its `A_C` matrix and its complete configured covariance decomposition. The six one-bin total
 cross sections (inclusive and proton-tagged x FHC/RHC/combined; one true bin over the full
 cos(theta_mu) range, Wiener filter off, `A_C` = 1) are in `total_xsec.tsv` with their
 uncertainty breakdown and realised fake-data truth. The differential W_pi-p shape is withdrawn
@@ -55,8 +68,8 @@ through those rows with care.
 `p_pi` matrices are the adopted **two-bin** scheme (`ppi2bin`).  The five-bin `p_pi`
 binning is withdrawn and is deliberately not released.
 
-Proton-tagged (`1p`) matrices carry the full covariance including detector variations
-(all 51 extractions, rebuilt 2026-08-31); the differential W_pi-p shape is withdrawn (status
+Proton-tagged (`1p`) matrices carry the complete configured covariance including detector variations
+(first included on 2026-08-31; the released matrices are those of release 2026-09-06); the differential W_pi-p shape is withdrawn (status
 column of `index_extractions.tsv`).
 
 ## Regenerating

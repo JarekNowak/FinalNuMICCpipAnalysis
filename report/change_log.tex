@@ -304,6 +304,8 @@ only two above, the finite-sample averaging-down expected of statistically limit
 detector-variation samples rather than a recurrence; on the current release only two of
 eleven fall outside the range, both above (analysis note).
 
+\section{Count-level normalisation, fake data and release repairs (2026-09-02 onwards)}
+
 \subsection{Cut-and-count uncertainty quoted from a pre-rebuild breakdown}
 
 The total flux-averaged cross sections of the cut-and-count path took their systematic
@@ -489,6 +491,48 @@ against the realised truth) instead of being the injected tune by construction. 
 generator comparison moves from ``$0.5$--$0.6\sigma$ above GENIE, within $0.7\sigma$ of
 the rest'' to ``$0.5$--$0.8\sigma$ above GENIE, within $0.8\sigma$ of the rest''.
 
+\section{Development-era corrections}
+
+These predate the framework-based analysis and are recorded for completeness.  They were
+previously listed in a ``Known Issues'' table in the analysis note; that table had become
+thirteen resolved rows against one open one, so it was retired and its contents moved
+here, where a resolved correction belongs.
+
+\begin{center}
+\small
+\begin{tabular}{p{0.36\textwidth}p{0.56\textwidth}}
+\toprule
+Item & Resolution \\
+\midrule
+Unfolding covariance was statistics-only
+  & Replaced by the framework \texttt{PredTotal} plus the data Poisson term, removing a
+    ${\sim}26\%$ bias in the quoted uncertainty. \\
+$\theta_{\mu\pi}$ binning mismatch
+  & A custom 10-bin scheme was aligned to the framework's 9-bin one; the two pipelines had
+    been binning the same observable differently. \\
+Negative tail bins
+  & An artefact of the EXT treatment; all bins positive once the subtraction was
+    corrected. \\
+EXT subtraction on fake data
+  & The custom pipeline cancelled it via \texttt{fake\_data\_ext\_cancel}, a flag that had
+    to be remembered at unblinding. Superseded: the framework selects the beam-off
+    treatment from the presence of Monte Carlo truth in the beam-on file (added to
+    pseudo-data, subtracted from real data) and refuses a real file unless
+    \texttt{XSEC\_UNBLIND=1}, so no manual switch remains. \\
+Multisim propagation in the custom pipeline
+  & Never completed, and now moot: the released results come from the framework, which
+    propagates the multisims (\texttt{cov\_xsec\_multi} is in the release).  The row
+    survived in the note as the single ``open'' item long after it had ceased to describe
+    anything. \\
+CRT veto branches
+  & \texttt{crthitpe} and \texttt{crtveto} are all-zero in the NuMI ntuples; replaced by
+    \texttt{bdt\_cosmic}, disabled at its default. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Review passes}
+
 \subsection{Corrections from the independent review of 2026-09-04}
 
 Two reviewers with no prior contact with the analysis read Draft~1.4 in full, one checking
@@ -594,7 +638,7 @@ release regenerated; the D'Agostini cross-check was re-run.
 \textbf{Effect.} FHC $\cos\theta_\pi$: $\sigma_\mathrm{int}$ $0.726\to0.674$, closure
 $\chi^2$ $0.80/4\to0.68/5$, $A_C$ row sums $0.71$--$0.82\to0.68$--$0.77$,
 $s_{\min}/s_1$ $0.27\to0.46$; RHC $0.663\to0.615$, $0.43/4\to0.49/5$; combined
-$0.753\to0.658$, $1.05/4\to0.74/5$. The inclusive closure mean moves from $1.018$ to
+$0.753\to0.658$, $1.05/4\to0.73/5$. The inclusive closure mean moves from $1.018$ to
 $1.010$, the range of inclusive integrals to $0.62$--$0.96$, and the D'Agostini-to-Wiener-SVD
 ratio to $1.23$--$1.31$ (flat to $\le1.2\%$). No other extraction changes.
 
@@ -619,47 +663,7 @@ are degrees.  (viii)~A $\theta_\pi$ result was listed as final; none is extracte
 (ix)~The beamline-geometry flux term, quoted at $1.6$--$3.3\%$, is not in the released
 systematics configuration and is now stated as absent.
 
-\section{Development-era corrections}
-
-These predate the framework-based analysis and are recorded for completeness.  They were
-previously listed in a ``Known Issues'' table in the analysis note; that table had become
-thirteen resolved rows against one open one, so it was retired and its contents moved
-here, where a resolved correction belongs.
-
-\begin{center}
-\small
-\begin{tabular}{p{0.36\textwidth}p{0.56\textwidth}}
-\toprule
-Item & Resolution \\
-\midrule
-Unfolding covariance was statistics-only
-  & Replaced by the framework \texttt{PredTotal} plus the data Poisson term, removing a
-    ${\sim}26\%$ bias in the quoted uncertainty. \\
-$\theta_{\mu\pi}$ binning mismatch
-  & A custom 10-bin scheme was aligned to the framework's 9-bin one; the two pipelines had
-    been binning the same observable differently. \\
-Negative tail bins
-  & An artefact of the EXT treatment; all bins positive once the subtraction was
-    corrected. \\
-EXT subtraction on fake data
-  & The custom pipeline cancelled it via \texttt{fake\_data\_ext\_cancel}, a flag that had
-    to be remembered at unblinding. Superseded: the framework selects the beam-off
-    treatment from the presence of Monte Carlo truth in the beam-on file (added to
-    pseudo-data, subtracted from real data) and refuses a real file unless
-    \texttt{XSEC\_UNBLIND=1}, so no manual switch remains. \\
-Multisim propagation in the custom pipeline
-  & Never completed, and now moot: the released results come from the framework, which
-    propagates the multisims (\texttt{cov\_xsec\_multi} is in the release).  The row
-    survived in the note as the single ``open'' item long after it had ceased to describe
-    anything. \\
-CRT veto branches
-  & \texttt{crthitpe} and \texttt{crtveto} are all-zero in the NuMI ntuples; replaced by
-    \texttt{bdt\_cosmic}, disabled at its default. \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\section{External review of Draft~1.5: the two blocking safeguards implemented}
+\subsection{External review of Draft~1.5: the two blocking safeguards implemented}
 
 An external reviewer read Draft~1.5 and the supplement together as a package for opening
 the inclusive control regions and judged the science mature but the package not yet
@@ -671,13 +675,15 @@ selection and belongs to at least one control region, suppresses the selection s
 and stamps the file with a \texttt{XSEC\_CR\_SKIM} marker that \texttt{UniverseMaker}
 refuses regardless of \texttt{XSEC\_UNBLIND}; the sideband macros refuse any beam-on
 file that has neither the marker nor Monte Carlo truth (\texttt{macros/sb\_guard.h}).
-Verified by \texttt{macros/cr\_skim\_check.C} on a Monte Carlo and a beam-off file
+Verified by \texttt{macros/cr\_skim\_check.C} on three inputs, the Run-1 FHC overlay and
+the Run-1 and Run-4c beam-off samples, each
 processed both ways (note, \S\ref{N-sec:cr_skim_test}). No beam-on file was touched.
 (ii)~\textbf{The $\pi^0$-definition comparison} with and without the final multiplicity
 cut, promised before ratification, was produced from a Monte-Carlo-only reprocess into a
 separate tree (\texttt{/data/uboone/processed/sb\_pi0}, SLURM 3277998; new branches
 \texttt{sb\_pi0\_final}, \texttt{sb\_nprimtrk}, \texttt{sb\_nnonproton}); results in the
-note, \S\ref{N-sec:cr_pi0_final}.
+note, \S\ref{N-sec:cr_pi0_final}: the cut removes $11$--$14\%$ of the region uniformly across its
+components, and the frozen definition is kept.
 (iii)~\textbf{Governance.} The run-period rule no longer excludes a period automatically
 on a $3\sigma$ excursion: it triggers an investigation, exclusion requires an independent
 detector or processing defect and a new frozen release. A fitted $\pi^0$ correction is not
@@ -700,7 +706,7 @@ is introduced as the large-opening-angle, cosmic-enriched region; ``beam-off'', 
 and ``cosmic data'' are declared synonyms at first use; ``signal contamination'' is
 defined as the inclusive signal unless stated otherwise.
 
-\section{Second external review (2026-09-07): a stale figure and three captions}
+\subsection{Second external review (2026-09-07): a stale figure and three captions}
 
 The external reviewer re-read the 2026-09-06 note and supplement. The 1.13 contradiction is
 confirmed resolved. Found and corrected on 2026-09-07:
@@ -724,6 +730,26 @@ with the model dependence acknowledged; ``retains $5\%$ of a bin's normalisation
 row sum of $0.05$; the supplement's ``property of the response, not of the model'' is
 qualified to the tested generators. (vi)~The open upper $p_\pi$ bin: the released density
 and the conventional width form a matched representation of the bin integral, stated.
+
+\subsection{Stale-detail sweep (2026-09-07)}
+
+Three independent reviewers read the four documents and the data-release index for
+statements overtaken by the last week's changes. Nothing numerical moved. Corrected: the
+skim verification is now described as three inputs everywhere (Run-1 FHC overlay, Run-1 and
+Run-4c beam-off); the remaining ``full covariance'' phrases became ``complete configured
+covariance'' (note, talk, release README and index header); the beam-on normalisation
+paragraph of the note now states the distinct-exposure rule; the CRT paragraph no longer
+says the branches are zero-filled (they are pass-through, populated for Runs 3--5 only);
+the supplement's proton-tagged $A_C$ mean row sum for $W_\mathrm{had}$ is $0.61$ (release
+value), the pre-fix $\cos\theta_\mu$ generator-suppression passage and the 2026-08-28
+combined-detector and spread passages are labelled with their pass, the binning re-check
+tables say ``released'' means the 2026-09-04 release, and the $W_\mathrm{had}$ edge scan is
+recorded as open (non-gating; note, Limitations); the talk's backup control-region frames
+say ``adopted target; ratification requested''; the change log is regrouped (count-level
+repairs and review passes as sections), its superseded table gains the cut-and-count
+totals, proton-tagged purity, ensemble offsets and FHC beam-off rows, and the note's
+count of result-affecting entries is twenty (bundles counted once; the three
+presentation- or documentation-only entries excluded).
 
 \section{Open items}
 
@@ -792,8 +818,12 @@ Combined detector systematic        & $42.3\%$         & $24.6\%$ at the fix; $2
 Combined result / expected          & $0.910$          & $1.027$ at the fix (2026-08-28 pass) \\
 FHC $\theta_\mu$ $A_C$ conditioning & $0.015$          & now $0.51$ \\
 Mean $\delta p_T$                   & $0.742$~GeV/$c$  & now $0.264$~GeV/$c$ (beam frame) \\
-Proton-tagged \texttt{detVar}       & \texttt{n/a}, then $10.5$--$64.4\%$ & now $10.5$--$108.5\%$ (median $33.0\%$, 2026-09-04 release) \\
-Proton-tagged $\sigma$, all obs.    & 2026-08-18 values & superseded 2026-08-31 \\
+Proton-tagged \texttt{detVar}       & \texttt{n/a}, then $10.5$--$64.4\%$ & now $10.5$--$108.5\%$ (median $33.0\%$, 2026-09-06 release) \\
+Proton-tagged $\sigma$, all obs.    & 2026-08-18 values & superseded 2026-08-31, and again by the re-thrown release of 2026-09-04 (current values in the note) \\
+Cut-and-count totals                & $1.06/0.98/1.02$; $1.03\pm0.43$ / $0.93\pm0.42$ / $0.98\pm0.40$ (borrowed systematic) & now the one-bin extraction $1.03\pm0.40$ / $0.93\pm0.35$ / $0.97\pm0.37$ \\
+Proton-tagged purity                & $47$--$48\%$     & now $52/50/51\%$ \\
+Ensemble offset and pull widths     & $2.5\%$ at $2.1\sigma$; widths $1.04/0.96$ & now $0.5$--$2.7\%$ at $\le1.9\sigma$; widths $1.08/0.97/1.02$ \\
+FHC beam-off in the signal region   & $128$, then $13$ & now $30$ (per-run gates) \\
 \bottomrule
 \end{tabular}
 \end{center}

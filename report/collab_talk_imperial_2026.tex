@@ -263,14 +263,14 @@
 % ---------------------------------------------------------------------------
 \begin{frame}{Request to the collaboration}
   \begin{block}{Open the four inclusive control regions; the signal region and the proton-tagged regions stay blind}
-  \footnotesize
+  \scriptsize
   Frozen before opening: selections at branch level, run-dependent normalisation, beam-off scaling, displayed observables and binning, covariance, goodness-of-fit and the permitted responses.
   \end{block}
-  \vspace{-4pt}\scriptsize
+  \vspace{-10pt}\scriptsize
   \begin{columns}[T]
   \column{.5\textwidth}
   \textbf{Procedure} (to be ratified)
-  \begin{itemize}\itemsep1pt
+  \begin{itemize}\itemsep0pt
     \item FHC and RHC separately, combined as cross-check; data vs.\ MC$+$EXT$+$dirt
     \item pass: global normalisation $\chi^2$ over the eight (region, mode) totals, $p>0.05$; per-region pulls and normalisation-marginalised shape tests as diagnostics. Exercised on full-stack pseudo-data: $\chi^2=0.66/8$; fails a single-region discrepancy beyond $12\%$ (CC$0\pi$, $\pi^0$), a common shift only beyond $58\%$
     \item allowed: no change; added uncertainty; one-parameter normalisation of the target class (purity $>50\%$ of the $\nu$-MC, LR test, transfer uncertainty $+$ leverage of fixed components): CC$0\pi$ pre-authorised, $\pi^0$ only after the pre-fit result is reviewed; else model revision and renewed approval
@@ -278,16 +278,16 @@
   \end{itemize}
   \column{.5\textwidth}
   \textbf{Prerequisites}
-  \begin{itemize}\itemsep1pt
+  \begin{itemize}\itemsep0pt
     \item[$\checkmark$] tables from one release, checked automatically
     \item[$\checkmark$] definitions, overlap $=0$, plots and binning frozen
     \item[$\checkmark$] EXT gates released per run; pairings asserted
     \item[$\checkmark$] real beam-on files refused without \texttt{XSEC\_UNBLIND=1}
     \item[$\checkmark$] full-stack closure; region systematics incl.\ detector; transfer uncertainties
-    \item[$\checkmark$] control-region skim of the beam-on files: only non-signal events in a control region are written; marker refused by the extraction; verified on MC and beam-off
+    \item[$\checkmark$] control-region skim of the beam-on files: only non-signal events in a control region are written; marker refused by the extraction; verified on three inputs (MC, Run-1 and Run-4c beam-off)
     \item[$\square$] independent check of the skim; $\pi^0$ definition ratified after the multiplicity-cut comparison; ratification of the procedure
   \end{itemize}
-  Before the signal region: PPFX-corrected flux constants confirmed; discrepancy treatment; clean-cache reproduction.
+  Before the signal region: PPFX-corrected flux constants; discrepancy treatment; NuWro/GiBUU fake-data pass; clean-cache reproduction; inverted-proton-PID region for proton-tagged results.
   \end{columns}
 \end{frame}
 
@@ -297,12 +297,12 @@
   \begin{itemize}\itemsep4pt
     \item A blind, fully validated extraction of $\nu_\mu+\bar\nu_\mu$ CC$1\pi^\pm$ cross sections on argon in the NuMI beam: total and six differential distributions in FHC, RHC and combined, with complete configured covariances and released $A_C$ matrices.
     \item Two physics limits set the scope: the pion range saturates (two-bin $p_\pi$; no $W_{\pi p}$ shape), and $A_C$ is not norm preserving (the total is a one-bin extraction).
-    \item Fake-data totals $1.03/0.93/0.97\times10^{-38}$~cm$^2$/Ar with $38$--$39\%$ uncertainty, flux- and detector-limited.
+    \item Fake-data totals $1.03/0.93/0.97\times10^{-38}$~cm$^2$/Ar with $\sim\!38\%$ ($37.6$--$38.7\%$) uncertainty, flux- and detector-limited.
     \item A sequence of normalisation and weighting defects was found by review and fixed; automated guards now stop each of them from recurring.
     \item \alert{We ask to open the four inclusive control regions under the frozen procedure.}
   \end{itemize}
   \vspace{4pt}
-  \footnotesize Documents: analysis note (Draft 1.5), technical supplement, change log; data release in \texttt{report/data\_release/}.
+  \footnotesize Documents: analysis note, technical supplement and change log (Draft 1.5, release 2026-09-06, document revision 2026-09-07); data release in \texttt{report/data\_release/}.
 \end{frame}
 
 % ===========================================================================
@@ -496,13 +496,13 @@
     out of fiducial volume & 47.4 & 480 & 3.3 & 253 & 18.5 & 0.10 & 14 & 0.19 & 2.56 \\
     NC and $\nu_e$CC & 89.5 & 549 & 7.1 & 632 & 6.4 & 0.16 & 13 & 0.14 & 14 \\
     total $\nu$-MC & 1\,581 & 12\,192 & 124 & 6\,646 & 75.3 & & & & \\
-    \emph{CC$+$NC $\pi^0$ (ratified target)} & 64.5 & 444 & 21.8 & 3\,331 & 3.2 & 0.15 & 2.96 & 0.019 & 20 \\
+    \emph{CC$+$NC $\pi^0$ (adopted target; ratification requested)} & 64.5 & 444 & 21.8 & 3\,331 & 3.2 & 0.15 & 2.96 & 0.019 & 20 \\
     \bottomrule
   \end{tabular}\\[3pt]
   \footnotesize
   \begin{itemize}\itemsep1pt
     \item $T=N^{\rm SR}/N^{\rm CR}$ per truth class; a normalisation change of the target class in a region propagates to the signal region by $T$
-    \item CC$0\pi$: $T=0.03$, $\delta T/T=31$--$34\%$ (genuine detector sensitivity); $\pi^0$ (ratified target CC$+$NC$\pi^0$, purity $50$--$51\%$): $T=0.02$, $\delta T/T=17$--$19\%$, at its MC-statistical floor; flux cancels to $2$--$3\%$ in the ratio
+    \item CC$0\pi$: $T=0.03$, $\delta T/T=31$--$34\%$ (genuine detector sensitivity); $\pi^0$ (adopted target CC$+$NC$\pi^0$, ratification requested; purity $50$--$51\%$): $T=0.02$, $\delta T/T=17$--$19\%$, at its MC-statistical floor; flux cancels to $2$--$3\%$ in the ratio
     \item the multi-$\pi$ region has $T=2.5$ and a 24\% signal share: diagnostic only, no correction may be derived from it
     \item the cosmic region is $34$--$41\%$ EXT with the rest dominated by CC$0\pi$; it tests the beam-off normalisation and shape, no fitted correction
   \end{itemize}
@@ -537,7 +537,7 @@
   \column{.5\textwidth}\centering
   \includegraphics[width=.49\textwidth]{fw_resp_costhmu}\hfill
   \includegraphics[width=.49\textwidth]{fw_resp_thetamu}\\
-  {\footnotesize Smearceptance of $\cos\theta_\mu$ (left) and $\theta_\mu$ (right), beam frame, current release: two partitions of the same phase space (the $\theta_\mu$ edges are not the arccos images of the $\cos\theta_\mu$ edges).}
+  {\footnotesize Smearceptance of $\cos\theta_\mu$ (left) and $\theta_\mu$ (right), beam frame (drawn 2026-08-31; the response depends only on the simulation and the binning, unchanged since): two partitions of the same phase space (the $\theta_\mu$ edges are not the arccos images of the $\cos\theta_\mu$ edges).}
   \column{.5\textwidth}\small
   \begin{itemize}\itemsep3pt
     \item beam direction: truth uses the per-event neutrino direction; reco uses target-to-vertex, with the convention of the NuMI $\nu_e$ analysis

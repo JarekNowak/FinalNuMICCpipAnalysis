@@ -35,7 +35,7 @@ the analysis note so that the note describes one current analysis state, while t
 record of how that state was arrived at remains available and citable.
 
 The two documents were generated from a common source and are checked for numerical
-consistency where current results are duplicated (\texttt{report/tools/check\_tables.py},
+consistency where current results are duplicated (\texttt{report/check\_tables.py}, \texttt{xsec\_analyzer/check\_staleness.py},
 \texttt{check\_staleness.py}); that is a check, not a guarantee, and the change log records
 what each round of review found.
 Superseded material \emph{is} retained here where it is evidence --- pre-fix figures,
@@ -226,7 +226,7 @@ production change. None changes
 the total or angular results, which do not use this estimator. The first is worth doing
 before the $p_\pi$ spectrum is quoted as a shape measurement. \emph{[Subsequently done: the
 two-bin scheme was adopted (\S\ref{sec:ppi2bin_adopted}) and the golden-pion classifier was
-trained and found insufficient (\S\ref{sec:ppi_bias}).]}
+trained and found insufficient (\S\ref{sec:golden_bdt}).]}
 
 \subsubsection*{A truncation bug in the generator predictions, found while rebinning}
 
@@ -282,7 +282,7 @@ $[0.175, 0.205]$~GeV/$c$ and everything above, which raises the migration diagon
 $96/35/21/10/6\%$ (full analysis sample; $94.3/36.5/23.1/10.4/6.2\%$ on Run~1 alone,
 Table~\ref{tab:ppi_sat}) to $\mathbf{91/76\%}$, clearing the $68\%$ criterion in \emph{both} bins.
 (These are measured on the analysis sample; the golden-pion study of
-Sec.~\ref{sec:ppi_bias} uses a looser track sample whose diagonals are lower, and the two
+Sec.~\ref{sec:golden_bdt} uses a looser track sample whose diagonals are lower, and the two
 sets are not interchangeable.)
 
 The boundary is not a free choice dressed up as an optimisation. The worst diagonal is
@@ -441,6 +441,7 @@ over a wide range rather than a differential point. What the scheme buys is a re
 response is defensible, not a competitive shape measurement.
 
 \subsubsection*{A golden-pion classifier was trained and tested: it works, and it is not enough}
+\label{sec:golden_bdt}
 
 Following the BNB recipe, a golden-pion BDT was trained and evaluated
 (\texttt{macros/golden\_pion\_train.C}, \texttt{macros/golden\_pion\_compare.C}). The truth
@@ -899,9 +900,9 @@ prediction-dependent, and for the tested generators GENIE and GiBUU agree to a f
 cent throughout.
 
 On the current release the six proton-tagged observables are suppressed by similar
-amounts, $0.63$--$0.79$ (Table~\ref{tab:acwtki}): the two-bin TKI variables and
+amounts, $0.61$--$0.79$ (Table~\ref{tab:acwtki}): the two-bin TKI variables and
 $W_{\pi p}$ sit at $0.70$--$0.79$ and the six-bin $W_\mathrm{had}$, the most affected, at
-$0.63$. Sharpness alone does not drive the suppression: $W_{\pi p}$ is the sharpest
+$0.61$. Sharpness alone does not drive the suppression: $W_{\pi p}$ is the sharpest
 distribution measured here (the ratio of its largest to smallest bin is $\sim\!36$) yet is
 suppressed no more than the TKI variables, because $A_C$ removes structure that the
 \emph{response} cannot resolve and $W_{\pi p}$ is built from directly measured pion and
@@ -928,12 +929,12 @@ comparisons read off any panel are made on equal footing.
       $W_{\pi p}$        & $0.75$ \\
       $\delta\phi_T$     & $0.72$ \\
       $\delta p_T$       & $0.70$ \\
-      $W_\mathrm{had}$   & $0.63$ \\
+      $W_\mathrm{had}$   & $0.61$ \\
       \midrule
       \multicolumn{2}{p{0.72\textwidth}}{\emph{Computed from the released matrices
         (\texttt{A\_C\_1p\_FHC5\_*.tsv}) after the width-aware regularisation and the
-        removal of the duplicated $A_C$.  The values span $0.63$--$0.79$,
-        a range of $0.16$.  The pre-fix set ($0.88$, $0.78$, $0.63$,
+        removal of the duplicated $A_C$.  The values span $0.61$--$0.79$,
+        a range of $0.18$.  The pre-fix set ($0.88$, $0.78$, $0.63$,
         $0.61$, $0.43$, $1.71$) spanned a factor of four and amplified $p_n$ above unity;
         the ordering of the generator $\chi^2$ can no longer be attributed to differences
         in smearing.}} \\
@@ -1101,9 +1102,11 @@ best four bins               & $83.2 / 45.0 / 28.2 / 28.2\%$ & fails \\
 satisfies the criterion, and the first bin is thin ($137$ selected signal events, against a
 floor of $100$). The implication for the model comparison is direct: the low $\chi^2$
 quoted for $W_{\pi p}$ on that pass reflects a binning that cannot resolve the differences
-between generators, not agreement between them. The same test should be applied to
-$W_\mathrm{had}$, whose upper bins are also narrower than its $177$~MeV/$c^2$ half-width,
-before either $W$ result is quoted as a shape measurement.
+between generators, not agreement between them. The same test should be applied to $W_\mathrm{had}$, whose upper bins are also narrower
+than its $177$~MeV/$c^2$ half-width, before either $W$ result is quoted as a shape
+measurement. \emph{[Open: the $W_\mathrm{had}$ edge scan has not been run; $W_\mathrm{had}$
+is released at six bins with its closure and generator overlays, and its shape should be
+read with this caveat (analysis note, Limitations).]}
 
 \paragraph{Adopted scheme: two bins split at $1.15$~GeV/$c^2$.} The boundary is more tightly
 constrained than it was for $p_\pi$, where anything between roughly $0.19$ and $0.22$ worked.
@@ -1129,8 +1132,8 @@ consequence of the resolution being comparable to the full width of the peak reg
 
 Two consequences should be carried with the result. First, \textbf{the first bin is thin},
 $137$ selected signal events against a floor of $100$, so its statistical uncertainty will be
-large once systematics are folded in; the $p_\pi$ first bin, with $469$ events, already
-carries $42$--$53\%$. Second, if that proves too sparse in practice, $1.17$ is the natural
+large once systematics are folded in; the $p_\pi$ first bin, with $469$ events, carried
+$42$--$53\%$ on that pass and $77\%$ on the current release (Table~\ref{tab:ppi2bin_1p}). Second, if that proves too sparse in practice, $1.17$ is the natural
 fallback: it doubles the population for a bin-2 diagonal of $66.8\%$, marginally below
 threshold, which is a defensible trade to state explicitly rather than a criterion to fail
 silently.
@@ -1324,7 +1327,7 @@ per cent. The reason is physical: a $1$~GeV/$c$ pion has a CSDA range of several
 argon and cannot stop inside a $2.5$~m TPC unless it has already lost most of its energy
 through processes that truncate or break the track. ``Golden'' at high momentum therefore
 selects a pathological subsample rather than a clean one, which is why the classifier of
-\S\ref{sec:ppi_bias} reaches a ceiling: above $\sim\!0.5$~GeV/$c$ there is no clean
+\S\ref{sec:golden_bdt} reaches a ceiling: above $\sim\!0.5$~GeV/$c$ there is no clean
 subsample to find.
 
 \paragraph{A multivariate regression fixes the bias but redistributes the resolution.} A
@@ -1546,13 +1549,16 @@ retracted here. Across the full set of observables the $A_C$ integral factor sho
 correlation with peakedness ($r=-0.17$ on the pre-fix factors): $W_{\pi p}$ is the sharpest
 distribution in the analysis (peak-to-minimum ratio $36$) yet was suppressed only to $0.78$,
 $\delta p_T$ is comparatively flat (ratio $10$) yet was suppressed to $0.43$, and $p_n$ is
-flat yet was \emph{enhanced} to $1.71$; an enhancement no peak argument can produce. The
-retraction stands, and the width-aware $A_C$ makes the point moot: the factors are now
-uniform across observables regardless of shape. Within
+flat yet was \emph{enhanced} to $1.71$; an enhancement no peak argument can produce. The retraction stands; the width-aware $A_C$ removed the enhancement and narrowed the
+proton-tagged factors to $0.61$--$0.79$ (Table~\ref{tab:acwtki}), while the inclusive
+$\cos\theta_\mu$ factors remain far below the rest ($0.17$--$0.39$ against $0.66$--$0.91$
+for $p_\mu$), so the suppression is set by the response conditioning, not by shape. Within
 $\cos\theta_\mu$ itself the ordering is backwards: NEUT and NuWro are the \emph{flattest}
 of the five truth-level curves (peak-to-minimum $3.8$ and $4.3$, against $16.3$ for the
-tune) and are suppressed the \emph{most} ($0.37$ and $0.29$, against $0.67$). What actually
-drives their suppression is that $A_C$ pushes their backward bins negative
+tune) and were suppressed the \emph{most} ($0.37$ and $0.29$, against $0.67$) \emph{[pre-fix,
+2026-08-18 pass with the duplicated $A_C$; on the current release no smeared generator
+bin is negative in $\cos\theta_\mu$ and NEUT and NuWro sit above the tune in every bin]}.
+What drove their suppression on that pass was that $A_C$ pushed their backward bins negative
 ($-0.0005$ to $-0.0212$ in normalised units), eating the integral. $A_C$ is the Wiener
 filter acting on the SVD modes of the response: it removes whatever the data cannot
 statistically constrain, which is set by the conditioning of the response for that
@@ -1620,7 +1626,9 @@ itself, is given in Table~\ref{tab:reg_widths}. Every inclusive observable impro
 none is degraded except combined $\cos\theta_\mu$, marginally.
 
 \begin{table}[htbp]\centering
-\caption{$A_C$ conditioning $s_2/s_1$ before and after the regularisation fix, with the
+\caption{(2026-08-18 pass, measured immediately after the fix; the $\cos\theta_\pi$ row is the
+  five-bin scheme of that time; current conditioning values are derivable from the released
+  matrices.) $A_C$ conditioning $s_2/s_1$ before and after the regularisation fix, with the
   bin-width ratio of each observable. A value approaching zero means the smearing matrix
   has collapsed onto a single mode and the extraction carries no shape information.}
 \label{tab:reg_widths}
@@ -1802,8 +1810,7 @@ pass; after the fix both are released, with the caveats of \noteref{Table}{tab:c
     regenerated)}: every panel predates the regularisation fix, the removal of the
     duplicated $A_C$, the beam-off corrections and the fake-data re-throw; the FHC
     $\theta_\mu$ panel in particular was made under a rank-1 $A_C$. The current
-    distributions are Figs.~\ref{N-fig:dsigma_current}--\ref{N-fig:dsigma_comb} of the analysis note
-    of the analysis note.}
+    distributions are Figs.~\ref{N-fig:dsigma_current}--\ref{N-fig:dsigma_comb} of the analysis note.}
   \label{fig:theta_vs_costheta}
 \end{figure}
 
@@ -1821,11 +1828,11 @@ regularisation amplification and is withdrawn (analysis note, change log).
 
 \begin{table}[H]
   \centering
-  \caption{Total flux-averaged cross section from the one-bin extraction
+  \caption{(``Released'' means the 2026-09-04 release; the forward-split five-bin $\cos\theta_\pi$ row is the binning released since 2026-09-06.) (``Released'' means the 2026-09-04 release; the forward-split five-bin $\cos\theta_\pi$ row is the binning released since 2026-09-06.) Total flux-averaged cross section from the one-bin extraction
     (\noteref{Sec.}{sec:total_xsec}; $10^{-38}$~cm$^2$/Ar), compared with the flux-averaged
     generator predictions. The measurement uncertainty is the complete configured one-bin
     covariance (flux, cross section, re-interaction, detector, POT, targets and statistics;
-    MCS-momentum and beamline-geometry terms are not propagated,
+    MCS-momentum, beamline-geometry, beam-off gate-ratio and Run-2 stand-in terms are not propagated,
     \noteref{Sec.}{sec:limitations}). Release 2026-09-06, \texttt{data\_release/total\_xsec.tsv}. Values in
     parentheses give each generator's deviation from the measurement in units of the
     measurement uncertainty. The generator predictions are integrated over the full
@@ -1984,7 +1991,7 @@ The binnings above were fixed on an earlier release, and the coarsening of $\cos
 ($5\to4$) and $\theta_{\mu\pi}$ ($7\to5$) was driven by $A_C$ smearing on that release.
 Since then the per-run normalisation, the weights, the beam-off treatment, the fake-data
 throw and the native RHC detector variations all changed, so every released binning was
-re-tested on the current release for whether finer or more bins are admissible. Two
+re-tested on the 2026-09-04 release for whether finer or more bins are admissible. Two
 stages were used. First a pre-screen on the processed files
 (\texttt{macros/binning\_screen.C}): for the released binning and finer candidates of each
 observable, the column-normalised migration diagonal per true bin, the efficiency per
@@ -2236,8 +2243,8 @@ is $21.4\%$ (analysis note).
 
 The integrated cross section extracted from a given configuration is not a
 configuration-independent number: it depends on the additional smearing matrix
-$A_C$, which differs per configuration and per observable. The observable-to-
-observable spread within a single configuration is $15.9\%$ (FHC5), $17.4\%$
+$A_C$, which differs per configuration and per observable. The observable-to-observable spread within a single configuration was, on the 2026-08-28
+pass to which all percentages of this section refer, $15.9\%$ (FHC5), $17.4\%$
 (RHCFULL) and $14.8\%$ (COMB) for the proton-tagged family, i.e.\ larger than the
 $\sim\!10\%$ FHC-versus-RHC difference. Comparisons across configurations must
 therefore be made observable by observable, and against the fake-data truth
@@ -2346,7 +2353,7 @@ the one observable that had been \emph{above} unity --- moves toward it
 ($1.069\to1.008$) rather than being pushed further out.
 
 \paragraph{Why the combined configuration is affected and its inputs are not.}
-The detector systematic is anomalously large for COMB. For $p_\mu$ it is $23.1\%$ of
+The detector systematic was anomalously large for COMB on that pass. For $p_\mu$ it was $23.1\%$ of
 the prediction in FHC5 and $27.4\%$ in RHCFULL, but $42.3\%$ in COMB; for $\theta_\mu$,
 $15.4\%$ and $19.4\%$ against $36.4\%$. A combined measurement draws on the exposure of
 both horn currents and should carry a detector uncertainty \emph{between} those of its
@@ -2381,7 +2388,8 @@ the multi-mode configuration is touched.
 \begin{table}[H]
   \centering
   \caption{Detector systematic \texttt{detVar\_total} as a percentage of the prediction,
-    before and after pooling the detVar POT. A combined measurement should carry an
+    before and after pooling the detVar POT (2026-08-28 pass; the current detector terms
+    are those of Tables~\ref{tab:systbreak_fhc}--\ref{tab:systbreak_comb}). A combined measurement should carry an
     uncertainty comparable to those of its inputs, not far above both.}
   \label{tab:detvarfix}
   \small
