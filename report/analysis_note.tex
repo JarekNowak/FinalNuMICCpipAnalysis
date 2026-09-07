@@ -19,7 +19,7 @@
   \vspace{0.8cm}
   {\large Analysis Note, Full FHC, RHC, and Combined Exposure\par}
   \vspace{0.5cm}
-  {\normalsize Draft 1.5, 2026-09-06\par}
+  {\normalsize Draft 1.5, release 2026-09-06 \textperiodcentered\ document revision 2026-09-07\par}
 \vspace{0.15cm}
 {\footnotesize\ttfamily release 2026-09-06 \textperiodcentered\ 51 differential extractions $+$ 6 one-bin totals \textperiodcentered\ blind\par}
   \vspace{1.5cm}
@@ -2685,9 +2685,10 @@ were rebuilt and re-unfolded on 2026-08-31 to correct that.  Their detector term
 are of the same order as the inclusive ones ($15.6\%$--$35.0\%$) except where a sparse
 six-bin sample amplifies them.
 
-The proton-tagged results remain secondary scope for the narrower reason that their model
-comparisons have not been recomputed since, and because the exposure does not support the
-differential $W_{\pi p}$ shape at any binning.
+The proton-tagged results remain secondary scope because the exposure does not support
+the differential $W_{\pi p}$ shape at any binning, the proton-mistag background lacks a
+dedicated inverted-proton-PID control region (\S\ref{sec:cr_1p_scope}), and ensemble
+coverage has not been demonstrated for this sparser family (\S\ref{sec:limitations}).
 
 \begin{center}
 \small
@@ -3085,17 +3086,14 @@ Observable & $\sigma_\mathrm{int}$ & Flux & Detector & Total & Closure $\chi^2/\
   (\suppref{Sec.}{sec:crosschecks}) recovers a flat, $23$--$31\%$ higher total, consistent
   with the spread being a smearing effect (the $A_C$ row sums of \S\ref{sec:ac_rowsums}
   establish it directly). All entries were recomputed in a single pass with the
-  current code and a forced rebuild of the cached universes. The MC POT normalization
-  scales each ntuple file by its own stored POT ($D_\mathrm{run}/\mathrm{POT}_\mathrm{file}$):
-  the processing writes the \emph{total} run MC POT into every file of a run, so for the
-  multi-file RHC runs (Run~3 split across 5 ntuple files, Run~4 across 3) the per-file
-  scaling summed over the splits gives the correct total. An intermediate version of this
-  analysis instead divided by the \emph{sum} of the per-file POT values; because those
-  values are already run totals, that over-counted the denominator by the split
-  multiplicity and scaled the RHC/Combined simulation a factor of $5$ (Run~3) and $3$
-  (Run~4) too low, which under-subtracted the background and inflated the RHC/Combined
-  cross sections. That change has been reverted and the RHC/Combined columns here are the
-  corrected values, roughly $10$--$25\%$ below the intermediate ones; FHC (one MC file per
+  current code and a forced rebuild of the cached universes. The MC normalisation is evaluated run by run using the sum of the
+  \emph{distinct} stored exposure values of that run's files: this gives the run total
+  when that total is repeated in each split file (the processed-file convention of the
+  inclusive family; Run~3 is split across 5 files and Run~4 across 3) and the sum of the
+  true file exposures when each file stores its own (the proton-tagged family), so it
+  handles both conventions without weighting a run by its split multiplicity. Two earlier
+  implementations each broke one convention, dividing by the per-file value or summing
+  over all files; \S\ref{sec:wtki} and the change log record them. FHC (one MC file per
   run) is unaffected by either convention. The final row gives the alternative
   muon-angle parameterisation $\theta_\mu$ (\suppref{Sec.}{sec:thetavar}), complete for
   all three configurations; no $\theta_\pi$ parameterisation is extracted. (Values are fake-data closures; the signal is
@@ -3569,7 +3567,7 @@ region by background class and the transfer factors (\texttt{macros/sb\_transfer
     threshold), $1\pi^\pm$ outside the measured phase space, any $\pi^0$, $\geq2\pi^\pm$
     without $\pi^0$, out-of-fiducial-volume, and NC plus $\nu_e$CC. A region constrains a
     class only where $T$ is small: CC$0\pi$ constrains the $0\pi$ class ($T\simeq0.03$) and
-    $\pi^0$ the $\pi^0$ class ($T\simeq0.02$; the ratified target class CC$+$NC~$\pi^0$,
+    $\pi^0$ the $\pi^0$ class ($T\simeq0.02$; the adopted target class CC$+$NC~$\pi^0$,
     last row of each block, is $50$--$51\%$ of the region's neutrino MC); the multi-$\pi$ region contains
     \emph{fewer} multi-pion events than the signal region ($T\simeq2.5$) and is a weak
     constraint; the cosmic region constrains only the beam-off component (not listed:
@@ -3589,7 +3587,7 @@ region by background class and the transfer factors (\texttt{macros/sb\_transfer
     out of fiducial volume & 47.4 & 480 & 3.3 & 253 & 18.5 & 0.10 & 14 & 0.19 & 2.56 \\
     NC and $\nu_e$CC & 89.5 & 549 & 7.1 & 632 & 6.4 & 0.16 & 13 & 0.14 & 14 \\
     total $\nu$-MC & 1\,581 & 12\,192 & 124 & 6\,646 & 75.3 & & & & \\
-    \emph{CC$+$NC with a $\pi^0$ (ratified $\pi^0$ target; overlaps two rows above)} & 64.5 & 444 & 21.8 & 3\,331 & 3.2 & 0.15 & 2.96 & 0.019 & 20 \\
+    \emph{CC$+$NC with a $\pi^0$ (adopted $\pi^0$ target; overlaps two rows above)} & 64.5 & 444 & 21.8 & 3\,331 & 3.2 & 0.15 & 2.96 & 0.019 & 20 \\
     \midrule
     \multicolumn{10}{l}{\emph{RHC}} \\
     signal (contamination) & 1\,015 & 1\,206 & 34.9 & 780 & 6.4 & 0.84 & 29 & 1.30 & 158 \\
@@ -3600,7 +3598,7 @@ region by background class and the transfer factors (\texttt{macros/sb\_transfer
     out of fiducial volume & 54.5 & 511 & 4.9 & 302 & 17.2 & 0.11 & 11 & 0.18 & 3.17 \\
     NC and $\nu_e$CC & 108 & 599 & 12.5 & 857 & 8.9 & 0.18 & 8.59 & 0.13 & 12 \\
     total $\nu$-MC & 1\,735 & 12\,658 & 159 & 8\,080 & 81.8 & & & & \\
-    \emph{CC$+$NC with a $\pi^0$ (ratified $\pi^0$ target; overlaps two rows above)} & 81.0 & 491 & 31.1 & 4\,118 & 3.6 & 0.17 & 2.61 & 0.020 & 22 \\
+    \emph{CC$+$NC with a $\pi^0$ (adopted $\pi^0$ target; overlaps two rows above)} & 81.0 & 491 & 31.1 & 4\,118 & 3.6 & 0.17 & 2.61 & 0.020 & 22 \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -3664,7 +3662,7 @@ ratio in every universe and variation.
     below its own Monte-Carlo-statistical floor (\S\ref{sec:cr_transfer}). The ``all neutrino MC'' row uses the total
     neutrino MC of the CC$0\pi$ region as a reference. The Monte-Carlo-statistical floor of
     the detector entries, estimated from two disjoint halves of the variation samples
-    (\texttt{sb\_detvar\_split.C}), is given in the text; for the ratified CC$+$NC~$\pi^0$
+    (\texttt{sb\_detvar\_split.C}), is given in the text; for the adopted CC$+$NC~$\pi^0$
     class it is quoted in parentheses after the detector entry and, where it exceeds the
     entry, it replaces it in the total. \releasestamp}
   \label{tab:cr_transfer_unc}
@@ -3677,13 +3675,13 @@ ratio in every universe and variation.
     FHC & multi-$\pi$ & $\nu_\mu$CC $\geq2\pi^\pm$ & $2.5094$ & $3.0$ & $4.7$ & $2.6$ & $5.1$ & $18.5$ & $20.2$ \\
     FHC & $\pi^0$ & $\nu_\mu$CC with $\pi^0$ & $0.0189$ & $2.6$ & $6.1$ & $1.8$ & $4.4$ & $15.1$ & $17.1$ \\
     FHC & CC$0\pi$ & all neutrino MC & $0.1296$ & $1.7$ & $13.2$ & $2.6$ & $1.0$ & $9.7$ & $16.7$ \\
-    FHC & $\pi^0$ & CC$+$NC with $\pi^0$ (ratified) & $0.0194$ & $2.2$ & $5.8$ & $1.9$ & $4.2$ & $14.9$ ($12.1$) & $16.8$ \\
+    FHC & $\pi^0$ & CC$+$NC with $\pi^0$ (adopted) & $0.0194$ & $2.2$ & $5.8$ & $1.9$ & $4.2$ & $14.9$ ($12.1$) & $16.8$ \\
     \midrule
     RHC & CC$0\pi$ & $\nu_\mu$CC $0\pi$ & $0.0286$ & $3.0$ & $11.5$ & $6.6$ & $2.0$ & $30.6$ & $33.6$ \\
     RHC & multi-$\pi$ & $\nu_\mu$CC $\geq2\pi^\pm$ & $2.4527$ & $1.9$ & $4.0$ & $2.8$ & $3.9$ & $21.3$ & $22.3$ \\
     RHC & $\pi^0$ & $\nu_\mu$CC with $\pi^0$ & $0.0201$ & $1.8$ & $6.3$ & $1.8$ & $3.3$ & $11.5$ & $13.7$ \\
     RHC & CC$0\pi$ & all neutrino MC & $0.1371$ & $2.0$ & $12.5$ & $2.6$ & $0.8$ & $9.8$ & $16.3$ \\
-    RHC & $\pi^0$ & CC$+$NC with $\pi^0$ (ratified) & $0.0197$ & $1.7$ & $6.1$ & $1.6$ & $3.1$ & $11.8$ ($18.0$) & $19.4$ \\
+    RHC & $\pi^0$ & CC$+$NC with $\pi^0$ (adopted) & $0.0197$ & $1.7$ & $6.1$ & $1.6$ & $3.1$ & $11.8$ ($18.0$) & $19.4$ \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -3706,7 +3704,7 @@ target-class term ($27\%$ FHC, $31\%$ RHC) sits well above its floor ($9\%$, $6\
 and is a genuine detector sensitivity, but the $\pi^0$ target-class term ($15\%$ FHC,
 $11\%$ RHC) is comparable to or smaller than its floor ($13\%$, $17\%$), so it is an
 upper limit set by the variation-sample statistics rather than a measurement (the same
-holds for the ratified CC$+$NC~$\pi^0$ class: $15\%$ against a $12\%$ floor in FHC,
+holds for the adopted CC$+$NC~$\pi^0$ class: $15\%$ against a $12\%$ floor in FHC,
 $12\%$ against $18\%$ in RHC), and the multi-$\pi$ target-class term ($18$--$21\%$)
 sits below its floor ($25\%$ FHC, $23\%$ RHC); the half-sample estimator itself becomes
 unstable for the smallest classes, where floors of several hundred per cent appear. Any fitted correction under
@@ -4362,8 +4360,8 @@ Normalising by the individual file POT is therefore correct for the first set bu
 every split of a multi-file run to the full run exposure in the second, inflating the
 simulated background by the split multiplicity ($\sim\!3\times$ for RHC) and driving the
 background-subtracted spectrum negative. Normalising by the summed per-file POT has the
-mirror problem. The analysis now normalises by the sum of the \emph{distinct} per-file POT
-values, which reduces to the correct run total under either convention; FHC, with one MC
+mirror problem. The analysis now normalises each run by the sum of the \emph{distinct} per-file POT
+values within that run, which reduces to the correct run total under either convention; FHC, with one MC
 file per run, is unaffected by the choice.
 
 The combined-sample measurement is complete on the same binning, is included in the
