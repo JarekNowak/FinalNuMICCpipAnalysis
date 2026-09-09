@@ -37,7 +37,7 @@
 \institute{Lancaster University}
 \date{MicroBooNE Collaboration Meeting, Imperial College London, 12--17 September 2026}
 \newcommand{\uboone}{MicroBooNE}
-\newcommand{\mainframes}{13}
+\newcommand{\mainframes}{16}
 \newcommand{\GeVc}{~GeV/$c$}
 
 \begin{document}
@@ -260,34 +260,164 @@
   \end{columns}
 \end{frame}
 
+
 % ---------------------------------------------------------------------------
-\begin{frame}{Request to the collaboration}
-  \begin{block}{Open the four inclusive control regions; the signal region and the proton-tagged regions stay blind}
+\begin{frame}{Control regions opened on beam-on data}
+  \begin{columns}[T]
+  \column{.56\textwidth}\scriptsize
+  \textbf{How, and what stayed blind}
+  \begin{itemize}\itemsep1pt
+    \item eight beam-on files processed into the \emph{signal-region-stripped skim}: an event
+      is written only if it fails the full signal selection \emph{and} is in $\ge1$ control region
+    \item each job re-read its own output: marker present, \textbf{zero} written events with the
+      signal-region flag, every written event in a region --- all eight passed
+    \item the skim carries a marker the extraction refuses; \alert{the signal region has not been opened}
+    \item control-region distributions are \emph{complete}: nothing belonging to a region is dropped
+  \end{itemize}
+  \vspace{3pt}
+  \textbf{Processing behaved} --- both productions, pre-CRT and CRT-era. The Run-4/5 beam-on
+  files carry a vestigial software-trigger flag $\equiv0$ and no companion branch; the binding
+  guard leaves it unbound (fail-open), otherwise Runs 4--5 would have processed to \emph{zero}
+  events silently.
+  \column{.44\textwidth}\scriptsize
+  \textbf{Exposure actually compared}
+  \begin{center}\scriptsize
+  \begin{tabular}{@{}lccc@{}}
+  \toprule
+  & runs & POT/$10^{20}$ & of mode \\\midrule
+  FHC & 1, 4, 5 & 7.589 & $85.7\%$ \\
+  RHC & 1, 3, 4 & 8.491 & $76.6\%$ \\
+  \bottomrule
+  \end{tabular}
+  \end{center}
+  \vspace{2pt}
+  \alert{\textbf{No Run-2 beam-on file exists}} anywhere on disk (run range 6999--14116 absent).
+  Run~2 is $1.27\times10^{20}$ FHC and $2.59\times10^{20}$ RHC: $19.4\%$ of the total exposure.
+  It is therefore dropped from the data \emph{and} from the prediction --- MC, beam-off and dirt ---
+  throughout. Beam-off can stand Run~1 in for Run~2; beam-on cannot, it is the measurement.
+  \end{columns}
+\end{frame}
+
+% ---------------------------------------------------------------------------
+\begin{frame}{First look: the four regions}
+  \begin{columns}[T]
+  \column{.46\textwidth}
+  \includegraphics[width=\textwidth]{sideband_data_fhc_compact}\\
+  {\scriptsize FHC, one frozen distribution per region. Points: beam-on data. Stack: signal
+   contamination, $\nu$ background, beam-off, dirt. Nothing is added to the data --- real data
+   already contains cosmics and dirt. All twelve panels, and RHC, in backup.}
+  \column{.54\textwidth}\scriptsize
+  \begin{center}\scriptsize
+  \begin{tabular}{@{}llrrr@{}}
+  \toprule
+  & Region & Data & Pred. & D/P \\\midrule
+  FHC & CC$0\pi$    & 10\,660 & 11\,571 & 0.92 \\
+      & multi-$\pi$ &     109 &     110 & 0.99 \\
+      & $\pi^0$     &  6\,291 &  6\,327 & 0.99 \\
+      & cosmic      &      92 &     108 & 0.85 \\\midrule
+  RHC & CC$0\pi$    & 12\,047 & 10\,559 & 1.14 \\
+      & multi-$\pi$ &     136 &     125 & 1.09 \\
+      & $\pi^0$     &  8\,092 &  6\,640 & 1.22 \\
+      & cosmic      &     120 &      90 & 1.34 \\
+  \bottomrule
+  \end{tabular}
+  \end{center}
+  \vspace{3pt}
+  \alert{Do not read these mode-level ratios yet.} They average one anomalous run period
+  together with five consistent ones (next slide). The prediction carries a $20$--$30\%$
+  flux- and detector-dominated uncertainty, so none of these is a significant deviation on
+  its own; the information is in how they vary \emph{between} run periods, where those
+  uncertainties cancel.
+  \end{columns}
+\end{frame}
+
+% ---------------------------------------------------------------------------
+\begin{frame}{Run by run: one period is not like the others}
+  \begin{columns}[T]
+  \column{.52\textwidth}\scriptsize
+  \begin{center}\scriptsize
+  \begin{tabular}{@{}lccccc@{}}
+  \toprule
+  Period & POT & CC$0\pi$ & m-$\pi$ & $\pi^0$ & cosmic \\\midrule
+  \alert{FHC Run 1} & 3.28 & \alert{0.64} & 0.91 & \alert{0.72} & \alert{0.60} \\
+  FHC Run 4 & 2.08 & 1.17 & 1.22 & 1.25 & 1.14 \\
+  FHC Run 5 & 2.23 & 1.14 & 0.90 & 1.19 & 1.20 \\\midrule
+  RHC Run 1 & 0.61 & 1.19 & 1.08 & 1.09 & 0.83 \\
+  RHC Run 3 & 5.00 & 1.15 & 1.24 & 1.25 & 1.51 \\
+  RHC Run 4 & 2.88 & 1.12 & 0.82 & 1.20 & 1.25 \\
+  \bottomrule
+  \end{tabular}
+  \end{center}
+  {\scriptsize data\,/\,prediction; each period against its own exposure, its own beam-off and gate ratio.}
+  \column{.48\textwidth}\scriptsize
+  \textbf{FHC Run 1 is not a prediction systematic.} Flux is a hadron-production model
+  uncertainty common to all periods of a mode; the detector variations are the same Run-4
+  samples for every period. Both cancel period-to-period. A systematic can move FHC
+  together; it cannot put Run~1 at $0.64$ with Runs 4, 5 at $1.17$, $1.14$.
+  \vspace{3pt}
+
+  It is also \emph{flat across regions} of very different composition ($0.64$, $0.91$,
+  $0.72$, $0.60$) --- the signature of one multiplicative factor on the period, not a
+  mis-modelled background class.
+  \vspace{3pt}
+
+  \textbf{Every component of that period's prediction scales with its assumed exposure.}
+  Bringing Run~1 onto the others needs a fraction $f\simeq0.51$--$0.62$, i.e.
+  $\approx1.7$--$2.0\times10^{20}$~POT instead of $3.283$. The three high-statistics regions
+  give $f=0.55$, $0.62$, $0.51$ independently. \alert{First thing to check: the staged
+  Run-1 FHC file against the trigger table} (the ntuples carry no exposure record; Run~1 is
+  split FHC/RHC at run 6748).
+  \vspace{3pt}
+
+  \textbf{The other five periods} sit coherently $+10$--$25\%$: a common normalisation
+  offset, within the prediction uncertainty, and the one direction the global test is built
+  to be insensitive to ($58\%$ to fail). Present in both modes and in regions from $3\%$ to
+  $39\%$ beam-off.
+  \end{columns}
+\end{frame}
+
+% ---------------------------------------------------------------------------
+\begin{frame}{Where this leaves us, and what we ask}
+  \begin{block}{The four inclusive control regions are open. The signal region and the proton-tagged regions stay blind.}
   \scriptsize
-  Frozen before opening: selections at branch level, run-dependent normalisation, beam-off scaling, displayed observables and binning, covariance, goodness-of-fit and the permitted responses.
+  Frozen before opening and unchanged since: selections at branch level, run-dependent
+  normalisation, beam-off scaling, displayed observables and binning, covariance,
+  goodness-of-fit tests and the permitted responses to a discrepancy.
   \end{block}
-  \vspace{-10pt}\scriptsize
+  \vspace{-8pt}\scriptsize
   \begin{columns}[T]
   \column{.5\textwidth}
-  \textbf{Procedure} (to be ratified)
-  \begin{itemize}\itemsep0pt
-    \item FHC and RHC separately, combined as cross-check; data vs.\ MC$+$EXT$+$dirt
-    \item pass: global normalisation $\chi^2$ over the eight (region, mode) totals, $p>0.05$; per-region pulls and normalisation-marginalised shape tests as diagnostics. Exercised on full-stack pseudo-data: $\chi^2=0.66/8$; fails a single-region discrepancy beyond $12\%$ (CC$0\pi$, $\pi^0$), a common shift only beyond $58\%$
-    \item allowed: no change; added uncertainty; one-parameter normalisation of the target class (purity $>50\%$ of the $\nu$-MC, LR test, transfer uncertainty $+$ leverage of fixed components): CC$0\pi$ pre-authorised, $\pi^0$ only after the pre-fit result is reviewed; else model revision and renewed approval
-    \item forbidden: any signal cut or binning change; generator choice after inspection; bin-by-bin reweighting
+  \textbf{What we ask now}
+  \begin{itemize}\itemsep1pt
+    \item[1.] \alert{Exposure.} Confirm the staged FHC Run-1 beam-on file against the trigger
+      table (POT and gates), and the FHC/RHC split of Run~1 at run 6748.
+    \item[2.] \alert{Run 2.} Do beam-on data exist upstream? If yes, stage them; if not, Run~2
+      leaves the exposure and the whole normalisation is regenerated.
+    \item[3.] Ratify the comparison procedure and the decision rule; ratify the $\pi^0$
+      definition and target class, \emph{diagnostic-only} for this opening --- no fitted
+      correction is pre-authorised at $50$--$51\%$ purity with a class settled after the
+      purities were known.
+    \item[4.] Independent check of the skim; hashes of the frozen executable, plot list and
+      protocol macro into the approval record.
   \end{itemize}
   \column{.5\textwidth}
-  \textbf{Prerequisites}
-  \begin{itemize}\itemsep0pt
-    \item[$\checkmark$] tables from one release, checked automatically
-    \item[$\checkmark$] definitions, overlap $=0$, plots and binning frozen
-    \item[$\checkmark$] EXT gates released per run; pairings asserted
-    \item[$\checkmark$] real beam-on files refused without \texttt{XSEC\_UNBLIND=1}
-    \item[$\checkmark$] full-stack closure; region systematics incl.\ detector; transfer uncertainties
-    \item[$\checkmark$] control-region skim of the beam-on files: only non-signal events in a control region are written; marker refused by the extraction; verified on three inputs (MC, Run-1 and Run-4c beam-off)
-    \item[$\square$] independent check of the skim; $\pi^0$ definition ratified after the multiplicity-cut comparison; ratification of the procedure
+  \textbf{Not yet a statement about the background model}
+  \begin{itemize}\itemsep1pt
+    \item two bookkeeping items sit in front of any such statement: the missing Run-2
+      exposure and the FHC Run-1 anomaly
+    \item the frozen response tree treats a single-period excursion as a reconstruction or
+      exposure issue to investigate, \emph{not} a model correction, and forbids dropping a
+      period without independent evidence of a defect --- that is the path Run~1 follows
   \end{itemize}
-  Before the signal region: PPFX-corrected flux constants; discrepancy treatment; NuWro/GiBUU fake-data pass; clean-cache reproduction; inverted-proton-PID region for proton-tagged results.
+  \vspace{3pt}
+  \textbf{Before the signal region} (unchanged, none met here)
+  \begin{itemize}\itemsep1pt
+    \item PPFX-corrected flux constants confirmed; NuWro/GiBUU fake-data closure on the
+      released chain; MCS muon-momentum term bounded or propagated
+    \item documented treatment of any control-region discrepancy; clean-cache reproduction
+    \item inverted pion-PID region for the CC$0\pi$ misidentification transfer; inverted
+      proton-PID region before any proton-tagged result
+  \end{itemize}
   \end{columns}
 \end{frame}
 
@@ -299,7 +429,10 @@
     \item Two physics limits set the scope: the pion range saturates (two-bin $p_\pi$; no $W_{\pi p}$ shape), and $A_C$ is not norm preserving (the total is a one-bin extraction).
     \item Fake-data totals $1.03/0.93/0.97\times10^{-38}$~cm$^2$/Ar with $\sim\!38\%$ ($37.6$--$38.7\%$) uncertainty, flux- and detector-limited.
     \item A sequence of normalisation and weighting defects was found by review and fixed; automated guards now stop each of them from recurring.
-    \item \alert{We ask to open the four inclusive control regions under the frozen procedure.}
+    \item \alert{The control regions are open on beam-on data.} Five of six run periods agree
+      with the prediction to $+10$--$25\%$, inside its uncertainty; FHC Run~1 sits at $0.64$ and
+      has the size and flatness of an exposure error. No Run-2 beam-on data exist. Both must be
+      settled before any of this is read as a statement about the background model.
   \end{itemize}
   \vspace{4pt}
   \footnotesize Documents: analysis note, technical supplement and change log (Draft 1.5, release 2026-09-06, document revision 2026-09-07); data release in \texttt{report/data\_release/}.
@@ -506,6 +639,24 @@
     \item the multi-$\pi$ region has $T=2.5$ and a 24\% signal share: diagnostic only, no correction may be derived from it
     \item the cosmic region is $34$--$41\%$ EXT with the rest dominated by CC$0\pi$; it tests the beam-off normalisation and shape, no fitted correction
   \end{itemize}
+\end{frame}
+
+% ---------------------------------------------------------------------------
+\begin{frame}{Backup: control regions with beam-on data, FHC (all panels)}
+  \begin{center}
+  \includegraphics[width=0.66\textwidth]{sideband_data_fhc}
+  \end{center}
+  {\scriptsize FHC (Runs 1, 4, 5). Rows: CC$0\pi$, multi-$\pi$, $\pi^0$, cosmic.}
+\end{frame}
+
+% ---------------------------------------------------------------------------
+\begin{frame}{Backup: control regions with beam-on data, RHC}
+  \begin{center}
+  \includegraphics[width=0.66\textwidth]{sideband_data_rhc}
+  \end{center}
+  {\scriptsize RHC (Runs 1, 3, 4), frozen distributions and binning. Points: beam-on data;
+   stack: signal contamination, $\nu$ background, beam-off, dirt. Run~2 excluded from both
+   sides; the three periods are individually consistent with one another.}
 \end{frame}
 
 % ---------------------------------------------------------------------------
