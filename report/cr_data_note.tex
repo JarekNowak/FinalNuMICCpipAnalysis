@@ -60,6 +60,16 @@ the prediction in all four regions. That is a common normalisation offset, the o
 direction the frozen global test is explicitly insensitive to, and it is within the
 $20$--$30\%$ prediction uncertainty. It is nonetheless coherent across regions of very
 different composition, and is the second thing to understand.
+
+Applied to the data, the frozen procedure's pass/fail statistic --- the global
+normalisation $\chi^2$ over the eight (region, mode) totals --- gives $8.77/8$, $p=0.362$,
+and no region is flagged by the per-region pulls. The shape tests, which project the
+normalisation out and are therefore blind to all of the above, are a different matter: the
+muon-angle distribution fails in the CC$0\pi$ and $\pi^0$ regions in \emph{both} beam
+modes, by a wide margin, while the sixteen other tests are unremarkable. The same code on
+pseudo-data returned all twenty-two with $p>0.47$. Under the frozen rules that removes both
+of those regions from eligibility for a fitted normalisation correction, which requires a
+passing shape test.
 \end{abstract}
 \end{titlepage}
 
@@ -276,7 +286,119 @@ mode-specific flux problem.
 \label{sec:protocol}
 % =============================================================================
 
-\emph{[Protocol statistics being computed; this section is filled from the run in progress.]}
+The frozen procedure defines one pass/fail statistic --- the global normalisation $\chi^2$
+over the eight (region, mode) totals with the full pre-fit covariance --- and two
+diagnostics, the per-region pulls and the normalisation-marginalised shape tests of the
+frozen distributions. All three are computed here with exactly the machinery that was
+exercised on pseudo-data before opening, with only the data, the retained run periods and
+the removal of the pseudo-data beam-off throw changed. On pseudo-data that machinery
+returned a global $\chi^2$ of $0.66/8$ and all twenty-two shape tests with $p>0.47$, so it
+is not predisposed to fail.
+
+\begin{table}[H]
+  \centering
+  \caption{Per-region normalisation pulls and the global test. ``full'' is the pre-fit
+    prediction covariance plus the data Poisson term; ``st$+$det'' is the statistical and
+    detector terms alone. The last column is the fractional shift of that region's total
+    which, on its own, would bring the global $\chi^2$ to its $95\%$ point.}
+  \label{tab:pulls}
+  \small
+  \begin{tabular}{llrrrrrr}
+    \toprule
+    Mode & Region & Data & Prediction & EXT & pull (full) & pull (st$+$det) & $\sigma_{\rm full}/N$ \\
+    \midrule
+    FHC & CC$0\pi$    & 10\,660 & 11\,571.0 & $9.7\%$  & $-0.29$ & $-0.40$ & $27.0\%$ \\
+        & multi-$\pi$ &     109 &     109.6 & $5.2\%$  & $-0.02$ & $-0.03$ & $34.2\%$ \\
+        & $\pi^0$     &  6\,291 &  6\,327.3 & $10.0\%$ & $-0.02$ & $-0.03$ & $29.6\%$ \\
+        & cosmic      &      92 &     108.3 & $38.7\%$ & $-0.67$ & $-0.80$ & $22.4\%$ \\
+    \midrule
+    RHC & CC$0\pi$    & 12\,047 & 10\,558.9 & $8.0\%$  & $ 0.73$ & $ 1.75$ & $19.3\%$ \\
+        & multi-$\pi$ &     136 &     125.0 & $2.9\%$  & $ 0.26$ & $ 0.41$ & $33.1\%$ \\
+        & $\pi^0$     &  8\,092 &  6\,639.5 & $6.9\%$  & $ 0.99$ & $ 3.14$ & $22.1\%$ \\
+        & cosmic      &     120 &      89.5 & $28.2\%$ & $ 1.63$ & $ 2.21$ & $20.9\%$ \\
+    \midrule
+    \multicolumn{8}{l}{Global normalisation $\chi^2 = 8.77/8$, $p=0.362$ --- \textbf{passes} ($p>0.05$ required)} \\
+    \multicolumn{8}{l}{Blind spot: a common shift of all eight totals fails the test only beyond $61.9\%$} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\paragraph{Normalisation: the set passes.} The global $\chi^2$ is $8.77$ on eight degrees
+of freedom, $p=0.362$. No region is flagged by the $|{\rm pull}|>2$ criterion against the
+full covariance; the largest is the RHC cosmic region at $1.63$. That is the expected
+outcome given \S\ref{sec:perrun}: the offsets are $10$--$25\%$ against a prediction
+uncertainty of $19$--$34\%$ per region, and they are strongly correlated between regions
+($0.4$--$0.9$), which is exactly the direction the test cannot resolve. Against the
+statistical and detector terms alone, which is the diagnostic column, RHC $\pi^0$ reaches
+$3.14$ and RHC cosmic $2.21$.
+
+\begin{table}[H]
+  \centering
+  \caption{Normalisation-marginalised shape tests of the frozen distributions. The overall
+    normalisation of each distribution is projected out before the $\chi^2$ is formed, so
+    these are insensitive to the offsets of \S\ref{sec:perrun}. Entries with $p<0.01$ in
+    bold.}
+  \label{tab:shape}
+  \small
+  \begin{tabular}{llrr|llrr}
+    \toprule
+    Mode & Distribution & $\chi^2/$ndf & $p$ & Mode & Distribution & $\chi^2/$ndf & $p$ \\
+    \midrule
+    FHC & CC$0\pi$ $p_\mu$          & $13.09/6$  & $0.042$ & RHC & CC$0\pi$ $p_\mu$          & $\mathbf{52.85/6}$  & $\mathbf{0.000}$ \\
+        & CC$0\pi$ $\cos\theta_\mu$ & $\mathbf{350.51/4}$ & $\mathbf{0.000}$ &  & CC$0\pi$ $\cos\theta_\mu$ & $\mathbf{583.58/4}$ & $\mathbf{0.000}$ \\
+        & multi-$\pi$ $p_\mu$       & $6.29/6$   & $0.391$ &     & multi-$\pi$ $p_\mu$       & $10.67/6$  & $0.099$ \\
+        & multi-$\pi$ $\cos\theta_\mu$ & $8.49/4$ & $0.075$ &    & multi-$\pi$ $\cos\theta_\mu$ & $9.97/4$ & $0.041$ \\
+        & multi-$\pi$ $\theta_{\mu\pi}$ & $0.75/5$ & $0.980$ &   & multi-$\pi$ $\theta_{\mu\pi}$ & $0.64/5$ & $0.986$ \\
+        & $\pi^0$ $p_\mu$           & $\mathbf{30.41/6}$ & $\mathbf{0.000}$ & & $\pi^0$ $p_\mu$ & $\mathbf{67.40/6}$ & $\mathbf{0.000}$ \\
+        & $\pi^0$ $\cos\theta_\mu$  & $\mathbf{210.36/4}$ & $\mathbf{0.000}$ & & $\pi^0$ $\cos\theta_\mu$ & $\mathbf{240.85/4}$ & $\mathbf{0.000}$ \\
+        & $\pi^0$ $E_{\rm shr}$     & $7.14/9$   & $0.623$ &     & $\pi^0$ $E_{\rm shr}$     & $7.20/9$   & $0.616$ \\
+        & cosmic $p_\mu$            & $4.54/6$   & $0.604$ &     & cosmic $p_\mu$            & $4.22/6$   & $0.647$ \\
+        & cosmic $\cos\theta_\mu$   & $5.56/4$   & $0.234$ &     & cosmic $\cos\theta_\mu$   & $4.27/4$   & $0.371$ \\
+        & cosmic $\theta_{\mu\pi}$  & $2.80/3$   & $0.423$ &     & cosmic $\theta_{\mu\pi}$  & $2.12/3$   & $0.547$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\paragraph{Shape: the muon angle fails, and it is not the normalisation offset.}
+The shape tests project the overall normalisation out, so they are blind to everything
+\S\ref{sec:perrun} is about. Six of the twenty-two fail at $p<0.01$, and they are not
+scattered: they are the muon momentum and, far more strongly, the muon angle in the two
+high-statistics regions, CC$0\pi$ and $\pi^0$, in \emph{both} beam modes. The
+$\cos\theta_\mu$ values, $351/4$ and $210/4$ in FHC and $584/4$ and $241/4$ in RHC, are
+not marginal. The remaining sixteen tests, including every distribution of the multi-$\pi$
+and cosmic regions and the $\pi^0$ shower energy that the region was built to test, are
+unremarkable.
+
+Four things bound how far this can be taken.
+\begin{itemize}\itemsep3pt
+  \item \textbf{It is not an artefact of the test.} The same code on pseudo-data returned
+    all twenty-two with $p>0.47$. The failures appear only when real data is substituted.
+  \item \textbf{It is not the FHC Run-1 exposure.} A wrong weight on one run period does
+    distort a summed distribution, because the periods do not have identical shapes, so
+    the FHC numbers are not clean. But the largest failures are in RHC, which contains no
+    period suspected of an exposure error.
+  \item \textbf{The test is very sensitive by construction.} With $10^4$ events per region
+    and a covariance dominated by normalisation-like flux and detector terms, projecting
+    the normalisation out leaves a small shape covariance, so a discrepancy of a few per
+    cent per bin produces a large $\chi^2$. The size of these numbers should not be read as
+    the size of the effect.
+  \item \textbf{The binning concentrates the forward peak.} The released
+    $\cos\theta_\mu$ edges are $-1$, $0.45$, $0.65$, $0.8$, $0.9$, $1$: the first bin spans
+    three quarters of the range, so the test is largely comparing the forward peak with
+    everything else. A forward-angle discrepancy is where the \uboone{} BNB
+    CC$1\pi^\pm$ measurement also found every tested generator above the data.
+\end{itemize}
+
+\paragraph{Procedural consequence.}
+Under the frozen procedure a fitted normalisation correction is permitted only for a
+region whose shape test passes, so that the discrepancy is consistent with a pure
+normalisation shift. On these numbers neither CC$0\pi$ nor $\pi^0$ qualifies: both fail
+their muon-angle shape test in both modes. Whatever the eventual explanation, a fitted
+correction to either region is not available under the rules as frozen, and the response
+tree points instead at the added-uncertainty branch or at a model revision with renewed
+approval. That conclusion should be revisited once the exposure questions of
+\S\ref{sec:perrun} are closed and the tests are repeated.
+
 
 % =============================================================================
 \section{What this establishes, and what it does not}
@@ -293,6 +415,15 @@ mode-specific flux problem.
     bookkeeping issues sit in front of any such conclusion: the missing Run-2 exposure,
     which is excluded consistently here but leaves $19\%$ of the analysis unexamined, and
     the FHC Run-1 anomaly, which has the size and the flatness of an exposure error.
+  \item The frozen normalisation test passes. The muon-angle shape test does not, in the
+    two high-statistics regions and in both beam modes; the failure survives the removal of
+    the normalisation, is absent from the same code run on pseudo-data, and is largest in
+    RHC, which carries no suspected exposure error. It is the one result here that the
+    bookkeeping issues do not obviously explain, and it is the thing to understand next
+    after them. Its size should not be read from the $\chi^2$: the shape covariance is
+    small once the normalisation is projected out, so a few per cent per bin goes a long
+    way, and the released binning puts three quarters of the $\cos\theta_\mu$ range in one
+    bin.
   \item The frozen procedure's own response tree treats a single-period excursion as a
     reconstruction or exposure issue to be investigated, not as a model correction, and
     forbids excluding a period without independent evidence of a defect. That is the path
@@ -309,6 +440,11 @@ mode-specific flux problem.
     normalisation regenerated.
   \item Repeat this comparison once both are settled, and only then read the
     normalisation offset of \S\ref{sec:perrun} as a statement about the background.
+  \item Investigate the muon-angle shape failure independently of the exposure work: it is
+    present in RHC alone, so it can be studied on the RHC periods while the FHC Run-1
+    question is open. A finer $\cos\theta_\mu$ binning of the control regions, which is
+    not the released signal-region binning and is free to be chosen, would show whether
+    the discrepancy is confined to the forward peak.
   \item The prerequisites for opening the signal region are unchanged and none of them is
     met by this note: the alternative-generator closure, the flux central-value
     confirmation, the MCS momentum bound, the clean-cache reproduction, and the
