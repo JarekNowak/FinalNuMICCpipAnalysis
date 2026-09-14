@@ -38,7 +38,7 @@
 \institute{Lancaster University}
 \date{MicroBooNE Collaboration Meeting, Imperial College London, 12--17 September 2026}
 \newcommand{\uboone}{MicroBooNE}
-\newcommand{\mainframes}{18}
+\newcommand{\mainframes}{20}
 \newcommand{\GeVc}{~GeV/$c$}
 \newcommand{\figorbox}[2]{\IfFileExists{figures/#2.pdf}{\includegraphics[width=#1]{#2}}{\fbox{\parbox[c][3cm][c]{#1}{\centering\scriptsize \detokenize{#2}\\(plot in production)}}}}
 
@@ -343,6 +343,77 @@
     \item efficiency $11.4\%$, purity $\sim50\%$ ($87\%$ of tagged events have a true proton); strong cosmic rejector (beam-off $\div3.3$--$3.6$)
     \item TKI ($\delta p_T$, $\delta\alpha_T$, $\delta\phi_T$, $p_n$) in two bins, beam frame; $W_{\rm had}$ in six
   \end{itemize}
+\end{frame}
+
+% ---------------------------------------------------------------------------
+\begin{frame}{Proton-tagged selection}
+  \begin{columns}[T]
+  \column{.47\textwidth}
+  \includegraphics[width=\linewidth]{talk_crop/cutflow_yields_1p_fhc}\\
+  {\scriptsize FHC cut-flow: the ten inclusive cuts, then IdentProton (last bin); per-run POT-scaled, full CV weight.}
+  \vspace{2pt}
+
+  \scriptsize\setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}lrrrrrr@{}}
+  \toprule
+  IdentProton & Signal & $\nu$ bkg & EXT & Pred. & Eff. & Pur. \\
+  \midrule
+  FHC   & 376 & 338 & 8.5 & 723 & 11.4\% & 52.1\% \\
+  RHC   & 391 & 388 & 7.1 & 786 & 11.4\% & 49.8\% \\
+  Comb. & 768 & 726 & 16 & 1\,509 & 11.4\% & 50.9\% \\
+  \bottomrule
+  \end{tabular}
+  \column{.51\textwidth}
+  \footnotesize
+  \textbf{What the tag buys} (FHC, vs.\ the inclusive final cut, same signal definition)
+  \begin{itemize}\itemsep1pt
+    \item rejects $67\%$ of the $\nu$ background for a $32\%$ signal loss: purity $34\to52\%$, $S/\sqrt{B}$ $17.1\to20.5$
+    \item beam-off background down by $\times3.3$--$3.6$; up to $\times6$ in the CC$0\pi$ control region
+  \end{itemize}
+  \vspace{4pt}
+  \textbf{What it costs}
+  \begin{itemize}\itemsep1pt
+    \item $13\%$ mis-tag ($87\%$ have a true proton $>0.3$\GeVc), mostly a pion or other track taken as the proton
+    \item calorimetric $p_p$: $-9\%$ bias, $21\%$ resolution, corrected by the unfolding
+    \item mis-tag needs its own control region (inverted proton PID) before results are promoted
+  \end{itemize}
+  \end{columns}
+\end{frame}
+
+% ---------------------------------------------------------------------------
+\begin{frame}{Proton-tagged binning}
+  \begin{columns}[T]
+  \column{.62\textwidth}
+  \scriptsize\setlength{\tabcolsep}{3pt}
+  \begin{tabular}{@{}llcl@{}}
+  \toprule
+  Observable & Definition & Bins & Edges \\
+  \midrule
+  $W_\mathrm{had}$ & calorimetric mass & 6 & $0,.78,1.08,1.21,1.31,1.44,2.74$~GeV \\
+  $\delta p_T$ & $|\vec p_T^{\,\mu}+\vec p_T^{\,\pi+p}|$ & 2 & $0,0.3,2.5$\GeVc \\
+  $\delta\alpha_T$ & TKI angle & 2 & $0,120,180^\circ$ \\
+  $\delta\phi_T$ & TKI angle & 2 & $0,50,180^\circ$ \\
+  $p_n$ & nucleon-momentum proxy & 2 & $0,0.375,2$\GeVc \\
+  \midrule
+  $W_{\pi p}$ & $M(\pi p)$, direct & --- & shape withdrawn \\
+  \bottomrule
+  \end{tabular}\\[4pt]
+  \scriptsize $p_\mu$, $p_\pi$, $\cos\theta_\mu$, $\cos\theta_\pi$, $\theta_{\mu\pi}$: inclusive binning ($\cos\theta_\pi$ keeps the four-bin edges); RHC uses the FHC binning; last bins open at truth level.
+  \vspace{4pt}
+
+  \footnotesize
+  \begin{itemize}\itemsep1pt
+    \item same requirements as the inclusive binning (diagonal $\geq0.68$, event floor)
+    \item TKI: six bins sat inside the resolution $\to$ \textbf{two bins}
+    \item $W_{\pi p}$: 1 of 6 bins usable (diagonals $88/22/12/12/10/2\%$); no binning meets migration and statistics together $\to$ integrated only
+    \item $W_\mathrm{had}$: six equal-population bins; \alert{edge scan not yet run}
+  \end{itemize}
+  \column{.36\textwidth}
+  \centering
+  \includegraphics[width=.72\linewidth]{talk_crop/wsmear_Whad}\\
+  \includegraphics[width=.72\linewidth]{talk_crop/wsmear_dpt}\\
+  {\scriptsize Smearceptance, FHC: $W_\mathrm{had}$ (six bins, top), $\delta p_T$ (two bins, bottom).}
+  \end{columns}
 \end{frame}
 
 % ---------------------------------------------------------------------------
