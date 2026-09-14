@@ -38,7 +38,7 @@
 \institute{Lancaster University}
 \date{MicroBooNE Collaboration Meeting, Imperial College London, 12--17 September 2026}
 \newcommand{\uboone}{MicroBooNE}
-\newcommand{\mainframes}{20}
+\newcommand{\mainframes}{18}
 \newcommand{\GeVc}{~GeV/$c$}
 \newcommand{\figorbox}[2]{\IfFileExists{figures/#2.pdf}{\includegraphics[width=#1]{#2}}{\fbox{\parbox[c][3cm][c]{#1}{\centering\scriptsize \detokenize{#2}\\(plot in production)}}}}
 
@@ -372,7 +372,7 @@
   $\pi^0$ & shower veto fails & $\pi^0$ leakage; target CC$+$NC$\pi^0$ (analyser-adopted; ratification requested), purity $50$--$51\%$; $T=0.02$, $\delta T/T=17$--$19\%$ (MC-stat limited) \\
   cosmic & $\theta_{\mu\pi}>2.6$~rad & beam-off norm.\ and shape; $34$--$41\%$ EXT purity, no fitted correction \\
   \bottomrule
-  \end{tabular}\\[3pt]
+  \end{tabular}\\[0pt]
   \begin{itemize}\itemsep1pt
     \item disjoint from the signal region event by event; multi-$\pi$ and $\pi^0$ overlap ($\sim\!40\%$ of multi-$\pi$)
     \item pseudo-data/prediction $0.99$--$1.12$ everywhere; full-stack test (MC$+$EXT$+$dirt) at unity within statistics
@@ -382,104 +382,12 @@
   \includegraphics[width=\textwidth]{sideband_plots_fhc}\\
   {\scriptsize Frozen distributions and binning, FHC, full-stack pseudo-data in place of beam-on points.}
   \end{columns}
-\end{frame}
-
-
-% ---------------------------------------------------------------------------
-\begin{frame}{Beam-on processing: readiness, and an exposure gap}
-  \begin{columns}[T]
-  \column{.56\textwidth}\scriptsize
-  \textbf{The control-region skim runs on real beam-on files}
-  \begin{itemize}\itemsep1pt
-    \item all eight staged beam-on files processed through the signal-region-stripped skim:
-      an event is written only if it fails the full signal selection \emph{and} is in
-      $\ge1$ control region
-    \item each job re-read its own output and would have deleted it otherwise: marker
-      present, \textbf{no} written event carrying the signal-region flag, every written
-      event in a region --- all eight passed
-    \item the skim carries a marker the cross-section extraction refuses;
-      \alert{the signal region has not been opened}
-  \end{itemize}
-  \vspace{3pt}
-  \textbf{Both productions behave.} The Run-4/5 beam-on files carry a vestigial
-  software-trigger flag $\equiv0$ and no companion branch, exactly as the CRT-era beam-off.
-  The binding guard leaves it unbound (fail-open); without it Runs 4--5 would have
-  processed to \emph{zero} events silently. Verified on the beam-on files before processing.
-  \column{.44\textwidth}\scriptsize
-  \textbf{Beam-on exposure available}
-  \begin{center}\scriptsize
-  \begin{tabular}{@{}lccc@{}}
-  \toprule
-  & runs staged & POT/$10^{20}$ & of mode \\\midrule
-  FHC & 1, 4, 5 & 7.589 & $85.7\%$ \\
-  RHC & 1, 3, 4 & 8.491 & $76.6\%$ \\
-  \bottomrule
-  \end{tabular}
-  \end{center}
-  \vspace{2pt}
-  \alert{\textbf{No Run-2 beam-on file exists}} anywhere on disk --- the run range
-  6999--14116 is absent. Run~2 is $1.27\times10^{20}$~POT in FHC and $2.59\times10^{20}$ in
-  RHC: \textbf{$19.4\%$ of the total exposure}. Beam-off can stand Run~1 in for Run~2,
-  because it is a cosmic-only sample matched by run period; beam-on cannot, it is the
-  measurement.
-  \vspace{3pt}
-
-  Either those files are staged, or Run~2 leaves the exposure and the normalisation is
-  regenerated. The per-run beam-on exposures and gate counts also need confirming against
-  the trigger table: the ntuples carry no exposure record of their own, and Run~1 is split
-  between the horn modes inside its run range.
-  \end{columns}
-\end{frame}
-
-
-
-
-
-% ---------------------------------------------------------------------------
-\begin{frame}{What we ask}
-  \begin{block}{Open the four inclusive control regions under the frozen procedure; the signal region and the proton-tagged regions stay blind}
-  \scriptsize
-  Frozen before opening and unchanged since: selections at branch level, run-dependent
-  normalisation, beam-off scaling, displayed observables and binning, covariance,
-  goodness-of-fit tests and the permitted responses to a discrepancy.
+  \vspace{-4pt}
+  \begin{block}{We are ready to open the four inclusive control regions}
+  \footnotesize Procedure frozen (selections, normalisation, binning, covariance, tests); signal and proton-tagged regions stay blind.
   \end{block}
-  \vspace{-8pt}\scriptsize
-  \begin{columns}[T]
-  \column{.5\textwidth}
-  \textbf{What we ask now}
-  \begin{itemize}\itemsep1pt
-    \item[1.] \alert{Run 2.} Do beam-on data exist upstream? If yes, stage them; if not, Run~2
-      leaves the exposure and the whole normalisation is regenerated.
-    \item[2.] \alert{Exposure.} Confirm the per-run beam-on POT and gate counts against the
-      trigger table, and the FHC/RHC split of Run~1 at run 6748, before the comparison is
-      made.
-    \item[3.] Ratify the comparison procedure and the decision rule; ratify the $\pi^0$
-      definition and target class, \emph{diagnostic-only} for this opening --- no fitted
-      correction is pre-authorised at $50$--$51\%$ purity with a class settled after the
-      purities were known.
-    \item[4.] Independent check of the skim; hashes of the frozen executable, plot list and
-      protocol macro into the approval record.
-  \end{itemize}
-  \column{.5\textwidth}
-  \textbf{How a discrepancy would be handled}
-  \begin{itemize}\itemsep1pt
-    \item the frozen response tree treats a single run period's excursion as a
-      reconstruction or exposure issue to be investigated, \emph{not} a model correction,
-      and forbids dropping a period without independent evidence of a defect
-    \item a fitted normalisation is permitted only for CC$0\pi$, only on a passing shape
-      test, and carries the transfer uncertainty and the leverage of the fixed components
-  \end{itemize}
-  \vspace{3pt}
-  \textbf{Before the signal region} (unchanged, none met here)
-  \begin{itemize}\itemsep1pt
-    \item PPFX-corrected flux constants confirmed; NuWro/GiBUU fake-data closure on the
-      released chain; MCS muon-momentum term bounded or propagated
-    \item documented treatment of any control-region discrepancy; clean-cache reproduction
-    \item inverted pion-PID region for the CC$0\pi$ misidentification transfer; inverted
-      proton-PID region before any proton-tagged result
-  \end{itemize}
-  \end{columns}
 \end{frame}
+
 
 % ---------------------------------------------------------------------------
 \begin{frame}{Summary}
@@ -489,11 +397,7 @@
     \item Two physics limits set the scope: the pion range saturates (two-bin $p_\pi$; no $W_{\pi p}$ shape), and $A_C$ is not norm preserving (the total is a one-bin extraction).
     \item Fake-data totals $1.03/0.93/0.97\times10^{-38}$~cm$^2$/Ar with $\sim\!38\%$ ($37.6$--$38.7\%$) uncertainty, flux- and detector-limited.
     \item A sequence of normalisation and weighting defects was found by review and fixed; automated guards now stop each of them from recurring.
-    \item \alert{We ask to open the four inclusive control regions under the frozen procedure.}
-      The skim that keeps the signal region blind runs on the real beam-on files, and all eight
-      staged files pass its checks. Two exposure questions come first: \textbf{no Run-2 beam-on
-      data exist} ($19.4\%$ of the exposure), and the per-run beam-on exposures need confirming
-      against the trigger table.
+    \item \alert{We are ready to open the four inclusive control regions under the frozen procedure}; the signal region and the proton-tagged regions stay blind.
   \end{itemize}
   \vspace{4pt}
   \footnotesize Documents (\href{https://microboone-docdb.fnal.gov/cgi-bin/sso/ShowDocument?docid=46987}{\color{ubred}\underline{MicroBooNE-doc-46987}}): analysis note, technical supplement and change log (Draft 1.5, release 2026-09-06, document revision 2026-09-07); data release in \texttt{report/data\_release/}.
