@@ -186,8 +186,13 @@
   \small
   \begin{columns}[T]
   \column{.55\textwidth}
-  \begin{itemize}\itemsep3pt
-    \item $n^{\rm reco}=S\,N^{\rm true}+b$ with $S=\varepsilon M$ inverted once (no extra $1/\varepsilon$)
+  \begin{itemize}\itemsep1pt
+    \item $n^{\rm reco}=S\,N^{\rm true}+b$ with $S=\varepsilon M$, inverted once (no extra $1/\varepsilon$)
+      \begin{itemize}\scriptsize\itemsep0pt
+        \item $n^{\rm reco}$: selected events per reco bin; $b$: background ($\nu$, beam-off, dirt)
+        \item $N^{\rm true}$: generated signal events per true bin
+        \item $M_{ij}$: migration, P(reco bin $i$ $|$ true bin $j$, selected); $\varepsilon_j$: efficiency
+      \end{itemize}
     \item Wiener-SVD (\textsc{XSecAnalyzer}), second-derivative regularisation aware of the non-uniform bin widths
     \item the result is $A_C\,x_{\rm true}$; every prediction is smeared by the released $A_C$ before comparison
     \item $A_C$ is \emph{not} norm preserving: the integral of a differential result is observable-dependent
