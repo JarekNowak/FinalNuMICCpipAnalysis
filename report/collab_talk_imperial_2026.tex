@@ -295,28 +295,14 @@
 \end{frame}
 
 % ---------------------------------------------------------------------------
-\begin{frame}{Validation, and what the review found}
-  \footnotesize
-  \begin{columns}[T]
-  \column{.5\textwidth}
-  \textbf{Validation}
-  \begin{itemize}\itemsep2pt
+\begin{frame}{Validation}
+  \small
+  \begin{itemize}\itemsep6pt
     \item fake-data closure: unfolded/realised truth $=1.010$ on average over the 18 inclusive extractions; all $p>0.9$
     \item 32-throw ensemble (current release): pull widths $1.08$ ($p_\mu$), $0.97$ ($\cos\theta_\mu$), $1.02$ (one-bin total); 62--71\% / 92--94\% coverage; means $0.5$--$2.7\%$ low, at most $1.9\sigma$, stated not corrected
     \item clean-cache rebuild of all 51 extractions bit-identical (2026-09-02 pass; to be repeated before unblinding)
     \item five automated guards: normalisation manifest, systematics/file coupling, staleness, table consistency, blinding guard
   \end{itemize}
-  \column{.5\textwidth}
-  \textbf{Corrected since August} (all in the change log)
-  \begin{itemize}\itemsep2pt
-    \item beam-off scaled by an \emph{event} count instead of gates: EXT was $9.7\times$ too large ($128\to13$ FHC events), then per run period ($13\to30$)
-    \item fake-data truth carried the CV weight twice ($1.6\%$ on closure)
-    \item PPFX CV weight missing from count-level tables ($3$--$6\%$)
-    \item one safe-weight rule everywhere; fake data re-thrown with it ($1\%$)
-    \item $A_C$ applied twice to models; TKI computed about detector $z$ (both withdrawn and redone)
-  \end{itemize}
-  \alert{None of these touched the real-data path; several would have biased a real-data result.}
-  \end{columns}
 \end{frame}
 
 % ---------------------------------------------------------------------------
