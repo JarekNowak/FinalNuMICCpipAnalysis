@@ -144,19 +144,38 @@
 \end{frame}
 
 % ---------------------------------------------------------------------------
-\begin{frame}{The pion momentum sets the scope}
+\begin{frame}{Binning requirements, and the pion momentum}
   \begin{columns}[T]
+  \column{.5\textwidth}
+  \begin{block}{Every binning must satisfy}
+    \footnotesize
+    \begin{enumerate}\itemsep0pt
+      \item bin width $\geq$ resolution; $\geq45$ selected signal events per bin
+      \item migration diagonal $\geq0.68$ in every true bin
+      \item unfolded: $A_C$ well conditioned, closure passes, uncertainties not inflated
+    \end{enumerate}
+  \end{block}
+  \vspace{2pt}
+  \scriptsize\setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}llc l@{}}
+  \toprule
+  Observable & bins & min.\ diag.\ (FHC) & why not finer / coarser \\
+  \midrule
+  $\cos\theta_\mu$, $\theta_\mu$ & 5, 5 & $0.68$, $0.67$ & finer fails 2 \\
+  $\cos\theta_\pi$ & 5 & $0.74$ & forward split; other splits fail 3 \\
+  $\theta_{\mu\pi}$ & 5 & $0.79$ & finer passes 2, fails 3 ($s_{\min}/s_1\to0$) \\
+  $p_\mu$ & 7 & $0.33$ & MCS $30\%$; kept, closure passes \\
+  $p_\pi$ & 2 & $0.91$, $0.76$ & 5 bins: 4 of 5 fail 2 \\
+  \bottomrule
+  \end{tabular}
   \column{.48\textwidth}
-  \includegraphics[width=\textwidth]{ppi_saturation}\\
-  {\footnotesize Reconstructed $p_\pi$ (range under the muon hypothesis, mass-corrected) saturates near $0.34$\GeVc: pions interact before stopping.}
-  \column{.52\textwidth}
-  \includegraphics[width=.49\textwidth]{fw_resp_ppi}\hfill\includegraphics[width=.49\textwidth]{fw_resp_pmu}\\
-  {\footnotesize Smearceptance $S=\varepsilon M$: five-bin $p_\pi$ (diagnostic, left) vs.\ $p_\mu$ (right).}
-  \vspace{4pt}\small
-  \begin{itemize}\itemsep2pt
-    \item every estimator tried (golden-pion tag, MCS, calorimetry, regression, daughter recovery): a physics limit, not an algorithmic one
-    \item $p_\pi$ released as \textbf{two bins}: $[0.175,0.205]$ and $>0.205$\GeVc, migration diagonals $91\%$ / $76\%$
-    \item proton-tagged $W_{\pi p}$ shape \textbf{withdrawn}; the sample supports an integrated cross section
+  \includegraphics[width=.49\textwidth]{ppi_saturation}\hfill\includegraphics[width=.49\textwidth]{fw_resp_ppi}\\
+  {\scriptsize Left: reconstructed $p_\pi$ (range, mass-corrected) saturates near $0.34$\GeVc: pions interact before stopping. Right: five-bin $p_\pi$ smearceptance (diagnostic).}
+  \vspace{4pt}\footnotesize
+  \begin{itemize}\itemsep1pt
+    \item every estimator tried (golden pion, MCS, calorimetry, regression): a physics limit
+    \item $p_\pi$ released as \textbf{two bins}: $[0.175,0.205]$, $>0.205$\GeVc
+    \item proton-tagged $W_{\pi p}$ shape \textbf{withdrawn}: no binning meets 1 and 2
   \end{itemize}
   \end{columns}
 \end{frame}
