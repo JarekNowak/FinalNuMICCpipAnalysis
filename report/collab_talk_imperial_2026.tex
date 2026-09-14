@@ -38,7 +38,7 @@
 \institute{Lancaster University}
 \date{MicroBooNE Collaboration Meeting, Imperial College London, 12--17 September 2026}
 \newcommand{\uboone}{MicroBooNE}
-\newcommand{\mainframes}{16}
+\newcommand{\mainframes}{19}
 \newcommand{\GeVc}{~GeV/$c$}
 \newcommand{\figorbox}[2]{\IfFileExists{figures/#2.pdf}{\includegraphics[width=#1]{#2}}{\fbox{\parbox[c][3cm][c]{#1}{\centering\scriptsize \detokenize{#2}\\(plot in production)}}}}
 
@@ -62,12 +62,12 @@
   \vspace{4pt}
 
   \centering
-  \figorbox{.3\textwidth}{eff_turnon_pmu_fhc}\hfill
-  \figorbox{.3\textwidth}{eff_turnon_ppi_fhc}\hfill
-  \figorbox{.3\textwidth}{eff_turnon_thmupi_fhc}\\
+  \includegraphics[width=.32\textwidth]{talk_crop/eff_turnon_pmu_fhc}\hfill
+  \includegraphics[width=.32\textwidth]{talk_crop/eff_turnon_ppi_fhc}\hfill
+  \includegraphics[width=.32\textwidth]{talk_crop/eff_turnon_thmupi_fhc}\\
   \raggedright\footnotesize
   FHC selection efficiency for signal \emph{without} the kinematic thresholds, each with the other two cuts applied; shaded: excluded.
-  Momenta: efficiency turns on at the 10~cm muon and 20~cm pion track-length cuts; below threshold the correction would be large and model dependent.
+  Momenta: efficiency turns on at the 10~cm muon and 20~cm pion track-length cuts, $\leq4\%$ below the thresholds and $13$--$20\%$ above; below them the correction would be large and model dependent.
   $\theta_{\mu\pi}$: set by purity, not efficiency; the region above $2.6$~rad has $4.6\%$ signal purity (cosmic dominated) and serves as the cosmic control region.
 \end{frame}
 
@@ -208,6 +208,42 @@
   {\footnotesize Extracted on the thrown fake data with the complete configured covariance; closes on the realised truth to $0.975$--$0.998$. RHC/FHC of the tune $=0.90$. Generators span $\times1.6$, all within $1\sigma$ of the $\sim\!38\%$ band: no discrimination at this exposure.}
   \end{block}
   \end{columns}
+\end{frame}
+
+% ---------------------------------------------------------------------------
+\begin{frame}{Analysis steps, FHC (1/3): selected events}
+  \centering
+  \begin{minipage}[t]{.32\textwidth}\centering\includegraphics[width=\linewidth]{talk_crop/step1_reco_pmu}\\[-1pt]{\scriptsize $p_\mu$}\end{minipage}\hfill
+  \begin{minipage}[t]{.32\textwidth}\centering\includegraphics[width=\linewidth]{talk_crop/step1_reco_ppi}\\[-1pt]{\scriptsize $p_\pi$ (two bins)}\end{minipage}\hfill
+  \begin{minipage}[t]{.32\textwidth}\centering\includegraphics[width=\linewidth]{talk_crop/step1_reco_costhmu}\\[-1pt]{\scriptsize $\cos\theta_\mu$}\end{minipage}\\[3pt]
+  \begin{minipage}[t]{.32\textwidth}\centering\includegraphics[width=\linewidth]{talk_crop/step1_reco_costhpi}\\[-1pt]{\scriptsize $\cos\theta_\pi$}\end{minipage}\hfill
+  \begin{minipage}[t]{.32\textwidth}\centering\includegraphics[width=\linewidth]{talk_crop/step1_reco_thmupi}\\[-1pt]{\scriptsize $\theta_{\mu\pi}$}\end{minipage}\hfill
+  \begin{minipage}[t]{.32\textwidth}\centering\includegraphics[width=\linewidth]{talk_crop/step1_reco_thetamu}\\[-1pt]{\scriptsize $\theta_\mu$}\end{minipage}\\[2pt]
+  \raggedright{\scriptsize Reconstructed distributions at the final cut, per-run POT-scaled ($8.86\times10^{20}$~POT), x-axis in reconstructed bin number. Points: Poisson-thrown fake data; stack: MC signal and $\nu$ + beam-off background (purity $58.5\%$).}
+\end{frame}
+
+% ---------------------------------------------------------------------------
+\begin{frame}{Analysis steps, FHC (2/3): background subtraction}
+  \centering
+  \begin{minipage}[t]{.32\textwidth}\centering\includegraphics[width=\linewidth]{talk_crop/step2_bsub_pmu}\\[-1pt]{\scriptsize $p_\mu$}\end{minipage}\hfill
+  \begin{minipage}[t]{.32\textwidth}\centering\includegraphics[width=\linewidth]{talk_crop/step2_bsub_ppi}\\[-1pt]{\scriptsize $p_\pi$ (two bins)}\end{minipage}\hfill
+  \begin{minipage}[t]{.32\textwidth}\centering\includegraphics[width=\linewidth]{talk_crop/step2_bsub_costhmu}\\[-1pt]{\scriptsize $\cos\theta_\mu$}\end{minipage}\\[3pt]
+  \begin{minipage}[t]{.32\textwidth}\centering\includegraphics[width=\linewidth]{talk_crop/step2_bsub_costhpi}\\[-1pt]{\scriptsize $\cos\theta_\pi$}\end{minipage}\hfill
+  \begin{minipage}[t]{.32\textwidth}\centering\includegraphics[width=\linewidth]{talk_crop/step2_bsub_thmupi}\\[-1pt]{\scriptsize $\theta_{\mu\pi}$}\end{minipage}\hfill
+  \begin{minipage}[t]{.32\textwidth}\centering\includegraphics[width=\linewidth]{talk_crop/step2_bsub_thetamu}\\[-1pt]{\scriptsize $\theta_\mu$}\end{minipage}\\[2pt]
+  \raggedright{\scriptsize Fake data minus the predicted background ($\nu$ background, beam-off, dirt) against the MC signal: the input to the unfolding. Error bars: the total covariance (statistical and all systematic terms) of the measured events.}
+\end{frame}
+
+% ---------------------------------------------------------------------------
+\begin{frame}{Analysis steps, FHC (3/3): unfolding}
+  \centering
+  \only<1>{\includegraphics[height=.74\textheight]{talk_crop/dsigma_build_FHC5_1}}%
+  \only<2>{\includegraphics[height=.74\textheight]{talk_crop/dsigma_build_FHC5_2}}%
+  \only<3>{\includegraphics[height=.74\textheight]{talk_crop/dsigma_build_FHC5_3}}\\
+  \raggedright\scriptsize
+  \only<1>{The target: the fake-data truth smeared by the released $A_C$; this is what the unfolding must recover.}%
+  \only<2>{$+$ unfolded fake data (Wiener-SVD, complete covariance): closes on the $A_C$-smeared truth in every observable.}%
+  \only<3>{$+$ the MicroBooNE tune ($A_C$-smeared), the model the fake data were thrown from. The generators follow on the next slide.}
 \end{frame}
 
 % ---------------------------------------------------------------------------

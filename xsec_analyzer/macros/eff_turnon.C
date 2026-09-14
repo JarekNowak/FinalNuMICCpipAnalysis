@@ -50,9 +50,10 @@ void eff_turnon(){
     e->GetXaxis()->SetLabelSize(0.045); e->GetYaxis()->SetLabelSize(0.045);
     e->SetLineColor(TColor::GetColor("#0072B2")); e->SetLineWidth(2); e->SetMarkerStyle(20); e->SetMarkerSize(0.7); e->SetMarkerColor(TColor::GetColor("#0072B2"));
     e->Draw("E1");
-    TBox box(v.upper?v.thr:v.lo,0,v.upper?v.hi:v.thr,ymax); box.SetFillColorAlpha(kGray+1,0.35); box.Draw();
+    // solid fill, not alpha: transparency makes vector exports rasterise the whole page
+    TBox box(v.upper?v.thr:v.lo,0,v.upper?v.hi:v.thr,ymax); box.SetFillColor(TColor::GetColor("#DDDDDD")); box.Draw();
     TLine ln(v.thr,0,v.thr,ymax); ln.SetLineStyle(2); ln.SetLineWidth(2); ln.Draw();
-    e->Draw("E1 same");
+    e->Draw("E1 same"); gPad->RedrawAxis();
     TLatex tx; tx.SetNDC(); tx.SetTextSize(0.045); tx.DrawLatex(0.13,0.93,"MicroBooNE NuMI FHC simulation");
     c.SaveAs(Form("../report/figures/eff_turnon_%s_fhc.pdf",v.name));
   }
