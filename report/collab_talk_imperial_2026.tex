@@ -38,7 +38,7 @@
 \institute{Lancaster University}
 \date{MicroBooNE Collaboration Meeting, Imperial College London, 12--17 September 2026}
 \newcommand{\uboone}{MicroBooNE}
-\newcommand{\mainframes}{19}
+\newcommand{\mainframes}{20}
 \newcommand{\GeVc}{~GeV/$c$}
 \newcommand{\figorbox}[2]{\IfFileExists{figures/#2.pdf}{\includegraphics[width=#1]{#2}}{\fbox{\parbox[c][3cm][c]{#1}{\centering\scriptsize \detokenize{#2}\\(plot in production)}}}}
 
@@ -296,13 +296,36 @@
 
 % ---------------------------------------------------------------------------
 \begin{frame}{Validation}
-  \small
-  \begin{itemize}\itemsep6pt
+  \centering
+  \begin{minipage}[b]{.405\textwidth}\centering
+    \includegraphics[width=\linewidth]{talk_crop/val_closure}\\
+    {\scriptsize Fake-data closure: unfolded/realised truth integral}
+  \end{minipage}\hfill
+  \begin{minipage}[b]{.575\textwidth}\centering
+    \figorbox{\linewidth}{talk_crop/val_pulls}\\
+    {\scriptsize 32-throw ensemble: per-bin pulls against the statistical covariance (FHC)}
+  \end{minipage}\\[8pt]
+  \raggedright\small
+  \begin{itemize}\itemsep4pt
     \item fake-data closure: unfolded/realised truth $=1.010$ on average over the 18 inclusive extractions; all $p>0.9$
     \item 32-throw ensemble (current release): pull widths $1.08$ ($p_\mu$), $0.97$ ($\cos\theta_\mu$), $1.02$ (one-bin total); 62--71\% / 92--94\% coverage; means $0.5$--$2.7\%$ low, at most $1.9\sigma$, stated not corrected
     \item clean-cache rebuild of all 51 extractions bit-identical (2026-09-02 pass; to be repeated before unblinding)
-    \item five automated guards: normalisation manifest, systematics/file coupling, staleness, table consistency, blinding guard
   \end{itemize}
+\end{frame}
+
+% ---------------------------------------------------------------------------
+\begin{frame}{Part II: the proton-tagged subsample}
+  \vfill
+  \begin{center}\Large\color{ubdark}\bfseries
+  CC$\,1\mu1\pi^{\pm}$ with a tagged proton
+  \end{center}
+  \vspace{10pt}
+  \large
+  \begin{itemize}\itemsep10pt
+    \item inclusive selection $+$ a contained proton $>0.3$\GeVc; efficiency $11.4\%$, purity $\sim50\%$; strong cosmic rejector
+    \item TKI ($\delta p_T$, $\delta\alpha_T$, $\delta\phi_T$, $p_n$) in two bins, beam frame; $W_{\rm had}$ in six
+  \end{itemize}
+  \vfill
 \end{frame}
 
 % ---------------------------------------------------------------------------
@@ -312,8 +335,6 @@
   \includegraphics[width=\textwidth]{dsigma_ccpi1p_noW_FHC5}
   \column{.4\textwidth}\small
   \begin{itemize}\itemsep3pt
-    \item inclusive selection $+$ a contained proton $>0.3$\GeVc; efficiency $11.4\%$, purity $\sim50\%$; strong cosmic rejector
-    \item TKI ($\delta p_T$, $\delta\alpha_T$, $\delta\phi_T$, $p_n$) in two bins, beam frame; $W_{\rm had}$ in six
     \item single-nucleon STV prescription applied to the $\pi p$ system: $p_n$ is a proxy (stated limitation)
     \item generators: normalisation spread only; no FSI discrimination at this exposure
     \item headline: one-bin total $0.62\pm0.26$ (FHC)
