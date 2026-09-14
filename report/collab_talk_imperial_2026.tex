@@ -37,7 +37,7 @@
 \institute{Lancaster University}
 \date{MicroBooNE Collaboration Meeting, Imperial College London, 12--17 September 2026}
 \newcommand{\uboone}{MicroBooNE}
-\newcommand{\mainframes}{14}
+\newcommand{\mainframes}{15}
 \newcommand{\GeVc}{~GeV/$c$}
 
 \begin{document}
@@ -76,14 +76,29 @@
 \end{frame}
 
 % ---------------------------------------------------------------------------
-\begin{frame}{Selection and yields}
+\begin{frame}{Selection}
   \begin{columns}[T]
-  \column{.5\textwidth}
-  \footnotesize
-  \textbf{Cuts}: software trigger, vertex in FV, topological score $>0.67$, muon candidate (highest muon-BDT score among qualifying tracks),
-  exactly one contained pion candidate (LLR, MIP-BDT, pion-BDT, Bragg-$\pi$), three-plane hits, shower veto,
-  $\theta_{\mu\pi}<2.6$~rad, non-proton multiplicity $<4$ and $<5$ tracks.
-  \vspace{4pt}
+  \column{.46\textwidth}
+  \small
+  \begin{itemize}\itemsep4pt
+    \item \textbf{Event}: software trigger, reconstructed vertex in the FV, topological score $>0.67$
+    \item \textbf{Muon}: highest muon-BDT score among qualifying tracks
+    \item \textbf{Pion}: exactly one contained candidate (LLR, MIP-BDT, pion-BDT, Bragg-$\pi$), hits on all three planes
+    \item \textbf{Topology}: shower veto, $\theta_{\mu\pi}<2.6$~rad, non-proton multiplicity $<4$, fewer than 5 tracks
+  \end{itemize}
+  \vspace{6pt}
+  Largest remaining background: CC$0\pi$ with a proton taken as the pion.
+  \column{.54\textwidth}
+  \includegraphics[width=\textwidth]{cutflow_yields_fhc}\\
+  {\footnotesize FHC cut-flow, per-run POT-scaled, full CV weight.}
+  \end{columns}
+\end{frame}
+
+% ---------------------------------------------------------------------------
+\begin{frame}{Yields and normalisation}
+  \begin{columns}[T]
+  \column{.54\textwidth}
+  \small
   \begin{tabular}{lrrrrr}
   \toprule
   Final cut & Signal & $\nu$ bkg & EXT & Pred. & Pur. \\
@@ -92,12 +107,22 @@
   RHC & 1\,015 & 720 & 23 & 1\,759 & 57.7\% \\
   Comb. & 1\,959 & 1\,357 & 53 & 3\,372 & 58.1\% \\
   \bottomrule
-  \end{tabular}\\[2pt]
-  Efficiency $17.4$--$17.6\%$ in the measured phase space; largest background: CC$0\pi$ with a proton taken as the pion.\\[3pt]
-  \textbf{Normalisation} (details in backup): $8.86$ (FHC) and $11.08\times10^{20}$~POT (RHC), each run scaled by its own POT; per-configuration new-G4 flux; beam-off matched by run period and scaled by gates ($1.9\%$ of the sample).
-  \column{.5\textwidth}
-  \includegraphics[width=.92\textwidth]{cutflow_yields_fhc}\\
-  {\footnotesize FHC cut-flow, per-run POT-scaled, full CV weight.}
+  \end{tabular}\\[6pt]
+  Efficiency $17.4$--$17.6\%$ in the measured phase space.
+  \vspace{6pt}
+  \begin{block}{Normalisation (details in backup)}
+    \footnotesize
+    \begin{itemize}\itemsep2pt
+      \item $8.86$ (FHC) and $11.08\times10^{20}$~POT (RHC); each run scaled by its own POT
+      \item per-configuration new-G4 flux
+      \item beam-off matched by run period and scaled by gates ($1.9\%$ of the sample)
+    \end{itemize}
+  \end{block}
+  \column{.44\textwidth}
+  \centering
+  \includegraphics[width=.8\textwidth]{fw_eff_pmu}\\
+  \includegraphics[width=.8\textwidth]{fw_eff_costhmu}\\
+  {\footnotesize FHC selection efficiency vs.\ true $p_\mu$ and $\cos\theta_\mu$.}
   \end{columns}
 \end{frame}
 
