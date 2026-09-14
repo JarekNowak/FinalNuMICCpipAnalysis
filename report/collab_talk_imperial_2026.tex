@@ -37,8 +37,9 @@
 \institute{Lancaster University}
 \date{MicroBooNE Collaboration Meeting, Imperial College London, 12--17 September 2026}
 \newcommand{\uboone}{MicroBooNE}
-\newcommand{\mainframes}{15}
+\newcommand{\mainframes}{16}
 \newcommand{\GeVc}{~GeV/$c$}
+\newcommand{\figorbox}[2]{\IfFileExists{figures/#2.pdf}{\includegraphics[width=#1]{#2}}{\fbox{\parbox[c][3cm][c]{#1}{\centering\scriptsize \detokenize{#2}\\(plot in production)}}}}
 
 \begin{document}
 
@@ -46,18 +47,34 @@
 \begin{frame}[plain]
   \titlepage
   \begin{center}\small\color{ubdark}
-  $\nu_\mu+\bar\nu_\mu$ CC single charged pion on argon \;$\bullet$\; FHC, RHC and combined \;$\bullet$\; blind, fake-data results
+  $\nu_\mu+\bar\nu_\mu$ CC single charged pion on argon \;$\bullet$\; FHC, RHC and combined \;$\bullet$\; blind, fake-data results\\[3pt]
+  \footnotesize Internal note: \href{https://microboone-docdb.fnal.gov/cgi-bin/sso/ShowDocument?docid=46987}{\underline{MicroBooNE-doc-46987}}
   \end{center}
 \end{frame}}
+
+% ---------------------------------------------------------------------------
+\begin{frame}{Signal definition}
+  \small
+  \textbf{Signal} (truth level, charge-blind): $\nu_\mu/\bar\nu_\mu$ CC in the FV with exactly one $\mu$,
+  exactly one $\pi^\pm$, no $\pi^0$, no kaons or other mesons, any number of nucleons; coherent production included.\\[3pt]
+  \textbf{Measured phase space}: $p_\mu>0.15$\GeVc, $p_\pi>0.175$\GeVc, $\theta_{\mu\pi}<2.6$~rad
+  \vspace{4pt}
+
+  \centering
+  \figorbox{.3\textwidth}{eff_turnon_pmu_fhc}\hfill
+  \figorbox{.3\textwidth}{eff_turnon_ppi_fhc}\hfill
+  \figorbox{.3\textwidth}{eff_turnon_thmupi_fhc}\\
+  \raggedright\footnotesize
+  FHC selection efficiency for signal \emph{without} the kinematic thresholds, each with the other two cuts applied; shaded: excluded.
+  Momenta: efficiency turns on at the 10~cm muon and 20~cm pion track-length cuts; below threshold the correction would be large and model dependent.
+  $\theta_{\mu\pi}$: set by purity, not efficiency; the region above $2.6$~rad has $4.6\%$ signal purity (cosmic dominated) and serves as the cosmic control region.
+\end{frame}
 
 % ---------------------------------------------------------------------------
 \begin{frame}{What is measured}
   \begin{columns}[T]
   \column{.56\textwidth}
-  \small\textbf{Signal} (truth level, charge-blind): $\nu_\mu/\bar\nu_\mu$ CC in the FV with exactly one $\mu$,
-  exactly one $\pi^\pm$, no $\pi^0$, no kaons or other mesons, any number of nucleons; coherent production included.\\[2pt]
-  \textbf{Measured phase space}: $p_\mu>0.15$, $p_\pi>0.175$\GeVc, $\theta_{\mu\pi}<2.6$~rad
-  \vspace{2pt}
+  \small
   \begin{block}{Deliverables per configuration (FHC, RHC, combined)}
     \footnotesize
     \begin{itemize}\itemsep1pt
@@ -397,7 +414,7 @@
       against the trigger table.
   \end{itemize}
   \vspace{4pt}
-  \footnotesize Documents: analysis note, technical supplement and change log (Draft 1.5, release 2026-09-06, document revision 2026-09-07); data release in \texttt{report/data\_release/}.
+  \footnotesize Documents (\href{https://microboone-docdb.fnal.gov/cgi-bin/sso/ShowDocument?docid=46987}{\color{ubred}\underline{MicroBooNE-doc-46987}}): analysis note, technical supplement and change log (Draft 1.5, release 2026-09-06, document revision 2026-09-07); data release in \texttt{report/data\_release/}.
 \end{frame}
 
 % ===========================================================================
