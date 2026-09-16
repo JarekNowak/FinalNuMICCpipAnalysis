@@ -473,6 +473,295 @@ or added variables. More signal MC is the largest single lever, and no amount of
 selection work substitutes for it.
 
 % =============================================================================
+\section{Reconstruction study on HyperonProduction ntuples}
+\label{sec:recostudy}
+% =============================================================================
+
+\subsection{Why the PeLEE ntuples cannot answer these questions}
+
+Every question about \emph{which particle a candidate actually is} was
+unanswerable on the PeLEE ntuples. Their truth record stops at the primary
+vertex: \texttt{mc\_pdg} lists the \Szero\ and the muon, but never the
+$\Szero \to \Lam\gamma \to p\pi^-\gamma$ chain. Measured on the signal sample,
+\texttt{nproton} averages $0.06$ and is zero in $94.4\%$ of events,
+\texttt{npion} is zero in $100\%$, PDG~22 never appears, and
+\emph{zero of 17721 events} contain a backtracked $\pi^-$ PFP. The
+per-candidate truth columns are correspondingly meaningless: the pion candidate
+matches a true $\pi^-$ in $0.0\%$ of events, $60\%$ carry no truth match at all
+and $36.5\%$ leak the muon's truth. This is a property of the ntuple, not a bug
+in the selection.
+
+The HyperonProduction (``hypana'') analyser writes the full decay chain
+(\texttt{mc\_sigmazero\_lambda\_end\_*} is the true \Lam\ decay vertex,
+\texttt{mc\_decay\_*} the daughters) together with per-PFP truth matching
+(\texttt{pfp\_true\_pdg}, \texttt{pfp\_purity}, \texttt{pfp\_completeness}).
+The studies below are all performed there. \texttt{HypInput.h} adapts the hypana
+branches to the PeLEE names the selection already uses; the two formats index
+every \texttt{trk\_*}/\texttt{shr\_*}/\texttt{pfp\_*} vector per PFP with equal
+lengths, so the port is a branch remap with a double$\rightarrow$float copy
+rather than a structural rewrite.
+
+Two caveats apply throughout. The hyperon samples are generated with an
+\emph{enhanced} hyperon-production cross section, so they are valid for
+efficiencies and ratios but not for absolute yields. And a full hypana-only
+analysis is not yet possible: hypana output exists only for hyperon samples,
+there is none for the generic RHC overlay or dirt, and the overlay's parent
+reco2 files are not on local disk. Anything requiring realistic background
+therefore still runs on PeLEE.
+
+\subsection{Signal definition used in this section}
+
+\Szero, $\numubar$ charged current, $\Lam \to p\pi^-$ in truth, muon momentum
+above $0.15$~GeV/c, and \textbf{both} the reconstructed and the true neutrino
+vertex inside the fiducial volume. The branching ratio matters: only
+$\sim 60\%$ of \Szero\ events have $\Lam \to p\pi^-$ at all (PDG $63.9\%$), so
+the remaining $40\%$ contain no proton or pion to reconstruct and must not be
+counted as reconstruction failures.
+
+\paragraph{A fiducial-volume trap.} Requiring only the \emph{reconstructed}
+vertex in the FV gives badly wrong answers, because events whose reco vertex is
+in the FV but whose true vertex is not are mis-reconstructed --- the reco vertex
+belongs to a different interaction --- and they dominate the sample. With reco
+FV only the muon appears to be reconstructed $53.7\%$ of the time and all four
+particles $10.2\%$; requiring both fiducial cuts gives $91.5\%$ and $18.1\%$.
+The internal check that catches this: a ceiling \emph{below} the selection's own
+preselection efficiency ($15.6\%$) is impossible.
+
+\subsection{Per-particle reconstruction}
+
+Table~\ref{tab:recoeff} gives, for each of the four final-state particles, how
+often a truth-matched PFP exists and where Pandora places it in its hierarchy.
+Statistics: 3704 signal events, full NuWro sample.
+
+\begin{table}[h]\centering
+\begin{tabular}{lrrrr}
+\toprule
+particle & primary (gen 2) & secondary (gen $\geq3$) & not reconstructed & total \\
+\midrule
+$\mu^+$   & $91.5\%$ & $0.3\%$ & $8.2\%$  & $91.8\%$ \\
+$p$       & $58.1\%$ & $2.8\%$ & $39.1\%$ & $60.9\%$ \\
+$\pi^-$   & $45.7\%$ & $1.6\%$ & $52.8\%$ & $\mathbf{47.3\%}$ \\
+$\gamma$  & $59.8\%$ & $2.6\%$ & $37.6\%$ & $62.4\%$ \\
+\bottomrule
+\end{tabular}
+\caption{Reconstruction of the four \Szero\ final-state particles.
+The $\pi^-$ is the weak link.}
+\label{tab:recoeff}
+\end{table}
+
+Found together: $0$ of $4$ in $4.5\%$ of events, $1$ in $7.5\%$, $2$ in
+$27.2\%$, $3$ in $42.6\%$, and \textbf{all four in $18.1\%$}. Since the
+selection requires a muon, proton, pion and shower candidate, $18.1\%$ is its
+hard ceiling; it reports $15.6\%$ at the \texttt{NTracksCut} preselection only
+because it fills those slots with whatever PFP is available.
+
+\paragraph{Secondaries do not explain the loss.} The analyser originally
+discarded every PFP with generation $\neq 2$. The natural hypothesis was that
+the \Lam\ daughters, produced at a displaced vertex, were being reconstructed as
+generation-3 secondaries and thrown away. The module was changed to keep them
+(labelled by a new \texttt{pfp\_generation} branch, so
+\texttt{pfp\_generation}~$==2$ recovers the old behaviour exactly) and the
+measurement repeated: secondaries are $6.6\%$ of PFPs but recover only $2.8\%$
+for the proton and $1.6\%$ for the pion, and nothing at all for the muon and
+photon. The losses are genuine reconstruction failures.
+
+\subsection{Track/shower misclassification}
+
+In events with at least four PFPs (622 events), each truth-matched particle was
+compared against the track/shower split the selection uses
+(\texttt{pfp\_trk\_shr\_score} $> 0.5$):
+
+\begin{table}[h]\centering
+\begin{tabular}{lrrrr}
+\toprule
+particle & expected & as track & as shower & not found \\
+\midrule
+$\mu^+$  & track  & $95.7\%$          & $1.6\%$           & $2.7\%$ \\
+$p$      & track  & $70.3\%$          & $8.2\%$           & $21.5\%$ \\
+$\pi^-$  & track  & $54.2\%$          & $\mathbf{11.6\%}$ & $34.2\%$ \\
+$\gamma$ & shower & $\mathbf{15.0\%}$ & $69.5\%$          & $15.6\%$ \\
+\bottomrule
+\end{tabular}
+\caption{Classification of truth-matched particles. Bold entries are
+misclassifications that directly corrupt candidate assignment.}
+\label{tab:misclass}
+\end{table}
+
+All four particles are \emph{found} in $41.2\%$ of these events but all four are
+\emph{correctly classified} in only $26.7\%$: the hard split at $0.5$ costs
+$14.5$ percentage points, a third of otherwise-perfect events. Two consequences
+matter. Photons pass as tracks $15\%$ of the time and then compete for the pion
+slot --- which is the origin of the $25\%$ photon contamination measured
+independently among pion candidates. And $\pi^-$ are called showers $11.6\%$ of
+the time, which removes them from the track pool entirely so they can never be
+selected.
+
+\subsection{The pion candidate, and why ranking cannot fix it}
+
+On signal events reaching the pion stage the candidate is a true $\pi^-$ only
+$34.2\%$ of the time (muon $89.5\%$, photon $77.6\%$, proton $64.5\%$), with
+contaminants $\gamma$ $25.0\%$, $p$ $16.2\%$, $\mu^+$ $10.5\%$. Two hard
+constraints make this not a ranking problem:
+
+\begin{itemize}
+  \item A true $\pi^-$ PFP exists in only $56.6\%$ of these events (track-like
+        in $52.6\%$). That is the ceiling: $43\%$ of the time there is no pion
+        to find and the selection assigns one regardless.
+  \item $76.3\%$ of events have exactly \emph{one} track-like PFP left after the
+        muon and proton are taken, so there is no choice to make. Adding
+        wiggliness and $dE/dx$ terms to the ranking changed the outcome by
+        exactly zero events across seven weightings.
+\end{itemize}
+
+Raising the pion track-score threshold lifts purity from $34.2\%$ to $41.6\%$
+but the figure of merit falls monotonically (ratio $1.000 \to 0.442$ over
+$0.50 \to 0.95$), so it is not worth doing.
+
+\subsection{The \Lam\ displaced vertex is not usable}
+
+The \Lam\ displaced-vertex handle fails on physics grounds, not implementation.
+Measured with truth-matched $p$ and $\pi^-$ tracks ($n=266$):
+
+\begin{itemize}
+  \item True \Lam\ flight distance: median $1.85$~cm, mean $3.23$~cm. Not
+        $7.89$~cm --- $c\tau$ is the rest-frame value and the \Lam\ from a \Szero\
+        decay is slow ($\beta\gamma \approx 0.4$), so $\beta\gamma c\tau \approx
+        3$~cm.
+  \item Reconstructed primary-vertex resolution: median $5.54$~cm.
+  \item Correlation between reconstructed and true flight distance:
+        $r = -0.014$.
+\end{itemize}
+
+The ruler is three times longer than the quantity being measured. Three
+estimators were compared against the true decay vertex --- the midpoint of the
+two track starts (what the code used), the distance of closest approach of the
+two track lines, and the best of the four endpoint pairings --- and all three
+gave a residual of $\sim 5.5$~cm, because all are limited by the same vertex
+resolution. The tracks themselves converge well (DCA median $0.33$~cm); it is
+the baseline that is poor. This closes the earlier null result
+(\texttt{LambdaDecayDist} signal $10.19$~cm against background $11.02$~cm) and
+the requirement is withdrawn from the work plan. It would still work for
+directly produced, faster \Lam, so the negative result should not be
+generalised.
+
+% =============================================================================
+\section{A global hypothesis fit}
+\label{sec:hypfit}
+% =============================================================================
+
+\subsection{Motivation}
+
+The selection currently identifies the muon, then the proton, then the pion,
+each conditioned only on what has already been taken, and never uses the fact
+that $p\pi^-$ must form a \Lam\ and $\Lam\gamma$ a \Szero. The particles are not
+independent and are being treated as if they were. The per-role PID templates in
+Sec.~\ref{sec:phase0} show why this fails specifically on the pion: the muon,
+proton and photon each have a strong, distinctive signature, while
+\textbf{the $\pi^-$ has none} --- it lies between the other three on every
+variable measured. It can only be identified by exclusion once the others are
+pinned, together with the \Lam\ mass constraint, which is precisely what a
+sequential cut chain cannot do.
+
+The proposed replacement is:
+\begin{enumerate}
+  \item \textbf{Relaxed candidate pool.} Drop \texttt{trk\_score} $>0.5$ as an
+        eligibility gate; every PFP is eligible for every role and the score
+        becomes a likelihood term. This recovers the $11.6\%$ of $\pi^-$ called
+        showers and stops photons monopolising the pion slot.
+  \item \textbf{Enumerate assignments} of four roles to $N$ PFPs, $P(N,4)$.
+        Computationally free: $N=4 \to 24$, $N=6 \to 360$, $N=8 \to 1680$.
+  \item \textbf{Score each hypothesis} with a combined $-2\ln L$ built from the
+        two mass constraints, per-role PID templates, muon-at-vertex, the
+        $p$--$\pi$ DCA, a length-ordering prior and a soft-photon prior.
+  \item \textbf{Partial hypotheses} for the $29.1\%$ of signal with three PFPs,
+        where the dominant topology is $2$ tracks $+$ $1$ shower ($51.9\%$),
+        i.e.\ one hadron missing with the photon still present.
+\end{enumerate}
+
+The headroom is specific: all four particles are found in $41.2\%$ of
+$N\geq4$ events but correctly classified in $26.7\%$, so perfect assignment
+given what is found is worth a factor $1.54$, before any gain from the enlarged
+pool or from partial hypotheses.
+
+\subsection{Phase 0: measured ingredients}
+\label{sec:phase0}
+
+Everything the fit is parameterised by has been measured on truth-matched PFPs
+and recorded in \texttt{HypFitParams.h} (700 files, 1323 signal events).
+
+\begin{table}[h]\centering
+\begin{tabular}{lrrr}
+\toprule
+constraint & $n$ & Gaussian centre & $\sigma$ \\
+\midrule
+$m(p,\pi)$ vs \Lam\ ($1.11568$)      & 397 & $1.1234$ & $27.2$~MeV \\
+$m(\Lam,\gamma)$ vs \Szero\ ($1.19264$) & 243 & $1.1812$ & $45.4$~MeV \\
+\bottomrule
+\end{tabular}
+\caption{Mass constraints from correctly assigned candidates. The \Szero\ term
+is $\sim1.7\times$ wider, as expected from the soft photon.}
+\label{tab:massres}
+\end{table}
+
+The reconstruction is biased by $+7.7$~MeV on the \Lam\ and $-11.4$~MeV on the
+\Szero, which is $28\%$ and $25\%$ of the respective widths. \textbf{The $\chi^2$
+must therefore be centred on the measured means, not the PDG masses}, or every
+hypothesis carries a built-in offset. Both biases have identifiable causes: the
+pion momentum is taken from range under the \emph{muon} hypothesis, and the
+photon energy is under-measured (reco $0.0792$ vs true $0.0861$~GeV).
+
+Remaining ingredients:
+\begin{itemize}
+  \item $p$--$\pi$ distance of closest approach: median $0.35$~cm, $16$--$84\%$
+        range $0.08$--$1.36$~cm. Strongly peaked and one of the most powerful
+        terms available --- and note that it works precisely where the \Lam\
+        decay \emph{distance} fails.
+  \item The muon is the longest of the three tracks $92.1\%$ of the time: a soft
+        prior worth $\ln(0.921/0.079) = 2.46$ in log-likelihood, not a cut.
+  \item $98.9\%$ of PFPs carry \emph{both} a track fit and a shower fit, so the
+        relaxed pool requires no re-reconstruction --- only a change of
+        eligibility rule.
+\end{itemize}
+
+\begin{table}[h]\centering\small
+\begin{tabular}{lrrrr}
+\toprule
+variable & $\mu^+$ & $p$ & $\pi^-$ & $\gamma$ \\
+\midrule
+\texttt{trk\_shr\_score}    & $1.00$  & $0.90$  & $0.80$  & $\mathbf{0.11}$ \\
+\texttt{trk\_llrpid}        & $\mathbf{0.96}$ & $-0.29$ & $0.14$ & $0.56$ \\
+\texttt{trk\_pid\_chipr}    & $180$   & $\mathbf{16.4}$ & $96$ & $192$ \\
+\texttt{three\_plane\_dedx} & $2.47$  & $\mathbf{10.3}$ & $7.52$ & $3.30$ \\
+\texttt{rms\_deflection}    & $0.01$  & $0.01$  & $0.01$  & $\mathbf{0.08}$ \\
+\texttt{moliere\_avg}       & $1.78$  & $6.18$  & $8.95$  & $\mathbf{13.3}$ \\
+\texttt{trk\_length}        & $\mathbf{139}$ & $12.8$ & $10.8$ & $14.2$ \\
+\bottomrule
+\end{tabular}
+\caption{Per-role PID templates, medians on truth-matched PFPs
+($n = 1213/808/650/814$). The muon, proton and photon each have a distinctive
+signature; the $\pi^-$ has none.}
+\label{tab:templates}
+\end{table}
+
+\subsection{The mass-sculpting risk}
+
+Selecting the combination that best fits $m_\Lam$ will sculpt a \Lam-like peak
+out of pure combinatorics in background events, manufacturing the signal being
+searched for. This is the standard failure mode of combinatoric selection and it
+is the main risk in the whole scheme.
+
+\textbf{Decision: the \Lam\ and \Szero\ invariant masses are used for assignment
+only and are kept out of the BDT input list.} The best-hypothesis score and the
+margin to the second-best hypothesis are permitted as inputs. Before the fit is
+adopted, the full machinery must be run on a background-only sample and the
+resulting mass distributions inspected for an induced peak. A secondary check is
+to assign using one constraint and test with the other.
+
+A second, smaller risk: the enlarged candidate pool raises background acceptance
+as well as signal efficiency, so the figure of merit must be re-measured end to
+end rather than judged on efficiency alone.
+
+% =============================================================================
 \section{Fake data by Poisson throw}
 \label{sec:fakedata}
 % =============================================================================
@@ -562,12 +851,25 @@ interaction level), FHC dirt, and a combined-mode flux normalisation following
 % =============================================================================
 
 \begin{enumerate}
-  \item \textbf{Selection (priority).} Photon-candidate identification, explicit
-        $\pi^0$ veto, pion assignment, \Lam\ displaced-vertex requirement.
-        Sec.~\ref{sec:purity}.
+  \item \textbf{Selection (priority): global hypothesis fit.} Relaxed candidate
+        pool, combinatoric role assignment scored against the \Lam\ and \Szero\
+        mass constraints and the per-role PID templates, then partial hypotheses
+        for three-PFP events. Sec.~\ref{sec:hypfit}. Phase~0 (resolutions,
+        templates, priors) is complete and recorded in
+        \texttt{HypFitParams.h}; Sec.~\ref{sec:phase0}.
+        \emph{The \Lam\ displaced-vertex requirement listed in earlier versions
+        of this plan is withdrawn: the true flight distance (median $1.85$~cm) is
+        three times smaller than the vertex resolution ($5.54$~cm) and the
+        reconstructed quantity is uncorrelated with truth, $r=-0.014$.
+        Sec.~\ref{sec:recostudy}.}
   \item \textbf{Framework port.} Branch bindings, \texttt{Sigma0} selection class,
         factory registration, cut-flow validation against the standalone code
         before any config work. Sec.~\ref{sec:port}.
+  \item \textbf{Background through HyperonProduction.} A hypana-only analysis is
+        blocked: hypana output exists for the hyperon samples only, and the RHC
+        overlay's parent reco2 files are not on local disk. Until they are
+        retrieved and processed, anything needing realistic background runs on
+        PeLEE. Sec.~\ref{sec:recostudy}.
   \item \textbf{Fake data.} \texttt{throw\_sigma0.C}, all samples, RHC POT.
         Sec.~\ref{sec:fakedata}.
   \item \textbf{Systematics.} Single-bin \texttt{univmake} for the background
