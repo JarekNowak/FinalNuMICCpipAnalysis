@@ -54,6 +54,8 @@ private:
   double reco_pn_;
   double reco_proton_mom_;
   double reco_proton_costh_;
+  // opening angle between the pion and proton candidate tracks [rad]; frame independent
+  double reco_pi_pr_opening_angle_;
   int    reco_n_proton_;
   // diagnostic: LLR PID score of the identified proton candidate (lower = more
   // proton-like); stored so a tighter proton-PID working point can be emulated
@@ -69,6 +71,8 @@ private:
   double true_pn_;
   double true_proton_mom_;
   double true_proton_costh_;
+  // opening angle between the leading true charged pion and the leading true proton [rad]
+  double true_pi_pr_opening_angle_;
   int    true_lead_proton_idx_;
   double lead_true_proton_mom_;
 };

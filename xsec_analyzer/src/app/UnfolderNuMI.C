@@ -820,9 +820,15 @@ void UnfolderNuMI(std::string XSEC_Config, std::string SLICE_Config, std::string
     // Dump the final differential-cross-section curves for the physical slice
     // (sl_idx 0) to a sidecar ROOT file so a clean, native multi-observable
     // closure montage can be drawn without rasterising the PDF canvases.
-    if ( sl_idx == 0 ) {
+    // A 2D (or any multi-slice) config has more than one physical slice; slice 0 is then only the
+    // first Y slice, so the LAST slice (the "bin number" slice over every analysis bin) is dumped
+    // as well, to closure_hists_all_<output>. One-dimensional configs (physical slice + bin number)
+    // behave exactly as before.
+    const bool multi_slice = sb.slices_.size() > 2;
+    const bool last_slice = sl_idx + 1 == static_cast<int>( sb.slices_.size() );
+    if ( sl_idx == 0 || ( multi_slice && last_slice ) ) {
       TDirectory* save_dir = gDirectory;
-      std::string ch_name = OutputDirectory + "closure_hists_" + OutputFileName;
+      std::string ch_name = OutputDirectory + ( sl_idx == 0 ? "closure_hists_" : "closure_hists_all_" ) + OutputFileName;
       TFile ch_file( ch_name.c_str(), "RECREATE" );
       auto write_clone = [&]( const char* key, const char* outname ) {
         auto it = slice_gen_map.find( key );

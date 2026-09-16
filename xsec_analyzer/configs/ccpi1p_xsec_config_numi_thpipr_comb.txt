@@ -1,0 +1,12 @@
+# CC1mu1pi1p pion-proton opening angle theta_pipr, 3 bins (maximin scan, min diag 0.77/0.75).
+UnivFile /data/uboone/processed/ccpi1p_COMB_thpipr_univmake.root
+SystFile configs/ccpi1p_systcalc_numi.conf
+FPFile configs/file_properties_numi_comb_w.txt
+Unfold WienerSVD 1 second-deriv
+Flux 6.60865e-10
+Prediction uBTune "MicroBooNE Tune" univ CV
+Prediction FakeData "Fakedata" univ FakeData
+Prediction GENIE "GENIE" file /home/t2k/nowak/MicroBooNE/working_xsec_analyzer/generator_predictions/gen2d/genie_1p_ext_comb_fte.root thpipr_fte
+Prediction GiBUU "GiBUU" file /home/t2k/nowak/MicroBooNE/working_xsec_analyzer/generator_predictions/gen2d/gibuu_1p_ext_comb_fte.root thpipr_fte
+Prediction NEUT "NEUT" file /home/t2k/nowak/MicroBooNE/working_xsec_analyzer/generator_predictions/gen2d/neut_1p_ext_comb_fte.root thpipr_fte
+Prediction NuWro "NuWro" file /home/t2k/nowak/MicroBooNE/working_xsec_analyzer/generator_predictions/gen2d/nuwro_1p_ext_comb_fte.root thpipr_fte

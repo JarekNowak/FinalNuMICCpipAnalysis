@@ -7,7 +7,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 export LD_LIBRARY_PATH="/usr/lib64/flexiblas:$(root-config --libdir):$PWD/lib:${LD_LIBRARY_PATH:-}"
 export XSEC_ANALYZER_DIR="$PWD"
 PROC=/data/uboone/processed; LOG=../logs; NPAR=${1:-2}
-obs=(Wpipr Whad dpt dalphat dphit pn)
+obs=(Wpipr Whad dpt dalphat dphit pn thetap thpipr)   # thetap, thpipr added 2026-09-16
 
 univ_one() {  # key
   local k=$1 uout=$PROC/ccpi1p_FHC5_${k}_univmake.root

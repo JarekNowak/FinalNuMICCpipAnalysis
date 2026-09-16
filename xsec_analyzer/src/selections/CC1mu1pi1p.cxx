@@ -165,6 +165,10 @@ void CC1mu1pi1p::compute_reco_observables( AnalysisEvent* Event ) {
   TVector3 pr( Event->track_dirx_->at(CandidateProtonIdx_),
     Event->track_diry_->at(CandidateProtonIdx_),
     Event->track_dirz_->at(CandidateProtonIdx_) );
+  // opening angle from the track directions themselves: SetMag(0) on a zero momentum
+  // would otherwise turn the vector into (0,0,0) and the angle into 0
+  reco_pi_pr_opening_angle_ = TVector3( Event->track_dirx_->at(CandidatePionIndex),
+    Event->track_diry_->at(CandidatePionIndex), Event->track_dirz_->at(CandidatePionIndex) ).Angle( pr );
   pr.SetMag( pmom );
   double Epr = KEp + PROTON_MASS;
   reco_proton_mom_ = pmom;
@@ -207,6 +211,7 @@ void CC1mu1pi1p::compute_true_observables( AnalysisEvent* Event ) {
   double Epi = ssqrt( TrueCandidatePionP.Mag2() + PI_PLUS_MASS*PI_PLUS_MASS );
   true_proton_mom_ = pr.Mag();
   true_proton_costh_ = pr.Unit().Dot( true_nu_dir(Event) );
+  true_pi_pr_opening_angle_ = TrueCandidatePionP.Angle( pr );
 
   // Truth: use the exact per-event neutrino direction, which is how every generator
   // prediction defines these variables (the neutrino is +z by construction there).
@@ -230,7 +235,9 @@ void CC1mu1pi1p::define_output_branches() {
   set_branch( &reco_pn_,          "pn_reco" );
   set_branch( &reco_proton_mom_,  "proton_mom_reco" );
   set_branch( &reco_proton_costh_,"proton_costh_reco" );
+  set_branch( &reco_pi_pr_opening_angle_, "pi_pr_opening_angle_reco" );
   set_branch( &reco_n_proton_,    "n_proton_reco" );
+  set_branch( &CandidateProtonIdx_, "CandidateProtonIndex" );
   set_branch( &reco_proton_llr_,  "proton_llr_reco" );
 
   set_branch( &true_W_pipr_,      "W_pipr_true" );
@@ -241,6 +248,7 @@ void CC1mu1pi1p::define_output_branches() {
   set_branch( &true_pn_,          "pn_true" );
   set_branch( &true_proton_mom_,  "proton_mom_true" );
   set_branch( &true_proton_costh_,"proton_costh_true" );
+  set_branch( &true_pi_pr_opening_angle_, "pi_pr_opening_angle_true" );
   set_branch( &lead_true_proton_mom_, "lead_proton_mom_true" );
 }
 
@@ -253,12 +261,12 @@ void CC1mu1pi1p::reset() {
 
   reco_W_pipr_ = reco_W_had_ = BOGUS;
   reco_deltaAlphaT_ = reco_deltaPhiT_ = reco_deltaPt_ = reco_pn_ = BOGUS;
-  reco_proton_mom_ = reco_proton_costh_ = BOGUS;
+  reco_proton_mom_ = reco_proton_costh_ = reco_pi_pr_opening_angle_ = BOGUS;
   reco_proton_llr_ = BOGUS;
 
   true_W_pipr_ = true_W_had_ = BOGUS;
   true_deltaAlphaT_ = true_deltaPhiT_ = true_deltaPt_ = true_pn_ = BOGUS;
-  true_proton_mom_ = true_proton_costh_ = BOGUS;
+  true_proton_mom_ = true_proton_costh_ = true_pi_pr_opening_angle_ = BOGUS;
   true_lead_proton_idx_ = BOGUS_INDEX;
   lead_true_proton_mom_ = BOGUS;
 }

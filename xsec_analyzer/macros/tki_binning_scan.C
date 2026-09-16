@@ -13,17 +13,26 @@
 // The events floor is deliberately stricter than the 100 used for W_pipr: that scheme
 // passed the diagonal criterion with 137 events in its first bin and still failed the
 // extraction, A_C collapsing to a rank-one matrix, while the 469-event p_pi case worked.
+//
+// Extended 2026-09-16 for the 0.50-criterion study: the scan also covers W_pipr, W_had and
+// the proton angles (cos theta_p, theta_p, and the pion-proton opening angle theta_pipr from
+// the friend trees of macros/proton_angle_friend.C), and ONLY selects a subset by name.
+// Results are printed against both 0.68 and CRIT; the scan still stops at the largest bin
+// count passing CRIT.
 //   usage: root -l -b -q 'macros/tki_binning_scan.C("/data/uboone/processed/beta")'
+//          root -l -b -q 'macros/tki_binning_scan.C("/data/uboone/processed/w",400,0.50,"thpipr,costhp")'
 #include <vector>
 #include <algorithm>
 #include <string>
 
 namespace {
-  struct Spec { const char* br; const char* name; double lo, hi, step, minw; };
+  // br: CC1mu1pi1p_<br>_{reco,true}; when rexp/texp are given they are used verbatim instead
+  struct Spec { const char* br; const char* name; double lo, hi, step, minw;
+                const char* rexp = nullptr; const char* texp = nullptr; };
 }
 
 void tki_binning_scan( const char* dir = "/data/uboone/processed/beta",
-                       int MINEVT = 400, double CRIT = 0.68 ) {
+                       int MINEVT = 400, double CRIT = 0.68, const char* ONLY = "", int KMAX = 6 ) {
 
   const char* S = "CC1mu1pi1p";
   std::vector<Spec> obs = {
@@ -31,17 +40,39 @@ void tki_binning_scan( const char* dir = "/data/uboone/processed/beta",
     { "deltaAlphaT", "delta_alphaT [deg]", 0., 180.,  5.,   15.    },
     { "deltaPhiT",   "delta_phiT   [deg]", 0., 180.,  5.,   15.    },
     { "pn",          "p_n       [GeV/c]", 0.,   1.50, 0.025, 0.075 },
+    { "W_pipr",      "W_pipr  [GeV/c2]",  1.08, 2.60, 0.01,  0.05  },
+    { "W_had",       "W_had   [GeV/c2]",  0.,   2.74, 0.02,  0.10  },
+    { "costhp",      "cos theta_p",       -1.,  1.,   0.025, 0.10,
+      "CC1mu1pi1p_proton_costh_reco", "CC1mu1pi1p_proton_costh_true" },
+    { "thetap",      "theta_p [rad]",      0.,  3.1416, 0.0314, 0.157,
+      "TMath::ACos(CC1mu1pi1p_proton_costh_reco)", "TMath::ACos(CC1mu1pi1p_proton_costh_true)" },
+    { "thpipr",      "theta_pipr [rad]",   0.,  3.1416, 0.0314, 0.157,
+      "pa.thpipr_reco", "pa.thpipr_true" },
   };
 
   TChain ch("stv_tree");
   int nf = ch.Add( Form("%s/xsec-ana-Run*_fhc_*.root", dir) );
   printf("\n  chained %d file(s) from %s\n", nf, dir);
   if ( ch.GetEntries() <= 0 ) { printf("  no entries -- has stage 1 finished?\n"); return; }
+  // friend trees (theta_pipr), file by file in the same order as the main chain
+  TChain fr("pa"); int nfr = 0;
+  for ( auto* el : *ch.GetListOfFiles() ) {
+    TString fn = el->GetTitle(); TString b = gSystem->BaseName( fn ); b.ReplaceAll( ".root", ".pa.root" );
+    TString ff = TString( gSystem->DirName( fn ) ) + "/friends_pa/" + b;
+    if ( !gSystem->AccessPathName( ff ) ) { fr.Add( ff ); ++nfr; }
+  }
+  if ( nfr == nf ) { ch.AddFriend( &fr, "pa" ); printf("  friend trees attached (%d)\n", nfr); }
+  std::string only = std::string(",") + ONLY + ",";
 
   for ( auto& o : obs ) {
+    if ( only != ",," && only.find( std::string(",")+o.br+"," ) == std::string::npos ) continue;
+    if ( std::string(o.br)=="thpipr" && nfr != nf ) { printf("\n  %s: friend trees missing, skipped\n", o.name); continue; }
     int N = (int)std::lround( (o.hi-o.lo)/o.step );
-    ch.Draw( Form("%s_%s_reco : %s_%s_true >> h2(%d,%g,%g,%d,%g,%g)",
-                  S,o.br,S,o.br,N,o.lo,o.hi,N,o.lo,o.hi),
+    std::string rx = o.rexp ? o.rexp : Form("%s_%s_reco",S,o.br);
+    std::string tx = o.texp ? o.texp : Form("%s_%s_true",S,o.br);
+    gDirectory->Delete("h2;*");
+    ch.Draw( Form("%s : %s >> h2(%d,%g,%g,%d,%g,%g)",
+                  rx.c_str(),tx.c_str(),N,o.lo,o.hi,N,o.lo,o.hi),
              Form("%s_Selected && %s_MC_Signal",S,S), "goff" );
     TH2D* h2 = (TH2D*)gDirectory->Get("h2");
     if ( !h2 || h2->GetEntries()<=0 ) { printf("\n  %s: no entries\n", o.name); continue; }
@@ -64,7 +95,7 @@ void tki_binning_scan( const char* dir = "/data/uboone/processed/beta",
     };
     int MINW = (int)std::lround(o.minw/o.step);
 
-    for ( int K=6; K>=2; --K ) {
+    for ( int K=KMAX; K>=2; --K ) {
       // best[k][i] : best achievable worst-diagonal using k bins covering [0,i)
       std::vector<std::vector<double>> best(K+1, std::vector<double>(N+1,-1.));
       std::vector<std::vector<int>>    prev(K+1, std::vector<int>(N+1,-1));
@@ -86,8 +117,8 @@ void tki_binning_scan( const char* dir = "/data/uboone/processed/beta",
       std::vector<int> cut; int i=N;
       for ( int k=K;k>=1;--k ){ cut.push_back(i); i=prev[k][i]; }
       cut.push_back(0); std::reverse(cut.begin(),cut.end());
-      printf("    %d bins : worst diagonal %5.1f%%  %s\n", K, 100*best[K][N],
-             best[K][N] > CRIT ? "PASSES" : "fails");
+      printf("    %d bins : worst diagonal %5.1f%%  %s at %.2f, %s at 0.68\n", K, 100*best[K][N],
+             best[K][N] > CRIT ? "PASSES" : "fails", CRIT, best[K][N] > 0.68 ? "passes" : "fails");
       printf("        edges  :"); for ( size_t k=1;k+1<cut.size();++k ) printf(" %7.3f", o.lo+cut[k]*o.step); printf("\n");
       printf("        diag   :");
       for ( size_t k=0;k+1<cut.size();++k ){ double nev; printf(" %6.1f%%",100*diag(cut[k],cut[k+1],k==0,k+2==cut.size(),nev)); }

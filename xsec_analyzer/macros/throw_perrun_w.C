@@ -3,7 +3,9 @@
 // branches) and writing the fake data into the same w/ dir. Same throw logic + POT
 // values as throw_perrun_fhc.C; CloneTree carries the W/TKI branches through. FHC only
 // for now (RHC/comb added when those configs are built).
-static const char* W="/data/uboone/processed/w/";
+// Directory read AND written. THROW_W_DIR overrides it so a staging tree can be thrown from
+// its own reprocessed MC (same seeds -> identical events when the weights are unchanged).
+static const char* W = gSystem->Getenv("THROW_W_DIR") ? gSystem->Getenv("THROW_W_DIR") : "/data/uboone/processed/w/";
 
 void throw_group_w(std::vector<const char*> infiles, const char* outfile, double dpot, double mcpot, int seed){
   double potscale = dpot/mcpot;
