@@ -1,0 +1,414 @@
+\input{common_preamble}
+\usepackage{xr}
+\externaldocument[N-]{analysis_note}
+\externaldocument[CR-]{cr_data_note}
+
+\newcommand{\GeVcc}{\,\text{GeV}\!/c}
+
+\begin{document}
+
+\begin{titlepage}
+\centering
+\vspace*{2cm}
+{\LARGE\bfseries Binning criterion, proton-tagged angular observables\\ and two-dimensional cross sections\par}
+\vspace{0.5cm}
+{\large Measurement of $\nu_\mu + \bar{\nu}_\mu$ Charged-Current Single Pion
+Production on Argon in the NuMI Beam\par}
+\vspace{0.8cm}
+{\large Studies of 2026-09-16/17; blind (fake data throughout)\par}
+\vspace{0.5cm}
+{\normalsize 2026-09-17\par}
+\vspace{1.5cm}
+{\large Ishanee Pophale, Jarek Nowak\par}
+\vspace{0.5cm}
+{\normalsize\textit{Lancaster University}\par}
+\vspace{2cm}
+
+\begin{abstract}
+Three questions were asked of the released analysis: whether the migration-diagonal requirement
+could be relaxed from $0.68$ to $0.50$, whether the proton-tagged sample should measure the proton
+angle and the pion--proton opening angle, and whether double-differential cross sections are
+supported. This note records the answers and the machinery built for them. \textbf{(i)}~Relaxing the
+criterion admits finer binnings in $\cos\theta_\mu$, $\theta_\mu$, $p_\pi$ and the proton-tagged
+transverse variables, but every one of the twenty-six candidates built and unfolded in full is
+rejected by the conditioning of the additional-smearing matrix $A_C$: the criterion is not what
+limits this measurement, and the study is reported as a study, with no rebinning adopted.
+\textbf{(ii)}~$\theta_p$ (four bins) and the pion--proton opening angle $\theta_{\pi p}$ (three bins)
+both meet the unchanged $0.68$ criterion and are now extracted for FHC, RHC and the combined
+configuration, with generator predictions from all four generators; $\theta_{\pi p}$ is the
+best-conditioned new observable of the analysis ($s_{\min}/s_1 = 0.30$--$0.48$). The selection now
+stores the opening angle, which required reprocessing the proton-tagged tree; the reprocess was
+gated on a bit-for-bit comparison of every existing branch. \textbf{(iii)}~The framework supports
+two-dimensional measurements as flattened bins with one slice per outer bin; eight pairs were
+screened and are being extracted. The first results confirm what the one-dimensional study
+already showed: a good migration diagonal does not guarantee a usable $A_C$. The joint FHC$+$RHC
+background fit developed in the same period is documented separately in the control-region note.
+\end{abstract}
+\end{titlepage}
+
+\tableofcontents
+\clearpage
+
+% =============================================================================
+\section{Scope, status and conventions}
+\label{sec:scope}
+% =============================================================================
+
+The signal region is blind: every ``measurement'' here is the per-run Poisson fake data of the
+released throw, and the extractions are closure tests. Three families of configuration are used and
+must not be confused.
+\begin{itemize}\itemsep2pt
+  \item \textbf{Live}: $\theta_p$ and $\theta_{\pi p}$, in \texttt{configs/ccpi1p\_*} with the released
+    naming, extracted into \texttt{processed/} beside the released observables. They use binnings that
+    meet the unchanged $0.68$ criterion.
+  \item \textbf{0.50 study}: \texttt{configs/c50/}, extracted into \texttt{processed/rebuild\_c50/}.
+    Nothing from it is adopted. The directory is deliberately outside the glob of
+    \texttt{norm\_manifest.py}, which audits the release.
+  \item \textbf{2D study}: \texttt{configs/d2/}, extracted into \texttt{processed/rebuild\_2d/}.
+\end{itemize}
+Screening uses the per-run exposure scales and the safe central-value weight of the extraction, and
+the same first/last-edge conventions as the released bin configs. Two criteria appear throughout: the
+column-normalised migration diagonal per true bin (the BNB criterion, $>0.68$) and the conditioning
+of the additional-smearing matrix, $s_{\min}/s_1$ from its singular values, which the analysis note
+already identified as the quantity that decided $\cos\theta_\pi$ and $\theta_{\mu\pi}$.
+
+% =============================================================================
+\section{The 0.50 migration-diagonal study}
+\label{sec:c50}
+% =============================================================================
+
+\subsection{Screening}
+
+\texttt{macros/binning\_screen\_2d.C} evaluates every candidate in one pass over the processed files
+(the earlier \texttt{binning\_screen.C} used four \texttt{TTree::Draw} calls per bin, which does not
+scale to a long candidate list). It reproduces the published pre-screen table exactly for FHC and RHC,
+which is its regression test, and it also handles two-dimensional candidates
+(\S\ref{sec:2d}). For the proton-tagged observables the maximin edge scan of
+\texttt{macros/tki\_binning\_scan.C} was generalised to take the criterion, an observable filter and
+the maximum bin count, and to cover $W$, the proton angles and the opening angle; it reproduces the
+two-bin transverse-kinematic-imbalance numbers of the binning README.
+
+At $0.50$ the following become admissible where $0.68$ refused them (smallest diagonal, FHC / RHC):
+$\cos\theta_\mu$ with 6, 7 or 8 bins ($0.64/0.63$, $0.61/0.61$, $0.60/0.59$); $\theta_\mu$ with 7 or 8
+($0.63/0.62$, $0.61/0.61$); $p_\pi$ with three bins and the extra edge at $0.26$\GeVcc\ ($0.51/0.53$);
+proton-tagged $\delta p_T$ with three ($0.59/0.55$), $\delta\alpha_T$ with three ($0.52/0.50$),
+$W_{\pi p}$ with two at $1.19$\GeVcc\ ($0.56/0.56$); $\cos\theta_p$ with six and $\theta_p$ with seven.
+$p_\mu$ still fails ($0.33/0.31$ released, worse when finer), as do three-bin $p_\pi$ at $0.30$\GeVcc,
+four-bin $p_n$ and $\delta\phi_T$ in RHC. $W_{\rm had}$ in two bins passes even at $0.68$
+($0.71/0.72$) although the released configuration has six.
+
+\subsection{What the full extractions say}
+
+Twenty-six candidates (thirteen binnings $\times$ FHC and RHC) were built and unfolded with the
+released machinery. Table~\ref{tab:c50} gives the result. The conditioning is decisive: of the finer
+binnings only $W_{\rm had}$ (two bins) keeps an $A_C$ with $s_{\min}/s_1$ above $0.5$, and the
+two-bin $W_{\pi p}$ and the four-bin $\cos\theta_p$ in FHC are the only others above $0.1$. Several
+candidates have $s_{\min}/s_1$ numerically zero to three decimals: their $A_C$ maps every model onto
+a single shape, so the extraction cannot be read as a shape measurement, exactly the pathology the
+analysis note documented for $\theta_\mu$. Closure $\chi^2$ values are uniformly small --- which is
+the point: they cannot distinguish these cases, because a rank-deficient $A_C$ makes data and
+prediction agree by construction.
+
+\begin{table}[H]
+  \centering
+  \caption{Candidates admitted by the $0.50$ criterion, built and unfolded in full (fake data).
+    $A_C$ rows: range of the row sums; $s_{\min}/s_1$: conditioning of $A_C$; data stat.: bin-averaged
+    data-statistical term; unc.: range of the per-bin total uncertainty; closure: range of the
+    per-bin ratio to the $A_C$-smeared truth. Rows in bold keep a usable $A_C$.}
+  \label{tab:c50}
+  \scriptsize\setlength{\tabcolsep}{3pt}
+  \begin{tabular}{llccccc@{\hspace{4pt}}c}
+    \toprule
+    Candidate & Config & bins & $A_C$ rows & $s_{\min}/s_1$ & data stat. & unc.\ [\%] & closure \\
+    \midrule
+    $\cos\theta_\mu$ 6 & FHC & 6 & $0.40$--$0.52$ & $0.110$ & $17.0\%$ & $30$--$76$ & $0.80$--$1.21$ \\
+                       & RHC & 6 & $0.09$--$0.44$ & $0.085$ & $15.8\%$ & $31$--$133$ & $0.58$--$1.25$ \\
+    $\cos\theta_\mu$ 7 & FHC & 7 & $0.21$--$0.37$ & $0.024$ & $23.8\%$ & $31$--$143$ & $0.51$--$1.30$ \\
+                       & RHC & 7 & $0.03$--$0.52$ & $0.054$ & $19.3\%$ & $33$--$121$ & $0.71$--$1.17$ \\
+    $\theta_\mu$ 7 & FHC & 7 & $0.47$--$0.68$ & $0.000$ & $11.0\%$ & $25$--$52$ & $1.02$--$1.38$ \\
+                   & RHC & 7 & $0.35$--$0.93$ & $0.001$ & $10.3\%$ & $30$--$38$ & $1.03$--$1.38$ \\
+    $\theta_\mu$ 8 & FHC & 8 & $0.53$--$0.73$ & $0.000$ & $10.0\%$ & $25$--$54$ & $0.87$--$1.36$ \\
+                   & RHC & 8 & $0.16$--$0.76$ & $0.001$ & $13.2\%$ & $28$--$54$ & $0.84$--$1.42$ \\
+    $p_\pi$ 3 & FHC & 3 & $0.53$--$0.91$ & $0.048$ & $14.8\%$ & $39$--$56$ & $0.90$--$0.97$ \\
+              & RHC & 3 & $0.45$--$0.89$ & $0.010$ & $12.7\%$ & $40$--$45$ & $0.97$--$1.02$ \\
+    $\delta p_T$ 3 & FHC & 3 & $0.37$--$0.89$ & $0.001$ & $13.8\%$ & $32$--$37$ & $0.94$--$0.96$ \\
+                   & RHC & 3 & $0.32$--$0.86$ & $0.000$ & $12.0\%$ & $35$--$36$ & $1.04$--$1.12$ \\
+    $\delta\alpha_T$ 3 & FHC & 3 & $0.44$--$0.98$ & $0.029$ & $10.2\%$ & $42$--$52$ & $0.83$--$0.99$ \\
+                       & RHC & 3 & $0.42$--$0.92$ & $0.011$ & $9.8\%$ & $41$--$47$ & $1.00$--$1.17$ \\
+    $W_{\pi p}$ 2 ($1.19$) & FHC & 2 & $0.27$--$0.91$ & $0.264$ & $19.1\%$ & $41$--$72$ & $0.93$--$0.99$ \\
+                           & RHC & 2 & $0.28$--$1.48$ & $0.147$ & $24.1\%$ & $47$--$91$ & $0.73$--$1.00$ \\
+    \textbf{$W_{\rm had}$ 2} & FHC & 2 & $0.80$--$0.90$ & $\mathbf{0.579}$ & $16.3\%$ & $37$--$87$ & $0.80$--$1.03$ \\
+                             & RHC & 2 & $0.76$--$0.86$ & $\mathbf{0.541}$ & $17.1\%$ & $45$--$100$ & $0.78$--$1.05$ \\
+    $\cos\theta_p$ 4 & FHC & 4 & $0.54$--$0.76$ & $0.445$ & $20.6\%$ & $34$--$76$ & $0.66$--$1.08$ \\
+                     & RHC & 4 & $-0.09$--$0.62$ & $0.018$ & $36.2\%$ & $41$--$182$ & $0.43$--$1.41$ \\
+    $\cos\theta_p$ 6 & FHC & 6 & $0.77$--$0.90$ & $0.000$ & $25.6\%$ & $34$--$84$ & $0.54$--$1.06$ \\
+                     & RHC & 6 & $0.43$--$0.78$ & $0.000$ & $24.3\%$ & $38$--$72$ & $0.75$--$1.48$ \\
+    $\theta_p$ 5 & FHC & 5 & $0.59$--$1.14$ & $0.034$ & $13.5\%$ & $33$--$44$ & $0.84$--$1.24$ \\
+                 & RHC & 5 & $-0.03$--$0.60$ & $0.005$ & $24.9\%$ & $39$--$99$ & $0.82$--$1.30$ \\
+    $\theta_p$ 7 & FHC & 7 & $0.61$--$0.98$ & $0.000$ & $16.4\%$ & $34$--$58$ & $0.87$--$1.30$ \\
+                 & RHC & 7 & $0.32$--$0.87$ & $0.000$ & $20.7\%$ & $39$--$60$ & $0.77$--$1.14$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\paragraph{Conclusion.} The $0.68$ criterion is not the binding constraint of this analysis and
+lowering it to $0.50$ buys nothing: the binnings it admits are rejected one level down, by the
+regularised response. No rebinning is proposed. Two by-products are worth keeping: $W_{\rm had}$ in
+two bins is better conditioned than the released six-bin configuration, and the criterion study
+produced the screening tool used for the new observables below.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.92\textwidth]{c50/diag_incl_fhc}
+  \caption{Migration diagonal per true bin for the released inclusive binnings and the finer
+    candidates, FHC; the two criteria are drawn. The RHC version and the proton-tagged and
+    two-dimensional versions are \texttt{c50/diag\_\{incl,1p,2d\}\_\{fhc,rhc\}}.}
+  \label{fig:diag_incl}
+\end{figure}
+
+% =============================================================================
+\section{Proton-tagged angular observables}
+\label{sec:newobs}
+% =============================================================================
+
+\subsection{What was added, and why the opening angle needed a reprocess}
+
+The proton-tagged selection already stored the proton polar angle about the neutrino direction
+($\cos\theta_p$, reconstructed in the beta convention, truth against the per-event neutrino). It did
+not store the pion--proton opening angle $\theta_{\pi p}$, nor the index of the chosen proton, so the
+angle could not be formed offline from the stored quantities. Both are now written by
+\texttt{CC1mu1pi1p}: the reconstructed angle from the two track directions (frame independent, and
+immune to the zero-momentum degeneracy of a scaled vector), the true angle from the leading charged
+pion and the leading proton.
+
+Before committing to the reprocess, the proton choice was replicated offline
+(\texttt{macros/proton\_\allowbreak angle\_\allowbreak friend.C}) --- the lowest-LLR track above threshold, contained, not the
+muon or pion candidate --- and validated against the stored $\cos\theta_p$: identical for all
+$18\,698$ selected events of the fourteen Monte Carlo files. That friend tree also answered what the
+candidate is: on selected \emph{signal} events it is the leading true proton $82\%$ of the time, a
+softer proton $6\%$, and not a proton $13\%$ (on all selected events, background included, $59$,
+$10$ and $31\%$). The wrong-candidate events populate a flat tail in both angles, while the correct
+ones peak within about $0.1$~rad (figure \texttt{c50/resolution\_\allowbreak proton\_\allowbreak angles}).
+
+\paragraph{Reprocess and its gate.} The proton-tagged tree (41 units) and the seven per-run beam-off
+files, which are shared with the inclusive tree and carry both selections, were reprocessed into
+staging directories, and the per-run fake data re-thrown with the same seeds. Promotion was gated on
+\texttt{macros/compare\_reprocess.C}: for every file, all 168 numeric branches of the old tree
+identical entry by entry, the entry count and \texttt{summed\_pot} unchanged, and the new angle equal
+to the friend-tree value on every selected and signal event. All 56 files passed. One needed
+attention: the FHC Run-1 dirt snapshot carries a \texttt{summed\_pot} written in place by
+\texttt{set\_summed\_pot.C}, $1.673920\times10^{21}$ against the native $1.6739168\times10^{21}$; the
+established value was carried into the new file so that the normalisation cache keys are unchanged.
+The old trees are kept as \texttt{w\_pre\_thpipr} and \texttt{ext\_perrun\_pre\_thpipr}.
+
+\subsection{Binning}
+
+The maximin scan (FHC Runs 1, 2, 4; $\geq400$ events per bin) gives the largest bin count at each
+criterion; the weighted screen then checks it over FHC and RHC at the released exposure
+(Table~\ref{tab:newbins}). $\theta_p$ supports one bin more than $\cos\theta_p$ at both criteria, so
+the angle rather than its cosine is measured, matching the released $\theta_\mu$ convention. Both
+adopted binnings meet $0.68$; the RHC $\theta_p$ value sits exactly at it, as the released
+$\cos\theta_\mu$ does.
+
+\begin{table}[H]
+  \centering
+  \caption{Proton-tagged angular binnings. Scan: worst diagonal of the maximin scheme at that bin
+    count (unweighted, FHC Runs 1, 2, 4). Screen: smallest diagonal FHC / RHC with the per-run
+    weighting. Adopted binnings in bold.}
+  \label{tab:newbins}
+  \small
+  \begin{tabular}{llccl}
+    \toprule
+    Observable & bins & scan & screen FHC / RHC & edges \\
+    \midrule
+    \textbf{$\theta_p$} & \textbf{4} & $\mathbf{72.6\%}$ & $\mathbf{0.73/0.68}$ & $0$, $0.597$, $0.942$, $1.287$, $\pi$ \\
+    $\theta_p$ & 5 & $68.0\%$ & $0.67/0.64$ & $0$, $0.377$, $0.691$, $0.942$, $1.225$, $\pi$ \\
+    $\theta_p$ & 7 & $57.1\%$ & $0.56/0.55$ & (0.50 criterion) \\
+    $\cos\theta_p$ & 4 & $73.2\%$ & $0.73/0.66$ & $-1$, $0.275$, $0.575$, $0.825$, $1$ \\
+    $\cos\theta_p$ & 6 & $57.2\%$ & $0.58/0.55$ & (0.50 criterion) \\
+    \textbf{$\theta_{\pi p}$} & \textbf{3} & $\mathbf{75.8\%}$ & $\mathbf{0.77/0.75}$ & $0$, $1.193$, $2.010$, $\pi$ \\
+    $\theta_{\pi p}$ & 4 & $67.9\%$ & --- & $0$, $0.973$, $1.476$, $2.010$, $\pi$ \\
+    $\theta_{\pi p}$ & 7 & $53.9\%$ & $0.52/0.53$ & (0.50 criterion) \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Generator predictions}
+
+The four generator predictions are produced in \texttt{generator\_predictions/gen2d/}, which holds
+copies of the released readers (GENIE gst, GiBUU \texttt{FinalEvents}, NuWro and NEUT in their
+containers) with the new observables added through one shared header, so the released chain is
+untouched. Two checks are built in. Every histogram the copies also write is reproduced bit-for-bit
+from the released per-flavour files, for all four generators; and the generic combiner reproduces all
+sixty released inclusive FTE histograms (four generators $\times$ FHC, RHC, combined $\times$ five
+observables) exactly. Unlike the released proton-tagged predictions, which exist for FHC only, the new
+ones are produced for FHC, RHC and the combined configuration.
+\texttt{scripts/check\_ext\_bins.py} checks that the generator edges and the configuration edges agree
+and that each prediction has as many bins as its configuration.
+
+\subsection{Extractions}
+
+\begin{table}[H]
+  \centering
+  \caption{Extractions of the new observables (fake data). Columns as in Table~\ref{tab:c50};
+    $\chi^2$ is the closure against the $A_C$-smeared truth.}
+  \label{tab:newobs_extract}
+  \small
+  \begin{tabular}{llcccccc}
+    \toprule
+    Observable & Config & bins & $A_C$ rows & $s_{\min}/s_1$ & data stat. & unc.\ [\%] & closure $\chi^2$/ndf \\
+    \midrule
+    $\theta_p$ & FHC & 4 & $0.58$--$1.30$ & $0.082$ & $12.3\%$ & $35$--$45$ & $0.91/4$ \\
+               & RHC & 4 & $0.21$--$1.00$ & $0.002$ & $12.9\%$ & $36$--$44$ & $0.49/4$ \\
+               & COMB & 4 & $0.60$--$1.24$ & $0.125$ & $9.7\%$ & $32$--$50$ & $0.76/4$ \\
+    $\theta_{\pi p}$ & FHC & 3 & $0.57$--$0.65$ & $0.480$ & $20.1\%$ & $38$--$93$ & $0.16/3$ \\
+                     & RHC & 3 & $0.59$--$0.73$ & $0.376$ & $24.5\%$ & $43$--$187$ & $0.12/3$ \\
+                     & COMB & 3 & $0.43$--$0.49$ & $0.304$ & $14.3\%$ & $40$--$89$ & $0.06/3$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+$\theta_{\pi p}$ is the best-conditioned observable of the proton-tagged programme: its
+$s_{\min}/s_1$ of $0.30$--$0.48$ is above everything in Table~\ref{tab:c50} except two-bin
+$W_{\rm had}$, and above the released $\cos\theta_\pi$ ($0.27/0.24$). Its price is the last bin, whose
+total uncertainty reaches $93\%$ (FHC) and $187\%$ (RHC). $\theta_p$ unfolds well in FHC and the
+combined configuration but is nearly rank-deficient in RHC ($0.002$), where its diagonal sat exactly
+at the criterion: the RHC $\theta_p$ curves should not be read as a shape measurement.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{bkgfit/newobs_xsec}
+  \caption{Extracted $\mathrm{d}\sigma/\mathrm{d}\theta_p$ and
+    $\mathrm{d}\sigma/\mathrm{d}\theta_{\pi p}$ (fake data; the signal region is blind) against the
+    four generators and the fake-data truth. Integrated cross sections in the legends,
+    $10^{-38}$~cm$^2$/Ar, $A_C$-smeared.}
+  \label{fig:newobs_xsec}
+\end{figure}
+
+Both distributions are strongly forward peaked: the top $\theta_p$ bin, more than half the angular
+range, carries about a tenth of the first bin's $\mathrm{d}\sigma/\mathrm{d}\theta$, and the pion and
+proton are separated by less than $2$~rad in the bulk of the events. The generator ordering is the
+familiar one --- GENIE lowest, NEUT highest, GiBUU and NuWro between, a spread of about $1.6$ in the
+integral --- and the shapes are similar, so these observables discriminate mainly through
+normalisation, with NEUT's relative excess in the middle $\theta_{\pi p}$ bin the exception.
+
+% =============================================================================
+\section{Two-dimensional cross sections}
+\label{sec:2d}
+% =============================================================================
+
+\subsection{What the framework already supports}
+
+A double-differential measurement needs no new unfolding machinery. UniverseMaker bins are arbitrary
+selection strings, so a two-dimensional binning is a flat list of bins; \texttt{SliceBinning} carries
+slices with an ``other variable'' held in a fixed range, and \texttt{UnfolderNuMI} loops over the
+slices and divides by the width of the other variable, so each slice is a differential cross section
+in the inner variable. Two constraints were found and respected: the analysis bins of a slice must be
+contiguous, because the per-slice $A_C$ block is taken as a range, so the bin configuration is written
+slice by slice; and the closure sidecar was dumped only for slice~0, which for a two-dimensional
+configuration is the first outer bin rather than the whole measurement, so \texttt{UnfolderNuMI} now
+also dumps the ``bin number'' slice as \texttt{closure\_hists\_all\_*} when a configuration has more
+than one physical slice (one-dimensional output is unchanged). Configurations are generated by
+\texttt{scripts/make\_bin\_configs.py}, which reproduces the hand-written one-dimensional candidate
+configurations byte for byte as its regression test.
+
+\subsection{Screening}
+
+Eight pairs were screened with \texttt{binning\_screen\_2d.C}, which for a two-dimensional candidate
+also splits the off-diagonal migration into leakage within the outer slice (X) and between slices (Y).
+Table~\ref{tab:2dscreen} gives the best grid of each pair. The Y-leakage is what decides: the pairs
+built on $\delta p_T$ lose $20$--$30\%$ of events across the outer bin and those built on $W_{\pi p}$
+up to $60\%$, which is why every $W_{\pi p}$ pair fails both criteria. Expected event counts are the
+second constraint: $\cos\theta_\pi\times\theta_{\mu\pi}$ has a bin with four expected events.
+
+\begin{table}[H]
+  \centering
+  \caption{Two-dimensional pairs (inner $\times$ outer), best grid of each: smallest diagonal over the
+    flattened true bins, mean leakage within and between outer slices, and the expected selected
+    signal of the thinnest bin at data exposure.}
+  \label{tab:2dscreen}
+  \small
+  \begin{tabular}{llcccc}
+    \toprule
+    Pair & grid & min.\ diagonal FHC / RHC & X-leak & Y-leak & thinnest bin \\
+    \midrule
+    $\cos\theta_\pi\times\cos\theta_\mu$ & $2\times3$ & $0.69/0.68$ & $3.4\%$ & $12.5\%$ & 25 \\
+    $\cos\theta_\mu\times p_\mu$ & $2\times2$ & $0.70/0.68$ & $6.1\%$ & $11.5\%$ & 69 \\
+    $\cos\theta_\pi\times\theta_{\mu\pi}$ & $2\times3$ & $0.66/0.60$ & $5.7\%$ & $9.1\%$ & 4 \\
+    $\cos\theta_\pi\times p_\pi$ & $2\times2$ & $0.53/0.51$ & $5.4\%$ & $17.2\%$ & 34 \\
+    $\theta_p\times\delta p_T$ & $2\times2$ & $0.53/0.52$ & $8.4\%$ & $25.4\%$ & 63 \\
+    $\theta_{\pi p}\times\delta p_T$ & $2\times2$ & $0.56/0.55$ & $10.7\%$ & $25.4\%$ & 58 \\
+    $\theta_p\times W_{\pi p}$ & $2\times2$ & $0.40/0.39$ & $8.8\%$ & $39.4\%$ & 17 \\
+    $\theta_{\pi p}\times W_{\pi p}$ & $2\times2$ & $0.21/0.20$ & $9.7\%$ & $39.4\%$ & 12 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Extractions}
+
+All eight pairs are being extracted for FHC, RHC and the combined configuration, with generator
+predictions produced as flattened histograms in the same bin order. At the time of writing the first
+three are complete and already repeat the lesson of \S\ref{sec:c50}:
+$\cos\theta_\pi\times\cos\theta_\mu$ gives $s_{\min}/s_1=0.245$ (FHC) and $0.315$ (RHC) with a
+data-statistical term of $29$ and $25\%$, while $\cos\theta_\mu\times p_\mu$ --- the pair with the
+best migration diagonals of the set --- comes out at $0.002$ in FHC, rank-deficient. A good diagonal
+does not imply a usable regularised response. The completed table will be added when the array
+finishes; the evaluation is \texttt{report/tools/extract\_eval.py}, which reads the multi-slice
+sidecar where one exists.
+
+% =============================================================================
+\section{Reproduction}
+\label{sec:repro}
+% =============================================================================
+
+\begin{small}
+\begin{verbatim}
+# screening (single pass, 1D and 2D; reproduces the published pre-screen exactly)
+root -l -b -q 'macros/binning_screen_2d.C+("fhc","incl")'      # rhc; incl | 1p
+root -l -b -q 'macros/tki_binning_scan.C("/data/uboone/processed/w",\
+                     400,0.68,"thetap,thpipr",10)'
+# theta_pipr without reprocessing (friend trees, for screening only)
+logs/c50/run_pafriend.sh
+# configurations
+python3 scripts/make_bin_configs.py c50_candidates      # configs/c50
+python3 scripts/make_bin_configs.py newobs_candidates   # configs/ + configs/d2
+python3 scripts/check_ext_bins.py                       # generator vs configuration edges
+# generator predictions (verifies the released histograms bit-for-bit)
+generator_predictions/gen2d/regen_ext.sh
+# reprocess with the opening angle, its gate, and promotion
+./reprocess_thpipr.sh ; PROMOTE=1 ./reprocess_thpipr.sh
+# extractions
+sbatch --array=0-25%4 --export=ALL,REPO=$PWD,\
+       MANIFEST=$PWD/slurm/c50_manifest.list    slurm/slurm_c50.sbatch
+sbatch --array=0-29%6 --export=ALL,REPO=$PWD,\
+       MANIFEST=$PWD/slurm/newobs_manifest.list slurm/slurm_extract.sbatch
+# evaluation and figures
+python3 report/tools/binning_eval_c50.py   # 0.50 candidates
+python3 report/tools/extract_eval.py       # new observables and 2D
+python3 report/tools/c50_figures.py
+python3 report/tools/newobs_xsec_fig.py
+\end{verbatim}
+\end{small}
+
+% =============================================================================
+\section{Open items}
+\label{sec:open}
+% =============================================================================
+
+\begin{enumerate}[itemsep=3pt]
+  \item The two-dimensional extractions are running; their conditioning decides whether any pair is
+    worth proposing as a released measurement. On the evidence so far only
+    $\cos\theta_\pi\times\cos\theta_\mu$ is a candidate, and its data-statistical term is large.
+  \item $\theta_p$ in RHC is rank-deficient. Either it is quoted for FHC and the combined
+    configuration only, or the RHC binning is coarsened to three bins, which has not been screened.
+  \item Two-bin $W_{\rm had}$ is better conditioned than the released six-bin configuration; a
+    decision on replacing it is outstanding.
+  \item The proton candidate is the leading true proton only $82\%$ of the time on signal events, and
+    the truth-level observables use the leading proton. The effect is inside the response, but an
+    inverted-proton-PID control region --- already a prerequisite for the signal region --- is what
+    would constrain it.
+  \item The released analysis note does not yet mention $\theta_p$ or $\theta_{\pi p}$; the binning
+    appendix and the observable tables need entries once the decisions above are taken.
+\end{enumerate}
+
+\end{document}
