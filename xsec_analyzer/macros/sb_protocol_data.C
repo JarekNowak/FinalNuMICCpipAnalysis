@@ -24,6 +24,7 @@
 #include <string>
 #include <cmath>
 #include "TMatrixD.h"
+#include "TParameter.h"
 #include "TDecompSVD.h"
 struct Src { std::string file; double scale; };
 static void add_ext(std::vector<Src>& v, const char* m){
@@ -36,8 +37,15 @@ static void add_ext(std::vector<Src>& v, const char* m){
   else { v.push_back({std::string(E)+R1,OCCX*1458253./G1}); v.push_back({std::string(E)+R3B,OCCX*10349610./G3}); for(auto f:R4) v.push_back({std::string(E)+f,OCCX*6304167./G4}); }
 }
 struct Var { int reg; std::string name, br; std::vector<double> edges; bool overflowTop; };
-void sb_protocol_data(){
-  const char* P="/data/uboone/processed/sb/"; const char* DV="/data/uboone/processed/";
+// Corrections of 2026-09-16 (both default ON; sb_protocol_data(false,false) reproduces cr_data_note of 2026-09-09):
+//  current_mc  : read the sideband MC, detector variations, beam-off and dirt from sb_pi0/ (reprocessed 2026-09-06
+//                with the current selection). sb/ (2026-08-11) predates the beam-frame correction and stores
+//                cos(theta_mu) about detector z while the beam-on skim stores the beam-frame angle.
+//  potnorm_dv  : scale each detector-variation sample by POT(CV)/POT(knob). The knob samples do not have the CV
+//                sample's POT (e.g. WMX 0.913 in FHC); unscaled ratios carried that as a spurious -8% "shift".
+void sb_protocol_data(bool current_mc=true, bool potnorm_dv=true){
+  const char* P= current_mc ? "/data/uboone/processed/sb_pi0/" : "/data/uboone/processed/sb/"; const char* DV= current_mc ? "/data/uboone/processed/sb_pi0/" : "/data/uboone/processed/";
+  printf("sb_protocol_data: MC from %s, detector variations %s\n", P, potnorm_dv ? "POT-normalised" : "unscaled");
   const char* B="/data/uboone/processed/beamon_skim/";
   const int NM=2, NR=4; const char* modes[NM]={"fhc","rhc"}; const char* dvtag[NM]={"run4fhc","run4rhc"};
   const char* rb[NR]={"CC1mu1piXp_sb_cc0pi","CC1mu1piXp_sb_multipi","CC1mu1piXp_sb_pi0","CC1mu1piXp_sb_cosmic"}; const char* rn[NR]={"CC0pi","multipi","pi0","cosmic"};
@@ -99,8 +107,10 @@ void sb_protocol_data(){
     double dummy2[NK]={0}; std::vector<double> dh2(NB,0); for(auto& d:data){ sb_guard_data(d); loop(d.c_str(),1.0,false,false,m,dataT,dummy2,dataH[m],dh2); }
     // detector variations: CV + 8 knobs (unscaled; only ratios are used)
     double kT[NK]={0}, k2[NK]={0}; std::vector<double> kH(NB,0), kH2(NB,0);
+    auto potof=[](const char* fn){ TFile ff(fn); auto* pp=dynamic_cast<TParameter<float>*>(ff.Get("summed_pot")); return pp? (double)pp->GetVal() : 1.0; };
+    double potCV=potof(Form("%sxsec-ana-detvar_%s_CV.root",DV,dvtag[m]));
     loop(Form("%sxsec-ana-detvar_%s_CV.root",DV,dvtag[m]),1.0,true,false,m,knCVT,k2,knCVH[m],kH2);
-    for(int kk=0;kk<8;kk++){ std::fill(kH.begin(),kH.end(),0.); std::fill(kH2.begin(),kH2.end(),0.); double t1[NK]={0},t2[NK]={0}; loop(Form("%sxsec-ana-detvar_%s_%s.root",DV,dvtag[m],knobs[kk]),1.0,true,false,m,t1,t2,kH,kH2);
+    for(int kk=0;kk<8;kk++){ std::fill(kH.begin(),kH.end(),0.); std::fill(kH2.begin(),kH2.end(),0.); double t1[NK]={0},t2[NK]={0}; double skn = potnorm_dv ? potCV/potof(Form("%sxsec-ana-detvar_%s_%s.root",DV,dvtag[m],knobs[kk])) : 1.0; loop(Form("%sxsec-ana-detvar_%s_%s.root",DV,dvtag[m],knobs[kk]),skn,true,false,m,t1,t2,kH,kH2);
       for(int r=0;r<NR;r++) knT[kk][m*NR+r]=t1[m*NR+r]; knH[kk][m]=kH; }
   }
   // ---- pseudo-data: neutrino throw (files) + Poisson throws of beam-off and dirt (seed as sideband_compare fakestack)

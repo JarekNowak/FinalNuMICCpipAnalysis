@@ -17,7 +17,9 @@
 struct Src { std::string file; double scale; };
 void sb_plots_data(const char* mode="fhc", bool compact=false){
   gStyle->SetOptStat(0);
-  const char* P="/data/uboone/processed/sb/";           // MC with the region flags
+  // sb_pi0/ (2026-09-06, current selection). sb/ (2026-08-11) predates the beam-frame correction: its cos(theta_mu)
+  // is about detector z while the beam-on skim is beam-frame (the 2026-09-09 muon-angle "shape failure").
+  const char* P="/data/uboone/processed/sb_pi0/";       // MC with the region flags
   const char* B="/data/uboone/processed/beamon_skim/";  // beam-on control-region skim
   const char* E="/data/uboone/processed/ext_perrun/xsec-ana-";
   const char* R1="neutrinoselection_filt_run1_beamoff.root", *R3B="neutrinoselection_filt_run3b_beamoff.root";

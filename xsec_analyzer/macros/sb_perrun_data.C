@@ -6,7 +6,7 @@
 #include <string>
 struct Src { std::string file; double scale; };
 void sb_perrun_data(){
-  const char* P="/data/uboone/processed/sb/"; const char* B="/data/uboone/processed/beamon_skim/";
+  const char* P="/data/uboone/processed/sb_pi0/"; /* current selection; sb/ predates the beam-frame fix (totals identical) */ const char* B="/data/uboone/processed/beamon_skim/";
   const char* E="/data/uboone/processed/ext_perrun/xsec-ana-";
   const char* R1="neutrinoselection_filt_run1_beamoff.root", *R3B="neutrinoselection_filt_run3b_beamoff.root";
   const char* R4[4]={"numi_pelee_ntuple_beam_off_run4a_rhc_ana.root","numi_pelee_ntuple_beam_off_run4b_rhc_ana.root","numi_pelee_ntuple_beam_off_run4c_fhc_ana.root","numi_pelee_ntuple_beam_off_run4d_fhc_ana.root"};

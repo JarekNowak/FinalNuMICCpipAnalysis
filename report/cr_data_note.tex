@@ -28,7 +28,7 @@ Production on Argon in the NuMI Beam\par}
 \vspace{0.8cm}
 {\large First results with real data; the signal region remains blind\par}
 \vspace{0.5cm}
-{\normalsize 2026-09-09\par}
+{\normalsize 2026-09-09, updated 2026-09-16\par}
 \vspace{1.5cm}
 {\large Ishanee Pophale, Jarek Nowak\par}
 \vspace{0.5cm}
@@ -36,6 +36,28 @@ Production on Argon in the NuMI Beam\par}
 \vspace{2cm}
 
 \begin{abstract}
+\noindent\fbox{\parbox{0.97\linewidth}{\textbf{Update 2026-09-16.} Two defects in the comparison below were found
+while building the joint FHC+RHC background fit (\S\ref{sec:corrections}, \S\ref{sec:jointfit}); the statements
+they affect are marked \emph{superseded} where they occur.
+(i)~\textbf{The sideband Monte Carlo was stale.} It was processed on 2026-08-11, before the beam-frame correction
+of the muon angle, and stores $\cos\theta_\mu$ about the detector $z$ axis while the beam-on skim stores the
+beam-frame angle. \textbf{The muon-angle shape failures reported below are an artefact of that mismatch}: with the
+current Monte Carlo all $\cos\theta_\mu$ shape tests pass ($p=0.24$--$0.98$). The $p_\mu$ shape failures in the
+$\pi^0$ region and in RHC CC$0\pi$ remain.
+(ii)~\textbf{The detector-variation term of the control-region covariance was inflated about tenfold.} The knob
+samples do not have the POT of the detector-variation central-value sample (e.g.\ $0.913$ for WMX in FHC); the
+sideband macros compared unscaled counts. Normalised, the detector term on the CC$0\pi$ and $\pi^0$ totals is
+$1$--$2\%$, not $20\%$. With the corrected covariance \textbf{the frozen global test fails}, $\chi^2=69.5/8$, and
+it passes once FHC Run~1 is set aside ($5.0/8$, $p=0.76$). A free FHC Run-1 exposure factor fits
+$f=0.520\pm0.020$ with $\chi^2=16.2/17$, in line with the exposure hypothesis of \S\ref{sec:perrun}.
+The statistical part of the detector variations is removed with an event-matched bootstrap
+(\S\ref{sec:detvar_pot}). A joint FHC+RHC fit of the background classes finds no normalisation correction
+warranted (CC$0\pi$ $0.984\pm0.191$ without FHC Run~1) and FHC and RHC consistent; its projected benefit and its
+limits are in \S\ref{sec:jointfit}. \emph{All of this is post-inspection work on already-opened regions; nothing
+here is a frozen-procedure response or a release input.}}}
+\medskip
+
+\noindent\textit{Original abstract (2026-09-09).}
 The four inclusive control regions of the $\mathrm{CC}\,1\mu1\pi Xp$ NuMI analysis have
 been opened on beam-on data. This note reports what was processed, the yields and
 distributions in each region, and the statistics of the frozen comparison procedure
@@ -196,7 +218,8 @@ which here belong to the prediction alone.
   \includegraphics[width=\textwidth]{sideband_data_fhc}
   \caption{FHC control regions with beam-on data (Runs 1, 4, 5). Rows are the CC$0\pi$,
     multi-$\pi$, $\pi^0$ and cosmic regions; the distributions are the frozen ones. Points
-    are beam-on data with Poisson errors; the stack is the prediction.}
+    are beam-on data with Poisson errors; the stack is the prediction. Regenerated 2026-09-16 from the current
+    sideband Monte Carlo (\S\ref{sec:stale_mc}).}
   \label{fig:data_fhc}
 \end{figure}
 
@@ -204,7 +227,7 @@ which here belong to the prediction alone.
   \centering
   \includegraphics[width=\textwidth]{sideband_data_rhc}
   \caption{RHC control regions with beam-on data (Runs 1, 3, 4). Same layout as
-    Fig.~\ref{fig:data_fhc}.}
+    Fig.~\ref{fig:data_fhc}; regenerated 2026-09-16 from the current sideband Monte Carlo.}
   \label{fig:data_rhc}
 \end{figure}
 
@@ -337,7 +360,8 @@ $3.14$ and RHC cosmic $2.21$.
   \caption{Normalisation-marginalised shape tests of the frozen distributions. The overall
     normalisation of each distribution is projected out before the $\chi^2$ is formed, so
     these are insensitive to the offsets of \S\ref{sec:perrun}. Entries with $p<0.01$ in
-    bold.}
+    bold. \textbf{Superseded 2026-09-16}: the prediction used here came from the stale sideband Monte Carlo
+    (\S\ref{sec:stale_mc}); corrected values in Table~\ref{tab:protocol_corrected}.}
   \label{tab:shape}
   \small
   \begin{tabular}{llrr|llrr}
@@ -359,7 +383,9 @@ $3.14$ and RHC cosmic $2.21$.
   \end{tabular}
 \end{table}
 
-\paragraph{Shape: the muon angle fails, and it is not the normalisation offset.}
+\paragraph{Shape: the muon angle fails, and it is not the normalisation offset.} \textbf{\emph{Superseded
+2026-09-16: the muon-angle failures are an artefact of the stale sideband Monte Carlo (\S\ref{sec:stale_mc});
+the corrected tests are in Table~\ref{tab:protocol_corrected}.}}
 The shape tests project the overall normalisation out, so they are blind to everything
 \S\ref{sec:perrun} is about. Six of the twenty-two fail at $p<0.01$, and they are not
 scattered: they are the muon momentum and, far more strongly, the muon angle in the two
@@ -389,7 +415,9 @@ Four things bound how far this can be taken.
     CC$1\pi^\pm$ measurement also found every tested generator above the data.
 \end{itemize}
 
-\paragraph{Procedural consequence.}
+\paragraph{Procedural consequence.} \emph{(Superseded 2026-09-16 for the muon angle; the $p_\mu$ failures of
+the $\pi^0$ region and of RHC CC$0\pi$ survive the correction, so the conclusion on eligibility for a fitted
+correction is unchanged.)}
 Under the frozen procedure a fitted normalisation correction is permitted only for a
 region whose shape test passes, so that the discrepancy is consistent with a pure
 normalisation shift. On these numbers neither CC$0\pi$ nor $\pi^0$ qualifies: both fail
@@ -399,6 +427,417 @@ tree points instead at the added-uncertainty branch or at a model revision with 
 approval. That conclusion should be revisited once the exposure questions of
 \S\ref{sec:perrun} are closed and the tests are repeated.
 
+
+
+% =============================================================================
+\section{Corrections found on 2026-09-16}
+\label{sec:corrections}
+% =============================================================================
+
+Both defects were found while building the templates of the joint background fit of \S\ref{sec:jointfit}, whose
+first version reproduced the frozen statistics exactly --- including their failures --- and so inherited them.
+
+\subsection{The sideband Monte Carlo predates the beam-frame correction}
+\label{sec:stale_mc}
+
+The reconstructed muon angle of the NuMI analysis is measured about the neutrino direction, approximated by the
+vector from the NuMI target to the reconstructed vertex; before 2026-08-19 it was measured about the detector $z$
+axis, $28^\circ$ away. The sideband-instrumented Monte Carlo used for every figure and table of this note
+(\texttt{processed/sb/}) was produced on 2026-08-11. Recomputing the angle from the stored track direction on
+3\,000 CC$0\pi$ events of each file settles which convention each file carries (Table~\ref{tab:stale_mc}): the
+sideband Monte Carlo stores the detector-frame angle, the beam-on skim and every current Monte Carlo tree the
+beam-frame angle. The totals are unaffected --- the region flags do not depend on the angle convention --- so the
+yields, the per-run table and the global normalisation test are unchanged by this defect; every $\cos\theta_\mu$
+distribution and shape test is not.
+
+\begin{table}[H]
+  \centering
+  \caption{Left: median $|\cos\theta_\mu^{\rm stored}-\cos\theta_\mu^{\rm recomputed}|$ for the two conventions.
+    Right: data over prediction in the CC$0\pi$ region, FHC Runs~4+5, in bins of reconstructed $\cos\theta_\mu$
+    (edges $-1,0,0.45,0.65,0.8,0.9,0.95,1$), with the prediction from the stale and from the current Monte Carlo,
+    and with the angle recomputed in the detector frame for both (identical by construction).}
+  \label{tab:stale_mc}
+  \small
+  \begin{tabular}{lcc}
+    \toprule
+    File & vs.\ beam frame & vs.\ detector $z$ \\
+    \midrule
+    \texttt{sb/} (2026-08-11) & $0.155$ & $0.000$ \\
+    \texttt{processed/} (2026-08-19) & $0.000$ & $0.155$ \\
+    \texttt{sb\_pi0/} (2026-09-06) & $0.000$ & $0.154$ \\
+    beam-on skim (2026-09-09) & $0.000$ & $0.163$ \\
+    \bottomrule
+  \end{tabular}\hfill
+  \begin{tabular}{lccccccc}
+    \toprule
+    & \multicolumn{7}{c}{$\cos\theta_\mu$ bin} \\
+    Prediction & 1 & 2 & 3 & 4 & 5 & 6 & 7 \\
+    \midrule
+    \texttt{sb/}, beam frame & 1.33 & 1.09 & 0.73 & 0.71 & 1.00 & 1.28 & 2.22 \\
+    \texttt{sb\_pi0/}, beam frame & 1.34 & 1.10 & 1.19 & 1.18 & 1.21 & 1.13 & 1.13 \\
+    detector frame & 1.38 & 1.38 & 1.21 & 1.12 & 1.07 & 1.10 & 1.24 \\
+    \midrule
+    \multicolumn{8}{l}{$p_\mu>0.75$\GeVc} \\
+    \texttt{sb/}, beam frame & 1.13 & 0.38 & 0.22 & 0.36 & 0.67 & 1.15 & 2.46 \\
+    \texttt{sb\_pi0/}, beam frame & 1.26 & 0.89 & 0.80 & 0.96 & 1.03 & 0.98 & 1.04 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The swing of the stale comparison from $0.22$ to $2.46$ disappears with a consistent convention: the current
+prediction is flat at the $1.10$--$1.34$ offset of \S\ref{sec:perrun}. All sideband macros now read
+\texttt{processed/sb\_pi0/} (reprocessed 2026-09-06 with the current selection; it also carries the Run-4
+detector-variation samples, the per-run beam-off and the dirt). Figures~\ref{fig:data_fhc} and~\ref{fig:data_rhc}
+have been regenerated from it; the originals are kept as \texttt{sideband\_data\_*\_sb20260811.pdf}.
+
+\subsection{Detector variations: POT normalisation and the statistical part}
+\label{sec:detvar_pot}
+
+The sideband macros formed the detector-variation shifts as ratios of unscaled event counts, on the grounds that
+``the POT scale cancels in every ratio''. It does for a transfer factor $N^{\rm SR}/N^{\rm CR}$ within one sample,
+so the transfer-factor uncertainties of the analysis note stand; it does not for a knob-to-central-value ratio,
+because the knob samples were not produced with the central value's POT (Table~\ref{tab:detvar}). The
+cross-section extraction normalises by \texttt{summed\_pot} and is not affected.
+
+\begin{table}[H]
+  \centering
+  \caption{FHC Run-4 detector variations: POT of each knob sample relative to the central-value sample, and the
+    shift of the region totals (\%) as unscaled count ratios (u) and POT-normalised with the event-matched
+    bootstrap noise (n). The RHC samples show the same pattern with POT ratios of $0.950$--$1.012$.}
+  \label{tab:detvar}
+  \small
+  \begin{tabular}{lcrrrrrr}
+    \toprule
+    & & \multicolumn{2}{c}{CC$0\pi$} & \multicolumn{2}{c}{$\pi^0$} & \multicolumn{2}{c}{signal region} \\
+    Knob & POT ratio & u & n & u & n & u & n \\
+    \midrule
+    LYdown    & 0.926 & $-8.1$ & $-0.8\pm0.3$ & $-7.6$ & $-0.2\pm0.3$ & $-7.0$ & $+0.5\pm0.6$ \\
+    LYrayl    & 0.916 & $-8.1$ & $+0.4\pm0.3$ & $-8.0$ & $+0.4\pm0.3$ & $-7.1$ & $+1.4\pm0.5$ \\
+    Recomb2   & 1.039 & $+4.4$ & $+0.8\pm0.4$ & $+3.2$ & $-0.1\pm0.5$ & $-3.2$ & $-6.8\pm0.9$ \\
+    SCE       & 0.999 & $+1.5$ & $+1.7\pm0.5$ & $-0.7$ & $-0.6\pm0.6$ & $-0.5$ & $-0.4\pm1.2$ \\
+    WMAngleXZ & 0.907 & $-9.6$ & $-0.4\pm0.4$ & $-9.2$ & $+0.0\pm0.5$ & $-6.8$ & $+2.7\pm0.9$ \\
+    WMAngleYZ & 0.911 & $-9.3$ & $-0.5\pm0.4$ & $-9.0$ & $-0.3\pm0.5$ & $-6.6$ & $+2.5\pm1.0$ \\
+    WMX       & 0.913 & $-8.5$ & $+0.3\pm0.4$ & $-9.7$ & $-0.9\pm0.5$ & $-12.1$ & $-3.7\pm1.0$ \\
+    WMYZ      & 0.917 & $-8.5$ & $-0.3\pm0.4$ & $-9.1$ & $-0.7\pm0.5$ & $-9.1$ & $-0.9\pm0.9$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\paragraph{Removing the statistical part.} A knob-minus-central-value difference also carries the statistical
+fluctuation of the finite samples, which a covariance built from the shifts counts as detector uncertainty. The
+knob samples are re-simulations of the \emph{same} generated events: matching on the true neutrino energy and
+vertex pairs $96.8$--$97.0\%$ of the FHC knob events with central-value events ($94.1\%$ for Recomb2) and
+$97.6$--$98.1\%$ in RHC. The statistical noise of the difference therefore comes only from events that migrate
+between bins and from the unmatched few per cent. It is estimated with a Poisson bootstrap in which every
+generated event receives one Poisson(1) weight shared by its central-value and knob copies (300 replicas):
+\begin{gather}
+  f_{k,i}=\frac{N^{k}_{i}\,{\rm POT}_{\rm CV}/{\rm POT}_{k}-N^{\rm CV}_{i}}{N^{\rm CV}_{i}},\qquad
+  C_k=\mathrm{Cov}_{\rm bootstrap}(f_k),\\
+  V_{{\rm det},ij}=\Big[\textstyle\sum_k \big(f_k f_k^{\mathsf T}-C_k\big)\Big]_{{\rm PSD},\,ij}\,\mu_i\,\mu_j,
+\end{gather}
+since $\mathrm{E}[f f^{\mathsf T}]=\varphi\varphi^{\mathsf T}+C$ for true shifts $\varphi$; the sum is projected
+onto the positive semi-definite cone by eigenvalue clipping. On the CC$0\pi$ total the bootstrap noise is $0.3\%$
+against $0.9\%$ for independent samples. On region totals the subtraction is a small correction; on
+finely binned distributions it is not: in the $(\cos\theta_\mu\times p_\mu)$ bins of \S\ref{sec:jointfit} the
+median quadrature shift is $8.3\%$ (FHC), of which $7.3\%$ is statistical, leaving $3.9\%$
+(Fig.~\ref{fig:detvar_matched}). The resulting detector term is $1.9\%$ on the FHC CC$0\pi$ total ($20.2\%$
+unscaled), $0.8\%$ on $\pi^0$ ($20.1\%$), $6.5\%$ on cosmic ($21.7\%$) and $8.3\%$ in the signal region ($21.0\%$);
+in RHC $2.1$, $1.8$, $7.0$ and $8.5\%$ (unscaled $8.4$, $7.2$, $30.9$, $15.4\%$).
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{bkgfit/detvar_matched}
+  \caption{Left: knob shifts of the region totals, unscaled (crosses) and POT-normalised with the bootstrap noise
+    (points). Right: quadrature over the eight knobs per $(\cos\theta_\mu\times p_\mu)$ bin of the CC$0\pi$ and
+    $\pi^0$ regions: unscaled, POT-normalised, its statistical noise, and the noise-subtracted estimate.}
+  \label{fig:detvar_matched}
+\end{figure}
+
+\subsection{The frozen procedure with corrected inputs}
+\label{sec:protocol_corrected}
+
+\texttt{macros/sb\_protocol\_data.C} now takes two switches, current Monte Carlo and POT-normalised detector
+variations, both on by default; with both off it reproduces Tables~\ref{tab:pulls} and~\ref{tab:shape} exactly.
+Its definitions are unchanged (multisim families and the eight knobs as unisims; the event-matched noise
+subtraction is not part of it).
+
+\begin{table}[H]
+  \centering
+  \caption{Frozen statistics with corrected inputs (current Monte Carlo, POT-normalised detector variations), same
+    run periods as Table~\ref{tab:pulls}. Shape tests: $\chi^2/$ndf ($p$); $p<0.01$ in bold.}
+  \label{tab:protocol_corrected}
+  \small
+  \begin{tabular}{llrrr|ll}
+    \toprule
+    Mode & Region & pull (full) & pull (st$+$det) & $\sigma_{\rm full}/N$ & $p_\mu$ shape & $\cos\theta_\mu$ shape \\
+    \midrule
+    FHC & CC$0\pi$    & $-0.42$ & $-3.81$ & $18.6\%$ & $12.95/6$ ($0.044$) & $3.26/4$ ($0.515$) \\
+        & multi-$\pi$ & $-0.02$ & $-0.03$ & $32.6\%$ & $6.12/6$ ($0.410$) & $1.70/4$ ($0.791$) \\
+        & $\pi^0$     & $-0.03$ & $-0.27$ & $22.3\%$ & $\mathbf{28.05/6}$ ($\mathbf{<0.001}$) & $0.59/4$ ($0.964$) \\
+        & cosmic      & $-0.82$ & $-1.09$ & $18.5\%$ & $4.41/6$ ($0.621$) & $2.58/4$ ($0.630$) \\
+    \midrule
+    RHC & CC$0\pi$    & $0.80$ & $6.03$ & $17.7\%$ & $\mathbf{50.19/6}$ ($\mathbf{<0.001}$) & $5.48/4$ ($0.242$) \\
+        & multi-$\pi$ & $0.28$ & $0.47$ & $31.5\%$ & $10.40/6$ ($0.109$) & $2.52/4$ ($0.640$) \\
+        & $\pi^0$     & $1.03$ & $9.53$ & $21.1\%$ & $\mathbf{66.61/6}$ ($\mathbf{<0.001}$) & $0.49/4$ ($0.975$) \\
+        & cosmic      & $1.60$ & $2.14$ & $21.3\%$ & $4.10/6$ ($0.663$) & $0.11/4$ ($0.999$) \\
+    \midrule
+    \multicolumn{7}{l}{Global normalisation $\chi^2 = 69.49/8$, $p<10^{-3}$ --- \textbf{fails}; blind spot of a common shift $58.0\%$.} \\
+    \multicolumn{7}{l}{Other shape tests all pass: multi-$\pi$ $\theta_{\mu\pi}$ $p=0.98/0.99$, cosmic $\theta_{\mu\pi}$ $0.40/0.53$, $\pi^0$ $E_{\rm shr}$ $0.66/0.63$.} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Three consequences. \textbf{(1)} The global test now fails. The frozen macro cannot drop a run period; the fit
+framework of \S\ref{sec:jointfit}, which reproduces the frozen statistic ($8.82/8$ against $8.77/8$, same pulls
+to $0.03$), gives $48.4/8$ with the full covariance and all periods and $5.0/8$ ($p=0.76$) without FHC Run~1: the
+failure is the FHC Run-1 excursion, no longer absorbed by a $20\%$ detector term. \textbf{(2)} No region is flagged
+by the full-covariance pulls ($|{\rm pull}|\le1.60$), but the statistical-plus-detector pulls of the RHC CC$0\pi$
+and $\pi^0$ regions are $6.0$ and $9.5$: the common offset is highly significant against everything except the
+flux and cross-section terms. \textbf{(3)} The muon-angle failures are gone; the $p_\mu$ failures of the $\pi^0$
+region (both modes) and of RHC CC$0\pi$ remain and are unexplained. Under the frozen rules the response tree is
+entered through item~4(i) for FHC Run~1 and neither CC$0\pi$ (RHC $p_\mu$) nor $\pi^0$ is eligible for a fitted
+correction.
+
+% =============================================================================
+\section{Joint FHC+RHC background fit}
+\label{sec:jointfit}
+% =============================================================================
+
+\paragraph{Status.} This section develops and validates the fit proposed in \texttt{BACKGROUND\_FIT\_PLAN.md} and
+applies it, \emph{post-inspection}, to the control regions opened in this note. It is not a response under the
+frozen procedure, it does not touch the signal region, and none of its outputs is a release input; using any of
+them would be a documented amendment requiring renewed approval. Code: \texttt{xsec\_analyzer/bkgfit/} and
+\texttt{macros/bkgfit\_templates.C}; results \texttt{logs/bkgfit/*.json}.
+
+\subsection{Model}
+\label{sec:fit_model}
+\begin{itemize}\itemsep2pt
+  \item \textbf{Templates} per run period (FHC Runs 1, 2, 4, 5; RHC Runs 1, 2, 3, 4; Run~2 Monte Carlo only, for
+    full-exposure projections) from \texttt{sb\_pi0/}: the neutrino Monte Carlo split into five truth classes
+    (signal; $\nu_\mu$CC $0\pi$; CC$+$NC with a $\pi^0$; $\nu_\mu$CC $\geq2\pi^\pm$ without $\pi^0$; other) and by
+    $\nu/\bar\nu$, with its central value, $\sum w^2$ and all 2\,230 systematic universes (PPFX 600, GENIE
+    multisim 600, re-interaction 1\,000, the nine GENIE unisims and the two SCC pairs); the beam-off per run period
+    with the gate ratios of the frozen procedure; the dirt; the beam-on skim.
+  \item \textbf{Bins}: CC$0\pi$ and $\pi^0$ in reconstructed $\cos\theta_\mu$ (edges $-1,0,0.45,0.65,0.8,0.9,0.95,1$)
+    $\times$ $p_\mu$ ($0.15,0.35,0.75,\infty$\GeVc), 21 each, and the cosmic total (``2D''); or the three totals
+    (``totals''). Multi-$\pi$ overlaps $\pi^0$ and is left out. The binning requires $p_\mu\ge0.15$\GeVc, which
+    removes about $2\%$ of the region events in data and prediction alike.
+  \item \textbf{Parameters}: normalisations of truth classes, applied in every universe so that their correlation
+    with the flux and cross-section terms is kept; optionally per beam mode, and an exposure factor per run period.
+  \item \textbf{Covariance}: the universe families with the extraction's conventions (multisims averaged, unisims
+    summed), the event-matched noise-subtracted detector term of \S\ref{sec:detvar_pot} (fully correlated between
+    run periods and between the two modes, noise within a mode), POT $2\%$ and targets $1\%$, Monte Carlo, beam-off
+    and dirt statistics, and the data term in the Pearson form (prediction variance).
+  \item \textbf{Test statistic}: $\chi^2(\theta)=r^{\mathsf T}V^{-1}r$ minimised with Minuit2 (MIGRAD, HESSE, MINOS).
+    Two choices are forced by validation. The systematic covariance is held at the nominal prediction: evaluated
+    at $\theta$, a poor fit is ``improved'' by inflating it and the parameters run to their limits. The data
+    variance is held there too: evaluated at $\theta$ it grows with the prediction and biased the 2D toys upward by
+    one standard deviation. It is the Pearson form, the prediction itself: the combined Neyman--Pearson form depends
+    on the data and leaves a residual $+0.02$ to $+0.03\sigma$ pull bias that only $10^5$-toy ensembles resolve
+    (\S\ref{sec:ensembles}). An iterated variant re-evaluates both at the result.
+\end{itemize}
+
+\subsection{What two beams buy}
+
+The antineutrino share of the neutrino Monte Carlo (full exposure) is $11.8\%$ (FHC) and $15.4\%$ (RHC) in the
+CC$0\pi$ region, $12.9$ and $12.3\%$ in $\pi^0$, $15.6$ and $18.7\%$ in the signal region. The NuMI RHC flux at
+MicroBooNE carries a large $\nu_\mu$ component, and antineutrino cross sections and efficiencies are lower, so the
+two modes do not separate $\nu$ from $\bar\nu$ backgrounds: fitted jointly, a $\bar\nu$ CC$0\pi$ normalisation is
+determined to $\pm0.60$ against $\pm0.14$ for $\nu$ (Table~\ref{tab:fisher}). What the joint fit does buy is
+statistics, the flux correlation between the modes and a consistency test between them.
+
+\begin{table}[H]
+  \centering
+  \caption{Expected uncertainty (Asimov, 2D bins, full exposure) of each parameter set, FHC alone / RHC alone /
+    joint, and the largest parameter correlation of the joint fit.}
+  \label{tab:fisher}
+  \small
+  \begin{tabular}{llccc}
+    \toprule
+    Parameters & & FHC & RHC & joint (max $|\rho|$) \\
+    \midrule
+    CC$0\pi$ & & $0.147$ & $0.150$ & $0.135$ \\
+    CC$0\pi$, $\pi^0$ & & $0.186$, $0.262$ & $0.168$, $0.231$ & $0.152$, $0.197$ ($0.45$) \\
+    CC$0\pi$ $\nu$, $\bar\nu$ & & $0.159$, $0.916$ & $0.169$, $0.758$ & $0.143$, $0.602$ ($0.11$) \\
+    all four classes & & $0.22$, $0.46$, $2.10$, $0.30$ & $0.20$, $0.39$, $1.69$, $0.26$ & $0.18$, $0.31$, $1.21$, $0.22$ ($0.69$) \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Expected effect on the measurement}
+
+The benefit is quantified on the one-bin total, $x=(D-B)H/S$ per mode, with the background $B$, selected signal
+$S$ and generated signal per unit flux $H$ taken from the same universes; in a flux universe the integrated flux
+moves with the generated signal, which reproduces the extraction's flux term ($30.1\%$ FHC, against $30.25\%$ in
+the release). The constraint is the Gaussian posterior of $(B,S,H)$ given the control-region bins, without free
+parameters (the conditional-covariance constraint of the framework's \texttt{ConstrainedCalculator}) or with free
+class normalisations (generalised least squares).
+
+\begin{table}[H]
+  \centering
+  \caption{Relative uncertainty (\%) of the one-bin total, Asimov, full exposure, FHC / RHC.}
+  \label{tab:gain}
+  \small
+  \begin{tabular}{p{0.56\textwidth}cc}
+    \toprule
+    & FHC & RHC \\
+    \midrule
+    Prior total (flux $30.1/27.8$, detector $14.6/14.8$, GENIE multisim $7.7/7.9$, data statistics $4.2/4.1$) & $35.8$ & $33.6$ \\
+    Conditional constraint from the 2D control-region bins & $11.3$ & $11.3$ \\
+    \quad with free CC$0\pi$ / CC$0\pi$+$\pi^0$ / all four class normalisations & $12.0$ / $13.7$ / $22.4$ & $11.9$ / $13.5$ / $23.4$ \\
+    \quad flux not correlated between control and signal regions & $31.8$ & $29.6$ \\
+    \quad detector not correlated & $18.1$ & $18.2$ \\
+    \quad flux and detector not correlated & $34.8$ & $32.8$ \\
+    \quad detector as the unscaled sideband convention (prior $48.0/39.5$) & $16.0$ & $17.7$ \\
+    Frozen-procedure propagation of a CC$0\pi$ / CC$0\pi$+$\pi^0$ fit (item 4(ii)) & $35.9$ / $36.1$ & $33.8$ / $34.0$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Three things follow. The gain is real but \emph{entirely} a correlated-systematic effect: the control regions
+constrain the common flux and detector directions of the signal-region prediction, and with those two
+decorrelated nothing is left. The frozen procedure's propagation rule, which keeps the flux and detector terms
+and adds the fit uncertainty, gains nothing: a normalisation fit alone cannot reduce the uncertainty of this
+measurement. Whether it is acceptable to let the control regions constrain the common flux normalisation --- the
+direction the frozen procedure deliberately leaves to the signal-region uncertainty --- is a decision for the
+collaboration, not a technical result. Leave-one-out closure tests how far the Gaussian treatment can be trusted:
+taking as truth a universe excluded from the covariance, the constrained one-bin total has an RMS bias of $4.5\%$
+(prior $26.7\%$) over 30 flux universes, $10.7\%$ (prior $14.0\%$) over 30 GENIE universes and $4.6\%$ (prior
+$5.2\%$) over the eight knobs, with RMS pulls $0.43$, $0.68$ and $0.45$ and maxima $1.28$, $1.64$ and $0.99$
+(FHC; RHC alike). The constraint covers, and it helps against flux and detector variations; it does not
+constrain the interaction model (Fig.~\ref{fig:robustness}).
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{bkgfit/robustness}
+  \caption{Left: prior (outline) and constrained (filled) one-bin total uncertainty for the covariance variants of
+    Table~\ref{tab:gain}. Right: leave-one-out closure, RMS bias of the constrained one-bin total.}
+  \label{fig:robustness}
+\end{figure}
+
+\subsection{Validation on pseudo-data}
+
+\begin{itemize}\itemsep2pt
+  \item \textbf{Toys}: see \S\ref{sec:ensembles} for ensembles of up to $10^5$ toys per model; the 300-toy sets of
+    Fig.~\ref{fig:validation} give pull means $0.02$--$0.07$, widths $0.89$--$1.03$ and coverage $67$--$75\%$.
+  \item \textbf{Injections} (Asimov, two-parameter totals fit): class shifts are recovered exactly; a $30\%$ signal
+    excess moves the normalisations by $0.13\sigma$; an unfitted class at $+30\%$ by $-0.07\sigma$; a detector knob
+    by at most $0.14\sigma$; flux and GENIE universes by $-0.97$ to $+0.84\sigma$, i.e.\ within the uncertainty they
+    are part of.
+  \item \textbf{FHC versus RHC}: a likelihood-ratio test of shared against beam-specific normalisations inside the
+    joint covariance (a parameter goodness-of-fit test is not valid here, the modes share universes). A $+15\%$ shift
+    of the RHC neutrino Monte Carlo alone gives $\Delta\chi^2=12.9/2$ ($p=0.002$, totals) and $20.3/2$ ($p=4\times10^{-5}$,
+    2D).
+  \item \textbf{MCMC} (adaptive Metropolis, four chains, flat priors): posterior means within $0.02$ and widths within
+    $2\%$ of MIGRAD/MINOS on the Asimov dataset and on a CC$0\pi$ $\times1.25$ injection, $\hat R\le1.004$. With a
+    few parameters and a near-quadratic likelihood the profile likelihood is sufficient; the sampler is kept as a
+    cross-check.
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{bkgfit/validation}
+  \caption{Validation, totals (top) and 2D (bottom): toy pulls, Asimov injections, profile likelihood against MCMC.}
+  \label{fig:validation}
+\end{figure}
+
+\subsection{Pull-mean convergence: large ensembles}
+\label{sec:ensembles}
+
+With 300 toys the error on a pull mean is $0.058$, so the $+0.07$ of the first validation could not be separated
+from zero. Ensembles of $10^5$ toys per model (error $0.003$) with three diagnostic variants, each of
+$5\times10^4$, settle it (Table~\ref{tab:ensembles}, Fig.~\ref{fig:ensembles}). With the combined Neyman--Pearson
+data variance the mean does \emph{not} converge to zero in the 2D fits: a residual $+0.019$ (CC$0\pi$) and
+$+0.034$, $+0.031$ (CC$0\pi$+$\pi^0$) remains at six to ten standard deviations of the ensemble. It persists
+when the Poisson fluctuation is replaced by a Gaussian one ($+0.031$), so it is not Poisson counting in low bins;
+it disappears when the data variance is the prediction at the nominal parameters ($+0.000$, $-0.004$, $-0.001$).
+The CNP variance depends on the fluctuating data, which correlates the weight of a bin with its own fluctuation.
+The bias is small --- $0.3$--$0.7\%$ on $\theta$ against a $16$--$21\%$ uncertainty --- but it is avoidable, so
+the Pearson form is the default of the fit and every data result below uses it. Pull widths are $1.00$ and
+coverage $68\%$ in every variant.
+
+\begin{table}[H]
+  \centering
+  \caption{Pull means $\pm$ their ensemble error. ``standard'': systematic throw from the covariance, Poisson,
+    CNP data variance ($10^5$ toys); ``Gaussian'': Gaussian instead of Poisson fluctuation; ``Pearson'': standard
+    toys fitted with the prediction as data variance ($5\times10^4$ each).}
+  \label{tab:ensembles}
+  \small
+  \begin{tabular}{llccc}
+    \toprule
+    Bins & Model (parameter) & standard, CNP & Gaussian, CNP & standard, Pearson \\
+    \midrule
+    totals & CC$0\pi$ & $+0.003\pm0.003$ & $+0.005\pm0.005$ & $-0.011\pm0.005$ \\
+    totals & CC$0\pi$+$\pi^0$ (CC$0\pi$) & $+0.012\pm0.003$ & $+0.014\pm0.005$ & $+0.003\pm0.005$ \\
+    totals & CC$0\pi$+$\pi^0$ ($\pi^0$) & $+0.016\pm0.003$ & $+0.014\pm0.005$ & $+0.008\pm0.005$ \\
+    2D & CC$0\pi$ & $+0.019\pm0.003$ & $+0.031\pm0.005$ & $+0.000\pm0.005$ \\
+    2D & CC$0\pi$+$\pi^0$ (CC$0\pi$) & $+0.034\pm0.003$ & $+0.031\pm0.005$ & $-0.004\pm0.005$ \\
+    2D & CC$0\pi$+$\pi^0$ ($\pi^0$) & $+0.031\pm0.003$ & $+0.029\pm0.005$ & $-0.001\pm0.005$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{bkgfit/ensembles}
+  \caption{Running pull mean against the ensemble size for each model and parameter; band: statistical error of the
+    standard ensemble. The Poisson-only variant has no systematic throw, so its pulls are narrower.}
+  \label{fig:ensembles}
+\end{figure}
+
+\subsection{Application to the beam-on control regions}
+
+\begin{table}[H]
+  \centering
+  \caption{Fits to the control-region totals of the beam-on data (corrected inputs). LR: likelihood-ratio test
+    against the unfitted prediction.}
+  \label{tab:fit_data}
+  \footnotesize\setlength{\tabcolsep}{4pt}
+  \begin{tabular}{llp{0.46\textwidth}c}
+    \toprule
+    Periods & Model & result & $\chi^2/$ndf ($p$) \\
+    \midrule
+    all & no parameters & --- & $44.13/6$ ($7\times10^{-8}$) \\
+    no FHC Run 1 & no parameters & --- & $3.22/6$ ($0.78$) \\
+    no FHC Run 1 & CC$0\pi$ & $0.984\pm0.191$ (LR $p=0.93$) & $3.22/5$ ($0.67$) \\
+    no FHC Run 1 & CC$0\pi$, $\pi^0$ & $1.059\pm0.241$, $1.171\pm0.335$ (LR $p=0.88$) & $2.97/4$ ($0.56$) \\
+    no FHC Run 1 & per mode & CC$0\pi$, $\pi^0$: FHC $1.062$, $1.126$; RHC $1.046$, $1.180$ (shared vs.\ split $p=0.72$) & \\
+    all, per period & $f_{\rm FHC\,R1}$ & $0.520\pm0.020$ & $16.77/17$ ($0.47$) \\
+    all, per period & $f_{\rm FHC\,R1}$, CC$0\pi$, $\pi^0$ & $0.535^{+0.062}_{-0.081}$, $1.052\pm0.223$, $1.045\pm0.308$ & $16.70/15$ ($0.34$) \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{itemize}\itemsep2pt
+  \item \textbf{No normalisation correction is warranted.} Without FHC Run~1 the unfitted prediction describes the
+    totals, the fitted normalisations are one within their uncertainties, and FHC and RHC agree. The common
+    $10$--$25\%$ offset is absorbed by the correlated flux and cross-section terms, not by the class parameters.
+  \item \textbf{FHC Run 1.} A free exposure factor on the whole FHC Run-1 prediction fits $0.520\pm0.020$ and
+    restores a good fit over all six periods; with the class normalisations free as well it is $0.535$. This is the
+    quantitative form of the hypothesis of \S\ref{sec:perrun} and is consistent with $f=0.51$--$0.62$ derived there
+    from the ratios. It is evidence for an exposure error, not the independent confirmation that item~4(i) requires.
+  \item \textbf{2D.} Without FHC Run~1 the unfitted prediction gives $\chi^2=289.2/86$ in the $(\cos\theta_\mu\times
+    p_\mu)$ bins (all periods $381.7/86$; with the stale Monte Carlo it was about $4\,900/86$). Normalisation parameters do
+    not repair it ($276.8/84$ with CC$0\pi$ and $\pi^0$ free), and the residual is organised in $p_\mu$: data over the pre-fit prediction is $1.16$--$1.82$
+    in the $0.35$--$0.75$\GeVc bins, $1.05$--$1.40$ below $0.35$\GeVc and mostly $0.8$--$1.1$ above $0.75$\GeVc,
+    in every angular bin, both modes and both regions (Fig.~\ref{fig:fit_residuals}). This is the $p_\mu$ failure of Table~\ref{tab:protocol_corrected}, it is
+    common to both modes and to regions of different composition, and it points at the muon momentum rather than a
+    background class; it is the open item. 2D normalisation fits are not quoted while it stands.
+  \item \textbf{Conditional constraint of the signal-region prediction.} Conditioning the model on the control-region
+    totals (no FHC Run~1, no signal-region data used) moves the expected signal-region total, signal plus
+    background, from $785\pm211$ to $982\pm83$ events (FHC Runs 4, 5) and from $1\,337\pm333$ to $1\,648\pm138$ (RHC):
+    the $25\%$ offset of the control regions propagated through the correlated terms. It is reported to make the
+    size of that propagation explicit; it is not an input to anything.
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{bkgfit/data_residuals}
+  \caption{Beam-on control regions without FHC Run~1: data and the post-fit prediction (CC$0\pi$ and $\pi^0$
+    normalisations from the totals fit) relative to the pre-fit prediction, in reconstructed $\cos\theta_\mu$ groups,
+    each split into $p_\mu<0.35$, $0.35$--$0.75$ and $>0.75$\GeVc; band: total uncertainty.}
+  \label{fig:fit_residuals}
+\end{figure}
 
 % =============================================================================
 \section{What this establishes, and what it does not}
@@ -415,7 +854,9 @@ approval. That conclusion should be revisited once the exposure questions of
     bookkeeping issues sit in front of any such conclusion: the missing Run-2 exposure,
     which is excluded consistently here but leaves $19\%$ of the analysis unexamined, and
     the FHC Run-1 anomaly, which has the size and the flatness of an exposure error.
-  \item The frozen normalisation test passes. The muon-angle shape test does not, in the
+  \item \emph{(Superseded 2026-09-16: with corrected inputs the global test fails because of FHC Run~1, and the
+    muon-angle failure was an artefact of the stale sideband Monte Carlo; see \S\ref{sec:protocol_corrected} and the
+    status list below.)} The frozen normalisation test passes. The muon-angle shape test does not, in the
     two high-statistics regions and in both beam modes; the failure survives the removal of
     the normalisation, is absent from the same code run on pseudo-data, and is largest in
     RHC, which carries no suspected exposure error. It is the one result here that the
@@ -440,7 +881,8 @@ approval. That conclusion should be revisited once the exposure questions of
     normalisation regenerated.
   \item Repeat this comparison once both are settled, and only then read the
     normalisation offset of \S\ref{sec:perrun} as a statement about the background.
-  \item Investigate the muon-angle shape failure independently of the exposure work: it is
+  \item \emph{(Done 2026-09-16: the failure was the stale sideband Monte Carlo, \S\ref{sec:stale_mc}; the open
+    shape question is now the muon momentum.)} Investigate the muon-angle shape failure independently of the exposure work: it is
     present in RHC alone, so it can be studied on the RHC periods while the FHC Run-1
     question is open. A finer $\cos\theta_\mu$ binning of the control regions, which is
     not the released signal-region binning and is free to be chosen, would show whether
@@ -451,9 +893,30 @@ approval. That conclusion should be revisited once the exposure questions of
     inverted-PID regions for the misidentification transfers.
 \end{enumerate}
 
-\paragraph{Provenance.}
+\paragraph{Status after 2026-09-16.}
+\begin{enumerate}[itemsep=3pt]
+  \item The muon-angle shape failure is withdrawn: it compared a detector-frame prediction with beam-frame data
+    (\S\ref{sec:stale_mc}). The $p_\mu$ failures of the $\pi^0$ region and of RHC CC$0\pi$ remain and are the open
+    shape question; they point at the muon momentum (\S\ref{sec:jointfit}).
+  \item With the detector term corrected (\S\ref{sec:detvar_pot}) the frozen global test fails with FHC Run~1 and
+    passes without it. The FHC Run-1 exposure check (item~1 of \emph{Required next}) is now the gating item.
+  \item The sideband transfer-factor uncertainties are unaffected by the POT defect; the control-region
+    systematics table of the analysis note (detector column) and the frozen-procedure numbers quoted there are, and
+    must be regenerated with \texttt{sb\_protocol\_data.C} defaults.
+  \item The joint fit shows that no normalisation correction is warranted and that a normalisation fit propagated
+    under the frozen rules cannot reduce the measurement's uncertainty; a conditional constraint could ($35.8\to11.3\%$
+    on the one-bin total, Asimov), entirely through the flux and detector correlations. Adopting it would change what
+    the control regions are for and needs a collaboration decision.
+\end{enumerate}
+
+\paragraph{Provenance.}\sloppy
 Beam-on skim written 2026-09-09 from the eight files of Table~\ref{tab:files}; prediction
 from the release of 2026-09-06 (the same Monte Carlo, beam-off and dirt samples, and the
 same per-run exposure scaling, as the blind studies), with Run~2 removed from both sides.
+Update of 2026-09-16: sideband Monte Carlo \texttt{processed/\allowbreak sb\_pi0/}; frozen statistics
+\texttt{macros/sb\_protocol\_data.C} (defaults: current Monte Carlo, POT-normalised detector variations); templates
+\texttt{macros/bkgfit\_templates.C}; detector variations \texttt{bkgfit/detvar.py}; fit, validation and data
+\texttt{python3 -m bkgfit.studies} \{composition, sensitivity, robustness, validate, ensembles, data\}; figures
+\texttt{python3 -m bkgfit.figures}; logs \texttt{logs/bkgfit/}.
 
 \end{document}
