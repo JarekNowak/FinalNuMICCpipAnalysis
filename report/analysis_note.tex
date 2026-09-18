@@ -2036,11 +2036,10 @@ Proton angular observables $\theta_p$, $\theta_{\pi p}$
 \midrule
 Differential $W_{\pi p}$ shape
   & Withdrawn
-  & No binning satisfies both the migration and the statistics requirement at this
-    exposure; supports an integrated cross section only. \\
+  & Appendix~\ref{app:withdrawn}. \\
 Five-bin $d\sigma/dp_\pi$
   & Withdrawn
-  & Four of five bins fall below the $68\%$ diagonal criterion. \\
+  & Appendix~\ref{app:withdrawn}. \\
 
 \bottomrule
 \end{tabular}
@@ -2645,12 +2644,10 @@ proton-mistag background has no dedicated control region yet
 \end{quote}
 
 \begin{quote}
-\textbf{On the six-bin $W_{\pi p}$ material below.}  Six-bin $W_{\pi p}$ distributions and
-their closure appear in this section.  They are \emph{diagnostic}: they show why the shape
-is not measurable, and they are not a result.  The differential $W_{\pi p}$ shape is
-withdrawn (Sec.~\ref{sec:status_matrix}), and closure against $A_C$-smeared truth cannot
-restore shape information the response does not contain --- the top bin is $2\%$ diagonal
-in that scheme.  The proton-tagged deliverable is the integrated cross section.
+\textbf{On the six-bin $W_{\pi p}$ material below.}  Any six-bin $W_{\pi p}$ distribution in this
+section is \emph{diagnostic}: it shows why the shape is not measurable and is not a result. The
+differential $W_{\pi p}$ shape is withdrawn (Appendix~\ref{app:withdrawn}); the proton-tagged
+deliverable is the integrated cross section.
 \end{quote}
 % =============================================================================
 
@@ -3481,6 +3478,86 @@ finite boundary used in the numerical release to assign that bin a width, not a 
 limit of the sample. The bin is an inclusive high-momentum region, not a differential
 point, for the reasons set out in the technical supplement; the bin-integrated partial
 cross sections are given in \suppref{Table}{tab:ppi_partial}.
+
+\section{Alternative binnings considered}
+\label{app:altbinning}
+
+Every released binning is the coarsest that satisfies the migration-diagonal criterion, and finer
+schemes were tested rather than assumed unusable. The criterion itself was also relaxed, from the
+$0.68$ column-normalised diagonal to $0.50$, to see what that would admit: twenty-six further
+candidates pass the relaxed diagonal, and all but one fail the secondary requirement, which is the
+conditioning of the additional-smearing matrix $A_C$. A binning that migrates acceptably can still
+give a response that cannot be inverted, and that --- not the diagonal --- is what limits this
+measurement. Table~\ref{tab:altbinning} lists the alternatives and their fate.
+
+\begin{table}[H]
+  \centering
+  \caption{Alternative binnings examined. $s_{\min}/s_1$ is the conditioning of $A_C$ (FHC/RHC
+    unless stated); a value near zero means the regularised response cannot be inverted, whatever
+    the migration diagonal says. Only the two-bin $W_\mathrm{had}$ is healthy, and it was not
+    adopted.}
+  \label{tab:altbinning}
+  \footnotesize
+  \begin{tabular}{llcp{5.3cm}}
+    \toprule
+    Observable & Alternative & $s_{\min}/s_1$ & Status \\
+    \midrule
+    $\cos\theta_\mu$ & 6 bins & $0.11/0.09$ & not adopted: conditioning \\
+                     & 7 bins & $0.02/0.05$ & not adopted: conditioning \\
+    $\theta_\mu$ & 7, 8 bins & $0.00/0.00$ & not adopted: rank-deficient \\
+    $p_\pi$ & 3 bins & $0.05/0.01$ & not adopted: conditioning \\
+    $\delta p_T$ & 3 bins & $0.00/0.00$ & not adopted: rank-deficient \\
+    $\delta\alpha_T$ & 3 bins & $0.03/0.01$ & not adopted: conditioning \\
+    $W_{\pi p}$ & 2 bins & $0.26/0.15$ & sound response, no shape (App.~\ref{app:withdrawn}) \\
+    $W_\mathrm{had}$ & 2 bins & $\mathbf{0.58/0.54}$ & healthy; \emph{not} adopted, six bins keep the shape \\
+    $\cos\theta_p$ & 4 bins & $0.45/0.02$ & superseded by $\theta_p$ \\
+                   & 6 bins & $0.00/0.00$ & not adopted: rank-deficient \\
+    $\theta_p$ & 5, 7 bins & $\le0.03$ & not adopted: conditioning \\
+               & 3 bins (RHC edges) & $0.16/0.05$; COMB $0.51$ & alternative to the released four bins \\
+    $\cos\theta_\pi$ & 4 bins & $0.27/0.24$ & previous release; superseded by five bins \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Two entries deserve a sentence. The two-bin $W_\mathrm{had}$ is the only candidate whose response is
+healthier than the released one, and it was still not adopted: two bins buy that conditioning by
+discarding almost all of the shape, and the shape is what $W_\mathrm{had}$ is measured for. The
+three-bin $\theta_p$ reaches the best combined conditioning of anything tried ($0.51$), but the
+released four-bin scheme is better balanced across the two configurations in which $\theta_p$ is
+quoted, and keeps a bin.
+
+\section{Withdrawn results}
+\label{app:withdrawn}
+
+Two results were extracted, examined and withdrawn. They are recorded here rather than in the body
+because the reasons are properties of the response, not of the measurement being reported, and
+because their files remain in the data release, where they could otherwise be mistaken for results.
+\textbf{Neither is to be quoted.}
+
+\subsection{The differential \texorpdfstring{$W_{\pi p}$}{W pi p} shape}
+
+The directly measured pion--proton invariant mass is the observable that would show the
+$\Delta(1232)$ directly, and it is the reason the proton-tagged subsample was built. At this
+exposure its shape is not measurable at any binning tried. The six-bin scheme that resolves the
+resonance region has a top bin only $2\%$ diagonal: essentially every event reconstructed there
+comes from somewhere else. Coarsening to two bins restores the response ($s_{\min}/s_1=0.26$ FHC,
+$0.15$ RHC) but leaves an observable with no shape to speak of, and the two-bin scheme was not
+adopted for that reason. Closure against the $A_C$-smeared truth does not rescue the six-bin
+result: closure tests whether the extraction inverted the response it was given, and cannot restore
+information the response does not contain.
+
+What the proton-tagged sample does support is the \emph{integrated} cross section, which is
+released, and the calorimetric hadronic mass $W_\mathrm{had}$, whose response is sound at six bins.
+
+\subsection{The five-bin \texorpdfstring{$d\sigma/dp_\pi$}{d sigma / d p pi}}
+
+Charged pions interact hadronically before ranging out, so the reconstructed momentum saturates
+near $0.34$~GeV/$c$ and the migration matrix loses its diagonal above it: four of the five bins
+fall below the $68\%$ criterion, the top bin reaching $6\%$. The released $d\sigma/dp_\pi$ is
+therefore a two-bin result --- a near-threshold interval and one broad inclusive interval --- and
+is a two-region partition rather than a spectrum. The limitation is the estimator, not the binning:
+range-based momentum is only valid for a pion that stops, and no rebinning of a saturated variable
+recovers the information.
 
 \section{Selection Cut Parameter Summary}
 \label{app:cutparams}
