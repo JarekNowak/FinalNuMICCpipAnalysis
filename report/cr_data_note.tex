@@ -10,6 +10,9 @@
 \usepackage{float}
 \usepackage{hyperref}
 \hypersetup{colorlinks=true,linkcolor=blue!70!black,citecolor=green!50!black,urlcolor=blue!70!black}
+\usepackage{xr}
+\externaldocument[N-]{analysis_note}
+\newcommand{\noteref}[2]{#1~\ref{N-#2} of the analysis note}
 \graphicspath{{figures/}}
 \newcommand{\uboone}{MicroBooNE}
 \newcommand{\GeVc}{\,\text{GeV}\!/c}
@@ -634,7 +637,7 @@ them would be a documented amendment requiring renewed approval. Code: \texttt{x
     variance is held there too: evaluated at $\theta$ it grows with the prediction and biased the 2D toys upward by
     one standard deviation. It is the Pearson form, the prediction itself: the combined Neyman--Pearson form depends
     on the data and leaves a residual $+0.02$ to $+0.03\sigma$ pull bias that only $10^5$-toy ensembles resolve
-    (\S\ref{sec:ensembles}). An iterated variant re-evaluates both at the result.
+    (\noteref{Sec.}{sec:validation}). An iterated variant re-evaluates both at the result.
 \end{itemize}
 
 \subsection{What two beams buy}
@@ -715,75 +718,15 @@ constrain the interaction model (Fig.~\ref{fig:robustness}).
   \label{fig:robustness}
 \end{figure}
 
-\subsection{Validation on pseudo-data}
+\subsection{Validation}
 
-\begin{itemize}\itemsep2pt
-  \item \textbf{Toys}: see \S\ref{sec:ensembles} for ensembles of up to $10^5$ toys per model; the 300-toy sets of
-    Fig.~\ref{fig:validation} give pull means $0.02$--$0.07$, widths $0.89$--$1.03$ and coverage $67$--$75\%$.
-  \item \textbf{Injections} (Asimov, two-parameter totals fit): class shifts are recovered exactly; a $30\%$ signal
-    excess moves the normalisations by $0.13\sigma$; an unfitted class at $+30\%$ by $-0.07\sigma$; a detector knob
-    by at most $0.14\sigma$; flux and GENIE universes by $-0.97$ to $+0.84\sigma$, i.e.\ within the uncertainty they
-    are part of.
-  \item \textbf{FHC versus RHC}: a likelihood-ratio test of shared against beam-specific normalisations inside the
-    joint covariance (a parameter goodness-of-fit test is not valid here, the modes share universes). A $+15\%$ shift
-    of the RHC neutrino Monte Carlo alone gives $\Delta\chi^2=12.9/2$ ($p=0.002$, totals) and $20.3/2$ ($p=4\times10^{-5}$,
-    2D).
-  \item \textbf{MCMC} (adaptive Metropolis, four chains, flat priors): posterior means within $0.02$ and widths within
-    $2\%$ of MIGRAD/MINOS on the Asimov dataset and on a CC$0\pi$ $\times1.25$ injection, $\hat R\le1.004$. With a
-    few parameters and a near-quadratic likelihood the profile likelihood is sufficient; the sampler is kept as a
-    cross-check.
-\end{itemize}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\textwidth]{bkgfit/validation}
-  \caption{Validation, totals (top) and 2D (bottom): toy pulls, Asimov injections, profile likelihood against MCMC.}
-  \label{fig:validation}
-\end{figure}
-
-\subsection{Pull-mean convergence: large ensembles}
-\label{sec:ensembles}
-
-With 300 toys the error on a pull mean is $0.058$, so the $+0.07$ of the first validation could not be separated
-from zero. Ensembles of $10^5$ toys per model (error $0.003$) with three diagnostic variants, each of
-$5\times10^4$, settle it (Table~\ref{tab:ensembles}, Fig.~\ref{fig:ensembles}). With the combined Neyman--Pearson
-data variance the mean does \emph{not} converge to zero in the 2D fits: a residual $+0.019$ (CC$0\pi$) and
-$+0.034$, $+0.031$ (CC$0\pi$+$\pi^0$) remains at six to ten standard deviations of the ensemble. It persists
-when the Poisson fluctuation is replaced by a Gaussian one ($+0.031$), so it is not Poisson counting in low bins;
-it disappears when the data variance is the prediction at the nominal parameters ($+0.000$, $-0.004$, $-0.001$).
-The CNP variance depends on the fluctuating data, which correlates the weight of a bin with its own fluctuation.
-The bias is small --- $0.3$--$0.7\%$ on $\theta$ against a $16$--$21\%$ uncertainty --- but it is avoidable, so
-the Pearson form is the default of the fit and every data result below uses it. Pull widths are $1.00$ and
-coverage $68\%$ in every variant.
-
-\begin{table}[H]
-  \centering
-  \caption{Pull means $\pm$ their ensemble error. ``standard'': systematic throw from the covariance, Poisson,
-    CNP data variance ($10^5$ toys); ``Gaussian'': Gaussian instead of Poisson fluctuation; ``Pearson'': standard
-    toys fitted with the prediction as data variance ($5\times10^4$ each).}
-  \label{tab:ensembles}
-  \small
-  \begin{tabular}{llccc}
-    \toprule
-    Bins & Model (parameter) & standard, CNP & Gaussian, CNP & standard, Pearson \\
-    \midrule
-    totals & CC$0\pi$ & $+0.003\pm0.003$ & $+0.005\pm0.005$ & $-0.011\pm0.005$ \\
-    totals & CC$0\pi$+$\pi^0$ (CC$0\pi$) & $+0.012\pm0.003$ & $+0.014\pm0.005$ & $+0.003\pm0.005$ \\
-    totals & CC$0\pi$+$\pi^0$ ($\pi^0$) & $+0.016\pm0.003$ & $+0.014\pm0.005$ & $+0.008\pm0.005$ \\
-    2D & CC$0\pi$ & $+0.019\pm0.003$ & $+0.031\pm0.005$ & $+0.000\pm0.005$ \\
-    2D & CC$0\pi$+$\pi^0$ (CC$0\pi$) & $+0.034\pm0.003$ & $+0.031\pm0.005$ & $-0.004\pm0.005$ \\
-    2D & CC$0\pi$+$\pi^0$ ($\pi^0$) & $+0.031\pm0.003$ & $+0.029\pm0.005$ & $-0.001\pm0.005$ \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\textwidth]{bkgfit/ensembles}
-  \caption{Running pull mean against the ensemble size for each model and parameter; band: statistical error of the
-    standard ensemble. The Poisson-only variant has no systematic throw, so its pulls are narrower.}
-  \label{fig:ensembles}
-\end{figure}
+The fit is validated entirely on simulation --- toy ensembles, injection tests and the convergence
+of the pull mean --- and those studies use no beam-on data, so they are in the analysis note
+(\noteref{Sec.}{sec:validation}) with the rest of the validation programme. The short version is
+that the fit is unbiased and its uncertainties are correctly sized, with one caveat that changed a
+default: the combined Neyman--Pearson data variance leaves a small pull-mean bias in the
+two-dimensional fits, and the Pearson variance at the nominal prediction does not, so the latter is
+used.
 
 \subsection{Application to the beam-on control regions}
 

@@ -81,9 +81,8 @@
 \newcommand{\suppref}[2]{#1~\ref{S-#2} of the technical supplement}
 \externaldocument[CR-]{cr_data_note}
 \newcommand{\crref}[2]{#1~\ref{CR-#2} of the control-sample note}
-% Stamp appended to every release-derived table caption: the extraction pass and the
-% results file it was generated from (a reviewer's request after stale tables survived).
-\newcommand{\releasestamp}{[current frozen release]}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
 
 \begin{document}
 
@@ -96,7 +95,7 @@
   \vspace{0.8cm}
   {\large Analysis Note, Full FHC, RHC, and Combined Exposure\par}
   \vspace{0.5cm}
-  {\normalsize Draft 1.5, release 2026-09-06 \textperiodcentered\ document revision 2026-09-07\par}
+  {\normalsize Analysis note\par}
 
   \vspace{1.5cm}
   {\large Ishanee Pophale, Jarek Nowak\par}
@@ -196,6 +195,36 @@ The measurement is built in five steps, and the note follows them in order.
     tested in four control regions that hold no signal-region event, which have been opened on
     beam-on data.
 \end{enumerate}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[
+      font=\small,
+      box/.style={draw, rounded corners=2pt, align=center, inner sep=4pt, minimum height=8mm},
+      data/.style={box, fill=blue!6},
+      mc/.style={box, fill=orange!8},
+      res/.style={box, fill=green!8},
+      ar/.style={-{Latex[length=2mm]}, thick}]
+    \node[data] (d) {beam data\\(here: fake data)};
+    \node[data, below=5mm of d] (ext) {beam-off data};
+    \node[mc, below=5mm of ext] (mc) {simulation\\$+$ universes};
+    \node[box, right=12mm of ext] (sel) {selection\\\S\ref{sec:selection}};
+    \node[box, right=11mm of sel] (sub) {background\\subtraction};
+    \node[box, right=11mm of sub] (unf) {unfolding\\\S\ref{sec:unfolding}};
+    \node[res, right=11mm of unf] (xs) {$\mathrm{d}\sigma/\mathrm{d}x$\\$+\;A_C$, covariance};
+    \node[mc, below=9mm of sub] (resp) {response\\$+$ efficiency};
+    \node[mc, below=9mm of unf] (cov) {systematic\\universes};
+    \draw[ar] (d) -- (sel); \draw[ar] (ext) -- (sel); \draw[ar] (mc) -- (sel);
+    \draw[ar] (sel) -- (sub); \draw[ar] (sub) -- (unf); \draw[ar] (unf) -- (xs);
+    \draw[ar] (resp) -- (sub); \draw[ar] (resp) -- (unf); \draw[ar] (cov) -- (unf);
+    \draw[ar] (mc) -- (resp);
+  \end{tikzpicture}
+  \caption{The extraction chain. The same selection is applied to data, beam-off data and
+    simulation; the simulation additionally supplies the response and the systematic universes. What
+    comes out is a cross section together with the additional-smearing matrix $A_C$ and the
+    covariance --- all three are needed to compare it with a prediction.}
+  \label{fig:chain}
+\end{figure}
 
 \subsection*{How to read this note}
 
@@ -1125,7 +1154,7 @@ detailed per-category, per-cut breakdown for each.
     POT-scaled \emph{per run} (each run by its own $D_{\text{run}}/\text{MC}_{\text{run}}$,
     Table~\ref{tab:pot}); EXT (beam-off cosmic) is scaled by the (per-run summed)
     per-run beam-on/beam-off \emph{gate} ratio times the $0.98$ NuMI beam-occupancy factor, each run period using the beam-off sample taken in that period (\S\ref{sec:mc}); dirt from the
-    GENIE NuMI dirt overlay. Pred.\ $=$ Signal $+$ Bkg $+$ EXT $+$ Dirt. Eff.\ is the cumulative signal efficiency relative to the generated signal (the None stage, where all true signal is counted); Pur.\ $=$ Signal/Pred. \releasestamp}
+    GENIE NuMI dirt overlay. Pred.\ $=$ Signal $+$ Bkg $+$ EXT $+$ Dirt. Eff.\ is the cumulative signal efficiency relative to the generated signal (the None stage, where all true signal is counted); Pur.\ $=$ Signal/Pred.}
   \label{tab:cutflow}
   \small
   \begin{tabular}{lrrrrrrr}
@@ -1294,7 +1323,7 @@ Table~\ref{tab:bkgcomp} shows the truth-level background breakdown at the final 
     the selection's counters, CV-weighted and per-run POT-scaled; the same classes and
     yields as the signal-region column of \suppref{Table}{tab:cr_transfer}). Fractions are of
     the $637$ neutrino-background events; beam-off and dirt are listed for scale.
-    \releasestamp}
+   }
   \label{tab:bkgcomp}
   \begin{tabular}{lrr}
     \toprule
@@ -1563,7 +1592,7 @@ Uncertainties     & Closed-form, linear                 & Correlated across iter
 
 Wiener-SVD is the primary result, for its objective regularisation and its explicit,
 reportable bias $A_C$; D'Agostini serves as the quantitative cross-check
-(\suppref{Sec.}{sec:crosschecks}; re-evaluated on this release), where its flat,
+(\suppref{Sec.}{sec:crosschecks}), where its flat,
 iteration-stable integral, $23$--$31\%$ above Wiener-SVD (config-dependent), is
 consistent with the observable-to-observable spread of the Wiener-SVD integrated cross
 sections (Table~\ref{tab:sigint_all}) being the $A_C$ smearing rather than a physical or
@@ -1902,7 +1931,7 @@ $8.46/5$ and $9.10/5$, and in $\cos\theta_\mu$ $3.88/5$ and $4.04/5$
 \begin{table}[H]
   \centering
   \caption{$\chi^2$/ndf of the unfolded fake data against each $A_C$-smeared prediction,
-    for the inclusive selection. ``truth'' is the fake-data truth (the closure test). \releasestamp}
+    for the inclusive selection. ``truth'' is the fake-data truth (the closure test).}
   \label{tab:chi2_incl}
   \small
   \begin{tabular}{llcccccc}
@@ -1942,7 +1971,7 @@ Beam & Observable & truth & uB tune & GENIE & GiBUU & NEUT & NuWro \\
     $\chi^2$ are systematically the larger for every column including the truth, a
     consequence of the different partition and of $A_C$. Model statements in this note
     are made on $\cos\theta_\mu$; $\theta_\mu$ is released as the second
-    parameterisation. \releasestamp}
+    parameterisation.}
 \label{tab:chi2_theta}
   \small
   \begin{tabular}{llcccccc}
@@ -2027,7 +2056,7 @@ Two-dimensional cross sections
     $\cos\theta_\pi\times\cos\theta_\mu$; eight pairs screened and extracted, per-mode results are
     too poorly conditioned to invert (\S\ref{sec:2d}). \\
 Proton angular observables $\theta_p$, $\theta_{\pi p}$
-  & Proposed secondary scope, added 2026-09-18 & Binning, generator predictions and all three
+  & Proposed secondary scope & Binning, generator predictions and all three
     extractions complete on fake data (\S\ref{sec:wtki_ang}); $\theta_{\pi p}$ needed a gated
     reprocess of the proton-tagged tree; $\theta_p$ is rank-deficient in RHC and is proposed for
     FHC and the combined configuration only. \\
@@ -2075,7 +2104,7 @@ every observable (Tables~\ref{tab:fhc}--\ref{tab:comb}); the differential result
 shown in Figs.~\ref{fig:dsigma_current}--\ref{fig:dsigma_comb}.
 
 \begin{center}\small
-\captionof{table}{FHC (Runs 1, 2, 4, 5; data POT $8.857\times10^{20}$): integrated cross section, the two largest systematic terms, the total, and the fake-data closure against $A_C$-smeared truth. All values are read from the released covariance and results table; the anatomy of the flux term is in \S\ref{sec:fluxanatomy}. \releasestamp}
+\captionof{table}{FHC (Runs 1, 2, 4, 5; data POT $8.857\times10^{20}$): integrated cross section, the two largest systematic terms, the total, and the fake-data closure against $A_C$-smeared truth. All values are read from the released covariance and results table; the anatomy of the flux term is in \S\ref{sec:fluxanatomy}.}
     \label{tab:fhc}
 \begin{tabular}{lccccc}
 \toprule
@@ -2153,7 +2182,7 @@ FHC one, since the background subtraction multiplies both by the same $1+B/S$
 (\S\ref{sec:fluxanatomy}).
 
 \begin{center}\small
-\captionof{table}{RHC (Runs 1, 2, 3, 4; data POT $1.1082\times10^{21}$): integrated cross section, the two largest systematic terms, the total, and the fake-data closure against $A_C$-smeared truth. All values are read from the released covariance and results table; the anatomy of the flux term is in \S\ref{sec:fluxanatomy}. \releasestamp}
+\captionof{table}{RHC (Runs 1, 2, 3, 4; data POT $1.1082\times10^{21}$): integrated cross section, the two largest systematic terms, the total, and the fake-data closure against $A_C$-smeared truth. All values are read from the released covariance and results table; the anatomy of the flux term is in \S\ref{sec:fluxanatomy}.}
     \label{tab:rhc}
 \begin{tabular}{lccccc}
 \toprule
@@ -2170,7 +2199,7 @@ Observable & $\sigma_\mathrm{int}$ & Flux & Detector & Total & Closure $\chi^2/\
 \end{center}
 
 \begin{center}\small
-\captionof{table}{Combined (data POT $1.9939\times10^{21}$): integrated cross section, the two largest systematic terms, the total, and the fake-data closure against $A_C$-smeared truth. All values are read from the released covariance and results table; the anatomy of the flux term is in \S\ref{sec:fluxanatomy}. \releasestamp}
+\captionof{table}{Combined (data POT $1.9939\times10^{21}$): integrated cross section, the two largest systematic terms, the total, and the fake-data closure against $A_C$-smeared truth. All values are read from the released covariance and results table; the anatomy of the flux term is in \S\ref{sec:fluxanatomy}.}
     \label{tab:comb}
 \begin{tabular}{lccccc}
 \toprule
@@ -2404,7 +2433,7 @@ $A_C$-suppressed and observable-dependent.
     central-value weight (tune $\times$ PPFX $\times$ normalisation), the same as
     Table~\ref{tab:cutflow}; the two differ by $\lesssim1\%$ because the yield comparison uses the
     Run-1 dirt overlay with per-mode scale factors rather than the per-run dirt files.
-    \releasestamp}
+   }
   \label{tab:cutcount}
   \footnotesize
   \begin{tabular}{lrrcccccccc}
@@ -2431,6 +2460,38 @@ within $0.8\sigma$ of the other three; the generator spread itself, a factor $1.
 larger than any of these differences. For the proton-tagged phase space the FHC generator
 totals are GENIE $0.50$, NuWro $0.65$, GiBUU $0.74$ and NEUT $0.78$, bracketing the
 injected $0.63$.
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[
+      font=\small, x=1mm, y=1mm,
+      box/.style={draw, rounded corners=2pt, align=center, inner sep=3pt, minimum height=7mm},
+      sig/.style={box, fill=red!8},
+      cr/.style={box, fill=blue!6},
+      ar/.style={-{Latex[length=2mm]}, thick},
+      lbl/.style={font=\scriptsize, fill=white, inner sep=1pt}]
+    \node[box]  (pre)   at (0,0)    {muon candidate,\\contained vertex};
+    \node[cr]   (pi0)   at (34,20)  {$\pi^0$ region};
+    \node[box]  (np)    at (38,0)   {charged-pion\\candidates};
+    \node[cr]   (cc0)   at (76,12)  {CC$0\pi$ region};
+    \node[cr]   (multi) at (76,-12) {multi-$\pi$ region};
+    \node[box]  (oa)    at (76,0)   {$\theta_{\mu\pi}$};
+    \node[sig]  (sr)    at (112,8)  {\textbf{signal region}\\(blind)};
+    \node[cr]   (cos)   at (112,-8) {cosmic region};
+    \draw[ar] (pre) -- (np);
+    \draw[ar] (pre.north) |- node[lbl, pos=0.75]{shower veto fails} (pi0.west);
+    \draw[ar] (np) -- node[lbl, pos=0.6]{$0$} (cc0);
+    \draw[ar] (np) -- node[lbl, pos=0.6]{$\geq2$} (multi);
+    \draw[ar] (np) -- node[lbl, pos=0.55]{$1$} (oa);
+    \draw[ar] (oa) -- node[lbl, pos=0.55]{$<2.6$} (sr);
+    \draw[ar] (oa) -- node[lbl, pos=0.55]{$>2.6$} (cos);
+  \end{tikzpicture}
+  \caption{How the four control regions relate to the signal region. Each is one inverted
+    requirement of the signal selection, so no event can be in both: the regions are disjoint from
+    the signal region by construction, which is what allows them to be inspected on beam-on data
+    while the signal region stays blind.}
+  \label{fig:regions}
+\end{figure}
 
 \subsection{What the control regions show}
 \label{sec:cr_outcome}
@@ -2505,7 +2566,7 @@ beam configurations.
     across FHC/RHC/combined, validating the per-run weighting and POT-scaling machinery;
     the low-statistics regions (multi-$\pi$, cosmic) scatter within Poisson expectation
     ($\sqrt{N}\!\approx\!6$--$10\%$). The background-model test against the full stack
-    (with EXT and dirt) is performed at control-region unblinding with beam-on data. \releasestamp}
+    (with EXT and dirt) is performed at control-region unblinding with beam-on data.}
   \label{tab:sidebands}
   \begin{tabular}{llccc}
     \toprule
@@ -2597,7 +2658,7 @@ of, the dominant background classes, and only then open the signal region.
     out-of-cryostat overlay. The pseudo-data
     column is a Poisson throw of the neutrino MC only, so it should be compared with
     Signal $+$ $\nu$ bkg; EXT and dirt are listed for scale and enter the comparison only
-    with real beam-on data. \releasestamp}
+    with real beam-on data.}
   \label{tab:sideband_yields}
   \small
   \begin{tabular}{llrrrrrc}
@@ -2816,7 +2877,7 @@ results tables and the data release, and covers all ten released combined proton
     analysis. The small $\chi^2/\mathrm{ndf}$ validates the chain. The integral ratios compare
     the unfolded result with the $A_C$-smeared truth, so departures from unity reflect
     the statistical realisation of the throw and any residual extraction bias; they do
-    not measure the suppression introduced by $A_C$. The third block ($^{\dagger}$) is the two angular observables proposed as secondary scope on 2026-09-18 (\S\ref{sec:wtki_ang}); they are not part of the 2026-09-06 release. \releasestamp}
+    not measure the suppression introduced by $A_C$. The third block ($^{\dagger}$) is the two angular observables proposed as secondary scope (\S\ref{sec:wtki_ang}).}
   \label{tab:wtki_fhc}
   \begin{tabular}{lccc}
 \toprule
@@ -2871,7 +2932,7 @@ factor of several, which is why the frame is stated with every transverse quanti
   \centering
   \caption{RHC fake-data closure for the twelve proton-tagged observables,
     binning and columns as in Table~\ref{tab:wtki_fhc}. All observables close positive with
-    the convention-agnostic MC POT normalisation described above. The third block ($^{\dagger}$) is the two angular observables proposed as secondary scope on 2026-09-18 (\S\ref{sec:wtki_ang}); they are not part of the 2026-09-06 release. \releasestamp}
+    the convention-agnostic MC POT normalisation described above. The third block ($^{\dagger}$) is the two angular observables proposed as secondary scope (\S\ref{sec:wtki_ang}).}
   \label{tab:wtki_rhc}
   \begin{tabular}{lccc}
 \toprule
@@ -2902,7 +2963,7 @@ Observable & $\sigma_\mathrm{int}$ & unf./truth & $\chi^2/\mathrm{ndf}$ \\
     every $\chi^2$ is comfortably below its number of bins. This completes the proton-tagged
     measurement in all three beam configurations. Note that the combined result is an
     independent extraction, not a fluence-weighted average of the FHC and RHC ones, so it is
-    not required to lie between them; see the discussion below. The third block ($^{\dagger}$) is the two angular observables proposed as secondary scope on 2026-09-18 (\S\ref{sec:wtki_ang}); they are not part of the 2026-09-06 release. \releasestamp}
+    not required to lie between them; see the discussion below. The third block ($^{\dagger}$) is the two angular observables proposed as secondary scope (\S\ref{sec:wtki_ang}).}
   \label{tab:wtki_comb}
   \begin{tabular}{lccc}
 \toprule
@@ -2940,6 +3001,22 @@ Observable & $\sigma_\mathrm{int}$ & unf./truth & $\chi^2/\mathrm{ndf}$ \\
     $\delta\alpha_T$ rises toward $180^\circ$, the
     signature of final-state interactions.}
   \label{fig:dsigma_ccpi1p_fhc}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{dsigma_ccpi1p_noW_RHCFULL}
+  \caption{The same five proton-tagged observables for RHC. Curves and points as in
+    Fig.~\ref{fig:dsigma_ccpi1p_fhc}.}
+  \label{fig:dsigma_ccpi1p_rhc}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{dsigma_ccpi1p_noW_COMB}
+  \caption{The same five proton-tagged observables for the combined configuration. Curves and
+    points as in Fig.~\ref{fig:dsigma_ccpi1p_fhc}.}
+  \label{fig:dsigma_ccpi1p_comb}
 \end{figure}
 
 
@@ -2990,9 +3067,8 @@ one pion candidate is what would separate them.
   \texorpdfstring{$\theta_{\pi p}$}{theta pi p}}
 \label{sec:wtki_ang}
 
-Two angular observables were added to the proton-tagged sample on 2026-09-18 and are proposed as
-secondary scope; they are not part of the 2026-09-06 release, and the numbers below are fake data
-like every other result in this note. Both use the leading proton candidate:
+Two angular observables of the proton-tagged sample are proposed as secondary scope. Like every
+other number in this note they are fake data. Both use the leading proton candidate:
 \[
   \theta_p=\arccos\!\big(\hat p_p\cdot\hat\nu\big), \qquad
   \theta_{\pi p}=\arccos\!\big(\hat p_\pi\cdot\hat p_p\big),
@@ -3022,6 +3098,18 @@ generators differ mainly in normalisation rather than shape, so these observable
 through the integral. The study behind all of this --- binning, generator predictions, the
 $0.50$-criterion screen and the two-dimensional programme --- is a separate note.
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{newobs_xsec}
+  \caption{The two proton angular observables in all three configurations: $\theta_p$ (top row) and
+    $\theta_{\pi p}$ (bottom row), for FHC, RHC and the combined exposure. Points are the unfolded
+    fake data with the total uncertainty, the grey histogram is the $A_C$-smeared fake-data truth,
+    and the four coloured histograms are the generator predictions; integrated cross sections are
+    given in the legends. The RHC $\theta_p$ panel is shown for completeness only: its response is
+    rank-deficient and its shape is not a measurement.}
+  \label{fig:newobs_xsec}
+\end{figure}
+
 \subsection{Two-dimensional cross sections (proposed)}
 \label{sec:2d}
 
@@ -3042,6 +3130,139 @@ term, per-bin uncertainties to $545\%$ and a closure ratio of $-0.40$. Condition
 of the response can be inverted and says nothing about how much data survives in the inverted
 directions; the two have to be read together, here and everywhere else in this note.
 
+% =============================================================================
+\section{Validation}
+\label{sec:validation}
+% =============================================================================
+
+Nothing in this section uses beam-on data. Every study here asks whether the machinery does what it
+claims on simulation, where the right answer is known: whether the extraction returns the truth it
+was given, whether the quoted uncertainties are the right size, and whether the background fit that
+the control regions feed is unbiased. The tests that do use beam-on data --- the control-region
+comparison itself --- are in the control-sample note.
+
+\subsection{Self-closure of the extraction}
+
+The first test is the weakest and the most necessary: unfold a spectrum thrown from the same
+simulation that built the response, and require the truth back. This catches an inverted matrix, a
+misaligned binning or a normalisation applied twice, and it is reported with every extraction in
+this note as the closure $\chi^2$ against the $A_C$-smeared truth. It cannot detect a wrong model,
+because the model is the same on both sides, and it cannot detect a mis-sized uncertainty, because
+one throw says nothing about a distribution of throws. Those are the next two subsections.
+
+\subsection{Ensemble coverage: are the uncertainties the right size?}
+\label{par:ensemble}
+A single closure throw cannot say whether the quoted uncertainty is correctly sized, so
+thirty-two statistically independent Poisson realisations of the FHC data were each put
+through the whole chain, universes rebuilt from that throw, and the per-bin pull
+$p_i=(\hat{x}_i-(A_C x_{\rm CV})_i)/\sigma_i$ formed against the fixed central-value
+truth smeared by that member's own $A_C$, for three extractions chosen to bracket the
+conditioning: $p_\mu$, $\cos\theta_\mu$ (whose $A_C$ row sums fall to $0.17$ in FHC) and
+the one-bin total (no regularisation).
+
+\begin{center}
+\small
+\begin{tabular}{lccc}
+\toprule
+Reference: statistical covariance & pull mean & pull width & 68\% / 95\% coverage \\
+\midrule
+$d\sigma/dp_\mu$        & $-0.05$ & $1.08$ & $62.1\%$ / $92.0\%$ \\
+$d\sigma/d\cos\theta_\mu$ & $-0.18$ & $0.97$ & $71.2\%$ / $93.1\%$ \\
+one-bin total           & $-0.25$ & $1.02$ & $62.5\%$ / $93.8\%$ \\
+expected                & $0$     & $1$    & $68\%$ / $95\%$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The widths are consistent with unity, each determined to $\pm13\%$ with this many
+members, and the coverage is correct within the same statistics: \textbf{the statistical
+uncertainties are correctly sized, and the strongly suppressed observable behaves no
+differently from the well-conditioned one.} Against the full covariance the pull widths
+are $0.33$--$0.35$ (total: $0.11$) with essentially $100\%$ coverage, because the ensemble
+varies only the data statistics while the quoted uncertainty carries the flux, detector
+and cross-section terms that are identical in every member; that is the measured form of
+the closure $p$-values clustered near unity. The ensemble means sit below the reference by
+$0.5\%$ ($p_\mu$), $1.0\%$ (total) and $2.7\%$ ($\cos\theta_\mu$), at $0.4$, $1.3$ and
+$1.9$ standard deviations of the mean, all from the same throws: one measurement of a
+small negative offset, not three, not significant, and not corrected. The throw itself is
+unbiased (mean selected count $0.999$ of the expectation). The study covers three
+extractions in one configuration; RHC and the proton-tagged family have not been tested.
+The reference construction and the full-covariance pulls are discussed in
+\suppref{Sec.}{sec:supp_ensemble}.
+
+
+
+\subsection{The background fit, validated on pseudo-data}
+
+\begin{itemize}\itemsep2pt
+  \item \textbf{Toys}: see \S\ref{sec:ensembles} for ensembles of up to $10^5$ toys per model; the 300-toy sets of
+    Fig.~\ref{fig:validation} give pull means $0.02$--$0.07$, widths $0.89$--$1.03$ and coverage $67$--$75\%$.
+  \item \textbf{Injections} (Asimov, two-parameter totals fit): class shifts are recovered exactly; a $30\%$ signal
+    excess moves the normalisations by $0.13\sigma$; an unfitted class at $+30\%$ by $-0.07\sigma$; a detector knob
+    by at most $0.14\sigma$; flux and GENIE universes by $-0.97$ to $+0.84\sigma$, i.e.\ within the uncertainty they
+    are part of.
+  \item \textbf{FHC versus RHC}: a likelihood-ratio test of shared against beam-specific normalisations inside the
+    joint covariance (a parameter goodness-of-fit test is not valid here, the modes share universes). A $+15\%$ shift
+    of the RHC neutrino Monte Carlo alone gives $\Delta\chi^2=12.9/2$ ($p=0.002$, totals) and $20.3/2$ ($p=4\times10^{-5}$,
+    2D).
+  \item \textbf{MCMC} (adaptive Metropolis, four chains, flat priors): posterior means within $0.02$ and widths within
+    $2\%$ of MIGRAD/MINOS on the Asimov dataset and on a CC$0\pi$ $\times1.25$ injection, $\hat R\le1.004$. With a
+    few parameters and a near-quadratic likelihood the profile likelihood is sufficient; the sampler is kept as a
+    cross-check.
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{bkgfit/validation}
+  \caption{Validation, totals (top) and 2D (bottom): toy pulls, Asimov injections, profile likelihood against MCMC.}
+  \label{fig:validation}
+\end{figure}
+
+\subsection{Pull-mean convergence of the background fit}
+\label{sec:ensembles}
+
+With 300 toys the error on a pull mean is $0.058$, so the $+0.07$ of the first validation could not be separated
+from zero. Ensembles of $10^5$ toys per model (error $0.003$) with three diagnostic variants, each of
+$5\times10^4$, settle it (Table~\ref{tab:ensembles}, Fig.~\ref{fig:ensembles}). With the combined Neyman--Pearson
+data variance the mean does \emph{not} converge to zero in the 2D fits: a residual $+0.019$ (CC$0\pi$) and
+$+0.034$, $+0.031$ (CC$0\pi$+$\pi^0$) remains at six to ten standard deviations of the ensemble. It persists
+when the Poisson fluctuation is replaced by a Gaussian one ($+0.031$), so it is not Poisson counting in low bins;
+it disappears when the data variance is the prediction at the nominal parameters ($+0.000$, $-0.004$, $-0.001$).
+The CNP variance depends on the fluctuating data, which correlates the weight of a bin with its own fluctuation.
+The bias is small --- $0.3$--$0.7\%$ on $\theta$ against a $16$--$21\%$ uncertainty --- but it is avoidable, so
+the Pearson form is the default of the fit and every data result below uses it. Pull widths are $1.00$ and
+coverage $68\%$ in every variant.
+
+\begin{table}[H]
+  \centering
+  \caption{Pull means $\pm$ their ensemble error. ``standard'': systematic throw from the covariance, Poisson,
+    CNP data variance ($10^5$ toys); ``Gaussian'': Gaussian instead of Poisson fluctuation; ``Pearson'': standard
+    toys fitted with the prediction as data variance ($5\times10^4$ each).}
+  \label{tab:ensembles}
+  \small
+  \begin{tabular}{llccc}
+    \toprule
+    Bins & Model (parameter) & standard, CNP & Gaussian, CNP & standard, Pearson \\
+    \midrule
+    totals & CC$0\pi$ & $+0.003\pm0.003$ & $+0.005\pm0.005$ & $-0.011\pm0.005$ \\
+    totals & CC$0\pi$+$\pi^0$ (CC$0\pi$) & $+0.012\pm0.003$ & $+0.014\pm0.005$ & $+0.003\pm0.005$ \\
+    totals & CC$0\pi$+$\pi^0$ ($\pi^0$) & $+0.016\pm0.003$ & $+0.014\pm0.005$ & $+0.008\pm0.005$ \\
+    2D & CC$0\pi$ & $+0.019\pm0.003$ & $+0.031\pm0.005$ & $+0.000\pm0.005$ \\
+    2D & CC$0\pi$+$\pi^0$ (CC$0\pi$) & $+0.034\pm0.003$ & $+0.031\pm0.005$ & $-0.004\pm0.005$ \\
+    2D & CC$0\pi$+$\pi^0$ ($\pi^0$) & $+0.031\pm0.003$ & $+0.029\pm0.005$ & $-0.001\pm0.005$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{bkgfit/ensembles}
+  \caption{Running pull mean against the ensemble size for each model and parameter; band: statistical error of the
+    standard ensemble. The Poisson-only variant has no systematic throw, so its pulls are narrower.}
+  \label{fig:ensembles}
+\end{figure}
+
+
 \section{Systematic Uncertainties}
 \label{sec:systematics}
 % =============================================================================
@@ -3060,7 +3281,7 @@ propagation matrix and released per component (Sec.~\ref{sec:ac_rowsums}).  Tabl
       computed from the released per-component covariance rather than estimated.
       Ranges span observables and configurations; the two families are given separately
       because the proton-tagged sample is both statistically sparser and more
-      detector-sensitive. \releasestamp}
+      detector-sensitive.}
     \label{tab:systematics}
     \begin{tabular}{L{3.4cm} L{3.4cm} c c}
 \toprule
@@ -3103,10 +3324,10 @@ are those of Table~\ref{tab:fhc}.
 \begin{center}\small
 \captionof{table}{FHC (Runs 1, 2, 4, 5): bin-averaged fractional uncertainty (\%) by
   source group for the six released extractions, read from the release systematics dumps
-  (2026-09-06 release). ``Prediction total'' excludes the data
+  ``Prediction total'' excludes the data
   statistics; the flux row is the PPFX multisim term. Every row is a bin average of the
   per-bin fractional uncertainties, so the rows do not combine in quadrature to the totals
-  (the quadrature is taken per bin before averaging). \releasestamp}
+  (the quadrature is taken per bin before averaging).}
 \label{tab:systbreak}
 \begin{tabular}{lcccccc}
 \toprule
@@ -3451,14 +3672,13 @@ $\cos\theta_\pi$ four (\suppref{Sec.}{sec:binopt}).
       $\theta_{\pi p}$ (rad)$^{\dagger}$ & 3 & 0, 1.193, 2.010, $\pi$ \\
     \bottomrule
   \end{tabular}
-  \par\smallskip\noindent{\footnotesize $^{\dagger}$ Proposed secondary scope, added 2026-09-18 and
-    not part of the 2026-09-06 release: the proton polar angle and the pion--proton opening angle
-    (\S\ref{sec:wtki_ang}). $\theta_p$ uses edges derived on the RHC chain, which condition three
+  \par\smallskip\noindent{\footnotesize $^{\dagger}$ Proposed secondary scope: the proton polar angle and the pion--proton
+    opening angle (\S\ref{sec:wtki_ang}). $\theta_p$ uses edges derived on the RHC chain, which condition three
     times better than the FHC-derived ones at the same bin count.\par $^{*}$ Numerical plotting boundary only; the upper truth bin is open-ended ($p_\pi>0.205$~GeV/$c$), and the released density over the conventional width $0.795$~GeV/$c$ represents the bin integral (\suppref{Table}{tab:ppi_partial}).}
 
 \end{table}
 
-The migration-diagonal criterion itself was revisited in 2026-09: relaxing it from $0.68$ to
+The migration-diagonal criterion itself was also relaxed, from $0.68$ to
 $0.50$ admits twenty-six new candidate binnings, and \emph{every one of them} fails the secondary
 gate on the conditioning of $A_C$, which is not the diagonal. The only healthy candidate is a
 two-bin $W_\mathrm{had}$, and the six-bin scheme is kept, since two bins buy conditioning by
@@ -3514,7 +3734,7 @@ measurement. Table~\ref{tab:altbinning} lists the alternatives and their fate.
                    & 6 bins & $0.00/0.00$ & not adopted: rank-deficient \\
     $\theta_p$ & 5, 7 bins & $\le0.03$ & not adopted: conditioning \\
                & 3 bins (RHC edges) & $0.16/0.05$; COMB $0.51$ & alternative to the released four bins \\
-    $\cos\theta_\pi$ & 4 bins & $0.27/0.24$ & previous release; superseded by five bins \\
+    $\cos\theta_\pi$ & 4 bins & $0.27/0.24$ & superseded by the five-bin scheme \\
     \bottomrule
   \end{tabular}
 \end{table}
