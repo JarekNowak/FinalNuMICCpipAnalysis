@@ -104,351 +104,44 @@
   {\normalsize\textit{Lancaster University}\par}
   \vspace{2cm}
   \begin{abstract}
-    We present a measurement of $\nu_\mu + \bar{\nu}_\mu$ charged-current single
-    charged-pion ($\mathrm{CC}\pi^{\pm}$) differential cross sections on argon-40 using
-    the full \uboone{} NuMI exposure, in three configurations: forward horn current
-    (FHC; Runs~1, 2, 4, 5; $8.857\times10^{20}$ protons on target,
-    POT), reverse horn current (RHC; Runs~1, 2, 3, 4a, 4b, 4c;
-    $11.082\times10^{20}$~POT), and their combination ($19.939\times10^{20}$~POT).
-    The analysis is blind: results are extracted on Poisson-thrown central-value
-    fake data.
-    %
-    Events are selected requiring a reconstructed muon candidate track and exactly
-    one contained pion candidate track emerging from a fiducial neutrino vertex,
-    passing an electromagnetic-shower veto, and with a muon--pion opening angle
-    less than 2.6~rad. In the measured phase space the selection achieves
-    $\approx\!59\%$ signal purity and $\approx\!17\%$ efficiency
-    (Table~\ref{tab:cutflow}).
-    %
-    Differential cross sections are extracted for each configuration via Wiener-SVD
-    unfolding in five kinematic quantities: muon momentum~$\pmuM$, pion
-    momentum~$\ppiM$, muon polar angle, pion polar angle~$\cthpiM$ and
-    the muon--pion opening angle~$\thmupM$. The muon polar angle is reported in both
-    its $\cos\theta_\mu$ and its $\theta_\mu$ parameterisation, so six differential
-    distributions are released per configuration.
-    %
-    Each configuration is normalised with its own integrated $\nu_\mu+\bar\nu_\mu$
-    flux (FHC $6.81159$, RHC $6.44646$, combined $6.60865\times10^{-10}$~cm$^{-2}$
-    POT$^{-1}$; new-G4 GEANT4 values above $60$~MeV, Sec.~\ref{sec:flux}); the RHC
-    $\nu_\mu+\bar\nu_\mu$ integral is lower because the reverse-horn focusing accepts a
-    softer, less intense hadron spectrum at the off-axis \uboone{} location, not because
-    the beam is $\bar\nu_\mu$-dominant, which is a composition property.
-    The primary total is a one-bin extraction with the same machinery as the differential
-    results: one true bin covering the full $\cos\theta_\mu$ range with no overflow, so
-    the response is the efficiency alone, nothing is regularised and $A_C\equiv1$
-    (Table~\ref{tab:cutcount}): FHC $1.03\pm0.40$, RHC $0.93\pm0.35$ and combined
-    $0.97\pm0.37$ ($\times10^{-38}$~cm$^2$/Ar) on the thrown fake data, closing on the
-    realised truth to $0.975$--$0.998$; the RHC/FHC ratio of the injected tune is $0.901$. The Wiener-SVD integrated cross sections are of order
-    $0.62$--$0.96\times10^{-38}$~cm$^2$/Ar (Table~\ref{tab:sigint_all}); they differ
-    between observables because the additional-smearing matrix $A_C$ is not norm
-    preserving, so a ratio of two of them is observable-dependent and is not quoted as a
-    result. The RHC deficit is a property of the injected sample rather than a
-    normalisation artefact: the exposures sum exactly and each configuration carries its
-    own flux, and on the central-value prediction the one-bin total is by construction the
-    central-value tune (the closed-form cut-and-count check reproduces it to four digits).
-    %
-    The standalone generators span a factor $1.6$ in the same phase space, all within one
-    standard deviation of the $\sim\!38\%$ uncertainty the total will carry
-    (\suppref{Table}{tab:total_xsec}): at this exposure the total does not discriminate
-    between them. No beam-on data is unblinded in this note:
-    every ``data'' point shown is Poisson-thrown from the central-value Monte Carlo
-    (\S\ref{sec:mc}), so no statement here is a measurement of a real deficit or excess.
-    %
-    The extraction is validated by a same-sample self-closure, and cross-checked against
-    the D'Agostini iterative-Bayesian method: its flat, iteration-stable integral
-    ($23$--$31\%$ above Wiener-SVD, and flat to $\le1.2\%$ across observables where the
-      Wiener-SVD spread is $24$--$35\%$; re-evaluated on this release)
-      is consistent with the
-    observable-to-observable spread of the Wiener-SVD integrated cross sections being
-    the additional-smearing matrix $A_C$, which the released row sums establish directly,
-    not a physical or acceptance effect
-    (\suppref{Sec.}{sec:crosschecks}). All results use the \textsc{XSecAnalyzer}
-    framework on the resolution-optimised binning of \suppref{Sec.}{sec:binopt}.
-      The unfolded integral reproduces the realised fake-data truth to $1.010$ on
-      average over the eighteen inclusive extractions (second-derivative regularisation).
-      %
-      \textbf{Scope.}  The primary results are the total cross section, the angular
-      observables, $d\sigma/dp_\mu$, and a deliberately coarse two-bin $d\sigma/dp_\pi$.
-      The proton-tagged subsample is secondary scope because the exposure supports an
-      integrated cross section rather than a resonance shape; its covariance is otherwise complete with respect to the
-      configured model.  All fifty-one
-      extractions carry the complete configured covariance (PPFX flux, interaction model,
-      reinteraction, detector variations, normalisation and statistical terms; the identified
-      but unpropagated terms are listed in \S\ref{sec:limitations}).
-      Sec.~\ref{sec:status_matrix} gives a per-result status table.
-      %
-      \textbf{Validation.}  Two results bound what the extraction can be trusted to do.
-      An ensemble of thirty-two independent Poisson realisations, each carried through the
-      whole chain on the current release, gives per-bin pull widths of $1.08$
-      ($d\sigma/dp_\mu$), $0.97$ ($d\sigma/d\cos\theta_\mu$) and $1.02$ (the one-bin
-      total) against the statistical covariance, with $62$--$71\%$ and $92$--$94\%$
-      interval coverage: the statistical uncertainties are correctly sized, and the
-      observable whose additional smearing is most severe behaves no differently from the
-      best-conditioned one.  Separately, the release was built from the processed ntuples with every cached
-      universe deleted, and an independent rebuild of the same kind reproduced it
-      bit-identically, so the released numbers are regenerable from the raw inputs rather
-      than from a preserved intermediate.  The ensemble
-      means sit below the reference by $0.5\%$ ($p_\mu$), $1.0\%$ (one-bin total) and
-      $2.7\%$ ($\cos\theta_\mu$), $0.4$, $1.3$ and $1.9$ standard deviations of the mean;
-      no correction is applied.
-      %
-      \textbf{Companion documents.}  This note describes the analysis as it stands and the
-      reasons for its choices. The studies behind those choices --- the pion-momentum
-      estimator survey, the binning and threshold optimisation, and the closure programme
-      --- are in the technical supplement. The history of the analysis, every correction
-      that changed a result with the values before and after, is in the change log and is
-      not repeated here.  The additional-smearing and
-      covariance matrices for all fifty-one differential extractions, and the six one-bin
-      totals, are released as text in
-      \texttt{report/data\_release/}; a prediction cannot be compared with these results
-      without the former, nor used quantitatively without the latter.
+    We measure $\nu_\mu+\bar\nu_\mu$ charged-current single-charged-pion
+    (CC$\pi^{\pm}$) differential cross sections on argon using the full \uboone{} NuMI
+    exposure, in three configurations: forward horn current (FHC, $8.857\times10^{20}$~POT),
+    reverse horn current (RHC, $11.082\times10^{20}$~POT) and their combination
+    ($19.939\times10^{20}$~POT).
+
+    Events are selected by requiring a muon candidate and exactly one contained charged-pion
+    candidate from a fiducial vertex, an electromagnetic-shower veto, and a muon--pion opening
+    angle below $2.6$~rad, giving $\approx\!59\%$ purity at $\approx\!17\%$ efficiency. Cross
+    sections are extracted by Wiener-SVD unfolding in six released distributions --- muon and pion
+    momentum, muon polar angle in both parameterisations, pion polar angle and the muon--pion
+    opening angle --- together with a flux-averaged total from a one-bin extraction of the same
+    machinery. A proton-tagged subsample, in which a proton candidate is also required, is measured
+    as secondary scope in the hadronic invariant mass, the transverse-kinematic-imbalance variables
+    and two proton angles.
+
+    Each configuration carries its own integrated flux and exposure, and each result carries the
+    complete configured covariance: flux, interaction model, hadron re-interaction, detector
+    response, normalisation and statistical terms. Unfolded results must be compared with a
+    prediction through the released additional-smearing matrix $A_C$, which is not
+    normalisation-preserving; $A_C$ and the covariance are released for every extraction.
+
+    \textbf{The analysis is blind.} Every ``data'' point in this note is Poisson-thrown from the
+    central-value Monte Carlo, so no number here is a statement about beam-on data. The four
+    background-control regions, which contain no signal-region events, have been opened on beam-on
+    data; they show no evidence that the background model needs correcting.
+
+    The extraction is validated by same-sample self-closure, by an ensemble of independent
+    Poisson realisations carried through the whole chain --- which returns correctly sized
+    statistical uncertainties --- and by an independent bit-identical rebuild from the processed
+    ntuples. Sec.~\ref{sec:intro} explains how the note is organised; the studies behind the
+    analysis choices are in the technical supplement, and the history of the analysis is in the
+    change log.
   \end{abstract}
   \vfill
   \tableofcontents
 \end{titlepage}
 
-% =============================================================================
-\section{Request to open the background-control regions}
-\label{sec:request}
-% =============================================================================
-
-This section is the self-contained case for the one decision requested of the
-collaboration at this stage: permission to inspect beam-on data in four
-reconstruction-level control regions of the inclusive $\mathrm{CC}\,1\mu1\pi Xp$
-selection while the signal region stays blind. Everything here is expanded in
-\S\ref{sec:sidebands}; the numbers are those of the frozen release identified in the box
-below.
-
-\medskip\noindent\fbox{\parbox{0.97\linewidth}{\textbf{Analysis state.} Numerical release
-2026-09-06 (document revision 2026-09-07); repository tag \texttt{cr-freeze-2026-09-06};
-fake data: one Poisson throw per run of the central-value prediction with the unified
-weight rule (\S\ref{sec:mc}); binning: the released edges of Appendix~\ref{app:binning}
-(five-bin forward-split $\cos\theta_\pi$, two-bin $p_\pi$); normalisation: per-run
-exposure, per-run beam-off gate ratios, per-configuration flux; detector variations:
-native Run-4 FHC and RHC samples; data release: \texttt{report/data\_release/}, checksum
-manifest \texttt{MANIFEST.sha256} (\texttt{b8ebc69e3bc91434}). Every table marked
-``current frozen release'' is generated from this state.}}
-\medskip
-
-\paragraph{Request.}
-We request approval to inspect beam-on data in four control regions: CC$0\pi$,
-multi-$\pi$, $\pi^0$ and large muon--pion opening angle (called ``cosmic'' below for
-brevity: it is cosmic-\emph{enriched}, $34$--$41\%$ beam-off, not cosmic-pure).
-Throughout, ``beam-off'', ``EXT'' and ``cosmic data'' name the same data-driven
-component, the beam-off trigger sample scaled by gate counts; ``signal contamination''
-means the inclusive signal unless the proton-tagged selection is named. Each region is
-anchored by the inversion of one nominal signal requirement; requirements that become
-undefined once that inversion is made, or that would sculpt the targeted control sample,
-are dropped as listed in Table~\ref{tab:cr_defs}. Each region is disjoint from the
-signal region at reconstruction level (demonstrated event by event,
-\S\ref{sec:cr_overlap}); their expected signal contaminations are $8$--$24\%$. The
-signal region remains blind. Before the regions are opened, the selections, the
-run-dependent normalisation, the beam-off scaling, the displayed observables and binning,
-the covariance construction, the goodness-of-fit tests and the permitted responses to a
-discrepancy are frozen as written in \S\ref{sec:cr_protocol}. Control-region data will be
-compared with the complete prediction (neutrino MC $+$ beam-off $+$ dirt) separately in
-FHC and RHC, with the combined configuration as a cross-check. Any discrepancy beyond
-the pre-declared criteria requires a documented treatment and renewed approval before
-the signal region is opened. The proton-tagged control regions are \emph{not} part of
-this request (\S\ref{sec:cr_1p_scope}).
-
-\paragraph{What each region can and cannot do.} The physics roles, which the
-transfer factors of \S\ref{sec:cr_transfer} decide, are these.
-\begin{itemize}\itemsep2pt
-  \item \textbf{CC$0\pi$} is the high-statistics validation of the dominant neutrino
-    background class: CC$0\pi$ events with a proton or other track taken as the pion are
-    $244$ of the $637$ FHC neutrino-background events ($38\%$). The region has $72\%$
-    target purity ($65\%$ of the full stack) and $0.6\%$ raw statistical precision. It
-    validates the normalisation and kinematics of the underlying CC$0\pi$ population,
-    \emph{not} the proton-to-pion misidentification probability that transfers that
-    population into the signal region: the transfer carries a $31$--$34\%$ uncertainty
-    dominated by the detector variations. It is therefore a validation test rather than
-    a per-cent-level constraint, and it is conditionally eligible for a fitted
-    normalisation correction under \S\ref{sec:cr_protocol}. The direct test of the
-    misidentification probability is an inverted pion-PID region, which does not exist
-    yet and is listed among the prerequisites for opening the signal region.
-  \item \textbf{$\pi^0$} tests the shower veto and the CC$+$NC~$\pi^0$ background. Its
-    target purity is $50.1\%$ (FHC) and $51.0\%$ (RHC) of the neutrino MC, its transfer
-    factor $0.02$ with a $17$--$19\%$ uncertainty set by the Monte-Carlo-statistical
-    floor of the detector-variation samples. \textbf{For this opening the region is
-    diagnostic only.} Approval to inspect it does not authorise a fitted correction; a
-    proposal to fit the CC$+$NC~$\pi^0$ normalisation would require a separate
-    documented review after the pre-fit result has been recorded, with the fit model,
-    the leverage of the fixed components, the transfer uncertainty and its floor, and
-    the expected effect on the signal-region prediction.
-  \item \textbf{Multi-$\pi$} is diagnostic only. Its transfer factor is $\simeq2.5$
-    (the signal region holds more of the target class than the region does) and its
-    target purity $47\%$; it is not used to fit or constrain the signal-region
-    normalisation, and exposes gross modelling failures and shape discrepancies.
-  \item \textbf{Cosmic} validates the beam-off normalisation and shape to $\sim\!50\%$
-    once the prediction uncertainties of its neutrino component are included ($17\%$
-    from data statistics alone). That is sufficient because beam-off is $1.9\%$ of the
-    selected signal-region prediction: a $50\%$ uncertainty on it is an effect of order
-    $1\%$ on the selected sample. It is not eligible for a fitted correction.
-\end{itemize}
-About $29\%$ of the FHC neutrino background has no region of its own: NC and
-$\nu_e$CC without a $\pi^0$, out-of-fiducial-volume events and CC$1\pi^\pm$ outside the
-measured phase space (\S\ref{sec:cr_transfer}). These components keep their model
-uncertainties unchanged; the CC$0\pi$ and $\pi^0$ distributions carry indirect
-sensitivity to the first two through the shared reconstruction, and each is small
-enough individually that no dedicated region is justified at this exposure.
-
-\paragraph{What the test detects, and its blind direction.} The pass/fail statistic is
-a global normalisation $\chi^2$ over the eight (region, mode) totals with the full
-pre-fit covariance (\S\ref{sec:cr_protocol}). It detects a discrepancy confined to one
-region beyond $12\%$ of the CC$0\pi$ or $\pi^0$ total and beyond $50$--$62\%$ of the
-multi-$\pi$ or cosmic total, an FHC/RHC inconsistency, and, through the
-normalisation-marginalised shape tests, a shape difference; a \emph{common}
-normalisation shift of all regions fails it only beyond $58\%$, because the correlated
-flux, cross-section and detector terms absorb it. That blind direction is acceptable
-because it is the direction the signal-region measurement already carries as its flux
-and cross-section uncertainty: the control regions test the background model region by
-region, not the overall normalisation.
-
-\paragraph{What the present pseudo-data studies do and do not show.}
-The sideband machinery has been exercised on Poisson-thrown central-value pseudo-data.
-Those studies validate the selection logic, the per-run exposure scaling, the
-central-value weighting and, in the full-stack variant of \S\ref{sec:cr_fullstack}, the
-exact bookkeeping path that beam-on data will follow. They do \emph{not} validate the
-background model: the pseudo-data are drawn from the same simulation that supplies the
-prediction, so agreement is guaranteed up to statistics. The background model is the
-largest untested assumption in the analysis, and testing it is what the control regions
-are for. The control-region comparison is made at reconstruction level, so it does not
-depend on the unfolding or on the alternative-generator closure that is required before
-the signal region is opened (\S\ref{sec:limitations}).
-
-\begin{table}[H]
-  \centering
-  \caption{Control-region definitions in terms of the selection stages. The
-    common preselection \textit{pre} is software trigger, reconstructed vertex in the
-    fiducial volume, topological score $>0.67$ and a qualifying muon candidate
-    (Cuts~1--4 of \S\ref{sec:selection}); \textit{shower} is the shower veto (Cut~8),
-    \textit{final} the non-proton multiplicity cut (Cut~10), \textit{contained/gap} the
-    pion containment and three-plane requirements (Cuts~5--7), \textit{opening} the
-    $\theta_{\mu\pi}<2.6$~rad cut (Cut~9), and $n_\pi$ the number of qualifying contained
-    pion candidates. The signal region is \textit{pre}, \textit{contained}, \textit{gap}, \textit{shower},
-    \textit{opening} and \textit{final} with $n_\pi=1$. ``Dropped'' lists nominal requirements not
-    applied in the region; ``target'' the signal-region background the region is meant to
-    constrain. Each region is stored as a flag alongside the signal-region flag when the
-    events are processed.}
-  \label{tab:cr_defs}
-  \small
-  \begin{tabular}{p{1.5cm}p{5.2cm}p{3.0cm}p{4.6cm}}
-    \toprule
-    Region & Definition (branch level) & Dropped vs.\ signal & Target background \\
-    \midrule
-    CC$0\pi$ & \textit{pre}, \textit{shower}, \textit{final}; $n_\pi=0$ & contained, gap, opening (no pion to define them) & CC$0\pi$ events with a proton or other track taken as the pion; pion absorption feed-in \\
-    multi-$\pi$ & \textit{pre}, \textit{final}; $n_\pi\ge2$ & shower, contained/gap of the extra pion, opening & multi-pion events with one pion lost \\
-    $\pi^0$ & \textit{pre}, shower veto failed; $n_{\rm shower}\ge1$ & contained, gap, opening, final & CC/NC~$\pi^0$ with both photons missed; shower-veto efficiency \\
-    cosmic & \textit{pre}, \textit{contained}, \textit{gap}, \textit{shower}, \textit{final}; opening-angle cut inverted & opening only & residual beam-off (cosmic) in the signal region; its normalisation \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-\noindent The $\pi^0$ region is the furthest from a single inversion: besides the pion
-requirements, which have no meaning once no pion candidate is demanded, it also drops the
-final multiplicity cut. The cut was dropped when the region was defined to avoid a
-plausible topology-dependent sculpting (photon showers reconstructed as additional
-track-like primaries). The dedicated comparison of \S\ref{sec:cr_pi0_final} subsequently
-found no material change in target purity, transfer uncertainty or the frozen
-leading-shower-energy shape. The no-cut definition is retained because it provides
-$11$--$14\%$ more events, not because the study demonstrated a material bias from the
-cut.
-
-\paragraph{Points the collaboration is asked to ratify.}
-(i)~The $\pi^0$ definition without the final multiplicity cut (Table~\ref{tab:cr_defs});
-the comparison with the version retaining it is in \S\ref{sec:cr_pi0_final} and will
-\emph{not} be used to modify the region after beam-on inspection. (ii)~The $\pi^0$
-target class CC$+$NC~$\pi^0$, adopted by the analysers on 2026-09-06 (the NC$\pi^0$
-events the shower veto is also meant to remove had been counted under ``NC and
-$\nu_e$CC''; $\nu_\mu$CC~$\pi^0$ alone is $46\%$ of the region), together with the
-region's diagnostic-only status for this opening. Purity is defined throughout as the
-target class's share of the \emph{neutrino-MC} prediction in the region, beam-off and
-dirt being separately constrained components; both the class definition and the
-denominator were settled after the purities were known, which is one reason the region
-is diagnostic-only. (iii)~The roles of the other three regions as stated above, and the
-frozen procedure of \S\ref{sec:cr_protocol}.
-
-\paragraph{Approval checklist.}
-\begin{center}\small
-\begin{tabular}{p{7.2cm}p{4.6cm}p{2.6cm}}
-\toprule
-Item & Status / evidence & Sign-off \\
-\midrule
-\multicolumn{3}{l}{\emph{Required before the control regions are opened}}\\
-\midrule
-Control-region definitions frozen & Table~\ref{tab:cr_defs} & \\
-Signal-region overlap zero, event by event & \S\ref{sec:cr_overlap} & \\
-Plot list and binning frozen & \S\ref{sec:cr_protocol} item~1 & \\
-Pre-fit covariance, global statistic and thresholds frozen & \S\ref{sec:cr_protocol} items~2--3; null calibration Fig.~\ref{fig:cr_null_calibration} & \\
-Response to a discrepancy frozen & \S\ref{sec:cr_protocol} item~4 & \\
-$\pi^0$ definition and target class ratified; diagnostic-only status recorded & this section, (i)--(ii) & conveners \\
-Flux and detector-systematics contacts have reviewed their parts & pending & contacts \\
-Repository tag and release checksum recorded & analysis-state box above & \\
-\midrule
-\multicolumn{3}{l}{\emph{Required later, before the signal region is opened}}\\
-\midrule
-Control-region results reviewed; any discrepancy treated under \S\ref{sec:cr_protocol} & pending & conveners \\
-Alternative-generator (NuWro or GiBUU) fake-data closure on the released chain & pending, \S\ref{sec:limitations} & \\
-Flux constants confirmed as PPFX-corrected central values & pending, \S\ref{sec:flux_status} & flux contact \\
-MCS muon-momentum uncertainty bounded or propagated & pending, \S\ref{sec:limitations} & \\
-Final empty-cache reproduction of the release to be unblinded & pending, \S\ref{sec:pipeline} & \\
-Inverted pion-PID region for the CC$0\pi$ misidentification transfer & pending & \\
-Inverted-proton-PID region before any proton-tagged result & pending, \S\ref{sec:cr_1p_scope} & \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\paragraph{Expected yields and precision.}
-Table~\ref{tab:sideband_yields} gives the expected composition per region and beam. The
-raw statistical precision of the data samples is $0.6\%$ (CC$0\pi$), $0.8\%$ ($\pi^0$)
-and $6\%$ (multi-$\pi$) for the combined exposure. The neutrino-MC prediction in each
-region carries the flux, cross-section and re-interaction uncertainties of
-Table~\ref{tab:cr_syst}, including the detector variations. The regions carry a
-few-per-cent sensitivity to the signal normalisation in principle (the CC$0\pi$ region
-holds $1\,124$ signal events, $9\%$ of its neutrino MC, so a $30\%$ signal excess would
-appear as a $2.8\%$ excess), which is inside the $9$--$24\%$ detector-variation
-uncertainty on the region prediction and so invisible to every pull of
-\S\ref{sec:cr_protocol}; that is what keeps the regions blind to the signal, and the
-response tree holds the signal at its central value in any case.
-
-\subsection{Outcome: the regions were opened on 2026-09-09}
-\label{sec:cr_outcome}
-
-The request above was granted and the four regions were inspected on beam-on data. The full account
-is the control-sample note; what follows is what a reader of this note needs, and it includes two
-defects in the first comparison that were found afterwards and that changed its conclusions. The
-sign-off checklist above was not revised when the regions were opened --- several of its
-``required before the control regions are opened'' items still read \emph{pending} --- and
-reconciling it with what was actually signed off is an open item.
-
-\begin{itemize}\itemsep3pt
-  \item \textbf{Two defects, both now corrected.} The sideband Monte Carlo used for the first
-    comparison predated the beam-frame correction of \S\ref{sec:beamdir}: it stored
-    $\cos\theta_\mu$ about the detector $z$ axis while the beam-on skim stored the beam-frame angle.
-    The ``muon-angle shape failure'' reported in both CC$0\pi$ and $\pi^0$ was that artefact and is
-    withdrawn; with the current sideband sample the ratio is flat. Separately, the sideband detector
-    variations were compared without POT normalisation --- the knob samples do not carry the central
-    sample's exposure --- which inflated the detector term by roughly an order of magnitude
-    ($\sim\!20\%$ on control-region totals against $\sim\!2\%$ normalised). Transfer-factor ratios
-    and the released extraction are unaffected, both normalising by exposure already.
-  \item \textbf{One run is discrepant, and it is an exposure error, not a background.} With the
-    corrected inputs the frozen global test fails when FHC Run~1 is included and passes without it.
-    A free exposure factor on FHC Run~1 fits $0.520\pm0.020$ with $\chi^2=16/17$, consistent with
-    the $0.51$--$0.62$ implied by the yield ratios themselves. This is evidence of a bookkeeping
-    error in that run's exposure, not of a mismodelled background; it is an open item, and no result
-    in this note depends on FHC Run~1 alone.
-  \item \textbf{No background correction is warranted.} A joint FHC$+$RHC fit of the background
-    class normalisations (\crref{Sec.}{sec:jointfit}) returns the CC$0\pi$ class at $0.984\pm0.191$ with
-    FHC Run~1 excluded --- unity within a fifth of its own uncertainty. The measurement therefore
-    keeps its nominal background prediction, and item~4 of \S\ref{sec:cr_protocol} is not invoked.
-  \item \textbf{The residual deficit is not signal contamination.} The control regions sit
-    $8$--$16\%$ below prediction. Adding one cut to each region --- ``far'' sidebands, which can only
-    remove signal --- drives the signal fraction of the CC$0\pi$ region from $8.7\%$ to $2.1\%$ while
-    keeping $58\%$ of its events, and the data-to-prediction ratio does not move ($0.84\to0.85$;
-    $\pi^0$ $0.91\to0.92$). Whatever produces the deficit does not scale with signal contamination
-    (\crref{Sec.}{sec:farsb}).
-\end{itemize}
 
 % =============================================================================
 \section{Introduction}
@@ -471,12 +164,50 @@ differences for individual kinematic variables.
 
 \uboone{} is a single-phase liquid argon time-projection chamber (LArTPC)~\cite{uboone_nim} at
 Fermilab that operated from 2015--2021, providing the world's highest-statistics
-$\nu_\mu$-on-argon dataset below $5$~GeV during its NuMI running period.
-This note presents a simultaneous measurement of differential cross sections in five
-kinematic quantities (six released distributions, the muon polar angle being given in both
-$\cos\theta_\mu$ and $\theta_\mu$) in the CC$\pi^{\pm}$ channel using the full NuMI exposure in FHC, RHC, and combined
-configurations, employing Pandora pattern recognition~\cite{pandora,uboone_pandora} and
-Wiener-SVD unfolding~\cite{wienervsd}.
+$\nu_\mu$-on-argon dataset below $5$~GeV during its NuMI running period. This note presents a
+measurement of differential cross sections in this channel over the full NuMI exposure, in the
+forward-horn, reverse-horn and combined configurations, using Pandora pattern
+recognition~\cite{pandora,uboone_pandora} and Wiener-SVD unfolding~\cite{wienervsd}.
+
+\subsection*{What the measurement does}
+
+The measurement is built in five steps, and the note follows them in order.
+
+\begin{enumerate}\itemsep3pt
+  \item \textbf{Exposure and flux} (\S\ref{sec:flux}). Each configuration is an independent
+    measurement with its own exposure and its own integrated flux. The NuMI beam reaches
+    \uboone{} off-axis, and its direction is not the detector axis; every angle in this note is
+    defined about the neutrino direction, which matters at the level of whole bins.
+  \item \textbf{Signal and selection} (\S\ref{sec:signal}--\S\ref{sec:selection}). The signal is
+    defined by the particles leaving the nucleus, not by the interaction mechanism: one muon, one
+    charged pion, no neutral pion, above stated momentum thresholds and inside the fiducial volume.
+    The selection reconstructs that topology.
+  \item \textbf{Response and unfolding} (\S\ref{sec:unfolding}). The detector smears and loses
+    events, so the measured spectrum is not the cross section. Wiener-SVD unfolding inverts the
+    response with a regularisation that trades bias against variance, and reports what it did
+    through the additional-smearing matrix $A_C$: a prediction must be multiplied by $A_C$ before
+    it is compared with these results. $A_C$ is not normalisation-preserving, which is why
+    integrated cross sections differ between observables of the same sample.
+  \item \textbf{Uncertainties} (\S\ref{sec:systematics}). Flux, interaction model, hadron
+    re-interaction and detector response are propagated as full covariance matrices through the
+    same unfolding as the data, and are released with the results.
+  \item \textbf{Validation and blinding} (\S\ref{sec:limitations}). The analysis is blind: results
+    are extracted on fake data thrown from the central-value simulation. The background model is
+    tested in four control regions that hold no signal-region event, which have been opened on
+    beam-on data.
+\end{enumerate}
+
+\subsection*{How to read this note}
+
+\S\ref{sec:results} is the results section and can be read on its own; \S\ref{sec:wtki} gives the
+proton-tagged subsample, which is secondary scope. Two companion documents carry material that
+would otherwise interrupt the argument: the \emph{technical supplement} holds the studies behind
+the analysis choices --- estimator surveys, binning and threshold optimisation, the closure
+programme, the control-region procedure --- and the \emph{change log} holds the history of the
+analysis, including every correction that changed a result and the values before and after. Neither
+is needed to follow this note. The additional-smearing and covariance matrices for every extraction
+are released as text in \texttt{report/data\_release/}; a prediction cannot be compared with these
+results without the former, nor used quantitatively without the latter.
 
 \section{Physics Context}
 \label{sec:theory}
@@ -498,7 +229,7 @@ $\sim\!25$--$30\%$, charge exchange, quasi-elastic scattering) mix the CC$\pi^{\
 CC$\pi^0$ and CC$0\pi$ topologies at the $30\%$ level. That mixing is why the signal is
 defined by the final-state particle content and not by the production process, and why
 CC$0\pi$ is the largest background: pion absorption and a proton taken for the pion feed
-it into the selection (\S\ref{sec:request}).
+it into the selection (\suppref{Sec.}{sec:request}).
 
 \subsection{Generators compared}
 \label{sec:generators}
@@ -2231,6 +1962,7 @@ Comb & $\theta_\mu$       & $0.56/5$ & $0.83/5$ & $3.16/5$ & $4.71/5$ & $8.20/5$
 \end{table}
 
 \section{Full-exposure results: FHC, RHC, and combined}
+\label{sec:results}
 \label{sec:rhc}
 
 \subsection{Scope and status of each result}
@@ -2813,6 +2545,31 @@ larger than any of these differences. For the proton-tagged phase space the FHC 
 totals are GENIE $0.50$, NuWro $0.65$, GiBUU $0.74$ and NEUT $0.78$, bracketing the
 injected $0.63$.
 
+\subsection{What the control regions show}
+\label{sec:cr_outcome}
+
+The four regions have been opened on beam-on data. They test the background model at reconstruction
+level, with the signal region untouched, and the procedure they follow --- the frozen definitions,
+the pre-agreed test statistic and the conditions under which a correction may be applied --- is
+given in \suppref{Sec.}{sec:request}. Three things come out of them.
+
+\begin{itemize}\itemsep3pt
+  \item \textbf{The background model needs no correction.} A joint FHC$+$RHC fit of the background
+    class normalisations returns the dominant CC$0\pi$ class at $0.984\pm0.191$, unity within a
+    fifth of its own uncertainty (\crref{Sec.}{sec:jointfit}). The measurement keeps its nominal
+    background prediction.
+  \item \textbf{One run's exposure is discrepant.} The global test passes in every period except
+    FHC Run~1, where a free exposure factor fits $0.520\pm0.020$ with $\chi^2=16/17$. The size and
+    the sharpness of that number point to a bookkeeping error in the run's exposure rather than to
+    a mismodelled background; it is an open item (\S\ref{sec:limitations}), and no result here
+    rests on FHC Run~1 alone.
+  \item \textbf{The remaining deficit is not signal contamination.} The regions sit $8$--$16\%$
+    below prediction. Tightening each region so that it holds less signal --- the CC$0\pi$ region
+    goes from $8.7\%$ to $2.1\%$ signal while keeping $58\%$ of its events --- leaves the
+    data-to-prediction ratio where it was, $0.84\to0.85$ (\crref{Sec.}{sec:farsb}). Whatever causes
+    the deficit does not scale with the signal content of the region.
+\end{itemize}
+
 \subsection{Background-control sidebands}
 \label{sec:sidebands}
 % =============================================================================
@@ -2832,7 +2589,7 @@ beam-on data in the signal region. To exercise it before unblinding, four
 signal-depleted control regions (``sidebands'') are defined, each anchored by the
 inversion of one nominal signal requirement, with the requirements that the inversion
 leaves undefined dropped explicitly (branch-level definitions in
-Table~\ref{tab:cr_defs}):
+\suppref{Table}{tab:cr_defs}):
 \begin{itemize}
   \item \textbf{CC$0\pi$}: the muon selection with no reconstructed charged pion
     (charged-current quasi-elastic / $2p2h$-enriched);
@@ -2921,9 +2678,7 @@ fluctuation is $11\%$, so the observed $1.09$, and the RHC multi-$\pi$ $1.10$ (o
 events, $8\%$), are within about one standard deviation.
 
 \paragraph{Use at unblinding.}
-The regions were opened on 2026-09-09 and the outcome is summarised in \S\ref{sec:cr_outcome}; the
-estimates in this paragraph were made beforehand and are kept because they set what the regions
-could deliver. Once the control regions are opened with beam-on data the same table becomes a genuine
+Once the control regions are opened with beam-on data the same table becomes a genuine
 background test, and the statistical precision available is set by the yields above: the
 combined CC$0\pi$ and $\pi^0$ samples have $0.6\%$ and $0.8\%$ \emph{raw data
 statistical} precision. Their effective constraint on the signal-region background is
@@ -3195,7 +2950,7 @@ part of this request.
 
 \subsection{The $\pi^0$ region with and without the final multiplicity cut}
 \label{sec:cr_pi0_final}
-The frozen $\pi^0$ definition drops the final multiplicity cut (\S\ref{sec:request}). The
+The frozen $\pi^0$ definition drops the final multiplicity cut (\suppref{Sec.}{sec:request}). The
 comparison with the definition that retains it was produced from a reprocess of the Monte Carlo, the dirt and the per-run beam-off samples into a
 separate set of processed files that carry the alternative region flag and the two
 multiplicities, the Run-4
@@ -3215,7 +2970,7 @@ gives the two definitions side by side.
     quadrature over the eight knobs, as in Table~\ref{tab:cr_transfer_unc}, with its
     MC-statistical floor from the split-sample method, and the total takes the larger of
     the two as there. The non-target row is all neutrino background other than the target
-    class, the leverage denominator of \S\ref{sec:request}; the CC$0\pi$ line is part of it.}
+    class, the leverage denominator of \suppref{Sec.}{sec:request}; the CC$0\pi$ line is part of it.}
   \label{tab:cr_pi0_final}
   \small
   \begin{tabular}{lrrrr}
@@ -3266,7 +3021,7 @@ The transfer factor rises by $12$/$15\%$ with the smaller denominator, and its
 uncertainties are unchanged within their precision. What the cut changes is the
 multiplicity distributions themselves (Fig.~\ref{fig:cr_pi0_final}): the frozen region
 extends to five and more primary tracks and four and more non-proton-like tracks, the
-topologies the multi-shower argument of \S\ref{sec:request} anticipated, and they are
+topologies the multi-shower argument of \suppref{Sec.}{sec:request} anticipated, and they are
 $11$--$14\%$ of the region, not a dominant population. One limitation of the frozen
 definition follows from it: the $11$--$14\%$ of the region that fails the signal-region
 multiplicity cut cannot populate the signal region, so a data/MC discrepancy confined to
@@ -3399,13 +3154,13 @@ ratified it is frozen and any departure from it is itself a change requiring app
     (ii)~\emph{Fitted normalisation correction (c).} Permitted only for CC$0\pi$ and
     $\pi^0$ (target-class purity above $50\%$ of the neutrino-MC prediction; target
     classes $\nu_\mu$CC~$0\pi$ and CC$+$NC~$\pi^0$, adopted 2026-09-06, ratification
-    requested in \S\ref{sec:request}) and only if the
+    requested in \suppref{Sec.}{sec:request}) and only if the
     region's shape test 2(b) passes, so that the discrepancy is consistent with a pure
     normalisation shift: a one-parameter fit of the target class, to FHC and RHC
     simultaneously, applied if it improves the fit by a likelihood-ratio test at
     $p<0.01$. The $\pi^0$ region meets the purity rule narrowly ($50.1$/$51.0\%$) and
     with a class and denominator settled after the purities were known
-    (\S\ref{sec:request}), so its eligibility is \emph{not} pre-authorised by this
+    (\suppref{Sec.}{sec:request}), so its eligibility is \emph{not} pre-authorised by this
     document: a fitted $\pi^0$ correction may be \emph{proposed} only after the pre-fit
     control-region result is documented, and the fit model, the leverage of the fixed
     components, the transfer-factor uncertainty and its Monte-Carlo-statistical floor
@@ -3427,7 +3182,7 @@ ratified it is frozen and any departure from it is itself a change requiring app
     held fixed in the fit: the prediction uncertainties of the non-target neutrino
     background, the beam-off and the signal contamination, each multiplied by its share
     of the target class ($0.80$, $0.23$ and $0.20$ in the $\pi^0$ region; $0.26$, $0.15$
-    and $0.13$ in CC$0\pi$; \S\ref{sec:request}).
+    and $0.13$ in CC$0\pi$; \suppref{Sec.}{sec:request}).
     (iii)~\emph{Added uncertainty (b).} Otherwise the central prediction is left
     unchanged and the full observed discrepancy, as a fraction of the target class in the
     region, is assigned as a one-standard-deviation normalisation uncertainty on that
@@ -3438,7 +3193,7 @@ ratified it is frozen and any departure from it is itself a change requiring app
     flagged, the background model is revised and renewed collaboration approval is
     required before the signal region is opened. The pass/fail test of item~3 is always
     the pre-fit one; the post-treatment value is labelled as such wherever it is quoted.
-    The response letters used here and in \S\ref{sec:request} are (a)~no action,
+    The response letters used here and in \suppref{Sec.}{sec:request} are (a)~no action,
     (b)~added uncertainty, (c)~fitted normalisation correction, (d)~model revision. FHC and RHC share one background
     model: a class that passes in one mode and fails in the other is treated under (b),
     never corrected in one mode alone. The signal contamination of each region
@@ -3461,7 +3216,7 @@ ratified it is frozen and any departure from it is itself a change requiring app
 
 \subsection{Scope: inclusive regions only}
 \label{sec:cr_1p_scope}
-The request of \S\ref{sec:request} covers the four inclusive regions. The proton-tagged
+The request of \suppref{Sec.}{sec:request} covers the four inclusive regions. The proton-tagged
 regions of \S\ref{sec:sidebands_1p} apply the proton tag rather than inverting it and
 therefore do not constrain the $\approx\!13\%$ proton mis-tag background that most
 affects the hadronic observables; the inverted-proton-PID region that would do so has not yet
@@ -4284,7 +4039,7 @@ have negative row sums in their least-determined bin.
 
 \paragraph{Actions required before unblinding.}
 The prerequisites, split by the decision they gate, are the checklist of
-\S\ref{sec:request}. In brief: the four inclusive control regions are to be opened first,
+\suppref{Sec.}{sec:request}. In brief: the four inclusive control regions are to be opened first,
 under the frozen procedure of \S\ref{sec:cr_protocol} once the conveners have ratified it;
 the signal region only after any control-region discrepancy has been treated under that
 procedure, the flux constants have been confirmed as PPFX-corrected central values

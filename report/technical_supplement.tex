@@ -2716,4 +2716,213 @@ signal.
 
 \end{thebibliography}
 
+% =============================================================================
+% Moved here from the analysis note 2026-09-18: the note opened with this request, which
+% put two hundred lines of procedure before the reader knew what the analysis was. The
+% regions have since been opened; the note keeps the definitions and the outcome, and the
+% procedure lives here.
+\section{Control regions: the opening request and its sign-off}
+\label{sec:request}
+% =============================================================================
+
+This section is the self-contained case for the one decision requested of the
+collaboration at this stage: permission to inspect beam-on data in four
+reconstruction-level control regions of the inclusive $\mathrm{CC}\,1\mu1\pi Xp$
+selection while the signal region stays blind. Everything here is expanded in
+\S\ref{sec:sidebands}; the numbers are those of the frozen release identified in the box
+below.
+
+\medskip\noindent\fbox{\parbox{0.97\linewidth}{\textbf{Analysis state.} Numerical release
+2026-09-06 (document revision 2026-09-07); repository tag \texttt{cr-freeze-2026-09-06};
+fake data: one Poisson throw per run of the central-value prediction with the unified
+weight rule (\S\ref{sec:mc}); binning: the released edges of Appendix~\ref{app:binning}
+(five-bin forward-split $\cos\theta_\pi$, two-bin $p_\pi$); normalisation: per-run
+exposure, per-run beam-off gate ratios, per-configuration flux; detector variations:
+native Run-4 FHC and RHC samples; data release: \texttt{report/data\_release/}, checksum
+manifest \texttt{MANIFEST.sha256} (\texttt{b8ebc69e3bc91434}). Every table marked
+``current frozen release'' is generated from this state.}}
+\medskip
+
+\paragraph{Request.}
+We request approval to inspect beam-on data in four control regions: CC$0\pi$,
+multi-$\pi$, $\pi^0$ and large muon--pion opening angle (called ``cosmic'' below for
+brevity: it is cosmic-\emph{enriched}, $34$--$41\%$ beam-off, not cosmic-pure).
+Throughout, ``beam-off'', ``EXT'' and ``cosmic data'' name the same data-driven
+component, the beam-off trigger sample scaled by gate counts; ``signal contamination''
+means the inclusive signal unless the proton-tagged selection is named. Each region is
+anchored by the inversion of one nominal signal requirement; requirements that become
+undefined once that inversion is made, or that would sculpt the targeted control sample,
+are dropped as listed in Table~\ref{tab:cr_defs}. Each region is disjoint from the
+signal region at reconstruction level (demonstrated event by event,
+\S\ref{sec:cr_overlap}); their expected signal contaminations are $8$--$24\%$. The
+signal region remains blind. Before the regions are opened, the selections, the
+run-dependent normalisation, the beam-off scaling, the displayed observables and binning,
+the covariance construction, the goodness-of-fit tests and the permitted responses to a
+discrepancy are frozen as written in \S\ref{sec:cr_protocol}. Control-region data will be
+compared with the complete prediction (neutrino MC $+$ beam-off $+$ dirt) separately in
+FHC and RHC, with the combined configuration as a cross-check. Any discrepancy beyond
+the pre-declared criteria requires a documented treatment and renewed approval before
+the signal region is opened. The proton-tagged control regions are \emph{not} part of
+this request (\S\ref{sec:cr_1p_scope}).
+
+\paragraph{What each region can and cannot do.} The physics roles, which the
+transfer factors of \S\ref{sec:cr_transfer} decide, are these.
+\begin{itemize}\itemsep2pt
+  \item \textbf{CC$0\pi$} is the high-statistics validation of the dominant neutrino
+    background class: CC$0\pi$ events with a proton or other track taken as the pion are
+    $244$ of the $637$ FHC neutrino-background events ($38\%$). The region has $72\%$
+    target purity ($65\%$ of the full stack) and $0.6\%$ raw statistical precision. It
+    validates the normalisation and kinematics of the underlying CC$0\pi$ population,
+    \emph{not} the proton-to-pion misidentification probability that transfers that
+    population into the signal region: the transfer carries a $31$--$34\%$ uncertainty
+    dominated by the detector variations. It is therefore a validation test rather than
+    a per-cent-level constraint, and it is conditionally eligible for a fitted
+    normalisation correction under \S\ref{sec:cr_protocol}. The direct test of the
+    misidentification probability is an inverted pion-PID region, which does not exist
+    yet and is listed among the prerequisites for opening the signal region.
+  \item \textbf{$\pi^0$} tests the shower veto and the CC$+$NC~$\pi^0$ background. Its
+    target purity is $50.1\%$ (FHC) and $51.0\%$ (RHC) of the neutrino MC, its transfer
+    factor $0.02$ with a $17$--$19\%$ uncertainty set by the Monte-Carlo-statistical
+    floor of the detector-variation samples. \textbf{For this opening the region is
+    diagnostic only.} Approval to inspect it does not authorise a fitted correction; a
+    proposal to fit the CC$+$NC~$\pi^0$ normalisation would require a separate
+    documented review after the pre-fit result has been recorded, with the fit model,
+    the leverage of the fixed components, the transfer uncertainty and its floor, and
+    the expected effect on the signal-region prediction.
+  \item \textbf{Multi-$\pi$} is diagnostic only. Its transfer factor is $\simeq2.5$
+    (the signal region holds more of the target class than the region does) and its
+    target purity $47\%$; it is not used to fit or constrain the signal-region
+    normalisation, and exposes gross modelling failures and shape discrepancies.
+  \item \textbf{Cosmic} validates the beam-off normalisation and shape to $\sim\!50\%$
+    once the prediction uncertainties of its neutrino component are included ($17\%$
+    from data statistics alone). That is sufficient because beam-off is $1.9\%$ of the
+    selected signal-region prediction: a $50\%$ uncertainty on it is an effect of order
+    $1\%$ on the selected sample. It is not eligible for a fitted correction.
+\end{itemize}
+About $29\%$ of the FHC neutrino background has no region of its own: NC and
+$\nu_e$CC without a $\pi^0$, out-of-fiducial-volume events and CC$1\pi^\pm$ outside the
+measured phase space (\S\ref{sec:cr_transfer}). These components keep their model
+uncertainties unchanged; the CC$0\pi$ and $\pi^0$ distributions carry indirect
+sensitivity to the first two through the shared reconstruction, and each is small
+enough individually that no dedicated region is justified at this exposure.
+
+\paragraph{What the test detects, and its blind direction.} The pass/fail statistic is
+a global normalisation $\chi^2$ over the eight (region, mode) totals with the full
+pre-fit covariance (\S\ref{sec:cr_protocol}). It detects a discrepancy confined to one
+region beyond $12\%$ of the CC$0\pi$ or $\pi^0$ total and beyond $50$--$62\%$ of the
+multi-$\pi$ or cosmic total, an FHC/RHC inconsistency, and, through the
+normalisation-marginalised shape tests, a shape difference; a \emph{common}
+normalisation shift of all regions fails it only beyond $58\%$, because the correlated
+flux, cross-section and detector terms absorb it. That blind direction is acceptable
+because it is the direction the signal-region measurement already carries as its flux
+and cross-section uncertainty: the control regions test the background model region by
+region, not the overall normalisation.
+
+\paragraph{What the present pseudo-data studies do and do not show.}
+The sideband machinery has been exercised on Poisson-thrown central-value pseudo-data.
+Those studies validate the selection logic, the per-run exposure scaling, the
+central-value weighting and, in the full-stack variant of \S\ref{sec:cr_fullstack}, the
+exact bookkeeping path that beam-on data will follow. They do \emph{not} validate the
+background model: the pseudo-data are drawn from the same simulation that supplies the
+prediction, so agreement is guaranteed up to statistics. The background model is the
+largest untested assumption in the analysis, and testing it is what the control regions
+are for. The control-region comparison is made at reconstruction level, so it does not
+depend on the unfolding or on the alternative-generator closure that is required before
+the signal region is opened (\S\ref{sec:limitations}).
+
+\begin{table}[H]
+  \centering
+  \caption{Control-region definitions in terms of the selection stages. The
+    common preselection \textit{pre} is software trigger, reconstructed vertex in the
+    fiducial volume, topological score $>0.67$ and a qualifying muon candidate
+    (Cuts~1--4 of \S\ref{sec:selection}); \textit{shower} is the shower veto (Cut~8),
+    \textit{final} the non-proton multiplicity cut (Cut~10), \textit{contained/gap} the
+    pion containment and three-plane requirements (Cuts~5--7), \textit{opening} the
+    $\theta_{\mu\pi}<2.6$~rad cut (Cut~9), and $n_\pi$ the number of qualifying contained
+    pion candidates. The signal region is \textit{pre}, \textit{contained}, \textit{gap}, \textit{shower},
+    \textit{opening} and \textit{final} with $n_\pi=1$. ``Dropped'' lists nominal requirements not
+    applied in the region; ``target'' the signal-region background the region is meant to
+    constrain. Each region is stored as a flag alongside the signal-region flag when the
+    events are processed.}
+  \label{tab:cr_defs}
+  \small
+  \begin{tabular}{p{1.5cm}p{5.2cm}p{3.0cm}p{4.6cm}}
+    \toprule
+    Region & Definition (branch level) & Dropped vs.\ signal & Target background \\
+    \midrule
+    CC$0\pi$ & \textit{pre}, \textit{shower}, \textit{final}; $n_\pi=0$ & contained, gap, opening (no pion to define them) & CC$0\pi$ events with a proton or other track taken as the pion; pion absorption feed-in \\
+    multi-$\pi$ & \textit{pre}, \textit{final}; $n_\pi\ge2$ & shower, contained/gap of the extra pion, opening & multi-pion events with one pion lost \\
+    $\pi^0$ & \textit{pre}, shower veto failed; $n_{\rm shower}\ge1$ & contained, gap, opening, final & CC/NC~$\pi^0$ with both photons missed; shower-veto efficiency \\
+    cosmic & \textit{pre}, \textit{contained}, \textit{gap}, \textit{shower}, \textit{final}; opening-angle cut inverted & opening only & residual beam-off (cosmic) in the signal region; its normalisation \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\noindent The $\pi^0$ region is the furthest from a single inversion: besides the pion
+requirements, which have no meaning once no pion candidate is demanded, it also drops the
+final multiplicity cut. The cut was dropped when the region was defined to avoid a
+plausible topology-dependent sculpting (photon showers reconstructed as additional
+track-like primaries). The dedicated comparison of \S\ref{sec:cr_pi0_final} subsequently
+found no material change in target purity, transfer uncertainty or the frozen
+leading-shower-energy shape. The no-cut definition is retained because it provides
+$11$--$14\%$ more events, not because the study demonstrated a material bias from the
+cut.
+
+\paragraph{Points the collaboration is asked to ratify.}
+(i)~The $\pi^0$ definition without the final multiplicity cut (Table~\ref{tab:cr_defs});
+the comparison with the version retaining it is in \S\ref{sec:cr_pi0_final} and will
+\emph{not} be used to modify the region after beam-on inspection. (ii)~The $\pi^0$
+target class CC$+$NC~$\pi^0$, adopted by the analysers on 2026-09-06 (the NC$\pi^0$
+events the shower veto is also meant to remove had been counted under ``NC and
+$\nu_e$CC''; $\nu_\mu$CC~$\pi^0$ alone is $46\%$ of the region), together with the
+region's diagnostic-only status for this opening. Purity is defined throughout as the
+target class's share of the \emph{neutrino-MC} prediction in the region, beam-off and
+dirt being separately constrained components; both the class definition and the
+denominator were settled after the purities were known, which is one reason the region
+is diagnostic-only. (iii)~The roles of the other three regions as stated above, and the
+frozen procedure of \S\ref{sec:cr_protocol}.
+
+\paragraph{Approval checklist.}
+\begin{center}\small
+\begin{tabular}{p{7.2cm}p{4.6cm}p{2.6cm}}
+\toprule
+Item & Status / evidence & Sign-off \\
+\midrule
+\multicolumn{3}{l}{\emph{Required before the control regions are opened}}\\
+\midrule
+Control-region definitions frozen & Table~\ref{tab:cr_defs} & \\
+Signal-region overlap zero, event by event & \S\ref{sec:cr_overlap} & \\
+Plot list and binning frozen & \S\ref{sec:cr_protocol} item~1 & \\
+Pre-fit covariance, global statistic and thresholds frozen & \S\ref{sec:cr_protocol} items~2--3; null calibration Fig.~\ref{fig:cr_null_calibration} & \\
+Response to a discrepancy frozen & \S\ref{sec:cr_protocol} item~4 & \\
+$\pi^0$ definition and target class ratified; diagnostic-only status recorded & this section, (i)--(ii) & conveners \\
+Flux and detector-systematics contacts have reviewed their parts & pending & contacts \\
+Repository tag and release checksum recorded & analysis-state box above & \\
+\midrule
+\multicolumn{3}{l}{\emph{Required later, before the signal region is opened}}\\
+\midrule
+Control-region results reviewed; any discrepancy treated under \S\ref{sec:cr_protocol} & pending & conveners \\
+Alternative-generator (NuWro or GiBUU) fake-data closure on the released chain & pending, \S\ref{sec:limitations} & \\
+Flux constants confirmed as PPFX-corrected central values & pending, \S\ref{sec:flux_status} & flux contact \\
+MCS muon-momentum uncertainty bounded or propagated & pending, \S\ref{sec:limitations} & \\
+Final empty-cache reproduction of the release to be unblinded & pending, \S\ref{sec:pipeline} & \\
+Inverted pion-PID region for the CC$0\pi$ misidentification transfer & pending & \\
+Inverted-proton-PID region before any proton-tagged result & pending, \S\ref{sec:cr_1p_scope} & \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Expected yields and precision.}
+Table~\ref{tab:sideband_yields} gives the expected composition per region and beam. The
+raw statistical precision of the data samples is $0.6\%$ (CC$0\pi$), $0.8\%$ ($\pi^0$)
+and $6\%$ (multi-$\pi$) for the combined exposure. The neutrino-MC prediction in each
+region carries the flux, cross-section and re-interaction uncertainties of
+Table~\ref{tab:cr_syst}, including the detector variations. The regions carry a
+few-per-cent sensitivity to the signal normalisation in principle (the CC$0\pi$ region
+holds $1\,124$ signal events, $9\%$ of its neutrino MC, so a $30\%$ signal excess would
+appear as a $2.8\%$ excess), which is inside the $9$--$24\%$ detector-variation
+uncertainty on the region prediction and so invisible to every pull of
+\S\ref{sec:cr_protocol}; that is what keeps the regions blind to the signal, and the
+response tree holds the signal at its central value in any case.
+
 \end{document}
