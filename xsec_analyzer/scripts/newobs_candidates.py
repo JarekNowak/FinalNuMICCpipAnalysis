@@ -7,9 +7,12 @@
 #  * 2D pairs, STUDY family (configs/d2/, processed/rebuild_2d/): the best-screened grid of each
 #    pair, including those that fail both criteria, for a complete comparison.
 PI = 3.1416
+# theta_p edges: the RHC-derived maximin scheme adopted 2026-09-18. The FHC-derived edges it replaces
+# ([0, 0.597, 0.942, 1.287, PI]) condition three to four times worse in both usable configurations
+# (FHC 0.082 vs 0.383, COMB 0.125 vs 0.408); see report/newobs_note.tex, section 3.5.
 P1 = 'proton-tagged'
 CANDS = [
-    dict(name='thetap', pfx='ccpi1p', xvar='thetap', xedges=[0, 0.597, 0.942, 1.287, PI], xopen=False,
+    dict(name='thetap', pfx='ccpi1p', xvar='thetap', xedges=[0, 0.659, 1.068, 1.539, PI], xopen=False,
          subdir='', suffix='', univdir='/data/uboone/processed', cfgs=('fhc5', 'rhcfull', 'comb'), gen_obs='thetap',
          note='CC1mu1pi1p proton polar angle theta_p about the neutrino direction, 4 bins (maximin scan, min diag 0.73/0.68).'),
     dict(name='thpipr', pfx='ccpi1p', xvar='thpipr', xedges=[0, 1.193, 2.010, PI], xopen=False,

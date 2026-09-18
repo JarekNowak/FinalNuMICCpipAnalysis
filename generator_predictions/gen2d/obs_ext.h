@@ -52,7 +52,7 @@ namespace ext {
     return v;
   }
   // ---- proton-tagged 1D ------------------------------------------------------------------
-  inline Axis thetap_axis() { Axis a = { {0, 0.597, 0.942, 1.287, PI}, false, false }; return a; }
+  inline Axis thetap_axis() { Axis a = { {0, 0.659, 1.068, 1.539, PI}, false, false }; return a; }  // RHC maximin, adopted 2026-09-18
   inline Axis thpipr_axis() { Axis a = { {0, 1.193, 2.010, PI}, false, false }; return a; }
 
   struct Hists {

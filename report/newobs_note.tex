@@ -541,17 +541,22 @@ python3 report/tools/xsec2d_total_check.py  # 2D normalisation vs the one-bin to
 % =============================================================================
 
 \begin{enumerate}[itemsep=3pt]
-  \item Two two-dimensional pairs are worth proposing as released measurements, in the combined
-    configuration only: $\theta_p\times\delta p_T$ and $\cos\theta_\pi\times\cos\theta_\mu$
-    (Table~\ref{tab:2dextract}, Figs.~\ref{fig:2dslices}--\ref{fig:2dmap}). Both need generator predictions checked against the flattened bin
-    order and a decision on whether a combined-only result is acceptable, the released differential
-    results being quoted per beam mode as well.
+  \item Two two-dimensional pairs are proposed as released measurements: $\theta_p\times\delta p_T$
+    and $\cos\theta_\pi\times\cos\theta_\mu$ (Table~\ref{tab:2dextract},
+    Figs.~\ref{fig:2dslices}--\ref{fig:2dmap}). The generator predictions are confirmed against the
+    flattened bin order (\texttt{scripts/check\_ext\_bins.py}). \textbf{Decided 2026-09-18}: the
+    combined result is the measurement, and the per-mode extractions go to
+    Appendix~\ref{sec:app2d} marked as not shape measurements.
   \item $\theta_p$ in RHC is rank-deficient, and \S\ref{sec:thetap_rhc} shows that coarsening does
-    not rescue it ($0.002\to0.050$ at three bins): it can only be quoted for FHC and the combined
-    configuration. Open instead is which edges $\theta_p$ should use at all, the RHC-derived scheme
-    being three to four times better conditioned in both usable configurations than the released one.
-  \item Two-bin $W_{\rm had}$ is better conditioned than the released six-bin configuration; a
-    decision on replacing it is outstanding.
+    not rescue it ($0.002\to0.050$ at three bins): it is quoted for FHC and the combined
+    configuration only. \textbf{Decided 2026-09-18}: $\theta_p$ adopts the four-bin RHC-derived
+    edges $0$, $0.659$, $1.068$, $1.539$, $\pi$~rad, which condition three times better in both
+    usable configurations at the same number of bins. Configurations, generator predictions and the
+    three extractions are rebuilt on them; the superseded outputs are kept as
+    \texttt{*\_thetap\_fhcedges}.
+  \item Two-bin $W_{\rm had}$ is better conditioned than the released six-bin configuration.
+    \textbf{Decided 2026-09-18}: the six-bin scheme stays. Two bins buy conditioning by discarding
+    almost all of the shape, and the shape is what $W_{\rm had}$ is measured for.
   \item The proton candidate is the leading true proton only $82\%$ of the time on signal events, and
     the truth-level observables use the leading proton. The effect is inside the response, but an
     inverted-proton-PID control region --- already a prerequisite for the signal region --- is what
@@ -559,5 +564,39 @@ python3 report/tools/xsec2d_total_check.py  # 2D normalisation vs the one-bin to
   \item The released analysis note does not yet mention $\theta_p$ or $\theta_{\pi p}$; the binning
     appendix and the observable tables need entries once the decisions above are taken.
 \end{enumerate}
+
+
+% =============================================================================
+\appendix
+\section{Two-dimensional results per beam mode}
+\label{sec:app2d}
+% =============================================================================
+
+The two pairs proposed in \S\ref{sec:2d} are measurements in the combined configuration only: in FHC
+and RHC separately the responses are too poorly conditioned to invert
+($\theta_p\times\delta p_T$ $0.455/0.332$, $\cos\theta_\pi\times\cos\theta_\mu$ $0.245/0.315$,
+against $0.617$ and $0.563$ combined). Every released differential result is also quoted per beam
+mode, so the per-mode extractions are shown here for completeness. \textbf{They are not shape
+measurements and must not be read as one}: the RHC $\theta_p\times\delta p_T$ closure alone spans
+$0.31$--$1.72$. What they do show is where the combined result's advantage comes from --- the same
+bins and the same treatment, with more data.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.66\textwidth]{bkgfit/xsec2d_thetap_dpt_FHC5_slices}\\[4pt]
+  \includegraphics[width=0.66\textwidth]{bkgfit/xsec2d_thetap_dpt_RHCFULL_slices}
+  \caption{$\theta_p\times\delta p_T$ per beam mode, FHC (top) and RHC (bottom); conditioning
+    $0.455$ and $0.332$. Curves and points as in Fig.~\ref{fig:2dslices}.}
+  \label{fig:app_thetap_dpt}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.98\textwidth]{bkgfit/xsec2d_costhpi_costhmu_FHC5_slices}\\[4pt]
+  \includegraphics[width=0.98\textwidth]{bkgfit/xsec2d_costhpi_costhmu_RHCFULL_slices}
+  \caption{$\cos\theta_\pi\times\cos\theta_\mu$ per beam mode, FHC (top) and RHC (bottom);
+    conditioning $0.245$ and $0.315$.}
+  \label{fig:app_costhpi_costhmu}
+\end{figure}
 
 \end{document}
