@@ -5,7 +5,8 @@ slice) to closure_hists_all_xsec_*.root; dividing by the bin area gives the doub
 section. Two figures per pair and configuration:
   <pair>_<cfg>_slices : one panel per outer bin, d2sigma/dXdY against the inner variable, with the
                         four generators and the fake-data truth;
-  <pair>_<cfg>_map    : the same numbers as a map, beside the ratio to the fake-data truth.
+  <pair>_<cfg>_map    : the same numbers as a map, beside the ratio to the fake-data truth, in the
+                        kBird palette the released note uses for its matrix figures.
 The data are the per-run Poisson FAKE DATA: the signal region is blind.
    python3 report/tools/xsec2d_figs.py [pair ...]      (default: every pair with a sidecar)
 """
@@ -13,7 +14,7 @@ import os, sys
 import numpy as np, uproot
 import matplotlib.pyplot as plt
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from xsec_figs_style import apply, GEN, TRUTH, DATA, SEQ, DIV
+from xsec_figs_style import apply, GEN, TRUTH, DATA, BIRD, ink
 
 apply()
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
@@ -83,18 +84,17 @@ def fig_map(name, c, cfg, lab, d):
     r = np.divide(d['data'], d['truth'], out=np.full_like(d['data'], np.nan), where=d['truth'] > 0)
     lim = max(0.35, float(np.nanmax(np.abs(r - 1))))
     for ax, (Z, cmap, vmin, vmax, title, cbl, fmt) in zip(axs, [
-            (d['data'], SEQ, 0, None, 'unfolded fake data', r'$\mathrm{d}^2\sigma/\mathrm{d}X\,\mathrm{d}Y$ [$10^{-38}$cm$^2$/Ar/unit]', '.3f'),
-            (r, DIV, 1 - lim, 1 + lim, 'closure: unfolded / fake-data truth', 'ratio', '.2f')]):
-        m = ax.pcolormesh(np.arange(nx + 1), np.arange(ny + 1), Z, cmap=cmap, vmin=vmin, vmax=vmax,
-                          edgecolors='white', linewidth=2.5)
+            (d['data'], BIRD, 0, None, 'unfolded fake data', r'$\mathrm{d}^2\sigma/\mathrm{d}X\,\mathrm{d}Y$ [$10^{-38}$cm$^2$/Ar/unit]', '.3f'),
+            (r, BIRD, 1 - lim, 1 + lim, 'closure: unfolded / fake-data truth', 'ratio', '.2f')]):
+        m = ax.pcolormesh(np.arange(nx + 1), np.arange(ny + 1), Z, cmap=cmap, vmin=vmin, vmax=vmax)
+        for sp in ax.spines.values(): sp.set_zorder(3)   # contiguous cells, as COLZ draws them
         fig.colorbar(m, ax=ax, label=cbl, fraction=0.046, pad=0.03)
         for j in range(ny):
             for i in range(nx):
+                if not np.isfinite(Z[j, i]): continue
                 e = d['err'][j, i] if fmt == '.3f' else d['err'][j, i] / d['truth'][j, i]
-                hi = np.nanmax(Z) if vmax is None else vmax
-                dark = (Z[j, i] - (vmin or 0)) / (hi - (vmin or 0)) > 0.62 if np.isfinite(Z[j, i]) else False
                 ax.text(i + 0.5, j + 0.5, f'{Z[j, i]:{fmt}}\n$\pm${e:{fmt}}', ha='center', va='center',
-                        fontsize=9, color='white' if dark else 'black')
+                        fontsize=9, color=ink(m.cmap(m.norm(Z[j, i]))))
         ax.set_xticks(np.arange(nx) + 0.5); ax.set_xticklabels([rng(xe, i) for i in range(nx)])
         ax.set_yticks(np.arange(ny) + 0.5); ax.set_yticklabels([rng(ye, j) for j in range(ny)])
         ax.set_xlabel(LAB[c['xvar']]); ax.set_ylabel(LAB[c['yvar']]); ax.set_title(title, fontsize=10)
