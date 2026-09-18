@@ -79,6 +79,8 @@
 \usepackage{xr}
 \externaldocument[S-]{technical_supplement}
 \newcommand{\suppref}[2]{#1~\ref{S-#2} of the technical supplement}
+\externaldocument[CR-]{cr_data_note}
+\newcommand{\crref}[2]{#1~\ref{CR-#2} of the control-sample note}
 % Stamp appended to every release-derived table caption: the extraction pass and the
 % results file it was generated from (a reviewer's request after stale tables survived).
 \newcommand{\releasestamp}{[current frozen release]}
@@ -409,6 +411,44 @@ appear as a $2.8\%$ excess), which is inside the $9$--$24\%$ detector-variation
 uncertainty on the region prediction and so invisible to every pull of
 \S\ref{sec:cr_protocol}; that is what keeps the regions blind to the signal, and the
 response tree holds the signal at its central value in any case.
+
+\subsection{Outcome: the regions were opened on 2026-09-09}
+\label{sec:cr_outcome}
+
+The request above was granted and the four regions were inspected on beam-on data. The full account
+is the control-sample note; what follows is what a reader of this note needs, and it includes two
+defects in the first comparison that were found afterwards and that changed its conclusions. The
+sign-off checklist above was not revised when the regions were opened --- several of its
+``required before the control regions are opened'' items still read \emph{pending} --- and
+reconciling it with what was actually signed off is an open item.
+
+\begin{itemize}\itemsep3pt
+  \item \textbf{Two defects, both now corrected.} The sideband Monte Carlo used for the first
+    comparison predated the beam-frame correction of \S\ref{sec:beamdir}: it stored
+    $\cos\theta_\mu$ about the detector $z$ axis while the beam-on skim stored the beam-frame angle.
+    The ``muon-angle shape failure'' reported in both CC$0\pi$ and $\pi^0$ was that artefact and is
+    withdrawn; with the current sideband sample the ratio is flat. Separately, the sideband detector
+    variations were compared without POT normalisation --- the knob samples do not carry the central
+    sample's exposure --- which inflated the detector term by roughly an order of magnitude
+    ($\sim\!20\%$ on control-region totals against $\sim\!2\%$ normalised). Transfer-factor ratios
+    and the released extraction are unaffected, both normalising by exposure already.
+  \item \textbf{One run is discrepant, and it is an exposure error, not a background.} With the
+    corrected inputs the frozen global test fails when FHC Run~1 is included and passes without it.
+    A free exposure factor on FHC Run~1 fits $0.520\pm0.020$ with $\chi^2=16/17$, consistent with
+    the $0.51$--$0.62$ implied by the yield ratios themselves. This is evidence of a bookkeeping
+    error in that run's exposure, not of a mismodelled background; it is an open item, and no result
+    in this note depends on FHC Run~1 alone.
+  \item \textbf{No background correction is warranted.} A joint FHC$+$RHC fit of the background
+    class normalisations (\crref{Sec.}{sec:jointfit}) returns the CC$0\pi$ class at $0.984\pm0.191$ with
+    FHC Run~1 excluded --- unity within a fifth of its own uncertainty. The measurement therefore
+    keeps its nominal background prediction, and item~4 of \S\ref{sec:cr_protocol} is not invoked.
+  \item \textbf{The residual deficit is not signal contamination.} The control regions sit
+    $8$--$16\%$ below prediction. Adding one cut to each region --- ``far'' sidebands, which can only
+    remove signal --- drives the signal fraction of the CC$0\pi$ region from $8.7\%$ to $2.1\%$ while
+    keeping $58\%$ of its events, and the data-to-prediction ratio does not move ($0.84\to0.85$;
+    $\pi^0$ $0.91\to0.92$). Whatever produces the deficit does not scale with signal contamination
+    (\crref{Sec.}{sec:farsb}).
+\end{itemize}
 
 % =============================================================================
 \section{Introduction}
@@ -2250,6 +2290,10 @@ Proton-tagged differential results, including transverse kinematic imbalance
     $A_C$ and covariance released; the
     $W_\mathrm{had}$ edge scan has not been run (\S\ref{sec:limitations}) and the
     differential $W_{\pi p}$ shape is withdrawn. \\
+Two-dimensional cross sections
+  & Proposed secondary scope, combined configuration only & $\theta_p\times\delta p_T$ and
+    $\cos\theta_\pi\times\cos\theta_\mu$; eight pairs screened and extracted, per-mode results are
+    too poorly conditioned to invert (\S\ref{sec:2d}). \\
 Proton angular observables $\theta_p$, $\theta_{\pi p}$
   & Proposed secondary scope, added 2026-09-18 & Binning, generator predictions and all three
     extractions complete on fake data (\S\ref{sec:wtki_ang}); $\theta_{\pi p}$ needed a gated
@@ -2877,7 +2921,9 @@ fluctuation is $11\%$, so the observed $1.09$, and the RHC multi-$\pi$ $1.10$ (o
 events, $8\%$), are within about one standard deviation.
 
 \paragraph{Use at unblinding.}
-Once the control regions are opened with beam-on data the same table becomes a genuine
+The regions were opened on 2026-09-09 and the outcome is summarised in \S\ref{sec:cr_outcome}; the
+estimates in this paragraph were made beforehand and are kept because they set what the regions
+could deliver. Once the control regions are opened with beam-on data the same table becomes a genuine
 background test, and the statistical precision available is set by the yields above: the
 combined CC$0\pi$ and $\pi^0$ samples have $0.6\%$ and $0.8\%$ \emph{raw data
 statistical} precision. Their effective constraint on the signal-region background is
@@ -3849,6 +3895,33 @@ set, is likewise not a physics spread but the residual of the additional smearin
 discussed in the next section: each observable's $A_C$ rescales the integral by a different
 factor, so the ten numbers are not ten independent measurements of the same quantity.
 
+\subsection{What the proton candidate is}
+\label{sec:prmatch}
+
+Every proton-tagged observable is built on the reconstructed proton candidate, while the truth-level
+definitions use the leading true proton. On selected signal events the candidate is the leading true
+proton $81.7\%$ of the time, some true proton $87.4\%$, and not a proton at all $12.6\%$
+($10\,105$ events; \texttt{bkgfit/protonmatch.py}).
+
+What that costs was measured for the two angular observables, and the answer depends on which
+question is asked. A correct pick reconstructs the angle tightly (interquartile range $0.073$~rad in
+$\theta_p$, $0.124$~rad in $\theta_{\pi p}$); a wrong pick does not smear the angle, it randomises it
+($1.0$--$1.4$~rad, three quarters of those events beyond $0.3$~rad). Averaged over everything the
+candidate widens the \emph{core} resolution by only a quarter to a third, which understates it badly,
+because a binned measurement is not limited by its core. Residuals beyond $0.3$~rad occur in $18.9\%$
+of $\theta_p$ events and \emph{$74\%$ of those are wrong picks} ($\theta_{\pi p}$: $25.9\%$ and
+$51\%$). Candidate purity is therefore the dominant source of bin-to-bin migration in $\theta_p$,
+which is why its migration diagonal sits at the criterion and its RHC response is rank-deficient.
+
+The same $18\%$ wrong-pick rate applies to $W_{\pi p}$, $W_\mathrm{had}$ and the TKI observables,
+which use the same candidate; the migration attribution above was measured for the angles only. The
+control region that would constrain this is the multi-$\pi$ sideband, which is already open:
+\texttt{pion\_number} is defined by the same PID cut that picks the proton, so an otherwise-signal
+event whose proton fails it has two pion candidates and lands there. It constrains the
+proton~$\to$~pion direction rather than the pion~$\to$~proton one that produces the $12.6\%$, and it
+is the most signal-contaminated of the four regions, so a region inverting the proton PID at exactly
+one pion candidate is what would separate them.
+
 \subsection{Proton angular observables: \texorpdfstring{$\theta_p$}{theta p} and
   \texorpdfstring{$\theta_{\pi p}$}{theta pi p}}
 \label{sec:wtki_ang}
@@ -3884,6 +3957,26 @@ better in both usable configurations. Both distributions are strongly forward pe
 generators differ mainly in normalisation rather than shape, so these observables discriminate
 through the integral. The study behind all of this --- binning, generator predictions, the
 $0.50$-criterion screen and the two-dimensional programme --- is a separate note.
+
+\subsection{Two-dimensional cross sections (proposed)}
+\label{sec:2d}
+
+Eight two-dimensional pairs were screened and extracted in all three configurations. The framework
+needed no new unfolding machinery --- a two-dimensional binning is a flat list of analysis bins
+ordered slice by slice --- and the integrated normalisation of the two-dimensional chain agrees with
+the released one-bin total to a median of $0.7\%$ once each is compared with its own $A_C$-smeared
+truth. Two pairs are worth proposing, both in the combined configuration only:
+$\theta_p\times\delta p_T$ ($s_{\min}/s_1=0.617$) and $\cos\theta_\pi\times\cos\theta_\mu$
+($0.563$). Combining the beam modes roughly doubles their conditioning ($0.46\to0.62$,
+$0.25\to0.56$), which is the clearest benefit the joint exposure delivers anywhere in this analysis,
+and it comes from statistics and the shared flux rather than from any $\nu/\bar\nu$ separation.
+Everything built on $W_{\pi p}$ is unusable, as its $39\%$ leakage between outer bins predicted.
+
+One pair is worth recording as a caution. $\theta_{\pi p}\times W_{\pi p}$ conditions at $0.560$,
+as well as the two usable pairs, and its extraction is still worthless: a $58\%$ data-statistical
+term, per-bin uncertainties to $545\%$ and a closure ratio of $-0.40$. Conditioning bounds how much
+of the response can be inverted and says nothing about how much data survives in the inverted
+directions; the two have to be read together, here and everywhere else in this note.
 
 \section{Systematic Uncertainties}
 \label{sec:systematics}
@@ -4348,6 +4441,12 @@ $\cos\theta_\pi$ four (\suppref{Sec.}{sec:binopt}).
     times better than the FHC-derived ones at the same bin count.\par $^{*}$ Numerical plotting boundary only; the upper truth bin is open-ended ($p_\pi>0.205$~GeV/$c$), and the released density over the conventional width $0.795$~GeV/$c$ represents the bin integral (Table~\ref{tab:ppi_partial}).}
 
 \end{table}
+
+The migration-diagonal criterion itself was revisited in 2026-09: relaxing it from $0.68$ to
+$0.50$ admits twenty-six new candidate binnings, and \emph{every one of them} fails the secondary
+gate on the conditioning of $A_C$, which is not the diagonal. The only healthy candidate is a
+two-bin $W_\mathrm{had}$, and the six-bin scheme is kept, since two bins buy conditioning by
+discarding the shape the observable is measured for. No binning in this note changes as a result.
 
 Every released binning was tested for whether finer or more bins are admissible
 (\suppref{Sec.}{sec:binning_recheck}): $p_\mu$, $\cos\theta_\mu$, $\theta_\mu$ and $p_\pi$

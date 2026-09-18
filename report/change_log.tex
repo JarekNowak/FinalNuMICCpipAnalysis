@@ -845,6 +845,54 @@ $\theta_p$ and $\theta_{\pi p}$ with their reprocess and its bit-for-bit gate, a
 two-dimensional programme. The control-region note gains its \S5 (corrections) and \S6 (joint
 FHC$+$RHC background fit).
 
+\section{Corrections and additions of 2026-09-18}
+
+\subsection{\texorpdfstring{$\theta_p$}{theta p} adopts RHC-derived edges}
+\begin{sloppypar}
+The maximin binning scan had only ever been run on the FHC chain, because
+\texttt{macros/tki\_binning\_scan.C} chained the FHC files unconditionally; it now takes a beam
+argument, FHC by default so every published screen reproduces. Run on RHC it returns different edges,
+and at the \emph{same} four bins those edges condition three to four times better in both usable
+configurations (FHC $s_{\min}/s_1$ $0.082\to0.383$, combined $0.125\to0.408$). $\theta_p$ therefore
+adopts $0,\,0.659,\,1.068,\,1.539,\,\pi$~rad. Coarsening to three bins does \emph{not} rescue the
+rank-deficient RHC response ($0.002\to0.050$), so $\theta_p$ is quoted for FHC and the combined
+configuration only. The price of the change is stated with it: the data-statistical term rises from
+$12.3\%$ to $16.6\%$ (FHC) and $9.7\%$ to $14.7\%$ (combined), because better conditioning means
+less of the truth smeared into the measurement, not a smaller error bar. Configurations, generator
+predictions and all three extractions were rebuilt; regenerating the predictions left $240$
+histograms byte-identical and changed only \texttt{thetap\_fte}. Superseded outputs are kept as
+\texttt{*\_thetap\_fhcedges}. No released observable is affected.
+\end{sloppypar}
+
+\subsection{The proton candidate, and where its cost actually appears}
+On selected signal events the reconstructed proton candidate is the leading true proton $81.7\%$ of
+the time, some true proton $87.4\%$, and not a proton at all $12.6\%$ (the $59\%$ recorded during
+the screen predates the proton-tagged reprocess and is withdrawn). A wrong pick randomises the angle
+rather than smearing it, so it widens the core resolution by only a quarter to a third while
+supplying $74\%$ of the residuals beyond $0.3$~rad in $\theta_p$ and $51\%$ in $\theta_{\pi p}$:
+candidate purity dominates bin-to-bin \emph{migration}, which is the mechanism behind $\theta_p$'s
+marginal diagonal and its rank-deficient RHC response. No released number changes.
+
+\subsection{Far sidebands, and a ratio that does not move}
+Adding one cut per control region drives the CC$0\pi$ signal fraction from $8.7\%$ to $2.1\%$ while
+keeping $58\%$ of the events and raising the CC$0\pi$ content of the background from $72\%$ to
+$85\%$. The data-to-prediction ratio is flat under every far cut ($0.84\to0.85$; $\pi^0$
+$0.91\to0.92$), so the $8$--$16\%$ control-region deficit is not signal contamination.
+
+\subsection{Corrections to claims in the documents}
+\begin{itemize}\itemsep2pt
+  \item The technical supplement stated that the released proton-tagged binnings ``were not
+    re-tested''. They have been, at both $0.68$ and a relaxed $0.50$ diagonal: twenty-six candidates
+    pass the relaxed diagonal and all fail on $A_C$ conditioning. Only a two-bin $W_\mathrm{had}$ is
+    healthy, and it was not adopted.
+  \item The analysis note carried the request to open the control regions with no record that they
+    were opened on 2026-09-09. It now records the outcome, including that the sign-off checklist
+    was not revised at opening.
+  \item \sloppy \texttt{norm\_manifest.py} reported a spurious \textsc{unfold prescription drift} and
+    rewrote the tracked manifest on every run: the one-bin total extraction is deliberately
+    unregularised, so the two classes are now audited separately.
+\end{itemize}
+
 \section{Open items}
 
 The following remain outstanding following the 2026-09-07 review. None is a correction awaiting application;
@@ -918,6 +966,10 @@ Cut-and-count totals                & $1.06/0.98/1.02$; $1.03\pm0.43$ / $0.93\pm
 Proton-tagged purity                & $47$--$48\%$     & now $52/50/51\%$ \\
 Ensemble offset and pull widths     & $2.5\%$ at $2.1\sigma$; widths $1.04/0.96$ & now $0.5$--$2.7\%$ at $\le1.9\sigma$; widths $1.08/0.97/1.02$ \\
 FHC beam-off in the signal region   & $128$, then $13$ & now $30$ (per-run gates) \\
+Proton candidate $=$ leading proton  & $59\%$ (and $31\%$ ``not a proton'') & now $81.7\%$ ($12.6\%$ not a proton); the earlier figure predates the proton-tagged reprocess \\
+$\theta_p$ bin edges                & $0,\,0.597,\,0.942,\,1.287,\,\pi$ & now the RHC-derived $0,\,0.659,\,1.068,\,1.539,\,\pi$~rad (2026-09-18) \\
+Control-region detector term        & $\sim\!20\%$ on CR totals & $\sim\!2\%$; the sideband \texttt{detVar} ratios were not POT-normalised \\
+CR muon-angle shape failure         & reported in CC$0\pi$ and $\pi^0$ & withdrawn: the sideband MC predated the beam-frame correction \\
 \bottomrule
 \end{tabular}
 \end{center}
