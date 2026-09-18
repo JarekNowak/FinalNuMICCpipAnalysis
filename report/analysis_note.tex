@@ -3130,6 +3130,74 @@ term, per-bin uncertainties to $545\%$ and a closure ratio of $-0.40$. Condition
 of the response can be inverted and says nothing about how much data survives in the inverted
 directions; the two have to be read together, here and everywhere else in this note.
 
+\begin{table}[H]
+  \centering
+  \caption{The eight two-dimensional pairs (inner $\times$ outer), ordered by the conditioning of
+    $A_C$ in the combined configuration. The last three columns are the combined configuration
+    only: the bin-averaged data-statistical term, the range of the per-bin total uncertainty and the
+    range of the closure ratio against the $A_C$-smeared truth. Fake data.}
+  \label{tab:2dextract}
+  \small
+  \begin{tabular}{lcccccc}
+    \toprule
+    & \multicolumn{3}{c}{$s_{\min}/s_1$} & \multicolumn{3}{c}{combined configuration} \\
+    \cmidrule(lr){2-4}\cmidrule(lr){5-7}
+    Pair & FHC & RHC & COMB & data stat. & unc.\ [\%] & closure \\
+    \midrule
+    $\theta_p\times\delta p_T$ & $0.455$ & $0.332$ & $\mathbf{0.617}$ & $13.7\%$ & $31$--$88$ & $0.82$--$1.25$ \\
+    $\cos\theta_\pi\times\cos\theta_\mu$ & $0.245$ & $0.315$ & $\mathbf{0.563}$ & $14.8\%$ & $32$--$62$ & $0.93$--$1.17$ \\
+    $\theta_{\pi p}\times W_{\pi p}$ & $0.403$ & $0.214$ & $0.560$ & $57.7\%$ & $43$--$545$ & $-0.40$--$1.10$ \\
+    $\cos\theta_\pi\times\theta_{\mu\pi}$ & $0.027$ & $0.133$ & $0.169$ & $22.2\%$ & $28$--$94$ & $0.91$--$1.37$ \\
+    $\cos\theta_\mu\times p_\mu$ & $0.002$ & $0.261$ & $0.110$ & $8.9\%$ & $33$--$57$ & $0.97$--$0.99$ \\
+    $\theta_p\times W_{\pi p}$ & $0.008$ & $0.152$ & $0.105$ & $111.7\%$ & $36$--$291$ & $0.39$--$1.22$ \\
+    $\cos\theta_\pi\times p_\pi$ & $0.023$ & $0.158$ & $0.052$ & $12.9\%$ & $32$--$58$ & $0.96$--$1.14$ \\
+    $\theta_{\pi p}\times\delta p_T$ & $0.024$ & $0.035$ & $0.028$ & $10.7\%$ & $28$--$50$ & $0.93$--$1.08$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Two entries in that table are worth reading against each other. $\cos\theta_\mu\times p_\mu$
+screened best of the eight on the migration diagonal ($0.70/0.68$) and is rank-deficient in FHC
+($0.002$); $\theta_p\times\delta p_T$ screened worst of the proton-tagged pairs and conditions best
+of all. The diagonal is a necessary condition, not a sufficient one, and the regularised response is
+what decides --- the same lesson the one-dimensional binning study returns
+(Appendix~\ref{app:altbinning}).
+
+Figures~\ref{fig:2dslices} and~\ref{fig:2dmap} show the two usable pairs. The slice form is how a
+double-differential result is normally published and how the generators are compared; the map is the
+same numbers, and shows at a glance where the measurement has support. Each slice panel carries its
+own vertical scale, because the outer bins differ by an order of magnitude, and the maps are drawn
+on equal-size cells labelled by their ranges for the same reason.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.66\textwidth]{bkgfit/xsec2d_thetap_dpt_COMB_slices}\\[6pt]
+  \includegraphics[width=0.98\textwidth]{bkgfit/xsec2d_costhpi_costhmu_COMB_slices}
+  \caption{The two proposed two-dimensional measurements as slices in the outer variable, combined
+    configuration: $\theta_p\times\delta p_T$ (top) and $\cos\theta_\pi\times\cos\theta_\mu$
+    (bottom). Points are the unfolded fake data with the total uncertainty, the grey histogram is
+    the $A_C$-smeared fake-data truth and the four coloured histograms are the generator
+    predictions.}
+  \label{fig:2dslices}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.82\textwidth]{bkgfit/xsec2d_thetap_dpt_COMB_map}\\[6pt]
+  \includegraphics[width=0.90\textwidth]{bkgfit/xsec2d_costhpi_costhmu_COMB_map}
+  \caption{The same two measurements as maps: $\mathrm{d}^2\sigma/\mathrm{d}X\,\mathrm{d}Y$ per cell
+    with its total uncertainty (left) and the ratio to the $A_C$-smeared truth (right), for
+    $\theta_p\times\delta p_T$ (top) and $\cos\theta_\pi\times\cos\theta_\mu$ (bottom). Cells are
+    equal-size and labelled by their ranges; the palette is the \texttt{kBird} scale used for the
+    matrix figures elsewhere in this note. The closure panels are flat to within their
+    uncertainties, which are the measurement uncertainty divided by the truth.}
+  \label{fig:2dmap}
+\end{figure}
+
+The per-mode extractions of these two pairs are not shape measurements --- their responses cannot be
+inverted --- and are not shown. Whether a combined-only result is acceptable, when every released
+differential result is also quoted per beam mode, is the open question these two pairs raise.
+
 % =============================================================================
 \section{Validation}
 \label{sec:validation}
