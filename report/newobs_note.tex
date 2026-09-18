@@ -251,16 +251,17 @@ and that each prediction has as many bins as its configuration.
 \begin{table}[H]
   \centering
   \caption{Extractions of the new observables (fake data). Columns as in Table~\ref{tab:c50};
-    $\chi^2$ is the closure against the $A_C$-smeared truth.}
+    $\chi^2$ is the closure against the $A_C$-smeared truth. $\theta_p$ is on the adopted
+    RHC-derived edges (\S\ref{sec:thetap_rhc}).}
   \label{tab:newobs_extract}
   \small
   \begin{tabular}{llcccccc}
     \toprule
     Observable & Config & bins & $A_C$ rows & $s_{\min}/s_1$ & data stat. & unc.\ [\%] & closure $\chi^2$/ndf \\
     \midrule
-    $\theta_p$ & FHC & 4 & $0.58$--$1.30$ & $0.082$ & $12.3\%$ & $35$--$45$ & $0.91/4$ \\
-               & RHC & 4 & $0.21$--$1.00$ & $0.002$ & $12.9\%$ & $36$--$44$ & $0.49/4$ \\
-               & COMB & 4 & $0.60$--$1.24$ & $0.125$ & $9.7\%$ & $32$--$50$ & $0.76/4$ \\
+    $\theta_p$ & FHC & 4 & $0.53$--$0.94$ & $0.383$ & $16.6\%$ & $34$--$64$ & $1.92/4$ \\
+               & RHC & 4 & $-0.09$--$0.72$ & $0.001$ & $21.0\%$ & $39$--$91$ & $0.04/4$ \\
+               & COMB & 4 & $0.74$--$0.99$ & $0.408$ & $14.7\%$ & $35$--$83$ & $0.67/4$ \\
     $\theta_{\pi p}$ & FHC & 3 & $0.57$--$0.65$ & $0.480$ & $20.1\%$ & $38$--$93$ & $0.16/3$ \\
                      & RHC & 3 & $0.59$--$0.73$ & $0.376$ & $24.5\%$ & $43$--$187$ & $0.12/3$ \\
                      & COMB & 3 & $0.43$--$0.49$ & $0.304$ & $14.3\%$ & $40$--$89$ & $0.06/3$ \\
@@ -272,8 +273,8 @@ $\theta_{\pi p}$ is the best-conditioned observable of the proton-tagged program
 $s_{\min}/s_1$ of $0.30$--$0.48$ is above everything in Table~\ref{tab:c50} except two-bin
 $W_{\rm had}$, and above the released $\cos\theta_\pi$ ($0.27/0.24$). Its price is the last bin, whose
 total uncertainty reaches $93\%$ (FHC) and $187\%$ (RHC). $\theta_p$ unfolds well in FHC and the
-combined configuration but is nearly rank-deficient in RHC ($0.002$), where its diagonal sat exactly
-at the criterion: the RHC $\theta_p$ curves should not be read as a shape measurement.
+combined configuration ($0.383$, $0.408$) but is rank-deficient in RHC ($0.001$), where its diagonal
+sat exactly at the criterion: the RHC $\theta_p$ curves should not be read as a shape measurement.
 
 \subsection{Does a coarser RHC binning rescue $\theta_p$?}
 \label{sec:thetap_rhc}
@@ -282,7 +283,12 @@ The edges above were derived on the FHC chain, because \texttt{tki\_binning\_sca
 chained the FHC files; it now takes a beam argument, with FHC the default so every published screen
 reproduces. Run on the RHC chain, the maximin scan returns different edges: three bins at
 $0.785$ and $1.539$~rad with a worst diagonal of $0.78$, four bins at $0.659$, $1.068$ and
-$1.539$~rad at $0.73$. Both were extracted in all three configurations (Table~\ref{tab:thetap_rhc}).
+$1.539$~rad at $0.73$. Both were extracted in all three configurations (Table~\ref{tab:thetap_rhc}), and the four-bin
+scheme has since been \textbf{adopted}: the live configurations, the generator predictions and the
+three extractions are rebuilt on it, reproducing the study builds to the last digit of
+$\sigma_{\rm int}$ ($0.5323$, $0.3906$, $0.4846\times10^{-38}$~cm$^2$/Ar). Regenerating the
+predictions left $240$ histograms byte-identical and changed only \texttt{thetap\_fte}, in the
+twelve proton-tagged files. The superseded FHC-edge outputs are kept as \texttt{*\_thetap\_fhcedges}.
 
 \begin{table}[H]
   \centering
@@ -317,10 +323,13 @@ The same table says something that was not being looked for: at the \emph{same} 
 RHC-derived edges are far better conditioned everywhere else --- FHC $0.082\to0.383$ and combined
 $0.125\to0.408$ --- and the three-bin scheme reaches $0.513$ combined, four times the released value
 and on a par with the best two-dimensional pairs of \S\ref{sec:2d}. The released $\theta_p$ edges are
-therefore not the best available, and since $\theta_p$ is a new observable and nothing depends on
-them yet, the binning should be settled before it is proposed. This is a decision, not a correction:
-the cost of the three-bin scheme is one bin of the shape, and its FHC data-statistical term is the
-best of the three ($11.2\%$).
+therefore not the best available, and since $\theta_p$ is a new observable and nothing depended on
+them yet, the binning was settled before proposing it. The four-bin RHC-derived scheme was adopted:
+it keeps all four bins and is the most balanced across the two usable configurations, where the
+three-bin scheme trades FHC conditioning ($0.163$) for the best combined value ($0.513$). The price
+of the change is a data-statistical term that rises from $12.3\%$ to $16.6\%$ in FHC and from
+$9.7\%$ to $14.7\%$ combined, and a per-bin uncertainty reaching $83\%$ rather than $50\%$: better
+conditioning here means less smearing of the truth into the measurement, not a smaller error bar.
 
 \begin{figure}[H]
   \centering
@@ -332,8 +341,9 @@ best of the three ($11.2\%$).
   \label{fig:newobs_xsec}
 \end{figure}
 
-Both distributions are strongly forward peaked: the top $\theta_p$ bin, more than half the angular
-range, carries about a tenth of the first bin's $\mathrm{d}\sigma/\mathrm{d}\theta$, and the pion and
+Both distributions are strongly forward peaked: the top $\theta_p$ bin, half the angular
+range, carries a fifteenth of the first bin's $\mathrm{d}\sigma/\mathrm{d}\theta$ ($16.6$ in FHC,
+$14.8$ combined), and the pion and
 proton are separated by less than $2$~rad in the bulk of the events. The generator ordering is the
 familiar one --- GENIE lowest, NEUT highest, GiBUU and NuWro between, a spread of about $1.6$ in the
 integral --- and the shapes are similar, so these observables discriminate mainly through
