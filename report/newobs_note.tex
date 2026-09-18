@@ -276,6 +276,68 @@ total uncertainty reaches $93\%$ (FHC) and $187\%$ (RHC). $\theta_p$ unfolds wel
 combined configuration ($0.383$, $0.408$) but is rank-deficient in RHC ($0.001$), where its diagonal
 sat exactly at the criterion: the RHC $\theta_p$ curves should not be read as a shape measurement.
 
+\subsection{What the proton candidate is, and what that costs}
+\label{sec:prmatch}
+
+Both new observables are built on the reconstructed proton candidate, while their truth-level
+definitions use the leading true proton. The two need not be the same particle, and the difference
+is absorbed by the response, so the question worth asking is not how often the pick is right but how
+much of the smearing it causes. Both are measured on selected signal events with the friend trees of
+\texttt{macros/proton\_angle\_friend.C} (\texttt{python3 -m bkgfit.protonmatch}, $10\,105$ events).
+
+\begin{table}[H]
+  \centering
+  \caption{What the reconstructed proton candidate is on selected signal events, and the
+    reconstructed-minus-true residual of the two angles in each category. IQR is the interquartile
+    range; the last column of each pair is the fraction of the category beyond $0.3$~rad.}
+  \label{tab:prmatch}
+  \small
+  \begin{tabular}{lrrcccc}
+    \toprule
+    & & & \multicolumn{2}{c}{$\theta_p$ residual [rad]} & \multicolumn{2}{c}{$\theta_{\pi p}$ residual [rad]} \\
+    \cmidrule(lr){4-5}\cmidrule(lr){6-7}
+    Candidate truth & events & share & IQR & $|r|>0.3$ & IQR & $|r|>0.3$ \\
+    \midrule
+    the leading true proton & $8252$ & $81.7\%$ & $0.073$ & $6.1\%$ & $0.124$ & $15.5\%$ \\
+    a proton, not the leading one & $577$ & $5.7\%$ & $1.203$ & $77.6\%$ & $1.439$ & $77.3\%$ \\
+    not a proton & $1276$ & $12.6\%$ & $0.979$ & $74.8\%$ & $1.090$ & $70.1\%$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The pick is the leading true proton $81.7\%$ of the time and some true proton $87.4\%$ of the time;
+$12.6\%$ of candidates are not protons at all. (An earlier figure of $59\%$ recorded during the
+screen is superseded: it was measured before the proton-tagged reprocess.)
+
+The residuals say what that costs, and they say it in two different ways depending on which question
+is asked. A correct pick reconstructs the angle tightly --- an interquartile range of $0.073$~rad in
+$\theta_p$, $0.124$~rad in $\theta_{\pi p}$. A wrong pick does not smear the angle, it randomises
+it: interquartile ranges of $1.0$--$1.4$~rad, with three quarters of those events beyond $0.3$~rad.
+Averaged over everything the pick therefore widens the \emph{core} by only a quarter to a third
+($0.073\to0.109$~rad for $\theta_p$, $0.124\to0.165$ for $\theta_{\pi p}$), which makes it look like
+a minor effect.
+
+It is not a minor effect, because a binned measurement does not care about the core. What moves an
+event out of its bin is a large residual, and there the attribution reverses: residuals beyond
+$0.3$~rad occur in $18.9\%$ of $\theta_p$ events, and \textbf{$74\%$ of them are wrong picks};
+for $\theta_{\pi p}$, $25.9\%$ of events, $51\%$ of them wrong picks. The candidate purity is thus
+the dominant source of bin-to-bin migration in $\theta_p$ and half of it in $\theta_{\pi p}$ --- which
+is the mechanism behind the numbers of \S\ref{sec:newobs}: $\theta_p$'s migration diagonal sat exactly
+at the criterion and its RHC response is rank-deficient.
+
+\paragraph{The control region already exists.} The open item that accompanied this measurement asked
+for an inverted-proton-PID control region. It is already in hand: \texttt{pion\_number} is defined by
+the same LLR cut that picks the proton (\texttt{CC1mu1piXp.cxx}), so an otherwise-signal event whose
+proton fails the proton PID has two pion candidates and lands in the multi-$\pi$ sideband --- which
+is open on beam-on data, and whose data-to-prediction ratio is $0.84$. Two caveats keep this from
+closing the item. It constrains the mis-identification in the direction proton~$\to$~pion, while the
+$12.6\%$ ``not a proton'' category above is the opposite direction, pion~$\to$~proton; the two are
+the same LLR modelling seen from two sides, not the same rate. And the multi-$\pi$ region is the most
+signal-contaminated of the four control regions ($22.1\%$, and $12.3\%$ in its far variant), so it is
+also the one a constraint should lean on least. A dedicated region that inverts the proton PID while
+keeping exactly one pion candidate would separate the two directions; it does not exist yet, and
+building it needs no new data, only a selection flag.
+
 \subsection{Does a coarser RHC binning rescue $\theta_p$?}
 \label{sec:thetap_rhc}
 
@@ -567,10 +629,15 @@ python3 report/tools/xsec2d_total_check.py  # 2D normalisation vs the one-bin to
   \item Two-bin $W_{\rm had}$ is better conditioned than the released six-bin configuration.
     \textbf{Decided 2026-09-18}: the six-bin scheme stays. Two bins buy conditioning by discarding
     almost all of the shape, and the shape is what $W_{\rm had}$ is measured for.
-  \item The proton candidate is the leading true proton only $82\%$ of the time on signal events, and
-    the truth-level observables use the leading proton. The effect is inside the response, but an
-    inverted-proton-PID control region --- already a prerequisite for the signal region --- is what
-    would constrain it.
+  \item The proton candidate is the leading true proton $81.7\%$ of the time on signal events
+    (\S\ref{sec:prmatch}). A wrong pick randomises the angle rather than smearing it, so although it
+    widens the core resolution by only a quarter to a third, it supplies $74\%$ of the
+    bin-to-bin migration in $\theta_p$ and $51\%$ in $\theta_{\pi p}$: this is the mechanism behind
+    $\theta_p$'s marginal diagonal and its rank-deficient RHC response. The inverted-proton-PID
+    control region asked for here turns out to be the multi-$\pi$ sideband, already open, but it
+    constrains proton~$\to$~pion rather than the pion~$\to$~proton direction that matters, and it is
+    the most signal-contaminated of the four regions. A region inverting the proton PID at exactly
+    one pion candidate would separate the two; it needs a selection flag, not new data.
   \item The released analysis note does not yet mention $\theta_p$ or $\theta_{\pi p}$; the binning
     appendix and the observable tables need entries once the decisions above are taken.
 \end{enumerate}
