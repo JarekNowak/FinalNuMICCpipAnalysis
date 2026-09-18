@@ -128,7 +128,10 @@
     \textbf{The analysis is blind.} Every ``data'' point in this note is Poisson-thrown from the
     central-value Monte Carlo, so no number here is a statement about beam-on data. The four
     background-control regions, which contain no signal-region events, have been opened on beam-on
-    data; they show no evidence that the background model needs correcting.
+    data. They indicate no correction to the background-class normalisations. They do expose a
+    run-level exposure error: the FHC Run-1 beam-on sample is the dataset recorded without the open
+    trigger, while the analysis assumes the open-trigger bookkeeping. Correcting it would raise the
+    FHC cross section by $14\%$, and doing so is a prerequisite for unblinding the signal region.
 
     The extraction is validated by same-sample self-closure, by an ensemble of independent
     Poisson realisations carried through the whole chain --- which returns correctly sized
@@ -190,9 +193,10 @@ The measurement is built in five steps, and the note follows them in order.
   \item \textbf{Uncertainties} (\S\ref{sec:systematics}). Flux, interaction model, hadron
     re-interaction and detector response are propagated as full covariance matrices through the
     same unfolding as the data, and are released with the results.
-  \item \textbf{Validation and blinding} (\S\ref{sec:limitations}). The analysis is blind: results
-    are extracted on fake data thrown from the central-value simulation. The background model is
-    tested in four control regions that hold no signal-region event, which have been opened on
+  \item \textbf{Validation and blinding} (\S\ref{sec:validation}, \S\ref{sec:limitations}). The
+    analysis is blind: results are extracted on fake data thrown from the central-value simulation.
+    What the validation establishes, and what it does not, is \S\ref{sec:validation}; the background
+    model is tested in four control regions that hold no signal-region event and have been opened on
     beam-on data.
 \end{enumerate}
 
@@ -1997,10 +2001,16 @@ Comb & $\theta_\mu$       & $0.56/5$ & $0.83/5$ & $3.16/5$ & $4.71/5$ & $8.20/5$
 \subsection{Scope and status of each result}
 \label{sec:status_matrix}
 
-All fifty-one
-extractions carry the complete configured systematic covariance, detector variations
-included (``complete'' relative to the configured uncertainty model; the identified
-terms that are not in it are listed in \S\ref{sec:limitations}). The proton-tagged
+Table~\ref{tab:inventory} is the inventory of everything this analysis has extracted, generated
+from the release index so that it cannot drift from what was produced. The fifty-one differential
+extractions in the release --- six inclusive and eleven proton-tagged observables, each in three
+configurations --- carry the systematic covariance of the nominal configured uncertainty model,
+detector variations included. ``Nominal configured'' is meant strictly: the identified terms that
+are \emph{not} in it are listed in \S\ref{sec:limitations}, and the phrase should not be read as a
+complete accounting of every uncertainty this measurement has.
+
+\input{tables/inventory}
+ The proton-tagged
 detector terms run from $10.5\%$ to $108.5\%$ with a median of $33.0\%$, against
 $15.6\%$--$35.0\%$ for the inclusive results; the wide range is the sparse six-bin
 samples, where the unfolding amplifies them.
@@ -2291,6 +2301,31 @@ written there as systematic $\oplus$ data-statistical (FHC: $38.5\%\oplus4.3\%$)
 regularisation its flux and detector terms are not amplified.
 
 
+\subsection{The two-region \texorpdfstring{$p_\pi$}{p pi} measurement}
+\label{sec:ppi_two_region}
+
+Because the upper pion-momentum bin is open-ended, the $p_\pi$ result is reported as two
+bin-integrated cross sections rather than as a spectrum. These are the quantities to compare a
+prediction with; the differential form exists only so that the result can be drawn next to the
+others, and it carries the reporting width described in Appendix~\ref{app:binning}.
+
+\begin{table}[H]
+  \centering
+  \caption{The $p_\pi$ result as bin integrals, $10^{-38}$~cm$^2$/Ar, on fake data. The upper region
+    is open-ended; no width is assigned to it here and none is needed. Uncertainties are the total
+    of the nominal configured covariance.}
+  \label{tab:ppi_partial_main}
+  \small
+  \begin{tabular}{lccc}
+    \toprule
+    Region & FHC & RHC & Combined \\
+    \midrule
+    $\sigma(0.175<p_\pi<0.205$~GeV/$c)$ & $0.059\pm0.041$ & $0.054\pm0.034$ & $0.062\pm0.038$ \\
+    $\sigma(p_\pi>0.205$~GeV/$c)$ & $0.764\pm0.293$ & $0.694\pm0.268$ & $0.713\pm0.270$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
 \subsection{How far \texorpdfstring{$A_C$}{A C} is from preserving normalisation}
 \label{sec:ac_rowsums}
 
@@ -2506,11 +2541,24 @@ given in \suppref{Sec.}{sec:request}. Three things come out of them.
     class normalisations returns the dominant CC$0\pi$ class at $0.984\pm0.191$, unity within a
     fifth of its own uncertainty (\crref{Sec.}{sec:jointfit}). The measurement keeps its nominal
     background prediction.
-  \item \textbf{One run's exposure is discrepant.} The global test passes in every period except
-    FHC Run~1, where a free exposure factor fits $0.520\pm0.020$ with $\chi^2=16/17$. The size and
-    the sharpness of that number point to a bookkeeping error in the run's exposure rather than to
-    a mismodelled background; it is an open item (\S\ref{sec:limitations}), and no result here
-    rests on FHC Run~1 alone.
+  \item \textbf{One run's exposure is wrong, and the cause is identified.} The global test passes
+    in every period except FHC Run~1, where every region sits at $0.60$--$0.72$ and a free exposure
+    factor fits $0.520\pm0.020$. Two sets of bookkeeping numbers exist for that run --- $2.192\times
+    10^{20}$~POT with $5\,748\,692$ triggers without the open trigger, and $3.283\times10^{20}$ with
+    $9\,846\,635$ with it --- and every configuration in this analysis assumes the second. The data
+    say it is the first. The assumption enters the prediction three ways that all scale with it (the
+    neutrino MC through the POT, the beam-off through the gate count, the dirt through the POT), so
+    the four combinations can be told apart: assuming the open-trigger pair gives region ratios of
+    $0.637$, $0.715$, $0.911$ and $0.595$, while assuming the non-open pair gives $0.970$, $1.090$,
+    $1.380$ (on $40$ events) and $0.948$. The two mixed hypotheses leave the beam-off-dominated
+    cosmic region at $0.72$--$0.75$, so both numbers are wrong together rather than one of them.
+
+    This does not stay in the control regions. FHC Run~1 is $37\%$ of the assumed FHC exposure, so
+    the correction takes FHC from $8.857$ to $7.766\times10^{20}$~POT and would raise the FHC cross
+    section by $14.0\%$ and the combined one by $5.8\%$; RHC is untouched, and fake-data closure is
+    unaffected because the throws use the same assumed exposure. \textbf{No configuration has been
+    changed}: the exposure must be confirmed against the beam bookkeeping before a released
+    normalisation moves. This is an unblinding prerequisite (\S\ref{sec:limitations}).
   \item \textbf{The remaining deficit is not signal contamination.} The regions sit $8$--$16\%$
     below prediction. Tightening each region so that it holds less signal --- the CC$0\pi$ region
     goes from $8.7\%$ to $2.1\%$ signal while keeping $58\%$ of its events --- leaves the
@@ -2518,18 +2566,20 @@ given in \suppref{Sec.}{sec:request}. Three things come out of them.
     the deficit does not scale with the signal content of the region.
 \end{itemize}
 
-\subsection{Background-control sidebands}
+\subsection{Pre-opening validation of the control-region machinery (pseudo-data)}
 \label{sec:sidebands}
 % =============================================================================
 
 \begin{quote}
-\textbf{The pseudo-data studies in this section are not a closure test of the complete
-beam-on sideband prediction.} The pseudo-data contain only the central-value neutrino-MC
-component, so the ratios reported here validate the selection logic, the run scaling and
-the central-value weighting only; the full-stack variant of \suppref{Sec.}{sec:cr_fullstack}
-additionally exercises the bookkeeping path. At sideband unblinding, beam-on data will be
-compared with the full neutrino-MC $+$ EXT $+$ dirt prediction under the frozen
-procedure of \suppref{Sec.}{sec:cr_protocol}.
+\textbf{This subsection is the test that was run before the control regions were opened, and it
+is not a test of the background model.} The pseudo-data used here contain only the central-value
+neutrino-MC component, so what these ratios validate is the implementation --- the region
+definitions, the per-run exposure scaling and the central-value weighting --- on a sample where the
+right answer is known by construction. The full-stack variant of
+\suppref{Sec.}{sec:cr_fullstack} additionally exercises the bookkeeping path. \textbf{The beam-on
+results are in \S\ref{sec:cr_outcome}}, where the regions are compared with the complete
+neutrino-MC $+$ beam-off $+$ dirt prediction under the frozen procedure of
+\suppref{Sec.}{sec:cr_protocol}.
 \end{quote}
 
 Because the analysis is blind, the background model cannot yet be confronted with
@@ -2625,9 +2675,9 @@ small regions are statistical: with $82$ cosmic-sideband events for FHC, a $\sqr
 fluctuation is $11\%$, so the observed $1.09$, and the RHC multi-$\pi$ $1.10$ (on $175$
 events, $8\%$), are within about one standard deviation.
 
-\paragraph{Use at unblinding.}
-Once the control regions are opened with beam-on data the same table becomes a genuine
-background test, and the statistical precision available is set by the yields above: the
+\paragraph{What the regions could deliver.}
+These yields set the statistical precision that was available when the regions were opened, and
+the estimates were made beforehand; what they actually showed is \S\ref{sec:cr_outcome}. The
 combined CC$0\pi$ and $\pi^0$ samples have $0.6\%$ and $0.8\%$ \emph{raw data
 statistical} precision. Their effective constraint on the signal-region background is
 weaker and depends on the correlated transfer uncertainty
@@ -2644,9 +2694,9 @@ uncertainty is currently assigned to the gate ratios themselves or to the Run-1 
 standing in for Run~2 ($14\%$ of the FHC and $23\%$ of the RHC exposure); both are
 listed in \S\ref{sec:limitations}. The multi-$\pi$ region, at $\sim\!300$
 combined events, gives $\sim\!6\%$, useful as a cross-check but not competitive with
-the others. The intended procedure is to unblind the control regions first, use them to
-test, and where item~4 of \suppref{Sec.}{sec:cr_protocol} permits to correct the normalisation
-of, the dominant background classes, and only then open the signal region.
+the others. The procedure followed was to open the control regions first, use them to test --- and where
+item~4 of \suppref{Sec.}{sec:cr_protocol} permits, to correct --- the normalisation of the dominant
+background classes, and only then to open the signal region. The signal region remains blinded.
 
 \begin{table}[H]
   \centering
@@ -2732,7 +2782,11 @@ control region are incomplete, \S\ref{sec:limitations}); the eleventh, the
 differential $W_{\pi p}$ shape, is withdrawn (its files are in the release for
 completeness, flagged as such in \texttt{index\_extractions.tsv}), and the robust
 proton-tagged deliverable proposed as a headline is the one-bin total cross section
-(Table~\ref{tab:cutcount}). The ten are: the five hadronic-mass and
+(Table~\ref{tab:cutcount}). Two further observables, the proton angles $\theta_p$ and
+$\theta_{\pi p}$ (\S\ref{sec:wtki_ang}), were added afterwards and are proposed as secondary scope;
+this is the arithmetic behind the twelve rows of Tables~\ref{tab:wtki_fhc}--\ref{tab:wtki_comb},
+which are the ten validation products plus those two, the withdrawn $W_{\pi p}$ shape appearing
+only in the technical supplement. The ten are: the five hadronic-mass and
 transverse-kinematic-imbalance (W/TKI) variables specific to this selection
 ($W_\mathrm{had}$ and the four TKI observables), plus the five muon/pion kinematic observables of the inclusive analysis
 ($p_\mu$, $p_\pi$, $\cos\theta_\mu$, $\cos\theta_\pi$, $\theta_{\mu\pi}$) re-measured on
@@ -2840,7 +2894,7 @@ systematic treatment here includes the flux, cross-section, reinteraction and
 detector-variation terms.
 
 The reverse-horn-current measurement is complete at the same binning
-(Table~\ref{tab:wtki_rhc}). All ten released RHC observables close positive, with
+(Table~\ref{tab:wtki_rhc}). All ten proton-tagged validation products close positive in RHC, with
 $\sigma_\mathrm{int}$ in $0.31$--$0.44\times10^{-38}$~cm$^2$/Ar against $0.39$--$0.50$
 for FHC; these are $A_C$-suppressed integrals with different $A_C$ per configuration, so
 their ratio is not the RHC/FHC ratio (that is $0.860$ from the one-bin totals,
@@ -2860,7 +2914,7 @@ within that run, which reduces to the correct run total under either convention;
 with one MC file per run, is unaffected by the choice.
 
 The combined-sample measurement is complete on the same binning, is included in the
-results tables and the data release, and covers all ten released combined proton-tagged observables.
+results tables and the data release, and covers all ten combined proton-tagged validation products.
 
 \begin{table}[H]
   \centering
@@ -3021,7 +3075,7 @@ Observable & $\sigma_\mathrm{int}$ & unf./truth & $\chi^2/\mathrm{ndf}$ \\
 
 
 With all three configurations in hand, the combined $\sigma_\mathrm{int}$ lies between the
-FHC and RHC values for eight of the ten released observables; $\delta p_T$ ($0.540$
+FHC and RHC values for eight of the ten proton-tagged validation products; $\delta p_T$ ($0.540$
 against $0.461$ and $0.418$) and $\delta\phi_T$ ($0.503$ against $0.474$ and $0.389$)
 lie above both, by amounts well inside their $\sim\!30\%$ uncertainties.
 
@@ -3760,12 +3814,13 @@ $-1,-0.1,0.35,0.6,0.8,1$) with better-conditioned $A_C$ and unchanged per-bin
 uncertainties, which is the released binning; the generator predictions are computed at
 these edges from the event-level files.
 
-The top $p_\pi$ bin is defined at truth level as $p_\pi>0.205$~GeV/$c$ with no upper
-edge; the $1$~GeV/$c$ listed above is the
-finite boundary used in the numerical release to assign that bin a width, not a kinematic
-limit of the sample. The bin is an inclusive high-momentum region, not a differential
-point, for the reasons set out in the technical supplement; the bin-integrated partial
-cross sections are given in \suppref{Table}{tab:ppi_partial}.
+The top $p_\pi$ bin is defined at truth level as $p_\pi>0.205$~GeV/$c$ with \emph{no upper edge}.
+An open-ended bin has no width, so it has no differential density: the $1$~GeV/$c$ listed above is a
+reporting convention that assigns the bin a finite width of $0.795$~GeV/$c$ so that it can be
+plotted on the same axis as the first, and it is not a kinematic limit of the sample. A height read
+off that plot is that convention, not a measured $\mathrm{d}\sigma/\mathrm{d}p_\pi$. The quantities
+that are unambiguous are the two bin integrals, which is how the result should be quoted and
+compared (Table~\ref{tab:ppi_partial_main}).
 
 \section{Alternative binnings considered}
 \label{app:altbinning}
