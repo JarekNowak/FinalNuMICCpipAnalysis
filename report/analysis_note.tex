@@ -93,12 +93,11 @@
   Single Pion Production Differential Cross Sections on Argon
   with the MicroBooNE Detector in the NuMI Beam\par}
   \vspace{0.8cm}
-  {\large Analysis Note, Full FHC, RHC, and Combined Exposure\par}
-  \vspace{0.5cm}
-  {\normalsize Analysis note\par}
+  {\large Analysis note for the full FHC, RHC and combined exposures\par}
+
 
   \vspace{1.5cm}
-  {\large Ishanee Pophale, Jarek Nowak\par}
+  {\large Ishanee Pophale and Jarek Nowak\par}
   \vspace{0.5cm}
   {\normalsize\textit{Lancaster University}\par}
   \vspace{2cm}
@@ -120,7 +119,7 @@
     and two proton angles.
 
     Each configuration carries its own integrated flux and exposure, and each result carries the
-    complete configured covariance: flux, interaction model, hadron re-interaction, detector
+    nominal configured covariance: flux, interaction model, hadron re-interaction, detector
     response, normalisation and statistical terms. Unfolded results must be compared with a
     prediction through the released additional-smearing matrix $A_C$, which is not
     normalisation-preserving; $A_C$ and the covariance are released for every extraction.
@@ -133,12 +132,13 @@
     trigger, while the analysis assumes the open-trigger bookkeeping. Correcting it would raise the
     FHC cross section by $14\%$, and doing so is a prerequisite for unblinding the signal region.
 
-    The extraction is validated by same-sample self-closure, by an ensemble of independent
-    Poisson realisations carried through the whole chain --- which returns correctly sized
-    statistical uncertainties --- and by an independent bit-identical rebuild from the processed
-    ntuples. Sec.~\ref{sec:intro} explains how the note is organised; the studies behind the
-    analysis choices are in the technical supplement, and the history of the analysis is in the
-    change log.
+    The implementation is validated by same-sample closure, and the size of the statistical
+    uncertainties by an ensemble of independent Poisson realisations carried through the whole
+    chain; the release is reproducible bit-identically from the processed ntuples. Both closure
+    tests use the nominal model on both sides, so what they establish is that the machinery is
+    correct under that model --- robustness to a materially different interaction model has not yet
+    been demonstrated and is an outstanding prerequisite. Sec.~\ref{sec:status} is the one-page
+    version of the analysis and the status of every product in it.
   \end{abstract}
   \vfill
   \tableofcontents
@@ -242,6 +242,66 @@ is needed to follow this note. The additional-smearing and covariance matrices f
 are released as text in \texttt{report/data\_release/}; a prediction cannot be compared with these
 results without the former, nor used quantitatively without the latter.
 
+% =============================================================================
+\section{Analysis status}
+\label{sec:status}
+% =============================================================================
+
+This section is the one-page version of the analysis, and the status of everything in it.
+
+\paragraph{What is measured.} Flux-averaged $\nu_\mu+\bar\nu_\mu$ charged-current
+single-charged-pion production on argon. The signal is defined by what leaves the nucleus --- one
+muon, one charged pion, no neutral pion, any number of nucleons, vertex in the fiducial volume ---
+not by the interaction mechanism, in the phase space $p_\mu>0.15$~GeV/$c$, $p_\pi>0.175$~GeV/$c$
+and $\theta_{\mu\pi}<2.6$~rad.
+
+\paragraph{From what.} The full NuMI exposure: FHC $8.857\times10^{20}$~POT, RHC
+$11.082\times10^{20}$, combined $19.939\times10^{20}$, each normalised run by run and each with its
+own integrated flux. The selection reaches $\approx\!17\%$ efficiency at $\approx\!59\%$ purity; the
+dominant background is CC$0\pi$ with a proton taken for the pion, then multi-pion events, with
+beam-off cosmics at $\approx\!2\%$ of the prediction.
+
+\paragraph{What comes out.} A flux-averaged total from a one-bin extraction, six differential
+distributions, and a proton-tagged subsample measured as secondary scope;
+Table~\ref{tab:inventory} is the full inventory. All angles are defined about the neutrino
+direction, not the detector axis --- using the detector axis would move about $65\%$ of signal
+events to a different $\cos\theta_\mu$ bin.
+
+\paragraph{How to compare a prediction with it.} Multiply the prediction by the released
+additional-smearing matrix $A_C$, then use the released covariance. $A_C$ is not
+normalisation-preserving, so the integral of a differential result is not the total cross section
+and differs between observables; the physical total is the one-bin extraction, where $A_C=1$.
+
+\begin{center}
+\fbox{\begin{minipage}{0.94\textwidth}
+\textbf{Status of every product}
+\begin{itemize}\itemsep1pt \setlength{\parskip}{0pt}
+  \item \textbf{Signal region: blinded.} Every data point in this note is a Poisson throw of the
+    central-value simulation. No statement here is a measurement of beam-on data.
+  \item \textbf{Control regions: opened} on beam-on data under the frozen procedure; they indicate
+    no correction to the background-class normalisations (\S\ref{sec:cr_outcome}).
+  \item \textbf{Primary:} the inclusive one-bin total and the six inclusive differential
+    distributions, in all three configurations.
+  \item \textbf{Secondary:} the proton-tagged one-bin total. The proton-tagged differential
+    observables are carried as validation products and are not proposed for approval in this review.
+  \item \textbf{Proposed:} the proton angles $\theta_p$ and $\theta_{\pi p}$, and two
+    two-dimensional pairs in the combined configuration only.
+  \item \textbf{Withdrawn --- do not quote:} the differential $W_{\pi p}$ shape and the five-bin
+    $d\sigma/dp_\pi$ (Appendix~\ref{app:withdrawn}).
+  \item \textbf{Validated:} the implementation against the nominal model, and the size of the
+    statistical uncertainties. \textbf{Not yet demonstrated:} robustness to a materially different
+    interaction model (\S\ref{sec:validation}).
+  \item \textbf{Uncertainties:} the nominal configured covariance. Identified terms that are
+    \emph{not} in it are listed in \S\ref{sec:limitations}.
+  \item \textbf{Before the signal region is opened:} the FHC Run-1 exposure must be resolved --- the
+    beam-on sample appears to be the one recorded without the open trigger, which would raise the
+    FHC cross section by $14\%$ --- and the flux normalisation must be confirmed with the flux
+    contact.
+\end{itemize}
+\end{minipage}}
+\end{center}
+
+% =============================================================================
 \section{Physics Context}
 \label{sec:theory}
 % =============================================================================
@@ -1918,7 +1978,7 @@ true bin; the quoted numbers are the overall mean (bias) and RMS (resolution).
 Table~\ref{tab:chi2_incl} collects the bin-by-bin $\chi^2$ of the unfolded fake data
 against each prediction, for every observable and every beam configuration. All
 predictions are $A_C$-smeared, so the comparison is made in the measurement space, and the
-the complete configured covariance is used. The \emph{truth} column is the closure test: it is small
+the nominal configured covariance is used. The \emph{truth} column is the closure test: it is small
 throughout (with the caveat on its $p$-values in \S\ref{sec:status_matrix}).
 
 \paragraph{One application of $A_C$.} Every prediction in these tables is smeared by
@@ -2033,27 +2093,27 @@ Total flux-averaged cross section (one-bin extraction), all three configurations
   & Not suppressed by $A_C$; the most directly interpretable total. \\
 $d\sigma/dp_\mu$
   & Analysis definition final; result blinded
-  & Complete configured covariance including detector variations. \\
+  & Nominal configured covariance including detector variations. \\
 $d\sigma/d\cos\theta_\mu$ and $d\sigma/d\theta_\mu$
   & Analysis definition final; result blinded
-  & Complete configured covariance; discriminates between models. \\
+  & Nominal configured covariance; discriminates between models. \\
 $d\sigma/d\cos\theta_\pi$
   & Analysis definition final; result blinded
-  & Complete configured covariance. (No $\theta_\pi$ parameterisation is extracted; only the muon angle
+  & Nominal configured covariance. (No $\theta_\pi$ parameterisation is extracted; only the muon angle
     is released in both forms.) \\
 $d\sigma/d\theta_{\mu\pi}$
   & Analysis definition final; result blinded
-  & Complete configured covariance; the best-conditioned shape observable. \\
+  & Nominal configured covariance; the best-conditioned shape observable. \\
 $d\sigma/dp_\pi$, two-bin
   & Analysis definition final, coarse; result blinded
-  & Complete configured covariance, but a two-region partition rather than a spectrum: one
+  & Nominal configured covariance, but a two-region partition rather than a spectrum: one
     near-threshold interval and one broad inclusive interval above
     $0.205$~GeV/$c$.  See below. \\
 \midrule
-\multicolumn{3}{l}{\emph{Secondary scope --- complete configured covariance, secondary results}}\\
+\multicolumn{3}{l}{\emph{Secondary scope --- nominal configured covariance, secondary results}}\\
 \midrule
 Proton-tagged integrated cross section
-  & Complete (configured covariance)
+  & Nominal configured covariance
   & Detector systematics propagated, closure $\chi^2$ recomputed, $A_C$ and covariance
     released. \\
 Proton-tagged differential results, including transverse kinematic imbalance
@@ -2090,7 +2150,7 @@ Three points condition how the numbers below are read, and are established in
 charged pions interact before ranging out, so the reconstructed momentum saturates near
 $0.34$~GeV/$c$ and no finer binning survives the migration criterion; the upper bin is open-ended
 and its released density represents a bin integral. \emph{Second}, the closure $\chi^2$ quoted with
-each extraction uses the complete systematic covariance, so its $p$-values are not a sensitive test
+each extraction uses the nominal configured covariance, so its $p$-values are not a sensitive test
 of the extraction --- they confirm consistency and nothing more. \emph{Third}, an ensemble of
 independent Poisson realisations carried through the whole chain gives per-bin pull widths of
 $0.97$--$1.08$, so the quoted statistical uncertainties are correctly sized; the study covers three
@@ -3258,12 +3318,36 @@ differential result is also quoted per beam mode, is the open question these two
 % =============================================================================
 
 Nothing in this section uses beam-on data. Every study here asks whether the machinery does what it
-claims on simulation, where the right answer is known: whether the extraction returns the truth it
-was given, whether the quoted uncertainties are the right size, and whether the background fit that
-the control regions feed is unbiased. The tests that do use beam-on data --- the control-region
-comparison itself --- are in the control-sample note.
+claims on simulation, where the right answer is known. The tests that do use beam-on data --- the
+control-region comparison itself --- are in the control-sample note.
 
-\subsection{Self-closure of the extraction}
+Validation of an unfolded measurement comes in three layers, and it is worth naming them, because
+they are not interchangeable and this analysis has completed two of the three.
+
+\begin{enumerate}\itemsep3pt
+  \item \textbf{Implementation closure under the nominal model.} Unfold pseudo-data thrown from the
+    same simulation that built the response, and require the truth back. This tests the
+    implementation --- the matrices, the binning, the normalisation, the bookkeeping --- and nothing
+    else, because the model is identical on both sides. \emph{Passed}, and reported with every
+    extraction as the closure $\chi^2$.
+  \item \textbf{Statistical coverage.} Carry many independent Poisson realisations through the whole
+    chain and ask whether the spread of the results matches the uncertainty each one reports.
+    \emph{Passed} for the extractions and configuration stated below; it has not been run for RHC or
+    for the proton-tagged family.
+  \item \textbf{Robustness to model mismatch.} Unfold pseudo-data whose truth differs materially
+    from the model that built the response --- another generator, or a reweighting that moves the
+    pion-momentum or angular shape --- and ask how much bias the regularisation and the response
+    model then introduce. \emph{Not yet demonstrated.}
+\end{enumerate}
+
+The third is the one that bounds how much of the result is the data and how much is the model
+assumed in unfolding it, and its absence is the honest limit of what follows: the statements below
+establish that the implementation is correct and its statistical uncertainties are the right size
+\emph{under the nominal model}. They do not establish that the extraction is robust to the
+underlying interaction model being wrong, and no claim in this note should be read that way. The
+missing test is listed as a prerequisite in \S\ref{sec:limitations}.
+
+\subsection{Implementation closure under the nominal model}
 
 The first test is the weakest and the most necessary: unfold a spectrum thrown from the same
 simulation that built the response, and require the truth back. This catches an inverted matrix, a
