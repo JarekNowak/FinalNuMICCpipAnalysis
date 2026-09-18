@@ -275,6 +275,53 @@ total uncertainty reaches $93\%$ (FHC) and $187\%$ (RHC). $\theta_p$ unfolds wel
 combined configuration but is nearly rank-deficient in RHC ($0.002$), where its diagonal sat exactly
 at the criterion: the RHC $\theta_p$ curves should not be read as a shape measurement.
 
+\subsection{Does a coarser RHC binning rescue $\theta_p$?}
+\label{sec:thetap_rhc}
+
+The edges above were derived on the FHC chain, because \texttt{tki\_binning\_scan.C} only ever
+chained the FHC files; it now takes a beam argument, with FHC the default so every published screen
+reproduces. Run on the RHC chain, the maximin scan returns different edges: three bins at
+$0.785$ and $1.539$~rad with a worst diagonal of $0.78$, four bins at $0.659$, $1.068$ and
+$1.539$~rad at $0.73$. Both were extracted in all three configurations (Table~\ref{tab:thetap_rhc}).
+
+\begin{table}[H]
+  \centering
+  \caption{$\theta_p$ on RHC-derived edges, against the released FHC-derived scheme. Columns as in
+    Table~\ref{tab:newobs_extract}.}
+  \label{tab:thetap_rhc}
+  \small
+  \begin{tabular}{llcccccc}
+    \toprule
+    Binning & Config & bins & $A_C$ rows & $s_{\min}/s_1$ & data stat. & unc.\ [\%] & closure \\
+    \midrule
+    released (FHC) & FHC & 4 & $0.58$--$1.30$ & $0.082$ & $12.3\%$ & $35$--$45$ & $0.86$--$0.98$ \\
+                   & RHC & 4 & $0.21$--$1.00$ & $0.002$ & $12.9\%$ & $36$--$44$ & $0.95$--$1.17$ \\
+                   & COMB & 4 & $0.60$--$1.24$ & $0.125$ & $9.7\%$ & $32$--$50$ & $0.89$--$1.09$ \\
+    RHC maximin & FHC & 4 & $0.53$--$0.94$ & $\mathbf{0.383}$ & $16.6\%$ & $34$--$64$ & $0.80$--$1.06$ \\
+                & RHC & 4 & $-0.09$--$0.72$ & $0.001$ & $21.0\%$ & $39$--$91$ & $0.95$--$1.19$ \\
+                & COMB & 4 & $0.74$--$0.99$ & $\mathbf{0.408}$ & $14.7\%$ & $35$--$83$ & $0.88$--$1.10$ \\
+    RHC maximin & FHC & 3 & $0.31$--$0.66$ & $0.163$ & $11.2\%$ & $35$--$47$ & $0.90$--$0.98$ \\
+                & RHC & 3 & $0.18$--$0.57$ & $0.050$ & $26.1\%$ & $40$--$94$ & $0.85$--$0.99$ \\
+                & COMB & 3 & $0.67$--$0.83$ & $\mathbf{0.513}$ & $11.7\%$ & $35$--$72$ & $0.91$--$1.03$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The answer to the question is no. Dropping to three bins moves RHC from $0.002$ to $0.050$, which is
+a factor of twenty-five and still far below anything usable; at four bins RHC stays rank-deficient
+($0.001$) and one $A_C$ row sum even goes negative. The RHC data-statistical term rises rather than
+falls, from $13\%$ to $21$--$26\%$, which is what a suppressed response does to a coarser binning.
+$\theta_p$ cannot be quoted as an RHC shape measurement at any of the three binnings tried.
+
+The same table says something that was not being looked for: at the \emph{same} four bins, the
+RHC-derived edges are far better conditioned everywhere else --- FHC $0.082\to0.383$ and combined
+$0.125\to0.408$ --- and the three-bin scheme reaches $0.513$ combined, four times the released value
+and on a par with the best two-dimensional pairs of \S\ref{sec:2d}. The released $\theta_p$ edges are
+therefore not the best available, and since $\theta_p$ is a new observable and nothing depends on
+them yet, the binning should be settled before it is proposed. This is a decision, not a correction:
+the cost of the three-bin scheme is one bin of the shape, and its FHC data-statistical term is the
+best of the three ($11.2\%$).
+
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{bkgfit/newobs_xsec}
@@ -499,8 +546,10 @@ python3 report/tools/xsec2d_total_check.py  # 2D normalisation vs the one-bin to
     (Table~\ref{tab:2dextract}, Figs.~\ref{fig:2dslices}--\ref{fig:2dmap}). Both need generator predictions checked against the flattened bin
     order and a decision on whether a combined-only result is acceptable, the released differential
     results being quoted per beam mode as well.
-  \item $\theta_p$ in RHC is rank-deficient. Either it is quoted for FHC and the combined
-    configuration only, or the RHC binning is coarsened to three bins, which has not been screened.
+  \item $\theta_p$ in RHC is rank-deficient, and \S\ref{sec:thetap_rhc} shows that coarsening does
+    not rescue it ($0.002\to0.050$ at three bins): it can only be quoted for FHC and the combined
+    configuration. Open instead is which edges $\theta_p$ should use at all, the RHC-derived scheme
+    being three to four times better conditioned in both usable configurations than the released one.
   \item Two-bin $W_{\rm had}$ is better conditioned than the released six-bin configuration; a
     decision on replacing it is outstanding.
   \item The proton candidate is the leading true proton only $82\%$ of the time on signal events, and

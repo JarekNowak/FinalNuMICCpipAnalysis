@@ -42,7 +42,9 @@ def main():
     from c50_candidates import CANDS
     print(f"{'candidate':12s} {'cfg':8s} {'nb':>2s} {'A_C rows':>11s} {'smin/s1':>7s} {'DataStat':>8s} {'bin unc %':>11s} {'closure':>11s} {'chi2/ndf p':>14s}")
     for c in CANDS:
-        for cfg, T in (('fhc5', 'FHC5'), ('rhcfull', 'RHCFULL')):
+        # candidates may declare their own configurations (the RHC theta_p schemes add comb)
+        want = c.get('cfgs', ('fhc5', 'rhcfull'))
+        for cfg, T in [(x, {'fhc5': 'FHC5', 'rhcfull': 'RHCFULL', 'comb': 'COMB'}[x]) for x in want]:
             base = f"{c['pfx']}_{T}_{c['name']}"
             log, out = RB + f'unfold_{base}.log', RB + f'closure_hists_xsec_{base}.root'
             if not (os.path.exists(log) and os.path.exists(out)):
