@@ -346,15 +346,96 @@ second constraint: $\cos\theta_\pi\times\theta_{\mu\pi}$ has a bin with four exp
 
 \subsection{Extractions}
 
-All eight pairs are being extracted for FHC, RHC and the combined configuration, with generator
-predictions produced as flattened histograms in the same bin order. At the time of writing the first
-three are complete and already repeat the lesson of \S\ref{sec:c50}:
-$\cos\theta_\pi\times\cos\theta_\mu$ gives $s_{\min}/s_1=0.245$ (FHC) and $0.315$ (RHC) with a
-data-statistical term of $29$ and $25\%$, while $\cos\theta_\mu\times p_\mu$ --- the pair with the
-best migration diagonals of the set --- comes out at $0.002$ in FHC, rank-deficient. A good diagonal
-does not imply a usable regularised response. The completed table will be added when the array
-finishes; the evaluation is \texttt{report/tools/extract\_eval.py}, which reads the multi-slice
-sidecar where one exists.
+All eight pairs were extracted for FHC, RHC and the combined configuration, with generator
+predictions produced as flattened histograms in the same bin order (Table~\ref{tab:2dextract}).
+
+\begin{table}[H]
+  \centering
+  \caption{Two-dimensional extractions (fake data): conditioning of $A_C$, bin-averaged
+    data-statistical term, range of the per-bin total uncertainty and range of the closure ratio.
+    Pairs are ordered by their combined-configuration conditioning.}
+  \label{tab:2dextract}
+  \small
+  \begin{tabular}{lcccccc}
+    \toprule
+    & \multicolumn{3}{c}{$s_{\min}/s_1$} & \multicolumn{3}{c}{combined configuration} \\
+    \cmidrule(lr){2-4}\cmidrule(lr){5-7}
+    Pair & FHC & RHC & COMB & data stat. & unc.\ [\%] & closure \\
+    \midrule
+    $\theta_p\times\delta p_T$ & $0.455$ & $0.332$ & $\mathbf{0.617}$ & $13.7\%$ & $31$--$88$ & $0.82$--$1.25$ \\
+    $\cos\theta_\pi\times\cos\theta_\mu$ & $0.245$ & $0.315$ & $\mathbf{0.563}$ & $14.8\%$ & $32$--$62$ & $0.93$--$1.17$ \\
+    $\theta_{\pi p}\times W_{\pi p}$ & $0.403$ & $0.214$ & $0.560$ & $57.7\%$ & $43$--$545$ & $-0.40$--$1.10$ \\
+    $\cos\theta_\pi\times\theta_{\mu\pi}$ & $0.027$ & $0.133$ & $0.169$ & $22.2\%$ & $28$--$94$ & $0.91$--$1.37$ \\
+    $\cos\theta_\mu\times p_\mu$ & $0.002$ & $0.261$ & $0.110$ & $8.9\%$ & $33$--$57$ & $0.97$--$0.99$ \\
+    $\theta_p\times W_{\pi p}$ & $0.008$ & $0.152$ & $0.105$ & $111.7\%$ & $36$--$291$ & $0.39$--$1.22$ \\
+    $\cos\theta_\pi\times p_\pi$ & $0.023$ & $0.158$ & $0.052$ & $12.9\%$ & $32$--$58$ & $0.96$--$1.14$ \\
+    $\theta_{\pi p}\times\delta p_T$ & $0.024$ & $0.035$ & $0.028$ & $10.7\%$ & $28$--$50$ & $0.93$--$1.08$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Four things follow.
+\begin{itemize}\itemsep2pt
+  \item \textbf{Two pairs are usable, and only combined}: $\theta_p\times\delta p_T$ ($0.617$) and
+    $\cos\theta_\pi\times\cos\theta_\mu$ ($0.563$), both better conditioned than every released
+    differential observable except the proton-tagged $W_{\rm had}$, with data-statistical terms of
+    $14$--$15\%$ and per-bin uncertainties of $31$--$88\%$. Combining the beam modes roughly doubles
+    their conditioning ($0.46\to0.62$, $0.25\to0.56$): this is the clearest benefit the joint
+    exposure delivers anywhere in this work, and it comes from statistics and the shared flux, not
+    from any $\nu/\bar\nu$ separation (\S\ref{sec:newobs}).
+  \item \textbf{The best migration diagonals give the worst conditioning.} $\cos\theta_\mu\times p_\mu$
+    screened best of the eight ($0.70/0.68$) and is rank-deficient in FHC ($0.002$). As in
+    \S\ref{sec:c50}, the diagonal is a necessary condition, not a sufficient one, and the
+    regularised response is what decides.
+  \item \textbf{Everything built on $W_{\pi p}$ is unusable}, as its $39\%$ leakage between outer
+    bins predicted: data-statistical terms of $58$--$1830\%$, per-bin uncertainties to $5988\%$ and
+    closure ratios that go negative ($-0.78$ in RHC, $-0.40$ in the combined
+    $\theta_{\pi p}\times W_{\pi p}$). This is the two-dimensional form of the conclusion already
+    drawn for the differential $W_{\pi p}$ shape. $\theta_{\pi p}\times W_{\pi p}$ is the sharpest
+    case: its combined conditioning, $0.560$, is as good as that of
+    $\cos\theta_\pi\times\cos\theta_\mu$, and the extraction is still worthless. Conditioning bounds
+    how much of the response can be inverted; it says nothing about how much data is left in the
+    inverted directions, and the two must be read together.
+  \item \textbf{Correlated pairs carry little.} $\theta_{\pi p}\times\delta p_T$ is poorly
+    conditioned ($0.02$--$0.04$) where $\theta_p\times\delta p_T$ is not, because the opening angle
+    and the transverse imbalance are built from the same hadronic system.
+\end{itemize}
+
+Figures~\ref{fig:2dslices} and \ref{fig:2dmap} show the two usable pairs in the combined
+configuration, as slices in the outer variable and as maps. The slices are the form a double
+differential is normally published in and the one the generators are compared in; the map is the same
+numbers, and is included because it shows at a glance where the measurement has support. Each panel of
+the slice figure carries its own vertical scale: the outer bins differ by an order of magnitude, and a
+shared axis leaves everything but the first slice unreadable. The maps are drawn on equal-size cells
+labelled by their ranges rather than on the physical axes, for the same reason.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.66\textwidth]{bkgfit/xsec2d_thetap_dpt_COMB_slices}\\[6pt]
+  \includegraphics[width=0.98\textwidth]{bkgfit/xsec2d_costhpi_costhmu_COMB_slices}
+  \caption{The two usable pairs as slices in the outer variable, combined configuration: $\theta_p
+    \times\delta p_T$ (top) and $\cos\theta_\pi\times\cos\theta_\mu$ (bottom). Points are the unfolded
+    \textbf{fake} data with the total uncertainty; the grey histogram is the fake-data truth and the
+    four coloured histograms are the generator predictions, all $A_C$-smeared. The signal region
+    remains blind.}
+  \label{fig:2dslices}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.82\textwidth]{bkgfit/xsec2d_thetap_dpt_COMB_map}\\[6pt]
+  \includegraphics[width=0.90\textwidth]{bkgfit/xsec2d_costhpi_costhmu_COMB_map}
+  \caption{The same two measurements as maps: $\mathrm{d}^2\sigma/\mathrm{d}X\,\mathrm{d}Y$ per cell
+    with its total uncertainty (left) and the ratio to the fake-data truth (right), for
+    $\theta_p\times\delta p_T$ (top) and $\cos\theta_\pi\times\cos\theta_\mu$ (bottom). Cells are drawn
+    at equal size and labelled by their ranges. The closure panel is flat to within its uncertainties
+    in both pairs; the $\pm$ values there are the measurement uncertainty divided by the truth, so the
+    spread of the ratios ($0.82$--$1.25$, $0.93$--$1.17$) is well inside them.}
+  \label{fig:2dmap}
+\end{figure}
+
+Closure $\chi^2$ values are small everywhere ($0.00$--$0.65$ on 2 degrees of freedom) and, as in
+\S\ref{sec:c50}, carry no information where $A_C$ is rank-deficient.
 
 % =============================================================================
 \section{Reproduction}
@@ -372,7 +453,7 @@ logs/c50/run_pafriend.sh
 # configurations
 python3 scripts/make_bin_configs.py c50_candidates      # configs/c50
 python3 scripts/make_bin_configs.py newobs_candidates   # configs/ + configs/d2
-python3 scripts/check_ext_bins.py                       # generator vs configuration edges
+python3 scripts/check_ext_bins.py            # generator vs configuration edges
 # generator predictions (verifies the released histograms bit-for-bit)
 generator_predictions/gen2d/regen_ext.sh
 # reprocess with the opening angle, its gate, and promotion
@@ -386,7 +467,8 @@ sbatch --array=0-29%6 --export=ALL,REPO=$PWD,\
 python3 report/tools/binning_eval_c50.py   # 0.50 candidates
 python3 report/tools/extract_eval.py       # new observables and 2D
 python3 report/tools/c50_figures.py
-python3 report/tools/newobs_xsec_fig.py
+python3 report/tools/newobs_xsec_fig.py     # Fig. 3 (1D)
+python3 report/tools/xsec2d_figs.py         # Figs. 4-5 (slices, maps)
 \end{verbatim}
 \end{small}
 
@@ -396,9 +478,11 @@ python3 report/tools/newobs_xsec_fig.py
 % =============================================================================
 
 \begin{enumerate}[itemsep=3pt]
-  \item The two-dimensional extractions are running; their conditioning decides whether any pair is
-    worth proposing as a released measurement. On the evidence so far only
-    $\cos\theta_\pi\times\cos\theta_\mu$ is a candidate, and its data-statistical term is large.
+  \item Two two-dimensional pairs are worth proposing as released measurements, in the combined
+    configuration only: $\theta_p\times\delta p_T$ and $\cos\theta_\pi\times\cos\theta_\mu$
+    (Table~\ref{tab:2dextract}, Figs.~\ref{fig:2dslices}--\ref{fig:2dmap}). Both need generator predictions checked against the flattened bin
+    order and a decision on whether a combined-only result is acceptable, the released differential
+    results being quoted per beam mode as well.
   \item $\theta_p$ in RHC is rank-deficient. Either it is quoted for FHC and the combined
     configuration only, or the RHC binning is coarsened to three bins, which has not been screened.
   \item Two-bin $W_{\rm had}$ is better conditioned than the released six-bin configuration; a
