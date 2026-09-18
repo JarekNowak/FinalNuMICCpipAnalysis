@@ -434,6 +434,20 @@ labelled by their ranges rather than on the physical axes, for the same reason.
   \label{fig:2dmap}
 \end{figure}
 
+The normalisation of the two-dimensional chain was checked against the released one-bin total
+extraction (\texttt{report/tools/xsec2d\_total\_check.py}). Summing the flattened $\sigma$ over the
+analysis bins is not expected to reproduce the total: both are $A_C$-smeared with different $A_C$,
+and the row sums are not one, so each loses its own amount of normalisation --- anywhere from
+nothing to $40\%$ here. What must hold is that the fake data and the fake-data truth lose the \emph{same}
+amount, because a wrong flux, a double-counted file or a bin area applied twice would move the data
+and leave the truth. The double ratio
+$[\sigma_{2D}^{\rm data}/\sigma_{2D}^{\rm truth}]/[\sigma_{\rm tot}^{\rm data}/\sigma_{\rm tot}^{\rm truth}]$
+has a median deviation from unity of $0.007$ over the $24$ extractions, and $20$ of the $24$ are
+within $2.5\%$. The four that are not ($0.91$, $0.94$, $1.03$, $1.08$) are all proton-tagged RHC,
+the configuration whose per-bin closure is worst, and all are far inside the $38$--$47\%$
+uncertainty the one-bin total itself carries. The two-dimensional extraction is therefore normalised
+consistently with the released measurement.
+
 Closure $\chi^2$ values are small everywhere ($0.00$--$0.65$ on 2 degrees of freedom) and, as in
 \S\ref{sec:c50}, carry no information where $A_C$ is rank-deficient.
 
@@ -468,7 +482,8 @@ python3 report/tools/binning_eval_c50.py   # 0.50 candidates
 python3 report/tools/extract_eval.py       # new observables and 2D
 python3 report/tools/c50_figures.py
 python3 report/tools/newobs_xsec_fig.py     # Fig. 3 (1D)
-python3 report/tools/xsec2d_figs.py         # Figs. 4-5 (slices, maps)
+python3 report/tools/xsec2d_figs.py         # Figs. 3-4 (slices, maps)
+python3 report/tools/xsec2d_total_check.py  # 2D normalisation vs the one-bin total
 \end{verbatim}
 \end{small}
 

@@ -31,8 +31,12 @@ namespace {
                 const char* rexp = nullptr; const char* texp = nullptr; };
 }
 
+// MODE selects the beam ("fhc", the default, reproduces every published screen; "rhc" for the
+// reverse-horn samples, needed to ask whether a coarser binning rescues a rank-deficient RHC
+// response). The event floor is a count, so it is not comparable between the two exposures.
 void tki_binning_scan( const char* dir = "/data/uboone/processed/beta",
-                       int MINEVT = 400, double CRIT = 0.68, const char* ONLY = "", int KMAX = 6 ) {
+                       int MINEVT = 400, double CRIT = 0.68, const char* ONLY = "", int KMAX = 6,
+                       const char* MODE = "fhc" ) {
 
   const char* S = "CC1mu1pi1p";
   std::vector<Spec> obs = {
@@ -51,8 +55,8 @@ void tki_binning_scan( const char* dir = "/data/uboone/processed/beta",
   };
 
   TChain ch("stv_tree");
-  int nf = ch.Add( Form("%s/xsec-ana-Run*_fhc_*.root", dir) );
-  printf("\n  chained %d file(s) from %s\n", nf, dir);
+  int nf = ch.Add( Form("%s/xsec-ana-Run*_%s_*.root", dir, MODE) );
+  printf("\n  chained %d file(s) from %s (%s)\n", nf, dir, MODE);
   if ( ch.GetEntries() <= 0 ) { printf("  no entries -- has stage 1 finished?\n"); return; }
   // friend trees (theta_pipr), file by file in the same order as the main chain
   TChain fr("pa"); int nfr = 0;
