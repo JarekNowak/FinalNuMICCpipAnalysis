@@ -840,6 +840,85 @@ coverage $68\%$ in every variant.
 \end{figure}
 
 % =============================================================================
+\section{Far sidebands: control regions with less signal in them}
+\label{sec:farsb}
+
+Every control region contains some signal. That is what makes a background constraint bite its own
+tail: the fit lowers a background component, and the signal region loses the same events a second
+time through the response. The four regions carry $5$--$22\%$ signal at data exposure, the
+multi-$\pi$ region worst. A \emph{far} sideband adds one cut that pushes the region away from the
+signal topology and pays for it in statistics. Three numbers decide whether the trade is worth
+taking, and Table~\ref{tab:farsb} gives all three: the signal fraction, the events kept, and the
+background mixture --- because a far sideband that constrains a \emph{different} mixture is not a
+purer version of the near one, it is a different region, and it constrains the signal region less
+well however clean it is. Nothing here needs approval: these are the control regions already opened,
+with an extra cut that can only reduce their signal content.
+
+\begin{table}[H]
+  \centering
+  \caption{Near and far definitions of the four control regions, at data exposure, all eight periods.
+    ``signal'' is the signal fraction of the total prediction, ``kept'' the yield relative to the near
+    definition of the same region, and the composition is of the \emph{background} only. Data are the
+    beam-on control-region skim. The composition column is the background only, in the order
+    CC0$\pi$ / $\pi^0$ / multi-$\pi$ / other / EXT$+$dirt.}
+  \label{tab:farsb}
+  \scriptsize
+  \begin{tabular}{llrrrrl}
+    \toprule
+    Region & Definition & pred. & data & d/p & signal & \multicolumn{1}{c}{composition [\%]} \\
+    \midrule
+    CC0$\pi$ & near (\texttt{sb\_cc0pi}) & $26914$ & $22707$ & $0.84$ & $8.7\%$ & 72 / 4 / 2 / 14 / 8 \\
+      & far: muon is only non-proton & $15570$ & $13202$ & $0.85$ & $\mathbf{2.1\%}$ & 85 / 3 / 0 / 10 / 2 \\
+      & far: $+$ exactly one proton & $10514$ & $8941$ & $0.85$ & $\mathbf{1.7\%}$ & 88 / 2 / 0 / 8 / 2 \\
+    \midrule
+    $\pi^0$ & near (\texttt{sb\_pi0}) & $15842$ & $14383$ & $0.91$ & $9.1\%$ & 15 / 52 / 11 / 15 / 8 \\
+      & far: $\geq2$ showers & $8273$ & $7648$ & $0.92$ & $6.4\%$ & 8 / 66 / 9 / 11 / 5 \\
+      & far: $\geq3$ showers & $2953$ & $2997$ & $1.01$ & $4.3\%$ & 4 / 75 / 8 / 10 / 3 \\
+    \midrule
+    multi-$\pi$ & near (\texttt{sb\_multipi}) & $292$ & $245$ & $0.84$ & $22.1\%$ & 2 / 23 / 57 / 13 / 4 \\
+      & far: $\geq4$ primary tracks & $123$ & $101$ & $0.82$ & $12.3\%$ & 2 / 20 / 67 / 11 / 1 \\
+    \midrule
+    cosmic & near (\texttt{sb\_cosmic}) & $228$ & $212$ & $0.93$ & $5.4\%$ & 23 / 3 / 4 / 38 / 33 \\
+      & far: $\theta_{\mu\pi}>2.9$ & $136$ & $107$ & $0.79$ & $3.3\%$ & 29 / 2 / 2 / 23 / 44 \\
+      & far: $\theta_{\mu\pi}>3.0$ & $104$ & $80$ & $0.77$ & $3.6\%$ & 32 / 2 / 1 / 20 / 44 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Four things follow.
+
+\begin{itemize}\itemsep2pt
+  \item \textbf{The CC0$\pi$ region has a cheap far definition.} Requiring the muon to be the only
+    non-proton-like primary track takes the signal fraction from $8.7\%$ to $2.1\%$, a factor of
+    four, while keeping $58\%$ of the events and \emph{raising} the CC0$\pi$ content of the
+    background from $72\%$ to $85\%$. It is purer in both senses at once, which is unusual and
+    makes it the one far definition worth adopting outright. Demanding exactly one proton as well
+    gains little ($1.7\%$) for another third of the statistics.
+  \item \textbf{The $\pi^0$ region improves more slowly.} Two showers halve the statistics to reach
+    $6.4\%$ signal and three showers cut them to a fifth for $4.3\%$. The $\pi^0$ content does rise
+    to $75\%$, so the far region is a better-targeted $\pi^0$ constraint, but the signal fraction
+    falls more slowly than the events do --- the residual signal is CC1$\pi^\pm$ with a genuine
+    extra shower, which no shower-counting cut removes.
+  \item \textbf{The multi-$\pi$ region is the contaminated one and cannot be fixed by cuts.} At
+    $22.1\%$ signal it is the region a constraint should trust least, and the only lever available
+    is the track count, which halves it to $12.3\%$ at $42\%$ of the statistics --- still four times
+    the signal contamination of the far CC0$\pi$ region, with $101$ data events. The $\pi^0$
+    multiplicity cut is not available here: \texttt{pion\_number\_reco} saturates at two, so
+    ``$\geq3$ pions'' selects nothing, and $\geq3$ non-proton tracks is already implied by the
+    region's own definition.
+  \item \textbf{The cosmic region changes character rather than purity.} Signal falls $5.4\to3.3\%$,
+    but the beam-off and dirt share of the background rises from $33\%$ to $44\%$. That is the point
+    of the region, so this is a feature; it does mean the far version constrains the cosmic and dirt
+    normalisation specifically rather than the neutrino background.
+\end{itemize}
+
+The most useful number in the table is one that does \emph{not} move. The data-to-prediction ratio
+is flat under every far cut --- CC0$\pi$ $0.84\to0.85\to0.85$, $\pi^0$ $0.91\to0.92$, multi-$\pi$
+$0.84\to0.82$ --- while the signal fraction falls by up to a factor of four. Whatever produces the
+$8$--$16\%$ deficit in the control regions, it is therefore not signal contamination and not
+anything that scales with it. That is a real constraint on the explanation, and it is available
+without unblinding anything.
+
 \section{What this establishes, and what it does not}
 \label{sec:conclusions}
 % =============================================================================
@@ -917,6 +996,7 @@ Update of 2026-09-16: sideband Monte Carlo \texttt{processed/\allowbreak sb\_pi0
 \texttt{macros/sb\_protocol\_data.C} (defaults: current Monte Carlo, POT-normalised detector variations); templates
 \texttt{macros/bkgfit\_templates.C}; detector variations \texttt{bkgfit/detvar.py}; fit, validation and data
 \texttt{python3 -m bkgfit.studies} \{composition, sensitivity, robustness, validate, ensembles, data\}; figures
-\texttt{python3 -m bkgfit.figures}; logs \texttt{logs/bkgfit/}.
+\texttt{python3 -m bkgfit.figures}; far sidebands \texttt{python3 -m bkgfit.farsb};
+logs \texttt{logs/bkgfit/}.
 
 \end{document}
