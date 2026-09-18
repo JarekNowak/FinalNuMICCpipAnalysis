@@ -109,9 +109,29 @@ for cfg in CONFIGS:
         fail(f"[{cfg}] flux {flux:.6g} != expected {EXPECT_FLUX[cfg]:.6g}")
 
     # CHECK 2: one regularisation prescription per configuration (the review's "freeze").
-    uniq_unf = sorted(set(unfolds.values()))
-    if len(uniq_unf) != 1:
-        fail(f"[{cfg}] UNFOLD PRESCRIPTION DRIFT: {uniq_unf}")
+    #
+    # Two prescriptions coexist BY DESIGN and must not be averaged into one verdict: the
+    # differential extractions are regularised (WienerSVD 1 second-deriv), while the one-bin
+    # total is deliberately unregularised (WienerSVD 0 -- the filter is off and A_C is the
+    # identity, which is the whole point of a single bin). Checking them together made the
+    # audit fail the moment the total extraction was added, and the failure said "drift" when
+    # nothing had drifted. So each class is checked against its own expected prescription, and
+    # an unknown prescription in either class is still a failure.
+    EXPECT_UNFOLD = {"differential": "WienerSVD 1 second-deriv", "one-bin total": "WienerSVD 0"}
+    klass = lambda name: "one-bin total" if "_total_" in name else "differential"
+    by_class = defaultdict(dict)
+    for name, unf in unfolds.items():
+        by_class[klass(name)][name] = unf
+    for k, members in sorted(by_class.items()):
+        uniq = sorted(set(members.values()))
+        if len(uniq) != 1:
+            fail(f"[{cfg}] UNFOLD PRESCRIPTION DRIFT among {k} configs: {uniq}")
+            for name, unf in sorted(members.items()):
+                fail(f"    {name}: {unf}")
+        elif uniq[0] != EXPECT_UNFOLD[k]:
+            fail(f"[{cfg}] {k} configs use {uniq[0]!r}, expected {EXPECT_UNFOLD[k]!r}")
+    note(f"[{cfg}] {len(by_class['differential'])} differential + "
+         f"{len(by_class['one-bin total'])} one-bin-total configs")
 
     # CHECK 3: POT, summed over DISTINCT per-run values.
     uniq_fp = sorted(set(fpfiles.values()))
@@ -166,8 +186,11 @@ for cfg in CONFIGS:
             fail(f"[{cfg}] {os.path.basename(fp)}: POT {tot:.5g} != expected {EXPECT_POT[cfg]:.5g}")
 
     pot = list(pot_by_fp.values())[0] if pot_by_fp else float("nan")
+    # the prescription column records the DIFFERENTIAL one: the one-bin total is a separate
+    # class with its own (unregularised) prescription, checked above.
+    diff_unf = sorted(set(by_class["differential"].values()))
     rows.append((cfg, len(xcs), f"{flux:.6g}", f"{pot:.5g}", f"{N_AR:.4g}",
-                 uniq_unf[0] if uniq_unf else "?", ";".join(os.path.basename(x) for x in uniq_fp)))
+                 diff_unf[0] if diff_unf else "?", ";".join(os.path.basename(x) for x in uniq_fp)))
 
 # ---------------------------------------------------------------------------------
 # Systematics/file-list coupling.
