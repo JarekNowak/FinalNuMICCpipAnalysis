@@ -1,0 +1,89 @@
+# Alternative-model fake data (altgenie): identical to file_properties_numi_fhc5.txt except
+# that the onBNB files are thrown from a reweighted interaction model. The MC, EXT and
+# dirt lines are unchanged, so the response and the background prediction stay NOMINAL --
+# which is the point of the test.
+# file_properties_numi_fhc5.txt   — PER-RUN (real-data-ready) FHC configuration
+# ---------------------------------------------------------------------------
+# EXT gate count (2026-09-02): the pooled beam-off file is the Run-1 FHC + Run-3b RHC
+#   beam-off samples; its gate count is 4582248.27 + 32649128.65 = 37231376.92 (analyser's
+#   authoritative trigger table). The previous 3821593 was the sum of the two samples'
+#   EVENT counts and over-scaled the EXT background by ~9.7x.
+# Columns:  file_name  run  file_type  [triggers  POT]   (trigs+POT: onBNB/extBNB only)
+#
+# PER-RUN NORMALISATION (replaces the old single per-mode pooling factor).
+#   The framework scales each numuMC file by  run_bnb_pot[run] / summed_pot  (native)
+#   (SystematicsCalculator.cxx:924).  By giving each run its OWN onBNB data POT and
+#   assigning each overlay to its real run, every run is scaled by its own
+#   D_run / MC_POT_run — the data-POT-weighted mixture that a real per-run beam-on
+#   dataset produces.  At unblinding, swap each fakedata_fhc_run<i> line for its
+#   beam-on counterpart (same run, same POT) — the normalisation is already correct.
+#
+#   Run  D_run(1e20)  MC_POT(1e20)  scale=D/MC
+#    1     3.283        23.282        0.14101
+#    2     1.268        24.934        0.05085
+#    4     2.075        28.335        0.07323
+#    5     2.231        19.300        0.11560   (reweighted-PPFX numu overlay)
+#   sum    8.857        95.851       (old single factor was 0.0924)
+#
+# onBNB: per-run fake data (Poisson throw of each run's CV at D_run/MC_POT_run,
+#   macros/throw_perrun_fhc.C).  Column 4 = per-run beam-on trigger count (feeds the
+#   EXT scale run_bnb_trigs/ext_trigs); column 5 = per-run data POT (feeds the
+#   numuMC scale run_bnb_pot/summed_pot).  Run 1 FHC uses the open-trigger exposure.
+/data/uboone/processed/xsec-ana-fakedata_altgenie_fhc_run1.root 1 onBNB 9846635 3.283e20
+/data/uboone/processed/xsec-ana-fakedata_altgenie_fhc_run2.root 2 onBNB 3535129 1.268e20
+/data/uboone/processed/xsec-ana-fakedata_altgenie_fhc_run4.root 4 onBNB 4131149 2.075e20
+/data/uboone/processed/xsec-ana-fakedata_altgenie_fhc_run5.root 5 onBNB 5154196 2.231e20
+# EXT: the SAME combined beam-off (Run1+Run3b merged, 3821593 gates) attached to
+#   every run via symlinks (distinct names -> distinct univmake subdirs, same data).
+#   The framework requires each run with an onBNB to also have an extBNB.  Since the
+#   beam-on/beam-off ratio is run-independent, each run scales the beam-off by
+#   bnb_trigs[run]/3821593 and the sum over runs = 22667109/3821593 = 5.93, i.e. the
+#   correct single combined EXT prediction.
+# PER-RUN beam-off (EXT), 2026-09-02: cosmic-only data, matched by run PERIOD irrespective of horn
+#   label; files pooled within a run (framework sums ext gates per run). Gate counts from the
+#   analyser: run1 4582248.27 (stands in for run 2, scaled by its own gates); run3b pre+post
+#   32649128.65; run4 4a+4b 9338778.225 (split evenly) + 4c 8060024.70 + 4d 17432345.70;
+#   run5 19256341.475. Symlink names are unique per (file, run id).
+/data/uboone/processed/xsec-ana-ext_run1_run1.root 1 extBNB 4582248.27 0
+/data/uboone/processed/xsec-ana-ext_run1_run2.root 2 extBNB 4582248.27 0
+/data/uboone/processed/xsec-ana-ext_run4a_run4.root 4 extBNB 4669389.1125 0
+/data/uboone/processed/xsec-ana-ext_run4b_run4.root 4 extBNB 4669389.1125 0
+/data/uboone/processed/xsec-ana-ext_run4c_run4.root 4 extBNB 8060024.70 0
+/data/uboone/processed/xsec-ana-ext_run4d_run4.root 4 extBNB 17432345.70 0
+/data/uboone/processed/xsec-ana-ext_run5_run5.root 5 extBNB 19256341.475 0
+# numu MC overlay (CV) — NATIVE summed_pot, each on its REAL run -> per-run scaling
+/data/uboone/processed/xsec-ana-Run1_fhc_new_numi_flux_fhc_pandora_ntuple.root 1 numuMC
+/data/uboone/processed/xsec-ana-Run2_fhc_new_numi_flux_fhc_pandora_ntuple.root 2 numuMC
+/data/uboone/processed/xsec-ana-Run4_fhc_new_numi_flux_fhc_pandora_ntuple.root 4 numuMC
+/data/uboone/processed/xsec-ana-reweightedPPFX_numi_nu_overlay_pion_ntuples_run5_fhc.root 5 numuMC
+# ---- dirt: PER-RUN with native summed_pot (2026-08-22) ---------------------
+# Previously ONE run1 FHC dirt sample covered every run and every beam mode, with
+# its summed_pot overwritten per configuration to fake the exposure scaling
+# (inflations x2.70 FHC / x18.31 RHC / x6.07 COMB, whose RHC/FHC ratio 0.147
+# disagreed with the true dirt ratio 0.567). Mode- and run-matched dirt now
+# exists and carries its own POT, so the framework scales each run natively and
+# setpot_dirt is gone.
+#   FHC dirt total 2.418e21 : run1 1.674e21, run4c 1.548e20, run4d 2.388e20,
+#                             run5 3.501e20
+#   RHC dirt total 1.371e21 : run3b 1.032e21, run4a 7.921e19, run4b 2.593e20
+# STAND-INS (no dedicated sample exists for these runs; the same file is
+# symlinked per run so each is scaled to ITS OWN data POT, as done for EXT):
+#   FHC run2  <- run1 snapshot
+#   RHC run1, run2  <- run3b
+/data/uboone/processed/xsec-ana-dirt_fhc_run1.root 1 dirtMC
+/data/uboone/processed/xsec-ana-dirt_fhc_run2.root 2 dirtMC          # stand-in: run1 sample
+/data/uboone/processed/xsec-ana-dirt_fhc_run4c.root 4 dirtMC
+/data/uboone/processed/xsec-ana-dirt_fhc_run4d.root 4 dirtMC
+/data/uboone/processed/xsec-ana-dirt_fhc_run5.root 5 dirtMC
+# Detector-variation MC (Run4 FHC native — scaled by total_bnb_data_pot/file_pot,
+#   run-independent in the framework, so the run column is immaterial here).
+/data/uboone/processed/xsec-ana-detvar_run4fhc_CV.root 1 detVarCV
+/data/uboone/processed/xsec-ana-detvar_run4fhc_LYdown.root 1 detVarLYdown
+/data/uboone/processed/xsec-ana-detvar_run4fhc_LYrayl.root 1 detVarLYrayl
+/data/uboone/processed/xsec-ana-detvar_run4fhc_Recomb2.root 1 detVarRecomb2
+/data/uboone/processed/xsec-ana-detvar_run4fhc_SCE.root 1 detVarSCE
+/data/uboone/processed/xsec-ana-detvar_run4fhc_WMAngleXZ.root 1 detVarWMAngleXZ
+/data/uboone/processed/xsec-ana-detvar_run4fhc_WMAngleYZ.root 1 detVarWMAngleYZ
+/data/uboone/processed/xsec-ana-detvar_run4fhc_WMX.root 1 detVarWMX
+/data/uboone/processed/xsec-ana-detvar_run4fhc_WMYZ.root 1 detVarWMYZ
+#
