@@ -17,7 +17,7 @@ What matters is the size of that bias against the uncertainty the measurement qu
 inside the systematic uncertainty is a measurement that survives the model being wrong; a bias
 comparable to it is a limit on the result.
 
-    python3 report/tools/altmodel_eval.py
+    python3 report/tools/altmodel_eval.py [FHC5|RHCFULL]
 """
 import os, sys
 import numpy as np, uproot
@@ -25,6 +25,7 @@ import numpy as np, uproot
 RB = '/data/uboone/processed/rebuild_alt'
 LIVE = '/data/uboone/processed'
 OBS = ['pmu', 'costhmu', 'costhpi', 'ppi2bin']
+CFG = sys.argv[1] if len(sys.argv) > 1 else 'FHC5'     # FHC5 | RHCFULL
 TAGS = [('altgenie', 'GENIE multisim u545'), ('altdelta', 'Delta->N pi angular')]
 LAB = {'pmu': 'p_mu', 'costhmu': 'cos th_mu', 'costhpi': 'cos th_pi', 'ppi2bin': 'p_pi (2 region)'}
 
@@ -45,9 +46,9 @@ def main():
                                                'max dev', 'bias/sigma', 'worst bin'))
     rows = []
     for obs in OBS:
-        nom = load(f'{LIVE}/closure_hists_xsec_FHC5_{obs}.root')
+        nom = load(f'{LIVE}/closure_hists_xsec_{CFG}_{obs}.root')
         for tag, desc in TAGS:
-            d = load(f'{RB}/closure_hists_xsec_ccpi_FHC5_{obs}_{tag}.root')
+            d = load(f'{RB}/closure_hists_xsec_ccpi_{CFG}_{obs}_{tag}.root')
             if d is None:
                 print('%-16s %-22s %s' % (LAB[obs], desc, 'pending')); continue
             ok = d['t'] > 0

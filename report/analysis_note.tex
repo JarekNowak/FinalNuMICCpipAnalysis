@@ -304,9 +304,9 @@ and differs between observables; the physical total is the one-bin extraction, w
   \item \textbf{Withdrawn --- do not quote:} the differential $W_{\pi p}$ shape and the five-bin
     $d\sigma/dp_\pi$ (Appendix~\ref{app:withdrawn}).
   \item \textbf{Validated:} the implementation, the size of the statistical uncertainties, and
-    robustness to a reweighted interaction model (a model-distortion closure with GENIE reweighting; an independent-generator closure is still pending) --- no bin biased by more than
-    $0.8\sigma$, though the two edge bins move by $30$--$60\%$ (\S\ref{sec:altmodel}). Not yet
-    extended to RHC or the proton-tagged family.
+    robustness to a reweighted interaction model (a model-distortion closure with GENIE reweighting, FHC and RHC; an independent-generator closure with NuWro is running) --- no bin biased by more than
+    $0.8\sigma$, though the two edge bins move by $30$--$60\%$ (\S\ref{sec:altmodel}). Not tested for
+    the proton-tagged family.
   \item \textbf{Uncertainties:} the nominal configured covariance. Identified terms that are
     \emph{not} in it are listed in \S\ref{sec:limitations}.
   \item \textbf{Before the signal region is opened:} the FHC and combined results must be rebuilt on the corrected FHC Run-1 exposure --- the beam-on sample was recorded without the open trigger, and the correction raises the FHC cross section by $14\%$ --- and the flux normalisation must be confirmed with the flux contact.
@@ -2802,7 +2802,7 @@ filled from the thrown files in truth and reco, so the truth it compares against
 model's own, and the reweighting is applied to signal and background alike, as a different model
 would be.
 
-To be precise about what this is and is not: the pseudo-data are reconstructed GENIE events reweighted event by event to an alternative parameter set --- signal and background together --- with the same detector simulation, unfolded with the nominal response and compared with the nominal covariance. It is a model-distortion closure, not an independent-generator closure; a NuWro or GiBUU detector-level sample would be the stronger test and remains pending. Two variations were used, both FHC. The first is GENIE multisim universe~545, a coherent variation
+To be precise about what this is and is not: the pseudo-data are reconstructed GENIE events reweighted event by event to an alternative parameter set --- signal and background together --- with the same detector simulation, unfolded with the nominal response and compared with the nominal covariance. It is a model-distortion closure, not an independent-generator closure; a NuWro or GiBUU detector-level sample would be the stronger test and remains pending. Two variations were used, in FHC and in RHC. The first is GENIE multisim universe~545, a coherent variation
 of every interaction parameter at once, chosen because it changes \emph{shape} rather than rate: the
 signal rate moves by $4\%$ while the true-level distributions move by up to $29\%$ in
 $\cos\theta_\pi$ and $24\%$ in $p_\pi$. The second is the $\Delta\to N\pi$ decay angular unisim, a
@@ -2812,7 +2812,7 @@ token one.
 
 \begin{table}[H]
   \centering
-  \caption{Unfolding pseudo-data from an alternative interaction model with the nominal response.
+  \caption{Unfolding pseudo-data from an alternative interaction model with the nominal response, FHC (upper block) and RHC (lower).
     ``Ratio'' is the mean of unfolded over the alternative model's own truth, ``max dev'' the largest
     per-bin departure from unity, and ``bias'' the largest per-bin departure expressed in units of
     the uncertainty that bin carries.}
@@ -2830,6 +2830,16 @@ token one.
                      & $\Delta\to N\pi$ angular & $1.031$ & $10.6\%$ & $+0.24\sigma$ \\
     $p_\pi$ (two regions) & GENIE multisim u545 & $0.725$ & $58.5\%$ & $-0.81\sigma$ \\
                           & $\Delta\to N\pi$ angular & $0.961$ & $16.8\%$ & $-0.31\sigma$ \\
+    \midrule
+    \multicolumn{5}{l}{\emph{RHC}} \\
+    $p_\mu$ & GENIE multisim u545 & $0.843$ & $26.2\%$ & $-0.73\sigma$ \\
+            & $\Delta\to N\pi$ angular & $1.049$ & $14.7\%$ & $+0.34\sigma$ \\
+    $\cos\theta_\mu$ & GENIE multisim u545 & $0.956$ & $8.7\%$ & $-0.22\sigma$ \\
+                     & $\Delta\to N\pi$ angular & $1.013$ & $25.0\%$ & $+0.57\sigma$ \\
+    $\cos\theta_\pi$ & GENIE multisim u545 & $0.934$ & $26.4\%$ & $-0.64\sigma$ \\
+                     & $\Delta\to N\pi$ angular & $1.008$ & $9.3\%$ & $+0.20\sigma$ \\
+    $p_\pi$ (two regions) & GENIE multisim u545 & $0.865$ & $23.2\%$ & $-0.32\sigma$ \\
+                          & $\Delta\to N\pi$ angular & $1.036$ & $5.1\%$ & $+0.08\sigma$ \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -2848,8 +2858,11 @@ the first because the range-based pion momentum saturates, the second because it
 The honest reading of the $\sigma$ column is that the bias is sub-$\sigma$ \emph{partly because the
 uncertainties are large}: those two bins carry $175\%$ and $41\%$ total uncertainty. At this exposure
 model bias is a subleading effect, comfortably inside the error bars. It would not stay subleading if
-the uncertainties shrank, so this test should be repeated, and extended to RHC and the proton-tagged
-family, before any future exposure is interpreted.
+the uncertainties shrank, so this test should be repeated before any future exposure is interpreted.
+In RHC the picture is the same with the roles of the edge bins taken by the sparse sixth $p_\mu$ bin
+($-0.73\sigma$) and the second $\cos\theta_\pi$ bin ($-0.64\sigma$): no bin beyond $0.73\sigma$, and
+the coherent GENIE variation, which lowers the RHC rate, pulls every RHC mean ratio below one
+($0.84$--$0.96$) where the angular variation does not. The proton-tagged family has not been tested.
 
 \subsection{The background fit, validated on pseudo-data}
 
