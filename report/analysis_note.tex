@@ -137,12 +137,12 @@
     \textbf{The analysis is blind.} Every ``data'' point in this note is Poisson-thrown from the
     central-value Monte Carlo, so no number here is a statement about beam-on data. The four
     background-control regions, which contain no signal-region events, have been opened on beam-on
-    data. They indicate no correction to the background-class normalisations. They did expose a run-level exposure error: the FHC Run-1 beam-on sample was recorded without the open trigger but had been normalised with the open-trigger bookkeeping. The corrected exposure is now adopted and the FHC and combined results are being rebuilt on it, which raises the FHC cross section by $14\%$.
+    data. After accounting for the FHC Run-1 exposure error, they do not support a class-specific background normalisation correction within the transfer uncertainties; a residual $8$--$16\%$ deficit remains, inside the pre-fit prediction and transfer uncertainties. They did expose a run-level exposure error: the FHC Run-1 beam-on sample was recorded without the open trigger but had been normalised with the open-trigger bookkeeping. The corrected exposure is now adopted and the FHC and combined results are being rebuilt on it, which raises the FHC cross section by $14\%$.
 
     The implementation is validated by same-sample closure, and the size of the statistical
     uncertainties by an ensemble of independent Poisson realisations carried through the whole
     chain; the release is reproducible bit-identically from the processed ntuples. Unfolding
-    pseudo-data thrown from a materially different interaction model with the nominal response biases
+    pseudo-data thrown from a reweighted interaction model --- a model-distortion closure, not an independent-generator one --- unfolded with the nominal response biases
     no bin by more than $0.8\sigma$ of its uncertainty, although the two edge bins --- the
     near-threshold pion-momentum region and the sparse top muon-momentum bin --- move by $30$--$60\%$.
     Sec.~\ref{sec:status} is the one-page version of the analysis and the status of every product
@@ -288,7 +288,7 @@ and differs between observables; the physical total is the one-bin extraction, w
   \item \textbf{Signal region: blinded.} Every data point in this note is a Poisson throw of the
     central-value simulation. No statement here is a measurement of beam-on data.
   \item \textbf{Control regions: opened} on beam-on data under the frozen procedure; they indicate
-    no correction to the background-class normalisations (\S\ref{sec:cr_outcome}).
+    no supported class-specific background correction within the transfer uncertainties; an $8$--$16\%$ residual deficit remains within them (\S\ref{sec:cr_outcome}).
   \item \textbf{Primary:} the inclusive one-bin total and the six inclusive differential
     distributions, in all three configurations.
   \item \textbf{Secondary:} the proton-tagged one-bin total. The proton-tagged differential
@@ -298,7 +298,7 @@ and differs between observables; the physical total is the one-bin extraction, w
   \item \textbf{Withdrawn --- do not quote:} the differential $W_{\pi p}$ shape and the five-bin
     $d\sigma/dp_\pi$ (Appendix~\ref{app:withdrawn}).
   \item \textbf{Validated:} the implementation, the size of the statistical uncertainties, and
-    robustness to a materially different interaction model --- no bin biased by more than
+    robustness to a reweighted interaction model (a model-distortion closure with GENIE reweighting; an independent-generator closure is still pending) --- no bin biased by more than
     $0.8\sigma$, though the two edge bins move by $30$--$60\%$ (\S\ref{sec:altmodel}). Not yet
     extended to RHC or the proton-tagged family.
   \item \textbf{Uncertainties:} the nominal configured covariance. Identified terms that are
@@ -867,9 +867,16 @@ $0.250$--$0.400$ & $-30\%$  & $21\%$ & $10.4\%$ \\
 \end{tabular}
 \end{center}
 
-\noindent At the threshold the resolution is $31\%$; in the $[0.113,0.175]\GeVc$
-region it is $51$--$56\%$ with a $+30$--$66\%$ bias and only $\sim\!3$--$4\%$
-reconstructability. Extending the measurement to the $\nu_e$ threshold would thus
+\noindent Throughout this note the pion-momentum bias is the \emph{signed} quantity
+$b(p_\pi)=\langle(p_\pi^{\rm reco}-p_\pi^{\rm true})/p_\pi^{\rm true}\rangle$, and it has two regimes
+that must not be conflated. \label{sec:ppi_regimes} Below threshold, the small subset of pions that
+reconstructs at all is biased \emph{upward} ($+30$ to $+131\%$ in the table): these are the few
+tracks long enough to pass, a conditional sample. At the threshold the mass correction removes most
+of the hypothesis bias ($-8\%$, with $31\%$ RMS resolution). Above about $0.4\GeVc$ the bias turns
+increasingly \emph{negative}, because pions interact before they stop and the visible range is
+truncated; the mean reconstructed momentum saturates near $0.34\GeVc$, so the bias reaches $-65\%$
+above $0.8\GeVc$. In the $[0.113,0.175]\GeVc$ region the resolution is $51$--$56\%$ with only
+$\sim\!3$--$4\%$ reconstructability. Extending the measurement to the $\nu_e$ threshold would thus
 add bins carrying large, strongly model-dependent unfolding systematics. For
 consistency with the $\nu_e$ measurement the threshold could be lowered to
 $0.113\GeVc$ with the $[0.113,0.175]\GeVc$ region kept in a single coarse bin to
@@ -1106,8 +1113,7 @@ the stored branch is not modified, the conversion is written into the reconstruc
 definition of the bin configuration (\suppref{Sec.}{sec:ppi_bias}, where it raises the
 lowest-bin reconstructed-to-true ratio from $0.888$ to $0.976$). The muon mass
 ($105.7$~MeV) is close to the pion mass ($139.6$~MeV), so the range-to-momentum
-conversion is a good proxy, and, crucially, the result is a \emph{momentum}, directly
-comparable to the true $p_\pi$ it is binned against.
+conversion is a good proxy \emph{for a pion that stops}, and, crucially, the result is a \emph{momentum}, directly comparable to the true $p_\pi$ it is binned against. For a pion that interacts hadronically before stopping the visible range is truncated and the estimator is biased low; that, not the mass hypothesis, is what limits the observable (\S\ref{sec:ppi_regimes}).
 The proton-hypothesis range \emph{kinetic energy} is not used: it is a different physical quantity from the momentum on the true axis, so
 binning it with the same edges would shift the migration matrix systematically rather
 than leave it near-diagonal (a true $0.2$~GeV/$c$ pion gives $KE\approx0.104$~GeV, two
@@ -1631,8 +1637,7 @@ every theory prediction is smeared by the same $A_C$ before comparison.
 migration, $P(C_j|E_i)=R_{ij}\pi_j/\sum_l R_{il}\pi_l$, and the unfolded estimate is
 $\hat{s}_j=\varepsilon_j^{-1}\sum_i P(C_j|E_i)(m_i-b_i)$. The MC prior $\pi_j$ is updated
 with the result and iterated; the \emph{number of iterations} is the regularisation knob
-(few $\Rightarrow$ prior-biased, many $\Rightarrow$ noisy). It carries no $A_C$, so its
-integral is essentially unbiased and theory is compared raw.
+(few $\Rightarrow$ prior-biased, many $\Rightarrow$ noisy). It carries no $A_C$ and theory is compared raw. It approximately preserves the total normalisation in the present nominal-model closure; its residual bias is controlled by the iteration count and is biased toward the prior, and can only be evaluated with non-nominal fake data. Its uncertainty here is the data covariance propagated through the iteration at fixed prior.
 
 \begin{table}[H]\centering\small
 \caption{Trade-offs of the two unfolding methods. Neither is ``more correct''; they make
@@ -1645,7 +1650,7 @@ integral is essentially unbiased and theory is compared raw.
 \midrule
 Regularisation    & Wiener filter (automatic, from S/N) & Iteration count $n$ (chosen) \\
 Residual bias     & Explicit $A_C$, published           & Implicit; set by early stopping \\
-Result integral   & Suppressed, observable-dependent    & Essentially unbiased (physical) \\
+Result integral   & Suppressed, observable-dependent    & Approximately preserved in nominal closure; prior-biased in general \\
 Theory comparison & Smear theory by $A_C$               & Raw theory \\
 Positivity        & Not guaranteed                      & Guaranteed for positive input \\
 Uncertainties     & Closed-form, linear                 & Correlated across iters.; needs care \\
@@ -1963,9 +1968,7 @@ true bin; the quoted numbers are the overall mean (bias) and RMS (resolution).
     \emph{exiting} muons (range $=$ distance to wall), which is why the analysis
     uses range only for contained muons (range-or-MCS).  The pion panel shows the estimator the
     analysis actually bins on, not the raw muon-hypothesis range momentum
-    (\suppref{Sec.}{sec:ppi_bias}): mean bias $-31\%$, RMS $27\%$. That average is dominated by
-    high momenta; the bias is only $-2\%$ in the first true bin and reaches $-65\%$
-    above $0.8$~GeV/$c$; because the reconstructed value saturates near
+    (\suppref{Sec.}{sec:ppi_bias}): signed mean bias $b=-31\%$, RMS $27\%$. That average is dominated by high momenta; $b$ is only $-2\%$ in the first true bin and reaches $-65\%$ above $0.8$~GeV/$c$, because the reconstructed value saturates near
     $0.34$~GeV/$c$ once pions interact hadronically before stopping. The
     angular variables are essentially unbiased with narrow resolution.}
   \label{fig:resolution}
@@ -2518,7 +2521,7 @@ the pre-agreed test statistic and the conditions under which a correction may be
 given in \suppref{Sec.}{sec:request}. Three things come out of them.
 
 \begin{itemize}\itemsep3pt
-  \item \textbf{The background model needs no correction.} A joint FHC$+$RHC fit of the background
+  \item \textbf{No supported class-specific correction.} A joint FHC$+$RHC fit of the background
     class normalisations returns the dominant CC$0\pi$ class at $0.984\pm0.191$, unity within a
     fifth of its own uncertainty (\crref{Sec.}{sec:jointfit}). The measurement keeps its nominal
     background prediction.
@@ -3242,7 +3245,7 @@ filled from the thrown files in truth and reco, so the truth it compares against
 model's own, and the reweighting is applied to signal and background alike, as a different model
 would be.
 
-Two variations were used, both FHC. The first is GENIE multisim universe~545, a coherent variation
+To be precise about what this is and is not: the pseudo-data are reconstructed GENIE events reweighted event by event to an alternative parameter set --- signal and background together --- with the same detector simulation, unfolded with the nominal response and compared with the nominal covariance. It is a model-distortion closure, not an independent-generator closure; a NuWro or GiBUU detector-level sample would be the stronger test and remains pending. Two variations were used, both FHC. The first is GENIE multisim universe~545, a coherent variation
 of every interaction parameter at once, chosen because it changes \emph{shape} rather than rate: the
 signal rate moves by $4\%$ while the true-level distributions move by up to $29\%$ in
 $\cos\theta_\pi$ and $24\%$ in $p_\pi$. The second is the $\Delta\to N\pi$ decay angular unisim, a
