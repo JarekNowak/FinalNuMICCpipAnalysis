@@ -38,6 +38,12 @@ HYP = {
     'neither: 2.192e20 POT + 5.75M gates':            dict(pot=2.192, trig=5748692., mc=0.14101 * 2.192 / 3.283),
     'mixed: open POT + non-open gates':               dict(pot=3.283, trig=5748692., mc=0.14101),
     'mixed: non-open POT + open gates':               dict(pot=2.192, trig=9846635., mc=0.14101 * 2.192 / 3.283),
+    # A third pairing exists in the repository for THIS beam-on file: configs/file_properties_numi_3283.txt
+    # records 3.283e20 POT with 7809962 triggers for neutrinoselection_filt_run1_beamon_beamgood.root,
+    # and run_dv_fullrebuild.sh derives its trigger counts from the same 7809962 / 3.283e20. The live
+    # 9846635 appears only in the scaling code, never next to a POT for this file.
+    'repo pairing: 3.283e20 + 7.81M gates':           dict(pot=3.283, trig=7809962., mc=0.14101),
+    'non-open POT + 7.81M gates':                     dict(pot=2.192, trig=7809962., mc=0.14101 * 2.192 / 3.283),
 }
 REGIONS = [('CC0pi', 'cc0pi'), ('pi0', 'pi0'), ('multi-pi', 'multipi'), ('cosmic', 'cosmic')]
 
