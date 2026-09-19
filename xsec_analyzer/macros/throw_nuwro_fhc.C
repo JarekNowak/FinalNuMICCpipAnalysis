@@ -1,4 +1,6 @@
 // throw_nuwro_fhc.C -- INDEPENDENT-GENERATOR fake data: a Poisson throw of the NuWro overlay
+// WITHDRAWN 2026-09-19: the NuWro overlay this throws could not be validated against the standalone
+// NuWro prediction (rate 1.76x GENIE vs ~1.6 implied) and is not used. Kept as the record of the attempt.
 // (xsec-ana-numi_nuwro_overlay_pion_ntuples_run1_fhc.root, 6.650e20 POT, Run-1 FHC detector
 // simulation), to be unfolded with the nominal GENIE response. This is the test the reviewer
 // asked for and the model-distortion closure cannot replace: a different generator, an
