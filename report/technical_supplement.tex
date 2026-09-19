@@ -1461,6 +1461,90 @@ below is the supporting detail.
 
 
 
+\subsection{Reconstruction of the proton-tagged observables from input quantities}
+\label{sec:wtki_reco}
+All six observables are built from the three candidate tracks (muon, charged pion,
+proton) using only reconstructed quantities stored in the input ntuples: the track
+direction cosines $\hat n$, the muon-hypothesis range and multiple-scattering momenta and
+the proton-hypothesis calorimetric kinetic energy.
+
+\emph{Candidate three-momenta.} The muon momentum magnitude is range-based when the muon
+track ends inside the containment volume (\noteref{Sec.}{sec:fv_where}), and
+multiple-Coulomb-scattering based otherwise.
+The charged pion, being minimum-ionising, starts from the muon-hypothesis range momentum, converted to the pion hypothesis at fixed kinetic
+energy in the reconstructed-bin definition exactly as in the inclusive analysis
+(\noteref{Sec.}{sec:selection}); the same two-bin configuration formula is used. The proton momentum follows from its
+calorimetric kinetic energy under the proton hypothesis,
+$p_p=\sqrt{T_p^2+2m_pT_p}$ with $T_p$ the calorimetric kinetic energy. Each
+three-momentum is $\vec p_i=p_i\,\hat n_i$, and the energies are
+$E_\mu=\sqrt{p_\mu^2+m_\mu^2}$, $E_\pi=\sqrt{p_\pi^2+m_\pi^2}$, $E_p=T_p+m_p$
+(masses $m_\mu=105.7$, $m_\pi=139.6$, $m_p=938.3$~MeV).
+
+\emph{Directly measured mass $W_{\pi p}$.} The invariant mass of the pion--proton
+four-vector sum, using no neutrino-direction assumption:
+\[
+  W_{\pi p}=\sqrt{(E_\pi+E_p)^2-|\vec p_\pi+\vec p_p|^2}.
+\]
+
+\emph{Transverse kinematic imbalance.} The TKI observables treat the muon against the
+visible hadronic system $\vec p_\mathrm{had}=\vec p_\pi+\vec p_p$,
+$E_\mathrm{had}=E_\pi+E_p$. With the components transverse to the beam ($\hat z$) written
+$\vec p_T^{\,\mu}$ and $\vec p_T^{\,\mathrm{had}}$,
+\[
+  \delta p_T=|\vec p_T^{\,\mu}+\vec p_T^{\,\mathrm{had}}|,\quad
+  \delta\alpha_T=\arccos\frac{-\vec p_T^{\,\mu}\!\cdot(\vec p_T^{\,\mu}+\vec p_T^{\,\mathrm{had}})}{|\vec p_T^{\,\mu}|\,\delta p_T},\quad
+  \delta\phi_T=\arccos\frac{-\vec p_T^{\,\mu}\!\cdot\vec p_T^{\,\mathrm{had}}}{|\vec p_T^{\,\mu}|\,|\vec p_T^{\,\mathrm{had}}|},
+\]
+both angles in degrees folded onto $[0,180]$. For a stationary nucleon with no
+final-state interactions $\delta p_T\to0$; Fermi motion broadens it and FSI drive
+$\delta\alpha_T\to180^\circ$.
+
+\emph{Calorimetric mass $W_\mathrm{had}$ and struck-nucleon momentum $p_n$.} The
+calorimetric available energy is $E_\mathrm{cal}=E_\mu+(E_\mathrm{had}-m_p)+E_b$ with the
+argon removal energy $E_b=24.78$~MeV, giving the momentum transfer
+$Q^2=-\big[(0,0,E_\mathrm{cal},E_\mathrm{cal})-p^\mu\big]^2$ and
+\[
+  W_\mathrm{had}=\sqrt{m_p^2+2m_p(E_\mathrm{cal}-E_\mu)-Q^2}
+\]
+(returned as $0$ where reconstruction fluctuations make the argument negative). The
+nucleon-momentum proxy $p_n$ combines the transverse imbalance with a longitudinal
+component $p_L$ from energy--momentum balance, $p_n=\sqrt{\delta p_T^2+p_L^2}$, using the
+MINERvA prescription~\cite{minerva_tki} as implemented in the framework's transverse-kinematics tool (option~1):
+\[
+  p_L=\frac{R}{2}-\frac{M_{A'}^2+\delta p_T^2}{2R},\qquad
+  R=M_A+p^{\mu}_{z}+p^{\mathrm{had}}_{z}-E_\mu-E_\mathrm{had},
+\]
+with the target mass $M_A=22\,m_n+18\,m_p-0.34381$~GeV (argon-40), the residual mass
+$M_{A'}=M_A-m_n+E_b$ and $E_b=24.78$~MeV; $z$ is the beam axis (\noteref{Sec.}{sec:beamdir}).
+The tool was written for a single-proton hadronic system: it receives the summed
+three-momentum $\vec p_\pi+\vec p_p$ and energy $E_\mathrm{had}=E_\pi+E_p$ in the proton
+slot and forms the hadronic kinetic energy as $E_\mathrm{had}-m_p$, which is why $m_p$
+appears in $E_\mathrm{cal}$ and $W_\mathrm{had}$ above. $\delta p_T$, $\delta\alpha_T$ and
+$\delta\phi_T$ depend only on the transverse momenta and are exact for the
+$\mu+(\pi p)$ system; $p_L$, $p_n$ and $W_\mathrm{had}$ inherit the single-nucleon
+residual-mass and removal-energy assumptions of a quasi-elastic-oriented prescription and
+are therefore \emph{proxies}, not the initial-state nucleon momentum. The generator
+predictions apply the identical formulas to the generator final states
+(Sec.~\ref{sec:acwtki}), so the comparison is like for like; a truth-level closure of
+this prescription against a pion-production-specific definition, and a quantification of
+the bias from the residual-mass assumption, have not been performed and are listed in
+Sec.~\ref{N-sec:limitations}.
+
+
+
+\paragraph{Two exposure conventions in the processed files.}
+One normalisation point is specific to this subsample and worth stating. The processed
+ntuples use two POT conventions: the files behind the inclusive selection store the
+\emph{total} run MC POT duplicated in every file of a multi-file run, whereas the
+proton-tagged files store each file's \emph{own} POT. Normalising by the individual file
+POT would be correct for the first set but would scale every split of a multi-file run to
+the full run exposure in the second, inflating the simulated background by the split
+multiplicity ($\sim\!3\times$ for RHC) and driving the background-subtracted spectrum
+negative; normalising by the summed per-file POT has the mirror problem. The analysis
+therefore normalises each run by the sum of the \emph{distinct} per-file POT values
+within that run, which reduces to the correct run total under either convention; FHC,
+with one MC file per run, is unaffected by the choice.
+
 \subsection{Additional smearing in the proton-tagged observables}
 \label{sec:acwtki}
 
