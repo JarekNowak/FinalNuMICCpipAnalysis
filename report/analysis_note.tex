@@ -143,9 +143,8 @@
     uncertainties by an ensemble of independent Poisson realisations carried through the whole
     chain; the release is reproducible bit-identically from the processed ntuples. Unfolding
     pseudo-data thrown from a reweighted interaction model with the nominal response biases no bin
-    by more than $0.8\sigma$; unfolding pseudo-data from an independent generator (NuWro) does not
-    close, returning $15$--$40\%$ above the NuWro truth in every bin through its larger background
-    and higher selection efficiency, a model dependence not yet represented in the covariance.
+    by more than $0.8\sigma$; an independent-generator closure is not yet available, the one existing
+    NuWro overlay having failed validation against the standalone NuWro prediction.
     Sec.~\ref{sec:status} is the one-page version of the analysis and the status of every product
     in it.
   \end{abstract}
@@ -306,10 +305,9 @@ and differs between observables; the physical total is the one-bin extraction, w
     $d\sigma/dp_\pi$ (Appendix~\ref{app:withdrawn}).
   \item \textbf{Validated:} the implementation, the size of the statistical uncertainties, and
     robustness to a reweighted interaction model (FHC and RHC; no bin beyond $0.8\sigma$,
-    \S\ref{sec:altmodel}). \textbf{Not passed:} the independent-generator closure with NuWro, which
-    comes back $15$--$40\%$ above the NuWro truth in every bin, half from background subtraction
-    and half from the efficiency the response assumes (\S\ref{sec:nuwro}). Not tested for the
-    proton-tagged family.
+    \S\ref{sec:altmodel}). \textbf{Not yet available:} an independent-generator closure --- the one
+    existing NuWro overlay could not be validated against the standalone NuWro prediction and is
+    not used. Not tested for the proton-tagged family.
   \item \textbf{Uncertainties:} the nominal configured covariance. Identified terms that are
     \emph{not} in it are listed in \S\ref{sec:limitations}.
   \item \textbf{Before the signal region is opened:} the FHC and combined results must be rebuilt on the corrected FHC Run-1 exposure --- the beam-on sample was recorded without the open trigger, and the correction raises the FHC cross section by $14\%$ --- and the flux normalisation must be confirmed with the flux contact.
@@ -2737,10 +2735,7 @@ they are not interchangeable and this analysis has completed two of the three.
     for the proton-tagged family.
   \item \textbf{Robustness to model mismatch.} Unfold pseudo-data whose truth differs materially
     from the model that built the response, and ask how much bias the regularisation and the nominal
-    response then introduce. Two tests of increasing strength: with \emph{reweighted} GENIE
-    pseudo-data, \emph{passed with a caveat} (\S\ref{sec:altmodel}); with an \emph{independent
-    generator}, NuWro, \emph{not passed} --- a coherent $+15$ to $+40\%$ excess, up to $1.9\sigma$
-    (\S\ref{sec:nuwro}).
+    response then introduce. With \emph{reweighted} GENIE pseudo-data, \emph{passed with a caveat} (\S\ref{sec:altmodel}); with an \emph{independent generator}, \emph{not yet available} --- the one existing NuWro overlay could not be validated and is not used.
 \end{enumerate}
 
 The third is the one that bounds how much of the result is the data and how much is the model
@@ -2870,54 +2865,14 @@ In RHC the picture is the same with the roles of the edge bins taken by the spar
 the coherent GENIE variation, which lowers the RHC rate, pulls every RHC mean ratio below one
 ($0.84$--$0.96$) where the angular variation does not. The proton-tagged family has not been tested.
 
-\subsection{Independent-generator closure with NuWro}
-\label{sec:nuwro}
-
-The stronger form of the third test uses a different generator end to end. A NuWro overlay of
-Run-1 FHC exists with the full detector simulation and its truth branches; it was thrown as fake
-data at the corrected FHC exposure and unfolded with the nominal Run-1 GENIE response, background
-prediction and covariance. Unlike the reweighted test, everything that can differ between
-generators does: the signal kinematics, the background composition and rate, and therefore the
-efficiency the response assumes.
-
-\begin{table}[H]
-  \centering
-  \caption{Unfolding NuWro pseudo-data with the nominal GENIE response, FHC exposure. Columns as in
-    Table~\ref{tab:altmodel}; every bin of every observable comes back above the NuWro truth.}
-  \label{tab:nuwro}
-  \small
-  \begin{tabular}{lcccc}
-    \toprule
-    Observable & bins & mean ratio & range of ratios & largest bias \\
-    \midrule
-    $p_\mu$ & 7 & $1.145$ & $1.06$--$1.20$ & $+0.78\sigma$ \\
-    $\cos\theta_\mu$ & 5 & $1.302$ & $1.27$--$1.33$ & $+1.70\sigma$ \\
-    $\cos\theta_\pi$ & 5 & $1.269$ & $1.09$--$1.48$ & $+1.92\sigma$ \\
-    $p_\pi$ (two regions) & 2 & $1.411$ & $1.28$--$1.55$ & $+1.64\sigma$ \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-This test does not pass. The unfolded result sits above the NuWro truth in every bin of every
-observable (Table~\ref{tab:nuwro}), by $15$ to $40\%$ on average and by up to $1.9\sigma$ of the
-quoted uncertainty, and the excess is coherent rather than a shape distortion. Its origin is
-identifiable, and it has two parts of about equal size. First, NuWro's selected background is
-$1.44$ times GENIE's at the same exposure, so subtracting the GENIE background prediction leaves
-$15\%$ of the NuWro signal behind. Second, NuWro's signal is selected with $19.1\%$ efficiency
-where GENIE's is selected with $16.6\%$ --- its pions are harder and more often contained and
-identified --- so the GENIE response under-corrects by a further $15\%$. Their product, $1.32$, is
-the excess observed, and it is largest exactly where the background fraction and the efficiency
-difference are largest: the near-threshold pion-momentum region and forward $\cos\theta_\pi$.
-
-The two parts have different remedies and should be read separately. The background part is what
-the control regions exist to catch: a $44\%$ excess in the CC$0\pi$-dominated background is far
-above the $12\%$ threshold of the frozen protocol, so in beam-on data it would be seen and
-corrected, and this test therefore overstates it. The efficiency part is not caught by anything in
-the chain except a test of this kind, and it is a genuine model dependence of the measurement at
-the $15\%$ level --- inside the $25$--$30\%$ flux-and-detector uncertainty of a bin, but not
-negligible, and not represented in the covariance. It is the strongest argument in this note for
-quoting the interaction-model uncertainty with an explicit generator-spread component rather than
-from GENIE reweighting alone, and it is listed as such in \S\ref{sec:limitations}.
+\paragraph{Independent-generator closure: not yet available.} The stronger form of the third
+test --- pseudo-data from a different generator with its own detector simulation --- was attempted
+with the one NuWro overlay of Run-1 FHC that exists. It is not used. The sample's normalisation does
+not agree with the standalone NuWro prediction for the same flux (its true signal rate per POT is
+$1.76$ times GENIE's, against the $1.6$ implied by the standalone NuWro cross section and the raw
+flux), and its provenance could not be established, so a closure against it would test the
+sample rather than the extraction. A properly produced NuWro or GiBUU overlay remains the
+outstanding validation item (\S\ref{sec:limitations}).
 
 \subsection{The background fit, validated on pseudo-data}
 
