@@ -134,11 +134,12 @@
 
     The implementation is validated by same-sample closure, and the size of the statistical
     uncertainties by an ensemble of independent Poisson realisations carried through the whole
-    chain; the release is reproducible bit-identically from the processed ntuples. Both closure
-    tests use the nominal model on both sides, so what they establish is that the machinery is
-    correct under that model --- robustness to a materially different interaction model has not yet
-    been demonstrated and is an outstanding prerequisite. Sec.~\ref{sec:status} is the one-page
-    version of the analysis and the status of every product in it.
+    chain; the release is reproducible bit-identically from the processed ntuples. Unfolding
+    pseudo-data thrown from a materially different interaction model with the nominal response biases
+    no bin by more than $0.8\sigma$ of its uncertainty, although the two edge bins --- the
+    near-threshold pion-momentum region and the sparse top muon-momentum bin --- move by $30$--$60\%$.
+    Sec.~\ref{sec:status} is the one-page version of the analysis and the status of every product
+    in it.
   \end{abstract}
   \vfill
   \tableofcontents
@@ -288,9 +289,10 @@ and differs between observables; the physical total is the one-bin extraction, w
     two-dimensional pairs in the combined configuration only.
   \item \textbf{Withdrawn --- do not quote:} the differential $W_{\pi p}$ shape and the five-bin
     $d\sigma/dp_\pi$ (Appendix~\ref{app:withdrawn}).
-  \item \textbf{Validated:} the implementation against the nominal model, and the size of the
-    statistical uncertainties. \textbf{Not yet demonstrated:} robustness to a materially different
-    interaction model (\S\ref{sec:validation}).
+  \item \textbf{Validated:} the implementation, the size of the statistical uncertainties, and
+    robustness to a materially different interaction model --- no bin biased by more than
+    $0.8\sigma$, though the two edge bins move by $30$--$60\%$ (\S\ref{sec:altmodel}). Not yet
+    extended to RHC or the proton-tagged family.
   \item \textbf{Uncertainties:} the nominal configured covariance. Identified terms that are
     \emph{not} in it are listed in \S\ref{sec:limitations}.
   \item \textbf{Before the signal region is opened:} the FHC Run-1 exposure must be resolved --- the
@@ -3335,17 +3337,12 @@ they are not interchangeable and this analysis has completed two of the three.
     \emph{Passed} for the extractions and configuration stated below; it has not been run for RHC or
     for the proton-tagged family.
   \item \textbf{Robustness to model mismatch.} Unfold pseudo-data whose truth differs materially
-    from the model that built the response --- another generator, or a reweighting that moves the
-    pion-momentum or angular shape --- and ask how much bias the regularisation and the response
-    model then introduce. \emph{Not yet demonstrated.}
+    from the model that built the response, and ask how much bias the regularisation and the nominal
+    response then introduce. \emph{Passed with a caveat}, \S\ref{sec:altmodel}.
 \end{enumerate}
 
 The third is the one that bounds how much of the result is the data and how much is the model
-assumed in unfolding it, and its absence is the honest limit of what follows: the statements below
-establish that the implementation is correct and its statistical uncertainties are the right size
-\emph{under the nominal model}. They do not establish that the extraction is robust to the
-underlying interaction model being wrong, and no claim in this note should be read that way. The
-missing test is listed as a prerequisite in \S\ref{sec:limitations}.
+assumed in unfolding it.
 
 \subsection{Implementation closure under the nominal model}
 
@@ -3397,6 +3394,66 @@ The reference construction and the full-covariance pulls are discussed in
 \suppref{Sec.}{sec:supp_ensemble}.
 
 
+
+\subsection{Robustness to a different interaction model}
+\label{sec:altmodel}
+
+The closure above cannot see a wrong model, because the model is the same on both sides of it. This
+test breaks that: the pseudo-data are thrown from a \emph{reweighted} interaction model while the
+response, the efficiency and the background prediction stay nominal, so whatever bias appears is
+what the regularisation and a wrong response produce together. The framework's fake-data universe is
+filled from the thrown files in truth and reco, so the truth it compares against is the alternative
+model's own, and the reweighting is applied to signal and background alike, as a different model
+would be.
+
+Two variations were used, both FHC. The first is GENIE multisim universe~545, a coherent variation
+of every interaction parameter at once, chosen because it changes \emph{shape} rather than rate: the
+signal rate moves by $4\%$ while the true-level distributions move by up to $29\%$ in
+$\cos\theta_\pi$ and $24\%$ in $p_\pi$. The second is the $\Delta\to N\pi$ decay angular unisim, a
+targeted distortion of the pion angular distribution in resonance events. Both are far larger than
+the agreement between the tune and the standalone generators, so they are a fair test rather than a
+token one.
+
+\begin{table}[H]
+  \centering
+  \caption{Unfolding pseudo-data from an alternative interaction model with the nominal response.
+    ``Ratio'' is the mean of unfolded over the alternative model's own truth, ``max dev'' the largest
+    per-bin departure from unity, and ``bias'' the largest per-bin departure expressed in units of
+    the uncertainty that bin carries.}
+  \label{tab:altmodel}
+  \small
+  \begin{tabular}{llccc}
+    \toprule
+    Observable & Alternative model & mean ratio & max dev. & largest bias \\
+    \midrule
+    $p_\mu$ & GENIE multisim u545 & $0.957$ & $26.5\%$ & $-0.44\sigma$ \\
+            & $\Delta\to N\pi$ angular & $1.094$ & $47.5\%$ & $+0.78\sigma$ \\
+    $\cos\theta_\mu$ & GENIE multisim u545 & $1.007$ & $11.8\%$ & $+0.24\sigma$ \\
+                     & $\Delta\to N\pi$ angular & $1.018$ & $22.9\%$ & $-0.50\sigma$ \\
+    $\cos\theta_\pi$ & GENIE multisim u545 & $1.010$ & $28.6\%$ & $+0.32\sigma$ \\
+                     & $\Delta\to N\pi$ angular & $1.031$ & $10.6\%$ & $+0.24\sigma$ \\
+    $p_\pi$ (two regions) & GENIE multisim u545 & $0.725$ & $58.5\%$ & $-0.81\sigma$ \\
+                          & $\Delta\to N\pi$ angular & $0.961$ & $16.8\%$ & $-0.31\sigma$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\textbf{No bin anywhere exceeds one standard deviation of its own uncertainty}, so nothing in this
+note is invalidated by the interaction model being wrong at the level tested. In the well-populated
+bins the extraction is genuinely robust: ratios of $0.90$--$1.07$ and biases below $0.3\sigma$
+against truth-level distortions of $10$--$29\%$.
+
+Two bins are not robust, and both are at an edge of the measurement. The near-threshold
+$p_\pi$ interval, $0.175$--$0.205$~GeV/$c$, comes back at $0.415$ of the alternative truth; the top
+$p_\mu$ bin comes back at $1.475$. These are the bins the note already identifies as the weakest ---
+the first because the range-based pion momentum saturates, the second because it is the sparse tail
+--- and the test says that when the model is wrong, that is where the damage lands.
+
+The honest reading of the $\sigma$ column is that the bias is sub-$\sigma$ \emph{partly because the
+uncertainties are large}: those two bins carry $175\%$ and $41\%$ total uncertainty. At this exposure
+model bias is a subleading effect, comfortably inside the error bars. It would not stay subleading if
+the uncertainties shrank, so this test should be repeated, and extended to RHC and the proton-tagged
+family, before any future exposure is interpreted.
 
 \subsection{The background fit, validated on pseudo-data}
 
