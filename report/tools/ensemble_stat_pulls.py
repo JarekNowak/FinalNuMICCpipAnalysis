@@ -1,10 +1,11 @@
-# ensemble_stat_pulls.py OBS -- pull mean/width and 68/95% coverage of the fake-data ensemble against
+# ensemble_stat_pulls.py TAG [NMAX] -- TAG = <cfg>_<obs> (fhc5_pmu, comb_ppi2bin, rhcfull_total ...) for the
+# 2026-09-19 configuration-aware ensembles, or the bare OBS of the 2026-09-05 FHC ensemble. Pull mean/width and 68/95% coverage of the fake-data ensemble against
 # (a) the full covariance (sidecar errors) and (b) the data-statistical covariance alone
 # (mat_table_cov_DataStats.txt from slurm/ens_statcov.sh), plus the integral offset of the ensemble
 # mean from the fixed central-value reference (h_genie_tune, smeared by each member's own A_C).
 import sys, math, ROOT
 ROOT.gROOT.SetBatch(True)
-obs=sys.argv[1]; P='/data/uboone/processed/ens/'
+obs=sys.argv[1]; NMAX=int(sys.argv[2]) if len(sys.argv)>2 else 100; P='/data/uboone/processed/ens/'
 def cov(path):
     n=None; C={}
     for l in open(path):
@@ -13,10 +14,12 @@ def cov(path):
         elif p[0] not in ('numYbins','xbin') and len(p)==3: C[(int(p[0]),int(p[1]))]=float(p[2])
     return n,C
 pull_full=[]; pull_stat=[]; ints=[]; refs=[]; nb=None
-for t in range(1,33):
+for t in range(1,NMAX+1):
     f=ROOT.TFile.Open(P+f'closure_hists_xsec_{obs}_t{t}.root')
     if not f or f.IsZombie(): continue
     u=f.Get('h_unfolded_nuwro'); r=f.Get('h_genie_tune')
+    import os
+    if not os.path.exists(P+f'statcov_{obs}_t{t}/unfold_output/mat_table_cov_DataStats.txt'): f.Close(); continue
     n,Cs=cov(P+f'statcov_{obs}_t{t}/unfold_output/mat_table_cov_DataStats.txt'); _,Ct=cov(P+f'statcov_{obs}_t{t}/unfold_output/mat_table_cov_total.txt')
     if nb is None: nb=u.GetNbinsX(); pull_full=[[] for _ in range(nb)]; pull_stat=[[] for _ in range(nb)]
     iu=ir=0.

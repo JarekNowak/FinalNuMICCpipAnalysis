@@ -11,7 +11,7 @@ struct Src { std::string file; double scale; int isMC; };
 void selection_diagnostics(const char* mode="fhc") {
   const char* P="/data/uboone/processed/";
   std::vector<Src> S;
-  double s_fhc=0.092402, s_rhc=0.071666;
+  double s_fhc=0.081020, s_rhc=0.071666;
   auto fhc=[&](){ for(auto r:{"Run1_fhc_new_numi_flux_fhc_pandora_ntuple",
     "Run2_fhc_new_numi_flux_fhc_pandora_ntuple","Run4_fhc_new_numi_flux_fhc_pandora_ntuple",
     "reweightedPPFX_numi_nu_overlay_pion_ntuples_run5_fhc"}) S.push_back({std::string(P)+"xsec-ana-"+r+".root",s_fhc,1}); };

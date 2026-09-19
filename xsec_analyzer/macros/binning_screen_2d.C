@@ -74,7 +74,7 @@ void binning_screen_2d( const char* mode = "fhc", const char* sample = "incl" ) 
   if ( std::string(mode) == "fhc" ) {
     const char* rn[4] = {"Run1_fhc_new_numi_flux_fhc_pandora_ntuple","Run2_fhc_new_numi_flux_fhc_pandora_ntuple",
                          "Run4_fhc_new_numi_flux_fhc_pandora_ntuple","reweightedPPFX_numi_nu_overlay_pion_ntuples_run5_fhc"};
-    double sc[4] = {0.14101,0.05085,0.07323,0.11560};
+    double sc[4] = {0.09415,0.05085,0.07323,0.11560};
     for ( int i = 0; i < 4; ++i ) mc.push_back( { P+"xsec-ana-"+rn[i]+".root", sc[i] } );
   } else {
     const char* rn[5] = {"Run1_rhc","Run2_rhc","Run4a_rhc","Run4b_rhc","Run4c_rhc"};

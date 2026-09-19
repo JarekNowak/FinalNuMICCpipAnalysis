@@ -8,7 +8,7 @@
 void eff_turnon(){
   gStyle->SetOptStat(0);
   const char* P="/data/uboone/processed/xsec-ana-";
-  std::vector<std::pair<std::string,double>> mc={{"Run1_fhc_new_numi_flux_fhc_pandora_ntuple",0.14101},{"Run2_fhc_new_numi_flux_fhc_pandora_ntuple",0.05085},
+  std::vector<std::pair<std::string,double>> mc={{"Run1_fhc_new_numi_flux_fhc_pandora_ntuple",0.09415},{"Run2_fhc_new_numi_flux_fhc_pandora_ntuple",0.05085},
     {"Run4_fhc_new_numi_flux_fhc_pandora_ntuple",0.07323},{"reweightedPPFX_numi_nu_overlay_pion_ntuples_run5_fhc",0.11560}};
   const char* TF="CC1mu1piXp_sig_truevertex_in_fv && CC1mu1piXp_sig_ccnc && CC1mu1piXp_sig_is_numu && CC1mu1piXp_sig_one_muon_above_thresh && CC1mu1piXp_sig_one_charged_pion && CC1mu1piXp_sig_no_pions && CC1mu1piXp_sig_no_heavy_mesons";
   const char* W="(TMath::Finite(tuned_cv_weight*ppfx_cv_weight*normalisation_weight)&&(tuned_cv_weight*ppfx_cv_weight*normalisation_weight)>=0&&(tuned_cv_weight*ppfx_cv_weight*normalisation_weight)<=30?tuned_cv_weight*ppfx_cv_weight*normalisation_weight:1)";

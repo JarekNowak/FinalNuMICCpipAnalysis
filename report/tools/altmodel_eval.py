@@ -17,17 +17,23 @@ What matters is the size of that bias against the uncertainty the measurement qu
 inside the systematic uncertainty is a measurement that survives the model being wrong; a bias
 comparable to it is a limit on the result.
 
-    python3 report/tools/altmodel_eval.py [FHC5|RHCFULL]
+    python3 report/tools/altmodel_eval.py [FHC5|RHCFULL] [incl|1p]
+    (1p = the proton-tagged family: W_had, the two-bin TKI variables and cos theta_pi, FHC only)
 """
 import os, sys
 import numpy as np, uproot
 
 RB = '/data/uboone/processed/rebuild_alt'
 LIVE = '/data/uboone/processed'
-OBS = ['pmu', 'costhmu', 'costhpi', 'ppi2bin']
 CFG = sys.argv[1] if len(sys.argv) > 1 else 'FHC5'     # FHC5 | RHCFULL
+FAM = sys.argv[2] if len(sys.argv) > 2 else 'incl'     # incl | 1p
+OBS = ['pmu', 'costhmu', 'costhpi', 'ppi2bin'] if FAM == 'incl' else ['Whad', 'dpt2bin', 'dalphat2bin', 'dphit2bin', 'pn2bin', 'costhpi']
+PFX = 'ccpi' if FAM == 'incl' else 'ccpi1p'
+LIVEPFX = '' if FAM == 'incl' else 'ccpi1p_'
 TAGS = [('altgenie', 'GENIE multisim u545'), ('altdelta', 'Delta->N pi angular')]
-LAB = {'pmu': 'p_mu', 'costhmu': 'cos th_mu', 'costhpi': 'cos th_pi', 'ppi2bin': 'p_pi (2 region)'}
+LAB = {'pmu': 'p_mu', 'costhmu': 'cos th_mu', 'costhpi': 'cos th_pi', 'ppi2bin': 'p_pi (2 region)',
+       'Whad': 'W_had', 'dpt2bin': 'delta p_T (2 bin)', 'dalphat2bin': 'delta alpha_T (2 bin)',
+       'dphit2bin': 'delta phi_T (2 bin)', 'pn2bin': 'p_n (2 bin)'}
 
 
 def load(path):
@@ -46,9 +52,9 @@ def main():
                                                'max dev', 'bias/sigma', 'worst bin'))
     rows = []
     for obs in OBS:
-        nom = load(f'{LIVE}/closure_hists_xsec_{CFG}_{obs}.root')
+        nom = load(f'{LIVE}/closure_hists_xsec_{LIVEPFX}{CFG}_{obs}.root')
         for tag, desc in TAGS:
-            d = load(f'{RB}/closure_hists_xsec_ccpi_{CFG}_{obs}_{tag}.root')
+            d = load(f'{RB}/closure_hists_xsec_{PFX}_{CFG}_{obs}_{tag}.root')
             if d is None:
                 print('%-16s %-22s %s' % (LAB[obs], desc, 'pending')); continue
             ok = d['t'] > 0

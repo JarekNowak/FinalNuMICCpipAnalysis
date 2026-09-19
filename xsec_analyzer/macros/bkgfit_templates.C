@@ -144,7 +144,7 @@ void bkgfit_templates( const char* outdir = "/data/uboone/processed/bkgfit" ) {
   std::vector<std::vector<std::pair<std::string, double>>> mc( NP ), ext( NP );
   std::vector<std::vector<std::string>> data( NP );
   auto fmc = [&]( const char* n ) { return P + "xsec-ana-" + n + ".root"; };
-  mc[0] = { { fmc( "Run1_fhc_new_numi_flux_fhc_pandora_ntuple" ), 0.14101 } };
+  mc[0] = { { fmc( "Run1_fhc_new_numi_flux_fhc_pandora_ntuple" ), 0.09415 } };
   mc[1] = { { fmc( "Run2_fhc_new_numi_flux_fhc_pandora_ntuple" ), 0.05085 } };
   mc[2] = { { fmc( "Run4_fhc_new_numi_flux_fhc_pandora_ntuple" ), 0.07323 } };
   mc[3] = { { fmc( "reweightedPPFX_numi_nu_overlay_pion_ntuples_run5_fhc" ), 0.11560 } };

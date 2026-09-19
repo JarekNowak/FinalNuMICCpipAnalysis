@@ -16,7 +16,7 @@ void sb_perrun_data(){
   struct Grp { const char* tag; std::vector<Src> mc, ext; std::vector<std::string> dat; double pot; };
   std::vector<Grp> g;
   // ---- FHC
-  g.push_back({"FHC run1",{{std::string(P)+"xsec-ana-Run1_fhc_new_numi_flux_fhc_pandora_ntuple.root",0.14101}},
+  g.push_back({"FHC run1",{{std::string(P)+"xsec-ana-Run1_fhc_new_numi_flux_fhc_pandora_ntuple.root",0.09415}},
     {{std::string(E)+R1,OCC*5748692./G1}},{std::string(B)+"xsec-ana-beamon_fhc_run1.root"},3.283});
   {std::vector<Src> e; for(auto f:R4) e.push_back({std::string(E)+f,OCC*4131149./G4});
    g.push_back({"FHC run4",{{std::string(P)+"xsec-ana-Run4_fhc_new_numi_flux_fhc_pandora_ntuple.root",0.07323}},e,
@@ -41,7 +41,7 @@ void sb_perrun_data(){
       double pr=0,dd=0;
       for(auto&x:G.mc) pr+=x.scale*sum(x.file,F,true);
       for(auto&x:G.ext) pr+=x.scale*sum(x.file,F,false);
-      { bool isf=TString(G.tag).BeginsWith("FHC"); double sc_full=isf?0.092402:0.071666, pot_full=isf?8.857:11.082;
+      { bool isf=TString(G.tag).BeginsWith("FHC"); double sc_full=isf?0.081020:0.071666, pot_full=isf?7.766:11.082;
         pr+=0.65*sc_full*(G.pot/pot_full)*sum(std::string(P)+"xsec-ana-prodgenie_numi_uboone_overlay_dirt_fhc_mcc9_run1_v28_all_snapshot.root",F,true); }
       for(auto&d:G.dat){ sb_guard_data(d); dd+=sum(d,F,false); }
       printf(" %7.0f/%7.0f=%5.3f",dd,pr,pr>0?dd/pr:0.);

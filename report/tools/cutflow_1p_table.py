@@ -7,7 +7,7 @@ R='/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/report/'; L='/home/t2k/nowak
 def fmt(x):
     if x>=1000: return f"{int(round(x)):,}".replace(',', '\\,')
     return f"{x:.1f}" if x<10 else f"{int(round(x))}"
-blocks={'fhc':'FHC (Runs 1,2,4,5; $8.857\\times10^{20}$~POT)','rhc':'RHC (Runs 1,2,3,4a,4b,4c; $1.108\\times10^{21}$~POT)','comb':'Combined FHC$+$RHC ($1.994\\times10^{21}$~POT)'}
+blocks={'fhc':'FHC (Runs 1,2,4,5; $7.766\\times10^{20}$~POT)','rhc':'RHC (Runs 1,2,3,4a,4b,4c; $1.108\\times10^{21}$~POT)','comb':'Combined FHC$+$RHC ($1.885\\times10^{21}$~POT)'}
 rows=[]; derived={}
 for m,title in blocks.items():
     lines=[l for l in open(L+f'cutflow_1p_{m}.log') if re.match(r'^(None|InFiducialVol|Topological|MuonCandidate|ContainedPion|MuonIn3Planes|PionIn3Planes|ShowerCut|OpeningAngle|Nonprotons|IdentProton)\s',l)]

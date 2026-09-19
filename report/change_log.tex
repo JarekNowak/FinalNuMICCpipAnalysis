@@ -1,6 +1,7 @@
 \input{common_preamble}
 \usepackage{xr}
 \externaldocument[N-]{analysis_note}
+\externaldocument[S-]{technical_supplement}
 
 \begin{document}
 
@@ -14,7 +15,7 @@ Production on Argon in the NuMI Beam\par}
 \vspace{0.8cm}
 {\large Corrections, release repairs and documentation changes\par}
 \vspace{0.5cm}
-{\normalsize Draft 1.5, release 2026-09-06 \textperiodcentered\ document revision 2026-09-07\par}
+{\normalsize Draft 1.6, release 2026-09-19 \textperiodcentered\ document revision 2026-09-19\par}
 \vspace{0.15cm}
 {\footnotesize\ttfamily release 2026-09-06 \textperiodcentered\ 51 differential extractions $+$ 6 one-bin totals \textperiodcentered\ blind\par}
 \vspace{1.5cm}
@@ -682,7 +683,7 @@ processed both ways (recorded in the repository at the tag). No beam-on file was
 cut, promised before ratification, was produced from a Monte-Carlo-only reprocess into a
 separate tree (\texttt{/data/uboone/processed/sb\_pi0}, SLURM 3277998; new branches
 \texttt{sb\_pi0\_final}, \texttt{sb\_nprimtrk}, \texttt{sb\_nnonproton}); results in the
-note, \S\ref{N-sec:cr_pi0_final}: the cut removes $11$--$14\%$ of the region uniformly across its
+supplement, \S\ref{S-sec:cr_pi0_final}: the cut removes $11$--$14\%$ of the region uniformly across its
 components, and the frozen definition is kept.
 (iii)~\textbf{Governance.} The run-period rule no longer excludes a period automatically
 on a $3\sigma$ excursion: it triggers an investigation, exclusion requires an independent
@@ -874,10 +875,15 @@ candidate purity dominates bin-to-bin \emph{migration}, which is the mechanism b
 marginal diagonal and its rank-deficient RHC response. No released number changes.
 
 \subsection{Far sidebands, and a ratio that does not move}
-Adding one cut per control region drives the CC$0\pi$ signal fraction from $8.7\%$ to $2.1\%$ while
-keeping $58\%$ of the events and raising the CC$0\pi$ content of the background from $72\%$ to
-$85\%$. The data-to-prediction ratio is flat under every far cut ($0.84\to0.85$; $\pi^0$
-$0.91\to0.92$), so the $8$--$16\%$ control-region deficit is not signal contamination.
+Adding one cut per control region drives the CC$0\pi$ signal fraction from $8.6\%$ to $2.2\%$ while
+keeping $58\%$ of the events and raising the CC$0\pi$ content of the background from $71\%$ to
+$85\%$. The data-to-prediction ratio is flat under the far cuts ($1.12\to1.13$; $\pi^0$
+$1.20\to1.23$), so the common excess of data over prediction is not signal contamination.
+\emph{Corrected the same evening:} the first version of this study reported an $8$--$16\%$
+\emph{deficit} because \texttt{bkgfit/farsb.py} summed the prediction over the FHC and RHC Run-2
+periods, which have simulation but no beam-on file ($\sim20\%$ of the prediction), and because the
+FHC Run-1 exposure was still wrong; with both fixed the ratios are $1.1$--$1.2$, and the cosmic region
+falls to unity as its beam-off share rises, locating the excess in the neutrino simulation.
 
 \subsection{Corrections to claims in the documents}
 \begin{itemize}\itemsep2pt
@@ -908,9 +914,85 @@ confirmed against the beam bookkeeping.
 Adopted in every configuration (17 file-properties lists, the throw macros, the gate counts in the
 analysis code, the normalisation audit); FHC Run~1 alone re-thrown; FHC exposure $8.857\to
 7.766\times10^{20}$, combined $1.9939\to1.8848\times10^{21}$. The FHC and combined extractions are
-rebuilt on it, raising $\sigma_{\rm FHC}$ by $14.0\%$ and $\sigma_{\rm comb}$ by $5.8\%$; RHC and
-the fake-data closure are unaffected. \texttt{bkgfit/run1\_trigger.py} is the record of the
+rebuilt on it (universe files, unfolding, covariances, release, figures and tables). On the blind
+fake data the exposure cancels --- the pseudo-data are thrown at the assumed exposure, so numerator
+and denominator move together --- and the rebuilt integrals differ from the previous release only
+through the new FHC Run-1 Poisson realisation and the changed run weighting (median ratio $0.99$;
+individual bins within their statistical uncertainties). On beam-on data, where the event count is
+fixed, the same correction raises $\sigma_{\rm FHC}$ by $14.0\%$ and $\sigma_{\rm comb}$ by
+$5.8\%$ relative to the old bookkeeping; RHC is unaffected. The combined flux constant is
+re-weighted to the corrected POT ($6.60865\to6.59691\times10^{-10}$~cm$^{-2}$/POT). \texttt{bkgfit/run1\_trigger.py} is the record of the
 evidence.
+
+\subsection{The rebuild on the corrected exposure landed; what moved and what did not}
+All 34 FHC and combined universe files were rebuilt on the corrected exposure (SLURM 3351878),
+promoted (the previous files are kept in \texttt{univmake\_backup\_job3351878}), and the full chain
+re-run: 51 re-unfolds, covariance harvest, release export, figures, counting and every
+release-derived table. The one-bin totals, which the rebuild manifest had omitted, were rebuilt
+separately (SLURM 3352400). Because the pseudo-data are thrown at the assumed exposure, the
+exposure cancels in a fake-data extraction and nothing moved by $14\%$: the rebuilt integrals are
+$0.95$--$1.05$ of the previous release for the inclusive observables (median $0.99$) and within
+$\pm30\%$ in the sparsest proton-tagged bins, all inside their statistical uncertainties --- the
+new FHC Run-1 Poisson realisation plus the changed run weighting (Run~1 is now $28\%$ of FHC,
+not $37\%$). The closure mean is unchanged ($1.011$ inclusive, $1.012$ proton-tagged). The
+$+14\%$ / $+5.8\%$ applies to a beam-on extraction at fixed event count, and the documents now say
+so.
+
+\subsection{Three further places the correction had not reached}
+\begin{itemize}\itemsep2pt
+  \item \textbf{The combined flux constant} was still the $8.857:11.082$ POT-weighted mean of the
+    FHC and RHC constants ($6.60865\times10^{-10}$); re-weighted to $7.766:11.082$ it is
+    $6.59691\times10^{-10}$~cm$^{-2}$/POT ($-0.18\%$), applied to all 50 combined configurations
+    and audited by \texttt{norm\_manifest.py}; the combined extractions were re-unfolded.
+  \item \textbf{Hard-coded per-run scales.} Some twenty standalone macros and tools (cut-flow
+    yields, the counting cross-check, binning screens, every sideband macro, the background-fit
+    templates, \texttt{farsb.py}) carry the per-run data/MC POT scale, the full-exposure dirt scale,
+    the beam-on trigger counts or the combined flux as literals. FHC Run~1 was $0.14101$
+    ($3.283/23.282$) in all of them; it is $0.09415$ now, with the dirt scale $0.092402\to0.081020$
+    where it stands for the full FHC exposure and the pooled-EXT factors of the counting macro
+    recomputed. The framework itself takes all of this from the file lists and was never affected.
+    The cut-flow tables and the counting log are regenerated from the corrected macros; the
+    background-fit templates and the sideband protocol are being re-run on them.
+  \item \textbf{Exposure-derived numbers in the documents} (POT tables, integrated flux and
+    conversion factors, the combined $\nu_\mu/\bar\nu_\mu$ flux row, the cut-flow headers).
+\end{itemize}
+
+\subsection{Background fit and frozen protocol re-run on the corrected exposure}
+The background-fit templates (\texttt{bkgfit\_templates.C}) and the frozen control-region protocol
+(\texttt{sb\_protocol\_data.C}) carried the wrong Run-1 scale; both are re-run. The frozen global test
+now \textbf{passes}, $\chi^2=8.1/8$ ($p=0.42$; it was $69.5/8$), and the all-period totals fit needs no
+parameter ($5.7/6$; CC$0\pi$ free $0.949\pm0.190$; the ``no FHC Run~1'' results are unchanged). A
+Run-1-specific residual survives: every other period sits $12$--$25\%$ above the pre-fit prediction,
+FHC Run~1 at unity, so a free Run-1 factor still fits $0.869\pm0.022$ ($\Delta\chi^2=37$; a free
+factor on any other period gains at most $15$). The exposure correction explains $0.52\to0.87$, not
+$0.52\to1$. Its cause is not identified and it is a new open item for unblinding; the CR note carries
+the per-period table. The sign of the ``residual deficit'' statements has changed with the
+correction: on the corrected exposure the regions sit \emph{above} the prediction, and the
+far-sideband study is being re-run.
+
+\subsection{The MCS momentum-scale bound is withdrawn and redone on the data side}
+The $\pm5\%$/$\pm10\%$ bound quoted on 2026-09-19 scaled the MCS momentum through the
+\emph{bin configuration}, which applies to the simulation and to the fake data alike. A common
+scale cancels in the extraction --- response and data move together --- so the $0.07\sigma$ and
+$0.19\sigma$ measured only the regulariser's response to a remapped variable, not the systematic.
+A momentum-scale error is a data-versus-simulation mismatch, so the variation is now applied to
+the fake data alone (\texttt{macros/mcs\_scale\_fakedata.C}: every MCS-measured muon, $63\%$ of the
+selected sample, has its momentum scaled by $1\pm0.05$; the simulation, the response and the
+selection flag are untouched) and $d\sigma/dp_\mu$ is re-extracted with the nominal response
+(SLURM 3352423). Result: the half-difference is $8$--$13\%$ of the bin value in the four lowest bins,
+$2\%$ in the fifth and $8$--$10\%$ with the opposite sign in the two highest, i.e.\ up to $0.34\sigma$
+of the quoted per-bin uncertainty (the withdrawn common-scale test had given $0.07\sigma$); the integral
+moves $-6.8\%$ / $+2.1\%$. As recommended by the review it is released as a fully correlated term
+for FHC $p_\mu$ (\texttt{cov\_MCSscale.txt}, \texttt{cov\_total\_plusMCS.txt}; per-bin totals
+$38$--$58\%\to39$--$58\%$); propagation inside the framework and to the other configurations and
+observables is open.
+
+\subsection{Proton-tagged alternative-model closure launched}
+The reweighted-model fake data (GENIE multisim universe 545; $\Delta\to N\pi$ angular unisim) are
+thrown for the proton-tagged sample as well (\texttt{macros/throw\_altmodel\_w.C}, same universes
+and seeds) and $W_\mathrm{had}$, the four two-bin TKI variables and $\cos\theta_\pi$ are
+re-extracted with the nominal response (SLURM 3352430). This is one of the six prerequisites
+listed for the proton-tagged products.
 
 \section{Open items}
 
@@ -936,9 +1018,15 @@ yet made.
     control-region discrepancy under the frozen procedure.
   \item \textbf{Tests not yet made (not gating):} the ensemble extended to RHC and to the
     proton-tagged family.
-  \item \textbf{Systematic terms not in the released covariance:} a dedicated MCS muon
-    momentum term; the beam-off gate-ratio and Run-2 stand-in terms ($\lesssim0.4\%$ of the
-    total); the beamline-geometry flux term ($\lesssim0.2\%$).
+  \item \textbf{Systematic terms not in the released covariance:} the MCS muon momentum-scale
+    term is evaluated at $\pm5\%$ on the data side and released as a separate component for FHC
+    $p_\mu$ (up to $0.34\sigma$ per bin), but is not propagated inside the framework nor to the other
+    configurations and observables; the beam-off gate-ratio and Run-2 stand-in terms ($\lesssim0.4\%$
+    of the total); the beamline-geometry flux term ($\lesssim0.2\%$).
+  \item \textbf{FHC Run~1 residual:} the $13\pm2\%$ offset of FHC Run~1 relative to the other five
+    periods in the control regions, which survives the exposure correction and is not covered by any
+    correlated term; its cause (bookkeeping POT, completeness of the Run-1 beam-on sample against its
+    run list, or the Run-1 overlay normalisation) is not identified.
   \item \textbf{Limits of the exposure:} the differential $W_{\pi p}$ shape is withdrawn
     (no binning satisfies both the migration and the statistics requirement); the
     proton-tagged sample supports an integrated cross section.

@@ -50,12 +50,16 @@ $\pi^0$ region and in RHC CC$0\pi$ remain.
 (ii)~\textbf{The detector-variation term of the control-region covariance was inflated about tenfold.} The knob
 samples do not have the POT of the detector-variation central-value sample (e.g.\ $0.913$ for WMX in FHC); the
 sideband macros compared unscaled counts. Normalised, the detector term on the CC$0\pi$ and $\pi^0$ totals is
-$1$--$2\%$, not $20\%$. With the corrected covariance \textbf{the frozen global test fails}, $\chi^2=69.5/8$, and
-it passes once FHC Run~1 is set aside ($5.0/8$, $p=0.76$). A free FHC Run-1 exposure factor fits
-$f=0.520\pm0.020$ with $\chi^2=16.2/17$, in line with the exposure hypothesis of \S\ref{sec:perrun}.
+$1$--$2\%$, not $20\%$. With the corrected covariance and the wrong FHC Run-1 exposure the frozen global test
+failed, $\chi^2=69.5/8$; a free FHC Run-1 exposure factor fitted $f=0.520\pm0.020$, which led to the
+bookkeeping check that resolved it (\S\ref{sec:perrun}). \textbf{On the corrected exposure the frozen global test
+passes}, $\chi^2=8.1/8$, $p=0.42$, and the all-period fit needs no parameter ($5.7/6$). A Run-1-specific
+residual survives: every other period sits $12$--$25\%$ above prediction, inside the correlated flux and
+cross-section terms, while FHC Run~1 sits at unity, so a free Run-1 factor still fits $0.869\pm0.022$
+($\Delta\chi^2=37$ for one parameter). It is an open item (\S\ref{sec:jointfit}).
 The statistical part of the detector variations is removed with an event-matched bootstrap
 (\S\ref{sec:detvar_pot}). A joint FHC+RHC fit of the background classes finds no normalisation correction
-warranted (CC$0\pi$ $0.984\pm0.191$ without FHC Run~1) and FHC and RHC consistent; its projected benefit and its
+warranted (CC$0\pi$ $0.949\pm0.190$ over all periods, $0.984\pm0.191$ without FHC Run~1) and FHC and RHC consistent; its projected benefit and its
 limits are in \S\ref{sec:jointfit}. \emph{All of this is post-inspection work on already-opened regions; nothing
 here is a frozen-procedure response or a release input.}}}
 \medskip
@@ -566,34 +570,38 @@ subtraction is not part of it).
 
 \begin{table}[H]
   \centering
-  \caption{Frozen statistics with corrected inputs (current Monte Carlo, POT-normalised detector variations), same
-    run periods as Table~\ref{tab:pulls}. Shape tests: $\chi^2/$ndf ($p$); $p<0.01$ in bold.}
+  \caption{Frozen statistics with corrected inputs (current Monte Carlo, POT-normalised detector variations,
+    corrected FHC Run-1 exposure), same run periods as Table~\ref{tab:pulls}. Shape tests: $\chi^2/$ndf ($p$);
+    $p<0.01$ in bold. The RHC rows are unchanged by the exposure correction.}
   \label{tab:protocol_corrected}
   \small
   \begin{tabular}{llrrr|ll}
     \toprule
     Mode & Region & pull (full) & pull (st$+$det) & $\sigma_{\rm full}/N$ & $p_\mu$ shape & $\cos\theta_\mu$ shape \\
     \midrule
-    FHC & CC$0\pi$    & $-0.42$ & $-3.81$ & $18.6\%$ & $12.95/6$ ($0.044$) & $3.26/4$ ($0.515$) \\
-        & multi-$\pi$ & $-0.02$ & $-0.03$ & $32.6\%$ & $6.12/6$ ($0.410$) & $1.70/4$ ($0.791$) \\
-        & $\pi^0$     & $-0.03$ & $-0.27$ & $22.3\%$ & $\mathbf{28.05/6}$ ($\mathbf{<0.001}$) & $0.59/4$ ($0.964$) \\
-        & cosmic      & $-0.82$ & $-1.09$ & $18.5\%$ & $4.41/6$ ($0.621$) & $2.58/4$ ($0.630$) \\
+    FHC & CC$0\pi$    & $0.47$ & $4.17$ & $18.8\%$ & $12.72/6$ ($0.048$) & $2.59/4$ ($0.628$) \\
+        & multi-$\pi$ & $0.46$ & $0.82$ & $33.3\%$ & $6.33/6$ ($0.387$) & $1.72/4$ ($0.787$) \\
+        & $\pi^0$     & $0.77$ & $7.66$ & $22.6\%$ & $\mathbf{28.15/6}$ ($\mathbf{<0.001}$) & $0.41/4$ ($0.981$) \\
+        & cosmic      & $0.37$ & $0.49$ & $19.8\%$ & $4.22/6$ ($0.647$) & $2.45/4$ ($0.654$) \\
     \midrule
     RHC & CC$0\pi$    & $0.80$ & $6.03$ & $17.7\%$ & $\mathbf{50.19/6}$ ($\mathbf{<0.001}$) & $5.48/4$ ($0.242$) \\
         & multi-$\pi$ & $0.28$ & $0.47$ & $31.5\%$ & $10.40/6$ ($0.109$) & $2.52/4$ ($0.640$) \\
         & $\pi^0$     & $1.03$ & $9.53$ & $21.1\%$ & $\mathbf{66.61/6}$ ($\mathbf{<0.001}$) & $0.49/4$ ($0.975$) \\
         & cosmic      & $1.60$ & $2.14$ & $21.3\%$ & $4.10/6$ ($0.663$) & $0.11/4$ ($0.999$) \\
     \midrule
-    \multicolumn{7}{l}{Global normalisation $\chi^2 = 69.49/8$, $p<10^{-3}$ --- \textbf{fails}; blind spot of a common shift $58.0\%$.} \\
-    \multicolumn{7}{l}{Other shape tests all pass: multi-$\pi$ $\theta_{\mu\pi}$ $p=0.98/0.99$, cosmic $\theta_{\mu\pi}$ $0.40/0.53$, $\pi^0$ $E_{\rm shr}$ $0.66/0.63$.} \\
+    \multicolumn{7}{l}{Global normalisation $\chi^2 = 8.11/8$, $p=0.42$ --- \textbf{passes}; blind spot of a common shift $58.3\%$.} \\
+    \multicolumn{7}{l}{(On the wrong FHC Run-1 exposure this was $69.49/8$, $p<10^{-3}$, and the FHC pulls were $-0.42$, $-0.02$, $-0.03$, $-0.82$.)} \\
+    \multicolumn{7}{l}{Other shape tests all pass: multi-$\pi$ $\theta_{\mu\pi}$ $p=0.99/0.99$, cosmic $\theta_{\mu\pi}$ $0.57/0.53$, $\pi^0$ $E_{\rm shr}$ $0.65/0.63$.} \\
     \bottomrule
   \end{tabular}
 \end{table}
 
-Three consequences. \textbf{(1)} The global test now fails. The frozen macro cannot drop a run period; the fit
-framework of \S\ref{sec:jointfit}, which reproduces the frozen statistic ($8.82/8$ against $8.77/8$, same pulls
-to $0.03$), gives $48.4/8$ with the full covariance and all periods and $5.0/8$ ($p=0.76$) without FHC Run~1: the
-failure is the FHC Run-1 excursion, no longer absorbed by a $20\%$ detector term. \textbf{(2)} No region is flagged
+Three consequences. \textbf{(1)} With the corrected covariance but the wrong FHC Run-1 exposure the global
+test failed ($69.49/8$); the fit framework of \S\ref{sec:jointfit}, which reproduces the frozen statistic
+($8.82/8$ against $8.77/8$, same pulls to $0.03$), gave $48.4/8$ with all periods and $5.0/8$ ($p=0.76$) without
+FHC Run~1, which isolated the FHC Run-1 excursion once it was no longer absorbed by a $20\%$ detector term and
+led to the bookkeeping check that resolved it. On the corrected exposure the test passes, $8.11/8$ ($p=0.42$),
+with every full-covariance pull positive (data above prediction in all eight totals) and none beyond $1.6$. \textbf{(2)} No region is flagged
 by the full-covariance pulls ($|{\rm pull}|\le1.60$), but the statistical-plus-detector pulls of the RHC CC$0\pi$
 and $\pi^0$ regions are $6.0$ and $9.5$: the common offset is highly significant against everything except the
 flux and cross-section terms. \textbf{(3)} The muon-angle failures are gone; the $p_\mu$ failures of the $\pi^0$
@@ -732,21 +740,25 @@ used.
 
 \begin{table}[H]
   \centering
-  \caption{Fits to the control-region totals of the beam-on data (corrected inputs). LR: likelihood-ratio test
-    against the unfitted prediction.}
+  \caption{Fits to the control-region totals of the beam-on data (corrected inputs, corrected FHC Run-1
+    exposure). LR: likelihood-ratio test against the unfitted prediction. The ``no FHC Run~1'' rows are
+    unchanged by the exposure correction.}
   \label{tab:fit_data}
   \footnotesize\setlength{\tabcolsep}{4pt}
   \begin{tabular}{llp{0.46\textwidth}c}
     \toprule
     Periods & Model & result & $\chi^2/$ndf ($p$) \\
     \midrule
-    all & no parameters & --- & $44.13/6$ ($7\times10^{-8}$) \\
+    all & no parameters & --- & $5.73/6$ ($0.46$) \\
+    all & CC$0\pi$ & $0.949\pm0.190$ (LR $p=0.78$) & $5.65/5$ ($0.34$) \\
+    all & CC$0\pi$, $\pi^0$ & $1.097\pm0.240$, $1.346\pm0.337$ (LR $p=0.57$) & $4.61/4$ ($0.33$) \\
     no FHC Run 1 & no parameters & --- & $3.22/6$ ($0.78$) \\
     no FHC Run 1 & CC$0\pi$ & $0.984\pm0.191$ (LR $p=0.93$) & $3.22/5$ ($0.67$) \\
     no FHC Run 1 & CC$0\pi$, $\pi^0$ & $1.059\pm0.241$, $1.171\pm0.335$ (LR $p=0.88$) & $2.97/4$ ($0.56$) \\
     no FHC Run 1 & per mode & CC$0\pi$, $\pi^0$: FHC $1.062$, $1.126$; RHC $1.046$, $1.180$ (shared vs.\ split $p=0.72$) & \\
-    all, per period & $f_{\rm FHC\,R1}$ & $0.520\pm0.020$ & $16.77/17$ ($0.47$) \\
-    all, per period & $f_{\rm FHC\,R1}$, CC$0\pi$, $\pi^0$ & $0.535^{+0.062}_{-0.081}$, $1.052\pm0.223$, $1.045\pm0.308$ & $16.70/15$ ($0.34$) \\
+    all, per period & no parameters & --- & $56.00/18$ ($9\times10^{-6}$) \\
+    all, per period & $f_{\rm FHC\,R1}$ & $0.869\pm0.022$ & $18.87/17$ ($0.34$) \\
+    all, per period & $f_{\rm FHC\,R1}$, CC$0\pi$, $\pi^0$ & $0.875\pm0.027$, $1.084\pm0.228$, $1.097\pm0.342$ & $18.73/15$ ($0.23$) \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -755,12 +767,40 @@ used.
   \item \textbf{No normalisation correction is warranted.} Without FHC Run~1 the unfitted prediction describes the
     totals, the fitted normalisations are one within their uncertainties, and FHC and RHC agree. The common
     $10$--$25\%$ offset is absorbed by the correlated flux and cross-section terms, not by the class parameters.
-  \item \textbf{FHC Run 1.} A free exposure factor on the whole FHC Run-1 prediction fits $0.520\pm0.020$ and
-    restores a good fit over all six periods; with the class normalisations free as well it is $0.535$. This is the
-    quantitative form of the hypothesis of \S\ref{sec:perrun} and is consistent with $f=0.51$--$0.62$ derived there
-    from the ratios. It is evidence for an exposure error, not the independent confirmation that item~4(i) requires. \textbf{Resolved}: the beam-on sample is the dataset recorded without the open trigger, $2.192\times10^{20}$~POT with $5\,748\,692$ triggers, confirmed against the beam bookkeeping; the prediction had assumed $3.283\times10^{20}$ and $9\,846\,635$. That puts the neutrino MC a factor $0.668$ and the beam-off a factor $0.584$ too high, which brackets the fitted $0.52$ once the two enter with their different weights. The corrected exposure is adopted throughout and the FHC and combined results are being rebuilt on it.
+  \item \textbf{FHC Run 1: the exposure error is resolved; a smaller residual is not.} On the wrong
+    exposure a free factor on the whole FHC Run-1 prediction fitted $0.520\pm0.020$, the quantitative form of the
+    hypothesis of \S\ref{sec:perrun}. \textbf{Resolved}: the beam-on sample is the dataset recorded without the
+    open trigger, $2.192\times10^{20}$~POT with $5\,748\,692$ triggers, confirmed against the beam bookkeeping; the
+    prediction had assumed $3.283\times10^{20}$ and $9\,846\,635$, which put the neutrino MC a factor $0.668$ and
+    the beam-off a factor $0.584$ too high. The corrected exposure is adopted throughout, the templates and the
+    frozen protocol are re-run on it, and the FHC and combined results are rebuilt on it. With it the frozen global
+    test passes ($8.1/8$, $p=0.42$) and the all-period totals fit needs no parameter ($5.7/6$). \textbf{Open}: period
+    by period the data sit above the prediction everywhere except in FHC Run~1
+    (Table~\ref{tab:perperiod_corrected}); a free Run-1 factor still fits $0.869\pm0.022$ and improves the
+    per-period fit by $\Delta\chi^2=37$ for one parameter, while a free factor on any other period gains at most
+    $15$. The common $12$--$25\%$ excess of the other five periods is inside the correlated flux and
+    cross-section terms (which is why the global test passes); a $13\pm2\%$ offset of one period relative to the
+    others is not covered by anything correlated. Its cause is not identified: the cosmic-enriched region, which is
+    beam-off dominated, sits at $0.95\pm0.17$ in Run~1, so the trigger count is not obviously wrong, and the
+    bookkeeping POT, the completeness of the Run-1 beam-on sample against its run list and the Run-1 overlay
+    normalisation remain to be checked. Until it is understood it is an open item for unblinding, because FHC
+    Run~1 is $28\%$ of the FHC exposure.
+
+    \begin{center}\footnotesize
+    \captionof{table}{Control-region totals per period on the corrected exposure, beam-on data over the pre-fit
+      prediction (neutrino MC $+$ beam-off $+$ dirt), from the background-fit templates. Run~2 has no beam-on file.}
+    \label{tab:perperiod_corrected}
+    \begin{tabular}{lccc}\toprule
+      Period & CC$0\pi$ & $\pi^0$ & cosmic \\ \midrule
+      FHC Run 1 & $3253/3344 = 0.973$ & $1954/1773 = 1.102$ & $36/38 = 0.95$ \\
+      FHC Run 4 & $3558/3025 = 1.176$ & $2044/1637 = 1.249$ & $26/23 = 1.14$ \\
+      FHC Run 5 & $3667/3213 = 1.141$ & $2115/1772 = 1.193$ & $30/25 = 1.20$ \\
+      RHC Run 1 & $909/752 = 1.209$ & $529/483 = 1.094$ & $8/10 = 0.83$ \\
+      RHC Run 3 & $6920/6008 = 1.152$ & $4706/3768 = 1.249$ & $71/47 = 1.51$ \\
+      RHC Run 4 & $4015/3576 = 1.123$ & $2620/2176 = 1.204$ & $41/33 = 1.25$ \\
+      \bottomrule\end{tabular}\end{center}
   \item \textbf{2D.} Without FHC Run~1 the unfitted prediction gives $\chi^2=289.2/86$ in the $(\cos\theta_\mu\times
-    p_\mu)$ bins (all periods $381.7/86$; with the stale Monte Carlo it was about $4\,900/86$). Normalisation parameters do
+    p_\mu)$ bins (all periods $333.0/86$ on the corrected exposure; with the stale Monte Carlo it was about $4\,900/86$). Normalisation parameters do
     not repair it ($276.8/84$ with CC$0\pi$ and $\pi^0$ free), and the residual is organised in $p_\mu$: data over the pre-fit prediction is $1.16$--$1.82$
     in the $0.35$--$0.75$\GeVc bins, $1.05$--$1.40$ below $0.35$\GeVc and mostly $0.8$--$1.1$ above $0.75$\GeVc,
     in every angular bin, both modes and both regions (Fig.~\ref{fig:fit_residuals}). This is the $p_\mu$ failure of Table~\ref{tab:protocol_corrected}, it is
@@ -810,20 +850,20 @@ with an extra cut that can only reduce their signal content.
     \toprule
     Region & Definition & pred. & data & d/p & signal & \multicolumn{1}{c}{composition [\%]} \\
     \midrule
-    CC0$\pi$ & near (\texttt{sb\_cc0pi}) & $26914$ & $22707$ & $0.84$ & $8.7\%$ & 72 / 4 / 2 / 14 / 8 \\
-      & far: muon is only non-proton & $15570$ & $13202$ & $0.85$ & $\mathbf{2.1\%}$ & 85 / 3 / 0 / 10 / 2 \\
-      & far: $+$ exactly one proton & $10514$ & $8941$ & $0.85$ & $\mathbf{1.7\%}$ & 88 / 2 / 0 / 8 / 2 \\
+    CC0$\pi$ & near (\texttt{sb\_cc0pi}) & $20344$ & $22707$ & $1.12$ & $8.6\%$ & 71 / 4 / 2 / 14 / 9 \\
+      & far: muon is only non-proton & $11688$ & $13202$ & $1.13$ & $\mathbf{2.2\%}$ & 85 / 3 / 1 / 10 / 2 \\
+      & far: $+$ exactly one proton & $7889$ & $8941$ & $1.13$ & $\mathbf{1.7\%}$ & 87 / 2 / 0 / 8 / 2 \\
     \midrule
-    $\pi^0$ & near (\texttt{sb\_pi0}) & $15842$ & $14383$ & $0.91$ & $9.1\%$ & 15 / 52 / 11 / 15 / 8 \\
-      & far: $\geq2$ showers & $8273$ & $7648$ & $0.92$ & $6.4\%$ & 8 / 66 / 9 / 11 / 5 \\
-      & far: $\geq3$ showers & $2953$ & $2997$ & $1.01$ & $4.3\%$ & 4 / 75 / 8 / 10 / 3 \\
+    $\pi^0$ & near (\texttt{sb\_pi0}) & $12001$ & $14383$ & $1.20$ & $9.0\%$ & 15 / 51 / 11 / 15 / 9 \\
+      & far: $\geq2$ showers & $6240$ & $7648$ & $1.23$ & $6.3\%$ & 8 / 66 / 9 / 11 / 6 \\
+      & far: $\geq3$ showers & $2217$ & $2997$ & $1.35$ & $4.2\%$ & 4 / 74 / 8 / 10 / 4 \\
     \midrule
-    multi-$\pi$ & near (\texttt{sb\_multipi}) & $292$ & $245$ & $0.84$ & $22.1\%$ & 2 / 23 / 57 / 13 / 4 \\
-      & far: $\geq4$ primary tracks & $123$ & $101$ & $0.82$ & $12.3\%$ & 2 / 20 / 67 / 11 / 1 \\
+    multi-$\pi$ & near (\texttt{sb\_multipi}) & $220$ & $245$ & $1.12$ & $22.1\%$ & 2 / 23 / 56 / 14 / 4 \\
+      & far: $\geq4$ primary tracks & $92$ & $101$ & $1.09$ & $11.9\%$ & 2 / 20 / 66 / 11 / 2 \\
     \midrule
-    cosmic & near (\texttt{sb\_cosmic}) & $228$ & $212$ & $0.93$ & $5.4\%$ & 23 / 3 / 4 / 38 / 33 \\
-      & far: $\theta_{\mu\pi}>2.9$ & $136$ & $107$ & $0.79$ & $3.3\%$ & 29 / 2 / 2 / 23 / 44 \\
-      & far: $\theta_{\mu\pi}>3.0$ & $104$ & $80$ & $0.77$ & $3.6\%$ & 32 / 2 / 1 / 20 / 44 \\
+    cosmic & near (\texttt{sb\_cosmic}) & $175$ & $212$ & $1.21$ & $5.2\%$ & 23 / 3 / 4 / 35 / 35 \\
+      & far: $\theta_{\mu\pi}>2.9$ & $105$ & $107$ & $1.02$ & $3.0\%$ & 29 / 2 / 2 / 22 / 45 \\
+      & far: $\theta_{\mu\pi}>3.0$ & $80$ & $80$ & $0.99$ & $3.3\%$ & 33 / 2 / 1 / 19 / 45 \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -832,7 +872,7 @@ Four things follow.
 
 \begin{itemize}\itemsep2pt
   \item \textbf{The CC0$\pi$ region has a cheap far definition.} Requiring the muon to be the only
-    non-proton-like primary track takes the signal fraction from $8.7\%$ to $2.1\%$, a factor of
+    non-proton-like primary track takes the signal fraction from $8.6\%$ to $2.2\%$, a factor of
     four, while keeping $58\%$ of the events and \emph{raising} the CC0$\pi$ content of the
     background from $72\%$ to $85\%$. It is purer in both senses at once, which is unusual and
     makes it the one far definition worth adopting outright. Demanding exactly one proton as well
@@ -856,11 +896,17 @@ Four things follow.
 \end{itemize}
 
 The most useful number in the table is one that does \emph{not} move. The data-to-prediction ratio
-is flat under every far cut --- CC0$\pi$ $0.84\to0.85\to0.85$, $\pi^0$ $0.91\to0.92$, multi-$\pi$
-$0.84\to0.82$ --- while the signal fraction falls by up to a factor of four. Whatever produces the
-$8$--$16\%$ deficit in the control regions, it is therefore not signal contamination and not
-anything that scales with it. That is a real constraint on the explanation, and it is available
-without unblinding anything.
+is flat under the far cuts --- CC0$\pi$ $1.12\to1.13\to1.13$, multi-$\pi$ $1.12\to1.09$, $\pi^0$
+$1.20\to1.23$ (the three-shower version, $1.35$ on $4\%$ signal, moves with the shower content, not the
+signal) --- while the signal fraction falls by up to a factor of four. Whatever produces the
+$12$--$20\%$ excess of data over prediction in the neutrino-dominated regions, it is therefore not
+signal contamination and not anything that scales with it. The cosmic region is the exception that
+locates it: as the far cuts raise its beam-off share from $35\%$ to $45\%$, its ratio falls from
+$1.21$ to $1.0$, so the excess sits in the neutrino simulation, not in the beam-off. (An earlier
+version of this table quoted an $8$--$16\%$ \emph{deficit}: the prediction then included the FHC and RHC
+Run-2 periods, which have simulation but no beam-on file, and the FHC Run-1 exposure was wrong. Both
+are corrected here.) That is a real constraint on the explanation, and it is available without
+unblinding anything.
 
 \section{What this establishes, and what it does not}
 \label{sec:conclusions}
@@ -876,9 +922,9 @@ without unblinding anything.
     bookkeeping issues sit in front of any such conclusion: the missing Run-2 exposure,
     which is excluded consistently here but leaves $19\%$ of the analysis unexamined, and
     the FHC Run-1 anomaly, which has the size and the flatness of an exposure error.
-  \item \emph{(Superseded 2026-09-16: with corrected inputs the global test fails because of FHC Run~1, and the
-    muon-angle failure was an artefact of the stale sideband Monte Carlo; see \S\ref{sec:protocol_corrected} and the
-    status list below.)} The frozen normalisation test passes. The muon-angle shape test does not, in the
+  \item \emph{(Superseded 2026-09-16 and 2026-09-19: with corrected inputs the global test failed because of the
+    wrong FHC Run-1 exposure and passes on the corrected one, $8.11/8$; the muon-angle failure was an artefact of
+    the stale sideband Monte Carlo; see \S\ref{sec:protocol_corrected} and the status list below.)} The frozen normalisation test passes. The muon-angle shape test does not, in the
     two high-statistics regions and in both beam modes; the failure survives the removal of
     the normalisation, is absent from the same code run on pseudo-data, and is largest in
     RHC, which carries no suspected exposure error. It is the one result here that the
@@ -920,8 +966,11 @@ without unblinding anything.
   \item The muon-angle shape failure is withdrawn: it compared a detector-frame prediction with beam-frame data
     (\S\ref{sec:stale_mc}). The $p_\mu$ failures of the $\pi^0$ region and of RHC CC$0\pi$ remain and are the open
     shape question; they point at the muon momentum (\S\ref{sec:jointfit}).
-  \item With the detector term corrected (\S\ref{sec:detvar_pot}) the frozen global test fails with FHC Run~1 and
-    passes without it. The FHC Run-1 exposure check (item~1 of \emph{Required next}) is now the gating item.
+  \item With the detector term corrected (\S\ref{sec:detvar_pot}) the frozen global test failed with FHC Run~1 and
+    passed without it; the FHC Run-1 exposure check resolved it (non-open-trigger sample, $2.192\times10^{20}$~POT)
+    and on the corrected exposure the test passes with all periods, $8.11/8$ ($p=0.42$). What remains is the
+    $13\pm2\%$ offset of FHC Run~1 relative to the other five periods (Table~\ref{tab:perperiod_corrected}),
+    which is now the gating item.
   \item The sideband transfer-factor uncertainties are unaffected by the POT defect; the control-region
     systematics table of the analysis note (detector column) and the frozen-procedure numbers quoted there are, and
     must be regenerated with \texttt{sb\_protocol\_data.C} defaults.

@@ -82,7 +82,7 @@ void sb_protocol(){
     delete el; };
   for(int m=0;m<NM;m++){
     std::vector<Src> mc, ext; std::vector<std::string> data; double sc_dirt;
-    if(m==0){ const char* rnm[4]={"Run1_fhc_new_numi_flux_fhc_pandora_ntuple","Run2_fhc_new_numi_flux_fhc_pandora_ntuple","Run4_fhc_new_numi_flux_fhc_pandora_ntuple","reweightedPPFX_numi_nu_overlay_pion_ntuples_run5_fhc"}; double sc[4]={0.14101,0.05085,0.07323,0.11560};
+    if(m==0){ const char* rnm[4]={"Run1_fhc_new_numi_flux_fhc_pandora_ntuple","Run2_fhc_new_numi_flux_fhc_pandora_ntuple","Run4_fhc_new_numi_flux_fhc_pandora_ntuple","reweightedPPFX_numi_nu_overlay_pion_ntuples_run5_fhc"}; double sc[4]={0.09415,0.05085,0.07323,0.11560};
       for(int i=0;i<4;i++) mc.push_back({std::string(P)+"xsec-ana-"+rnm[i]+".root",sc[i]}); for(auto r:{"run1","run2","run4","run5"}) data.push_back(std::string(P)+"xsec-ana-fakedata_fhc_"+r+".root"); sc_dirt=0.092402*0.65; }
     else { const char* rnm[5]={"Run1_rhc","Run2_rhc","Run4a_rhc","Run4b_rhc","Run4c_rhc"}; double sc[5]={0.06728,0.04478,0.08847,0.08847,0.08847};
       for(int i=0;i<5;i++) mc.push_back({std::string(P)+"xsec-ana-"+rnm[i]+"_new_numi_flux_rhc_pandora_ntuple.root",sc[i]}); for(auto s:{"aa","ab","ac","ad","ae"}) mc.push_back({std::string(P)+"xsec-ana-Run3_rhc_new_numi_flux_rhc_pandora_ntuple_"+std::string(s)+".root",0.09066});

@@ -21,7 +21,7 @@ void cutflow_yields_1p(const char* mode="fhc") {
     const char* rn[4]={"Run1_fhc_new_numi_flux_fhc_pandora_ntuple",
       "Run2_fhc_new_numi_flux_fhc_pandora_ntuple","Run4_fhc_new_numi_flux_fhc_pandora_ntuple",
       "reweightedPPFX_numi_nu_overlay_pion_ntuples_run5_fhc"};
-    double sc[4]={0.14101,0.05085,0.07323,0.11560};
+    double sc[4]={0.09415,0.05085,0.07323,0.11560};
     for(int i=0;i<4;i++) mc.push_back({std::string(P)+"xsec-ana-"+rn[i]+".root", sc[i]}); };
   auto rhcMC=[&](){
     const char* rn[5]={"Run1_rhc","Run2_rhc","Run4a_rhc","Run4b_rhc","Run4c_rhc"};
@@ -57,9 +57,9 @@ void cutflow_yields_1p(const char* mode="fhc") {
     }
   };
   add_ext(ext, mode);
-  double sc_dirt = ( (std::string(mode)=="fhc") ? 0.092402
+  double sc_dirt = ( (std::string(mode)=="fhc") ? 0.081020
                    : (std::string(mode)=="rhc") ? 0.071666
-                   : (0.092402 + 0.071666) ) * 0.65;
+                   : (0.081020 + 0.071666) ) * 0.65;
   dirt.push_back({std::string(P)+"xsec-ana-prodgenie_numi_uboone_overlay_dirt_fhc_mcc9_run1_v28_all_snapshot.root", sc_dirt});
 
   double sig[11]={0}, tot[11]={0}, ex[11]={0}, dt[11]={0};

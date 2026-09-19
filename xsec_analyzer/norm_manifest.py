@@ -26,7 +26,7 @@ N_AR = 8.710e29
 # Reference values the note quotes. The manifest's job is to prove the configs still
 # produce these, so a silent drift in either direction is caught.
 EXPECT_POT  = {"fhc5": 7.766e20, "rhcfull": 1.1082e21, "comb": 1.8848e21}
-EXPECT_FLUX = {"fhc5": 6.81159e-10, "rhcfull": 6.44646e-10, "comb": 6.60865e-10}
+EXPECT_FLUX = {"fhc5": 6.81159e-10, "rhcfull": 6.44646e-10, "comb": 6.59691e-10}
 
 CONFIGS = ["fhc5", "rhcfull", "comb"]
 failures, notes, rows = [], [], []
@@ -87,7 +87,7 @@ for cfg in CONFIGS:
     #
     # Compared with a relative tolerance, not for exact string equality: some configs
     # spell the same number to a different number of digits (6.44646e-10 vs 6.446460e-10
-    # are identical; comb has 6.60865e-10 vs 6.608653e-10, a 4.5e-7 relative difference).
+    # are identical; comb has 6.59691e-10 vs 6.596906e-10, a 6e-7 relative difference; the value is the 7.766:11.082 POT-weighted mean of the FHC and RHC constants after the Run-1 exposure correction).
     # Those are transcription artefacts worth knowing about but far below any level that
     # moves a cross section, and rewriting the configs to unify them would break the
     # byte-match between each config and the result it produced. So: tolerance for the

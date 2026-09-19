@@ -29,7 +29,7 @@ void sb_plots_data(const char* mode="fhc", bool compact=false){
   std::vector<Src> mc, ext; std::vector<std::string> data; double sc_dirt; double pot_frac; TString runs;
   if(std::string(mode)=="fhc"){
     // Run 2 dropped: no beam-on file.  Scales are those of the exposure table.
-    mc.push_back({std::string(P)+"xsec-ana-Run1_fhc_new_numi_flux_fhc_pandora_ntuple.root",0.14101});
+    mc.push_back({std::string(P)+"xsec-ana-Run1_fhc_new_numi_flux_fhc_pandora_ntuple.root",0.09415});
     mc.push_back({std::string(P)+"xsec-ana-Run4_fhc_new_numi_flux_fhc_pandora_ntuple.root",0.07323});
     mc.push_back({std::string(P)+"xsec-ana-reweightedPPFX_numi_nu_overlay_pion_ntuples_run5_fhc.root",0.11560});
     ext.push_back({std::string(E)+R1,OCCX*5748692./G1});

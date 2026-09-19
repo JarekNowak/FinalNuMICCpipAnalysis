@@ -38,6 +38,9 @@ void dsigma_current(const char* cfg = "FHC5", const char* gtag = "newg4") {
   const char* src[6]    = {"pmu","ppi2bin","costhmu","costhpi","thmupi","thetamu"};
   const char* obsX[6]   = {"p_{#mu} [GeV/c]","p_{#pi} [GeV/c]","cos#theta_{#mu}",
                            "cos#theta_{#pi}","#theta_{#mu#pi} [rad]","#theta_{#mu} [rad]"};
+  // panel titles: typeset symbols, not the file tags (pmu/ppi/...)
+  const char* obsT[6]   = {"p_{#mu}","p_{#pi}","cos#theta_{#mu}","cos#theta_{#pi}",
+                           "#theta_{#mu#pi}","#theta_{#mu}"};
   const char* gens[4]   = {"genie","gibuu","neut","nuwro"};
   // Okabe-Ito colorblind-safe palette + distinct line styles (redundant encoding,
   // so the four generators are separable in grayscale and for all colour-vision types)
@@ -72,7 +75,7 @@ void dsigma_current(const char* cfg = "FHC5", const char* gtag = "newg4") {
     TH1D* htun = (TH1D*)f->Get("h_genie_tune");       // uB tune
     if (!hunf) continue;
     hunf = (TH1D*)hunf->Clone(); hunf->SetDirectory(0);
-    hunf->SetTitle(Form("%s;%s;d#sigma/dx [10^{-38} cm^{2}/Ar]", obs[o], obsX[o]));
+    hunf->SetTitle(Form("%s;%s;d#sigma/dx [10^{-38} cm^{2}/Ar]", obsT[o], obsX[o]));
     hunf->SetMarkerStyle(20); hunf->SetMarkerSize(0.8); hunf->SetLineColor(kBlack); hunf->SetMarkerColor(kBlack);
     // axis title/label sizes tuned so titles sit inside the enlarged margins (not clipped)
     hunf->GetXaxis()->SetTitleSize(0.050); hunf->GetXaxis()->SetLabelSize(0.042);

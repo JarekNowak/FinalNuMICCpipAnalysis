@@ -18,7 +18,12 @@ read -r XC BIN SLICE <<< "$(sed -n "${line}p" "$MANIFEST")"
 [ -n "${SLICE:-}" ] || { echo "ERROR: no work on line $line" >&2; exit 1; }
 cd "$REPO" || exit 1
 export LD_LIBRARY_PATH="/usr/lib64/flexiblas:$(root-config --libdir):$REPO/lib:${LD_LIBRARY_PATH:-}"
-export XSEC_ANALYZER_DIR="$REPO"; export UNIV_THREADS=16
+export XSEC_ANALYZER_DIR="$REPO"
+# Honour a thread count set by the caller: the default request is a whole 16-core node, which
+# cannot backfill into a busy cluster (no node had more than 7 free CPUs), so a smaller job can
+# be submitted with --cpus-per-task=N and UNIV_THREADS=N to run in the gaps instead of waiting
+# for a node to drain.
+export UNIV_THREADS="${UNIV_THREADS:-${SLURM_CPUS_PER_TASK:-16}}"
 for f in "$XC" "$BIN" "$SLICE"; do [ -f "$f" ] || { echo "ERROR: missing $f" >&2; exit 1; }; done
 U=$(awk '$1=="UnivFile"{print $2}' "$XC"); FPM=$(awk '$1=="FPFile"{print $2}' "$XC")
 [ -n "$U" ] && [ -f "$FPM" ] || { echo "ERROR: $XC lacks UnivFile/FPFile" >&2; exit 1; }

@@ -34,7 +34,7 @@ def samples():
     """(mc, ext, data) per period: lists of (path, scale). Scales are bkgfit_templates.C's."""
     mc = [[] for _ in PNAME]; ext = [[] for _ in PNAME]; data = [[] for _ in PNAME]
     f = lambda n: P + 'xsec-ana-' + n + '.root'
-    mc[0] = [(f('Run1_fhc_new_numi_flux_fhc_pandora_ntuple'), 0.14101)]
+    mc[0] = [(f('Run1_fhc_new_numi_flux_fhc_pandora_ntuple'), 0.09415)]
     mc[1] = [(f('Run2_fhc_new_numi_flux_fhc_pandora_ntuple'), 0.05085)]
     mc[2] = [(f('Run4_fhc_new_numi_flux_fhc_pandora_ntuple'), 0.07323)]
     mc[3] = [(f('reweightedPPFX_numi_nu_overlay_pion_ntuples_run5_fhc'), 0.11560)]
@@ -142,6 +142,11 @@ def main():
     dt = np.zeros(len(V))                   # dirt
     ob = np.zeros(len(V))                   # beam-on data
     for p, name in enumerate(PNAME):
+        # 2026-09-19: periods without a beam-on file (Run 2, both modes) must not contribute a
+        # prediction: summing their MC/EXT/dirt against no data inflated the prediction by ~20% and
+        # turned a ~10% excess into the '8-16% deficit' previously reported.
+        if not data[p]:
+            print(f'== {name} skipped (no beam-on file)', flush=True); continue
         files = [(f, s, 'mc') for f, s in (mc[p][:1] if quick else mc[p])]
         files += [(f, s, 'ext') for f, s in ext[p]]
         sdirt = 0.092402 * 0.65 * POT[p] / 8.857 if p < 4 else 0.071666 * 0.65 * POT[p] / 11.082

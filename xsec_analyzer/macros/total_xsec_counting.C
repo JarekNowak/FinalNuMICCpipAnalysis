@@ -131,7 +131,7 @@ void total_xsec_counting() {
   auto FHC=[&](std::vector<Src>&mc, const char* P){
     const char* rn[4]={"Run1_fhc_new_numi_flux_fhc_pandora_ntuple","Run2_fhc_new_numi_flux_fhc_pandora_ntuple",
       "Run4_fhc_new_numi_flux_fhc_pandora_ntuple","reweightedPPFX_numi_nu_overlay_pion_ntuples_run5_fhc"};
-    double sc[4]={0.14101,0.05085,0.07323,0.11560};
+    double sc[4]={0.09415,0.05085,0.07323,0.11560};
     for(int i=0;i<4;i++) mc.push_back({std::string(P)+"xsec-ana-"+rn[i]+".root", sc[i]}); };
   auto RHC=[&](std::vector<Src>&mc, const char* P){
     const char* rn[5]={"Run1_rhc","Run2_rhc","Run4a_rhc","Run4b_rhc","Run4c_rhc"};
@@ -144,7 +144,8 @@ void total_xsec_counting() {
   // EXT scale = beam-on/beam-off GATE ratio x the 2% NuMI beam-occupancy factor. The pooled
   // beam-off file is the Run-1 FHC + Run-3b RHC samples, 4582248.27 + 32649128.65 =
   // 37231376.92 gates (analyser's table, 2026-09-02); the earlier 3821593 was an event
-  // count and over-scaled EXT ~9.7x. FHC 22667109/G, RHC 23534937/G, comb 46202046/G.
+  // count and over-scaled EXT ~9.7x. FHC 18569166/G, RHC 23534937/G, comb 42104103/G (FHC Run 1 = 5748692 triggers,
+  // the non-open-trigger sample, 2.192e20 POT; corrected 2026-09-19).
   // Dirt for "Combined" sums both modes' exposures.
   const double OCC = 0.98;
   // syst_frac = prediction-total fractional uncertainty of the released p_mu extraction
@@ -157,8 +158,8 @@ void total_xsec_counting() {
     std::vector<Src> fhc, rhc, comb;
     FHC(fhc,dirs[k]); RHC(rhc,dirs[k]); FHC(comb,dirs[k]); RHC(comb,dirs[k]);
     const bool incl = ( k == 0 );
-    one("FHC",      sels[k], dirs[k], 8.857e20,  6.81159e-10, fhc,  OCC*0.60882,  0.092402*0.65, sf[k][0], incl?"newg4":"");
+    one("FHC",      sels[k], dirs[k], 7.766e20,  6.81159e-10, fhc,  OCC*0.49875,  0.081020*0.65, sf[k][0], incl?"newg4":"");
     one("RHC",      sels[k], dirs[k], 1.1082e21, 6.44646e-10, rhc,  OCC*0.63213,  0.071666*0.65, sf[k][1], incl?"rhc":"");
-    one("Combined", sels[k], dirs[k], 1.99390e21,6.60865e-10, comb, OCC*1.24094, (0.092402+0.071666)*0.65, sf[k][2], incl?"comb":"");
+    one("Combined", sels[k], dirs[k], 1.8848e21, 6.596906e-10, comb, OCC*1.13087, (0.081020+0.071666)*0.65, sf[k][2], incl?"comb":"");
   }
 }

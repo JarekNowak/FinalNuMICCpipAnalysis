@@ -38,18 +38,25 @@ def locate(text,label):
 def replace(text,label,body):
     a,b=locate(text,label); return text[:a]+body+text[b:]
 def T(cols,header,rows): return '\\begin{tabular}{%s}\n\\toprule\n%s \\\\\n\\midrule\n%s\n\\bottomrule\n\\end{tabular}'%(cols,header,'\n'.join(rows))
-note=open(R+'analysis_note.tex').read(); supp=open(R+'technical_supplement.tex').read()
+# 2026-09-19: the tables live in three documents (note / supplement / proton-tagged note); each label
+# is located in whichever document carries it.
+DOCS={f:open(R+f).read() for f in ('analysis_note.tex','technical_supplement.tex','proton_tagged_note.tex')}
+def patch(label,body):
+    hits=[f for f,t in DOCS.items() if '\\label{%s}'%label in t]
+    assert len(hits)==1, (label,hits)
+    DOCS[hits[0]]=replace(DOCS[hits[0]],label,body)
+note=supp=None
 # --- tab:fhc / rhc / comb
 for lab,c in [('tab:fhc','FHC5'),('tab:rhc','RHCFULL'),('tab:comb','COMB')]:
     rows=[]
     for o in INCL:
         d=DU[('incl',c,o)]; cl=CL[('incl',c,o)]
         rows.append(f"      {LAB[o]:<18} & ${d['sigma_int']:.3f}$ & ${d['flux_total']:.1f}\\%$ & ${det(d):.1f}\\%$ & ${d['PredTotal']:.1f}\\%$ & ${float(cl['chi2']):.2f}/{cl['ndf']}$ ($p={float(cl['pval']):.2f}$) \\\\")
-    note=replace(note,lab,T('lccccc','Observable & $\\sigma_\\mathrm{int}$ & Flux & Detector & Total & Closure $\\chi^2/\\mathrm{ndf}$',rows))
+    patch(lab,T('lccccc','Observable & $\\sigma_\\mathrm{int}$ & Flux & Detector & Total & Closure $\\chi^2/\\mathrm{ndf}$',rows))
 # --- tab:sigint_all
 rows=[f"{LAB[o]:<17} & "+' & '.join(f"${DU[('incl',c,o)]['sigma_int']:.3f}$" for c in CFS)+' \\\\' for o in INCL[:5]]
 rows.append('\\midrule'); rows.append(f"{LAB['thetamu']:<17} & "+' & '.join(f"${DU[('incl',c,'thetamu')]['sigma_int']:.3f}$" for c in CFS)+' \\\\')
-note=replace(note,'tab:sigint_all',T('lccc','Observable & FHC & RHC & Combined',rows))
+patch('tab:sigint_all',T('lccc','Observable & FHC & RHC & Combined',rows))
 # --- tab:chi2_incl and tab:chi2_theta
 def chirow(beam,o,c,first):
     x=chi2log('incl',c,o); cells=[f"${x[m][0]:.2f}/{x[m][1]}$" for m in ['truth','MicroBooNE Tune','GENIE','GiBUU','NEUT','NuWro']]
@@ -58,13 +65,13 @@ rows=[]
 for beam,c in [('FHC','FHC5'),('RHC','RHCFULL'),('comb','COMB')]:
     for k,o in enumerate(INCL): rows.append(chirow(beam,o,c,k==0))
     if c!='COMB': rows.append('    \\midrule')
-note=replace(note,'tab:chi2_incl',T('llcccccc','Beam & Observable & truth & uB tune & GENIE & GiBUU & NEUT & NuWro',rows))
+patch('tab:chi2_incl',T('llcccccc','Beam & Observable & truth & uB tune & GENIE & GiBUU & NEUT & NuWro',rows))
 rows=[]
 for beam,c in [('FHC','FHC5'),('RHC','RHCFULL'),('Comb','COMB')]:
     for o in ['costhmu','thetamu']:
         x=chi2log('incl',c,o); rows.append(f"{beam} & {LAB[o]:<18} & "+' & '.join(f"${x[m][0]:.2f}/{x[m][1]}$" for m in ['truth','MicroBooNE Tune','GENIE','GiBUU','NEUT','NuWro'])+' \\\\')
     if c!='COMB': rows.append('\\midrule')
-note=replace(note,'tab:chi2_theta',T('llcccccc','Beam & Variable & truth & uB tune & GENIE & GiBUU & NEUT & NuWro',rows))
+patch('tab:chi2_theta',T('llcccccc','Beam & Variable & truth & uB tune & GENIE & GiBUU & NEUT & NuWro',rows))
 # --- tab:wtki_*
 for lab,c in [('tab:wtki_fhc','FHC5'),('tab:wtki_rhc','RHCFULL'),('tab:wtki_comb','COMB')]:
     rows=[]
@@ -72,7 +79,7 @@ for lab,c in [('tab:wtki_fhc','FHC5'),('tab:wtki_rhc','RHCFULL'),('tab:wtki_comb
         d=DU[('1p',c,o)]; cl=CL[('1p',c,o)]
         rows.append(f"      {LAB[o]:<18} & ${d['sigma_int']:.3f}$ & ${float(cl['unf_over_truth']):.2f}$ & ${float(cl['chi2']):.2f}/{cl['ndf']}$ \\\\")
         if o=='pn2bin': rows.append('      \\midrule')
-    note=replace(note,lab,T('lccc','Observable & $\\sigma_\\mathrm{int}$ & unf./truth & $\\chi^2/\\mathrm{ndf}$',rows))
+    patch(lab,T('lccc','Observable & $\\sigma_\\mathrm{int}$ & unf./truth & $\\chi^2/\\mathrm{ndf}$',rows))
 # --- systbreak tables
 ROWS=[('\\textbf{Prediction total}','PredTotal'),('Cross section (GENIE)','xsec_total'),('Flux (PPFX)','flux_total'),('Detector','DET'),('Reinteraction','reint'),('MC stat','MCstats'),('EXT stat','EXTstats'),('Data stat','DataStats'),('POT $+$ targets','POTT'),('\\textbf{Total (incl.\\ data stat)}','total')]
 def sb(c):
@@ -84,15 +91,15 @@ def sb(c):
         if lab.startswith('\\textbf'): vals=[f"\\textbf{{{v}}}" for v in vals]
         rows.append(lab+' & '+' & '.join(vals)+' \\\\')
     return T('lcccccc','Source & '+' & '.join(LAB[o] for o in INCL),rows)
-note=replace(note,'tab:systbreak',sb('FHC5'))
-for lab,c in [('tab:systbreak_fhc','FHC5'),('tab:systbreak_rhc','RHCFULL'),('tab:systbreak_comb','COMB')]: supp=replace(supp,lab,sb(c))
+patch('tab:systbreak',sb('FHC5'))
+for lab,c in [('tab:systbreak_fhc','FHC5'),('tab:systbreak_rhc','RHCFULL'),('tab:systbreak_comb','COMB')]: patch(lab,sb(c))
 # --- tab:systematics (ranges)
 def rng(fam,key,bold=False):
     vs=[(det(DU[(fam,c,o)]) if key=='DET' else DU[(fam,c,o)][key]) for c in CFS for o in (INCL if fam=='incl' else P1ALL)]
     return (f"$\\mathbf{{{min(vs):.1f}}}$--$\\mathbf{{{max(vs):.1f}}}$" if bold else f"${min(vs):.1f}$--${max(vs):.1f}$")
 SR=[('Flux (PPFX multisims)','\\texttt{weightsFlux}','flux_total',0),('Detector response','Dedicated samples','DET',0),('Cross-section model','\\texttt{weightsGenie}','xsec_total',0),('Hadron re-interaction','\\texttt{weightsReint}','reint',0),('POT counting','Beam toroids','POT',0),('Target count','FV geometry','numTargets',0),None,('MC statistics','universe spread','MCstats',0),('EXT statistics','beam-off sample','EXTstats',0),('Data statistics','thrown fake data','DataStats',0),None,('\\textbf{Prediction total}','quadrature sum','PredTotal',1),('\\textbf{Total}','incl.\\ data stats','total',1)]
 rows=['      \\midrule' if r is None else f"      {r[0]:<24}& {r[1]:<22}& {rng('incl',r[2],r[3])} & {rng('1p',r[2],r[3])} \\\\" for r in SR]
-note=replace(note,'tab:systematics',T('L{3.4cm} L{3.4cm} c c','Source & Branch / method & Inclusive (\\%) & Proton-tagged (\\%)',rows))
+patch('tab:systematics',T('L{3.4cm} L{3.4cm} c c','Source & Branch / method & Inclusive (\\%) & Proton-tagged (\\%)',rows))
 # --- tab:ppi_partial
 def part(c):
     rows=[l.split('\t') for l in open(R+f'data_release/curves_incl_{c}_ppi2bin.tsv') if not l.startswith('#') and not l.startswith('bin')]
@@ -100,7 +107,7 @@ def part(c):
 pp={c:part(c) for c in CFS}
 rows=[r"$\sigma(0.175<p_\pi<0.205\GeVc)$ & "+' & '.join(f"${pp[c][0][0]:.3f}\\pm{pp[c][0][1]:.3f}$" for c in CFS)+' \\\\',
       r"$\sigma(p_\pi>0.205\GeVc)$        & "+' & '.join(f"${pp[c][1][0]:.3f}\\pm{pp[c][1][1]:.3f}$" for c in CFS)+' \\\\']
-note=replace(note,'tab:ppi_partial',T('lccc','Region & FHC & RHC & Combined',rows))
+patch('tab:ppi_partial',T('lccc','Region & FHC & RHC & Combined',rows))
 # --- tab:cutcount + supplement tab:total_xsec: counts from the counting log (CV prediction),
 #     cross section and uncertainty from the one-bin extraction (data_release/total_xsec.tsv)
 vals=collections.OrderedDict(); cur=None; gens={}
@@ -124,7 +131,7 @@ for fam,title in [('CC1mu1piXp',None),('CC1mu1pi1p','    \\multicolumn{11}{l}{\\
         v=vals[(fam,cfg)]; t=TX[(FAMK[fam],CFGK[cfg])]
         assert abs(float(t['tune_cv'])-v['sig'])<6e-4, (fam,cfg,t['tune_cv'],v['sig'])
         rows.append(f"    {cfg:<8} & ${fmt(v['nsel'])}$ & ${fmt(v['bkg'])}$ & ${100*v['eff']:.1f}$ & ${float(t['sigma']):.3f}\\pm{float(t['err_total']):.3f}$ & ${float(t['stat_pct']):.1f}$ & ${float(t['syst_pct']):.1f}$ & ${float(t['total_pct']):.1f}$ & ${float(t['truth_realised']):.3f}$ & ${float(t['sigma_over_truth']):.3f}$ & ${float(t['chi2_truth']):.3f}$ \\\\")
-note=replace(note,'tab:cutcount',T('lrrcccccccc','Config & $N_\\mathrm{sel}$ & $N_\\mathrm{bkg}$ & $\\varepsilon$ [\\%] & $\\sigma$ & stat [\\%] & syst [\\%] & total [\\%] & truth & $\\sigma$/truth & $\\chi^2/1$',rows))
+patch('tab:cutcount',T('lrrcccccccc','Config & $N_\\mathrm{sel}$ & $N_\\mathrm{bkg}$ & $\\varepsilon$ [\\%] & $\\sigma$ & stat [\\%] & syst [\\%] & total [\\%] & truth & $\\sigma$/truth & $\\chi^2/1$',rows))
 rows=[]; dev={}
 for cfg in ['FHC','RHC','Combined']:
     t=TX[('incl',CFGK[cfg])]; g=gens[('CC1mu1piXp',cfg)]; sig=float(t['sigma']); err=float(t['err_total'])
@@ -132,10 +139,10 @@ for cfg in ['FHC','RHC','Combined']:
     for k in ['genie','gibuu','neut','nuwro']:
         dv=(sig-g[k])/err; dev[(cfg,k)]=dv; cells.append(f"${g[k]:.2f}\\,({dv:+.1f}\\sigma)$")
     rows.append(f"    {cfg:<8} & ${sig:.2f} \\pm {err:.2f}$ & "+' & '.join(cells)+' \\\\')
-supp=replace(supp,'tab:total_xsec',T('lccccc','Config & Measurement & GENIE & GiBUU & NEUT & NuWro',rows))
+patch('tab:total_xsec',T('lccccc','Config & Measurement & GENIE & GiBUU & NEUT & NuWro',rows))
 print("generator deviations (sigma - gen)/err:", {k:round(v,2) for k,v in dev.items()})
 # --- supplement W_pipr six-bin closure
 rows=[f"{n:<8} & ${DU[('1p',c,'Wpipr')]['sigma_int']:.3f}$ & ${float(CL[('1p',c,'Wpipr')]['unf_over_truth']):.2f}$ & ${float(CL[('1p',c,'Wpipr')]['chi2']):.2f}/6$ \\\\" for n,c in [('FHC','FHC5'),('RHC','RHCFULL'),('Combined','COMB')]]
-supp=replace(supp,'tab:wpipr_sixbin_closure',T('lccc','Config & $\\sigma_\\mathrm{int}$ & unf./truth & $\\chi^2/\\mathrm{ndf}$',rows))
-open(R+'analysis_note.tex','w').write(note); open(R+'technical_supplement.tex','w').write(supp)
+patch('tab:wpipr_sixbin_closure',T('lccc','Config & $\\sigma_\\mathrm{int}$ & unf./truth & $\\chi^2/\\mathrm{ndf}$',rows))
+for f,t in DOCS.items(): open(R+f,'w').write(t)
 sig=[DU[('incl',c,o)]['sigma_int'] for c in CFS for o in INCL]; print("rebuilt; incl sigma_int range %.3f-%.3f; cut-and-count:"%(min(sig),max(sig)), {k:round(v['sig'],3) for k,v in vals.items()})

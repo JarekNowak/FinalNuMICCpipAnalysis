@@ -27,7 +27,7 @@ static void add_ext(std::vector<Src>& v, const char* m){
   const char* R5="numi_pelee_ntuple_beam_off_run5_fhc_ana.root";
   const double G1=4582248.27, G3=32649128.65, G4=34831148.625, G5=19256341.475, OCCX=0.98;
   std::string mm=m;
-  if(mm=="fhc"||mm=="comb"){ v.push_back({std::string(E)+R1,OCCX*9846635./G1}); v.push_back({std::string(E)+R1,OCCX*3535129./G1});
+  if(mm=="fhc"||mm=="comb"){ v.push_back({std::string(E)+R1,OCCX*5748692./G1}); v.push_back({std::string(E)+R1,OCCX*3535129./G1});
     for(auto f:R4) v.push_back({std::string(E)+f,OCCX*4131149./G4}); v.push_back({std::string(E)+R5,OCCX*5154196./G5}); }
   if(mm=="rhc"||mm=="comb"){ v.push_back({std::string(E)+R1,OCCX*1458253./G1}); v.push_back({std::string(E)+R1,OCCX*5422907./G1});
     v.push_back({std::string(E)+R3B,OCCX*10349610./G3}); for(auto f:R4) v.push_back({std::string(E)+f,OCCX*6304167./G4}); }
@@ -53,7 +53,7 @@ void sideband_compare(const char* mode="fhc", const char* datasrc="fake",
   double sc_ext, sc_dirt;
   auto FHCmc=[&](){ const char* rn[4]={"Run1_fhc_new_numi_flux_fhc_pandora_ntuple",
       "Run2_fhc_new_numi_flux_fhc_pandora_ntuple","Run4_fhc_new_numi_flux_fhc_pandora_ntuple",
-      "reweightedPPFX_numi_nu_overlay_pion_ntuples_run5_fhc"}; double sc[4]={0.14101,0.05085,0.07323,0.11560};
+      "reweightedPPFX_numi_nu_overlay_pion_ntuples_run5_fhc"}; double sc[4]={0.09415,0.05085,0.07323,0.11560};
     for(int i=0;i<4;i++) mc.push_back({std::string(P)+"xsec-ana-"+rn[i]+".root",sc[i]}); };
   auto RHCmc=[&](){ const char* rn[5]={"Run1_rhc","Run2_rhc","Run4a_rhc","Run4b_rhc","Run4c_rhc"};
     double sc[5]={0.06728,0.04478,0.08847,0.08847,0.08847};
@@ -67,9 +67,9 @@ void sideband_compare(const char* mode="fhc", const char* datasrc="fake",
   // here, over-counting EXT by 2%. sc_dirt for "comb" sums both modes' exposures, matching
   // sc_ext -- the old two-branch ternary silently gave comb the FHC-only dirt scale.
   const double NUMI_EXT_OCC = 0.98;
-  if(m=="fhc"){FHCmc();FHCdata();sc_ext=NUMI_EXT_OCC*5.9313;sc_dirt=0.092402*0.65;}
+  if(m=="fhc"){FHCmc();FHCdata();sc_ext=NUMI_EXT_OCC*5.9313;sc_dirt=0.081020*0.65;}
   else if(m=="rhc"){RHCmc();RHCdata();sc_ext=NUMI_EXT_OCC*6.1584;sc_dirt=0.071666*0.65;}
-  else {FHCmc();RHCmc();FHCdata();RHCdata();sc_ext=NUMI_EXT_OCC*12.0898;sc_dirt=(0.092402+0.071666)*0.65;}
+  else {FHCmc();RHCmc();FHCdata();RHCdata();sc_ext=NUMI_EXT_OCC*12.0898;sc_dirt=(0.081020+0.071666)*0.65;}
   // real beam-on files would replace `data` here when unblinding the control regions.
   if(std::string(datasrc)=="beamon"){ printf("  [beamon requested — real-data control-region unblinding; not wired until authorised]\n"); return; }
   // "fakestack": the full-stack technical test requested at review. The pseudo-data are the

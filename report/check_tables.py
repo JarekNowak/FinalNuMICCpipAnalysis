@@ -10,13 +10,18 @@ PRECEDING table for captions longer than 400 characters (Draft 1.2 review).
 """
 import re,sys,os,csv
 R=os.path.dirname(os.path.abspath(__file__))
-note=open(os.path.join(R,'analysis_note.tex')).read()
+DOCS={f:open(os.path.join(R,f)).read() for f in ('analysis_note.tex','technical_supplement.tex','proton_tagged_note.tex')}
+def doc_of(label):
+    hits=[t for t in DOCS.values() if '\\label{%s}'%label in t]
+    assert len(hits)==1, label
+    return hits[0]
 res={(r['family'],r['config'],r['observable']):r for r in csv.DictReader(open(os.path.join(R,'current_results.tsv')),delimiter='\t')}
 LAB={'pmu':r'$p_\mu$','ppi2bin':r'$p_\pi$','costhmu':r'$\cos\theta_\mu$','costhpi':r'$\cos\theta_\pi$','thmupi':r'$\theta_{\mu\pi}$','thetamu':r'$\theta_\mu$',
      'Whad':r'$W_\mathrm{had}$','dpt2bin':r'$\delta p_T$','dalphat2bin':r'$\delta\alpha_T$','dphit2bin':r'$\delta\phi_T$','pn2bin':r'$p_n$'}
 INV={v:k for k,v in LAB.items()}
 bad=[]
 def table(label):
+    note=doc_of(label)
     i=note.index('\\label{%s}'%label); a=note.index('\\begin{tabular}',i)
     ends=[x for x in (note.find('\\end{table}',i),note.find('\\end{center}',i)) if x>0]
     if a>min(ends): bad.append(f"{label}: no tabular between label and end of environment"); return None
