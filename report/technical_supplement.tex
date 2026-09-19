@@ -5,6 +5,10 @@
 \externaldocument[N-]{analysis_note}
 \newcommand{\noteref}[2]{#1~\ref{N-#2} of the analysis note}
 
+
+% Every section is tagged by which measurement it serves, as the reviewer asked: shared
+% infrastructure, the inclusive measurement, or the proton-tagged one.
+\newcommand{\scopetag}[1]{\hfill{\normalfont\small\textsc{[#1]}}}
 \begin{document}
 \begin{titlepage}
 \centering
@@ -74,7 +78,7 @@ It is organised by question rather than by when the work was done.
 Terms of art are defined in the Glossary at the end, which is shared with the note.
 
 \part{Estimators and binning}
-\section{Pion momentum: the range estimator and why it fails}
+\section[Pion momentum: the range estimator and why it fails]{Pion momentum: the range estimator and why it fails\scopetag{inclusive}}
 \label{sec:supp_ppi}
 
 \subsection{The pion-momentum bias and why $p_\pi$ is the worst-conditioned observable}
@@ -675,7 +679,7 @@ clear the criterion with margin in all three proton-tagged configurations.
 
 
 
-\section{Rejected: extending the pion threshold below 0.175\,GeV/\textit{c}}
+\section[Rejected: extending the pion threshold below 0.175\,GeV/\textit{c}]{Rejected: extending the pion threshold below 0.175\,GeV/\textit{c}\scopetag{inclusive}}
 \label{sec:supp_lowppi}
 
 \emph{The extension described here was tested and rejected; it is not part of the
@@ -726,7 +730,7 @@ $0.550$--$1.000$ & 2933 & 429 & $14.6\%$ \\
 
 % =============================================================================
 
-\section{Binning Optimisation, Systematic Breakdown, and Threshold Validation}
+\section[Binning Optimisation, Systematic Breakdown, and Threshold Validation]{Binning Optimisation, Systematic Breakdown, and Threshold Validation\scopetag{inclusive}}
 \label{sec:binopt}
 % =============================================================================
 
@@ -883,7 +887,7 @@ did change is the new $\theta_p$, whose edges were taken from the RHC chain rath
 after the scan was run on both: at the same four bins they condition three to four times better in
 both usable configurations.
 
-\section{Hadronic mass, model comparison, and estimator surveys}
+\section[Hadronic mass, model comparison, and estimator surveys]{Hadronic mass, model comparison, and estimator surveys\scopetag{proton-tagged}}
 \label{sec:supp_w}
 
 \subsection{The $W$ binnings are finer than the resolution}
@@ -1349,7 +1353,7 @@ physical or acceptance effect.
 
 % =============================================================================
 
-\section{Proton-tagged selection, binning and additional smearing}
+\section[Proton-tagged selection, binning and additional smearing]{Proton-tagged selection, binning and additional smearing\scopetag{proton-tagged}}
 \label{sec:supp_1pdetail}
 
 The proton-tagged cut-flow, its per-observable binning study and its $A_C$ factors are
@@ -1600,8 +1604,9 @@ comparisons read off any panel are made on equal footing.
 % =============================================================================
 
 
-\section{Angular observables: the \texorpdfstring{$\cos\theta_\mu$}{cos(theta mu)}
-versus \texorpdfstring{$\theta_\mu$}{theta mu} forensics}
+\section[Angular observables: the \texorpdfstring{$\cos\theta_\mu$}{cos(theta mu)}
+versus \texorpdfstring{$\theta_\mu$}{theta mu} forensics]{Angular observables: the \texorpdfstring{$\cos\theta_\mu$}{cos(theta mu)}
+versus \texorpdfstring{$\theta_\mu$}{theta mu} forensics\scopetag{inclusive}}
 \label{sec:supp_ang}
 
 \subsection{Angular variable: $\cos\theta_\mu$ versus $\theta_\mu$}
@@ -1840,7 +1845,7 @@ POT $+$ targets & 3.1 & 4.1 & 3.5 & 3.4 & 3.4 & 3.3 \\
 
 
 \part{Validation of the extraction}
-\section{Identity closure: unfolding the prediction with itself}
+\section[Identity closure: unfolding the prediction with itself]{Identity closure: unfolding the prediction with itself\scopetag{shared}}
 \label{sec:identity}
 
 The fake-data closure tests reported in the body compare an unfolded Poisson throw against
@@ -1890,7 +1895,7 @@ and every deviation seen in the fake-data closure tests is attributable to the s
 throw and to the response model, not to the unfolding implementation.
 
 % =============================================================================
-\section{Why the results are presented as they are}
+\section[Why the results are presented as they are]{Why the results are presented as they are\scopetag{inclusive}}
 \label{sec:supp_caveats}
 
 \subsection{The two-bin \texorpdfstring{$p_\pi$}{p pi} result}
@@ -1977,7 +1982,7 @@ not used for the released closure tables, whose $p$-values should be read with t
 limitation in mind; the sizing is tested instead with the 32-member statistical ensemble
 of the next subsection for three representative FHC extractions.
 
-\section{Consistency between configurations and with the sibling $\nu_e$ measurement}
+\section[Consistency between configurations and with the sibling $\nu_e$ measurement]{Consistency between configurations and with the sibling $\nu_e$ measurement\scopetag{inclusive}}
 \label{sec:supp_closure}
 
 \subsection{Consistency with the sibling $\nu_e\,\mathrm{CC}\,1\pi$ measurement}
@@ -2063,7 +2068,7 @@ external user's arithmetic exposes it.
 
 
 \part{Control regions}
-\section{Control regions: the opening request and its sign-off}
+\section[Control regions: the opening request and its sign-off]{Control regions: the opening request and its sign-off\scopetag{inclusive}}
 \label{sec:request}
 % =============================================================================
 
@@ -2269,7 +2274,7 @@ response tree holds the signal at its central value in any case.
 
 % =============================================================================
 
-\section{Control-region machinery}
+\section[Control-region machinery]{Control-region machinery\scopetag{inclusive}}
 \label{sec:cr_machinery}
 
 \subsection{Region overlaps}
@@ -2761,7 +2766,7 @@ been implemented. The proton-tagged control-region programme is consequently \em
 ready for equivalent approval, and opening the inherited proton-tagged regions, while
 useful diagnostically, would not validate the proton-tagged background model.
 
-\subsection{Control regions for the proton-tagged subsample}
+\subsection[Control regions for the proton-tagged subsample]{Control regions for the proton-tagged subsample\scopetag{proton-tagged}}
 \label{sec:sidebands_1p}
 
 The proton-tagged selection inherits its cut logic from the inclusive selection, and with it
@@ -2853,7 +2858,7 @@ through resolution.
 
 
 \part{Selection, reconstruction and infrastructure}
-\section{Selection studies and supporting material}
+\section[Selection studies and supporting material]{Selection studies and supporting material\scopetag{inclusive}}
 \label{sec:supp_moved}
 
 The studies in this section are referred to from the analysis note; they are kept here
@@ -3182,7 +3187,7 @@ sparser; the machinery is in place.
 % =============================================================================
 
 
-\section{Analysis Pipeline and Automated Guards}
+\section[Analysis Pipeline and Automated Guards]{Analysis Pipeline and Automated Guards\scopetag{shared}}
 \label{sec:pipeline}
 % =============================================================================
 
@@ -3235,7 +3240,7 @@ the pre-unblinding list (\noteref{Sec.}{sec:limitations}).
 
 
 \part{Physics background}
-\section{Physics background and prior measurements (extended)}
+\section[Physics background and prior measurements (extended)]{Physics background and prior measurements (extended)\scopetag{shared}}
 \label{sec:supp_physics}
 % =============================================================================
 
