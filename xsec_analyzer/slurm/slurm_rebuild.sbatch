@@ -23,6 +23,9 @@ read -r FAM CFG OBS <<< "$(sed -n "${line}p" "$MANIFEST")"
 cd "$REPO" || exit 1
 export LD_LIBRARY_PATH="/usr/lib64/flexiblas:$(root-config --libdir):$REPO/lib:${LD_LIBRARY_PATH:-}"
 export XSEC_ANALYZER_DIR="$REPO"
+# Honour a caller-supplied thread count so the job can be sized to backfill a busy cluster
+# instead of waiting for a whole 16-core node to drain.
+export UNIV_THREADS="${UNIV_THREADS:-${SLURM_CPUS_PER_TASK:-16}}"
 declare -A TAG=( [fhc5]=FHC5 [rhcfull]=RHCFULL [comb]=COMB )
 T="${TAG[$CFG]}"
 mkdir -p "$RB"
