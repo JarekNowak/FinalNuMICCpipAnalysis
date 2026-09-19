@@ -1,0 +1,85 @@
+% glossary.tex -- shared by the analysis note and the technical supplement.
+% Plain-language definitions, in the order a reader meets the ideas, not alphabetical.
+\section*{Glossary}
+\addcontentsline{toc}{section}{Glossary}
+\label{sec:glossary}
+
+\begin{description}\itemsep2pt
+  \item[Signal definition] The set of particles leaving the nucleus that counts as the process being
+    measured, with momentum thresholds and a fiducial requirement. It is deliberately \emph{not} a
+    statement about the interaction mechanism, because final-state interactions mix mechanisms and
+    only the final state is observable.
+  \item[Fake data / pseudo-data] A simulated dataset used in place of beam-on data while the
+    analysis is blind. Here it is a Poisson throw: each simulated event is replicated a
+    Poisson-distributed number of times with mean equal to its weight at data exposure, so the
+    sample has the statistical fluctuations of a real dataset.
+  \item[Blind] The signal region has not been looked at in beam-on data. Every plotted ``data''
+    point in these documents is fake data.
+  \item[Beam-on, beam-off (EXT), dirt] Beam-on data are recorded in the beam spill; beam-off data are
+    recorded between spills and measure cosmic-ray activity; ``dirt'' is simulated neutrino
+    interactions outside the cryostat whose products enter the detector. The prediction is
+    neutrino simulation $+$ beam-off $+$ dirt.
+  \item[Gate ratio] The factor scaling beam-off data to the beam-on exposure: the ratio of the number
+    of beam-on to beam-off trigger gates in a running period.
+  \item[Tune, central value (CV)] The \uboone{} tune is the collaboration's adjusted GENIE model; the
+    central value is the nominal prediction from it. ``CV weight'' is the per-event weight that
+    turns the raw simulation into the tuned prediction.
+  \item[Safe-weight rule] Any event weight that is non-finite, negative or above $30$ is replaced by
+    $1$. One rule, applied everywhere, so that the prediction and every pseudo-data throw agree.
+  \item[Universe] One alternative version of the prediction with a systematic parameter varied. A
+    \emph{multisim} is a set of hundreds of universes drawn randomly from the parameter
+    uncertainties; a \emph{unisim} is a single $\pm1\sigma$ variation of one parameter. PPFX
+    universes vary the flux; GENIE universes the interaction model; reinteraction universes the
+    hadron transport.
+  \item[Detector variations (detVar)] Dedicated simulation samples with one aspect of the detector
+    response changed --- light yield, recombination, space-charge, wire response --- used to
+    estimate the detector uncertainty.
+  \item[Migration matrix, efficiency, smearceptance] The migration matrix $M_{ij}$ is the probability
+    that an event in true bin $j$ is reconstructed in bin $i$; the efficiency $\varepsilon_j$ is the
+    fraction of true bin $j$ that is selected at all. Their product $S_{ij}=\varepsilon_j M_{ij}$
+    is the response the unfolding inverts; we call it the smearceptance matrix.
+  \item[Migration diagonal] The fraction of events reconstructed in a bin that were truly in that
+    bin (the column-normalised diagonal of $M$). A binning is accepted only if every bin's diagonal
+    exceeds $0.68$.
+  \item[Unfolding, Wiener-SVD] Solving for the true spectrum given the reconstructed one and the
+    response. A plain inversion amplifies statistical noise; Wiener-SVD regularises it with a filter
+    built from the simulation, trading a small bias for a large reduction in variance.
+  \item[Additional-smearing matrix $A_C$] The price of regularisation, made explicit: the unfolded
+    result estimates $A_C\,T$ rather than the truth $T$. A prediction must be multiplied by $A_C$
+    before it is compared with the result. $A_C$ is released with every extraction.
+  \item[Not normalisation-preserving] The rows of $A_C$ do not sum to one, so the integral of an
+    unfolded differential result is not the total cross section and differs between observables of
+    the same sample. The total is measured separately.
+  \item[One-bin extraction] The total cross section, extracted with a single true bin covering the
+    whole phase space. Nothing is regularised, $A_C=1$, and the result is the physical total.
+  \item[Conditioning, $s_{\min}/s_1$, rank-deficient] The ratio of the smallest to the largest
+    singular value of the regularised response. Near zero, some direction in the true spectrum
+    cannot be recovered from the data at all (rank-deficient); the result in that direction is the
+    prior. A binning can pass the migration-diagonal criterion and still be unusable here.
+  \item[Closure] Unfolding pseudo-data and checking that the truth comes back. Closure against the
+    $A_C$-smeared truth tests the implementation; it cannot test whether the model is right,
+    because the same model is on both sides.
+  \item[Covariance] The matrix of uncertainties and their correlations between bins, one per
+    systematic source, propagated through the unfolding. ``Nominal configured covariance'' means the
+    sum over the sources implemented in the analysis; the sources known to be missing are listed
+    in the limitations.
+  \item[Flux-averaged cross section] The cross section averaged over the neutrino energy spectrum
+    of the beam, per argon nucleus, in the stated phase space. It depends on the flux, which is why
+    each horn configuration is a separate measurement.
+  \item[FHC, RHC] Forward and reverse horn current: the two polarities of the NuMI focusing horns,
+    giving a neutrino-dominated and an antineutrino-enriched beam.
+  \item[Beam frame] All angles are measured about the neutrino direction, which at \uboone{}'s
+    off-axis position is $28^\circ$ from the detector $z$ axis.
+  \item[Control region, sideband] A sample selected by inverting one requirement of the signal
+    selection, so that it is disjoint from the signal region and enriched in one background. It
+    can be inspected on beam-on data while the signal region stays blind.
+  \item[Transverse kinematic imbalance (TKI)] Variables built from the momenta transverse to the
+    neutrino direction of the lepton and the hadronic system: $\delta p_T$, $\delta\alpha_T$,
+    $\delta\phi_T$ and the inferred nucleon momentum $p_n$. They isolate nuclear effects from the
+    unknown neutrino energy.
+  \item[LLR particle identification] The log-likelihood-ratio score built from track $dE/dx$ that
+    separates protons from muons and pions.
+  \item[Generator predictions (FTE files)] Standalone GENIE, NuWro, NEUT and GiBUU predictions,
+    run with the NuMI flux and binned identically to the results, stored as histograms for the
+    comparison figures.
+\end{description}
