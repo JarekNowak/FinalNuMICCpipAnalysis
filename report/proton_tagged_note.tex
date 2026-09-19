@@ -123,7 +123,8 @@
     secondary result. Every differential and two-dimensional product is a validation product, not
     proposed for approval, until the dedicated inverted-proton-PID control region exists, the
     hadronic-mass proxy and $p_n$ prescriptions are validated for pion production, statistical
-    coverage is demonstrated and a non-nominal-model closure is run for this family. The
+    coverage is demonstrated and the model sensitivity that the non-nominal-model closure now
+    exposes in the low-imbalance bins ($1.1$--$1.2\sigma$) is carried or excluded. The
     differential $W_{\pi p}$ shape is withdrawn. All data points are blind fake data, extracted on the
     corrected FHC Run-1 exposure.
   \end{abstract}
@@ -631,6 +632,66 @@ differential result is also quoted per beam mode, is the open question these two
 
 % =============================================================================
 
+\section{Alternative-model closure}
+\label{sec:pt_altmodel}
+
+The nominal closure throws the pseudo-data from the simulation that builds the response, so it
+tests the implementation and is silent about the model being wrong. The inclusive analysis
+therefore also unfolds pseudo-data thrown from a \emph{reweighted} interaction model with the
+nominal response (\noteref{Sec.}{sec:altmodel}); the same two variations --- GENIE multisim
+universe 545, a coherent all-parameter variation, and the $\Delta\to N\pi$ decay-angle unisim ---
+are thrown here for the proton-tagged sample (same universes, same seeds; the weight applies to
+signal and background alike) and $W_\mathrm{had}$, the four two-bin transverse variables and
+$\cos\theta_\pi$ are re-extracted in FHC. The framework's fake-data truth is then the alternative
+model's truth, so the closure it reports is the model-mismatch bias, quoted in units of the
+released per-bin uncertainty (Table~\ref{tab:pt_altmodel}).
+
+\begin{table}[H]
+  \centering
+  \caption{Proton-tagged alternative-model closure, FHC: unfolded result against the alternative
+    model's own truth. ``ratio'' is the mean unfolded/truth over bins holding at least $10\%$ of the
+    largest truth ($W_\mathrm{had}$ has three near-empty bins whose unfolded values are consistent
+    with zero); ``bias'' is the largest per-bin deviation in units of the released uncertainty,
+    over every bin.}
+  \label{tab:pt_altmodel}
+  \small
+  \begin{tabular}{llccc}
+    \toprule
+    Observable & Variation & ratio & max.\ deviation & bias (bin) \\
+    \midrule
+    $W_\mathrm{had}$ & GENIE u545 & $1.03$ & $6\%$ & $-0.84\sigma$ (2) \\
+                     & $\Delta\to N\pi$ angular & $1.29$ & $33\%$ & $-0.89\sigma$ (6) \\
+    $\delta p_T$ (2 bins) & GENIE u545 & $0.66$ & $35\%$ & $\mathbf{-1.14\sigma}$ (1) \\
+                     & $\Delta\to N\pi$ angular & $1.04$ & $4\%$ & $+0.14\sigma$ (1) \\
+    $\delta\alpha_T$ (2 bins) & GENIE u545 & $0.85$ & $24\%$ & $-0.57\sigma$ (1) \\
+                     & $\Delta\to N\pi$ angular & $1.03$ & $8\%$ & $+0.19\sigma$ (2) \\
+    $\delta\phi_T$ (2 bins) & GENIE u545 & $0.80$ & $20\%$ & $-0.57\sigma$ (1) \\
+                     & $\Delta\to N\pi$ angular & $0.97$ & $20\%$ & $+0.42\sigma$ (1) \\
+    $p_n$ (2 bins) & GENIE u545 & $1.01$ & $34\%$ & $\mathbf{-1.16\sigma}$ (1) \\
+                     & $\Delta\to N\pi$ angular & $1.08$ & $15\%$ & $+0.16\sigma$ (2) \\
+    $\cos\theta_\pi$ & GENIE u545 & $0.96$ & $10\%$ & $-0.37\sigma$ (1) \\
+                     & $\Delta\to N\pi$ angular & $0.94$ & $24\%$ & $-0.55\sigma$ (3) \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Two things stand out. Under the $\Delta\to N\pi$ variation nothing exceeds $0.9\sigma$, and the
+$W_\mathrm{had}$ populated bins come back $24$--$33\%$ high on $\sim\!58\%$ uncertainties. Under the
+coherent GENIE variation the \emph{low} $\delta p_T$ and $p_n$ bins --- the quasi-elastic-like,
+small-imbalance region --- come back $35\%$ below the alternative truth, $-1.1$ and $-1.2\sigma$,
+while that truth itself moved by only $1\%$: the shift enters through the response and the
+background, i.e.\ through what the varied model does to the proton-tagged sample composition and
+the proton-tagging efficiency, which the nominal response does not follow. This is larger than
+anything the inclusive family shows (its largest is $0.81\sigma$, in the near-threshold $p_\pi$
+region). The released uncertainty covers it at about one standard deviation, so it is not a failure
+of the extraction, but it is a statement about these products: the small-imbalance bins of the
+proton-tagged transverse variables are model-sensitive at the level of their own uncertainty, and
+a measurement in them will need either the model dependence in the covariance or a demonstration
+that a validated independent generator does not reproduce the shift. Prerequisite~4 of
+\S\ref{sec:pt_prereq} is therefore met in the sense of having been run, with this as its outcome.
+
+% =============================================================================
+
 \section{Limitations and approval prerequisites}
 \label{sec:pt_prereq}
 Before any proton-tagged differential result is promoted beyond validation:
@@ -640,7 +701,10 @@ Before any proton-tagged differential result is promoted beyond validation:
   \item validate the $W_{\rm had}$ binning with an edge scan, and the pion-production meaning of
     $p_n$, $p_L$ and the calorimetric mass proxy;
   \item demonstrate statistical coverage with ensembles for this family;
-  \item run a non-nominal-model closure for this family;
+  \item run a non-nominal-model closure for this family --- done (\S\ref{sec:pt_altmodel}): the
+    low-imbalance $\delta p_T$ and $p_n$ bins are model-sensitive at $1.1$--$1.2\sigma$ under the
+    coherent GENIE variation, which must be carried in the covariance or excluded by an independent
+    generator before those bins are quoted;
   \item bound the candidate-mistag effect, which supplies $74\%$ of the large migrations in
     $\theta_p$;
   \item reassess whether any two-dimensional result has the effective rank and statistical

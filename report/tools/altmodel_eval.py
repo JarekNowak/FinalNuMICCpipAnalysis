@@ -58,12 +58,16 @@ def main():
             if d is None:
                 print('%-16s %-22s %s' % (LAB[obs], desc, 'pending')); continue
             ok = d['t'] > 0
-            r = d['v'][ok] / d['t'][ok]                      # unfolded / alternative-model truth
+            # the ratio and its max deviation are meaningless in nearly empty bins (proton-tagged
+            # W_had has three with < 10% of the peak truth and unfolded values consistent with zero),
+            # so they use only bins holding >= 10% of the largest truth; the pull uses every bin
+            full = ok & (d['t'] >= 0.1 * d['t'].max())
+            r = d['v'][full] / d['t'][full]                  # unfolded / alternative-model truth
             pull = (d['v'][ok] - d['t'][ok]) / d['e'][ok]    # bias in units of the quoted uncertainty
             i = int(np.argmax(np.abs(pull)))
             print('%-16s %-22s %5d %8.3f %8.1f%% %9.2f %9d' %
-                  (LAB[obs], desc, ok.sum(), np.mean(r), 100 * np.max(np.abs(r - 1)),
-                   pull[i], i + 1))
+                  (LAB[obs], desc, full.sum(), np.mean(r), 100 * np.max(np.abs(r - 1)),
+                   pull[i], np.flatnonzero(ok)[i] + 1))
             rows.append((obs, tag, np.mean(r), np.max(np.abs(r - 1)), np.abs(pull).max()))
     if rows:
         print('\nlargest |bias| over all bins and variations: %.2f sigma of the quoted uncertainty'
