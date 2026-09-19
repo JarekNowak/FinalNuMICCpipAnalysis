@@ -1,26 +1,3 @@
-# file_properties_numi_comb.txt  — PER-RUN (real-data-ready) COMBINED FHC+RHC
-# ---------------------------------------------------------------------------
-# Columns:  file_name  run  file_type  [triggers  POT]
-# Per-run POT scaling: FHC runs keep 1,2,4,5; RHC runs are OFFSET to 11,12,13,14 so
-# the two horn modes do not collide in run_to_bnb_pot_map. Each run scaled by its own
-# D_run/MC_run (Table tab:pot). EXT: same beam-off per run (symlinks); the per-run
-# bnb_trigs/3821593 sum to (22667109+23534937)/3821593 = 12.09.
-#
-# ---- onBNB (per-run fake data) ----
-# ---- extBNB (same beam-off per run, symlinks) ----
-# ---- numu MC overlay (native / group summed_pot, on its real run) ----
-# ---- dirt: PER-RUN with native summed_pot (2026-08-22) ---------------------
-# Previously ONE run1 FHC dirt sample covered every run and every beam mode, with
-# its summed_pot overwritten per configuration to fake the exposure scaling
-# (inflations x2.70 FHC / x18.31 RHC / x6.07 COMB, whose RHC/FHC ratio 0.147
-# disagreed with the true dirt ratio 0.567). Mode- and run-matched dirt now
-# exists and carries its own POT, so the framework scales each run natively and
-# setpot_dirt is gone.
-#   FHC dirt total 2.418e21 : run1 1.674e21, run4c 1.548e20, run4d 2.388e20,
-#                             run5 3.501e20
-# detVar entries REMOVED for the 2026-08-28 test of whether they dilute the
-# inclusive COMB truth prediction (COMB/expected = 0.910 with them present,
-# vs 1.020 for the proton-tagged family which has no detVar files).
 /data/uboone/processed/xsec-ana-fakedata_fhc_run1.root 1 onBNB 5748692 2.192e20
 /data/uboone/processed/xsec-ana-fakedata_fhc_run2.root 2 onBNB 3535129 1.268e20
 /data/uboone/processed/xsec-ana-fakedata_fhc_run4.root 4 onBNB 4131149 2.075e20
@@ -61,3 +38,12 @@
 /data/uboone/processed/xsec-ana-dirt_rhc_run3.root 13 dirtMC
 /data/uboone/processed/xsec-ana-dirt_rhc_run4a.root 14 dirtMC
 /data/uboone/processed/xsec-ana-dirt_rhc_run4b.root 14 dirtMC
+/data/uboone/processed/xsec-ana-detvar_run4rhc_CV.root 1 detVarCV
+/data/uboone/processed/xsec-ana-detvar_run4rhc_LYdown.root 1 detVarLYdown
+/data/uboone/processed/xsec-ana-detvar_run4rhc_LYrayl.root 1 detVarLYrayl
+/data/uboone/processed/xsec-ana-detvar_run4rhc_Recomb2.root 1 detVarRecomb2
+/data/uboone/processed/xsec-ana-detvar_run4rhc_SCE.root 1 detVarSCE
+/data/uboone/processed/xsec-ana-detvar_run4rhc_WMAngleXZ.root 1 detVarWMAngleXZ
+/data/uboone/processed/xsec-ana-detvar_run4rhc_WMAngleYZ.root 1 detVarWMAngleYZ
+/data/uboone/processed/xsec-ana-detvar_run4rhc_WMX.root 1 detVarWMX
+/data/uboone/processed/xsec-ana-detvar_run4rhc_WMYZ.root 1 detVarWMYZ

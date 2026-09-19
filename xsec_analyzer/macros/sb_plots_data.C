@@ -32,11 +32,11 @@ void sb_plots_data(const char* mode="fhc", bool compact=false){
     mc.push_back({std::string(P)+"xsec-ana-Run1_fhc_new_numi_flux_fhc_pandora_ntuple.root",0.14101});
     mc.push_back({std::string(P)+"xsec-ana-Run4_fhc_new_numi_flux_fhc_pandora_ntuple.root",0.07323});
     mc.push_back({std::string(P)+"xsec-ana-reweightedPPFX_numi_nu_overlay_pion_ntuples_run5_fhc.root",0.11560});
-    ext.push_back({std::string(E)+R1,OCCX*9846635./G1});
+    ext.push_back({std::string(E)+R1,OCCX*5748692./G1});
     for(auto f:R4) ext.push_back({std::string(E)+f,OCCX*4131149./G4});
     ext.push_back({std::string(E)+R5,OCCX*5154196./G5});
     for(auto r:{"run1","run4c","run4d","run5"}) data.push_back(std::string(B)+"xsec-ana-beamon_fhc_"+r+".root");
-    pot_frac=(3.283+2.075+2.231)/8.857; sc_dirt=0.092402*0.65*pot_frac; runs="Runs 1, 4, 5 (no Run-2 beam-on)";
+    pot_frac=(2.192+2.075+2.231)/8.857; sc_dirt=0.092402*0.65*pot_frac; runs="Runs 1, 4, 5 (no Run-2 beam-on)";
   } else {
     mc.push_back({std::string(P)+"xsec-ana-Run1_rhc_new_numi_flux_rhc_pandora_ntuple.root",0.06728});
     for(auto s:{"Run4a_rhc","Run4b_rhc","Run4c_rhc"}) mc.push_back({std::string(P)+"xsec-ana-"+std::string(s)+"_new_numi_flux_rhc_pandora_ntuple.root",0.08847});

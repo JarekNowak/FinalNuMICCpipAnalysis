@@ -29,7 +29,7 @@ void throw_group_sb(std::vector<const char*> infiles, const char* outfile, doubl
 void throw_perrun_sb(int seed=1){
   printf("SIDEBAND per-run fake data (seed %d):\n",seed);
   // FHC (single-file runs)
-  throw_group_sb({"xsec-ana-Run1_fhc_new_numi_flux_fhc_pandora_ntuple.root"},"xsec-ana-fakedata_fhc_run1.root",3.283e20,2.3282e21,seed);
+  throw_group_sb({"xsec-ana-Run1_fhc_new_numi_flux_fhc_pandora_ntuple.root"},"xsec-ana-fakedata_fhc_run1.root",2.192e20,2.3282e21,seed);
   throw_group_sb({"xsec-ana-Run2_fhc_new_numi_flux_fhc_pandora_ntuple.root"},"xsec-ana-fakedata_fhc_run2.root",1.268e20,2.4934e21,seed+1);
   throw_group_sb({"xsec-ana-Run4_fhc_new_numi_flux_fhc_pandora_ntuple.root"},"xsec-ana-fakedata_fhc_run4.root",2.075e20,2.8335e21,seed+2);
   throw_group_sb({"xsec-ana-reweightedPPFX_numi_nu_overlay_pion_ntuples_run5_fhc.root"},"xsec-ana-fakedata_fhc_run5.root",2.231e20,1.9300e21,seed+3);

@@ -140,7 +140,7 @@ void bkgfit_templates( const char* outdir = "/data/uboone/processed/bkgfit" ) {
   const std::string P = "/data/uboone/processed/sb_pi0/", DV = "/data/uboone/processed/sb_pi0/", BO = "/data/uboone/processed/beamon_skim/",
                     E = "/data/uboone/processed/sb_pi0/xsec-ana-";
   const char* pname[NP] = { "FHC_R1", "FHC_R2", "FHC_R4", "FHC_R5", "RHC_R1", "RHC_R2", "RHC_R3", "RHC_R4" };
-  const double POT[NP] = { 3.283, 1.268, 2.075, 2.231, 0.6053, 2.591, 5.003, 2.883 };
+  const double POT[NP] = { 2.192, 1.268, 2.075, 2.231, 0.6053, 2.591, 5.003, 2.883 };
   std::vector<std::vector<std::pair<std::string, double>>> mc( NP ), ext( NP );
   std::vector<std::vector<std::string>> data( NP );
   auto fmc = [&]( const char* n ) { return P + "xsec-ana-" + n + ".root"; };
@@ -156,7 +156,7 @@ void bkgfit_templates( const char* outdir = "/data/uboone/processed/bkgfit" ) {
   const double G1 = 4582248.27, G3 = 32649128.65, G4 = 34831148.625, G5 = 19256341.475, OCCX = 0.98;
   const char* R4[4] = { "numi_pelee_ntuple_beam_off_run4a_rhc_ana.root", "numi_pelee_ntuple_beam_off_run4b_rhc_ana.root",
                         "numi_pelee_ntuple_beam_off_run4c_fhc_ana.root", "numi_pelee_ntuple_beam_off_run4d_fhc_ana.root" };
-  ext[0] = { { E + "neutrinoselection_filt_run1_beamoff.root", OCCX * 9846635. / G1 } };
+  ext[0] = { { E + "neutrinoselection_filt_run1_beamoff.root", OCCX * 5748692. / G1 } };
   for ( auto f : R4 ) ext[2].push_back( { E + f, OCCX * 4131149. / G4 } );
   ext[3] = { { E + "numi_pelee_ntuple_beam_off_run5_fhc_ana.root", OCCX * 5154196. / G5 } };
   ext[4] = { { E + "neutrinoselection_filt_run1_beamoff.root", OCCX * 1458253. / G1 } };

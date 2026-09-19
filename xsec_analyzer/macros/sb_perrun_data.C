@@ -17,7 +17,7 @@ void sb_perrun_data(){
   std::vector<Grp> g;
   // ---- FHC
   g.push_back({"FHC run1",{{std::string(P)+"xsec-ana-Run1_fhc_new_numi_flux_fhc_pandora_ntuple.root",0.14101}},
-    {{std::string(E)+R1,OCC*9846635./G1}},{std::string(B)+"xsec-ana-beamon_fhc_run1.root"},3.283});
+    {{std::string(E)+R1,OCC*5748692./G1}},{std::string(B)+"xsec-ana-beamon_fhc_run1.root"},3.283});
   {std::vector<Src> e; for(auto f:R4) e.push_back({std::string(E)+f,OCC*4131149./G4});
    g.push_back({"FHC run4",{{std::string(P)+"xsec-ana-Run4_fhc_new_numi_flux_fhc_pandora_ntuple.root",0.07323}},e,
     {std::string(B)+"xsec-ana-beamon_fhc_run4c.root",std::string(B)+"xsec-ana-beamon_fhc_run4d.root"},2.075});}

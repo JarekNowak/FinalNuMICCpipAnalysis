@@ -44,7 +44,7 @@ void cutflow_yields_1p(const char* mode="fhc") {
   const double G1=4582248.27, G3=32649128.65, G4=34831148.625, G5=19256341.475, OCCX=0.98;
   auto add_ext=[&](std::vector<Src>& v, const char* m){
     if(std::string(m)=="fhc"||std::string(m)=="comb"){
-      v.push_back({std::string(E)+R1, OCCX*9846635./G1});
+      v.push_back({std::string(E)+R1, OCCX*5748692./G1});
       v.push_back({std::string(E)+R1, OCCX*3535129./G1});
       for(auto f:R4) v.push_back({std::string(E)+f, OCCX*4131149./G4});
       v.push_back({std::string(E)+R5, OCCX*5154196./G5});

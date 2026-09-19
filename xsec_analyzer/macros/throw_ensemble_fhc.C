@@ -31,7 +31,7 @@ void throw_ensemble_fhc(int throw_id=1){
   int s = 1000*throw_id;
   printf("FHC ensemble member %d (seed base %d):\n", throw_id, s);
   throw_one_ens("xsec-ana-Run1_fhc_new_numi_flux_fhc_pandora_ntuple.root",
-    Form("ens/fakedata_fhc_run1_t%d.root",throw_id), 3.283e20, 2.3282e21, s+0);
+    Form("ens/fakedata_fhc_run1_t%d.root",throw_id), 2.192e20, 2.3282e21, s+0);
   throw_one_ens("xsec-ana-Run2_fhc_new_numi_flux_fhc_pandora_ntuple.root",
     Form("ens/fakedata_fhc_run2_t%d.root",throw_id), 1.268e20, 2.4934e21, s+1);
   throw_one_ens("xsec-ana-Run4_fhc_new_numi_flux_fhc_pandora_ntuple.root",

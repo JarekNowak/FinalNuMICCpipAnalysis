@@ -46,7 +46,7 @@ struct ExtHelperDummy{};
   // framework's per-run scaling. Run 2 has no processed beam-off: the Run-1 file stands in.
   //   gates: run1 4582248.27 | run3b 32649128.65 | run4 (4a+4b 9338778.225, 4c 8060024.70,
   //          4d 17432345.70) = 34831148.625 | run5 19256341.475
-  //   beam-on triggers: FHC run1 9846635 run2 3535129 run4 4131149 run5 5154196;
+  //   beam-on triggers: FHC run1 5748692 run2 3535129 run4 4131149 run5 5154196;
   //                     RHC run1 1458253 run2 5422907 run3 10349610 run4 6304167
   const char* E="/data/uboone/processed/ext_perrun/xsec-ana-";
   const char* R1=  "neutrinoselection_filt_run1_beamoff.root";
@@ -57,7 +57,7 @@ struct ExtHelperDummy{};
   const double G1=4582248.27, G3=32649128.65, G4=34831148.625, G5=19256341.475, OCCX=0.98;
 static void add_ext(std::vector<Src>& v, const char* m){
     if(std::string(m)=="fhc"||std::string(m)=="comb"){
-      v.push_back({std::string(E)+R1, OCCX*9846635./G1});   // run 1
+      v.push_back({std::string(E)+R1, OCCX*5748692./G1});   // run 1
       v.push_back({std::string(E)+R1, OCCX*3535129./G1});   // run 2 (stand-in)
       for(auto f:R4) v.push_back({std::string(E)+f, OCCX*4131149./G4});
       v.push_back({std::string(E)+R5, OCCX*5154196./G5});

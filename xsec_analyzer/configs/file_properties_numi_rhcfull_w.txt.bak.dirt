@@ -1,0 +1,39 @@
+# file_properties_numi_rhcfull.txt  — PER-RUN (real-data-ready) RHC configuration
+# ---------------------------------------------------------------------------
+# Columns:  file_name  run  file_type  [triggers  POT]
+# Per-run POT scaling (see file_properties_numi_fhc5.txt header and Table tab:pot):
+#   Run  D_run(1e20)  MC_POT(1e20)  scale=D/MC   bnb_trigs
+#    1     0.6053       8.997        0.06728      1458253
+#    2     2.591        57.865       0.04478      5422907
+#    3     5.003        55.185       0.09066      10349610  (aa-ae, group MC total)
+#    4     2.883        32.586       0.08847      6304167   (4a/4b/4c, group MC total)
+#   sum    11.082       154.63      (old single factor 0.0717)
+# EXT: same beam-off per run (symlinks); per-run scale bnb_trigs/3821593 sums to 6.16.
+#
+# onBNB: per-run fake data (macros/throw_perrun_rhc.C)
+/data/uboone/processed/w/xsec-ana-fakedata_rhc_run1.root 1 onBNB 1458253 0.6053e20
+/data/uboone/processed/w/xsec-ana-fakedata_rhc_run2.root 2 onBNB 5422907 2.591e20
+/data/uboone/processed/w/xsec-ana-fakedata_rhc_run3.root 3 onBNB 10349610 5.003e20
+/data/uboone/processed/w/xsec-ana-fakedata_rhc_run4.root 4 onBNB 6304167 2.883e20
+# EXT: same combined beam-off attached to each run (symlinks, distinct subdir names)
+/data/uboone/processed/w/xsec-ana-beamoff_rhc_run1.root 1 extBNB 3821593 0
+/data/uboone/processed/w/xsec-ana-beamoff_rhc_run2.root 2 extBNB 3821593 0
+/data/uboone/processed/w/xsec-ana-beamoff_rhc_run3.root 3 extBNB 3821593 0
+/data/uboone/processed/w/xsec-ana-beamoff_rhc_run4.root 4 extBNB 3821593 0
+# numu MC overlay (CV) — native (single-file runs) / group-total (Run3 aa-ae, Run4 a/b/c)
+#   summed_pot, each on its real run -> per-run scaling.
+/data/uboone/processed/w/xsec-ana-Run1_rhc_new_numi_flux_rhc_pandora_ntuple.root 1 numuMC
+/data/uboone/processed/w/xsec-ana-Run2_rhc_new_numi_flux_rhc_pandora_ntuple.root 2 numuMC
+/data/uboone/processed/w/xsec-ana-Run3_rhc_new_numi_flux_rhc_pandora_ntuple_aa.root 3 numuMC
+/data/uboone/processed/w/xsec-ana-Run3_rhc_new_numi_flux_rhc_pandora_ntuple_ab.root 3 numuMC
+/data/uboone/processed/w/xsec-ana-Run3_rhc_new_numi_flux_rhc_pandora_ntuple_ac.root 3 numuMC
+/data/uboone/processed/w/xsec-ana-Run3_rhc_new_numi_flux_rhc_pandora_ntuple_ad.root 3 numuMC
+/data/uboone/processed/w/xsec-ana-Run3_rhc_new_numi_flux_rhc_pandora_ntuple_ae.root 3 numuMC
+/data/uboone/processed/w/xsec-ana-Run4a_rhc_new_numi_flux_rhc_pandora_ntuple.root 4 numuMC
+/data/uboone/processed/w/xsec-ana-Run4b_rhc_new_numi_flux_rhc_pandora_ntuple.root 4 numuMC
+/data/uboone/processed/w/xsec-ana-Run4c_rhc_new_numi_flux_rhc_pandora_ntuple.root 4 numuMC
+# Dirt MC overlay — summed_pot set (by the batch) to 9.14e19 so D_run1/summed_pot =
+#   D_RHC_total/dirt_native, scaling the Run1 dirt to the FULL RHC exposure.
+/data/uboone/processed/w/xsec-ana-prodgenie_numi_uboone_overlay_dirt_fhc_mcc9_run1_v28_all_snapshot.root 1 dirtMC
+# Detector-variation MC (Run4 RHC native; scaled by total_bnb_data_pot/file_pot)
+#

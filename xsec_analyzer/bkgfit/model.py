@@ -15,7 +15,7 @@ import numpy as np
 import uproot
 
 PERIODS = ['FHC_R1', 'FHC_R2', 'FHC_R4', 'FHC_R5', 'RHC_R1', 'RHC_R2', 'RHC_R3', 'RHC_R4']
-POT = dict(zip(PERIODS, [3.283, 1.268, 2.075, 2.231, 0.6053, 2.591, 5.003, 2.883]))
+POT = dict(zip(PERIODS, [2.192, 1.268, 2.075, 2.231, 0.6053, 2.591, 5.003, 2.883]))
 DATA_PERIODS = ['FHC_R1', 'FHC_R4', 'FHC_R5', 'RHC_R1', 'RHC_R3', 'RHC_R4']
 NB, NC = 46, 10
 SR, SIGGEN, MULTI, COSMIC = 0, 1, 44, 45

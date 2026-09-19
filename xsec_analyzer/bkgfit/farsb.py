@@ -25,7 +25,7 @@ S = 'CC1mu1piXp'
 P = '/data/uboone/processed/sb_pi0/'
 BO = '/data/uboone/processed/beamon_skim/'
 PNAME = ['FHC_R1', 'FHC_R2', 'FHC_R4', 'FHC_R5', 'RHC_R1', 'RHC_R2', 'RHC_R3', 'RHC_R4']
-POT = [3.283, 1.268, 2.075, 2.231, 0.6053, 2.591, 5.003, 2.883]
+POT = [2.192, 1.268, 2.075, 2.231, 0.6053, 2.591, 5.003, 2.883]
 G1, G3, G4, G5, OCCX = 4582248.27, 32649128.65, 34831148.625, 19256341.475, 0.98
 DIRT = P + 'xsec-ana-prodgenie_numi_uboone_overlay_dirt_fhc_mcc9_run1_v28_all_snapshot.root'
 
@@ -45,7 +45,7 @@ def samples():
     R4 = ['numi_pelee_ntuple_beam_off_run4a_rhc_ana.root', 'numi_pelee_ntuple_beam_off_run4b_rhc_ana.root',
           'numi_pelee_ntuple_beam_off_run4c_fhc_ana.root', 'numi_pelee_ntuple_beam_off_run4d_fhc_ana.root']
     E = P + 'xsec-ana-'
-    ext[0] = [(E + 'neutrinoselection_filt_run1_beamoff.root', OCCX * 9846635. / G1)]
+    ext[0] = [(E + 'neutrinoselection_filt_run1_beamoff.root', OCCX * 5748692. / G1)]
     ext[2] = [(E + r, OCCX * 4131149. / G4) for r in R4]
     ext[3] = [(E + 'numi_pelee_ntuple_beam_off_run5_fhc_ana.root', OCCX * 5154196. / G5)]
     ext[4] = [(E + 'neutrinoselection_filt_run1_beamoff.root', OCCX * 1458253. / G1)]

@@ -81,7 +81,7 @@ void throw_altmodel_fhc( const char* wbranch = "weight_All_UBGenie", int univ = 
           wbranch, univ, tag, seed );
   auto nm = [&]( const char* run ) { return Form("xsec-ana-fakedata_%s_fhc_%s.root", tag, run); };
   throw_alt_one( "xsec-ana-Run1_fhc_new_numi_flux_fhc_pandora_ntuple.root", nm("run1"),
-                 3.283e20, 2.3282e21, wbranch, univ, seed );
+                 2.192e20, 2.3282e21, wbranch, univ, seed );
   throw_alt_one( "xsec-ana-Run2_fhc_new_numi_flux_fhc_pandora_ntuple.root", nm("run2"),
                  1.268e20, 2.4934e21, wbranch, univ, seed + 1 );
   throw_alt_one( "xsec-ana-Run4_fhc_new_numi_flux_fhc_pandora_ntuple.root", nm("run4"),

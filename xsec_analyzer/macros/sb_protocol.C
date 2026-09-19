@@ -28,7 +28,7 @@ static void add_ext(std::vector<Src>& v, const char* m){
   const char* R4[4]={"numi_pelee_ntuple_beam_off_run4a_rhc_ana.root","numi_pelee_ntuple_beam_off_run4b_rhc_ana.root","numi_pelee_ntuple_beam_off_run4c_fhc_ana.root","numi_pelee_ntuple_beam_off_run4d_fhc_ana.root"};
   const char* R5="numi_pelee_ntuple_beam_off_run5_fhc_ana.root";
   const double G1=4582248.27, G3=32649128.65, G4=34831148.625, G5=19256341.475, OCCX=0.98;
-  if(std::string(m)=="fhc"){ v.push_back({std::string(E)+R1,OCCX*9846635./G1}); v.push_back({std::string(E)+R1,OCCX*3535129./G1}); for(auto f:R4) v.push_back({std::string(E)+f,OCCX*4131149./G4}); v.push_back({std::string(E)+R5,OCCX*5154196./G5}); }
+  if(std::string(m)=="fhc"){ v.push_back({std::string(E)+R1,OCCX*5748692./G1}); v.push_back({std::string(E)+R1,OCCX*3535129./G1}); for(auto f:R4) v.push_back({std::string(E)+f,OCCX*4131149./G4}); v.push_back({std::string(E)+R5,OCCX*5154196./G5}); }
   else { v.push_back({std::string(E)+R1,OCCX*1458253./G1}); v.push_back({std::string(E)+R1,OCCX*5422907./G1}); v.push_back({std::string(E)+R3B,OCCX*10349610./G3}); for(auto f:R4) v.push_back({std::string(E)+f,OCCX*6304167./G4}); }
 }
 struct Var { int reg; std::string name, br; std::vector<double> edges; bool overflowTop; };

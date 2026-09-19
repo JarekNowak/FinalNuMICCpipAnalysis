@@ -25,7 +25,7 @@ N_AR = 8.710e29
 
 # Reference values the note quotes. The manifest's job is to prove the configs still
 # produce these, so a silent drift in either direction is caught.
-EXPECT_POT  = {"fhc5": 8.857e20, "rhcfull": 1.1082e21, "comb": 1.9939e21}
+EXPECT_POT  = {"fhc5": 7.766e20, "rhcfull": 1.1082e21, "comb": 1.8848e21}
 EXPECT_FLUX = {"fhc5": 6.81159e-10, "rhcfull": 6.44646e-10, "comb": 6.60865e-10}
 
 CONFIGS = ["fhc5", "rhcfull", "comb"]
