@@ -1,0 +1,215 @@
+% paper_prl_proton_tagged.tex -- Letter: the proton-tagged measurement.
+% Companion to paper_prd_inclusive.tex (joint submission; see the cover-letter note at the end).
+% PRL limit 3750 words including figure word-equivalents; see report/tools/prl_wordcount.py.
+\documentclass[aps,prl,twocolumn,superscriptaddress,nofootinbib,floatfix]{revtex4-2}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\graphicspath{{figures/}{figures/bkgfit/}}
+\input{paper_macros}
+
+\begin{document}
+
+\title{First measurement of transverse kinematic imbalance and hadronic-system kinematics in
+  charged-current single-pion production on argon}
+
+\author{The \uboone{} Collaboration}
+\noaffiliation
+
+\date{\today}
+
+\begin{abstract}
+We report the first measurement of the kinematics of the full visible hadronic system in
+charged-current single-charged-pion production, $\nu_\mu(\bar\nu_\mu)\,\mathrm{Ar}\to
+\mu^\mp\pi^\pm p\,X$, using the \uboone{} liquid-argon time-projection chamber in the NuMI beam
+with $1.99\times10^{21}$ protons on target in forward- and reverse-horn-current running. Requiring
+a reconstructed proton alongside the muon and pion gives access to observables that the inclusive
+channel cannot see: the transverse kinematic imbalance between the muon and the $\pi p$ system
+($\delta p_T$, $\delta\alpha_T$, $\delta\phi_T$ and the inferred nucleon momentum $p_n$), the
+calorimetric hadronic mass $W_{\rm had}$, the proton polar angle and the pion--proton opening
+angle. Flux-averaged total and differential cross sections are extracted by Wiener-SVD unfolding
+with complete covariance and are compared with GENIE, NuWro, NEUT and GiBUU. The $\delta\alpha_T$
+distribution rises toward $180^\circ$, the region most sensitive to final-state interactions, and
+the standalone generators span a factor of $1.6$ in the proton-tagged total. [DRAFT: values are
+blind placeholders.]
+\end{abstract}
+
+\maketitle
+\draftbanner
+
+\paragraph*{Introduction.}
+Neutrino--nucleus interactions in the few-GeV region are the largest source of systematic
+uncertainty in accelerator oscillation experiments, and charged-current single-pion production
+(CC$\pi^\pm$) is both a signal channel and the dominant background to quasi-elastic-like samples.
+Its cross section on argon is now measured
+inclusively~\cite{uboone_bnb2026_ccpi,uboone_nue_ccpi} and is the subject of a companion
+article~\cite{companion_prd}. Those measurements characterise the lepton and the pion. They are
+blind to the nucleon, and therefore to the quantity that most directly encodes nuclear effects:
+the momentum balance between the outgoing lepton and the outgoing hadronic system.
+
+Transverse kinematic imbalance (TKI)~\cite{lu_tki,furmanski_pn} exploits that balance. For a
+neutrino incident along $\hat z$ on a free nucleon at rest, the momenta of the lepton and the
+hadronic system transverse to the beam cancel; on a nucleus the imbalance $\delta p_T$ measures the
+initial-state nucleon momentum, and its orientation $\delta\alpha_T$ relative to the lepton is
+flat in the absence of final-state interactions (FSI) and rises toward $180^\circ$ when the
+hadrons lose momentum in the nucleus. TKI has been measured in pionless final states by
+T2K~\cite{t2k_tki}, MINER$\nu$A~\cite{minerva_tki} and \uboone{}~\cite{uboone_tki}. In a
+pion-production channel the hadronic system is $\pi+p$ and the same variables probe FSI acting on
+a pion and a proton together, a regime in which generators disagree most and in which no
+measurement on argon exists. We present that measurement.
+
+\paragraph*{Experiment and data.}
+\uboone{}~\cite{uboone_nim} is an $85$-tonne active-mass liquid-argon time-projection chamber
+located $135$~mrad off the axis of the NuMI beam~\cite{numi_beam}. The off-axis flux peaks below
+$1$~GeV and, because the detector is off axis, the neutrino direction is $28^\circ$ from the
+detector $z$ axis. Every angle in this Letter is defined about the neutrino direction; defining
+them about the detector axis would move about $65\%$ of signal events across a $\cos\theta_\mu$
+bin~\cite{companion_prd}. The data comprise the full NuMI exposure: $8.86\times10^{20}$~POT in
+forward horn current (FHC, $\nu_\mu$-dominated), $1.11\times10^{21}$ in reverse horn current (RHC,
+$\bar\nu_\mu$-enriched), and their combination. Each running period is normalised to its own
+exposure and each horn configuration carries its own integrated $\nu_\mu+\bar\nu_\mu$ flux, from
+the PPFX-corrected simulation~\cite{ppfx}. The simulation uses GENIE v3~\cite{genie3} with the
+\uboone{} tune~\cite{uboone_tune}, GEANT4 and the Pandora reconstruction~\cite{pandora,uboone_pandora}.
+
+\paragraph*{Signal and selection.}
+The signal is defined by the final state leaving the nucleus: one muon with $p_\mu>0.15\GeVc$,
+exactly one charged pion with $p_\pi>0.175\GeVc$, no neutral pion, and at least one proton with
+$p_p>0.3\GeVc$, all from an interaction vertex inside the fiducial volume, with muon--pion opening
+angle $\theta_{\mu\pi}<2.6$~rad. Both neutrino and antineutrino interactions are signal. The
+selection applies the inclusive CC$\pi^\pm$ selection of the companion article~\cite{companion_prd}
+--- a muon candidate, exactly one contained pion candidate, an electromagnetic-shower veto and
+the opening-angle requirement --- and additionally requires a contained proton candidate,
+identified by a log-likelihood-ratio particle-identification score~\cite{uboone_llr}, with
+range-based momentum above $0.3\GeVc$. The proton-tagged selection is $11.4\%$ efficient and
+$51\%$ pure; the dominant background is CC$0\pi$ with a proton misidentified as the pion,
+followed by multi-pion final states. The proton candidate is the leading true proton in $82\%$ of
+selected signal events and a true proton in $87\%$; the remainder, where a pion or other track is
+taken for the proton, is absorbed into the response and is the dominant source of migration for
+the angular observables.
+
+\paragraph*{Observables.}
+With $\vec p_{\rm had}=\vec p_\pi+\vec p_p$ and transverse components taken about the neutrino
+direction,
+\begin{align}
+  \delta p_T &= |\vec p_T^{\,\mu}+\vec p_T^{\,\rm had}|, \\
+  \delta\alpha_T &= \arccos\frac{-\vec p_T^{\,\mu}\cdot(\vec p_T^{\,\mu}+\vec p_T^{\,\rm had})}
+                              {|\vec p_T^{\,\mu}|\,\delta p_T}, \\
+  \delta\phi_T &= \arccos\frac{-\vec p_T^{\,\mu}\cdot\vec p_T^{\,\rm had}}
+                            {|\vec p_T^{\,\mu}|\,|\vec p_T^{\,\rm had}|},
+\end{align}
+and $p_n$ is the initial nucleon momentum inferred from $\delta p_T$ and the longitudinal
+imbalance under the assumption of a stationary target nucleus~\cite{furmanski_pn}. The
+calorimetric hadronic mass is $W_{\rm had}=[m_p^2+2m_p(E_{\rm cal}-E_\mu)-Q^2]^{1/2}$. The proton
+polar angle $\theta_p$ is measured about the neutrino direction and the pion--proton opening angle
+$\theta_{\pi p}$ between the two reconstructed tracks, so the latter needs no beam direction at
+all. The directly reconstructed $\pi p$ invariant mass, which would show the $\Delta(1232)$, is not
+measurable as a shape at this exposure: no binning satisfies both the migration and the statistics
+requirement, and only its integral is reported.
+
+\paragraph*{Cross-section extraction.}
+Differential cross sections are extracted by Wiener-SVD unfolding~\cite{wienervsd} of the
+background-subtracted reconstructed spectrum with a response built from the simulation, using the
+\textsc{XSecAnalyzer} framework~\cite{xsec_analyzer}. Regularisation leaves a known residual
+smearing, described by the additional-smearing matrix $\AC$, which is released with each result: a
+prediction must be multiplied by $\AC$ before comparison. Because $\AC$ is not
+normalisation-preserving, the integral of a differential result is not the total cross section;
+the total is obtained separately from a one-bin extraction in which $\AC\equiv1$. Uncertainties
+from the flux (PPFX universes), the interaction model (GENIE reweighting), hadron re-interaction,
+detector response (dedicated variation samples~\cite{uboone_detvar}), exposure and target count,
+and simulation, beam-off and data statistics are propagated as full covariance matrices through
+the same unfolding and released with the results. The proton-tagged sample is statistically
+sparse and correspondingly detector-sensitive: the detector term ranges from $10\%$ to over
+$100\%$ across bins, with a median of $33\%$, against $16$--$35\%$ inclusively. The binning of every
+observable was set by requiring a column-normalised migration diagonal above $0.68$ and a
+well-conditioned $\AC$, which is why the four TKI observables are reported in two bins each.
+
+\paragraph*{Results.}
+\begin{table}[b]
+  \caption{Flux-averaged proton-tagged total cross section from the one-bin extraction,
+    $10^{-38}$~cm$^2$/Ar, with the standalone-generator predictions for FHC. [DRAFT: blind
+    placeholders; FHC and combined normalisations predate the Run-1 exposure correction.]}
+  \label{tab:total1p}
+  \begin{ruledtabular}
+  \begin{tabular}{lcc}
+    Configuration & $\sigma$ & unc.\ [\%] \\
+    \hline
+    FHC & $0.618\pm0.255$ & $41.3$ \\
+    RHC & $0.531\pm0.251$ & $47.2$ \\
+    Combined & $0.571\pm0.240$ & $42.1$ \\
+    \hline
+    GENIE / NuWro / GiBUU / NEUT (FHC) & \multicolumn{2}{c}{$0.50$ / $0.65$ / $0.74$ / $0.78$} \\
+  \end{tabular}
+  \end{ruledtabular}
+\end{table}
+Table~\ref{tab:total1p} gives the total cross section in the three configurations. The
+standalone generators span a factor of $1.6$ and bracket the result; at $41$--$47\%$ uncertainty
+the total does not yet discriminate among them, and the discrimination lies in the shapes.
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=\textwidth]{dsigma_ccpi1p_noW_COMB}
+  \caption{Proton-tagged differential cross sections in the combined FHC$+$RHC configuration:
+    the calorimetric hadronic mass $W_{\rm had}$ and the four transverse-kinematic-imbalance
+    observables $\delta p_T$, $\delta\alpha_T$, $\delta\phi_T$ and $p_n$. Points are the unfolded
+    data with the total uncertainty; the grey histogram is the $\AC$-smeared central-value
+    prediction and the coloured histograms are GENIE, GiBUU, NEUT and NuWro, all multiplied by
+    $\AC$. [DRAFT: blind fake data.]}
+  \label{fig:tki}
+\end{figure*}
+
+Figure~\ref{fig:tki} shows the five hadronic observables in the combined configuration.
+$\delta\alpha_T$ rises toward $180^\circ$: the enhancement in the backward region is the
+signature that the hadronic system has lost transverse momentum inside the nucleus, and it is
+sensitive to final-state interactions and other nuclear effects. The four generators differ most
+in this bin, in the high-$\delta p_T$ tail and in the upper region of $W_{\rm had}$, where NEUT
+and GiBUU lie above the tune and GENIE below it. The differential results close on their own
+$\AC$-smeared truth to $0.96$--$1.04$ in every observable with $\chi^2/{\rm ndf}$ below unity.
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=\textwidth]{newobs_xsec}
+  \caption{Proton polar angle $\theta_p$ (top) and pion--proton opening angle $\theta_{\pi p}$
+    (bottom) for FHC, RHC and the combined configuration, with the four generator predictions and
+    integrated cross sections in the legends. The RHC $\theta_p$ response is rank-deficient and that
+    panel is not a shape measurement. [DRAFT: blind fake data.]}
+  \label{fig:angles}
+\end{figure*}
+
+Figure~\ref{fig:angles} shows the two angular observables. Both distributions are strongly
+forward peaked, the top $\theta_p$ bin carrying a fifteenth of the first bin's density, and the
+pion and proton are separated by less than $2$~rad in the bulk of events. The generators differ
+mainly in normalisation --- GENIE lowest, NEUT highest, a spread of $1.6$ in the integral --- with
+NEUT's relative excess in the middle $\theta_{\pi p}$ bin the one shape difference. $\theta_{\pi p}$
+is the best-conditioned observable of the proton-tagged set; $\theta_p$ is reported for FHC and
+the combined configuration only, its RHC response being rank-deficient at any binning tried.
+
+\paragraph*{Validation.}
+The extraction is validated in three ways on simulation~\cite{companion_prd}: closure of
+pseudo-data thrown from the nominal model, which tests the implementation; ensembles of
+independent Poisson realisations, which return correctly sized statistical uncertainties for the
+inclusive extractions; and unfolding of pseudo-data thrown from a materially different interaction
+model with the nominal response, in which no inclusive bin is biased by more than $0.8\sigma$ of its
+uncertainty. The last two have not yet been run for the proton-tagged sample and are required
+before submission. The background model is tested in four control regions disjoint from the
+signal region, opened on beam-on data, which indicate no correction to the background-class
+normalisations.
+
+\paragraph*{Conclusions.}
+We have presented the first measurement of the hadronic-system kinematics in charged-current
+single-pion production on argon: the transverse kinematic imbalance, the calorimetric hadronic
+mass, the proton polar angle and the pion--proton opening angle, together with the flux-averaged
+total, in neutrino-dominated, antineutrino-enriched and combined NuMI exposures. The
+$\delta\alpha_T$ enhancement toward $180^\circ$ is observed in a pion-production channel for the
+first time, and the standalone generators span a factor of $1.6$ in normalisation with shapes that
+differ most where final-state interactions act. The additional-smearing matrices and covariances
+for every result are released with this Letter.
+
+\begin{acknowledgments}
+[Standard \uboone{} acknowledgments.]
+\end{acknowledgments}
+
+\input{paper_bib}
+
+\end{document}
