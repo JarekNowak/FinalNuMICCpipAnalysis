@@ -2053,14 +2053,18 @@ proposed for approval in this review, and ``diagnostic'' means a distribution sh
 explain why a result is withdrawn.
 
 
+\input{tables/infocontent}
+
 \paragraph{What the reader should know before the tables.}
 Three points condition how the numbers below are read, and are established in
 \suppref{Sec.}{sec:supp_caveats}. \emph{First}, $d\sigma/dp_\pi$ is released in two bins only:
 charged pions interact before ranging out, so the reconstructed momentum saturates near
 $0.34$~GeV/$c$ and no finer binning survives the migration criterion; the upper bin is open-ended
 and its released density represents a bin integral. \emph{Second}, the closure $\chi^2$ quoted with
-each extraction uses the nominal configured covariance, so its $p$-values are not a sensitive test
-of the extraction --- they confirm consistency and nothing more. \emph{Third}, an ensemble of
+each extraction uses the nominal configured covariance, so its $p$-values are not expected to be uniform and are not a sensitive test
+of the extraction --- the pseudo-data and the reference share the systematic sources that the
+covariance includes, so they confirm consistency and nothing more; statistical coverage is
+evaluated separately with ensembles (\S\ref{sec:validation}). \emph{Third}, an ensemble of
 independent Poisson realisations carried through the whole chain gives per-bin pull widths of
 $0.97$--$1.08$, so the quoted statistical uncertainties are correctly sized; the study covers three
 extractions in one configuration, and RHC and the proton-tagged family have not been tested.
@@ -2182,7 +2186,7 @@ Observable & $\sigma_\mathrm{int}$ & Flux & Detector & Total & Closure $\chi^2/\
 \begin{figure}[H]\centering
   \blindfig[0.98\textwidth]{dsigma_FHC5}
   \caption{Differential cross sections $d\sigma/dx$ for the six released distributions on the
-    current Poisson-thrown central-value fake data, FHC full exposure: unfolded fake
+    current Poisson-thrown central-value fake data, FHC full exposure: the points are the Wiener-SVD regularised estimator $A_C\,x_{\rm true}$, not an unsmeared estimate of $x_{\rm true}$; unfolded fake
     data (black points), $A_C$-smeared fake-data truth (grey dashed), the MicroBooNE
     tune (black solid), and the four generator predictions (GENIE, GiBUU, NEUT,
     NuWro). The unfolded points recover the injected truth for every observable, the
@@ -2512,6 +2516,18 @@ given in \suppref{Sec.}{sec:request}. Three things come out of them.
     data-to-prediction ratio where it was, $0.84\to0.85$ (\crref{Sec.}{sec:farsb}). Whatever causes
     the deficit does not scale with the signal content of the region.
 \end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.96\textwidth]{sideband_data_fhc}\\[4pt]
+  \includegraphics[width=0.96\textwidth]{sideband_data_rhc}
+  \caption{The opened control regions on beam-on data: FHC (top) and RHC (bottom), data against
+    the neutrino-MC $+$ beam-off $+$ dirt prediction in each region. These, not the pseudo-data
+    tests that follow, are the evidence for the background model; the FHC Run-1 deficit visible
+    here is the exposure error of \S\ref{sec:cr_outcome}. Full per-run ratios, the fitted
+    normalisation parameters and their correlations are in the control-sample note.}
+  \label{fig:cr_data}
+\end{figure}
 
 \subsection{Pre-opening validation of the control-region machinery (pseudo-data)}
 \label{sec:sidebands}
