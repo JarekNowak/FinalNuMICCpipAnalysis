@@ -137,10 +137,7 @@
     \textbf{The analysis is blind.} Every ``data'' point in this note is Poisson-thrown from the
     central-value Monte Carlo, so no number here is a statement about beam-on data. The four
     background-control regions, which contain no signal-region events, have been opened on beam-on
-    data. They indicate no correction to the background-class normalisations. They do expose a
-    run-level exposure error: the FHC Run-1 beam-on sample is the dataset recorded without the open
-    trigger, while the analysis assumes the open-trigger bookkeeping. Correcting it would raise the
-    FHC cross section by $14\%$, and doing so is a prerequisite for unblinding the signal region.
+    data. They indicate no correction to the background-class normalisations. They did expose a run-level exposure error: the FHC Run-1 beam-on sample was recorded without the open trigger but had been normalised with the open-trigger bookkeeping. The corrected exposure is now adopted and the FHC and combined results are being rebuilt on it, which raises the FHC cross section by $14\%$.
 
     The implementation is validated by same-sample closure, and the size of the statistical
     uncertainties by an ensemble of independent Poisson realisations carried through the whole
@@ -306,10 +303,7 @@ and differs between observables; the physical total is the one-bin extraction, w
     extended to RHC or the proton-tagged family.
   \item \textbf{Uncertainties:} the nominal configured covariance. Identified terms that are
     \emph{not} in it are listed in \S\ref{sec:limitations}.
-  \item \textbf{Before the signal region is opened:} the FHC Run-1 exposure must be resolved --- the
-    beam-on sample appears to be the one recorded without the open trigger, which would raise the
-    FHC cross section by $14\%$ --- and the flux normalisation must be confirmed with the flux
-    contact.
+  \item \textbf{Before the signal region is opened:} the FHC and combined results must be rebuilt on the corrected FHC Run-1 exposure --- the beam-on sample was recorded without the open trigger, and the correction raises the FHC cross section by $14\%$ --- and the flux normalisation must be confirmed with the flux contact.
 \end{itemize}
 \end{minipage}}
 \end{center}
@@ -2543,9 +2537,7 @@ given in \suppref{Sec.}{sec:request}. Three things come out of them.
     This does not stay in the control regions. FHC Run~1 is $37\%$ of the assumed FHC exposure, so
     the correction takes FHC from $8.857$ to $7.766\times10^{20}$~POT and would raise the FHC cross
     section by $14.0\%$ and the combined one by $5.8\%$; RHC is untouched, and fake-data closure is
-    unaffected because the throws use the same assumed exposure. \textbf{No configuration has been
-    changed}: the exposure must be confirmed against the beam bookkeeping before a released
-    normalisation moves. This is an unblinding prerequisite (\S\ref{sec:limitations}).
+    unaffected because the throws use the same assumed exposure. The beam bookkeeping confirms the non-open-trigger pairing, $2.192\times10^{20}$~POT with $5\,748\,692$ triggers; it is adopted in every configuration, FHC Run~1 alone has been re-thrown at it, and the FHC and combined results are being rebuilt. Until that rebuild lands, every FHC and combined number in this note is the old normalisation (\S\ref{sec:limitations}).
   \item \textbf{The remaining deficit is not signal contamination.} The regions sit $8$--$16\%$
     below prediction. Tightening each region so that it holds less signal --- the CC$0\pi$ region
     goes from $8.7\%$ to $2.1\%$ signal while keeping $58\%$ of its events --- leaves the

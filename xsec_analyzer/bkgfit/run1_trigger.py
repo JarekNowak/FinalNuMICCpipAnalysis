@@ -1,5 +1,9 @@
 """run1_trigger.py -- is the FHC Run-1 beam-on sample the open-trigger dataset or not?
 
+RESOLVED: the beam bookkeeping confirms 2.192e20 POT and 5 748 692 triggers (no open trigger),
+which is the pairing this test selected. The configs carry it since commit 619e5e8; this script
+remains as the record of the evidence.
+
 Two bookkeeping values exist for FHC Run 1:
 
     without open trigger   2.192e20 POT,  5 748 692 triggers

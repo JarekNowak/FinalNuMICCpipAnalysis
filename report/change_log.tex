@@ -893,6 +893,25 @@ $0.91\to0.92$), so the $8$--$16\%$ control-region deficit is not signal contamin
     unregularised, so the two classes are now audited separately.
 \end{itemize}
 
+\section{Corrections of 2026-09-19}
+
+\subsection{The FHC Run-1 exposure: confirmed and adopted}
+The FHC Run-1 control-region deficit (fitted exposure factor $0.520\pm0.020$; every region at
+$0.60$--$0.72$ against unity elsewhere) had a specific cause: the beam-on sample was recorded
+\emph{without} the open trigger, $2.192\times10^{20}$~POT with $5\,748\,692$ triggers, while every
+configuration carried the open-trigger pair, $3.283\times10^{20}$ with $9\,846\,635$. Six pairings
+were tested against the four regions, including a third trigger count found in the repository; only
+the non-open pair brings all four to unity ($0.970$, $1.090$, $1.380$ on $40$ events, $0.948$), and
+the beam-off-dominated cosmic region discriminates the gate count on its own. The pairing was then
+confirmed against the beam bookkeeping.
+
+Adopted in every configuration (17 file-properties lists, the throw macros, the gate counts in the
+analysis code, the normalisation audit); FHC Run~1 alone re-thrown; FHC exposure $8.857\to
+7.766\times10^{20}$, combined $1.9939\to1.8848\times10^{21}$. The FHC and combined extractions are
+rebuilt on it, raising $\sigma_{\rm FHC}$ by $14.0\%$ and $\sigma_{\rm comb}$ by $5.8\%$; RHC and
+the fake-data closure are unaffected. \texttt{bkgfit/run1\_trigger.py} is the record of the
+evidence.
+
 \section{Open items}
 
 The following remain outstanding following the 2026-09-07 review. None is a correction awaiting application;
