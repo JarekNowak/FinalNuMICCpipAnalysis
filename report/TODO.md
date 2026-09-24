@@ -65,3 +65,14 @@ Last commit: see git log. Untracked NuWro generator dirs remain (NuWro closure d
 12. Memory files to trust: `release-2026-09-19-state`, `hardcoded-run-scales`, `far-sidebands`
     (corrected), `altmodel-closure`, `nuwro-closure-fails` (MCS section superseded by the data-side
     result). After any exposure/flux change grep macros for 0.14101 / 3.283e20 / 9846635 / 6.60865.
+
+## Later (before unblinding; beam-on files not used yet)
+
+13. **Beam-on run lists vs exposure (Run 4/5).** Our beam-on files for Run 4b, 4d and 5 are event-level
+    SUPERSETS of the good-run files in the FNAL copy `/data/uboone/temp/custom_pelee_ntuples`
+    (+164 runs / +5.5 %, +52 runs / +1.9 %, +166 runs / +5.5 %; Run 4d equals the folder's `_all` file;
+    good-run list in the folder's `selectGoodRuns.cc`). Check whether their POT/trigger values
+    (Run 4 2.075e20 / 4,131,149; Run 5 2.231e20 / 5,154,196) were counted on the good-run lists; if so,
+    apply the good-run filter to the beam-on (and beam-off) files. The per-directory POT/trigger text
+    files did not arrive with the rsync -- re-sync them first. Run 1 is settled (user, 2026-09-24):
+    keep our 829-run beam-good file, ignore the folder's 923-run file.
