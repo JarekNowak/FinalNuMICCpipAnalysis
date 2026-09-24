@@ -1,4 +1,4 @@
-"""mcs_eval.py -- the MCS momentum-scale term for d sigma/dp_mu (FHC), from the DATA-SIDE variation.
+"""mcs_eval.py -- the MCS momentum-scale term for d sigma/dp_mu, from the DATA-SIDE variation.
 
 The fake data are re-thrown with every MCS-measured muon momentum (reco != range, 63% of the selected
 sample) scaled by 1 +- 0.05 while the simulation, the response and the selection flag stay nominal
@@ -9,13 +9,18 @@ regulariser's response to a remapped variable, not the systematic; it is superse
 Per bin: half-difference D_i = (x_up - x_dn)/2 of the unfolded result, quoted as a fraction of the
 nominal and in units of the released total uncertainty; the covariance C_ij = D_i D_j (fully
 correlated unisim) is written in the release units (bin integrals, like cov_*.txt) as
-data_release/cov/incl_FHC5_pmu/cov_MCSscale.txt, with cov_total_plusMCS.txt = cov_total + C.
+data_release/cov/incl_<CFG>_pmu/cov_MCSscale.txt, with cov_total_plusMCS.txt = cov_total + C.
 
-    python3 report/tools/mcs_eval.py
+    python3 report/tools/mcs_eval.py [FHC5|RHCFULL|COMB]      (default FHC5)
+
+RHC and combined (2026-09-24): the RHC fake data are scaled the same way
+(mcs_scale_fakedata.C(s,tag,"rhc")); the combined variation scales FHC and RHC together, i.e. one
+common MCS scale, which is the correlated assumption (same detector, same estimator).
 """
-import numpy as np, uproot, os
+import numpy as np, uproot, os, sys
+CFG=sys.argv[1] if len(sys.argv)>1 else 'FHC5'
 RB='/data/uboone/processed/rebuild_alt/'; LIVE='/data/uboone/processed/'
-REL='/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/report/data_release/cov/incl_FHC5_pmu/'
+REL=f'/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/report/data_release/cov/incl_{CFG}_pmu/'
 def cov(path):
     n=None; C=None
     for l in open(path):
@@ -28,10 +33,10 @@ def write(path,C,n):
         o.write(f'numXbins {n}\nnumYbins {n}\nxbin  ybin  z\n')
         for i in range(n):
             for j in range(n): o.write(f'{i}  {j}  {C[i,j]:.17e}\n')
-nom=uproot.open(LIVE+'closure_hists_xsec_FHC5_pmu.root')['h_unfolded_nuwro']
+nom=uproot.open(LIVE+f'closure_hists_xsec_{CFG}_pmu.root')['h_unfolded_nuwro']
 v=nom.values(); e=nom.errors(); w=np.diff(nom.axis().edges()); n=len(v)
-up=uproot.open(RB+'closure_hists_xsec_ccpi_FHC5_pmu_mcsdataup05.root')['h_unfolded_nuwro'].values()
-dn=uproot.open(RB+'closure_hists_xsec_ccpi_FHC5_pmu_mcsdatadn05.root')['h_unfolded_nuwro'].values()
+up=uproot.open(RB+f'closure_hists_xsec_ccpi_{CFG}_pmu_mcsdataup05.root')['h_unfolded_nuwro'].values()
+dn=uproot.open(RB+f'closure_hists_xsec_ccpi_{CFG}_pmu_mcsdatadn05.root')['h_unfolded_nuwro'].values()
 D=(up-dn)/2
 print('bin   nominal   up/nom   dn/nom   half-diff/nom   half-diff/sigma_tot')
 for i in range(n): print(f'{i+1:>3}  {v[i]:8.4f}  {up[i]/v[i]:7.3f}  {dn[i]/v[i]:7.3f}  {D[i]/v[i]:+13.3f}  {D[i]/e[i]:+12.2f}')

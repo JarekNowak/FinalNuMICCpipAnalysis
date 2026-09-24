@@ -1,25 +1,18 @@
-# TODO — state at 2026-09-24 (session handover)
+# TODO — state at 2026-09-24 (updated end of second session)
 
-Last commit: e3e59fa. Working tree clean apart from `slurm/ensemble_jobs_2026-09-19.txt`
-(job bookkeeping, commit with the next item) and the untracked NuWro generator dirs
-(NuWro closure dropped; leave or delete).
 
-## Immediate (mechanical, ~1 h)
+Last commit: see git log. Untracked NuWro generator dirs remain (NuWro closure dropped; leave or delete).
 
-1. **Final ensemble refresh.** All 600 members are in (the 5 transient failures were re-run:
-   SLURM 3356048/3356049). Run, from `xsec_analyzer/`:
-   `bash slurm/ens_statcov_all.sh` (incremental, ~40 min) then
-   `python3 ../report/tools/ensemble_tables.py` (patches the coverage tables of the note and
-   supplement, writes `data_release/ensemble_2026-09-20.tsv`). Then in `analysis_note.tex` remove
-   the sentence "Two ensembles are still filling ($51$ and $46$ members); the others have
-   $96$--$100$." and in the supplement/note prose replace "$46$--$100$ members" by "$100$ members"
-   and "(−0.24 for the RHC total on 46 members)" by the refreshed value; check the change-log
-   open item "Ensemble offset" numbers; recompile (note, supplement, change_log); commit.
+## Done 2026-09-24 (second session)
 
-2. **Verify the rebuilt binaries** (the reason for the restart): after `make`, check the mtimes of
-   `bin/univmake` and `bin/UnfolderNuMI` (bare `make` was once a no-op), then re-run one release
-   unfold (e.g. `slurm/unfold_incl_local.sh` FHC p_mu) and confirm `closure_summary.tsv` /
-   `current_results.tsv` are unchanged (`python3 report/check_tables.py`, `check_staleness.py`).
+1. **Ensemble refresh: DONE** (1e64f8f). All six ensembles are complete at 100 members. The first
+   refresh exposed a race: concurrent ensembles re-threw the same `ens/fakedata_*_t<T>.root`, and
+   10 members read truncated trees. They were quarantined in `ens/corrupt_race_2026-09-20/` and re-run.
+   The throw macros now write to a temporary file and rename it. Final: widths 0.92–1.07, offsets
+   0.4–1.1% at ≤2.0σ (the RHC total is −0.81% at 2.0σ).
+2. **Rebuilt binaries verified**: make is a true no-op (sources older than binaries); an FHC p_mu
+   re-unfold reproduces all 38 released covariances and the closure sidecar bit-for-bit;
+   check_tables and check_staleness are clean.
 
 ## Open analysis items (need a decision or work)
 
@@ -34,9 +27,10 @@ Last commit: e3e59fa. Working tree clean apart from `slurm/ensemble_jobs_2026-09
    not implicated (cosmic region 0.95 ± 0.17). Documented in cr_data_note (tab:perperiod_corrected),
    analysis_note §cr_outcome + status box, change_log open items.
 
-4. **MCS momentum-scale term: propagate.** Released only as `cov_MCSscale.txt` for FHC p_mu (up to
-   0.34σ per bin; integral −6.8 % / +2.1 %). Still to do: RHC and combined p_mu (same data-side
-   recipe: `macros/mcs_scale_fakedata.C` on the RHC fake data), the other observables (enters via
+4. **MCS momentum-scale term: propagate.** Now released for p_mu in all three configurations
+   (`cov_MCSscale.txt`; `report/tools/mcs_eval.py CFG`). FHC and combined are ≤0.35σ. RHC is ≤0.32σ
+   except the open top bin, which is +21 %/−44 % (0.85σ): a candidate for the p_mu binning or the
+   prior discussion. Still to do: the other observables (enters via
    the p_mu acceptance), and inclusion inside the framework covariance rather than as a released
    add-on. Decide whether ±5 % is the right prior (the note argues from the −10 % estimator bias).
 

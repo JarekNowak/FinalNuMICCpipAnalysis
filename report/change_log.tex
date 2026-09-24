@@ -1039,6 +1039,18 @@ low at $0.5$--$2.0\sigma$ on the mean (the $2.0\sigma$ is the RHC total, $-0.81\
 tables of the note and the supplement and \texttt{data\_release/ensemble\_2026-09-20.tsv} are
 regenerated.
 
+\subsection{MCS momentum-scale term extended to RHC and combined $p_\mu$}
+The data-side variation of 2026-09-19 is now run for the other two configurations
+(\texttt{macros/mcs\_scale\_fakedata.C} takes the beam mode; RHC fake data $\pm5\%$ on the $60\%$ of
+selected muons measured by MCS; the combined configuration scales FHC and RHC together; SLURM
+3427764). Combined: half-differences $5$--$10\%$ in the five lowest bins, $2\%$ and $14\%$ in the two
+highest, at most $0.35\sigma$; integral $-2.5\%$/$+2.4\%$. RHC: $6$--$15\%$ ($\le0.32\sigma$) in
+the six lowest bins but $+21\%$/$-44\%$ ($0.85\sigma$) in the open top bin; integral
+$-0.8\%$/$-6.8\%$. Released as \texttt{cov\_MCSscale.txt} and \texttt{cov\_total\_plusMCS.txt}
+under \texttt{incl\_RHCFULL\_pmu} and \texttt{incl\_COMB\_pmu} (\texttt{report/tools/mcs\_eval.py CFG}).
+The RHC top bin is the one place where the term is not small against the quoted uncertainty.
+Propagation inside the framework and to the other observables remains open.
+
 \section{Open items}
 
 The following remain outstanding following the 2026-09-07 review. None is a correction awaiting application;
@@ -1064,9 +1076,9 @@ yet made.
   \item \textbf{Tests not yet made (not gating):} the ensemble extended to the proton-tagged
     family (the inclusive ensembles now cover FHC, RHC and the combined configuration).
   \item \textbf{Systematic terms not in the released covariance:} the MCS muon momentum-scale
-    term is evaluated at $\pm5\%$ on the data side and released as a separate component for FHC
-    $p_\mu$ (up to $0.34\sigma$ per bin), but is not propagated inside the framework nor to the other
-    configurations and observables; the beam-off gate-ratio and Run-2 stand-in terms ($\lesssim0.4\%$
+    term is evaluated at $\pm5\%$ on the data side and released as a separate component for $p_\mu$
+    in all three configurations (up to $0.35\sigma$ per bin in FHC and combined, $0.85\sigma$ in the
+    RHC open top bin), but is not propagated inside the framework nor to the other observables; the beam-off gate-ratio and Run-2 stand-in terms ($\lesssim0.4\%$
     of the total); the beamline-geometry flux term ($\lesssim0.2\%$).
   \item \textbf{FHC Run~1 residual:} the $13\pm2\%$ offset of FHC Run~1 relative to the other five
     periods in the control regions, which survives the exposure correction and is not covered by any
