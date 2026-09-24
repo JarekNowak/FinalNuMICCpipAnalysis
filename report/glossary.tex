@@ -1,20 +1,20 @@
 % glossary.tex -- shared by the analysis note and the technical supplement.
-% Plain-language definitions, in the order a reader meets the ideas, not alphabetical.
+% Plain-language definitions, ordered as the concepts appear in the analysis.
 \section*{Glossary}
 \addcontentsline{toc}{section}{Glossary}
 \label{sec:glossary}
 
 \begin{description}\itemsep2pt
   \item[Signal definition] The set of particles leaving the nucleus that counts as the process being
-    measured, with momentum thresholds and a fiducial requirement. It is deliberately \emph{not} a
-    statement about the interaction mechanism, because final-state interactions mix mechanisms and
-    only the final state is observable.
+    measured, with momentum thresholds and a fiducial requirement. It makes no statement about the
+    interaction mechanism, because final-state interactions mix mechanisms and only the final state
+    is observable.
   \item[Fake data / pseudo-data] A simulated dataset used in place of beam-on data while the
     analysis is blind. Here it is a Poisson throw: each simulated event is replicated a
     Poisson-distributed number of times with mean equal to its weight at data exposure, so the
     sample has the statistical fluctuations of a real dataset.
-  \item[Blind] The signal region has not been looked at in beam-on data. Every plotted ``data''
-    point in these documents is fake data.
+  \item[Blind] The signal region has not been examined in beam-on data. Every plotted ``data''
+    point of the signal region is fake data.
   \item[Beam-on, beam-off (EXT), dirt] Beam-on data are recorded in the beam spill; beam-off data are
     recorded between spills and measure cosmic-ray activity; ``dirt'' is simulated neutrino
     interactions outside the cryostat whose products enter the detector. The prediction is
@@ -32,15 +32,15 @@
     universes vary the flux; GENIE universes the interaction model; reinteraction universes the
     hadron transport.
   \item[Detector variations (detVar)] Dedicated simulation samples with one aspect of the detector
-    response changed --- light yield, recombination, space-charge, wire response --- used to
-    estimate the detector uncertainty.
+    response changed (light yield, recombination, space charge or wire response), used to estimate
+    the detector uncertainty.
   \item[Migration matrix, efficiency, smearceptance] The migration matrix $M_{ij}$ is the probability
     that an event in true bin $j$ is reconstructed in bin $i$; the efficiency $\varepsilon_j$ is the
     fraction of true bin $j$ that is selected at all. Their product $S_{ij}=\varepsilon_j M_{ij}$
     is the response the unfolding inverts; we call it the smearceptance matrix.
-  \item[Migration diagonal] The fraction of events reconstructed in a bin that were truly in that
-    bin (the column-normalised diagonal of $M$). A binning is accepted only if every bin's diagonal
-    exceeds $0.68$.
+  \item[Migration diagonal] The fraction of the selected events of a true bin that are
+    reconstructed in the same bin (the diagonal of the column-normalised $M$). A binning is accepted
+    only if every bin's diagonal exceeds $0.68$.
   \item[Unfolding, Wiener-SVD] Solving for the true spectrum given the reconstructed one and the
     response. A plain inversion amplifies statistical noise; Wiener-SVD regularises it with a filter
     built from the simulation, trading a small bias for a large reduction in variance.

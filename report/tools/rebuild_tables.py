@@ -108,6 +108,14 @@ pp={c:part(c) for c in CFS}
 rows=[r"$\sigma(0.175<p_\pi<0.205\GeVc)$ & "+' & '.join(f"${pp[c][0][0]:.3f}\\pm{pp[c][0][1]:.3f}$" for c in CFS)+' \\\\',
       r"$\sigma(p_\pi>0.205\GeVc)$        & "+' & '.join(f"${pp[c][1][0]:.3f}\\pm{pp[c][1][1]:.3f}$" for c in CFS)+' \\\\']
 patch('tab:ppi_partial',T('lccc','Region & FHC & RHC & Combined',rows))
+patch('tab:ppi_partial_main',T('lccc','Region & FHC & RHC & Combined',rows))   # the analysis-note copy (was hand-copied until 2026-09-24)
+# --- tab:ac_rowsums (analysis note): range of the A_C row sums per observable and configuration, from the
+#     closure sidecars (row i of A_C = y-bin i of h_A_C, summed over x), the same definition as infocontent.py
+import uproot as _up, numpy as _np
+def _acr(c,o):
+    r=_up.open(f'/data/uboone/processed/closure_hists_xsec_{c}_{o}.root')['h_A_C'].values().sum(axis=0); return r.min(), r.max()
+rows=[LAB[o]+' & '+' & '.join("${:.2f}$--${:.2f}$".format(*_acr(c,o)) for c in CFS)+' \\\\' for o in INCL]
+patch('tab:ac_rowsums',T('lccc','Observable & FHC & RHC & Combined',rows))
 # --- tab:cutcount + supplement tab:total_xsec: counts from the counting log (CV prediction),
 #     cross section and uncertainty from the one-bin extraction (data_release/total_xsec.tsv)
 vals=collections.OrderedDict(); cur=None; gens={}

@@ -14,7 +14,15 @@ LIVE='/data/uboone/processed'
 # smallest column-normalised migration diagonal (FHC), from the binning re-check table of the
 # technical supplement; p_pi is the two-region scheme (91% / 76%)
 DIAG={'pmu':0.33,'ppi2bin':0.76,'costhmu':0.68,'thetamu':0.67,'costhpi':0.74,'thmupi':0.79}
-UNC ={'pmu':43.5,'ppi2bin':53.9,'costhmu':44.9,'thetamu':32.4,'costhpi':41.0,'thmupi':37.5}
+# bin-averaged total uncertainty including data statistics, read from the same systematics dumps as
+# the "Total (incl. data stat)" row of tab:systbreak (it was a hand-copied constant until 2026-09-24)
+DUMP='/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/logs/systdump'
+def _total(o):
+    for line in open(f"{DUMP}/fhc5_{'ppi' if o=='ppi2bin' else o}.dump"):
+        p=line.split()
+        if len(p)==3 and p[0]=='[SYSTDUMP]' and p[1]=='total': return float(p[2])
+    raise KeyError(o)
+UNC ={o:_total(o) for o in ['pmu','ppi2bin','costhmu','thetamu','costhpi','thmupi']}
 LAB ={'pmu':r'$p_\mu$','ppi2bin':r'$p_\pi$ (two regions)','costhmu':r'$\cos\theta_\mu$',
       'thetamu':r'$\theta_\mu$','costhpi':r'$\cos\theta_\pi$','thmupi':r'$\theta_{\mu\pi}$'}
 rows=[]

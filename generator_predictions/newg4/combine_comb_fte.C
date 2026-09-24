@@ -8,12 +8,12 @@
 //
 //   FHC: Phi_numu=4.43515e-10, Phi_numubar=2.37644e-10  (>60 MeV, /POT/cm2)
 //   RHC: Phi_numu=2.92348e-10, Phi_numubar=3.52298e-10
-//   POT_FHC = 8.857e20  (nue-matched FHC exposure)
+//   POT_FHC = 7.766e20  (full FHC exposure, non-open-trigger Run 1; was 8.857e20 until 2026-09-24)
 //   POT_RHC = 1.1082e21 (full RHC exposure)
 void combine_comb_fte(const char* fhc_fte,const char* rhc_fte,const char* out_fte){
   const double PhiF = 4.43515e-10 + 2.37644e-10;   // 6.81159e-10
   const double PhiR = 2.92348e-10 + 3.52298e-10;   // 6.44646e-10
-  const double POTF = 8.857e20, POTR = 1.1082e21;
+  const double POTF = 7.766e20, POTR = 1.1082e21;
   const double wF = PhiF*POTF, wR = PhiR*POTR, WT = wF+wR;
   printf("  weights: E_FHC=%.4e E_RHC=%.4e  frac(FHC)=%.4f frac(RHC)=%.4f\n",
          wF,wR,wF/WT,wR/WT);

@@ -59,7 +59,7 @@ for l in table('tab:chi2_incl') or []:
     if c[0] in ('FHC','RHC','comb'): beam={'FHC':'fhc5','RHC':'rhcfull','comb':'comb'}[c[0]]
     if len(c)>2 and c[1] in INV and beam:
         if abs(num(c[2])-float(res[('incl',beam,INV[c[1]])]['chi2_truth']))>0.006: bad.append(f"tab:chi2_incl {beam} {INV[c[1]]}: {c[2]}")
-for lab in ['tab:systbreak','tab:systematics','tab:cutcount','tab:cutflow','tab:ppi_partial','tab:chi2_theta']: table(lab)
+for lab in ['tab:systbreak','tab:systematics','tab:cutcount','tab:cutflow','tab:ppi_partial','tab:ppi_partial_main','tab:ac_rowsums','tab:chi2_theta']: table(lab)
 if bad:
     print("TABLE CONSISTENCY FAILURES (%d):"%len(bad)); [print("  "+b) for b in bad]; sys.exit(1)
 print("all note tables consistent with the release (%d extractions checked)"%len(res))

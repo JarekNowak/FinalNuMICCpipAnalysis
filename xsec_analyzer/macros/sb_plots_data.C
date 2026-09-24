@@ -8,7 +8,7 @@
 //       real data already contains cosmics and dirt, which here belong to the prediction;
 //   (3) the prediction is scaled to ONLY the run periods for which beam-on data exists.
 //       No Run-2 beam-on sample is staged, so Run 2 is dropped from the MC, the beam-off
-//       and the dirt on both sides. Retained: FHC runs 1,4,5 = 7.589/8.857 = 85.7% of the
+//       and the dirt on both sides. Retained: FHC runs 1,4,5 = 6.498/7.766 = 83.7% of the
 //       FHC exposure; RHC runs 1,3,4 = 8.491/11.082 = 76.6% of the RHC exposure.
 //   usage: root -l -b -q 'macros/sb_plots_data.C("fhc")'
 #include "sb_guard.h"
@@ -36,7 +36,7 @@ void sb_plots_data(const char* mode="fhc", bool compact=false){
     for(auto f:R4) ext.push_back({std::string(E)+f,OCCX*4131149./G4});
     ext.push_back({std::string(E)+R5,OCCX*5154196./G5});
     for(auto r:{"run1","run4c","run4d","run5"}) data.push_back(std::string(B)+"xsec-ana-beamon_fhc_"+r+".root");
-    pot_frac=(2.192+2.075+2.231)/8.857; sc_dirt=0.092402*0.65*pot_frac; runs="Runs 1, 4, 5 (no Run-2 beam-on)";
+    pot_frac=(2.192+2.075+2.231)/7.766; sc_dirt=0.092402*0.65*(2.192+2.075+2.231)/8.857; runs="Runs 1, 4, 5 (no Run-2 beam-on)";  // dirt: 0.092402 is per 8.857e20 (per-POT form)
   } else {
     mc.push_back({std::string(P)+"xsec-ana-Run1_rhc_new_numi_flux_rhc_pandora_ntuple.root",0.06728});
     for(auto s:{"Run4a_rhc","Run4b_rhc","Run4c_rhc"}) mc.push_back({std::string(P)+"xsec-ana-"+std::string(s)+"_new_numi_flux_rhc_pandora_ntuple.root",0.08847});

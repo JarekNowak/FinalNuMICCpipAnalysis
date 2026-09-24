@@ -36,7 +36,7 @@ void combine_ext( const char* numu_f, const char* numubar_f, const char* out_f, 
 
 void combine_comb_ext( const char* fhc_fte, const char* rhc_fte, const char* out_fte, const char* obs_csv ) {
   const double PhiF = 4.43515e-10 + 2.37644e-10, PhiR = 2.92348e-10 + 3.52298e-10;
-  const double POTF = 8.857e20, POTR = 1.1082e21;
+  const double POTF = 7.766e20, POTR = 1.1082e21;   // full FHC exposure (was 8.857e20 until 2026-09-24)
   const double wF = PhiF*POTF, wR = PhiR*POTR, WT = wF+wR;
   TFile fF( fhc_fte ), fR( rhc_fte ), fo( out_fte, "recreate" );
   TObjArray* names = TString( obs_csv ).Tokenize( "," );
