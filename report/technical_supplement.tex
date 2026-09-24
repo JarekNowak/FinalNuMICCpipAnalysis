@@ -3116,7 +3116,7 @@ its input, but a single residual has no width, so it cannot say whether the quot
 uncertainty is correctly sized.  To answer that, up to one hundred statistically independent
 Poisson realisations of the data of each configuration (six extractions: $p_\mu$ and
 $\cos\theta_\mu$ in FHC, $\cos\theta_\mu$ in RHC, the two-region $p_\pi$ in the combined
-configuration, the FHC and RHC one-bin totals; $46$--$100$ members) were each put through the
+configuration, the FHC and RHC one-bin totals; $100$ members each) were each put through the
 \emph{whole} chain ---
 thrown, universes rebuilt from that throw, unfolded --- and the per-bin pull
 \[
@@ -3126,13 +3126,11 @@ formed against the fixed central-value truth smeared by that member's own $A_C$.
 per-throw \emph{fake-data} truth is not a valid reference: it follows the Poisson draw, so
 numerator and reference fluctuate together and the width comes out too small.)
 
-Three extractions were run on the current release, each with the same 32 throws
-(with the weight rule of \noteref{Eq.}{eq:safeweight}),
-chosen to bracket the
-conditioning: the well-behaved $p_\mu$; $\cos\theta_\mu$, whose $A_C$ row sums fall as
-low as $0.17$ in FHC ($0.050$ in RHC) so that the regularisation removes up to $83\%$
-($95\%$) of a bin's normalisation;
-and the one-bin total, which has no regularisation at all. If the uncertainties were
+The throws follow the weight rule of \noteref{Eq.}{eq:safeweight}, and the extractions are
+chosen to bracket the conditioning and the configurations: the well-behaved $p_\mu$;
+$\cos\theta_\mu$, whose $A_C$ row sums fall as low as $0.17$ in FHC ($0.050$ in RHC) so that the
+regularisation removes up to $83\%$ ($95\%$) of a bin's normalisation; the two-region $p_\pi$ of
+the combined configuration; and the one-bin totals, which have no regularisation at all. If the uncertainties were
 mis-sized anywhere, the second is where it would show; if the extraction carried a bias
 independent of the regularisation, the third is where it would show.
 
@@ -3143,29 +3141,29 @@ independent of the regularisation, the third is where it would show.
 Reference covariance & pull mean & pull width & 68\% / 95\% coverage \\
 \midrule
 \multicolumn{4}{l}{\emph{statistical only}}\\
-$d\sigma/dp_\mu$, FHC                    & $-0.08$ & $0.96$ & $68.5\%$ / $96.9\%$ \\
-$d\sigma/d\cos\theta_\mu$, FHC           & $-0.09$ & $1.03$ & $67.6\%$ / $94.6\%$ \\
+$d\sigma/dp_\mu$, FHC                    & $-0.08$ & $0.98$ & $67.9\%$ / $96.4\%$ \\
+$d\sigma/d\cos\theta_\mu$, FHC           & $-0.08$ & $1.01$ & $68.0\%$ / $95.2\%$ \\
 $d\sigma/d\cos\theta_\mu$, RHC           & $-0.07$ & $1.07$ & $66.6\%$ / $93.6\%$ \\
-$d\sigma/dp_\pi$ (two regions), combined & $-0.08$ & $0.90$ & $79.4\%$ / $94.1\%$ \\
-one-bin total, FHC                       & $-0.12$ & $0.98$ & $66.7\%$ / $94.8\%$ \\
-one-bin total, RHC                       & $-0.24$ & $1.10$ & $60.9\%$ / $91.3\%$ \\
+$d\sigma/dp_\pi$ (two regions), combined & $-0.09$ & $0.92$ & $74.0\%$ / $95.5\%$ \\
+one-bin total, FHC                       & $-0.10$ & $0.97$ & $67.0\%$ / $95.0\%$ \\
+one-bin total, RHC                       & $-0.21$ & $0.99$ & $64.0\%$ / $94.0\%$ \\
 \midrule
 \multicolumn{4}{l}{\emph{full}}\\
-$d\sigma/dp_\mu$, FHC                    & $-0.01$ & $0.34$ & $99.1\%$ / $100.0\%$ \\
-$d\sigma/d\cos\theta_\mu$, FHC           & $-0.03$ & $0.35$ & $99.2\%$ / $100.0\%$ \\
+$d\sigma/dp_\mu$, FHC                    & $-0.02$ & $0.34$ & $99.1\%$ / $100.0\%$ \\
+$d\sigma/d\cos\theta_\mu$, FHC           & $-0.02$ & $0.35$ & $99.4\%$ / $100.0\%$ \\
 $d\sigma/d\cos\theta_\mu$, RHC           & $-0.01$ & $0.33$ & $99.0\%$ / $100.0\%$ \\
-$d\sigma/dp_\pi$ (two regions), combined & $-0.01$ & $0.21$ & $100.0\%$ / $100.0\%$ \\
-one-bin total, FHC                       & $-0.01$ & $0.12$ & $100.0\%$ / $100.0\%$ \\
-one-bin total, RHC                       & $-0.03$ & $0.12$ & $100.0\%$ / $100.0\%$ \\
+$d\sigma/dp_\pi$ (two regions), combined & $-0.02$ & $0.22$ & $100.0\%$ / $100.0\%$ \\
+one-bin total, FHC                       & $-0.01$ & $0.11$ & $100.0\%$ / $100.0\%$ \\
+one-bin total, RHC                       & $-0.02$ & $0.11$ & $100.0\%$ / $100.0\%$ \\
 \midrule
 expected                & $0$     & $1$    & $68\%$ / $95\%$ \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-Against the statistical covariance all three widths are consistent with unity --- $1.08$,
-$0.97$ and $1.02$, each determined to $\pm13\%$ ($1/\sqrt{2\times32}$) with this many members --- and the
-interval coverage is correct within the same statistics.  \textbf{The statistical uncertainties are correctly sized, and the strongly
+Against the statistical covariance all six widths are consistent with unity --- $0.92$--$1.07$,
+each determined to about $\pm7\%$ ($1/\sqrt{2\times100}$, more for the multi-bin extractions,
+whose bins are correlated) --- and the interval coverage is correct within the same statistics.  \textbf{The statistical uncertainties are correctly sized, and the strongly
 suppressed observable behaves no differently from the well-conditioned one.}  That the
 severe $A_C$ suppression in $\cos\theta_\mu$ does not distort its uncertainties is the
 more informative of the two results, since $p_\mu$ passing was the expected outcome.
@@ -3178,24 +3176,34 @@ only the data statistics while the denominator carries flux, detector and cross-
 terms that are identical in every member.  That is the same effect as the closure
 $p$-values clustered near unity, now measured rather than argued.
 
-Second, the ensemble means sit below the reference in all six cases, by $0.4$--$1.3\%$
-($0.5$--$1.5\sigma$ on the mean; largest for FHC $\cos\theta_\mu$, $-1.28\%$ at $1.5\sigma$
-on $100$ members), with per-bin pull means of $-0.07$ to $-0.12$ and $-0.24$ for the RHC total
-on $46$ members (Table above; \texttt{data\_release/ensemble\_2026-09-20.tsv}). The
+Second, the ensemble means sit below the reference in all six cases, by $0.4$--$1.1\%$
+($0.5$--$2.0\sigma$ on the mean; largest in significance for the RHC total, $-0.81\%$ at $2.0\sigma$,
+and in size for FHC $\cos\theta_\mu$, $-1.10\%$ at $1.3\sigma$), with per-bin pull means of $-0.07$
+to $-0.10$ and $-0.21$ for the RHC total (Table above; \texttt{data\_release/ensemble\_2026-09-20.tsv}). The
 extractions of one configuration share the same throws and are correlated, so this is a few
 measurements of a small negative offset, each consistent with zero at the present ensemble
 size. The throw itself is unbiased: the mean selected count over the 32
 members of the earlier FHC ensemble (same throw rule) is $1578.7$ against the neutrino-MC expectation of $1580.6$ (ratio $0.999$), so
 whatever offset remains is in the extraction, not in the pseudo-data. The offset is at most two standard
 deviations of the ensemble mean and is largest where the regularisation is strongest,
-but the one-bin total, which has no regularisation, also sits low, so the excess in
+but the one-bin totals, which have no regularisation, also sit low, so the excess in
 $\cos\theta_\mu$ over the common $\approx1\%$ is the only part that can be attributed
 to $A_C$. No correction is applied and no uncertainty is assigned; a larger ensemble
 would settle whether the common offset is real.
 
-The study covers three extractions in one configuration (FHC).  Extending it to RHC and
-to the proton-tagged family would test whether the same holds where the statistics are
-sparser; the machinery is in place.
+Ten of the $600$ members were first built from a truncated read of their fake data: two
+ensembles sharing a throw number re-threw the same file at the same time, and a member that opened
+it mid-write saw part of the tree. Four RHC-total members (Run~2 read at $47$--$72\%$) and one FHC
+$\cos\theta_\mu$ member ($43\%$) were affected materially; they widened the RHC-total pull width
+to $1.28$. Every member was checked (the number of events univmake read against the entries on disk;
+$2791$ of $2800$ inputs agree exactly, and the five remaining one-entry differences are one
+out-of-range truth event in the one-bin binning, which does not enter the reco-level data), and
+the affected members were re-run with the throw written to a temporary file and renamed on
+completion. The table is the corrected result.
+
+The study covers the inclusive sample in all three configurations. Extending it to the
+proton-tagged family would test whether the same holds where the statistics are sparser; the
+machinery is in place.
 
 
 % =============================================================================

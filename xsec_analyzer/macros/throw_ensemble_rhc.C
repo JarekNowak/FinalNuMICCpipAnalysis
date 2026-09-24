@@ -8,7 +8,11 @@ void throw_group_ens(std::vector<const char*> infiles, const char* outfile, doub
   for(auto b:{"weight_All_UBGenie","weight_ppfx_all","weight_reint_all"}) cin.SetBranchStatus(b,0);
   float tcv,pcv,nw; cin.SetBranchAddress("tuned_cv_weight",&tcv);
   cin.SetBranchAddress("ppfx_cv_weight",&pcv); cin.SetBranchAddress("normalisation_weight",&nw);
-  TFile* out=new TFile(Form("%s%s",P,outfile),"recreate"); out->SetCompressionLevel(1);
+  // Write to a private temporary name and rename on success: ensembles sharing a throw id (e.g. RHC
+  // total and COMB, 2026-09-20) re-throw the same file concurrently, and a reader that opened it while
+  // another job was recreating it silently saw a truncated tree (members 56,57,59,60 of RHC total).
+  TString fin=Form("%s%s",P,outfile), ftmp=Form("%s.tmp%d",fin.Data(),gSystem->GetPid());
+  TFile* out=new TFile(ftmp,"recreate"); out->SetCompressionLevel(1);
   TTree* ot=cin.CloneTree(0); float one=1.0f;
   ot->SetBranchAddress("tuned_cv_weight",&one); ot->SetBranchAddress("ppfx_cv_weight",&one); ot->SetBranchAddress("normalisation_weight",&one);
   Long64_t N=cin.GetEntries(); long kept=0;
@@ -16,7 +20,7 @@ void throw_group_ens(std::vector<const char*> infiles, const char* outfile, doub
     int nc=gRandom->Poisson(cv*potscale); for(int c=0;c<nc;c++){one=1.0f;ot->Fill();kept++;} }
   ot->Write("",TObject::kOverwrite);
   TParameter<float> sp("summed_pot",(float)dpot); sp.Write("summed_pot",TObject::kOverwrite);
-  out->Close(); printf("  %-45s POTSCALE=%.5f kept=%ld\n",outfile,potscale,kept);
+  out->Close(); if(gSystem->Rename(ftmp,fin)!=0){ printf("FAILED rename %s\n",ftmp.Data()); gSystem->Unlink(ftmp); } printf("  %-45s POTSCALE=%.5f kept=%ld\n",outfile,potscale,kept);
 }
 void throw_ensemble_rhc(int throw_id=1){
   int s=1000*throw_id;
