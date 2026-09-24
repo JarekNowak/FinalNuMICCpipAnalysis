@@ -14,6 +14,22 @@ Last commit: see git log. Untracked NuWro generator dirs remain (NuWro closure d
    re-unfold reproduces all 38 released covariances and the closure sidecar bit-for-bit;
    check_tables and check_staleness are clean.
 
+## Done 2026-09-24/25 (third session)
+
+- Inclusive analysis note rewritten in analysis order, without em dashes, self-description or release
+  history (3aeaf8a); stale pre-Run-1-fix values corrected (see change log, "Values corrected while
+  rewriting the analysis note"). Combined generator weights fixed (8.857e20 -> 7.766e20) and the result
+  set re-unfolded. MCS term shown to be exactly zero for the non-p_mu inclusive observables.
+
+## Follow-ups from that session
+
+- Proton-tagged theta_p / theta_pip COMB study extractions: their combined generator files
+  (gen2d/*_1p_ext_comb_fte.root) were regenerated with the corrected weights (-0.8%); re-unfold them
+  (UnfolderNuMI on the existing univmakes) and refresh the proton-tagged note tables.
+- Proton-tagged ensembles (SLURM 3427889-91, 3x100: 1p_fhc5 Whad, 1p_fhc5 dpt2bin, 1p_comb pn2bin):
+  when done, `bash slurm/ens_statcov.sh 1p_fhc5 Whad` etc., then ensemble_stat_pulls.evaluate('1p_fhc5_Whad').
+- The technical supplement and proton-tagged note have not had the same style pass as the note.
+
 ## Open analysis items (need a decision or work)
 
 3. **FHC Run-1 residual (gating for unblinding).** On the corrected exposure the frozen global test
