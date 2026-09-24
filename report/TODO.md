@@ -30,8 +30,11 @@ Last commit: see git log. Untracked NuWro generator dirs remain (NuWro closure d
 4. **MCS momentum-scale term: propagate.** Now released for p_mu in all three configurations
    (`cov_MCSscale.txt`; `report/tools/mcs_eval.py CFG`). FHC and combined are ≤0.35σ. RHC is ≤0.32σ
    except the open top bin, which is +21 %/−44 % (0.85σ): a candidate for the p_mu binning or the
-   prior discussion. Still to do: the other observables (enters via
-   the p_mu acceptance), and inclusion inside the framework covariance rather than as a released
+   prior discussion. Other inclusive observables: the term is exactly ZERO (2026-09-24): the selection has no
+   reco-p_mu cut and no other inclusive observable reads the muon momentum, so the scaled fake data give
+   bit-identical results (FHC5 cosθμ/cosθπ/p_π/total checked; SLURM 3427873 cancelled after 9/36).
+   Still to do: the proton-tagged TKI observables (δp_T, δα_T, p_n use the muon momentum vector; needs
+   mcs_scale_fakedata on the w/ fake data), and inclusion inside the framework covariance rather than as a released
    add-on. Decide whether ±5 % is the right prior (the note argues from the −10 % estimator bias).
 
 5. **Proton-tagged model sensitivity.** Low-imbalance δp_T and p_n bins are −1.1/−1.2σ under the
