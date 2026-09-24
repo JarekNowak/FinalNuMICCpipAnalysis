@@ -3,13 +3,17 @@
 # KEPT work directory, so the per-bin statistical covariance tables (mat_table_cov_DataStats.txt etc.)
 # are available for the statistics-only pull test; the SLURM ensemble job deletes its work directory.
 # Members already done are skipped, so the script can be re-run while the ensemble is still filling.
-#   CFG = fhc5 | rhcfull | comb ; OBS = pmu | costhmu | ppi2bin | total ; NMAX default 100.
+#   CFG = fhc5 | rhcfull | comb | 1p_fhc5 | 1p_comb ; OBS = pmu | costhmu | ppi2bin | total ; NMAX default 100.
 # (2026-09-19: generalised from the FHC-only form, which read xsec_fhc_OBS_tT.txt and wrote statcov_OBS_tT.)
 set -u
 CFG=${1:?cfg}; OBS=${2:?obs}; NMAX=${3:-100}
 REPO=/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/xsec_analyzer; PROC=/data/uboone/processed
 export LD_LIBRARY_PATH="/usr/lib64/flexiblas:$(root-config --libdir):$REPO/lib:${LD_LIBRARY_PATH:-}"; export XSEC_ANALYZER_DIR="$REPO"
-case "$OBS" in ppi2bin) SL=configs/ccpi_ppi_slice_config_2bin.txt;; total) SL=configs/ccpi_total_slice_config_opt.txt;; *) SL=configs/ccpi_${OBS}_slice_config_opt.txt;; esac
+if [[ "$CFG" == 1p_* ]]; then   # proton-tagged ensembles (slurm_ensemble_1p.sbatch): ccpi1p slice configs
+  case "$OBS" in *2bin) SL=configs/ccpi1p_${OBS%2bin}_slice_config_2bin.txt;; *) SL=configs/ccpi1p_${OBS}_slice_config.txt;; esac
+else
+  case "$OBS" in ppi2bin) SL=configs/ccpi_ppi_slice_config_2bin.txt;; total) SL=configs/ccpi_total_slice_config_opt.txt;; *) SL=configs/ccpi_${OBS}_slice_config_opt.txt;; esac
+fi
 ok=0; skip=0; fail=0
 for T in $(seq 1 "$NMAX"); do
   XC="$PROC/ens/xsec_${CFG}_${OBS}_t${T}.txt"; [ -f "$XC" ] || continue
