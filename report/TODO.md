@@ -26,8 +26,10 @@ Last commit: see git log. Untracked NuWro generator dirs remain (NuWro closure d
 - Proton-tagged theta_p / theta_pip COMB study extractions: their combined generator files
   (gen2d/*_1p_ext_comb_fte.root) were regenerated with the corrected weights (-0.8%); re-unfold them
   (UnfolderNuMI on the existing univmakes) and refresh the proton-tagged note tables.
-- Proton-tagged ensembles (SLURM 3427889-91, 3x100: 1p_fhc5 Whad, 1p_fhc5 dpt2bin, 1p_comb pn2bin):
-  when done, `bash slurm/ens_statcov.sh 1p_fhc5 Whad` etc., then ensemble_stat_pulls.evaluate('1p_fhc5_Whad').
+- Proton-tagged ensembles: DONE 2026-09-25. All 1600 inputs read complete; statistical pull widths
+  1.02 / 1.08 / 0.99 (W_had, dpt2bin, pn2bin comb), integral offsets within 0.7%. Written into the
+  proton-tagged note (sec:pt_ensemble, table from report/tools/ensemble_tables_1p.py), supplement,
+  change log; data_release/ensemble_1p_2026-09-25.tsv.
 - The technical supplement and proton-tagged note have not had the same style pass as the note.
 
 ## Open analysis items (need a decision or work)

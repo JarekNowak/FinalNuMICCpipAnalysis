@@ -45,6 +45,7 @@ def evaluate(obs, NMAX=100, quiet=False):
     for lab,P in [('statistical only',pull_stat),('full',pull_full)]:
         mm,w,c68,c95=summ(P); out[lab]=dict(mean=mm,width=w,cov68=c68,cov95=c95); _print(f"  {lab:<18} pull mean {mm:+.2f} width {w:.2f} cov68 {100*c68:.1f}% cov95 {100*c95:.1f}%")
         _print("    per-bin means:", ' '.join(f"{sum(b)/len(b):+.2f}" for b in P))
+        out[lab+' per-bin']=[summ([b]) for b in P]
     _print(f"  integral: ensemble mean {m:.4f} vs reference {ref:.4f} -> {100*(m/ref-1):+.2f}% ({(m-ref)/(sd/math.sqrt(len(ints))):+.1f} sigma on the mean; throw-to-throw sd {100*sd/ref:.1f}%)")
     out.update(members=len(ints), bins=nb, mean_integral=m, reference_integral=ref, offset_pct=100*(m/ref-1), offset_sigma=(m-ref)/(sd/math.sqrt(len(ints))), sd_pct=100*sd/ref)
     return out
