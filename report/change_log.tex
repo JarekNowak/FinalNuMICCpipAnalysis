@@ -1103,6 +1103,45 @@ Prerequisite~3 of the proton-tagged note is met for these three observables
 \texttt{ensemble\_tables\_1p.py} and the numbers are released in
 \texttt{ensemble\_1p\_2026-09-25.tsv}.
 
+\section{Binning review of 2026-09-26}
+
+\subsection{The 0.68 and 0.50 criteria applied uniformly (study; no binning changed)}
+Every observable of both families was re-binned on the corrected exposure under the nominal $0.68$
+and a relaxed $0.50$ column-normalised migration criterion, applied in FHC and RHC, with an event
+floor ($70$ selected FHC signal events per inclusive bin, $50$ per proton-tagged bin). At every bin
+count up to twelve the partition with the largest worst-bin diagonal was found by dynamic
+programming (\texttt{report/tools/maximin\_binning.py}), and $141$ candidates were extracted in full
+in FHC, RHC and combined (SLURM 3428213, 3428222, 3428223, 3433027, 3433033). The shape each binning
+retains is measured by the Wiener filter factors, the eigenvalues of $A_C$, and their sum, the degrees
+of freedom for signal; a binning is selected as the fewest bins reaching $90\%$ of the largest
+admissible sum (\texttt{report/tools/binreview\_tables.py}, \texttt{data\_release/binreview\_choices\_2026-09-26.tsv}).
+The supplement section (\S\ref{S-sec:binreview}) gives the tables, the figure and the observable-by-observable
+findings. The released $p_\mu$ (worst diagonal $0.33$) and $W_{\rm had}$ ($0.09$) fail both criteria;
+$\cos\theta_\mu$ ($0.67$) and $\theta_\mu$ ($0.65$) fail $0.68$ and pass it with optimised edges at the
+same five bins; no two-bin $\delta\alpha_T$ passes $0.68$; the $\theta_p$ and $\theta_{\pi p}$ study
+binnings hold $21$ and $42$ events in their sparsest bin. Selected under $0.68$ and $0.50$: $p_\mu$ four
+and six bins, $p_\pi$ two and three, $\cos\theta_\mu$ seven and eight, $\theta_\mu$ eight and ten,
+$\cos\theta_\pi$ seven, $\theta_{\mu\pi}$ five to ten (equivalent), $W_{\rm had}$ two, $W_{\pi p}$ one and
+two, $\delta p_T$ and $p_n$ two, $\delta\alpha_T$ one and two, $\delta\phi_T$ two and three, $\theta_p$
+four, $\theta_{\pi p}$ three and four. The same partition retains up to one degree of freedom more as
+$\cos\theta_\mu$ than as $\theta_\mu$, because the regulariser acts on the density. The recommendation
+is $0.68$ for every observable; the decision is open (below). A single-throw closure cannot establish
+the coverage of a new binning, so each adopted one needs its own ensemble.
+
+\subsection{Statements corrected by the review (text moved)}
+Four statements about the released binnings were wrong and are corrected. The note's appendix on
+alternative binnings said that every binning is the coarsest that meets the criterion and that the
+conditioning of $A_C$, not the diagonal, limits the binning: the released $p_\mu$ and
+$W_{\rm had}$ fail both criteria, $\cos\theta_\mu$ and $\theta_\mu$ fail $0.68$, and the threshold of
+about $0.1$ on $s_{\min}/s_1$ used to reject candidates is not met by most released binnings. The
+note's appendix on distributions not reported said that the $W_{\rm had}$ response is adequate at
+six bins: all six fail $0.68$ and five fail $0.50$. The supplement's re-check said that
+$\cos\theta_\mu$ and $\theta_\mu$ cannot go finer: with optimised edges both admit more bins, and
+their released five bins fail $0.68$ where optimised five-bin edges pass. The RHC-derived $\theta_p$
+edges were presented as an improvement: they leave $21$ selected events in the last bin. The
+proton-tagged note's binning prerequisite now states the $W_{\rm had}$ finding, and the note's
+unblinding requirements include the choice of criterion and binnings.
+
 \section{Open items}
 
 The following remain outstanding following the 2026-09-07 review. None is a correction awaiting application;
@@ -1124,7 +1163,9 @@ yet made.
     released configurations (no alternative-generator test exists on the released chain);
     the clean-cache bit-identical reproduction repeated on the 2026-09-06 release; the inverted-proton-PID
     control region for any proton-tagged result; the documented treatment of any
-    control-region discrepancy under the frozen procedure.
+    control-region discrepancy under the frozen procedure; the choice of migration criterion and
+    binnings (the released $p_\mu$ and $W_{\rm had}$ fail both $0.68$ and $0.50$, $\cos\theta_\mu$ and
+    $\theta_\mu$ fail $0.68$; supplement, \S\ref{S-sec:binreview}).
   \item \textbf{Ensembles:} the inclusive ensembles cover FHC, RHC and the combined configuration,
     and three proton-tagged ensembles cover $W_{\rm had}$, $\delta p_T$ and $p_n$; no test of this
     kind remains outstanding.
@@ -1193,6 +1234,9 @@ Proton candidate $=$ leading proton  & $59\%$ (and $31\%$ ``not a proton'') & no
 $\theta_p$ bin edges                & $0,\,0.597,\,0.942,\,1.287,\,\pi$ & now the RHC-derived $0,\,0.659,\,1.068,\,1.539,\,\pi$~rad (2026-09-18) \\
 Control-region detector term        & $\sim\!20\%$ on CR totals & $\sim\!2\%$; the sideband \texttt{detVar} ratios were not POT-normalised \\
 CR muon-angle shape failure         & reported in CC$0\pi$ and $\pi^0$ & withdrawn: the sideband MC predated the beam-frame correction \\
+Finest $\cos\theta_\mu$, $\theta_\mu$ binning & five bins, ``cannot go finer'' & released five fail $0.68$; optimised edges admit more (2026-09-26 review) \\
+$W_{\rm had}$ six-bin response       & ``adequate''     & fails $0.68$ in all six bins, $0.50$ in five; two regions admissible \\
+Binning information measure         & $s_{\min}/s_1\gtrsim0.1$ & Wiener filter factors of $A_C$ and their sum; most released binnings fail the old threshold \\
 \bottomrule
 \end{tabular}
 \end{center}

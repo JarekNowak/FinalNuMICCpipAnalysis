@@ -122,7 +122,8 @@
     matrices and covariances. \textbf{Status.} The one-bin proton-tagged total is proposed as a
     secondary result. Every differential and two-dimensional product is a validation product, not
     proposed for approval, until the dedicated inverted-proton-PID control region exists, the
-    hadronic-mass proxy and $p_n$ prescriptions are validated for pion production, and the
+    hadronic-mass proxy and $p_n$ prescriptions are validated for pion production, $W_{\rm had}$ is
+    binned to meet the migration criterion, and the
     model sensitivity that the non-nominal-model closure now
     exposes in the low-imbalance bins ($1.1$--$1.2\sigma$) is carried or excluded. The
     differential $W_{\pi p}$ shape is withdrawn. Fake-data ensembles show correctly sized statistical
@@ -246,8 +247,9 @@ trades signal statistics for a fully reconstructed hadronic final state.
 
 Eleven observables are extracted in the proton-tagged subsample; ten are carried as
 \emph{secondary validation products}, with their covariances but not proposed for
-approval in this review (the binning validation of $W_\mathrm{had}$ and the dedicated
-control region are incomplete, \noteref{Sec.}{sec:limitations}); the eleventh, the
+approval in this review (the six-bin $W_\mathrm{had}$ fails the migration criterion,
+\suppref{Sec.}{sec:binreview}, and the dedicated control region is incomplete,
+\noteref{Sec.}{sec:limitations}); the eleventh, the
 differential $W_{\pi p}$ shape, is withdrawn (its files are in the release for
 completeness, flagged as such in \texttt{index\_extractions.tsv}), and the robust
 proton-tagged deliverable proposed as a headline is the one-bin total cross section
@@ -272,7 +274,9 @@ from the muon versus the summed $(\pi+p)$ hadronic system using the framework ST
 Proton momenta are obtained from
 the proton-hypothesis range-based kinetic energy. $W_\mathrm{had}$ is measured
 in six equal-population bins ($W_{\pi p}$ was binned the same way for the diagnostic
-study in the supplement); the four TKI variables use the coarsened two-bin scheme
+study in the supplement), whose migration diagonals ($0.09$--$0.57$) are below the criterion;
+the only $W_\mathrm{had}$ binning that meets it is two regions split at $1.18$~GeV/$c^2$
+(\suppref{Sec.}{sec:binreview}). The four TKI variables use the coarsened two-bin scheme
 adopted after the finer binning was found to sit inside the resolution
 (\suppref{Sec.}{sec:w_binning}); the reverse-horn-current sample uses the same binning
 as FHC. The five inherited kinematic observables use the inclusive-analysis binning (two to seven bins; the proton-tagged
@@ -592,9 +596,9 @@ directions; the two have to be read together, here and everywhere else in this n
 Two entries in that table are worth reading against each other. $\cos\theta_\mu\times p_\mu$
 screened best of the eight on the migration diagonal ($0.70/0.68$) and is rank-deficient in FHC
 ($0.002$); $\theta_p\times\delta p_T$ screened worst of the proton-tagged pairs and conditions best
-of all. The diagonal is a necessary condition, not a sufficient one, and the regularised response is
-what decides --- the same lesson the one-dimensional binning study returns
-(\noteref{Appendix}{app:altbinning}).
+of all. The diagonal is a necessary condition, not a sufficient one: what the regularised response
+retains decides, and the one-dimensional review measures that by the Wiener filter factors of $A_C$
+(\suppref{Sec.}{sec:binreview}).
 
 Figures~\ref{fig:2dslices} and~\ref{fig:2dmap} show the two usable pairs. The slice form is how a
 double-differential result is normally published and how the generators are compared; the map is the
@@ -739,8 +743,10 @@ Before any proton-tagged differential result is promoted beyond validation:
 \begin{enumerate}\itemsep2pt
   \item construct and open the inverted-proton-PID control region, which separates the
     proton$\to$pion and pion$\to$proton misidentification directions;
-  \item validate the $W_{\rm had}$ binning with an edge scan, and the pion-production meaning of
-    $p_n$, $p_L$ and the calorimetric mass proxy;
+  \item bin $W_{\rm had}$ to meet the migration criterion: the edge scan of
+    \suppref{Sec.}{sec:binreview} finds the six bins in use below it in every bin, and two regions
+    split at $1.18$~GeV/$c^2$ as the only binning that meets it; and validate the pion-production
+    meaning of $p_n$, $p_L$ and the calorimetric mass proxy;
   \item demonstrate statistical coverage with ensembles for this family: done for $W_{\rm had}$,
     the two-bin $\delta p_T$ (FHC) and the two-bin $p_n$ (combined), with pull widths $0.99$--$1.08$
     (\S\ref{sec:pt_ensemble});

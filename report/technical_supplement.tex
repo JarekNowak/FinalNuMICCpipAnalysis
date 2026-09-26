@@ -889,6 +889,245 @@ did change is the new $\theta_p$, whose edges were taken from the RHC chain rath
 after the scan was run on both: at the same four bins they condition three to four times better in
 both usable configurations.
 
+\paragraph{Conclusions corrected by the binning review.}
+The review of \S\ref{sec:binreview}, on the corrected exposure and with the edges optimised at every
+bin count rather than chosen by hand, corrects three of the conclusions above. First, the released
+five-bin $\cos\theta_\mu$ and $\theta_\mu$ fail the $0.68$ criterion (worst diagonals $0.67$ and
+$0.65$), optimised edges at the same five bins pass it, and both variables admit finer binnings that
+retain more shape. Second, the proton-tagged candidates were rejected on a conditioning threshold that
+the released binnings themselves do not meet; the review measures the retained shape by the Wiener
+filter factors of $A_C$ instead. Third, the six-bin $W_\mathrm{had}$ fails $0.68$ in all six bins and
+$0.50$ in five, and the RHC-derived $\theta_p$ edges leave $21$ selected events in the last bin.
+
+\section[Binning review against the 0.68 and 0.50 migration criteria]{Binning review against the 0.68 and 0.50 migration criteria\scopetag{shared}}
+\label{sec:binreview}
+
+\paragraph{What a binning has to satisfy.}
+A true bin is admissible when most of its selected signal is reconstructed in the same bin: the
+diagonal of the column-normalised migration matrix must reach $0.68$, the value used in the BNB
+CC$1\pi$ measurements, or $0.50$ in the relaxed variant reviewed here. The criterion bounds how much
+of a bin's content the unfolding moves between bins, and therefore how strongly the result leans on
+the modelled migrations. It is applied in FHC and in RHC; the combined configuration inherits the
+binning. Every true bin must also hold a minimum of selected signal events, counted in FHC at data
+exposure: $70$ in the inclusive family, the content of the sparsest released inclusive bin, and $50$
+in the proton-tagged family. Neither requirement says how much of the binned shape survives the
+regularised unfolding, and that is the third property reviewed.
+
+\paragraph{How much shape an unfolded binning retains.}
+In the Wiener-SVD unfolding, $A_C$ is similar to the diagonal matrix of the Wiener filter factors
+$W_k=S_k^2/(S_k^2+N_k^2)$, one for each component of the pre-whitened response. Its eigenvalues are
+these factors, all between zero and one, and its trace is their sum: the number of degrees of
+freedom that the data determine. A factor of at least $0.5$ marks a component measured with a
+signal-to-noise ratio of at least one. For the released FHC $\cos\theta_\mu$, for example, the
+factors are $0.79$, $0.79$, $0.66$, $0.35$ and $0.20$, a trace of $2.79$ in five bins. The earlier
+studies (\S\ref{sec:binning_recheck}, \noteref{Appendix}{app:altbinning}) used the conditioning
+$s_{\min}/s_1$ instead. The conditioning is set by the weakest component alone, so it does not
+separate a binning that loses one component from one that retains nothing beyond the normalisation,
+and the threshold of about $0.1$ used there to reject finer candidates was never applied to the
+released binnings, most of which fall below it: $p_\mu$ ($0.006$ in FHC, $0.0001$ in RHC),
+$\theta_{\mu\pi}$ ($0.007$, $0.002$), $\theta_\mu$ ($0.06$, $0.005$) and RHC $\cos\theta_\mu$
+($0.0003$). The singular values of $A_C$ are not the filter factors either: $A_C$ is not
+symmetric, and its largest singular value exceeds one.
+
+\paragraph{Candidates.}
+For each observable and each number of bins up to twelve, the partition with the largest worst-bin
+diagonal over FHC and RHC that meets the event floor was found by dynamic programming on a fine
+grid, with the edge conventions of the released configurations
+(\texttt{report/tools/maximin\_binning.py}). The tool reproduces the unfolder's diagonals of the
+released binnings to $0.01$, and to $0.05$ for $W_{\rm had}$, two of whose edges fall between grid
+points. The partitions relevant to either criterion, from the coarsest that
+could replace the released binning to the finest passing $0.50$, and for the angles also the
+partition at the released five bins, which separates the effect of the edges from that of the bin
+count, were extracted in full in FHC, RHC and combined: $141$ extractions with universes, covariance,
+unfolding and closure (SLURM 3428213, 3428222, 3428223, 3433027 and 3433033;
+\texttt{data\_release/binreview\_eval\_2026-09-26.tsv}). They carry the tune and fake-data predictions only. A partition
+has the same diagonals in $\cos\theta_\mu$ and in $\theta_\mu$, and the $\theta_\mu$ grid is finer
+at forward angles, so the eight- and ten-bin $\theta_\mu$ partitions, written in $\cos\theta_\mu$,
+are $\cos\theta_\mu$ candidates as well.
+
+\paragraph{Selection rule.}
+Among the admissible binnings of an observable, the one selected has the fewest bins that reach
+$90\%$ of the largest trace of $A_C$, averaged over FHC and RHC; ties go to the larger worst
+diagonal. Bins beyond that point add components that the regularisation fills rather than the data.
+A choice is marked rule-sensitive when $85\%$ or $95\%$, or an average that includes the combined
+configuration, would select a different binning. Figure~\ref{fig:binreview_dfs} shows the trace
+against the number of bins for every candidate, Tables~\ref{tab:binreview_incl}
+and~\ref{tab:binreview_1p} the selected binnings, and Table~\ref{tab:binreview_edges} their edges
+(\texttt{report/tools/binreview\_tables.py},
+\texttt{data\_release/binreview\_choices\_2026-09-26.tsv}).
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.92\textwidth]{binreview_dfs_incl}\\[4pt]
+  \includegraphics[width=\textwidth]{binreview_dfs_1p}
+  \caption{Degrees of freedom for signal (trace of $A_C$) against the number of bins, inclusive (top)
+    and proton-tagged (bottom), FHC, RHC and combined. Lines join the maximin binnings; the star is
+    the released binning (for $\theta_p$ and $\theta_{\pi p}$ the proposed study binning), drawn just
+    left of its bin count; squares are the $\theta_\mu$ partitions written in $\cos\theta_\mu$. A
+    filled marker passes $0.68$ in FHC and RHC, an open one $0.50$ only, a cross neither. The
+    three-bin $W_{\rm had}$ is built at an event floor of $30$, below that of the family. Fake data.}
+  \label{fig:binreview_dfs}
+\end{figure}
+
+\input{tables/binreview_incl}
+\input{tables/binreview_1p}
+\input{tables/binreview_edges}
+
+\paragraph{Inclusive observables.}
+\emph{$p_\mu$.} The released seven bins fail both criteria. Their FHC diagonals fall from $0.80$ to
+$0.33$ with momentum, because the bins are narrower than the $30\%$ resolution of the MCS estimator,
+and the note exempts $p_\mu$ from the criterion for that reason
+(\noteref{Sec.}{sec:response_eff}). Under $0.68$ four bins are admissible (worst diagonal $0.71$ in
+both beams): the trace falls from $2.3/2.1$ to $1.7/1.6$, and the number of components measured with
+signal-to-noise above one from three to two. Under $0.50$ the rule selects six bins ($0.57/0.59$,
+trace $2.1/1.9$). Seven bins ($0.51/0.51$) add $0.1$ and fail $0.50$ in the proton-tagged sample,
+which uses the same edges ($0.46/0.49$), whereas the six-bin edges pass there ($0.53/0.55$). No
+admissible binning keeps the third well-measured component of the released one ($W=0.62/0.52$);
+the closest is $0.40/0.46$, at seven bins.
+
+\emph{$p_\pi$.} The released edges ($0.175$ and $0.205$~GeV/$c$, open above) are the maximin
+two-bin partition, and no finer binning passes $0.68$: the reconstructed momentum saturates near
+$0.34$~GeV/$c$ (\S\ref{sec:ppi_bias}). Under $0.50$ a third bin from $0.26$~GeV/$c$ passes by
+$0.007$ ($0.51/0.53$). Its own filter factor is small ($0.05/0.01$), but the split raises the second
+factor from $0.55/0.40$ to $0.68/0.71$, so the trace rises from $1.4/1.3$ to $1.6/1.6$ and the largest
+per-bin uncertainty falls from $111\%$ to $75\%$ in FHC. The same edges fail $0.50$ in the
+proton-tagged sample ($0.48$ in FHC).
+
+\emph{$\cos\theta_\mu$.} The released five bins fail $0.68$ in the backward bin ($0.67/0.68$). In RHC
+their fifth filter factor is $0.001$ and the smallest $A_C$ row sum $0.05$, so one bin is filled
+almost entirely by the regularisation. The maximin five bins place four bins above
+$\cos\theta_\mu=0.7$, where the events are, and pass at $0.757/0.765$ with a trace of $2.6/3.0$ and
+row sums of at least $0.61$. Under $0.68$ the rule selects seven bins ($0.70/0.70$; trace
+$3.5/3.2$, four components above signal-to-noise one in every configuration), and under $0.50$ eight
+($0.66/0.66$; trace $4.0/3.7$), beyond which the trace levels off (nine bins: $3.95/3.79$). The
+$\theta_\mu$ partitions add one bin to each without adding information: eight bins pass $0.68$
+($0.70/0.69$) with a trace of $3.5/3.1$, and ten bins pass $0.50$ ($0.64/0.66$) with
+$3.75/3.72$.
+
+\emph{$\theta_\mu$.} This is the same variable in another parameterisation. The released binning
+fails $0.68$ ($0.66/0.65$); the rule selects eight bins under $0.68$ ($0.70/0.70$, trace
+$2.5/2.7$) and ten under $0.50$ ($0.64/0.66$, trace $3.2/3.2$). The same partition retains less as
+$\theta_\mu$ than as $\cos\theta_\mu$: the eight-bin partition keeps a trace of $2.5/2.7/3.1$ as
+$\theta_\mu$ and $3.5/3.1/3.5$ as $\cos\theta_\mu$, the ten-bin one $3.2/3.2/3.6$ and
+$3.75/3.72/4.22$, with the same diagonals up to the three-decimal rounding of the edges. The
+regulariser penalises the curvature of the cross-section density, and $d\sigma/d\theta_\mu$ and
+$d\sigma/d\cos\theta_\mu$ are different functions, so the parameterisation is part of the
+regularisation. A $\theta_\mu$ result adds no information to a $\cos\theta_\mu$ result with the same
+partition, and retains less.
+
+\emph{$\cos\theta_\pi$.} The released five bins pass both criteria ($0.74/0.76$). The trace rises to
+$3.6/3.6$ at seven bins ($0.73/0.74$) and no further (eight to ten bins: $3.5$--$3.8$), so both
+criteria select seven bins, with a largest per-bin uncertainty of $60/62\%$ against $56/48\%$. The
+gain, $0.45$ degrees of freedom in each beam and $0.7$ combined, is the one improvement of the review
+that does not repair a criterion failure. The seven-bin edges give $0.69/0.71$ and a bin of $30$
+events in the proton-tagged sample, whose $\cos\theta_\pi$ keeps its own four bins.
+
+\emph{$\theta_{\mu\pi}$.} The released five bins pass both criteria ($0.79/0.79$), and the trace
+barely moves between five and eleven bins ($2.3$--$2.7$ in FHC, $2.4$--$2.9$ in RHC); no binning has
+more than four filter factors above $0.2$. The observable carries about two and a half degrees of
+freedom at this exposure however it is binned. The rule selects six bins, rule-sensitively, and any
+count from five to ten is equivalent within its resolution. At five bins the maximin edges
+($0$, $0.6$, $1.025$, $1.5$, $2.0$, $2.6$~rad) raise the worst diagonal to $0.86$ and the smallest row
+sum from $0.52/0.58$ to $0.73/0.62$ at unchanged trace.
+
+\paragraph{Proton-tagged observables.}
+\emph{$W_{\rm had}$.} The released six bins fail both criteria: their FHC diagonals are $0.23$,
+$0.45$, $0.57$, $0.44$, $0.22$ and $0.09$, below $0.68$ in every bin and below $0.50$ in five of the
+six. The first bin holds three selected signal events, the
+per-bin uncertainty reaches $305\%$ in FHC, $162\%$ in RHC and $654\%$ combined, and the single-throw
+closure ratio of one combined bin is $78$. Under either criterion the admissible binning is two
+regions split at $1.18$~GeV/$c^2$ ($0.71/0.72$), with a trace of $1.3/1.3$ and, in FHC and RHC, one
+component above signal-to-noise one. Three bins pass $0.50$ only below the event floor ($30$ events:
+$0.531/0.535$,
+per-bin uncertainty up to $325\%$).
+
+\emph{$W_{\pi p}$.} No two-bin partition passes $0.68$. Under $0.50$ a split at $1.20$~GeV/$c^2$
+passes by $0.003$, with a second filter factor of $0.29/0.27$: a normalisation, not a shape. The
+differential $W_{\pi p}$ stays withdrawn under either criterion.
+
+\emph{$\delta p_T$ and $p_n$.} The released two bins pass both criteria ($0.74/0.72$ and
+$0.77/0.75$). The three-bin maximin partitions pass $0.50$ but lower the trace in FHC and RHC
+($\delta p_T$: $1.45/1.23$ to $1.17/1.01$; $p_n$: $1.66/1.53$ to $1.57/1.10$), so both criteria
+keep two bins. In the combined configuration the two-bin $\delta p_T$ has a trace of $0.98$: its
+shape component is not measured there.
+
+\emph{$\delta\alpha_T$.} The released two bins fail $0.68$ ($0.66/0.66$), and so does the best
+two-bin partition ($0.67/0.66$): under $0.68$ there is no $\delta\alpha_T$ shape. Under $0.50$ two
+bins are admissible, but their second filter factor is $0.19$--$0.24$ in every configuration and a
+third bin adds nothing, so $\delta\alpha_T$ contributes one well-measured number under either
+criterion.
+
+\emph{$\delta\phi_T$.} The released two bins pass both criteria ($0.79/0.76$). Under $0.50$ three
+bins ($0.62/0.60$; edges $0$, $22.5$, $75$ and $180^\circ$) raise the trace from $1.5/1.4$ to
+$2.0/1.6$, and in the combined configuration from $1.1$ to $1.8$; the new factor is $0.40$ in FHC
+but $0.01$ in RHC.
+
+\emph{$\theta_p$.} The study binning ($0.74/0.73$) holds $43$ and $21$ events in its two backward
+bins, below the floor, and its fourth filter factor in RHC is $0.001$. The maximin four bins at the
+floor ($0.69/0.68$) have a trace of $2.1/2.1$ against $2.2/1.5$, and a largest per-bin uncertainty
+of $41/84\%$ against $79/91\%$; five and six bins add nothing. Both criteria select these four
+bins, which pass $0.68$ by $0.002$ in RHC. Three bins pass more comfortably ($0.77/0.75$) but retain
+a single component (trace $1.2/1.0$), so they are no fallback.
+
+\emph{$\theta_{\pi p}$.} The last bin of the study binning holds $42$ events, below the floor.
+Under $0.68$ the maximin three bins ($0$, $1.131$, $1.916$ and $\pi$~rad; $0.75/0.74$) meet the
+floor and retain the same information as the study binning (trace $1.88/1.81$ against $1.87/1.79$)
+with a smaller largest per-bin uncertainty ($97/121\%$ against $140/187\%$). Under $0.50$ four bins
+($0.67/0.67$) raise the trace to $2.2/2.1$ and add a third component above signal-to-noise one in
+FHC and RHC; five or six bins add nothing.
+
+\paragraph{The shared kinematics of the proton-tagged family.}
+The proton-tagged $p_\mu$, $p_\pi$, $\cos\theta_\mu$ and $\theta_{\mu\pi}$ use the inclusive edges,
+evaluated here in the proton-tagged sample. The released $p_\mu$ gives $0.31/0.31$ there and the
+released $\cos\theta_\mu$ $0.71/0.70$. Of the selected inclusive binnings, the four-bin $p_\mu$
+passes $0.68$ by $0.005$ in FHC ($0.685/0.713$), the six-bin $p_\mu$ passes $0.50$ ($0.53/0.55$),
+the three-bin $p_\pi$ fails $0.50$ ($0.48/0.51$) and the five-bin maximin $\theta_{\mu\pi}$ passes
+at $0.84/0.86$. The seven- and eight-bin $\cos\theta_\mu$ pass $0.68$ ($0.70/0.71$) and $0.50$
+($0.65/0.68$) there as well.
+
+\paragraph{What the choice of criterion changes.}
+The released binnings fall into three groups. The seven-bin $p_\mu$ and the six-bin $W_{\rm had}$
+fail both criteria, and the $\theta_p$ and $\theta_{\pi p}$ study binnings fall below the event floor:
+these change whichever criterion is adopted. The five-bin $\cos\theta_\mu$ and $\theta_\mu$ and the
+two-bin $\delta\alpha_T$ fail $0.68$ only; rebinning the muon angles to meet it gains information,
+while $\delta\alpha_T$ loses a second component whose filter factor is only $0.2$. The remaining
+binnings, $p_\pi$, $\cos\theta_\pi$, $\theta_{\mu\pi}$, $\delta p_T$, $\delta\phi_T$ and $p_n$, pass
+both; of these $\cos\theta_\pi$ gains $0.45$ degrees of freedom at seven bins under either criterion,
+and the others are at or near their information limit.
+
+Where the two criteria select different binnings, the relaxed one adds $0.2$ to $0.6$ degrees of
+freedom per beam: $p_\mu$ (six bins against four), $p_\pi$ (three against two), $\cos\theta_\mu$
+(eight against seven), $\theta_\mu$ (ten against eight), $\delta\phi_T$ (three against two) and
+$\theta_{\pi p}$ (four against three); $\delta\alpha_T$ and $W_{\pi p}$ gain a second bin whose
+component the data do not determine. A new component measured at signal-to-noise above one appears
+only for $p_\pi$ in RHC, $\theta_\mu$ and $\delta\phi_T$ in the combined configuration (where
+$\theta_\mu$ loses one in RHC) and $\theta_{\pi p}$ in FHC and RHC. The price is diagonals down to
+$0.50$: bins in which up to half of the selected events come
+from neighbouring true bins, with a correspondingly stronger dependence of the result on the
+modelled migrations.
+
+\paragraph{Recommendation.}
+The $0.68$ criterion, applied to every observable, is the recommended choice. It is the criterion of
+the BNB measurements, it replaces the exemption of $p_\mu$, which rests on the regularisation
+absorbing migrations that the criterion exists to limit, and it forgoes little: where it differs from
+$0.50$ the difference is at most $0.64$ degrees of freedom per beam, and in all but five observable
+and beam combinations no component that the data determine at signal-to-noise above one. Its cost falls on
+$p_\mu$, which drops from seven bins to four and from three well-measured components to two; the
+relaxed criterion keeps six $p_\mu$ bins, but also only two well-measured components. For the muon
+angle the review favours the cosine, which retains up to one degree of freedom more than $\theta_\mu$
+for the same partition. Under $0.68$ the binnings are then: $p_\mu$ four bins; $p_\pi$ unchanged;
+$\cos\theta_\mu$ seven; $\theta_\mu$ eight, or the $\cos\theta_\mu$ partition; $\cos\theta_\pi$ seven,
+an optional gain since the released five pass; $\theta_{\mu\pi}$ the released five, whose maximin
+edges would raise the row sums at unchanged trace; $W_{\rm had}$ two regions; $\delta\alpha_T$ the
+integrated rate only; $\delta p_T$, $\delta\phi_T$ and $p_n$ unchanged; $\theta_p$ four and
+$\theta_{\pi p}$ three bins at their maximin edges.
+
+Any binning that replaces a released one needs its generator predictions at the new edges (the
+event-level generator files allow this), its own ensemble for statistical coverage, since the closure
+of a candidate is a single throw, the alternative-model closure and the D'Agostini cross-check before
+it is released. The control-region binnings are frozen separately (\S\ref{sec:cr_protocol}) and do
+not change.
+
 \section[Hadronic mass, model comparison, and estimator surveys]{Hadronic mass, model comparison, and estimator surveys\scopetag{proton-tagged}}
 \label{sec:supp_w}
 

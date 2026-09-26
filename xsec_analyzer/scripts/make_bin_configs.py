@@ -20,7 +20,7 @@ import os
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CFG = os.path.join(HERE, 'configs', 'c50')  # default study subdirectory, kept out of norm_manifest.py's release glob
-FLUX = {'fhc5': '6.81159e-10', 'rhcfull': '6.446460e-10', 'comb': '6.60865e-10'}
+FLUX = {'fhc5': '6.81159e-10', 'rhcfull': '6.446460e-10', 'comb': '6.596906e-10'}   # comb: POT-weighted 7.766:11.082 (2026-09-19)
 SYST = {'ccpi': 'configs/ccpi_systcalc_numi.conf', 'ccpi1p': 'configs/ccpi1p_systcalc_numi.conf'}
 FPM = {('ccpi', 'fhc5'): 'configs/file_properties_numi_fhc5.txt',
        ('ccpi', 'rhcfull'): 'configs/file_properties_numi_rhcfull.txt',

@@ -1754,6 +1754,7 @@ total cross section, independent of the observable, is the one-bin extraction of
 \S\ref{sec:total_xsec}.
 
 \subsection{Reconstructed spectra, response and efficiency}
+\label{sec:response_eff}
 
 Figures~\ref{fig:reco_spectra}--\ref{fig:reco_spectra_comb} show the reconstructed spectra of the
 six observables at the final cut, with the simulated signal and the background components.
@@ -1835,7 +1836,8 @@ $p_\pi$ is therefore not applied to $p_\mu$. For $p_\mu$ the Wiener-SVD regulari
 migration, the $A_C$ row sums remain between $0.67$ and $0.92$ (\S\ref{sec:ac_rowsums}), and the
 closure and ensemble tests pass; for $p_\pi$ the migration comes with a saturation of the
 estimator that no regularisation recovers. A finer $p_\mu$ binning is excluded by the same
-resolution (\suppref{Sec.}{sec:binopt}).
+resolution (\suppref{Sec.}{sec:binopt}); a $p_\mu$ binning that meets the criterion has four bins at
+$0.68$ or six at $0.50$ (\suppref{Sec.}{sec:binreview}).
 
 At any fine binning the $p_\pi$ response is far from diagonal, because the range estimator
 saturates near $0.34\GeVc$ once pions interact before stopping; the fine-bin study is in
@@ -2832,6 +2834,10 @@ The prerequisites are listed as a checklist in \suppref{Sec.}{sec:request}. The 
   \item the beam-on POT and gate counts of the unblinded files, checked against the run lists of
     those files, in place of the fake-data values; the Run-1 beam-off sample remains the Run-2
     substitute (\S\ref{sec:mc});
+  \item the migration criterion and the binnings, fixed and, where they change, carried through the
+    generator predictions, covariances, ensembles and alternative-model closure: the released $p_\mu$
+    and $W_\mathrm{had}$ fail both the $0.68$ and the $0.50$ criterion, and $\cos\theta_\mu$ and
+    $\theta_\mu$ fail $0.68$ (\suppref{Sec.}{sec:binreview});
   \item a final reproduction of the result set from empty caches.
 \end{enumerate}
 The control regions were compared with beam-on data under the frozen procedure of
@@ -2969,19 +2975,26 @@ and compared as those integrals (Table~\ref{tab:ppi_partial_main}).
 \section{Alternative binnings}
 \label{app:altbinning}
 
-Each binning is the coarsest that satisfies the migration-diagonal criterion, and finer schemes were
-tested. The criterion was also relaxed, from a column-normalised diagonal of $0.68$ to $0.50$: this
-admits twenty-six further candidates, and all but one fail the second requirement, the conditioning
-of the additional-smearing matrix $A_C$. A binning with acceptable migration can still give a
-response that cannot be inverted, and in this measurement the conditioning, rather than the
-diagonal, is the limit. Table~\ref{tab:altbinning} lists the alternatives.
+The released binnings come from the binning optimisation of \suppref{Sec.}{sec:binopt}. A review on
+the corrected exposure (\suppref{Sec.}{sec:binreview}) applies the $0.68$ criterion and a relaxed
+$0.50$ criterion uniformly to both families, with the edges optimised at every bin count, a minimum
+number of events per bin, and the Wiener filter factors of $A_C$ as the measure of the shape that the
+unfolding retains. For the released binnings it finds the following. The seven-bin $p_\mu$ fails
+both criteria (worst diagonal $0.33$), as does the six-bin $W_\mathrm{had}$ ($0.09$). The five-bin
+$\cos\theta_\mu$ and $\theta_\mu$ fail $0.68$ narrowly ($0.67$ and $0.65$), while optimised edges at
+the same five bins pass it. No two-bin $\delta\alpha_T$ passes $0.68$. The other reported binnings
+pass both criteria. Finer admissible binnings retain more shape in $\cos\theta_\mu$, $\theta_\mu$ and
+$\cos\theta_\pi$, and little or none in $\theta_{\mu\pi}$, $\delta p_T$ and $p_n$. No binning has been changed:
+the criterion and the binnings are to be fixed before the signal region is opened
+(\S\ref{sec:unblinding}). Table~\ref{tab:altbinning} lists the alternatives examined before the
+review, with the conditioning $s_{\min}/s_1$ on which they were judged; the review replaces that
+measure, which most released binnings do not meet either.
 
 \begin{table}[H]
   \centering
-  \caption{Alternative binnings examined. $s_{\min}/s_1$ is the conditioning of $A_C$ (FHC/RHC
-    unless stated); a value near zero means the regularised response cannot be inverted, whatever
-    the migration diagonal says. Only the two-bin $W_\mathrm{had}$ is healthy, and it was not
-    adopted.}
+  \caption{Alternative binnings examined before the review of \suppref{Sec.}{sec:binreview}, as judged
+    then. $s_{\min}/s_1$ is the conditioning of $A_C$ (FHC/RHC unless stated), which is set by the
+    weakest component of the regularised response alone.}
   \label{tab:altbinning}
   \footnotesize
   \begin{tabular}{llcp{5.3cm}}
@@ -2995,7 +3008,7 @@ diagonal, is the limit. Table~\ref{tab:altbinning} lists the alternatives.
     $\delta p_T$ & 3 bins & $0.00/0.00$ & not adopted: rank-deficient \\
     $\delta\alpha_T$ & 3 bins & $0.03/0.01$ & not adopted: conditioning \\
     $W_{\pi p}$ & 2 bins & $0.26/0.15$ & sound response, no shape (App.~\ref{app:withdrawn}) \\
-    $W_\mathrm{had}$ & 2 bins & $\mathbf{0.58/0.54}$ & healthy; \emph{not} adopted, six bins keep the shape \\
+    $W_\mathrm{had}$ & 2 bins & $0.58/0.54$ & not adopted then; the admissible binning of the review \\
     $\cos\theta_p$ & 4 bins & $0.45/0.02$ & superseded by $\theta_p$ \\
                    & 6 bins & $0.00/0.00$ & not adopted: rank-deficient \\
     $\theta_p$ & 5, 7 bins & $\le0.03$ & not adopted: conditioning \\
@@ -3005,11 +3018,12 @@ diagonal, is the limit. Table~\ref{tab:altbinning} lists the alternatives.
   \end{tabular}
 \end{table}
 
-The two-bin $W_\mathrm{had}$ is the only candidate with a better-conditioned response than the
-binning used, and it is not adopted because two bins discard almost all of the shape for which
-$W_\mathrm{had}$ is measured. The three-bin $\theta_p$ reaches the best combined conditioning of the
-candidates ($0.49$), but the four-bin scheme used is better balanced between the two configurations
-in which $\theta_p$ is quoted and keeps one more bin.
+The two-bin $W_\mathrm{had}$ was set aside because two bins discard most of the shape for which
+$W_\mathrm{had}$ is measured. The review finds that the six bins in use do not measure that shape
+either: every one of them fails $0.68$ and five fail $0.50$, and two regions split at
+$1.18$~GeV/$c^2$ are the only $W_\mathrm{had}$ binning that meets either criterion. The four-bin
+$\theta_p$ in use holds $21$ selected events in its last bin, below the review's minimum of $50$ for
+the proton-tagged family.
 
 \section{Distributions not reported}
 \label{app:withdrawn}
@@ -3026,8 +3040,8 @@ diagonal, so nearly every event reconstructed there comes from another true bin.
 the response ($s_{\min}/s_1=0.26$ FHC, $0.15$ RHC) but leave no shape. Closure against the
 $A_C$-smeared truth does not help: it tests whether the response was inverted correctly and cannot
 restore information the response does not contain. The proton-tagged sample supports the integrated
-cross section and the calorimetric hadronic mass $W_\mathrm{had}$, whose response is adequate at six
-bins.
+cross section and the calorimetric hadronic mass $W_\mathrm{had}$ in two regions split at
+$1.18$~GeV/$c^2$; the six bins in use fail the migration criterion (\suppref{Sec.}{sec:binreview}).
 
 \subsection{The five-bin \texorpdfstring{$d\sigma/dp_\pi$}{d sigma / d p pi}}
 

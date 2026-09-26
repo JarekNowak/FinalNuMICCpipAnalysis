@@ -32,6 +32,16 @@ Last commit: see git log. Untracked NuWro generator dirs remain (NuWro closure d
   change log; data_release/ensemble_1p_2026-09-25.tsv.
 - The technical supplement and proton-tagged note have not had the same style pass as the note.
 
+## Binning decision (gating for unblinding; review of 2026-09-26)
+
+Review in the supplement (sec:binreview), numbers in report/data_release/binreview_{eval,choices}_2026-09-26.tsv, figures
+report/figures/binreview_dfs_{incl,1p}.pdf. The released p_mu (worst diagonal 0.33) and W_had (0.09) fail
+both 0.68 and 0.50; cos theta_mu and theta_mu fail 0.68 narrowly; delta alpha_T has no two-bin partition
+passing 0.68. Decide the criterion, then for every changed binning: generator predictions at the new edges
+(event-level files), covariance (full extraction), ensembles, alternative-model closure, D'Agostini, note
+tables and figures. Candidate edges are in report/tables/binreview_edges.tex (configs in
+xsec_analyzer/configs/binreview/).
+
 ## Open analysis items (need a decision or work)
 
 3. **FHC Run-1 residual (gating for unblinding).** On the corrected exposure the frozen global test
