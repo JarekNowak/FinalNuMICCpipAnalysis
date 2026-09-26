@@ -3350,7 +3350,7 @@ The closure test above uses a single throw.  It can show that the extraction rep
 its input, but a single residual has no width, so it cannot say whether the quoted
 uncertainty is correctly sized.  To answer that, up to one hundred statistically independent
 Poisson realisations of the data of each configuration (six extractions: $p_\mu$ and
-$\cos\theta_\mu$ in FHC, $\cos\theta_\mu$ in RHC, the two-region $p_\pi$ in the combined
+$\cos\theta_\mu$ in FHC, $\cos\theta_\mu$ in RHC, the three-region $p_\pi$ in the combined
 configuration, the FHC and RHC one-bin totals; $100$ members each) were each put through the
 \emph{whole} chain (thrown, universes rebuilt from that throw, unfolded), and the per-bin pull
 \[
@@ -3362,9 +3362,11 @@ numerator and reference fluctuate together and the width comes out too small.)
 
 The throws follow the weight rule of \noteref{Eq.}{eq:safeweight}, and the extractions are
 chosen to bracket the conditioning and the configurations: the well-behaved $p_\mu$;
-$\cos\theta_\mu$, whose $A_C$ row sums fall as low as $0.17$ in FHC ($0.050$ in RHC) so that the
-regularisation removes up to $83\%$ ($95\%$) of a bin's normalisation; the two-region $p_\pi$ of
-the combined configuration; and the one-bin totals, which have no regularisation at all. If the uncertainties were
+$\cos\theta_\mu$, whose $A_C$ row sums fall as low as $0.49$ in FHC ($0.26$ in RHC) so that the
+regularisation removes up to $51\%$ ($74\%$) of a bin's normalisation; the three-region $p_\pi$ of
+the combined configuration; and the one-bin totals, which have no regularisation at all. The four
+differential ensembles are those of the binnings adopted on 2026-09-26 (members built from the
+staged configurations, identical to the released ones); the totals are those of 2026-09-20. If the uncertainties were
 mis-sized anywhere, the second is where it would show; if the extraction carried a bias
 independent of the regularisation, the third is where it would show.
 
@@ -3375,18 +3377,18 @@ independent of the regularisation, the third is where it would show.
 Reference covariance & pull mean & pull width & 68\% / 95\% coverage \\
 \midrule
 \multicolumn{4}{l}{\emph{statistical only}}\\
-$d\sigma/dp_\mu$, FHC                    & $-0.08$ & $0.98$ & $67.9\%$ / $96.4\%$ \\
-$d\sigma/d\cos\theta_\mu$, FHC           & $-0.08$ & $1.01$ & $68.0\%$ / $95.2\%$ \\
-$d\sigma/d\cos\theta_\mu$, RHC           & $-0.07$ & $1.07$ & $66.6\%$ / $93.6\%$ \\
-$d\sigma/dp_\pi$ (two regions), combined & $-0.09$ & $0.92$ & $74.0\%$ / $95.5\%$ \\
+$d\sigma/dp_\mu$, FHC                    & $-0.11$ & $1.07$ & $64.2\%$ / $93.5\%$ \\
+$d\sigma/d\cos\theta_\mu$, FHC           & $-0.06$ & $0.97$ & $71.8\%$ / $94.5\%$ \\
+$d\sigma/d\cos\theta_\mu$, RHC           & $-0.05$ & $1.05$ & $63.2\%$ / $94.0\%$ \\
+$d\sigma/dp_\pi$ (three regions), combined & $-0.11$ & $0.95$ & $72.7\%$ / $95.7\%$ \\
 one-bin total, FHC                       & $-0.10$ & $0.97$ & $67.0\%$ / $95.0\%$ \\
 one-bin total, RHC                       & $-0.21$ & $0.99$ & $64.0\%$ / $94.0\%$ \\
 \midrule
 \multicolumn{4}{l}{\emph{full}}\\
-$d\sigma/dp_\mu$, FHC                    & $-0.02$ & $0.34$ & $99.1\%$ / $100.0\%$ \\
-$d\sigma/d\cos\theta_\mu$, FHC           & $-0.02$ & $0.35$ & $99.4\%$ / $100.0\%$ \\
-$d\sigma/d\cos\theta_\mu$, RHC           & $-0.01$ & $0.33$ & $99.0\%$ / $100.0\%$ \\
-$d\sigma/dp_\pi$ (two regions), combined & $-0.02$ & $0.22$ & $100.0\%$ / $100.0\%$ \\
+$d\sigma/dp_\mu$, FHC                    & $-0.03$ & $0.32$ & $99.5\%$ / $100.0\%$ \\
+$d\sigma/d\cos\theta_\mu$, FHC           & $-0.02$ & $0.37$ & $98.5\%$ / $100.0\%$ \\
+$d\sigma/d\cos\theta_\mu$, RHC           & $-0.01$ & $0.46$ & $96.1\%$ / $100.0\%$ \\
+$d\sigma/dp_\pi$ (three regions), combined & $-0.02$ & $0.22$ & $100.0\%$ / $100.0\%$ \\
 one-bin total, FHC                       & $-0.01$ & $0.11$ & $100.0\%$ / $100.0\%$ \\
 one-bin total, RHC                       & $-0.02$ & $0.11$ & $100.0\%$ / $100.0\%$ \\
 \midrule
@@ -3395,7 +3397,7 @@ expected                & $0$     & $1$    & $68\%$ / $95\%$ \\
 \end{tabular}
 \end{center}
 
-Against the statistical covariance all six widths are consistent with unity ($0.92$--$1.07$,
+Against the statistical covariance all six widths are consistent with unity ($0.95$--$1.07$,
 each determined to about $\pm7\%$, $1/\sqrt{2\times100}$, more for the multi-bin extractions,
 whose bins are correlated), and the interval coverage is correct within the same statistics. The
 statistical uncertainties are therefore correctly sized, and the strongly suppressed observable
@@ -3404,7 +3406,7 @@ severe $A_C$ suppression in $\cos\theta_\mu$ does not distort its uncertainties 
 more informative of the two results, since $p_\mu$ passing was the expected outcome.
 
 Two further things the ensembles show.  Against the \emph{full} covariance the pull width
-is $0.21$--$0.35$ for the differential results and $0.12$ for the totals, and coverage is
+is $0.22$--$0.46$ for the differential results and $0.11$ for the totals, and coverage is
 essentially $100\%$: the quoted
 uncertainty is about three times the throw-to-throw spread, because the ensemble varies
 only the data statistics while the denominator carries flux, detector and cross-section
@@ -3412,9 +3414,9 @@ terms that are identical in every member.  That is the same effect as the closur
 $p$-values clustered near unity, now measured rather than argued.
 
 Second, the ensemble means sit below the reference in all six cases, by $0.4$--$1.1\%$
-($0.5$--$2.0\sigma$ on the mean; largest in significance for the RHC total, $-0.81\%$ at $2.0\sigma$,
-and in size for FHC $\cos\theta_\mu$, $-1.10\%$ at $1.3\sigma$), with per-bin pull means of $-0.07$
-to $-0.10$ and $-0.21$ for the RHC total (Table above; \texttt{data\_release/ensemble\_2026-09-20.tsv}). The
+($0.6$--$2.0\sigma$ on the mean; largest in significance for the RHC total, $-0.81\%$ at $2.0\sigma$,
+and in size for FHC $\cos\theta_\mu$, $-1.14\%$ at $1.3\sigma$), with pull means of $-0.05$
+to $-0.11$ and $-0.21$ for the RHC total (Table above; \texttt{data\_release/ensemble\_2026-09-26.tsv}). The
 extractions of one configuration share the same throws and are correlated, so this is a few
 measurements of a small negative offset, each consistent with zero at the present ensemble
 size. The throw itself is unbiased: the mean selected count over the 32
@@ -3434,13 +3436,18 @@ to $1.28$. Every member was checked (the number of events univmake read against 
 $2791$ of $2800$ inputs agree exactly, and the five remaining one-entry differences are one
 out-of-range truth event in the one-bin binning, which does not enter the reco-level data), and
 the affected members were re-run with the throw written to a temporary file and renamed on
-completion. The table is the corrected result.
+completion. That did not remove the race on NFS: on 2026-09-26 two members failed within minutes
+of five arrays starting together, so each throw is now created once and never replaced
+(\texttt{macros/throw\_guard.h}; change log). The four differential ensembles of the table were built
+this way, and the entry-count scan of their $2000$ inputs and of the proton-tagged $W_{\rm had}$
+ensemble finds no truncated read; the members short by one entry are the boundary case of an
+event with $\cos\theta_\mu=1.0$ exactly (change log).
 
 The study covers the inclusive sample in all three configurations. The proton-tagged family,
-where the statistics are sparser, has three further $100$-member ensembles ($W_{\rm had}$ and the
-two-bin $\delta p_T$ in FHC, the two-bin $p_n$ combined): statistical pull widths $0.99$--$1.08$,
-$68\%$ coverage $62$--$69\%$ and integral offsets within $0.7\%$ (\ptref{Sec.}{sec:pt_ensemble},
-\texttt{data\_release/ensemble\_1p\_2026-09-25.tsv}).
+where the statistics are sparser, has three further $100$-member ensembles ($W_{\rm had}$ in its two
+regions and the two-bin $\delta p_T$ in FHC, the two-bin $p_n$ combined): statistical pull widths
+$0.94$--$1.08$, $68\%$ coverage $62$--$72\%$ and integral offsets within $0.7\%$
+(\ptref{Sec.}{sec:pt_ensemble}, \texttt{data\_release/ensemble\_1p\_2026-09-26.tsv}).
 
 
 % =============================================================================
