@@ -45,13 +45,17 @@ OBS1P = {
  'pn':      ('X_pn_true', 'X_pn_reco', 0.0, 2.0, 0.025, True),
  'thetap':  ('ACOS:X_proton_costh_true', 'ACOS:X_proton_costh_reco', 0.0, PI, 0.0314, False),
  'thpipr':  ('X_pi_pr_opening_angle_true', 'X_pi_pr_opening_angle_reco', 0.0, PI, 0.0314, False),
+ # proton momentum (added 2026-09-26): the leading true proton, above the 0.3 GeV/c signal threshold; last bin open
+ 'pp':      ('X_proton_mom_true', 'X_proton_mom_reco', 0.3, 1.5, 0.02, True),
 }
 def fam_obs(fam): return dict(OBS, **OBS1P) if fam == '1p' else OBS
 def grid(lo, hi, step): n = int(round((hi - lo) / step)); return np.linspace(lo, hi, n + 1)
 
-def cache(fam, mode):
+def cache(fam, mode, only=None):
+    """fine migration matrices of every observable of the family (or of ONLY, merged into the existing cache)"""
     X = 'CC1mu1pi1p' if fam == '1p' else 'CC1mu1piXp'
     obs = fam_obs(fam)
+    if only: obs = {k: v for k, v in obs.items() if k in only}
     br = {X + '_MC_Signal', X + '_Selected', 'tuned_cv_weight', 'ppfx_cv_weight', 'normalisation_weight', X + '_candidate_pion_mom_reco'}
     for t, r, *_ in obs.values():
         for e in (t, r):
@@ -82,7 +86,11 @@ def cache(fam, mode):
                 mats[k] = M if mats[k] is None else mats[k] + M
                 gen[k] = G if gen[k] is None else gen[k] + G
         print('  read', name, flush=True)
-    np.savez_compressed(OUT + f'fine_{fam}_{mode}.npz', **{f'M_{k}': v for k, v in mats.items()}, **{f'G_{k}': v for k, v in gen.items()})
+    save = {f'M_{k}': v for k, v in mats.items()}; save.update({f'G_{k}': v for k, v in gen.items()})
+    fn = OUT + f'fine_{fam}_{mode}.npz'
+    if only and os.path.exists(fn):
+        old = np.load(fn); save = {**{k: old[k] for k in old.files}, **save}
+    np.savez_compressed(fn, **save)
 
 def load(fam, mode):
     d = np.load(OUT + f'fine_{fam}_{mode}.npz'); obs = fam_obs(fam)
@@ -145,6 +153,10 @@ if __name__ == '__main__':
         for fam in fams:
             for mode in ('fhc', 'rhc'):
                 print('caching', fam, mode, flush=True); cache(fam, mode)
+    elif what == 'cache_only':          # cache_only <fam> <obs,obs>: add observables to an existing cache
+        fam, only = sys.argv[2], sys.argv[3].split(',')
+        for mode in ('fhc', 'rhc'):
+            print('caching', fam, mode, only, flush=True); cache(fam, mode, only)
     elif what == 'scan':
         floor = float(sys.argv[2]) if len(sys.argv) > 2 else 50.0
         fams = sys.argv[3:] or ['incl', '1p']

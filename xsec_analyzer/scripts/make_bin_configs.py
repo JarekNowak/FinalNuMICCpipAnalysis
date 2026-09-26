@@ -51,7 +51,19 @@ VARS = {
     'thetap':  ('TMath::ACos({S}_proton_costh_true)', 'TMath::ACos({S}_proton_costh_reco)', '#theta_{p}', ' (rad)'),
     'costhp':  ('{S}_proton_costh_true', '{S}_proton_costh_reco', 'cos#theta_{p}', ''),
     'thpipr':  ('{S}_pi_pr_opening_angle_true', '{S}_pi_pr_opening_angle_reco', '#theta_{#pip}', ' (rad)'),
+    'pp':      ('{S}_proton_mom_true', '{S}_proton_mom_reco', 'p_{p}', ' (GeV/c)'),   # leading true proton / candidate (2026-09-26)
 }
+
+
+# Physical upper boundary of a variable: a last bin ending there is written without an upper edge, since
+# an event exactly at the boundary (five overlay signal events have cos theta_mu = 1.0) would otherwise
+# fall in no bin (2026-09-26).
+PHYS_TOP = {'costhmu': 1.0, 'costhpi': 1.0, 'costhp': 1.0, 'dalphat': 180.0, 'dphit': 180.0,
+            'thetap': 3.14159, 'thpipr': 3.14159, 'thetamu': 3.14159}
+
+
+def at_phys_top(var, hi):
+    return var in PHYS_TOP and hi >= PHYS_TOP[var] - 1e-3
 
 
 def rng(expr, lo, hi, lo_open, hi_open):
@@ -79,13 +91,15 @@ def write(name, pfx, xvar, xedges, xopen, yvar=None, yedges=None, yopen=False, n
         e = xe[j]; nb = len(e) - 1; first = idx
         for b in range(nb):
             last = b == nb - 1
-            tx = rng(xt, e[b], e[b + 1], xlow_open and b == 0, xopen and last)
-            rx = rng(xr, e[b], e[b + 1], b == 0, xopen and last)
+            top = last and (xopen or at_phys_top(xvar, e[b + 1]))
+            tx = rng(xt, e[b], e[b + 1], xlow_open and b == 0, top)
+            rx = rng(xr, e[b], e[b + 1], b == 0, top)
             if twoD:
                 yt, yr = VARS[yvar][0].format(S=S), VARS[yvar][1].format(S=S)
                 ylast = j == nsl - 1
-                tx = rng(yt, yedges[j], yedges[j + 1], ylow_open and j == 0, yopen and ylast) + ' && ' + tx
-                rx = rng(yr, yedges[j], yedges[j + 1], j == 0, yopen and ylast) + ' && ' + rx
+                ytop = ylast and (yopen or at_phys_top(yvar, yedges[j + 1]))
+                tx = rng(yt, yedges[j], yedges[j + 1], ylow_open and j == 0, ytop) + ' && ' + tx
+                rx = rng(yr, yedges[j], yedges[j + 1], j == 0, ytop) + ' && ' + rx
             true_lines.append(f'0 0 "{S}_MC_Signal && {tx}"')
             reco_lines.append(f'0 0 "{S}_Selected && {rx}"')
             idx += 1

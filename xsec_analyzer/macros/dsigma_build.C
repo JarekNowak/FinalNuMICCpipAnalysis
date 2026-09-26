@@ -15,7 +15,7 @@
 //   usage: root -l -b -q 'macros/dsigma_build.C("FHC5")'
 #include <vector>
 
-// Remap a two-bin p_pi histogram onto an equal-width axis. The adopted bins are
+// Remap the p_pi histogram (open top bin) onto an equal-width axis. The adopted bins are
 // [0.175,0.205] and everything above, i.e. 0.030 against 0.795 GeV/c: drawn to scale the
 // first is 4% of the axis and collapses into an invisible spike that also sets the y-range,
 // leaving the panel looking empty. Equal width keeps both bins readable; the cost is that
@@ -33,20 +33,23 @@ TH1D* eq2bin( TH1D* h ) {
   nh->SetLineColor( h->GetLineColor() );   nh->SetLineStyle( h->GetLineStyle() );
   nh->SetLineWidth( h->GetLineWidth() );   nh->SetMarkerColor( h->GetMarkerColor() );
   nh->SetMarkerStyle( h->GetMarkerStyle() ); nh->SetMarkerSize( h->GetMarkerSize() );
-  nh->GetXaxis()->SetBinLabel( 1, "0.175-0.205" );
-  nh->GetXaxis()->SetBinLabel( 2, "> 0.205" );
+  // labels from the bin edges; the last p_pi bin is open above (2026-09-26: three bins)
+  for ( int i = 1; i <= n; ++i )
+    nh->GetXaxis()->SetBinLabel( i, i < n ? Form( "%g-%g", h->GetXaxis()->GetBinLowEdge(i), h->GetXaxis()->GetBinUpEdge(i) )
+                                          : Form( "> %g", h->GetXaxis()->GetBinLowEdge(i) ) );
   nh->GetXaxis()->SetLabelSize( 0.058 );
   return nh;
 }
 
 void dsigma_build(const char* cfg = "FHC5") {
   const char* PROC = "/data/uboone/processed/";
-  const char* obs[6]  = {"pmu","ppi","costhmu","costhpi","thmupi","thetamu"};
-  // p_pi is read from the ADOPTED two-bin extraction; the five-bin version is
-  // superseded (only its lowest bin cleared the 0.68 smearing-diagonal criterion).
-  const char* src[6]    = {"pmu","ppi2bin","costhmu","costhpi","thmupi","thetamu"};
-  const char* obsX[6] = {"p_{#mu} [GeV/c]","p_{#pi} [GeV/c]","cos#theta_{#mu}",
-                         "cos#theta_{#pi}","#theta_{#mu#pi} [rad]","#theta_{#mu} [rad]"};
+  // 2026-09-26: binnings of the 0.50 migration criterion; p_pi from the three-bin extraction,
+  // theta_mu no longer reported.
+  const int NOBS = 5;
+  const char* obs[NOBS]  = {"pmu","ppi","costhmu","costhpi","thmupi"};
+  const char* src[NOBS]  = {"pmu","ppi3bin","costhmu","costhpi","thmupi"};
+  const char* obsX[NOBS] = {"p_{#mu} [GeV/c]","p_{#pi} [GeV/c]","cos#theta_{#mu}",
+                            "cos#theta_{#pi}","#theta_{#mu#pi} [rad]"};
   const char* gens[4]   = {"h_gen_GENIE","h_gen_GiBUU","h_gen_NEUT","h_gen_NuWro"};
   const char* glab[4]   = {"GENIE","GiBUU","NEUT","NuWro"};
   int gcol[4] = { TColor::GetColor("#0072B2"), TColor::GetColor("#009E73"),
@@ -72,7 +75,7 @@ void dsigma_build(const char* cfg = "FHC5") {
                   Form("%g", xmin) );
   };
 
-    for (int o = 0; o < 6; ++o) {
+    for (int o = 0; o < NOBS; ++o) {
       c.cd(o+1);
       gPad->SetBottomMargin(0.15); gPad->SetLeftMargin(0.16); gPad->SetTopMargin(0.08);
       TFile* f = TFile::Open(Form("%sclosure_hists_xsec_%s_%s.root", PROC, cfg, src[o]));
@@ -94,7 +97,7 @@ void dsigma_build(const char* cfg = "FHC5") {
       }
       f->Close();
 
-      if ( std::string(src[o]) == "ppi2bin" ) {
+      if ( std::string(src[o]) == "ppi3bin" ) {
         hdat = eq2bin(hdat); htru = eq2bin(htru); if (htun) htun = eq2bin(htun);
         for (auto& h : gh) h = eq2bin(h);
         keep.push_back(hdat); keep.push_back(htru); if (htun) keep.push_back(htun);

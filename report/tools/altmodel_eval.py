@@ -18,7 +18,7 @@ inside the systematic uncertainty is a measurement that survives the model being
 comparable to it is a limit on the result.
 
     python3 report/tools/altmodel_eval.py [FHC5|RHCFULL] [incl|1p]
-    (1p = the proton-tagged family: W_had, the two-bin TKI variables and cos theta_pi, FHC only)
+    (1p = the proton-tagged family: W_had, the TKI variables, cos theta_pi and p_p, FHC only)
 """
 import os, sys
 import numpy as np, uproot
@@ -27,13 +27,14 @@ RB = '/data/uboone/processed/rebuild_alt'
 LIVE = '/data/uboone/processed'
 CFG = sys.argv[1] if len(sys.argv) > 1 else 'FHC5'     # FHC5 | RHCFULL
 FAM = sys.argv[2] if len(sys.argv) > 2 else 'incl'     # incl | 1p
-OBS = ['pmu', 'costhmu', 'costhpi', 'ppi2bin'] if FAM == 'incl' else ['Whad', 'dpt2bin', 'dalphat2bin', 'dphit2bin', 'pn2bin', 'costhpi']
+# 2026-09-26: 0.50-criterion binnings (inclusive p_pi in three regions, proton-tagged delta phi_T in three bins)
+OBS = ['pmu', 'costhmu', 'costhpi', 'ppi3bin'] if FAM == 'incl' else ['Whad', 'dpt2bin', 'dalphat2bin', 'dphit3bin', 'pn2bin', 'costhpi', 'pp']
 PFX = 'ccpi' if FAM == 'incl' else 'ccpi1p'
 LIVEPFX = '' if FAM == 'incl' else 'ccpi1p_'
 TAGS = [('altgenie', 'GENIE multisim u545'), ('altdelta', 'Delta->N pi angular')]
-LAB = {'pmu': 'p_mu', 'costhmu': 'cos th_mu', 'costhpi': 'cos th_pi', 'ppi2bin': 'p_pi (2 region)',
+LAB = {'pmu': 'p_mu', 'costhmu': 'cos th_mu', 'costhpi': 'cos th_pi', 'ppi2bin': 'p_pi (2 region)', 'ppi3bin': 'p_pi (3 region)',
        'Whad': 'W_had', 'dpt2bin': 'delta p_T (2 bin)', 'dalphat2bin': 'delta alpha_T (2 bin)',
-       'dphit2bin': 'delta phi_T (2 bin)', 'pn2bin': 'p_n (2 bin)'}
+       'dphit2bin': 'delta phi_T (2 bin)', 'dphit3bin': 'delta phi_T (3 bin)', 'pn2bin': 'p_n (2 bin)', 'pp': 'p_p (3 bin)'}
 
 
 def load(path):

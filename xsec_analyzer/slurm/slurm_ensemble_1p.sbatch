@@ -3,7 +3,7 @@
 # from it, unfold, and record the unfolded spectrum with its uncertainty and the A_C-smeared truth.
 # Counterpart of slurm_ensemble_cfg.sbatch for the ccpi1p family (configs/file_properties_numi_<cfg>_w.txt,
 # configs/ccpi1p_*): outputs carry the tag 1p_<cfg> so ensemble_stat_pulls.evaluate('1p_<cfg>_<obs>')
-# and ens_statcov.sh 1p_<cfg> <obs> work unchanged. Throw files live under w/ens/ (tmp+rename, no race).
+# and ens_statcov.sh 1p_<cfg> <obs> work unchanged. Throw files live under w/ens/throws/ (created once, never replaced: macros/throw_guard.h).
 #SBATCH --job-name=ens1p
 #SBATCH --partition=main
 #SBATCH --cpus-per-task=4
@@ -17,33 +17,37 @@ REPO="${REPO:?}"; PROC="${PROC:-/data/uboone/processed}"; OBS="${OBS:-Whad}"; CF
 export UNIV_THREADS="${UNIV_THREADS:-${SLURM_CPUS_PER_TASK:-4}}"
 case "$CFG" in fhc5) MODES="fhc"; RUNS_fhc="1 2 4 5";; rhcfull) MODES="rhc"; RUNS_rhc="1 2 3 4";; comb) MODES="fhc rhc"; RUNS_fhc="1 2 4 5"; RUNS_rhc="1 2 3 4";; esac
 T=$(( SLURM_ARRAY_TASK_ID + 1 )); TAG="1p_${CFG}"
+# CONF: directory of the bin, slice and xsec configs (configs/adopt050 runs the staged binnings before promotion)
+CONF="${CONF:-configs}"
 
 cd "$REPO" || exit 1
 export LD_LIBRARY_PATH="/usr/lib64/flexiblas:$(root-config --libdir):$REPO/lib:${LD_LIBRARY_PATH:-}"
 export XSEC_ANALYZER_DIR="$REPO"
-mkdir -p "$PROC/w/ens" "$PROC/ens"
+mkdir -p "$PROC/w/ens/throws" "$PROC/ens/throws"
 echo "host=$(hostname) throw=$T fam=1p cfg=$CFG obs=$OBS"
 
 # --- 1. throw (w/ tree) --------------------------------------------------------------
 for m in $MODES; do
   root -l -b -q "macros/throw_ensemble_w.C($T,\"$m\")" 2>&1 | grep -E 'POTSCALE|FAILED'
   eval runs=\$RUNS_$m
-  for r in $runs; do [ -s "$PROC/w/ens/fakedata_${m}_run${r}_t${T}.root" ] || { echo "FAILED throw $T $m run $r" >&2; exit 1; }; done
+  for r in $runs; do [ -s "$PROC/w/ens/throws/fakedata_${m}_run${r}_t${T}.root" ] || { echo "FAILED throw $T $m run $r" >&2; exit 1; }; done
 done
 
 # --- 2. a file_properties pointing at this member's data ----------------------------
-FPM="$PROC/ens/fp_${TAG}_t${T}.txt"
-sed -E "s#/w/xsec-ana-fakedata_(fhc|rhc)_run([0-9])\.root#/w/ens/fakedata_\1_run\2_t${T}.root#" \
-  configs/file_properties_numi_${CFG}_w.txt > "$FPM"
+FPM="$PROC/ens/fp_${TAG}_${OBS}_t${T}.txt"   # per observable, written atomically (see slurm_ensemble_cfg.sbatch)
+sed -E "s#/w/xsec-ana-fakedata_(fhc|rhc)_run([0-9])\.root#/w/ens/throws/fakedata_\1_run\2_t${T}.root#" \
+  configs/file_properties_numi_${CFG}_w.txt > "$FPM.tmp.$$" && mv -f "$FPM.tmp.$$" "$FPM"
 n=$(grep -c "_t${T}\.root" "$FPM"); want=4; [ "$CFG" = comb ] && want=8
 [ "$n" -eq $want ] || { echo "FAILED fp rewrite for throw $T (matched $n of $want)" >&2; exit 1; }
 
 case "$OBS" in
-  *2bin) BIN="configs/ccpi1p_${OBS%2bin}_bin_config_2bin.txt"; SLICE="configs/ccpi1p_${OBS%2bin}_slice_config_2bin.txt";;
-  *)     BIN="configs/ccpi1p_${OBS}_bin_config.txt"; SLICE="configs/ccpi1p_${OBS}_slice_config.txt";;
+  *2bin) BIN="$CONF/ccpi1p_${OBS%2bin}_bin_config_2bin.txt"; SLICE="$CONF/ccpi1p_${OBS%2bin}_slice_config_2bin.txt";;
+  *3bin) BIN="$CONF/ccpi1p_${OBS%3bin}_bin_config_3bin.txt"; SLICE="$CONF/ccpi1p_${OBS%3bin}_slice_config_3bin.txt";;   # 2026-09-26
+  *)     BIN="$CONF/ccpi1p_${OBS}_bin_config.txt"; SLICE="$CONF/ccpi1p_${OBS}_slice_config.txt";;
 esac
-XC0="configs/ccpi1p_xsec_config_numi_${OBS}_${CFG}.txt"
-[ -f "$BIN" ] && [ -f "$SLICE" ] && [ -f "$XC0" ] || { echo "FAILED: missing bin/slice/xsec config for 1p $CFG $OBS" >&2; exit 1; }
+XC0="$CONF/ccpi1p_xsec_config_numi_${OBS}_${CFG}.txt"
+[ -f "$BIN" ] && [ -f "$SLICE" ] && [ -f "$XC0" ] || { echo "FAILED: missing bin/slice/xsec config for 1p $CFG $OBS in $CONF" >&2; exit 1; }
+echo "configs: $BIN $SLICE $XC0"
 # --- 3. universes from THIS throw ---------------------------------------------------
 U="$PROC/ens/univ_${TAG}_${OBS}_t${T}.root"
 rm -f "$U"

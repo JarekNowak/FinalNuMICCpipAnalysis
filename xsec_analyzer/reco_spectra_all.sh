@@ -10,15 +10,15 @@ declare -A TAG=( [fhc5]=FHC5 [rhcfull]=RHCFULL [comb]=COMB )
 declare -A PFX=( [fhc5]="" [rhcfull]="rhc_" [comb]="comb_" )
 n=0
 for cfg in fhc5 rhcfull comb; do t=${TAG[$cfg]}; p=${PFX[$cfg]}
-  for o in pmu ppi costhmu costhpi thmupi thetamu; do
+  for o in pmu ppi costhmu costhpi thmupi; do   # 2026-09-26: theta_mu dropped
     xc=configs/ccpi_xsec_config_numi_${o}_${cfg}.txt
     sc=configs/ccpi_${o}_slice_config_opt.txt
     # p_pi is extracted in the coarsened 2-bin scheme; the generator prediction
     # files carry a 2-bin ppi_fte, so the fine-binned config aborts with
     # "Prediction histogram bin count mismatch". Figure name stays fw_reco_*ppi.
     if [ "$o" = ppi ]; then
-      xc=configs/ccpi_xsec_config_numi_ppi2bin_${cfg}.txt
-      sc=configs/ccpi_ppi_slice_config_2bin.txt
+      xc=configs/ccpi_xsec_config_numi_ppi3bin_${cfg}.txt   # three regions since 2026-09-26
+      sc=configs/ccpi_ppi_slice_config_3bin.txt
     fi
     # Clear the fixed-name plot FIRST. Without this a crashed unfold leaves the
     # PREVIOUS observable's plot_step1_reco_spectrum.pdf in place, which is then
@@ -31,6 +31,6 @@ for cfg in fhc5 rhcfull comb; do t=${TAG[$cfg]}; p=${PFX[$cfg]}
     else echo "  MISSING plot_step1 for $cfg $o"; fi
   done
 done
-echo "reco spectra written: $n/18"
+echo "reco spectra written: $n/15"
 ls "$FIG"/fw_reco_*.pdf 2>/dev/null | wc -l
 echo "########## RECO SPECTRA DONE ##########"

@@ -1,11 +1,11 @@
 # val_closure_fig.py -- figure of the fake-data closure (unfolded / realised-truth integral) for the
-# 18 inclusive extractions, from the TSV written by closure_tables.C.
+# 15 inclusive extractions (2026-09-26), from the TSV written by closure_tables.C.
 #     python3 report/tools/val_closure_fig.py closure_summary.tsv OUT.eps
 import sys, ROOT
 ROOT.gROOT.SetBatch(True); ROOT.gStyle.SetOptStat(0)
 rows=[l.rstrip('\n').split('\t') for l in open(sys.argv[1]) if l.startswith('incl\t')]
-obs=['pmu','ppi2bin','costhmu','costhpi','thmupi','thetamu']
-lab={'pmu':'p_{#mu}','ppi2bin':'p_{#pi}','costhmu':'cos#theta_{#mu}','costhpi':'cos#theta_{#pi}','thmupi':'#theta_{#mu#pi}','thetamu':'#theta_{#mu}'}
+obs=['pmu','ppi3bin','costhmu','costhpi','thmupi']
+lab={'pmu':'p_{#mu}','ppi3bin':'p_{#pi}','costhmu':'cos#theta_{#mu}','costhpi':'cos#theta_{#pi}','thmupi':'#theta_{#mu#pi}'}
 cfg=[('FHC5','FHC','#0072B2',20),('RHCFULL','RHC','#D55E00',21),('COMB','combined','#009E73',22)]
 R={(r[1],r[2]):float(r[5]) for r in rows}
 vals=[R[(c,o)] for c,_,_,_ in cfg for o in obs if (c,o) in R]

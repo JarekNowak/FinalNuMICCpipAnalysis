@@ -7,14 +7,17 @@ import json, os
 _J = '/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/logs/binreview/scan_floor{}_{}.json'
 _W = dict(subdir='binreview', univdir='/data/uboone/processed/rebuild_binreview', cfgs=('fhc5', 'rhcfull', 'comb'), suffix='_br')
 OPEN = {'pmu': True, 'ppi': True, 'costhmu': False, 'thetamu': False, 'costhpi': False, 'thmupi': False,
-        'Whad': True, 'Wpipr': True, 'dpt': True, 'dalphat': False, 'dphit': False, 'pn': True, 'thetap': False, 'thpipr': False}
+        'Whad': True, 'Wpipr': True, 'dpt': True, 'dalphat': False, 'dphit': False, 'pn': True, 'thetap': False, 'thpipr': False,
+        'pp': True}
 # K=5 for the angles: maximin edges at the released bin count, to separate the effect of the edges from the
 # effect of the number of bins
 KS = {'incl': {'pmu': [4, 5, 6, 7], 'ppi': [3], 'costhmu': [5, 6, 7, 8, 9], 'thetamu': [5, 6, 7, 8, 9, 10],
                'costhpi': [5, 6, 7, 8, 9, 10], 'thmupi': [5, 6, 7, 8, 9, 10, 11]},
       # proton-tagged: floor 50 (the family is 2.6 times smaller); W_had K=3 only exists at floor 30
       '1p': {'Whad': [2, (3, 30)], 'Wpipr': [2], 'dpt': [3], 'dalphat': [2, 3], 'dphit': [3], 'pn': [3],
-             'thetap': [3, 4, 5, 6], 'thpipr': [3, 4, 5, 6]}}
+             'thetap': [3, 4, 5, 6], 'thpipr': [3, 4, 5, 6],
+             # proton momentum, added 2026-09-26 (user decision): every bin count up to the finest passing 0.50
+             'pp': [2, 3, 4, 5]}}
 FLOOR = {'incl': 70, '1p': 50}
 CANDS = []
 for fam, pfx in (('incl', 'ccpi'), ('1p', 'ccpi1p')):

@@ -17,7 +17,7 @@ export LD_LIBRARY_PATH="/usr/lib64/flexiblas:$(root-config --libdir):$REPO/lib:$
 L=../logs/fdfix; FIG=../report/figures
 root.exe -l -b -q 'macros/export_curves.C("../report/data_release")' > $L/export_curves_run1fix.log 2>&1
 root.exe -l -b -q 'macros/export_matrices.C("../report/data_release")' > $L/export_matrices_run1fix.log 2>&1
-for t in FHC5 RHCFULL COMB; do cp -p $PROC/closure_hists_xsec_${t}_ppi2bin.root $PROC/closure_hists_xsec_${t}_ppi.root; root.exe -l -b -q "macros/ppi2bin_figs.C(\"$t\")" > $L/ppi2bin_run1fix_$t.log 2>&1; done
+for t in FHC5 RHCFULL COMB; do cp -p $PROC/closure_hists_xsec_${t}_ppi3bin.root $PROC/closure_hists_xsec_${t}_ppi.root; root.exe -l -b -q "macros/ppi2bin_figs.C(\"$t\")" > $L/ppi2bin_run1fix_$t.log 2>&1; done
 for set in wtki wtki_noW incl; do root.exe -l -b -q "macros/dsigma_ccpi1p.C(\"FHC5\",\"$set\")" > $L/ccpi1p_run1fix_$set.log 2>&1; done
 for c in RHCFULL COMB; do for set in wtki wtki_noW incl; do root.exe -l -b -q "macros/dsigma_ccpi1p.C(\"$c\",\"$set\")" > $L/ccpi1p_run1fix_${set}_$c.log 2>&1; done; done
 root.exe -l -b -q 'macros/dsigma_build.C("FHC5")' > $L/dsigma_build_run1fix.log 2>&1; root.exe -l -b -q 'macros/dsigma_build_1p.C("FHC5")' > $L/dsigma_build_1p_run1fix.log 2>&1

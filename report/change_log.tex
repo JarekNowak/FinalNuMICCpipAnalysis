@@ -34,10 +34,10 @@ that a reader of the analysis note never has to work out whether a given table p
 a given fix, and so that a result quoted from an older draft can be identified as
 superseded rather than merely different.
 
-Most entries are normalisation errors.  That concentration is itself worth stating: the
-extraction divides by four numbers --- the data exposure, the integrated flux, the argon
-target count, and the per-run Monte Carlo exposure --- and eight separate defects came
-from one of those four differing between configurations without anything detecting it.
+Most entries are normalisation errors. The extraction divides by four numbers (the data
+exposure, the integrated flux, the argon target count and the per-run Monte Carlo exposure), and
+eight separate defects came from one of those four differing between configurations without
+anything detecting it.
 The response is \texttt{norm\_manifest.py}, which reads the authoritative configuration
 files and asserts that they agree, so that a future drift fails a check instead of
 producing a wrong cross section.
@@ -57,8 +57,8 @@ which invented a muon-angle anomaly.
 
 \section{How to read this document}
 
-Each entry states what was wrong, how it was found, what changed numerically, and what
---- if anything --- had to be withdrawn.  ``Before'' values are quoted from the draft in
+Each entry states what was wrong, how it was found, what changed numerically, and what, if
+anything, had to be withdrawn.  ``Before'' values are quoted from the draft in
 which they appeared and should not be used; they are given so that an older table can be
 recognised.
 
@@ -82,7 +82,7 @@ unaffected, because the error was a single multiplicative constant.
 \subsection{Configuration-specific flux was not being used}
 
 The RHC and combined extractions were normalised with the FHC integrated flux.  The three
-exposures see genuinely different spectra, and the correct integrated fluxes are
+exposures see different spectra, and the correct integrated fluxes are
 \[
 \Phi_{\mathrm{FHC}} = 6.81159\times10^{-10},\quad
 \Phi_{\mathrm{RHC}} = 6.44646\times10^{-10},\quad
@@ -133,7 +133,7 @@ This is the largest single correction and it affected every result.
 
 The fake data are generated externally by \texttt{throw\_perrun\_*.C}, which folds the
 tuned central value, the PPFX central value and the normalisation into the event
-multiplicity and then writes the per-event weights back as unity --- the throw is a
+multiplicity and then writes the per-event weights back as unity: the throw is a
 Poisson realisation of an already-weighted expectation.  The framework's
 \texttt{build\_universes} nevertheless substituted the \emph{weighted} central-value
 histogram for the raw counts, on both the reconstructed and the truth side, so the
@@ -151,8 +151,8 @@ $1567.1$ agrees with the thrown count at $1.3\sigma$.
 $51$ extracted cross sections fell by between $3.8\%$ and $12.9\%$.  Every absolute cross
 section from a draft predating this fix is high by roughly a tenth.
 
-\textbf{Withdrawn.} Two earlier explanations of the closure excess --- one attributing it
-to the unfolding covariance and Wiener filter, one to $A_C$ smearing --- were both wrong
+\textbf{Withdrawn.} Two earlier explanations of the closure excess, one attributing it
+to the unfolding covariance and Wiener filter and one to $A_C$ smearing, were both wrong
 and are retracted.  They are retained in the technical supplement as recorded dead ends
 rather than deleted.
 
@@ -178,7 +178,7 @@ information the measurement is supposed to carry.
 The corrected operator differences the \emph{density} on a non-uniform grid, reducing to
 the old stencil when the widths are equal, with one-sided first-derivative rows at the
 ends so that the operator stays non-singular without asserting that the distribution
-vanishes at the edges --- which it does not, since $\cos\theta_\mu$ peaks at the upper
+vanishes at the edges, which it does not, since $\cos\theta_\mu$ peaks at the upper
 edge.
 
 \textbf{Effect} on the conditioning measure $s_2/s_1$ of $A_C$:
@@ -231,8 +231,8 @@ of the prediction map in place, and again on the plotting path.  Confirmed exact
 $A_C^{2}\cdot\text{raw} = \text{plotted}\times\text{width}$ to $1.0000$ in every bin.
 
 \textbf{How it was found.}  By testing whether the released $A_C$ lets an external user
-reproduce a published generator curve.  It did not --- the discrepancy was $31\%$ on the
-integral and varied from $1.21$ to $1.55$ across bins, so it was not a normalisation --- and
+reproduce a published generator curve. It did not: the discrepancy was $31\%$ on the
+integral and varied from $1.21$ to $1.55$ across bins, so it was not a normalisation, and
 the residual factor turned out to be $A_C$ itself.
 
 \textbf{Effect} (2026-08-31 pass; the current values are in the note's
@@ -294,11 +294,11 @@ at all.  Both were needed; adding either alone does nothing.
 with the nine detector variation samples included and re-unfolded from them.  Every
 extraction in the analysis now carries a detector term.  The proton-tagged terms ran
 $10.5\%$--$64.4\%$ with a median of $23.9\%$, against $16.9\%$--$42.8\%$ for the inclusive
-results (current release: $10.5$--$108.5\%$, median $33.0\%$, and $15.6$--$35.0\%$).
+results (release of 2026-09-26: $9.9$--$74.5\%$, median $30.9\%$, and $16.6$--$34.2\%$).
 
 \textbf{Check} (of the time).  Per-mode detector-variation double counting has occurred in
-this analysis before, and the combined configuration --- which carries two per-mode sets
-where the single-mode configurations carry one --- is the one exposed to it.  Double
+this analysis before, and the combined configuration, which carries two per-mode sets
+where the single-mode configurations carry one, is the one exposed to it.  Double
 counting inflates the combined result.  On that pass, of the eight observables (of eleven)
 whose combined value fell outside its own FHC--RHC range, six fell \emph{below} both and
 only two above, the finite-sample averaging-down expected of statistically limited
@@ -915,8 +915,8 @@ Adopted in every configuration (17 file-properties lists, the throw macros, the 
 analysis code, the normalisation audit); FHC Run~1 alone re-thrown; FHC exposure $8.857\to
 7.766\times10^{20}$, combined $1.9939\to1.8848\times10^{21}$. The FHC and combined extractions are
 rebuilt on it (universe files, unfolding, covariances, release, figures and tables). On the blind
-fake data the exposure cancels --- the pseudo-data are thrown at the assumed exposure, so numerator
-and denominator move together --- and the rebuilt integrals differ from the previous release only
+fake data the exposure cancels, because the pseudo-data are thrown at the assumed exposure and
+numerator and denominator move together, and the rebuilt integrals differ from the previous release only
 through the new FHC Run-1 Poisson realisation and the changed run weighting (median ratio $0.99$;
 individual bins within their statistical uncertainties). On beam-on data, where the event count is
 fixed, the same correction raises $\sigma_{\rm FHC}$ by $14.0\%$ and $\sigma_{\rm comb}$ by
@@ -932,7 +932,7 @@ release-derived table. The one-bin totals, which the rebuild manifest had omitte
 separately (SLURM 3352400). Because the pseudo-data are thrown at the assumed exposure, the
 exposure cancels in a fake-data extraction and nothing moved by $14\%$: the rebuilt integrals are
 $0.95$--$1.05$ of the previous release for the inclusive observables (median $0.99$) and within
-$\pm30\%$ in the sparsest proton-tagged bins, all inside their statistical uncertainties --- the
+$\pm30\%$ in the sparsest proton-tagged bins, all inside their statistical uncertainties, from the
 new FHC Run-1 Poisson realisation plus the changed run weighting (Run~1 is now $28\%$ of FHC,
 not $37\%$). The closure mean is unchanged ($1.011$ inclusive, $1.012$ proton-tagged). The
 $+14\%$ / $+5.8\%$ applies to a beam-on extraction at fixed event count, and the documents now say
@@ -973,7 +973,7 @@ far-sideband study is being re-run.
 \subsection{The MCS momentum-scale bound is withdrawn and redone on the data side}
 The $\pm5\%$/$\pm10\%$ bound quoted on 2026-09-19 scaled the MCS momentum through the
 \emph{bin configuration}, which applies to the simulation and to the fake data alike. A common
-scale cancels in the extraction --- response and data move together --- so the $0.07\sigma$ and
+scale cancels in the extraction, since response and data move together, so the $0.07\sigma$ and
 $0.19\sigma$ measured only the regulariser's response to a remapped variable, not the systematic.
 A momentum-scale error is a data-versus-simulation mismatch, so the variation is now applied to
 the fake data alone (\texttt{macros/mcs\_scale\_fakedata.C}: every MCS-measured muon, $63\%$ of the
@@ -1124,9 +1124,10 @@ and six bins, $p_\pi$ two and three, $\cos\theta_\mu$ seven and eight, $\theta_\
 $\cos\theta_\pi$ seven, $\theta_{\mu\pi}$ five to ten (equivalent), $W_{\rm had}$ two, $W_{\pi p}$ one and
 two, $\delta p_T$ and $p_n$ two, $\delta\alpha_T$ one and two, $\delta\phi_T$ two and three, $\theta_p$
 four, $\theta_{\pi p}$ three and four. The same partition retains up to one degree of freedom more as
-$\cos\theta_\mu$ than as $\theta_\mu$, because the regulariser acts on the density. The recommendation
-is $0.68$ for every observable; the decision is open (below). A single-throw closure cannot establish
-the coverage of a new binning, so each adopted one needs its own ensemble.
+$\cos\theta_\mu$ than as $\theta_\mu$, because the regulariser acts on the density. The review
+recommended $0.68$ for every observable; the decision, taken the same day, is recorded in the next
+section. A single-throw closure cannot establish the coverage of a new binning, so each adopted one
+needs its own ensemble.
 
 \subsection{Statements corrected by the review (text moved)}
 Four statements about the released binnings were wrong and are corrected. The note's appendix on
@@ -1141,6 +1142,89 @@ their released five bins fail $0.68$ where optimised five-bin edges pass. The RH
 edges were presented as an improvement: they leave $21$ selected events in the last bin. The
 proton-tagged note's binning prerequisite now states the $W_{\rm had}$ finding, and the note's
 unblinding requirements include the choice of criterion and binnings.
+
+\section{Binnings of the 0.50 criterion adopted (2026-09-26)}
+
+\subsection{The decision and the binnings}
+The $0.50$ migration criterion was adopted for both families, with the binnings selected by the
+rule of the review (supplement, \S\ref{S-sec:binreview}) and four exceptions: $\cos\theta_\pi$ keeps
+its five bins, $\theta_{\mu\pi}$ its five, $\delta\alpha_T$ its split at $120^\circ$, and the
+proton-tagged $p_\pi$ its two regions, since three fail $0.50$ in that sample. The binnings are
+$p_\mu$ six bins ($0.15$, $0.30$, $0.425$, $0.575$, $0.825$, $1.25$, open) and $\cos\theta_\mu$ eight
+($-1$, $0.4$, $0.625$, $0.75$, $0.825$, $0.9$, $0.95$, $0.975$, $1$) in both families; the inclusive
+$p_\pi$ in three regions ($0.175$, $0.205$, $0.26$, open); $W_{\rm had}$ two regions split at
+$1.18$~GeV/$c^2$; $\delta\phi_T$ three bins ($0$, $22.5$, $75$, $180^\circ$); $\theta_p$ four bins
+($0$, $0.44$, $0.785$, $1.162$, $\pi$) and $\theta_{\pi p}$ four ($0$, $0.911$, $1.414$, $1.916$, $\pi$)
+at their maximin edges. $d\sigma/d\theta_\mu$ is no longer reported: a partition has the same
+diagonals in $\theta_\mu$ and $\cos\theta_\mu$, and the cosine retains up to one degree of freedom
+more. The exemption of $p_\mu$ from the criterion ends.
+
+\subsection{Proton momentum added to the proton-tagged family}
+The momentum of the leading proton, $p_p$, is a new proton-tagged observable. Its candidates, two to
+five bins between the signal threshold of $0.3$~GeV/$c$ and an open top, were extracted in the three
+configurations (SLURM 3433088); the rule selects three bins split at $0.42$ and $0.60$~GeV/$c$ (worst
+diagonal $0.74/0.73$, trace $1.49/1.40$), and two bins under $0.68$. Its generator predictions were
+built from the event-level files. The release now holds fifty-one extractions: fifteen inclusive and
+thirty-six proton-tagged.
+
+\subsection{Chain}
+{\sloppy Generator predictions at the new edges were built from the event-level files
+(\texttt{generator\_predictions/gen2d}; the histograms of the previous binnings are unchanged and the
+integrals of every new axis equal those of the old ones). The $27$ universe files of the new
+binnings (SLURM 3433061) and the $p_p$ candidates were installed by \texttt{promote\_050.sh}, which
+backed up the replaced configurations and universe files
+(\texttt{configs/backup\_pre050\_20260926}, \texttt{univmake\_backup\_pre050\_20260926}), archived the
+products of the retired extractions (two-region inclusive $p_\pi$, $\theta_\mu$, two-bin
+$\delta\phi_T$) and regenerated the release; the retired figures moved to
+\texttt{figures/retired\_pre050\_20260926}. The MCS term was re-evaluated for the six $p_\mu$ bins
+(largest $0.56\sigma$, in the open top bin in FHC). The alternative-model closure was repeated for
+every rebinned observable in FHC (SLURM 3433100, 3433125) and for $p_\mu$, $\cos\theta_\mu$ and
+$p_\pi$ in RHC (SLURM 3433342): the largest inclusive bias rose from $0.93\sigma$ to $1.18\sigma$
+(the third FHC $\cos\theta_\mu$ bin under the angular variation, a bin with $114\%$ uncertainty),
+RHC stays below $0.83\sigma$, and $p_p$ below $0.37\sigma$. Also repeated: the D'Agostini cross-check on the five inclusive observables
+(integrals flat in the observable to $1\%$ and equal to the one-bin totals), and the five ensembles
+of rebinned extractions (FHC $p_\mu$, FHC and RHC $\cos\theta_\mu$, combined $p_\pi$, proton-tagged
+FHC $W_{\rm had}$; SLURM 3433218, 3433219, 3433290, 3433291, 3433292).\par}
+
+\subsection{Defects found during the adoption}
+\begin{itemize}\itemsep2pt
+  \item \textbf{Ensemble throws on NFS.} Writing each throw to a temporary name and renaming it
+    over the final one (2026-09-24) did not stop the race: on NFS the rename unlinks the old file
+    under a reader on another node, which then fails with a short read (two FHC $p_\mu$ members
+    within two minutes of five arrays starting together). The arrays were cancelled after six
+    minutes. A member's throw is now created once by \texttt{link(2)} from a closed temporary,
+    stamped with its seed and POT scale, reused when the stamp matches and never replaced while it
+    may be open (\texttt{macros/throw\_guard.h}, \texttt{ens/throws/}). The FHC and RHC arrays of one
+    observable also shared a work directory, a universe log and a file list per member; these are
+    now per configuration.
+  \item \textbf{Response figure of $p_\pi$.} The figure script skipped the $p_\pi$ response, so the
+    note showed the two-region response of an earlier release; it now writes
+    \texttt{fw\_resp\_ppi3bin} and \texttt{fw\_eff\_ppi3bin}.
+  \item \textbf{MCS tool.} It read the MCS extractions of the retired binnings for
+    $\cos\theta_\mu$; it now checks whether the reconstructed bins read the muon momentum and writes
+    the identically zero term otherwise.
+  \item \textbf{Proton kinetic energy.} The proton candidate's kinetic energy is the range-based
+    value, an exact function of the track length, not a calorimetric one; the notes said otherwise.
+  \item \textbf{Reproduction precision.} The external reproduction of the released curves was quoted
+    at $1.2\times10^{-10}$; from the released text files it is a relative $4\times10^{-8}$, the
+    precision of those files.
+  \item \textbf{Hand-maintained tables.} The note's table of bin edges and the supplement's tables of
+    $A_C$ row sums and proton-tagged binnings carried values of earlier releases; the first two are
+    now generated (\texttt{binning\_table.py}, \texttt{ac\_rowsums\_table.py}).
+  \item \textbf{Combined-truth test.} The check of the combined truth against the average of its
+    inputs used POT weights and $A_C$-smeared integrals; with fluence weights on the one-bin truths
+    the ratio is $1.000$ (inclusive) and $1.001$ (proton-tagged).
+  \item \textbf{Top bin closed at a physical boundary.} The last true bin of $\cos\theta_\mu$ and
+    $\cos\theta_\pi$ is written as ``$<1.000$'' (likewise $\delta\phi_T$ at $180^\circ$ and
+    $\theta_{\pi p}$ at $3.142$~rad), so an event exactly at the boundary falls in no true bin. Five of
+    the $145\,946$ signal events of the fourteen overlays have $\cos\theta_\mu=1.0$ exactly (two of
+    them selected), none has $\cos\theta_\pi=1.0$, and no ensemble member is short by more than this.
+    The effect is $0.003\%$ of the signal and is left in the release; the configuration writer now
+    leaves such a bin open at the top for the next rebuild, and the ensemble entry-count scan
+    (\texttt{report/tools/ensemble\_entry\_scan.py}) reports a shortfall of one or two entries as this
+    case rather than as a truncated read. The one-entry-short members flagged on 2026-09-24 were this
+    case, not corrupt reads.
+\end{itemize}
 
 \section{Open items}
 
@@ -1163,12 +1247,11 @@ yet made.
     released configurations (no alternative-generator test exists on the released chain);
     the clean-cache bit-identical reproduction repeated on the 2026-09-06 release; the inverted-proton-PID
     control region for any proton-tagged result; the documented treatment of any
-    control-region discrepancy under the frozen procedure; the choice of migration criterion and
-    binnings (the released $p_\mu$ and $W_{\rm had}$ fail both $0.68$ and $0.50$, $\cos\theta_\mu$ and
-    $\theta_\mu$ fail $0.68$; supplement, \S\ref{S-sec:binreview}).
-  \item \textbf{Ensembles:} the inclusive ensembles cover FHC, RHC and the combined configuration,
-    and three proton-tagged ensembles cover $W_{\rm had}$, $\delta p_T$ and $p_n$; no test of this
-    kind remains outstanding.
+    control-region discrepancy under the frozen procedure.
+  \item \textbf{Ensembles:} the ensembles of the five rebinned extractions (FHC $p_\mu$, FHC and
+    RHC $\cos\theta_\mu$, combined $p_\pi$, proton-tagged FHC $W_{\rm had}$) were started on
+    2026-09-26; the one-bin totals and the proton-tagged $\delta p_T$ and $p_n$ keep their binnings
+    and their ensembles.
   \item \textbf{Systematic terms not in the released covariance:} the MCS muon momentum-scale
     term is evaluated at $\pm5\%$ on the data side and released as a separate component for $p_\mu$
     in all three configurations (up to $0.35\sigma$ per bin in FHC and combined, $0.85\sigma$ in the
@@ -1191,13 +1274,14 @@ yet made.
     extraction; a larger ensemble would settle it.
 \end{itemize}
 
-\paragraph{External reproduction of the $A_C$-smeared comparison --- resolved.}
+\paragraph{External reproduction of the $A_C$-smeared comparison (resolved).}
 The transformation
 \[
   \left(d\sigma/dx\right)^{\rm smeared}_i = \frac{1}{w_i}\sum_j (A_C)_{ij}\,p_j ,
 \]
 applied to a prediction supplied as a per-bin cross section, reproduces every released
-generator curve to a worst per-bin deviation of $1.2\times10^{-10}$; it was the failure of
+generator curve to a worst relative per-bin deviation of $4\times10^{-8}$, the precision of the
+text files; it was the failure of
 this test that exposed the double-$A_C$ bug, and its success is now the regression check.
 No packaged reference implementation ships with the release; a user can verify their
 implementation against any model column of \texttt{curves\_*.tsv}.
@@ -1222,7 +1306,7 @@ Combined detector systematic        & $42.3\%$         & $24.6\%$ at the fix; $2
 Combined result / expected          & $0.910$          & $1.027$ at the fix (2026-08-28 pass) \\
 FHC $\theta_\mu$ $A_C$ conditioning & $0.015$          & now $0.51$ \\
 Mean $\delta p_T$                   & $0.742$~GeV/$c$  & now $0.264$~GeV/$c$ (beam frame) \\
-Proton-tagged \texttt{detVar}       & \texttt{n/a}, then $10.5$--$64.4\%$ & now $10.5$--$108.5\%$ (median $33.0\%$, 2026-09-06 release) \\
+Proton-tagged \texttt{detVar}       & \texttt{n/a}, then $10.5$--$64.4\%$, then $10.5$--$108.5\%$ (2026-09-06) & now $9.9$--$74.5\%$ (median $30.9\%$, 2026-09-26 release) \\
 Proton-tagged $\sigma$, all obs.    & 2026-08-18 values & superseded 2026-08-31, and again by the re-thrown release of 2026-09-04 (current values in the note) \\
 Cut-and-count totals                & $1.06/0.98/1.02$; $1.03\pm0.43$ / $0.93\pm0.42$ / $0.98\pm0.40$ (borrowed systematic) & now the one-bin extraction $1.03\pm0.40$ / $0.93\pm0.35$ / $0.97\pm0.37$ \\
 Proton-tagged purity                & $47$--$48\%$     & now $52/50/51\%$ \\
@@ -1231,12 +1315,18 @@ FHC beam-off in the signal region   & $128$, then $13$, then $30$ & now $23$ (pe
 Combined generator weights (FHC:RHC) & $0.458{:}0.542$ & now $0.425{:}0.575$ (2026-09-24) \\
 Two-region $p_\pi$, FHC            & $0.059$ / $0.764$ & now $0.037$ / $0.827$ \\
 Proton candidate $=$ leading proton  & $59\%$ (and $31\%$ ``not a proton'') & now $81.7\%$ ($12.6\%$ not a proton); the earlier figure predates the proton-tagged reprocess \\
-$\theta_p$ bin edges                & $0,\,0.597,\,0.942,\,1.287,\,\pi$ & now the RHC-derived $0,\,0.659,\,1.068,\,1.539,\,\pi$~rad (2026-09-18) \\
+$\theta_p$ bin edges (first)        & $0,\,0.597,\,0.942,\,1.287,\,\pi$ & replaced by RHC-derived edges (2026-09-18), then by the maximin ones (2026-09-26) \\
 Control-region detector term        & $\sim\!20\%$ on CR totals & $\sim\!2\%$; the sideband \texttt{detVar} ratios were not POT-normalised \\
 CR muon-angle shape failure         & reported in CC$0\pi$ and $\pi^0$ & withdrawn: the sideband MC predated the beam-frame correction \\
 Finest $\cos\theta_\mu$, $\theta_\mu$ binning & five bins, ``cannot go finer'' & released five fail $0.68$; optimised edges admit more (2026-09-26 review) \\
 $W_{\rm had}$ six-bin response       & ``adequate''     & fails $0.68$ in all six bins, $0.50$ in five; two regions admissible \\
 Binning information measure         & $s_{\min}/s_1\gtrsim0.1$ & Wiener filter factors of $A_C$ and their sum; most released binnings fail the old threshold \\
+Binnings (2026-09-26)               & $p_\mu$ 7, $\cos\theta_\mu$ 5, $p_\pi$ 2, $W_{\rm had}$ 6, $\delta\phi_T$ 2, $\theta_{\pi p}$ 3 bins & now 6, 8, 3 (inclusive), 2, 3, 4; $\theta_\mu$ dropped; $p_p$ added (3) \\
+$\theta_p$ bin edges                & $0,\,0.659,\,1.068,\,1.539,\,\pi$ (RHC-derived) & now the maximin $0,\,0.44,\,0.785,\,1.162,\,\pi$~rad \\
+Mean inclusive closure ratio        & $1.011$ (eighteen extractions) & $0.996$ (fifteen, 2026-09-26) \\
+Smallest inclusive $A_C$ row sum    & $0.05$ (RHC $\cos\theta_\mu$, five bins) & $0.26$ (RHC $\cos\theta_\mu$, eight bins) \\
+Identity $UR=A_C$                   & $4.4\times10^{-6}$ & $6.1\times10^{-5}$ (eight-bin $\cos\theta_\mu$, width ratio $56{:}1$) \\
+Curve reproduction from $A_C$       & $1.2\times10^{-10}$ & relative $4\times10^{-8}$, the precision of the text files \\
 \bottomrule
 \end{tabular}
 \end{center}

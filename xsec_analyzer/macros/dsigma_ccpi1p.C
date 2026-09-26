@@ -20,19 +20,20 @@ void dsigma_ccpi1p(const char* cfg = "FHC5", const char* set = "wtki") {
   // withdrawn fine-binned extraction of 2026-08-18, which predates the beam-axis fix
   // (TKI about detector z) -- reading them drew a "data" curve that was a different
   // observable from the generator curves. Those sidecars are quarantined.
-  const char* obs_wtki[6] = {"Wpipr","Whad","dpt2bin","dalphat2bin","dphit2bin","pn2bin"};
-  const char* obs_noW[6]  = {"Whad","dpt2bin","dalphat2bin","dphit2bin","pn2bin",""};
+  // 2026-09-26: delta phi_T in three bins (dphit3bin) and W_had in two, under the 0.50 criterion
+  const char* obs_wtki[6] = {"Wpipr","Whad","dpt2bin","dalphat2bin","dphit3bin","pn2bin"};
+  const char* obs_noW[6]  = {"Whad","dpt2bin","dalphat2bin","dphit3bin","pn2bin","pp"};   // pp: proton momentum (2026-09-26)
   const char* obs_incl[6] = {"pmu","ppi2bin","costhmu","costhpi","thmupi","thmupi"};
   // display names: the closure files are keyed on ppi2bin but the panel should read p_pi
   const char* disp_incl[6] = {"pmu","ppi","costhmu","costhpi","thmupi",""};
   const char* obs[6];
   for ( int i = 0; i < 6; ++i ) obs[i] = incl ? obs_incl[i] : ( noW ? obs_noW[i] : obs_wtki[i] );
-  const int n_panel = ( incl || noW ) ? 5 : 6;
+  const int n_panel = incl ? 5 : 6;
   const char* obsX_wtki[6] = {"W_{#pi p} [GeV/c^{2}]","W_{had} [GeV/c^{2}]",
                          "#deltap_{T} [GeV/c]","#delta#alpha_{T} [deg]",
                          "#delta#phi_{T} [deg]","p_{n} [GeV/c]"};
   const char* obsX_noW[6]  = {"W_{had} [GeV/c^{2}]","#deltap_{T} [GeV/c]",
-                         "#delta#alpha_{T} [deg]","#delta#phi_{T} [deg]","p_{n} [GeV/c]",""};
+                         "#delta#alpha_{T} [deg]","#delta#phi_{T} [deg]","p_{n} [GeV/c]","p_{p} [GeV/c]"};
   const char* obsX_incl[6] = {"p_{#mu} [GeV/c]","p_{#pi} [GeV/c]","cos#theta_{#mu}",
                          "cos#theta_{#pi}","#theta_{#mu#pi} [rad]",""};
   const char* obsX[6];
@@ -69,7 +70,7 @@ void dsigma_ccpi1p(const char* cfg = "FHC5", const char* set = "wtki") {
     if (htru) { htru=(TH1D*)htru->Clone(); htru->SetDirectory(0); keep.push_back(htru); }
     if (htun) { htun=(TH1D*)htun->Clone(); htun->SetDirectory(0); keep.push_back(htun); }
     std::string disp = incl ? disp_incl[o] : obs[o];
-    if ( disp.size() > 4 && disp.substr(disp.size()-4) == "2bin" ) disp = disp.substr(0, disp.size()-4);
+    if ( disp.size() > 4 && ( disp.substr(disp.size()-4) == "2bin" || disp.substr(disp.size()-4) == "3bin" ) ) disp = disp.substr(0, disp.size()-4);
     hunf->SetTitle(Form("%s;%s;d#sigma/dx [10^{-38} cm^{2}/Ar]", disp.c_str(), obsX[o]));
     hunf->SetMarkerStyle(20); hunf->SetMarkerSize(0.8);
     hunf->SetLineColor(kBlack); hunf->SetMarkerColor(kBlack);

@@ -1,6 +1,6 @@
-"""ensemble_tables.py -- evaluate the six configuration-aware fake-data ensembles (2026-09-19/20:
-FHC p_mu, FHC cos theta_mu, RHC cos theta_mu, COMB p_pi (2 region), FHC total, RHC total; up to
-100 members each) with ensemble_stat_pulls.evaluate, write data_release/ensemble_2026-09-20.tsv and
+"""ensemble_tables.py -- evaluate the six configuration-aware fake-data ensembles (2026-09-26: FHC p_mu
+(six bins), FHC and RHC cos theta_mu (eight bins), COMB p_pi (three regions), and the FHC and RHC one-bin
+totals of 2026-09-20; 100 members each) with ensemble_stat_pulls.evaluate, write data_release/ensemble_2026-09-26.tsv and
 patch the coverage tables of the analysis note (statistical reference) and the technical supplement
 (statistical + full). Run slurm/ens_statcov_all.sh first so every member has its DataStats table.
 
@@ -11,13 +11,13 @@ HERE=os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
 from ensemble_stat_pulls import evaluate
 R=os.path.abspath(os.path.join(HERE,'..'))+'/'
 TAGS=[('fhc5_pmu',r'$d\sigma/dp_\mu$, FHC'),('fhc5_costhmu',r'$d\sigma/d\cos\theta_\mu$, FHC'),('rhcfull_costhmu',r'$d\sigma/d\cos\theta_\mu$, RHC'),
-      ('comb_ppi2bin',r'$d\sigma/dp_\pi$ (two regions), combined'),('fhc5_total','one-bin total, FHC'),('rhcfull_total','one-bin total, RHC')]
+      ('comb_ppi3bin',r'$d\sigma/dp_\pi$ (three regions), combined'),('fhc5_total','one-bin total, FHC'),('rhcfull_total','one-bin total, RHC')]
 res={}
 for tag,lab in TAGS:
     try: res[tag]=evaluate(tag, 100, quiet=True)
     except Exception as e: print(tag,'failed:',e)
-with open(R+'data_release/ensemble_2026-09-20.tsv','w') as o:
-    o.write('# Fake-data ensembles on the 2026-09-19 release (corrected FHC Run-1 exposure): Poisson throws of the central-value\n'
+with open(R+'data_release/ensemble_2026-09-26.tsv','w') as o:
+    o.write('# Fake-data ensembles on the 2026-09-26 release (binnings of the 0.50 criterion; the one-bin totals from 2026-09-20): Poisson throws of the central-value\n'
             '# prediction of each configuration (slurm_ensemble_cfg.sbatch), each carried through univmake + UnfolderNuMI; pulls against\n'
             '# the fixed central-value truth smeared by each member\'s own A_C. Statistical reference = DataStats covariance of the\n'
             '# member; full = total covariance. Offsets are of the ensemble-mean integral from the reference integral.\n')
@@ -26,7 +26,7 @@ with open(R+'data_release/ensemble_2026-09-20.tsv','w') as o:
         if tag not in res: continue
         r=res[tag]; s=r['statistical only']; f=r['full']
         o.write(f"{tag}\t{r['members']}\t{r['bins']}\t{s['mean']:.2f}\t{s['width']:.2f}\t{100*s['cov68']:.1f}\t{100*s['cov95']:.1f}\t{f['mean']:.2f}\t{f['width']:.2f}\t{100*f['cov68']:.1f}\t{100*f['cov95']:.1f}\t{r['mean_integral']:.4f}\t{r['reference_integral']:.4f}\t{r['offset_pct']:.2f}\t{r['offset_sigma']:.1f}\t{r['sd_pct']:.1f}\n")
-print('wrote data_release/ensemble_2026-09-20.tsv')
+print('wrote data_release/ensemble_2026-09-26.tsv')
 def row(tag,lab,key):
     r=res[tag][key]; return f"{lab:<40} & ${r['mean']:+.2f}$ & ${r['width']:.2f}$ & ${100*r['cov68']:.1f}\\%$ / ${100*r['cov95']:.1f}\\%$ \\\\"
 def patch(path, header_line, blocks):

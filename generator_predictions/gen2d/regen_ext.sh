@@ -25,8 +25,8 @@ echo "NuWro done $(date)"
 apptainer exec -B /cvmfs -B /home -B /data "$IMG" bash $G/reana_neut_ext.sh 2>&1 | tail -8
 echo "NEUT done $(date)"
 
-INC=pmu,ppi,costhmu,costhpi,thmupi,costhpi_costhmu,costhmu_pmu,costhpi_thmupi,costhpi_ppi
-ONEP=Wpipr,Whad,dpt,dalphat,dphit,pn,thetap,thpipr,thetap_dpt,thpipr_dpt,thetap_Wpipr,thpipr_Wpipr
+INC=pmu,ppi,costhmu,costhpi,thmupi,costhpi_costhmu,costhmu_pmu,costhpi_thmupi,costhpi_ppi,pmu6,ppi3,costhmu8
+ONEP=Wpipr,Whad,dpt,dalphat,dphit,pn,thetap,thpipr,thetap_dpt,thpipr_dpt,thetap_Wpipr,thpipr_Wpipr,Whad2,dphit3,thetap4m,thpipr4m,pp2,pp3,pp4,pp5
 root.exe -l -b -q -e '.L gen2d/combine_ext.C+' >/dev/null 2>&1
 for g in genie gibuu nuwro neut; do
   for s in ext:$INC 1p_ext:$ONEP; do
@@ -44,4 +44,19 @@ done
 for g in genie gibuu nuwro neut; do
   root.exe -l -b -q "$G/verify_ext.C+(\"$G/${g}_1p_ext_fhc_fte.root\",\"newg4/${g}_wtki_2bin_fte.root\",\"dpt_fte,dalphat_fte,dphit_fte,pn_fte,Wpipr_fte,Whad_fte\")" 2>&1 | grep VERIFY | sed "s/^/$g 1p-fhc vs wtki_2bin /"
 done
+echo "---- 0.50 binnings (2026-09-26): each new histogram integrates to its released counterpart ----"
+python3 - <<'PYEOF'
+import uproot
+G='gen2d'; pairs={'ext':[('pmu6','pmu'),('ppi3','ppi'),('costhmu8','costhmu')],
+                  '1p_ext':[('Whad2','Whad'),('dphit3','dphit'),('thetap4m','thetap'),('thpipr4m','thpipr'),('pp3','pp2'),('pp4','pp2'),('pp5','pp2')]}
+worst=0.
+for g in ('genie','gibuu','nuwro','neut'):
+  for t,pp in pairs.items():
+    for m in ('fhc','rhc','comb'):
+      f=uproot.open(f'{G}/{g}_{t}_{m}_fte.root')
+      for new,old in pp:
+        a=f[new+'_fte'].values().sum(); b=f[old+'_fte'].values().sum(); d=abs(a-b)/max(abs(b),1e-30); worst=max(worst,d)
+        if d>1e-9: print(f'INTEGRAL MISMATCH {g} {t} {m} {new} {a:.6g} vs {old} {b:.6g}')
+print(f'integral check: worst relative difference {worst:.2e}')
+PYEOF
 echo "==== GEN EXT DONE $(date) ===="

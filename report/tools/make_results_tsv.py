@@ -10,10 +10,11 @@ def det(d): return d['detVar_total'] if 'detVar_total' in d else math.sqrt(sum(v
 CF={'FHC5':'fhc5','RHCFULL':'rhcfull','COMB':'comb'}
 hdr='family\tobservable\tconfig\tsigma_int\tPredTotal_pct\tdetVar_pct\tflux_pct\txsec_pct\tchi2_truth\tp_truth\n'
 out=open(R+'current_results.tsv','w'); out1=open(R+'current_results_1p_new.tsv','w'); out.write(hdr); out1.write(hdr)
-for fam,obs,pref in [('incl',['pmu','ppi2bin','costhmu','costhpi','thmupi','thetamu'],''),('1p',['Whad','Wpipr','costhmu','costhpi','dalphat2bin','dphit2bin','dpt2bin','pmu','pn2bin','ppi2bin','thmupi'],'1p_')]:
+# 2026-09-26: 0.50-criterion binnings (inclusive ppi3bin, theta_mu dropped; proton-tagged dphit3bin)
+for fam,obs,pref in [('incl',['pmu','ppi3bin','costhmu','costhpi','thmupi'],''),('1p',['Whad','Wpipr','costhmu','costhpi','dalphat2bin','dphit3bin','dpt2bin','pmu','pn2bin','pp','ppi2bin','thmupi'],'1p_')]:
     for cfg in ['FHC5','RHCFULL','COMB']:
         for o in obs:
-            lo='ppi' if (fam=='incl' and o=='ppi2bin') else o
+            lo='ppi' if (fam=='incl' and o=='ppi3bin') else o
             d=load(f'{D}/{pref}{CF[cfg]}_{lo}.dump'); c=cl[(fam,cfg,o)]
             row=f"{fam}\t{o}\t{CF[cfg]}\t{d['sigma_int']:.4e}\t{d['PredTotal']:.1f}\t{det(d):.1f}\t{d['flux_total']:.1f}\t{d['xsec_total']:.1f}\t{float(c['chi2']):.3f}\t{float(c['pval']):.3f}\n"
             out.write(row)

@@ -58,7 +58,7 @@ for d in glob.glob(os.path.join(RELEASE, "cov", "*")):
 # ---- result figures: map by the config/observable in the filename ------------------
 # Only figures that actually depend on an extraction are checked; selection- and
 # detector-level figures do not and are skipped rather than guessed at.
-RESULT_PREFIX = ("dsigma", "ppi2bin", "systbreak", "wstep", "wsmear", "fw_xsec")
+RESULT_PREFIX = ("dsigma", "ppi2bin", "ppi3bin", "systbreak", "wstep", "wsmear", "fw_xsec")
 CFG = {"FHC5":"FHC5", "RHCFULL":"RHCFULL", "COMB":"COMB", "FHC":"FHC5", "RHC":"RHCFULL"}
 unmapped = []
 for p in sorted(glob.glob(os.path.join(FIGS, "*"))):
@@ -79,20 +79,21 @@ for p in sorted(glob.glob(os.path.join(FIGS, "*"))):
     check(p, max(cands, key=os.path.getmtime), f"figure/{fam}")
 
 
-# ---- content check: the two-bin p_pi figures print the integrated sigma; compare it with
+# ---- content check: the p_pi figures print the integrated sigma; compare it with
 # the sidecar they must be drawn from. An mtime check cannot catch a figure regenerated
 # from an OLD sidecar (2026-09-06: ppi2bin_xsec_1p_* were drawn from the 2026-08-30
 # closure_hists_xsec1p_*_ppi.root while the tables read the current ccpi1p_*_ppi2bin.root).
 import subprocess
 try:
     import ROOT
-    for fam, pre in (("incl", "xsec_"), ("1p", "xsec_ccpi1p_")):
+    # 2026-09-26: the inclusive p_pi has three bins (ppi3bin), the proton-tagged one two (ppi2bin)
+    for fam, pre, key in (("incl", "xsec_", "ppi3bin"), ("1p", "xsec_ccpi1p_", "ppi2bin")):
         for T, short in (("FHC5", "FHC"), ("RHCFULL", "RHC"), ("COMB", "COMB")):
-            fig = os.path.join(FIGS, f"ppi2bin_xsec{'_1p' if fam=='1p' else ''}_{short}.pdf")
-            sc = os.path.join(PROC, f"closure_hists_{pre}{T}_ppi2bin.root")
+            fig = os.path.join(FIGS, f"{key}_xsec{'_1p' if fam=='1p' else ''}_{short}.pdf")
+            sc = os.path.join(PROC, f"closure_hists_{pre}{T}_{key}.root")
             if not (os.path.exists(fig) and os.path.exists(sc)): continue
             f = ROOT.TFile.Open(sc); u = f.Get("h_unfolded_nuwro")
-            want = sum(u.GetBinContent(b)*u.GetBinWidth(b) for b in (1, 2)); f.Close()
+            want = sum(u.GetBinContent(b)*u.GetBinWidth(b) for b in range(1, u.GetNbinsX()+1)); f.Close()
             txt = subprocess.run(["gs", "-q", "-sDEVICE=txtwrite", "-o", "-", fig], capture_output=True, text=True).stdout
             m = re.search(r"=\s*([0-9]+\.[0-9]+)", txt)
             got = float(m.group(1)) if m else float("nan")

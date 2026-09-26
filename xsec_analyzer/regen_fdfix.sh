@@ -26,26 +26,28 @@ run_cfg() {
   ln -sfn "$REPO/configs" "$W/configs"; ln -sfn "$REPO/bin" "$W/bin"; ln -sfn "$REPO/lib" "$W/lib"
   ln -sfn "$REPO/booster_decision_tree" "$W/booster_decision_tree" 2>/dev/null || true
   cd "$W"
-  # ---- inclusive (6) ----
-  for o in pmu ppi costhmu costhpi thmupi thetamu; do
-    if [ "$o" = ppi ]; then xc=configs/ccpi_xsec_config_numi_ppi2bin_${cfg}.txt; sc=configs/ccpi_ppi_slice_config_2bin.txt; o2=ppi2bin
+  # ---- inclusive (5; theta_mu dropped 2026-09-26, p_pi in three bins under the 0.50 criterion) ----
+  for o in pmu ppi costhmu costhpi thmupi; do
+    if [ "$o" = ppi ]; then xc=configs/ccpi_xsec_config_numi_ppi3bin_${cfg}.txt; sc=configs/ccpi_ppi_slice_config_3bin.txt; o2=ppi3bin
     else xc=configs/ccpi_xsec_config_numi_${o}_${cfg}.txt; sc=configs/ccpi_${o}_slice_config_opt.txt; o2=$o; fi
     rm -f unfold_output/plot_step[1-4]_*.pdf
     bin/UnfolderNuMI "$xc" "$sc" "$PROC/xsec_${t}_${o2}.root" > "$LOG/${cfg}_${o}.raw" 2>&1 || echo "  FAIL $cfg $o"
     cp "$LOG/${cfg}_${o}.raw" "$DUMP/${cfg}_${o}.raw"; grep '\[SYSTDUMP\]' "$LOG/${cfg}_${o}.raw" > "$DUMP/${cfg}_${o}.dump"
     [ -f unfold_output/plot_step1_reco_spectrum.pdf ] && { cp unfold_output/plot_step1_reco_spectrum.pdf "$FIG/step1_reco_${o}${s}.pdf"; [ "$o" != thetamu ] && cp unfold_output/plot_step1_reco_spectrum.pdf "$FIG/fw_reco_${p}${o}.pdf"; }
     [ -f unfold_output/plot_step2_bkgd_subtraction.pdf ] && cp unfold_output/plot_step2_bkgd_subtraction.pdf "$FIG/step2_bsub_${o}${s}.pdf"
-    if [ "$cfg" = fhc5 ] && [ "$o" != thetamu ] && [ "$o" != ppi ]; then
-      [ -f unfold_output/plot_step3_smearing_matrix.pdf ] && cp unfold_output/plot_step3_smearing_matrix.pdf "$FIG/fw_resp_${o}.pdf"
-      [ -f unfold_output/plot_step4_efficiency.pdf ]      && cp unfold_output/plot_step4_efficiency.pdf      "$FIG/fw_eff_${o}.pdf"
+    # FHC response and efficiency; p_pi under its release name fw_*_ppi3bin (fw_*_ppi is the five-bin study)
+    if [ "$cfg" = fhc5 ] && [ "$o" != thetamu ]; then
+      [ -f unfold_output/plot_step3_smearing_matrix.pdf ] && cp unfold_output/plot_step3_smearing_matrix.pdf "$FIG/fw_resp_${o2}.pdf"
+      [ -f unfold_output/plot_step4_efficiency.pdf ]      && cp unfold_output/plot_step4_efficiency.pdf      "$FIG/fw_eff_${o2}.pdf"
     fi
     echo "  [$(date +%H:%M)] $cfg $o  truth-chi2: $(grep -m1 '^truth:' "$LOG/${cfg}_${o}.raw")"
   done
   # ---- proton-tagged (11) ----
-  for o in pmu ppi2bin costhmu costhpi thmupi Wpipr Whad dpt2bin dphit2bin dalphat2bin pn2bin; do
+  for o in pmu ppi2bin costhmu costhpi thmupi Wpipr Whad dpt2bin dphit3bin dalphat2bin pn2bin pp; do   # pp: proton momentum (2026-09-26)
     xc=configs/ccpi1p_xsec_config_numi_${o}_${cfg}.txt
     case "$o" in
-      dpt2bin|dphit2bin|dalphat2bin|pn2bin) sc=configs/ccpi1p_${o%2bin}_slice_config_2bin.txt ;;
+      dpt2bin|dalphat2bin|pn2bin) sc=configs/ccpi1p_${o%2bin}_slice_config_2bin.txt ;;
+      dphit3bin) sc=configs/ccpi1p_dphit_slice_config_3bin.txt ;;
       ppi2bin) sc=configs/ccpi1p_ppi_slice_config_2bin.txt ;;
       *) sc=configs/ccpi1p_${o}_slice_config.txt ;;
     esac
@@ -53,8 +55,8 @@ run_cfg() {
     bin/UnfolderNuMI "$xc" "$sc" "$PROC/xsec_ccpi1p_${t}_${o}.root" > "$LOG/1p_${cfg}_${o}.raw" 2>&1 || echo "  FAIL 1p $cfg $o"
     cp "$LOG/1p_${cfg}_${o}.raw" "$DUMP/1p_${cfg}_${o}.raw"; grep '\[SYSTDUMP\]' "$LOG/1p_${cfg}_${o}.raw" > "$DUMP/1p_${cfg}_${o}.dump"
     if [ "$cfg" = fhc5 ]; then
-      k=${o%2bin}
-      case "$o" in Wpipr|Whad|dpt2bin|dalphat2bin|dphit2bin|pn2bin)
+      k=${o%2bin}; k=${k%3bin}
+      case "$o" in Wpipr|Whad|dpt2bin|dalphat2bin|dphit3bin|pn2bin|pp)
         [ -f unfold_output/plot_step1_reco_spectrum.pdf ]    && cp unfold_output/plot_step1_reco_spectrum.pdf    "$FIG/wstep1_reco_${k}.pdf"
         [ -f unfold_output/plot_step2_bkgd_subtraction.pdf ] && cp unfold_output/plot_step2_bkgd_subtraction.pdf "$FIG/wstep2_bsub_${k}.pdf"
         [ -f unfold_output/plot_step3_smearing_matrix.pdf ]  && cp unfold_output/plot_step3_smearing_matrix.pdf  "$FIG/wsmear_${k}.pdf" ;;

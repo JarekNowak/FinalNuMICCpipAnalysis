@@ -3,9 +3,12 @@
 // data POT: POTSCALE_i = D_i / MC_POT_i(native). Writes one fake-data file per run,
 // carrying summed_pot = D_i (matches the onBNB convention; framework reads onBNB POT
 // from file_properties, but the parameter must be present). Ready for real data.
+#include "throw_guard.h"   // create-once throw files (2026-09-26)
 void throw_one_ens(const char* infile, const char* outfile, double dpot, double mcpot, int seed){
   const char* P="/data/uboone/processed/";
   double potscale = dpot/mcpot;
+  const TString fin=Form("%s%s",P,outfile); const std::vector<TString> inp={TString(Form("%s%s",P,infile))};
+  if(throw_reusable(fin,inp,seed,potscale)){ printf("  %-55s POTSCALE=%.5f reused\n",outfile,potscale); return; }
   gRandom->SetSeed(seed);
   TChain cin("stv_tree"); cin.Add(Form("%s%s",P,infile));
   cin.SetBranchStatus("*",1);
@@ -15,7 +18,7 @@ void throw_one_ens(const char* infile, const char* outfile, double dpot, double 
   // Write to a private temporary name and rename on success: ensembles sharing a throw id (e.g. RHC
   // total and COMB, 2026-09-20) re-throw the same file concurrently, and a reader that opened it while
   // another job was recreating it silently saw a truncated tree (members 56,57,59,60 of RHC total).
-  TString fin=Form("%s%s",P,outfile), ftmp=Form("%s.tmp%d",fin.Data(),gSystem->GetPid());
+  TString ftmp=Form("%s.tmp%d",fin.Data(),gSystem->GetPid());
   TFile* out=new TFile(ftmp,"recreate"); out->SetCompressionLevel(1);
   TTree* ot=cin.CloneTree(0); float one=1.0f;
   ot->SetBranchAddress("tuned_cv_weight",&one); ot->SetBranchAddress("ppfx_cv_weight",&one); ot->SetBranchAddress("normalisation_weight",&one);
@@ -24,7 +27,7 @@ void throw_one_ens(const char* infile, const char* outfile, double dpot, double 
     int nc=gRandom->Poisson(cv*potscale); for(int c=0;c<nc;c++){one=1.0f;ot->Fill();kept++;} }
   ot->Write("",TObject::kOverwrite);
   TParameter<float> sp("summed_pot",(float)dpot); sp.Write("summed_pot",TObject::kOverwrite);
-  out->Close(); if(gSystem->Rename(ftmp,fin)!=0){ printf("FAILED rename %s\n",ftmp.Data()); gSystem->Unlink(ftmp); }
+  throw_stamp(seed,potscale); out->Close(); throw_install(ftmp,fin,inp,seed,potscale);
   printf("  %-55s POTSCALE=%.5f kept=%ld\n",outfile,potscale,kept);
 }
 void throw_ensemble_fhc(int throw_id=1){
@@ -35,11 +38,11 @@ void throw_ensemble_fhc(int throw_id=1){
   int s = 1000*throw_id;
   printf("FHC ensemble member %d (seed base %d):\n", throw_id, s);
   throw_one_ens("xsec-ana-Run1_fhc_new_numi_flux_fhc_pandora_ntuple.root",
-    Form("ens/fakedata_fhc_run1_t%d.root",throw_id), 2.192e20, 2.3282e21, s+0);
+    Form("ens/throws/fakedata_fhc_run1_t%d.root",throw_id), 2.192e20, 2.3282e21, s+0);
   throw_one_ens("xsec-ana-Run2_fhc_new_numi_flux_fhc_pandora_ntuple.root",
-    Form("ens/fakedata_fhc_run2_t%d.root",throw_id), 1.268e20, 2.4934e21, s+1);
+    Form("ens/throws/fakedata_fhc_run2_t%d.root",throw_id), 1.268e20, 2.4934e21, s+1);
   throw_one_ens("xsec-ana-Run4_fhc_new_numi_flux_fhc_pandora_ntuple.root",
-    Form("ens/fakedata_fhc_run4_t%d.root",throw_id), 2.075e20, 2.8335e21, s+2);
+    Form("ens/throws/fakedata_fhc_run4_t%d.root",throw_id), 2.075e20, 2.8335e21, s+2);
   throw_one_ens("xsec-ana-reweightedPPFX_numi_nu_overlay_pion_ntuples_run5_fhc.root",
-    Form("ens/fakedata_fhc_run5_t%d.root",throw_id), 2.231e20, 1.9300e21, s+3);
+    Form("ens/throws/fakedata_fhc_run5_t%d.root",throw_id), 2.231e20, 1.9300e21, s+3);
 }

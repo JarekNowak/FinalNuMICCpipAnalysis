@@ -1,8 +1,11 @@
 // throw_ensemble_rhc.C(throw_id) -- RHC ensemble member: the group throw of throw_perrun_rhc.C,
 // writing throw-tagged names under ens/ so the released fake data is never overwritten.
+#include "throw_guard.h"   // create-once throw files (2026-09-26)
 void throw_group_ens(std::vector<const char*> infiles, const char* outfile, double dpot, double mcpot, int seed){
   const char* P="/data/uboone/processed/";
   double potscale = dpot/mcpot; gRandom->SetSeed(seed);
+  const TString fin=Form("%s%s",P,outfile); const std::vector<TString> inp=[&]{ std::vector<TString> v; for(auto f:infiles) v.push_back(Form("%s%s",P,f)); return v; }();
+  if(throw_reusable(fin,inp,seed,potscale)){ printf("  %-45s POTSCALE=%.5f reused\n",outfile,potscale); return; }
   TChain cin("stv_tree"); for(auto f:infiles) cin.Add(Form("%s%s",P,f));
   cin.SetBranchStatus("*",1);
   for(auto b:{"weight_All_UBGenie","weight_ppfx_all","weight_reint_all"}) cin.SetBranchStatus(b,0);
@@ -11,7 +14,7 @@ void throw_group_ens(std::vector<const char*> infiles, const char* outfile, doub
   // Write to a private temporary name and rename on success: ensembles sharing a throw id (e.g. RHC
   // total and COMB, 2026-09-20) re-throw the same file concurrently, and a reader that opened it while
   // another job was recreating it silently saw a truncated tree (members 56,57,59,60 of RHC total).
-  TString fin=Form("%s%s",P,outfile), ftmp=Form("%s.tmp%d",fin.Data(),gSystem->GetPid());
+  TString ftmp=Form("%s.tmp%d",fin.Data(),gSystem->GetPid());
   TFile* out=new TFile(ftmp,"recreate"); out->SetCompressionLevel(1);
   TTree* ot=cin.CloneTree(0); float one=1.0f;
   ot->SetBranchAddress("tuned_cv_weight",&one); ot->SetBranchAddress("ppfx_cv_weight",&one); ot->SetBranchAddress("normalisation_weight",&one);
@@ -20,12 +23,12 @@ void throw_group_ens(std::vector<const char*> infiles, const char* outfile, doub
     int nc=gRandom->Poisson(cv*potscale); for(int c=0;c<nc;c++){one=1.0f;ot->Fill();kept++;} }
   ot->Write("",TObject::kOverwrite);
   TParameter<float> sp("summed_pot",(float)dpot); sp.Write("summed_pot",TObject::kOverwrite);
-  out->Close(); if(gSystem->Rename(ftmp,fin)!=0){ printf("FAILED rename %s\n",ftmp.Data()); gSystem->Unlink(ftmp); } printf("  %-45s POTSCALE=%.5f kept=%ld\n",outfile,potscale,kept);
+  throw_stamp(seed,potscale); out->Close(); throw_install(ftmp,fin,inp,seed,potscale); printf("  %-45s POTSCALE=%.5f kept=%ld\n",outfile,potscale,kept);
 }
 void throw_ensemble_rhc(int throw_id=1){
   int s=1000*throw_id;
-  throw_group_ens({"xsec-ana-Run1_rhc_new_numi_flux_rhc_pandora_ntuple.root"},Form("ens/fakedata_rhc_run1_t%d.root",throw_id),0.6053e20,8.9972e20,s+0);
-  throw_group_ens({"xsec-ana-Run2_rhc_new_numi_flux_rhc_pandora_ntuple.root"},Form("ens/fakedata_rhc_run2_t%d.root",throw_id),2.591e20,5.7865e21,s+1);
-  throw_group_ens({"xsec-ana-Run3_rhc_new_numi_flux_rhc_pandora_ntuple_aa.root","xsec-ana-Run3_rhc_new_numi_flux_rhc_pandora_ntuple_ab.root","xsec-ana-Run3_rhc_new_numi_flux_rhc_pandora_ntuple_ac.root","xsec-ana-Run3_rhc_new_numi_flux_rhc_pandora_ntuple_ad.root","xsec-ana-Run3_rhc_new_numi_flux_rhc_pandora_ntuple_ae.root"},Form("ens/fakedata_rhc_run3_t%d.root",throw_id),5.003e20,5.5185e21,s+2);
-  throw_group_ens({"xsec-ana-Run4a_rhc_new_numi_flux_rhc_pandora_ntuple.root","xsec-ana-Run4b_rhc_new_numi_flux_rhc_pandora_ntuple.root","xsec-ana-Run4c_rhc_new_numi_flux_rhc_pandora_ntuple.root"},Form("ens/fakedata_rhc_run4_t%d.root",throw_id),2.883e20,3.2586e21,s+3);
+  throw_group_ens({"xsec-ana-Run1_rhc_new_numi_flux_rhc_pandora_ntuple.root"},Form("ens/throws/fakedata_rhc_run1_t%d.root",throw_id),0.6053e20,8.9972e20,s+0);
+  throw_group_ens({"xsec-ana-Run2_rhc_new_numi_flux_rhc_pandora_ntuple.root"},Form("ens/throws/fakedata_rhc_run2_t%d.root",throw_id),2.591e20,5.7865e21,s+1);
+  throw_group_ens({"xsec-ana-Run3_rhc_new_numi_flux_rhc_pandora_ntuple_aa.root","xsec-ana-Run3_rhc_new_numi_flux_rhc_pandora_ntuple_ab.root","xsec-ana-Run3_rhc_new_numi_flux_rhc_pandora_ntuple_ac.root","xsec-ana-Run3_rhc_new_numi_flux_rhc_pandora_ntuple_ad.root","xsec-ana-Run3_rhc_new_numi_flux_rhc_pandora_ntuple_ae.root"},Form("ens/throws/fakedata_rhc_run3_t%d.root",throw_id),5.003e20,5.5185e21,s+2);
+  throw_group_ens({"xsec-ana-Run4a_rhc_new_numi_flux_rhc_pandora_ntuple.root","xsec-ana-Run4b_rhc_new_numi_flux_rhc_pandora_ntuple.root","xsec-ana-Run4c_rhc_new_numi_flux_rhc_pandora_ntuple.root"},Form("ens/throws/fakedata_rhc_run4_t%d.root",throw_id),2.883e20,3.2586e21,s+3);
 }

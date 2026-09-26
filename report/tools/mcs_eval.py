@@ -27,7 +27,7 @@ common MCS scale, which is the correlated assumption (same detector, same estima
 import numpy as np, uproot, os, sys
 RB='/data/uboone/processed/rebuild_alt/'; LIVE='/data/uboone/processed/'
 R='/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/report/'
-OBS_ALL=['pmu','costhmu','thetamu','ppi2bin','costhpi','thmupi','total']
+OBS_ALL=['pmu','costhmu','ppi3bin','costhpi','thmupi','total']   # 2026-09-26: theta_mu dropped, p_pi in three regions
 def cov(path):
     n=None; C=None
     for l in open(path):
@@ -45,12 +45,25 @@ def total_err(CFG):
         p=l.split('\t')
         if p[0]=='incl' and p[1]=={'FHC5':'fhc5','RHCFULL':'rhcfull','COMB':'comb'}[CFG]: return float(p[2]),float(p[3])
     raise KeyError(CFG)
+CONF='/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/xsec_analyzer/configs/'
+BINCFG={'ppi3bin':'ccpi_ppi_bin_config_3bin.txt'}
+def uses_mcs_branch(obs):
+    """True when the live reco bin definitions read the scaled branch. The variation rescales only
+    CC1mu1piXp_candidate_muon_mom_reco and keeps the selection flag nominal, so an observable whose reco
+    bins do not read it sees bit-identical fake data at any binning: its term is zero by construction."""
+    t=open(CONF+BINCFG.get(obs,f'ccpi_{obs}_bin_config_opt.txt')).read()
+    return 'muon_mom' in t
 def evaluate(CFG,obs,quiet=False):
     up_f=RB+f'closure_hists_xsec_ccpi_{CFG}_{obs}_mcsdataup05.root'; dn_f=RB+f'closure_hists_xsec_ccpi_{CFG}_{obs}_mcsdatadn05.root'
-    if not (os.path.exists(up_f) and os.path.exists(dn_f)): return None
     nom=uproot.open(LIVE+f'closure_hists_xsec_{CFG}_{obs}.root')['h_unfolded_nuwro']
     v=nom.values(); e=nom.errors(); w=np.diff(nom.axis().edges()); n=len(v)
-    up=uproot.open(up_f)['h_unfolded_nuwro'].values(); dn=uproot.open(dn_f)['h_unfolded_nuwro'].values()
+    if obs!='total' and not uses_mcs_branch(obs):
+        up=dn=v.copy()                          # zero by construction (2026-09-26, binnings of the 0.50 criterion)
+        if not quiet: print(f'== {CFG} {obs}: reco binning does not read the muon momentum -> term identically zero')
+    else:
+        if not (os.path.exists(up_f) and os.path.exists(dn_f)): return None
+        up=uproot.open(up_f)['h_unfolded_nuwro'].values(); dn=uproot.open(dn_f)['h_unfolded_nuwro'].values()
+        assert len(up)==n and len(dn)==n, f'{CFG} {obs}: MCS extraction has {len(up)} bins, release {n}'
     D=(up-dn)/2
     if obs=='total':
         sig,err=total_err(CFG); e=np.array([err/w[0]])     # sidecar is per unit width; tsv is the integral
@@ -82,7 +95,7 @@ if __name__=='__main__':
                 r=evaluate(CFG,obs)
                 if r is None: print(f'== {CFG} {obs}: not extracted yet'); continue
                 rows.append(r)
-        out=R+'data_release/mcs_scale_2026-09-24.tsv'
+        out=R+'data_release/mcs_scale_2026-09-26.tsv'
         with open(out,'w') as o:
             o.write('# Data-side MCS momentum-scale (+-5%) term per released inclusive extraction: integral shift for the up/down\n'
                     '# variations, the half-difference of the integral, and the largest per-bin half-difference as a fraction of\n'

@@ -16,9 +16,12 @@ def doc_of(label):
     assert len(hits)==1, label
     return hits[0]
 res={(r['family'],r['config'],r['observable']):r for r in csv.DictReader(open(os.path.join(R,'current_results.tsv')),delimiter='\t')}
-LAB={'pmu':r'$p_\mu$','ppi2bin':r'$p_\pi$','costhmu':r'$\cos\theta_\mu$','costhpi':r'$\cos\theta_\pi$','thmupi':r'$\theta_{\mu\pi}$','thetamu':r'$\theta_\mu$',
-     'Whad':r'$W_\mathrm{had}$','dpt2bin':r'$\delta p_T$','dalphat2bin':r'$\delta\alpha_T$','dphit2bin':r'$\delta\phi_T$','pn2bin':r'$p_n$'}
+# 2026-09-26: 0.50-criterion binnings -- inclusive p_pi keyed ppi3bin, theta_mu dropped, delta phi_T keyed dphit3bin
+LAB={'pmu':r'$p_\mu$','ppi3bin':r'$p_\pi$','costhmu':r'$\cos\theta_\mu$','costhpi':r'$\cos\theta_\pi$','thmupi':r'$\theta_{\mu\pi}$',
+     'Whad':r'$W_\mathrm{had}$','dpt2bin':r'$\delta p_T$','dalphat2bin':r'$\delta\alpha_T$','dphit3bin':r'$\delta\phi_T$','pn2bin':r'$p_n$','pp':r'$p_p$'}
 INV={v:k for k,v in LAB.items()}
+# the proton-tagged tables list p_pi (two regions) under the same symbol
+INV1=dict(INV); INV1[r'$p_\pi$']='ppi2bin'
 bad=[]
 def table(label):
     note=doc_of(label)
@@ -50,16 +53,16 @@ for l in table('tab:sigint_all') or []:
 for lab,cfg in [('tab:wtki_fhc','fhc5'),('tab:wtki_rhc','rhcfull'),('tab:wtki_comb','comb')]:
     for l in table(lab) or []:
         c=[x.strip() for x in l.split('&')]
-        if c[0] in INV:
-            r=res[('1p',cfg,INV[c[0]])]
-            if abs(num(c[1])-float(r['sigma_int']))>6e-4 or abs(num(c[3])-float(r['chi2_truth']))>0.006: bad.append(f"{lab} {INV[c[0]]}: {c[1]} {c[3]} vs {r['sigma_int']} {r['chi2_truth']}")
+        if c[0] in INV1:
+            r=res[('1p',cfg,INV1[c[0]])]
+            if abs(num(c[1])-float(r['sigma_int']))>6e-4 or abs(num(c[3])-float(r['chi2_truth']))>0.006: bad.append(f"{lab} {INV1[c[0]]}: {c[1]} {c[3]} vs {r['sigma_int']} {r['chi2_truth']}")
 beam=None
 for l in table('tab:chi2_incl') or []:
     c=[x.strip() for x in l.split('&')]
     if c[0] in ('FHC','RHC','comb'): beam={'FHC':'fhc5','RHC':'rhcfull','comb':'comb'}[c[0]]
     if len(c)>2 and c[1] in INV and beam:
         if abs(num(c[2])-float(res[('incl',beam,INV[c[1]])]['chi2_truth']))>0.006: bad.append(f"tab:chi2_incl {beam} {INV[c[1]]}: {c[2]}")
-for lab in ['tab:systbreak','tab:systematics','tab:cutcount','tab:cutflow','tab:ppi_partial','tab:ppi_partial_main','tab:ac_rowsums','tab:chi2_theta']: table(lab)
+for lab in ['tab:systbreak','tab:systematics','tab:cutcount','tab:cutflow','tab:ppi_partial','tab:ppi_partial_main','tab:ac_rowsums']: table(lab)
 if bad:
     print("TABLE CONSISTENCY FAILURES (%d):"%len(bad)); [print("  "+b) for b in bad]; sys.exit(1)
 print("all note tables consistent with the release (%d extractions checked)"%len(res))

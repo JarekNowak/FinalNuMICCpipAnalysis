@@ -65,9 +65,10 @@ void export_matrices(const char* outdir = "../report/data_release"){
   fprintf(index, "tag\tn_smeared_bins\tn_true_bins\trowsum_min\trowsum_max\tsource_file\n");
 
   const char* cfgs[3]  = {"FHC5","RHCFULL","COMB"};
-  const char* incl[6]  = {"pmu","ppi2bin","costhmu","costhpi","thmupi","thetamu"};
-  const char* p1p[11]  = {"pmu","ppi2bin","costhmu","costhpi","thmupi","Wpipr","Whad",
-                          "dpt2bin","dphit2bin","dalphat2bin","pn2bin"};
+  // 2026-09-26: 0.50-criterion binnings (ppi3bin, dphit3bin; theta_mu dropped)
+  const char* incl[5]  = {"pmu","ppi3bin","costhmu","costhpi","thmupi"};
+  const char* p1p[12]  = {"pmu","ppi2bin","costhmu","costhpi","thmupi","Wpipr","Whad",
+                          "dpt2bin","dphit3bin","dalphat2bin","pn2bin","pp"};   // pp: proton momentum
 
   for (auto c : cfgs) {
     for (auto o : incl) {

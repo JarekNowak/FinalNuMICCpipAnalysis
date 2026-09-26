@@ -27,12 +27,12 @@ echo "host=$(hostname) throw=$T obs=$OBS"
 # --- 1. throw -----------------------------------------------------------------------
 root -l -b -q "macros/throw_ensemble_fhc.C($T)" 2>&1 | grep POTSCALE
 for r in 1 2 4 5; do
-  [ -s "$PROC/ens/fakedata_fhc_run${r}_t${T}.root" ] || { echo "FAILED throw $T run $r" >&2; exit 1; }
+  [ -s "$PROC/ens/throws/fakedata_fhc_run${r}_t${T}.root" ] || { echo "FAILED throw $T run $r" >&2; exit 1; }
 done
 
 # --- 2. a file_properties pointing at this member's data ----------------------------
 FPM="$PROC/ens/fp_fhc_t${T}.txt"
-sed -E "s#(xsec-ana-)fakedata_fhc_run([0-9])\.root#ens/fakedata_fhc_run\2_t${T}.root#" \
+sed -E "s#(xsec-ana-)fakedata_fhc_run([0-9])\.root#ens/throws/fakedata_fhc_run\2_t${T}.root#" \
   configs/file_properties_numi_fhc5.txt > "$FPM"
 n=$(grep -c "_t${T}\.root" "$FPM")
 [ "$n" -eq 4 ] || { echo "FAILED fp rewrite for throw $T (matched $n of 4)" >&2; exit 1; }

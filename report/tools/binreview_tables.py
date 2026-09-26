@@ -35,13 +35,13 @@ REL_EDGES = {('incl', 'pmu'): [0.15, 0.35, 0.55, 0.75, 0.95, 1.25, 1.75, 3.0], (
              ('1p', 'dpt'): [0, 0.3, 2.5], ('1p', 'dalphat'): [0, 120, 180], ('1p', 'dphit'): [0, 50, 180],
              ('1p', 'pn'): [0, 0.375, 2.0], ('1p', 'thetap'): [0, 0.659, 1.068, 1.539, PI], ('1p', 'thpipr'): [0, 1.193, 2.010, PI]}
 ORDER = {'incl': ['pmu', 'ppi', 'costhmu', 'thetamu', 'costhpi', 'thmupi'],
-         '1p': ['Whad', 'Wpipr', 'dpt', 'dalphat', 'dphit', 'pn', 'thetap', 'thpipr']}
+         '1p': ['Whad', 'Wpipr', 'dpt', 'dalphat', 'dphit', 'pn', 'thetap', 'thpipr', 'pp']}
 LAB = {'pmu': r'$p_\mu$', 'ppi': r'$p_\pi$', 'costhmu': r'$\cos\theta_\mu$', 'thetamu': r'$\theta_\mu$',
        'costhpi': r'$\cos\theta_\pi$', 'thmupi': r'$\theta_{\mu\pi}$', 'Whad': r'$W_{\rm had}$', 'Wpipr': r'$W_{\pi p}$',
        'dpt': r'$\delta p_T$', 'dalphat': r'$\delta\alpha_T$', 'dphit': r'$\delta\phi_T$', 'pn': r'$p_n$',
-       'thetap': r'$\theta_p$', 'thpipr': r'$\theta_{\pi p}$'}
+       'thetap': r'$\theta_p$', 'thpipr': r'$\theta_{\pi p}$', 'pp': r'$p_p$'}
 UNIT = {'pmu': 'GeV/$c$', 'ppi': 'GeV/$c$', 'thetamu': 'rad', 'thmupi': 'rad', 'Whad': 'GeV/$c^2$', 'Wpipr': 'GeV/$c^2$',
-        'dpt': 'GeV/$c$', 'dalphat': 'deg', 'dphit': 'deg', 'pn': 'GeV/$c$', 'thetap': 'rad', 'thpipr': 'rad'}
+        'dpt': 'GeV/$c$', 'dalphat': 'deg', 'dphit': 'deg', 'pn': 'GeV/$c$', 'thetap': 'rad', 'thpipr': 'rad', 'pp': 'GeV/$c$'}
 CF = ('fhc5', 'rhcfull', 'comb')
 
 rows = list(csv.DictReader(open(EVAL), delimiter='\t'))

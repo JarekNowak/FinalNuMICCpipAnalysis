@@ -17,9 +17,9 @@ CFG = [('fhc5', 'FHC', '#0072B2', '-'), ('rhcfull', 'RHC', '#D55E00', '-'), ('co
 LAB = {'pmu': r'$p_\mu$', 'ppi': r'$p_\pi$', 'costhmu': r'$\cos\theta_\mu$', 'thetamu': r'$\theta_\mu$',
        'costhpi': r'$\cos\theta_\pi$', 'thmupi': r'$\theta_{\mu\pi}$', 'Whad': r'$W_{\rm had}$', 'Wpipr': r'$W_{\pi p}$',
        'dpt': r'$\delta p_T$', 'dalphat': r'$\delta\alpha_T$', 'dphit': r'$\delta\phi_T$', 'pn': r'$p_n$',
-       'thetap': r'$\theta_p$', 'thpipr': r'$\theta_{\pi p}$'}
+       'thetap': r'$\theta_p$', 'thpipr': r'$\theta_{\pi p}$', 'pp': r'$p_p$'}
 PANELS = {'incl': ['pmu', 'ppi', 'costhmu', 'thetamu', 'costhpi', 'thmupi'],
-          '1p': ['Whad', 'Wpipr', 'dpt', 'dalphat', 'dphit', 'pn', 'thetap', 'thpipr']}
+          '1p': ['Whad', 'Wpipr', 'dpt', 'dalphat', 'dphit', 'pn', 'thetap', 'thpipr', 'pp']}
 
 rows = list(csv.DictReader(open(EVAL), delimiter='\t'))
 pts = collections.defaultdict(lambda: collections.defaultdict(dict))   # (fam, obs) -> binning -> cfg -> row

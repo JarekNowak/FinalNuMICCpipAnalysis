@@ -15,17 +15,19 @@ def load(f):
     return d
 def det(d): return d['detVar_total'] if 'detVar_total' in d else math.sqrt(sum(v*v for k,v in d.items() if k.startswith('detVar') and not k.endswith('_total')))
 CF={'FHC5':'fhc5','RHCFULL':'rhcfull','COMB':'comb'}; CFS=['FHC5','RHCFULL','COMB']
-INCL=['pmu','ppi2bin','costhmu','costhpi','thmupi','thetamu']; P1=['Whad','dpt2bin','dalphat2bin','dphit2bin','pn2bin','pmu','ppi2bin','costhmu','costhpi','thmupi']; P1ALL=['Wpipr']+P1
+# 2026-09-26: binnings of the 0.50 migration criterion -- inclusive p_pi in three bins (ppi3bin), theta_mu
+# dropped; proton-tagged delta phi_T in three bins (dphit3bin), p_pi still two (ppi2bin)
+INCL=['pmu','ppi3bin','costhmu','costhpi','thmupi']; P1=['Whad','dpt2bin','dalphat2bin','dphit3bin','pn2bin','pp','pmu','ppi2bin','costhmu','costhpi','thmupi']; P1ALL=['Wpipr']+P1
 DU={}
 for c in CFS:
-    for o in INCL: DU[('incl',c,o)]=load(f"{D}/{CF[c]}_{'ppi' if o=='ppi2bin' else o}.dump")
+    for o in INCL: DU[('incl',c,o)]=load(f"{D}/{CF[c]}_{'ppi' if o=='ppi3bin' else o}.dump")
     for o in P1ALL: DU[('1p',c,o)]=load(f"{D}/1p_{CF[c]}_{o}.dump")
-LAB={'pmu':r'$p_\mu$','ppi2bin':r'$p_\pi$','costhmu':r'$\cos\theta_\mu$','costhpi':r'$\cos\theta_\pi$','thmupi':r'$\theta_{\mu\pi}$','thetamu':r'$\theta_\mu$',
-     'Wpipr':r'$W_{\pi p}$','Whad':r'$W_\mathrm{had}$','dpt2bin':r'$\delta p_T$','dalphat2bin':r'$\delta\alpha_T$','dphit2bin':r'$\delta\phi_T$','pn2bin':r'$p_n$'}
+LAB={'pmu':r'$p_\mu$','ppi2bin':r'$p_\pi$','ppi3bin':r'$p_\pi$','costhmu':r'$\cos\theta_\mu$','costhpi':r'$\cos\theta_\pi$','thmupi':r'$\theta_{\mu\pi}$',
+     'Wpipr':r'$W_{\pi p}$','Whad':r'$W_\mathrm{had}$','dpt2bin':r'$\delta p_T$','dalphat2bin':r'$\delta\alpha_T$','dphit3bin':r'$\delta\phi_T$','pn2bin':r'$p_n$','pp':r'$p_p$'}
 # model chi2 from unfolder logs
 MODELS=['MicroBooNE Tune','GENIE','GiBUU','NEUT','NuWro','truth']
 def chi2log(fam,c,o):
-    f=f"{LG}{'1p_' if fam=='1p' else ''}{CF[c]}_{'ppi' if (fam=='incl' and o=='ppi2bin') else o}.raw"; out={}
+    f=f"{LG}{'1p_' if fam=='1p' else ''}{CF[c]}_{'ppi' if (fam=='incl' and o=='ppi3bin') else o}.raw"; out={}
     for line in open(f):
         m=re.match(r'^(MicroBooNE Tune|GENIE|GiBUU|NEUT|NuWro|truth): .* = ([0-9.e+-]+)/(\d+) bin',line)
         if m and m.group(1) not in out: out[m.group(1)]=(float(m.group(2)),int(m.group(3)))
@@ -54,8 +56,7 @@ for lab,c in [('tab:fhc','FHC5'),('tab:rhc','RHCFULL'),('tab:comb','COMB')]:
         rows.append(f"      {LAB[o]:<18} & ${d['sigma_int']:.3f}$ & ${d['flux_total']:.1f}\\%$ & ${det(d):.1f}\\%$ & ${d['PredTotal']:.1f}\\%$ & ${float(cl['chi2']):.2f}/{cl['ndf']}$ ($p={float(cl['pval']):.2f}$) \\\\")
     patch(lab,T('lccccc','Observable & $\\sigma_\\mathrm{int}$ & Flux & Detector & Total & Closure $\\chi^2/\\mathrm{ndf}$',rows))
 # --- tab:sigint_all
-rows=[f"{LAB[o]:<17} & "+' & '.join(f"${DU[('incl',c,o)]['sigma_int']:.3f}$" for c in CFS)+' \\\\' for o in INCL[:5]]
-rows.append('\\midrule'); rows.append(f"{LAB['thetamu']:<17} & "+' & '.join(f"${DU[('incl',c,'thetamu')]['sigma_int']:.3f}$" for c in CFS)+' \\\\')
+rows=[f"{LAB[o]:<17} & "+' & '.join(f"${DU[('incl',c,o)]['sigma_int']:.3f}$" for c in CFS)+' \\\\' for o in INCL]
 patch('tab:sigint_all',T('lccc','Observable & FHC & RHC & Combined',rows))
 # --- tab:chi2_incl and tab:chi2_theta
 def chirow(beam,o,c,first):
@@ -66,19 +67,14 @@ for beam,c in [('FHC','FHC5'),('RHC','RHCFULL'),('comb','COMB')]:
     for k,o in enumerate(INCL): rows.append(chirow(beam,o,c,k==0))
     if c!='COMB': rows.append('    \\midrule')
 patch('tab:chi2_incl',T('llcccccc','Beam & Observable & truth & uB tune & GENIE & GiBUU & NEUT & NuWro',rows))
-rows=[]
-for beam,c in [('FHC','FHC5'),('RHC','RHCFULL'),('Comb','COMB')]:
-    for o in ['costhmu','thetamu']:
-        x=chi2log('incl',c,o); rows.append(f"{beam} & {LAB[o]:<18} & "+' & '.join(f"${x[m][0]:.2f}/{x[m][1]}$" for m in ['truth','MicroBooNE Tune','GENIE','GiBUU','NEUT','NuWro'])+' \\\\')
-    if c!='COMB': rows.append('\\midrule')
-patch('tab:chi2_theta',T('llcccccc','Beam & Variable & truth & uB tune & GENIE & GiBUU & NEUT & NuWro',rows))
+# tab:chi2_theta (cos theta_mu against theta_mu) retired 2026-09-26 with theta_mu
 # --- tab:wtki_*
 for lab,c in [('tab:wtki_fhc','FHC5'),('tab:wtki_rhc','RHCFULL'),('tab:wtki_comb','COMB')]:
     rows=[]
     for o in P1:
         d=DU[('1p',c,o)]; cl=CL[('1p',c,o)]
         rows.append(f"      {LAB[o]:<18} & ${d['sigma_int']:.3f}$ & ${float(cl['unf_over_truth']):.2f}$ & ${float(cl['chi2']):.2f}/{cl['ndf']}$ \\\\")
-        if o=='pn2bin': rows.append('      \\midrule')
+        if o=='pp': rows.append('      \\midrule')
     patch(lab,T('lccc','Observable & $\\sigma_\\mathrm{int}$ & unf./truth & $\\chi^2/\\mathrm{ndf}$',rows))
 # --- systbreak tables
 ROWS=[('\\textbf{Prediction total}','PredTotal'),('Cross section (GENIE)','xsec_total'),('Flux (PPFX)','flux_total'),('Detector','DET'),('Reinteraction','reint'),('MC stat','MCstats'),('EXT stat','EXTstats'),('Data stat','DataStats'),('POT $+$ targets','POTT'),('\\textbf{Total (incl.\\ data stat)}','total')]
@@ -90,7 +86,7 @@ def sb(c):
             d=DU[('incl',c,o)]; v=det(d) if key=='DET' else (math.sqrt(d['POT']**2+d['numTargets']**2) if key=='POTT' else d[key]); vals.append(f"{v:.1f}")
         if lab.startswith('\\textbf'): vals=[f"\\textbf{{{v}}}" for v in vals]
         rows.append(lab+' & '+' & '.join(vals)+' \\\\')
-    return T('lcccccc','Source & '+' & '.join(LAB[o] for o in INCL),rows)
+    return T('l'+'c'*len(INCL),'Source & '+' & '.join(LAB[o] for o in INCL),rows)
 patch('tab:systbreak',sb('FHC5'))
 for lab,c in [('tab:systbreak_fhc','FHC5'),('tab:systbreak_rhc','RHCFULL'),('tab:systbreak_comb','COMB')]: patch(lab,sb(c))
 # --- tab:systematics (ranges)
@@ -102,11 +98,12 @@ rows=['      \\midrule' if r is None else f"      {r[0]:<24}& {r[1]:<22}& {rng('
 patch('tab:systematics',T('L{3.4cm} L{3.4cm} c c','Source & Branch / method & Inclusive (\\%) & Proton-tagged (\\%)',rows))
 # --- tab:ppi_partial
 def part(c):
-    rows=[l.split('\t') for l in open(R+f'data_release/curves_incl_{c}_ppi2bin.tsv') if not l.startswith('#') and not l.startswith('bin')]
+    rows=[l.split('\t') for l in open(R+f'data_release/curves_incl_{c}_ppi3bin.tsv') if not l.startswith('#') and not l.startswith('bin')]
     return [(float(r[3])*float(r[4]), float(r[3])*float(r[5])) for r in rows]
 pp={c:part(c) for c in CFS}
 rows=[r"$\sigma(0.175<p_\pi<0.205\GeVc)$ & "+' & '.join(f"${pp[c][0][0]:.3f}\\pm{pp[c][0][1]:.3f}$" for c in CFS)+' \\\\',
-      r"$\sigma(p_\pi>0.205\GeVc)$        & "+' & '.join(f"${pp[c][1][0]:.3f}\\pm{pp[c][1][1]:.3f}$" for c in CFS)+' \\\\']
+      r"$\sigma(0.205<p_\pi<0.26\GeVc)$  & "+' & '.join(f"${pp[c][1][0]:.3f}\\pm{pp[c][1][1]:.3f}$" for c in CFS)+' \\\\',
+      r"$\sigma(p_\pi>0.26\GeVc)$         & "+' & '.join(f"${pp[c][2][0]:.3f}\\pm{pp[c][2][1]:.3f}$" for c in CFS)+' \\\\']
 patch('tab:ppi_partial',T('lccc','Region & FHC & RHC & Combined',rows))
 patch('tab:ppi_partial_main',T('lccc','Region & FHC & RHC & Combined',rows))   # the analysis-note copy (was hand-copied until 2026-09-24)
 # --- tab:ac_rowsums (analysis note): range of the A_C row sums per observable and configuration, from the

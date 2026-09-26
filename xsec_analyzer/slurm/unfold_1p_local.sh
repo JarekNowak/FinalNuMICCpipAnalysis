@@ -13,7 +13,7 @@ declare -A TAG=( [fhc5]=FHC5 [rhcfull]=RHCFULL [comb]=COMB )
 ok=0; fail=0
 while read -r CFG OBS; do
   T=${TAG[$CFG]}
-  case "$OBS" in *2bin) SLICE="configs/ccpi1p_${OBS%2bin}_slice_config_2bin.txt" ;; *) SLICE="configs/ccpi1p_${OBS}_slice_config.txt" ;; esac
+  case "$OBS" in *2bin) SLICE="configs/ccpi1p_${OBS%2bin}_slice_config_2bin.txt" ;; *3bin) SLICE="configs/ccpi1p_${OBS%3bin}_slice_config_3bin.txt" ;; *) SLICE="configs/ccpi1p_${OBS}_slice_config.txt" ;; esac
   XSEC="configs/ccpi1p_xsec_config_numi_${OBS}_${CFG}.txt"
   W="$SCRATCH/1p_${T}_${OBS}.$$"; rm -rf "$W"; mkdir -p "$W/unfold_output"
   ln -s "$REPO/configs" "$W/configs"; ln -s "$REPO/bin" "$W/bin"; ln -s "$REPO/lib" "$W/lib"

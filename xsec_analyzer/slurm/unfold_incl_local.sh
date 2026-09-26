@@ -1,5 +1,5 @@
 #!/bin/bash
-# Re-unfold the 18 inclusive extractions to produce their covariance matrices and refresh
+# Re-unfold the 15 inclusive extractions to produce their covariance matrices and refresh
 # their A_C. Run locally: each unfold takes well under a minute, so 18 of them is faster
 # than queueing, and this keeps the cluster free.
 #
@@ -16,11 +16,11 @@ export XSEC_ANALYZER_DIR="$REPO"
 declare -A TAG=( [fhc5]=FHC5 [rhcfull]=RHCFULL [comb]=COMB )
 ok=0; fail=0
 for cfg in fhc5 rhcfull comb; do
-  for obs in pmu ppi costhmu costhpi thmupi thetamu; do
-    # p_pi is measured in the two-bin scheme; the five-bin configs are withdrawn.
+  for obs in pmu ppi costhmu costhpi thmupi; do
+    # p_pi in three bins (0.50 criterion, 2026-09-26); theta_mu is no longer extracted.
     if [ "$obs" = ppi ]; then
-      XSEC="configs/ccpi_xsec_config_numi_ppi2bin_${cfg}.txt"
-      SLICE="configs/ccpi_ppi_slice_config_2bin.txt"; OUTOBS=ppi2bin
+      XSEC="configs/ccpi_xsec_config_numi_ppi3bin_${cfg}.txt"
+      SLICE="configs/ccpi_ppi_slice_config_3bin.txt"; OUTOBS=ppi3bin
     else
       XSEC="configs/ccpi_xsec_config_numi_${obs}_${cfg}.txt"
       SLICE="configs/ccpi_${obs}_slice_config_opt.txt"; OUTOBS=$obs

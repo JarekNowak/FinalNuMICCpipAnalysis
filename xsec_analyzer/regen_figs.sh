@@ -16,7 +16,7 @@ mkdir -p "$DUMP" "$UO"
 declare -A TAG=( [fhc5]=FHC5 [rhcfull]=RHCFULL [comb]=COMB )
 declare -A PFX=( [fhc5]="" [rhcfull]="rhc_" [comb]="comb_" )
 declare -A GT=(  [fhc5]=newg4 [rhcfull]=rhc [comb]=comb )
-obs=(pmu ppi costhmu costhpi thmupi thetamu)
+obs=(pmu ppi costhmu costhpi thmupi)   # 2026-09-26: theta_mu dropped
 
 echo "==== REGEN FIGS START $(date) ===="
 nr=0
@@ -32,8 +32,8 @@ for cfg in fhc5 rhcfull comb; do t=${TAG[$cfg]}; p=${PFX[$cfg]}
     # number found : 2 | expected number : 5". The figure NAME stays fw_*_ppi,
     # which is what the note references.
     if [ "$o" = ppi ]; then
-      xc=configs/ccpi_xsec_config_numi_ppi2bin_${cfg}.txt
-      sc=configs/ccpi_ppi_slice_config_2bin.txt
+      xc=configs/ccpi_xsec_config_numi_ppi3bin_${cfg}.txt   # three regions since 2026-09-26
+      sc=configs/ccpi_ppi_slice_config_3bin.txt
     fi
     [ -f "$xc" ] || { echo "  MISSING xsec config $xc"; continue; }
     # Clear the fixed-name plots FIRST: a crashed unfold otherwise leaves the

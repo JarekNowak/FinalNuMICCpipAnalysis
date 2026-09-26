@@ -1,5 +1,7 @@
-// ppi2bin_figs.C -- the two-bin p_pi figures: cross section (inclusive and
-// proton-tagged) and the additional-smearing matrix A_C.
+// ppi2bin_figs.C -- the p_pi figures: cross section (inclusive and proton-tagged) and the
+// inclusive additional-smearing matrix A_C. Since 2026-09-26 (binnings of the 0.50 migration
+// criterion) the inclusive p_pi has THREE bins (closure files *_ppi3bin, figures ppi3bin_*), the
+// proton-tagged one keeps two (the three-bin edges fail 0.50 there; files *_ppi2bin).
 //
 // These nine figures (ppi2bin_xsec_*, ppi2bin_xsec_1p_*, ppi2bin_AC_*) are
 // referenced by the note but had NO producer anywhere in the repository: they
@@ -46,9 +48,19 @@ static TH1D* equalise(TH1* h, const char* name){
   return o;
 }
 
+// "0.175-0.205, 0.205-0.26, >0.26" from the bin edges of the analysis histogram (last bin open)
+static TString edge_list(TH1* h){
+  TString s; int n = h->GetNbinsX();
+  for (int i=1;i<=n;i++) s += (i<n) ? TString::Format("%g-%g, ", h->GetXaxis()->GetBinLowEdge(i), h->GetXaxis()->GetBinUpEdge(i))
+                                    : TString::Format(">%g", h->GetXaxis()->GetBinLowEdge(i));
+  return s;
+}
+static const char* nword(int n){ return n==2 ? "two" : (n==3 ? "three" : "multi"); }
+
 static void one_xsec(const char* cfg, bool proton_tagged){
-  TString tag  = proton_tagged ? "xsec_ccpi1p" : "xsec";   // the CURRENT sidecars (release 2026-09-06); the old xsec1p_*_ppi.root files are the 2026-08-30 pass
-  TString path = TString::Format("/data/uboone/processed/closure_hists_%s_%s_ppi2bin.root", tag.Data(), cfg);
+  TString tag  = proton_tagged ? "xsec_ccpi1p" : "xsec";
+  TString key  = proton_tagged ? "ppi2bin" : "ppi3bin";
+  TString path = TString::Format("/data/uboone/processed/closure_hists_%s_%s_%s.root", tag.Data(), cfg, key.Data());
   auto* f = TFile::Open(path);
   if (!f || f->IsZombie()){ printf("  MISSING %s\n", path.Data()); return; }
 
@@ -65,9 +77,10 @@ static void one_xsec(const char* cfg, bool proton_tagged){
 
   auto* hd = equalise(hu, "hd");
   hd->SetMarkerStyle(20); hd->SetMarkerSize(1.2); hd->SetLineWidth(2); hd->SetLineColor(kBlack);
-  hd->GetXaxis()->SetTitle("p_{#pi} bin  (0.175-0.205, >0.205 GeV/c; equal width for legibility)");
+  int nb = hu->GetNbinsX();
+  hd->GetXaxis()->SetTitle(Form("p_{#pi} bin  (%s GeV/c; equal width for legibility)", edge_list(hu).Data()));
   hd->GetYaxis()->SetTitle("d#sigma/dp_{#pi}  [10^{-38} cm^{2}/(GeV/c)/Ar]");
-  hd->GetXaxis()->SetNdivisions(2,0,0);
+  hd->GetXaxis()->SetNdivisions(nb,0,0);
   double ymax = hd->GetMaximum()+hd->GetBinError(hd->GetMaximumBin());
   for (auto& cv : curves){ auto* h=(TH1D*)f->Get(cv.first.c_str()); if(h) ymax=std::max(ymax,h->GetMaximum()); }
   hd->SetMaximum(1.45*ymax); hd->SetMinimum(0.);
@@ -91,10 +104,10 @@ static void one_xsec(const char* cfg, bool proton_tagged){
   leg->Draw();
 
   TLatex t; t.SetNDC(); t.SetTextSize(0.038);
-  t.DrawLatex(0.17,0.93, Form("%s%s  #minus  two-bin p_{#pi}",
-    shortcfg(cfg).Data(), proton_tagged?"  (proton-tagged)":""));
+  t.DrawLatex(0.17,0.93, Form("%s%s  #minus  %s-bin p_{#pi}",
+    shortcfg(cfg).Data(), proton_tagged?"  (proton-tagged)":"", nword(nb)));
 
-  TString out = TString::Format("%sppi2bin_xsec%s_%s.pdf", figdir,
+  TString out = TString::Format("%s%s_xsec%s_%s.pdf", figdir, key.Data(),
                                 proton_tagged?"_1p":"", shortcfg(cfg).Data());
   c->SaveAs(out);
   printf("  wrote %s\n", out.Data());
@@ -102,7 +115,7 @@ static void one_xsec(const char* cfg, bool proton_tagged){
 }
 
 static void one_AC(const char* cfg){
-  TString path = TString::Format("/data/uboone/processed/closure_hists_xsec_%s_ppi2bin.root", cfg);
+  TString path = TString::Format("/data/uboone/processed/closure_hists_xsec_%s_ppi3bin.root", cfg);
   auto* f = TFile::Open(path);
   if (!f || f->IsZombie()){ printf("  MISSING %s\n", path.Data()); return; }
   auto* ac = (TH2D*)f->Get("h_A_C");
@@ -114,12 +127,13 @@ static void one_AC(const char* cfg){
   ac->SetTitle("");
   ac->GetXaxis()->SetTitle("true p_{#pi} bin");
   ac->GetYaxis()->SetTitle("smeared p_{#pi} bin");
-  ac->GetXaxis()->SetNdivisions(2,0,0); ac->GetYaxis()->SetNdivisions(2,0,0);
+  int nb = ac->GetNbinsX();
+  ac->GetXaxis()->SetNdivisions(nb,0,0); ac->GetYaxis()->SetNdivisions(nb,0,0);
   ac->SetMarkerSize(2.2);
   ac->Draw("COLZ TEXT");
   TLatex t; t.SetNDC(); t.SetTextSize(0.038);
-  t.DrawLatex(0.17,0.93, Form("%s  #minus  A_{C}, two-bin p_{#pi}", shortcfg(cfg).Data()));
-  TString out = TString::Format("%sppi2bin_AC_%s.pdf", figdir, shortcfg(cfg).Data());
+  t.DrawLatex(0.17,0.93, Form("%s  #minus  A_{C}, %s-bin p_{#pi}", shortcfg(cfg).Data(), nword(nb)));
+  TString out = TString::Format("%sppi3bin_AC_%s.pdf", figdir, shortcfg(cfg).Data());
   c->SaveAs(out);
   printf("  wrote %s\n", out.Data());
   delete c; f->Close();
