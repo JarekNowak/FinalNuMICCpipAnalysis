@@ -41,11 +41,10 @@ xsec_analyzer/promote_050.sh (backups configs/backup_pre050_20260926,
 /data/uboone/processed/univmake_backup_pre050_20260926 and release_retired_pre050_20260926; retired
 figures in report/figures/retired_pre050_20260926). Done: release (51 extractions), MCS term, alternative-
 model closure FHC (3433100, 3433125) and RHC (3433342), D'Agostini, documents.
-Pending: the five ensembles (SLURM 3433218 comb ppi3bin, 3433219 fhc5 pmu, 3433290 fhc5 costhmu,
-3433291 rhcfull costhmu, 3433292 1p fhc5 Whad; two CPUs each). When they finish: entry-count scan,
-ens_statcov.sh / ens_statcov_all.sh, ensemble_tables.py (new dated TSV), ensemble_tables_1p.py, then the
-ensemble paragraphs of the note (par:ensemble, abstract, summary, limitations), supplement
-(sec:supp_ensemble), proton-tagged note (sec:pt_ensemble, abstract) and change log.
+Ensembles: DONE 2026-09-27 (commit 1773925): 500 members, none failed, no truncated read (entry-count
+scan tool report/tools/ensemble_entry_scan.py); statistical pull widths 0.94-1.07, offsets -0.4 to -1.1%
+at <=2.0 sigma (data_release/ensemble_2026-09-26.tsv, ensemble_1p_2026-09-26.tsv). configs/adopt050 can
+be removed once no ensemble refers to it.
 
 ## Open analysis items (need a decision or work)
 
