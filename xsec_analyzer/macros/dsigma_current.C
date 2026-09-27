@@ -4,6 +4,9 @@
 // h_fakedata_truth = A_C-smeared truth, h_genie_tune = MicroBooNE tune), overlays
 // the four generator FTE predictions, and writes one multi-panel figure per config.
 //   usage: root -l -b -q 'macros/dsigma_current.C("FHC5","newg4")'  (or "RHCFULL","rhc" / "COMB","comb")
+// 2026-09-27 (review 6.1-6.3): physics notation and units from dsigma_style.h, larger text, the
+// legend in the free sixth cell instead of in every panel, open-ended top bins hatched and labelled.
+#include "dsigma_style.h"
 
 // Remap the p_pi histogram (open top bin) onto an equal-width axis. The adopted bins are
 // [0.175,0.205] and everything above, i.e. 0.030 against 0.795 GeV/c: drawn to scale the
@@ -39,38 +42,18 @@ void dsigma_current(const char* cfg = "FHC5", const char* gtag = "newg4") {
   const int NOBS = 5;
   const char* obs[NOBS]    = {"pmu","ppi","costhmu","costhpi","thmupi"};
   const char* src[NOBS]    = {"pmu","ppi3bin","costhmu","costhpi","thmupi"};
-  const char* obsX[NOBS]   = {"p_{#mu} [GeV/c]","p_{#pi} [GeV/c]","cos#theta_{#mu}",
-                              "cos#theta_{#pi}","#theta_{#mu#pi} [rad]"};
-  // panel titles: typeset symbols, not the file tags (pmu/ppi/...)
-  const char* obsT[NOBS]   = {"p_{#mu}","p_{#pi}","cos#theta_{#mu}","cos#theta_{#pi}",
-                              "#theta_{#mu#pi}"};
-  const char* gens[4]   = {"genie","gibuu","neut","nuwro"};
+  // panel titles and axis labels (physics notation, units) come from ds_obs() in dsigma_style.h
   // Okabe-Ito colorblind-safe palette + distinct line styles (redundant encoding,
   // so the four generators are separable in grayscale and for all colour-vision types)
   int gcol[4]   = { TColor::GetColor("#0072B2"), TColor::GetColor("#009E73"),
                     TColor::GetColor("#CC79A7"), TColor::GetColor("#D55E00") }; // blue,green,purple,vermillion
   int gstyle[4] = { 1, 2, 7, 9 };
-  gStyle->SetOptStat(0);
-  TCanvas c(Form("ds_%s",cfg), "", 1600, 900);
-  c.Divide(3, 2);
+  gStyle->SetOptStat(0); gStyle->SetOptTitle(0);
   std::vector<TObject*> keep;
 
-  // If the x-axis does not start at zero, ROOT only labels the first "round" tick, so the
-  // bottom-left corner reads as the origin (0,0) even though it is not. Draw the actual
-  // lower limit under the left edge of the frame.
-  auto mark_xmin = [](TH1* h){
-    double xmin = h->GetXaxis()->GetXmin();
-    if ( xmin <= 0. ) return;
-    TLatex* t = new TLatex();
-    t->SetNDC(); t->SetTextSize(0.045); t->SetTextAlign(23);
-    t->DrawLatex( gPad->GetLeftMargin(), gPad->GetBottomMargin()-0.055,
-                  Form("%g", xmin) );
-  };
-
+  std::vector<DsPanel> P(NOBS);
   for (int o = 0; o < NOBS; ++o) {
-    c.cd(o+1);
-    // enlarge the pad margins so the axis titles are not clipped at the panel edges
-    gPad->SetBottomMargin(0.15); gPad->SetLeftMargin(0.16); gPad->SetTopMargin(0.08);
+    P[o].key = src[o];
     TFile* f = TFile::Open(Form("%sclosure_hists_xsec_%s_%s.root", PROC, cfg, src[o]));
     if (!f || f->IsZombie()) { printf("  missing closure %s %s\n", cfg, obs[o]); continue; }
     TH1D* hunf = (TH1D*)f->Get("h_unfolded_nuwro");   // unfolded fake data
@@ -78,13 +61,7 @@ void dsigma_current(const char* cfg = "FHC5", const char* gtag = "newg4") {
     TH1D* htun = (TH1D*)f->Get("h_genie_tune");       // uB tune
     if (!hunf) continue;
     hunf = (TH1D*)hunf->Clone(); hunf->SetDirectory(0);
-    hunf->SetTitle(Form("%s;%s;d#sigma/dx [10^{-38} cm^{2}/Ar]", obsT[o], obsX[o]));
-    hunf->SetMarkerStyle(20); hunf->SetMarkerSize(0.8); hunf->SetLineColor(kBlack); hunf->SetMarkerColor(kBlack);
-    // axis title/label sizes tuned so titles sit inside the enlarged margins (not clipped)
-    hunf->GetXaxis()->SetTitleSize(0.050); hunf->GetXaxis()->SetLabelSize(0.042);
-    hunf->GetXaxis()->SetTitleOffset(1.25);
-    hunf->GetYaxis()->SetTitleSize(0.048); hunf->GetYaxis()->SetLabelSize(0.042);
-    hunf->GetYaxis()->SetTitleOffset(1.55);
+    hunf->SetMarkerStyle(20); hunf->SetMarkerSize(1.1); hunf->SetLineColor(kBlack); hunf->SetMarkerColor(kBlack);
     // Generator overlays: use the A_C-SMEARED predictions the unfolder dumped into the
     // closure file (h_gen_<Label>), NOT the raw truth-level FTE files. The unfolded data
     // and the uB tune both live in the A_C-smeared measurement space (Wiener-SVD returns
@@ -107,37 +84,39 @@ void dsigma_current(const char* cfg = "FHC5", const char* gtag = "newg4") {
     }
     if (htru) { htru=(TH1D*)htru->Clone(); htru->SetDirectory(0); keep.push_back(htru); }
     if (htun) { htun=(TH1D*)htun->Clone(); htun->SetDirectory(0); keep.push_back(htun); }
-    // y-axis max over data(+error), truth, tune and every generator curve
+    if (gh.empty()) P[o].gen_note = "no generator predictions";   // (every inclusive sidecar carries them)
+    // open-ended top bin: its physical lower edge, from the result file (before any remapping)
+    if ( ds_obs(src[o])->open_top ) {
+      P[o].open_lo = hunf->GetXaxis()->GetBinLowEdge(hunf->GetNbinsX());
+      P[o].open_hi = hunf->GetXaxis()->GetXmax();
+    }
     if ( std::string(src[o]) == "ppi3bin" ) {
       hunf = eq2bin(hunf); if (htru) htru = eq2bin(htru); if (htun) htun = eq2bin(htun);
       for (auto& hg : gh) hg = eq2bin(hg);
       keep.push_back(hunf); if (htru) keep.push_back(htru); if (htun) keep.push_back(htun);
       for (auto hg : gh) if (hg) keep.push_back(hg);
+      P[o].index_axis = true;
     }
 
+    // y-axis max over data(+error), truth, tune and every generator curve
     double ymax = 0.;
     for (int b=1;b<=hunf->GetNbinsX();++b) ymax = std::max(ymax, hunf->GetBinContent(b)+hunf->GetBinError(b));
     if (htru) for (int b=1;b<=htru->GetNbinsX();++b) ymax = std::max(ymax, htru->GetBinContent(b));
     if (htun) for (int b=1;b<=htun->GetNbinsX();++b) ymax = std::max(ymax, htun->GetBinContent(b));
     for (auto hg : gh) for (int b=1;b<=hg->GetNbinsX();++b) ymax = std::max(ymax, hg->GetBinContent(b));
     hunf->SetMinimum(0); hunf->SetMaximum(1.35*ymax);
-    hunf->Draw("E1");
-    // cos#theta_{#mu} (o==2) and cos#theta_{#pi} (o==3) are forward-peaked (highest bin on
-    // the right), so put the legend at TOP-LEFT there; elsewhere keep it top-right.
-    bool fwd_peak = (o == 2 || o == 3);
-    double lx1 = fwd_peak ? 0.18 : 0.45, lx2 = fwd_peak ? 0.61 : 0.88;
-    TLegend* lg = new TLegend(lx1,0.62,lx2,0.90); lg->SetBorderSize(0); lg->SetFillStyle(0); lg->SetTextSize(0.030);
-    lg->SetNColumns(2);
-    lg->AddEntry(hunf, "Unfolded fake data", "lep");
-    if (htru) { htru->SetLineColor(kGray+2); htru->SetLineWidth(2); htru->SetLineStyle(2); htru->Draw("hist same"); lg->AddEntry(htru,"Truth (A_{C})","l"); }
-    if (htun) { htun->SetLineColor(kBlack); htun->SetLineWidth(2); htun->Draw("hist same"); lg->AddEntry(htun,"uB tune","l"); }
-    const char* glab[4] = { "GENIE", "GiBUU", "NEUT", "NuWro" };
-    for (size_t k=0;k<gh.size();++k) { gh[k]->Draw("hist same"); lg->AddEntry(gh[k], glab[gidx[k]], "l"); }
-    hunf->Draw("E1 same");
-    mark_xmin(hunf);
-    lg->Draw(); keep.push_back(lg); keep.push_back(hunf);
+    if (htru) { htru->SetLineColor(kGray+2); htru->SetLineWidth(2); htru->SetLineStyle(2); }
+    if (htun) { htun->SetLineColor(kBlack); htun->SetLineWidth(2); }
+    keep.push_back(hunf);
+    P[o].data = hunf; P[o].truth = htru; P[o].tune = htun; P[o].gen = gh; P[o].gidx = gidx;
   }
+  std::vector<DsPanel*> all;
+  for (auto& p : P) if (p.data) all.push_back(&p);
+
+  // text in pixels for a 1600 px wide figure printed at 0.98 of the text width (~8.5 pt titles);
+  // 560 px tall panels leave room for the full vertical-axis title with its units
+  const DsStyle S = { /*title*/30, /*label*/27, /*binlabel*/24, /*legend*/30, /*ptitle*/33, /*note*/26,
+                      /*lm*/0.215, /*rm*/0.045, /*tm*/0.095, /*bm*/0.16, /*xoff*/1.3, /*yoff*/1.85 };
   TString out = Form("unfold_output/dsigma_%s.pdf", cfg);
-  c.SaveAs(out);
-  printf("wrote %s\n", out.Data());
+  ds_figure(out.Data(), all, 3, 2, 1600, 560, 0, S, cfg, keep);
 }

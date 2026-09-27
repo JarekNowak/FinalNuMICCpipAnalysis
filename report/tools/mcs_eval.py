@@ -33,9 +33,13 @@ common MCS scale, which is the correlated assumption (same detector, same estima
 import numpy as np, uproot, os, sys
 RB='/data/uboone/processed/rebuild_alt/'; LIVE='/data/uboone/processed/'
 R='/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/report/'
-OBS_ALL=['pmu','costhmu','ppi3bin','costhpi','thmupi','total']   # 2026-09-26: theta_mu dropped, p_pi in three regions
-OBS_1P=['pmu','Whad','dpt2bin','dalphat2bin','pn2bin','dphit3bin','Wpipr','pp','ppi2bin','costhmu','costhpi','thmupi']
-MUMOM_1P={'pmu','Whad','dpt2bin','dalphat2bin','pn2bin'}   # reco observables built from the muon momentum magnitude
+OBS_ALL=['pmu','costhmu','ppi3bin','costhpi','thmupi','total','costhpi_costhmu2d']   # 2026-09-26: theta_mu dropped, p_pi in three regions
+OBS_1P=['pmu','Whad','dpt2bin','dalphat2bin','pn2bin','dphit3bin','Wpipr','pp','ppi2bin','costhmu','costhpi','thmupi','thetap','thpipr','thetap_dpt2d']
+MUMOM_1P={'pmu','Whad','dpt2bin','dalphat2bin','pn2bin','thetap_dpt2d'}   # reco observables built from the muon momentum magnitude
+# 2026-09-27: the results proposed for approval that were outside the release (proton angles, two-dimensional
+# pairs, combined only); two-dimensional results read the all-slice closure files of rebuild_2d
+TWO_D={'thetap_dpt2d':('ccpi1p','thetap_dpt'),'costhpi_costhmu2d':('ccpi','costhpi_costhmu')}
+ONLY_COMB={'thetap_dpt2d','costhpi_costhmu2d'}
 def cov(path):
     n=None; C=None
     for l in open(path):
@@ -60,12 +64,18 @@ def uses_mcs_branch(obs,fam='incl'):
     CC1mu1piXp_candidate_muon_mom_reco and keeps the selection flag nominal, so an observable whose reco
     bins do not read it sees bit-identical fake data at any binning: its term is zero by construction."""
     if fam=='1p': return obs in MUMOM_1P
+    if obs in TWO_D: return False          # cos theta_pi x cos theta_mu: directions only
     t=open(CONF+BINCFG.get(obs,f'ccpi_{obs}_bin_config_opt.txt')).read()
     return 'muon_mom' in t
 def evaluate(CFG,obs,quiet=False,fam='incl'):
     pre='ccpi_' if fam=='incl' else 'ccpi1p_'
     up_f=RB+f'closure_hists_xsec_{pre}{CFG}_{obs}_mcsdataup05.root'; dn_f=RB+f'closure_hists_xsec_{pre}{CFG}_{obs}_mcsdatadn05.root'
-    nom=uproot.open(LIVE+f"closure_hists_xsec_{'' if fam=='incl' else 'ccpi1p_'}{CFG}_{obs}.root")['h_unfolded_nuwro']
+    if obs in TWO_D:
+        px,nm=TWO_D[obs]
+        up_f=RB+f'closure_hists_all_xsec_{px}_{CFG}_{nm}_mcsdataup05.root'; dn_f=RB+f'closure_hists_all_xsec_{px}_{CFG}_{nm}_mcsdatadn05.root'
+        nom=uproot.open(LIVE+f'rebuild_2d/closure_hists_all_xsec_{px}_{CFG}_{nm}.root')['h_unfolded_nuwro']
+    else:
+        nom=uproot.open(LIVE+f"closure_hists_xsec_{'' if fam=='incl' else 'ccpi1p_'}{CFG}_{obs}.root")['h_unfolded_nuwro']
     v=nom.values(); e=nom.errors(); w=np.diff(nom.axis().edges()); n=len(v)
     if obs!='total' and not uses_mcs_branch(obs,fam):
         up=dn=v.copy()                          # zero by construction (2026-09-26, binnings of the 0.50 criterion)
@@ -103,6 +113,7 @@ if __name__=='__main__':
         rows=[]
         for CFG in ['FHC5','RHCFULL','COMB']:
             for obs in (OBS_ALL if fam=='incl' else OBS_1P):
+                if obs in ONLY_COMB and CFG!='COMB': continue
                 r=evaluate(CFG,obs,fam=fam)
                 if r is None: print(f'== {CFG} {obs}: not extracted yet'); continue
                 rows.append(r)

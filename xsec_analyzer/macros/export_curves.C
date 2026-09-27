@@ -55,8 +55,8 @@ void export_curves(const char* outdir="../report/data_release"){
   // 2026-09-26: 0.50-criterion binnings -- inclusive p_pi in three bins (ppi3bin), theta_mu dropped,
   // proton-tagged delta phi_T in three bins (dphit3bin)
   const char* incl[5]={"pmu","ppi3bin","costhmu","costhpi","thmupi"};
-  const char* p1p[12]={"pmu","ppi2bin","costhmu","costhpi","thmupi","Wpipr","Whad",
-                       "dpt2bin","dphit3bin","dalphat2bin","pn2bin","pp"};   // pp: proton momentum
+  const char* p1p[14]={"pmu","ppi2bin","costhmu","costhpi","thmupi","Wpipr","Whad",
+                       "dpt2bin","dphit3bin","dalphat2bin","pn2bin","pp","thetap","thpipr"};   // pp: proton momentum  // 2026-09-27: proton angles (proposed secondary results) added
   for(auto c:cfgs) for(auto o:incl){
     TString p=TString::Format("/data/uboone/processed/closure_hists_xsec_%s_%s.root",c,o);
     if(!gSystem->AccessPathName(p)) dump(p,TString::Format("incl_%s_%s",c,o).Data(),outdir,idx);

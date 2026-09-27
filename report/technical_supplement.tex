@@ -6,6 +6,11 @@
 \externaldocument[P-]{proton_tagged_note}
 \newcommand{\ptref}[2]{#1~\ref{P-#2} of the proton-tagged note}
 \newcommand{\noteref}[2]{#1~\ref{N-#2} of the analysis note}
+% the shared tables refer to this document with \suppref and to the analysis note with \inclref
+\newcommand{\suppref}[2]{#1~\ref{#2}}
+\newcommand{\inclref}[2]{#1~\ref{N-#2} of the analysis note}
+% shared status vocabulary of the three documents (2026-09-27)
+\input{shared/status_vocab}
 
 
 % Every section is tagged by the measurement it serves: shared infrastructure, the inclusive
@@ -29,10 +34,9 @@ Production on Argon in the NuMI Beam\par}
 \vspace{2cm}
 
 \begin{abstract}
-This supplement contains the studies behind the choices of the $\mathrm{CC}\pi^{\pm}$ NuMI
-cross-section measurement: the pion-momentum estimators and the binnings, the proton-tagged
-observables, the cross-checks and validation of the extraction, the control regions, the
-selection studies and the analysis pipeline, and an extended account of the physics background.
+This supplement contains the final configuration of the $\mathrm{CC}\pi^{\pm}$ NuMI cross-section
+measurement (Part~I), the evidence for its choices (Part~II), the alternatives that were studied and
+not adopted (Part~III) and an extended account of the physics background (Part~IV).
 
 Charged pions interact hadronically before they stop, so the range-based pion momentum saturates
 near $0.34$~GeV/$c$ and carries little information about the true momentum above about
@@ -40,11 +44,12 @@ $0.4$~GeV/$c$. Golden-pion tagging, multiple Coulomb scattering, calorimetry, mu
 regression, recovery of the daughter energy and the proton-tagged selection were all studied, and
 none recovers it; a truth-level golden selection performs no better than the classifier, which
 places the limitation in the physics of pion interactions rather than in the estimator. The pion
-momentum is therefore measured in three regions, and the pion--proton invariant mass $W_{\pi p}$
-only as an integrated cross section.
+momentum is therefore measured in three regions. No differential $W_{\pi p}$ result is reported. The
+topology-level one-bin total cross section of the proton-tagged sample remains measurable, but it is
+not described as a $W_{\pi p}$ measurement.
 
 The binnings of both families meet a $0.50$ migration criterion, and the cross-checks of the
-extraction (identity closure, the D'Agostini method, ensembles of fake-data experiments and the
+extraction (identity closure, the D'Agostini method, ensembles of pseudo-data experiments and the
 consistency between configurations) are passed. Numbers shared with the analysis notes are checked
 for consistency automatically (\texttt{report/check\_tables.py},
 \texttt{xsec\_analyzer/check\_staleness.py}). The corrections that shaped the analysis, with the
@@ -56,29 +61,219 @@ values before and after, are recorded in the change log.
 \label{sec:supp_intro}
 
 The inclusive analysis note and the proton-tagged note state what is measured and how. The studies
-that support their choices are described here, in five parts.
+that support their choices are collected here in four parts.
 \begin{itemize}\itemsep2pt
-  \item \textbf{Pion momentum and binning}: the range estimator of the pion momentum, its
-    saturation and the alternatives studied; the pion threshold; the choice of every binning under
-    the $0.68$ and $0.50$ migration criteria; the muon angle in its two parameterisations.
-  \item \textbf{Proton-tagged observables}: the hadronic-mass observables and their resolution; the
-    proton-tagged selection, the reconstruction of its observables and their additional smearing.
-  \item \textbf{Extraction and validation}: the D'Agostini cross-check, the identity closure, the
-    total cross section and its uncertainty breakdown, the presentation of the results, the $A_C$
-    row sums, the ensembles, and the consistency between configurations and with the NuMI
-    $\nu_e$ measurement.
-  \item \textbf{Control regions}: the prerequisites for opening them, the frozen procedure, the
-    transfer factors and their uncertainties, and the validation of the background fit.
-  \item \textbf{Selection and infrastructure}: the selection optimisation, cuts considered and
-    not adopted, and the automated guards of the pipeline; followed by the physics background.
+  \item \textbf{Final configuration} (Part~I): the status of every result, the final binnings and
+    the rule that selected them, the extraction configuration and uncertainty model, the validation
+    criteria and prerequisites, and the schema of the data release.
+  \item \textbf{Evidence for the choices} (Part~II): the range estimator of the pion momentum and
+    its saturation; the binnings under the $0.68$ and $0.50$ migration criteria; the hadronic-mass
+    observables, the proton-tagged selection and its additional smearing; the two-dimensional pairs;
+    the checks of the extraction and the consistency between configurations; the control regions;
+    the selection studies and the automated guards of the pipeline.
+  \item \textbf{Rejected alternatives and development history} (Part~III): the first binning
+    optimisation, the $\theta_\mu$ parameterisation, the lower pion threshold, the five-bin $p_\pi$
+    response, the details of the golden-pion classifier and of the other pion-momentum estimators,
+    and the cosmic-direction cuts. None of these is used in the submitted results; the change log
+    gives the chronology.
+  \item \textbf{Physics background} (Part~IV): production mechanisms, nuclear effects, generator
+    models and previous measurements.
 \end{itemize}
 Each section is tagged with the measurement it serves: \textsc{[inclusive]},
 \textsc{[proton-tagged]} or \textsc{[shared]}. Terms are defined in the glossary at the end, which is
 shared with the analysis notes.
 
-\part{Pion momentum and binning}
+\part{Final configuration}
+\section[Status of the results]{Status of the results\scopetag{shared}}
+\label{sec:supp_status}
+
+The decision requested from the collaboration is the following.
+
+\input{shared/decision_box}
+
+Table~\ref{tab:inventory} gives the status of every inclusive product, the configurations in which it
+is reported and the prerequisites that block it.
+
+\input{tables/inventory}
+
+Table~\ref{tab:pt_status} gives the same for the proton-tagged products.
+
+\input{tables/pt_status}
+
+\section[Final binnings and the binning rule]{Final binnings and the binning rule\scopetag{shared}}
+\label{sec:final_binning}
+
+Table~\ref{tab:binning} gives the bin edges of the inclusive observables. The proton-tagged edges are
+in \ptref{Table}{tab:pt_binning}, and those of the two two-dimensional results in their curve files
+(\S\ref{sec:release_schema}).
+
+\input{tables/binning}
+
+Each one-dimensional binning is selected by the following rule, established by the binning review
+(\S\ref{sec:binreview}):
+\begin{enumerate}\itemsep1pt
+  \item Generate candidate partitions: for every number of bins up to twelve, the maximin partition,
+    which has the largest worst-bin migration diagonal over FHC and RHC, found by dynamic programming
+    on a fine grid (\texttt{report/tools/maximin\_binning.py}).
+  \item Require the event floor: at least $70$ selected FHC signal events per bin at data exposure in
+    the inclusive family, and $50$ in the proton-tagged family.
+  \item Require every diagonal of the column-normalised migration matrix to be at least $0.50$, in FHC
+    and in RHC, on the analysis sample (\S\ref{sec:ppi_samples}); the combined configuration inherits
+    the binning.
+  \item Extract the candidates that pass in full, in the three configurations: universes, covariance,
+    unfolding and closure.
+  \item Compute the Wiener filter factors of each extraction and the trace of $A_C$, their sum, which
+    is the number of degrees of freedom that the data determine.
+  \item Select the fewest bins that reach $90\%$ of the largest trace, averaged over FHC and RHC; ties
+    go to the larger worst diagonal.
+  \item Check the closure and the per-bin uncertainties of the selected binning.
+  \item Freeze the binning.
+\end{enumerate}
+Four adopted binnings differ from the one the rule selects, for the reasons given in
+\S\ref{sec:binreview}: $\cos\theta_\pi$ and $\theta_{\mu\pi}$ keep five bins, $\delta\alpha_T$ keeps its
+split at $120^\circ$, and the proton-tagged $p_\pi$ keeps two regions. The $0.68$ criterion of the BNB
+CC$1\pi$ measurement is the precedent for the migration criterion and serves as a stricter comparison
+point; \S\ref{sec:binreview} gives the consequences of both. Everything in Part~III, including the
+first binning optimisation, the five-bin $p_\pi$ response and the $\theta_\mu$ parameterisation, is
+historical and is not used in the submitted results.
+
+\medskip\noindent\fbox{\parbox{0.97\linewidth}{Closure is necessary but not sufficient. A result may
+close while remaining dominated by modelled migrations or by the regularisation; the migration
+criterion and the Wiener filter factors are therefore imposed as independent information-content
+criteria.}}
+\medskip
+
+\section[Extraction configuration and uncertainty model]{Extraction configuration and uncertainty model\scopetag{shared}}
+\label{sec:supp_extraction}
+
+\paragraph{Unfolding.} Every differential result is unfolded with the Wiener-SVD method. The
+regularisation matrix is the second derivative of the cross-section density, built with the actual bin
+widths: on binnings as non-uniform as these, the uniform stencil reduces $A_C$ to a matrix that passes
+the normalisation and discards the shape (\S\ref{sec:reg_widths}). The additional-smearing matrix
+$A_C$ of every result is released with it, and every prediction is smeared by it before it is
+compared with the result. The one-bin total cross sections are extracted with the Wiener filter off,
+$A_C\equiv1$ (\S\ref{sec:supp_total}). The D'Agostini iterative method is a cross-check
+(\S\ref{sec:crosschecks}).
+
+\paragraph{Normalisation.} Each run is normalised to its recorded exposure: the simulation of every run
+is scaled by the ratio of its beam-on to its simulated POT, and the beam-off samples by the per-run
+gate ratios (\noteref{Sec.}{sec:mc}). The flux is the summed $\nu_\mu+\bar\nu_\mu$ flux integrated
+above $60$~MeV: FHC $6.81159$, RHC $6.44646$ and combined configuration
+$6.59691\times10^{-10}$~cm$^{-2}$~POT$^{-1}$, each configuration normalised with its own value. The
+$60$~MeV convention includes the flux below the pion-production threshold, so it lowers the
+flux-averaged total relative to a threshold matched to the spectrum (\noteref{Sec.}{sec:flux_status}).
+The target count is $N_\mathrm{Ar}=8.710\times10^{29}$ argon nuclei in the fiducial volume.
+
+\paragraph{Covariance.} The official covariance of every result, \texttt{cov\_total\_plusMCS.txt}, is
+the framework covariance, \texttt{cov\_total.txt}, plus the MCS muon-momentum-scale term. The framework
+covariance sums the flux (PPFX universes), cross-section (GENIE multisim and unisims), hadron
+re-interaction, detector-variation, POT and target-count terms and the statistical terms of the
+simulation, the beam-off samples and the data, each propagated through the unfolding and released
+separately (\S\ref{sec:release_schema}). The MCS term is the half-difference, taken as fully
+correlated, of the results obtained when the MCS-measured muon momenta of the pseudo-data are scaled
+by $\pm5\%$ on the data side and unfolded with the nominal response. It is computed outside the
+framework, is zero for the results that do not use the reconstructed muon momentum, and is
+included in every quoted uncertainty and every summary table, among them the systematic breakdowns of
+Tables~\ref{tab:systbreak_fhc}--\ref{tab:systbreak_comb} (\noteref{Sec.}{sec:mcs}). The closure
+$\chi^2$ and the biases of the robustness tests are quoted with the framework covariance, since they
+test the extraction rather than the uncertainty of the data. Three terms lie outside the official
+covariance and are to be included before publication (prerequisite U7): the beamline-geometry flux
+term, the uncertainty of the per-run beam-off gate ratios and that of the use of the Run-1 beam-off
+sample for Run~2.
+
+\section[Validation criteria and prerequisites]{Validation criteria and prerequisites\scopetag{shared}}
+\label{sec:supp_validation}
+
+The validation ladder (Table~\ref{tab:validation_ladder}) orders the tests of the extraction so that
+each answers a question the earlier ones cannot: the identity and pseudo-data closures test the
+implementation (\S\ref{sec:identity}), the ensembles the size of the statistical uncertainties
+(\S\ref{sec:supp_ensemble}), the pseudo-data from reweighted models the robustness to a model that
+reweighting can reach (\noteref{Sec.}{sec:altmodel}), the independent-generator closure the robustness
+to one that it cannot, and the control regions the background model (\S\ref{sec:request}).
+
+\input{shared/validation_ladder}
+
+The prerequisites (Table~\ref{tab:prerequisites}) give, for each item, its criterion, its owner and
+what it blocks. The independent-generator closure (U3) unfolds, with the nominal response,
+pseudo-data from a NuWro overlay with the full detector simulation that has been validated against
+standalone NuWro on the same flux; it passes if every bin holding at least $10\%$ of the largest truth
+lies within $1\sigma$ of its total uncertainty and every integral within its uncertainty, and it
+blocks unblinding. The NuWro overlay available so far failed that validation and is not used
+(\noteref{Sec.}{sec:limitations}).
+
+\input{shared/prerequisites}
+
+\section[Data-release schema]{Data-release schema\scopetag{shared}}
+\label{sec:release_schema}
+
+The numerical results are in \texttt{report/data\_release/} (Table~\ref{tab:release_schema}). Each
+extraction is identified by a tag \texttt{<family>\_<CFG>\_<observable>}: the family is \texttt{incl}
+or \texttt{1p}, the configuration \texttt{FHC5}, \texttt{RHCFULL} or \texttt{COMB}, and the observable
+is the key used in \texttt{index\_extractions.tsv}, for example \texttt{incl\_FHC5\_pmu} or
+\texttt{1p\_COMB\_thetap}. The two two-dimensional results have the tags
+\texttt{1p\_COMB\_thetap\_dpt2d} and \texttt{incl\_COMB\_costhpi\_costhmu2d}. Cross sections are in
+$10^{-38}$~cm$^2$/Ar per unit of the variable, or per unit of each of the two variables for the
+two-dimensional results. Uncertainties and correlations are taken from the covariance files.
+
+\begin{table}[H]
+  \centering
+  \caption{Files of the data release in \texttt{report/data\_release/}; \texttt{<tag>} is the tag of an
+    extraction.}
+  \label{tab:release_schema}
+  \footnotesize
+  \begin{tabular}{@{}L{5.3cm}L{10.2cm}@{}}
+    \toprule
+    File & Content \\
+    \midrule
+    \texttt{curves\_<tag>.tsv} & One row per bin: \texttt{bin}, \texttt{low}, \texttt{high},
+      \texttt{width}, \texttt{unfolded\_data}, \texttt{stat\_err}, then the truth, tune and generator
+      predictions, all already smeared by $A_C$. The values are densities; multiply by \texttt{width}
+      to integrate. The two-dimensional files carry \texttt{inner\_low}, \texttt{inner\_high},
+      \texttt{outer\_low}, \texttt{outer\_high} and \texttt{area} in place of \texttt{low},
+      \texttt{high} and \texttt{width}, and order the analysis bins outer slice by outer slice, with
+      the inner variable fastest. \\
+    \texttt{A\_C\_<tag>.tsv} & The additional-smearing matrix $A_C$: row $i$ is the smeared bin, column
+      $j$ the true bin. A prediction $p_j$, the cross section integrated over true bin $j$, is
+      compared with the result as $\mathrm{smeared}_i=\sum_j A_C[i][j]\,p_j/\mathrm{width}_i$, with
+      the area in place of the width for the two-dimensional results. \\
+    \texttt{cov/<tag>/cov\_total\_plusMCS.txt} & The official covariance: the framework covariance plus
+      the MCS momentum-scale term. \\
+    \texttt{cov/<tag>/cov\_total.txt} & The framework covariance. \\
+    \texttt{cov/<tag>/cov\_<source>.txt} & The components by source: flux, detector variations, cross
+      section, re-interaction, POT, target count, simulation, beam-off and data statistics, MCS
+      momentum scale. \\
+    \texttt{cov/<tag>/unfolded\_signal.txt} & The unfolded bin integrals. \\
+    \texttt{total\_xsec.tsv} & The one-bin total cross sections, with their uncertainty breakdown. \\
+    \texttt{index\_extractions.tsv} & Every extraction, with its status. \\
+    \texttt{../status.tsv} & The status of every product, the single source of Tables~\ref{tab:inventory}
+      and~\ref{tab:pt_status} (in \texttt{report/}, next to the release). \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\part{Evidence for the choices}
 \section[Pion momentum: the range estimator and its saturation]{Pion momentum: the range estimator and its saturation\scopetag{inclusive}}
 \label{sec:supp_ppi}
+
+\medskip\noindent\fbox{\parbox{0.97\linewidth}{\textbf{Final adopted configuration.} The inclusive
+$p_\pi$ is measured in three regions with edges $[0.175, 0.205, 0.26, \infty)$~GeV/$c$, and the
+proton-tagged $p_\pi$ in two regions, $[0.175, 0.205, \infty)$~GeV/$c$. The five-bin configurations
+are rejected diagnostics, not results. The golden-pion, MCS, calorimetric, regression and
+daughter-recovery studies justify keeping the coarse range-based measurement.}}
+\medskip
+
+\subsection{Track sample and analysis sample}
+\label{sec:ppi_samples}
+
+Migration diagonals of the pion momentum are quoted on two samples, which are not interchangeable. The
+track sample is every truth-matched pion track passing loose quality requirements (purity
+$>0.5$, track score $>0.5$, length $>5$~cm), from events of any topology, $126\,518$ tracks in
+total; the golden-pion studies use it, and the estimator studies use truth-matched pion tracks of the
+same kind. The analysis sample is the events passing the full
+CC$1\mu1\pi^\pm$ selection and satisfying the signal definition, about $10\,700$ per beam
+mode; the adopted binnings, the binning studies and the hadronic-mass study use it. The analysis
+sample has the better response, because the selection removes the events whose pion is poorly
+reconstructed.
 
 \subsection{Pion-momentum bias and the conditioning of the $p_\pi$ response}
 \label{sec:ppi_bias}
@@ -147,7 +342,8 @@ $0.800$--$1.200$ & 164 & 0.951 & 0.336 & 0.329 & 0.353 \\
 \end{figure}
 
 \subsubsection{Effect on the five-bin response matrix.}
-Migrating the five-bin scheme with the corrected estimator gives a nearly
+On the analysis sample of Table~\ref{tab:ppi_sat}, migrating the five-bin scheme with the
+corrected estimator gives a nearly
 lower-triangular matrix: the diagonal fraction falls from $94.3\%$ in the first true bin
 to $36.5$, $23.1$, $10.4$ and finally $6.2\%$ in the last. For the highest true bin
 ($p_\pi>0.55$~GeV/$c$) only $6.2\%$ of events are reconstructed in the corresponding reco
@@ -176,7 +372,7 @@ $56.1\%$ purity) so that it uses range only.
 
 Third, and most directly comparable, the binning is chosen against an explicit criterion:
 each bin must hold at least 100 predicted MC events and the diagonal element of the
-smearing matrix must exceed $0.68$. The resulting pion-momentum edges are
+migration (smearing) matrix must exceed $0.68$. The resulting pion-momentum edges are
 $0.10, 0.16, 0.19, 0.22, 0.60$~GeV/$c$ with an overflow bin: fine structure only where
 the estimator still tracks truth, then a single wide bin from $0.22$ to $0.60$ and
 everything above $0.60$ in overflow.
@@ -187,72 +383,27 @@ and the top three fail it by a wide margin. Its edges ($0.175$--$0.550$ in five 
 above) place four boundaries inside the region where the reconstructed momentum has
 saturated.
 
-\subsubsection{Consequences for the unfolding, and available inputs.}
+\subsubsection{Consequences for the unfolding.}
 The saturation does not bias the extracted cross section, because the response matrix
 contains it and the unfolding inverts it, but it makes the $p_\pi$ result depend more on the
 regularisation than any other observable. With $6\%$
 diagonal strength in the top bin, the result above $\sim\!0.5$~GeV/$c$ is effectively
 inferred from the response model rather than measured.
 
-The BNB note supplies a tested recipe, and all four of its BDT inputs are
-available in this analysis. The Bragg likelihood ratios (\texttt{trk\_bragg\_pion},
-\texttt{\_mip}, \texttt{\_mu}, \texttt{\_p}) and the track--shower score are in the
-ntuples; the multi-pion pion-ID BDT in this analysis trains on exactly those,
-and the descendant counts are \texttt{pfp\_trk\_daughters\_v} /
-\texttt{pfp\_shr\_daughters\_v}. Wiggliness is available under a different name: the PeLEE
-ntuples carry \texttt{trk\_avg\_deflection\_stdev\_v} (with companions
-\texttt{\_mean\_v} and \texttt{\_separation\_mean\_v}), which is the standard
-deviation of the angular deflection between adjacent track points. It is fully populated
-and is carried forward by \texttt{ProcessNTuples}.
-
-\subsubsection{Track wiggliness as a golden-pion tag.}
-The variable was tested on truth-matched charged pions in the Run-1 FHC overlay, calling a
-pion ``golden-like'' when the mass-corrected range momentum recovers the true momentum to
-within $20\%$, and ``interacting'' when it recovers less than $60\%$. The two populations
-separate clearly, but golden pions are the wigglier ones, by about a factor two in the
-mean ($0.0048$ against $0.0027$), the opposite of the naive expectation. This is not a
-momentum artefact: it persists when binned in track length, with the ratio staying at
-$0.51$--$0.63$ from $5$~cm to $400$~cm.
-
-The sign has a physical explanation. A pion that stops travels its full range and
-scatters strongly through its final slow centimetres, so the deflection spread averaged
-along the track is large. A pion that interacts hadronically is cut short while still fast
-and never reaches that wiggly end, so its track is straighter. High wiggliness is thus a
-signature of having stopped, which is the population for which a range-based
-momentum is meaningful.
-
-As a single cut it is useful: on this sample the golden fraction is $39.9\%$ before
-any cut, and requiring \texttt{trk\_avg\_deflection\_stdev\_v}$\,>0.001$ keeps $86.8\%$ of
-golden pions while rejecting $48.8\%$ of interacting ones, raising the golden fraction to
-$53.0\%$. A tighter cut at $0.002$ gives $57.8\%$ efficiency and $55.7\%$ golden. For
-comparison, the BNB four-variable BDT reaches $67.7\%$ golden at roughly half the
-generic-selection efficiency, so one variable recovers a good part of the gain, and the
-remaining three variables, all available here, could recover more.
-
-Three options follow, in increasing order of effort: rebin $p_\pi$ against
-a migration criterion, which on the numbers above means one or two resolved intervals at
-threshold plus a wide open region; add a golden-pion cut for the $p_\pi$ cross section
-built from the available variables, accepting the factor-two efficiency loss the
-BNB analysis accepts; or reproduce the BNB BDT in full. None changes the total or angular
-results, which do not use this estimator. The first option, applied with the $0.50$
-criterion of the analysis (\S\ref{sec:binreview}), gives the adopted binning
-(\S\ref{sec:ppi2bin_adopted}); the classifier was trained and tested and does not
-change this conclusion (\S\ref{sec:golden_bdt}).
-
 \subsubsection*{Adopted binning: three $p_\pi$ regions}
 \label{sec:ppi2bin_adopted}
 
-The released binning has three regions, $[0.175, 0.205]$ and $[0.205, 0.26]$~GeV/$c$ and
+The adopted binning has three regions, $[0.175, 0.205]$ and $[0.205, 0.26]$~GeV/$c$ and
 everything above. Merging raises the migration diagonals from $96/35/21/10/6\%$ (full
 analysis sample; $94.3/36.5/23.1/10.4/6.2\%$ on Run~1 alone, Table~\ref{tab:ppi_sat}) to
 $91/51/52\%$ in FHC and $90/53/53\%$ in RHC, which meets the $0.50$ criterion of the analysis
 in every region (\S\ref{sec:binreview}). Under the $0.68$ criterion of the BNB measurements
 only two regions pass, $[0.175, 0.205]$~GeV/$c$ and everything above, at $91/76\%$. These
-diagonals are measured on the analysis sample; the golden-pion study of
-Sec.~\ref{sec:golden_bdt} uses a looser track sample whose diagonals are lower, and the two
+diagonals are measured on the analysis sample (\S\ref{sec:ppi_samples}); the golden-pion study of
+Sec.~\ref{sec:golden_bdt} uses the looser track sample, whose diagonals are lower, and the two
 sets are not interchangeable.
 
-The first boundary follows from a scan of the two-region binning. The worst diagonal is
+The first boundary follows from a scan of the two-region binning on the analysis sample. The worst diagonal is
 always that of the upper region, and it falls monotonically as the boundary rises, so the
 binding constraint is the width of the first interval rather than the diagonal itself:
 
@@ -277,7 +428,7 @@ first interval with precedent: $30$~MeV/$c$ matches the narrowest bin used in th
 analysis. Going narrower trades first-bin diagonal for upper-bin diagonal, and at $10$~MeV/$c$
 the first bin itself falls to $80\%$ on only $325$ events. An exhaustive scan over all edge
 sets (\texttt{macros/ppi\_binning\_scan.C}) returns $0.205$ as the best first boundary for
-every number of bins tried, and for the proton-tagged selection as well.
+every number of bins tried, and in the proton-tagged sample as well.
 
 The second boundary costs $25$ points on the worst diagonal. The best three-region binning,
 with edges $0.205$ and $0.26$~GeV/$c$ from the maximin scan of \S\ref{sec:binreview}, reaches
@@ -332,7 +483,7 @@ $\chi^2/\mathrm{ndf}$ & \multicolumn{4}{c|}{$1.01/3$ ($p=0.80$)} & \multicolumn{
     \includegraphics[width=\textwidth]{ppi3bin_xsec_COMB}\caption{Combined}
   \end{subfigure}
   \caption{The three-region $p_\pi$ cross section, the graphical form of
-    Tab.~\ref{tab:ppi2bin}. Unfolded fake data (points, with the full systematic
+    Tab.~\ref{tab:ppi2bin}. Unfolded pseudo-data (points, with the full systematic
     uncertainty) against the $A_C$-smeared truth, the uB tune and the four generators; every
     curve is $A_C$-smeared, so all of them live in the same space as the measurement. The
     regions are drawn with equal width for legibility: they are $0.030$, $0.055$ and
@@ -385,21 +536,20 @@ rather than a competitive shape measurement.
 \subsubsection*{Golden-pion classifier}
 \label{sec:golden_bdt}
 
-Following the BNB recipe, a golden-pion BDT was trained and evaluated
-(\texttt{macros/golden\_pion\_train.C}, \texttt{macros/golden\_pion\_compare.C}). The truth
+Following the BNB recipe, a golden-pion BDT was trained and evaluated with the macros
+\texttt{golden\_pion\_train.C} and \texttt{golden\_pion\_compare.C} of \texttt{macros/}. The truth
 label is \texttt{mc\_end\_p} $<0.01$~GeV/$c$ (the pion ranged out), joined to
 reconstruction by matching \texttt{backtracked\_p} to \texttt{mc\_p}, which pairs $100\%$ of
 candidate tracks with no ambiguity. The inputs are the three deflection variables, the four
 Bragg likelihood ratios, the track--shower score and the descendant count. Training used
-$126\,518$ labelled tracks from Runs 1, 2 and 4; the split is by run, and all numbers
+$126\,518$ labelled tracks of the track sample (\S\ref{sec:ppi_samples}) from Runs 1, 2
+and 4; the split is by run, and all numbers
 below are on Run 2, which the classifier did not see in training.
 
 \subsubsection{Classifier performance.} The ROC integral is $0.758$. At
 $44.8\%$ efficiency the classifier raises the golden fraction from $43.1\%$ to $64.9\%$,
 against the BNB $36.3\to67.7\%$ at roughly $47\%$ efficiency, so it reproduces the BNB
-benchmark. The variable ranking is dominated by the deflection variables (\texttt{wmean},
-then \texttt{wstd}); the Bragg ratios contribute essentially nothing, although Bragg was
-expected to carry the stopping signature.
+benchmark.
 
 \subsubsection{Effect on the $p_\pi$ migration.} Table~\ref{tab:golden_compare}
 gives the migration diagonal in the five bins as the cut is tightened. The first bin
@@ -408,7 +558,8 @@ $15\%$ efficiency.
 
 \begin{table}[htbp]\centering
 \caption{Golden-pion BDT: efficiency, achieved golden fraction, and the $p_\pi$ migration
-  diagonal per true bin, on the held-out run. The BNB criterion for a usable bin is a
+  diagonal per true bin, on the held-out run of the track sample (\S\ref{sec:ppi_samples}). The
+  BNB criterion for a usable bin is a
   diagonal above $0.68$.}
 \label{tab:golden_compare}
 \begin{tabular}{lccccccc}
@@ -424,113 +575,16 @@ $>+0.15$  & $15.2\%$ & $84.5\%$ & 99.2 & 46.9 & 42.2 & 36.1 & 19.5 \\\midrule
 \end{tabular}
 \end{table}
 
-\subsubsection{Track sample and analysis sample.} The table above is built on the labelled
-track sample: every truth-matched pion track passing loose quality requirements (purity
-$>0.5$, track score $>0.5$, length $>5$~cm), from events of any topology, $126\,518$ tracks in
-total. The migration diagonals quoted elsewhere in this supplement, $96/35/21/10/6\%$ for five
-bins and $91/76\%$ for two, are measured on the analysis sample: events passing the full
-CC$1\mu1\pi^\pm$ selection and satisfying the signal definition, about $10\,700$ per beam
-mode. The analysis sample has the better response, because the selection removes the
-events whose pion is poorly reconstructed. On the track sample the same five-bin scheme reads
-$99/24/13/6/6\%$ and the two-bin scheme $98/62\%$.
-
-The track-sample figures are therefore not the analysis response, and the $62\%$ does not
-mean that the inclusive $p_\pi$ measurement fails the usable-bin criterion: on
-the analysis sample the upper bin of the two-bin scheme is at
-$76\%$. The comparisons made within the table, between rows of the same
-sample, are valid as they stand.
-
+\subsubsection{Truth-level ceiling.}
 The last row of the table is to be compared with the row of matching efficiency rather than
 with the tightest cut. Perfect truth-level golden selection keeps $43.1\%$ of
 tracks and gives $36.1, 24.1, 14.2, 8.9\%$ in bins 2--5; the classifier at the matching
 $44.8\%$ efficiency gives $33.1, 24.5, 15.4, 9.1\%$. They agree bin by bin. The classifier
 therefore already performs as well as perfect knowledge of which pions stopped, and a
 better golden-pion classifier cannot improve the response further.
-
-\subsubsection{Multiple Coulomb scattering as estimator and classifier input.} Range
-saturates because the pion interacts before stopping, which
-truncates the track. Multiple-Coulomb-scattering (MCS) momentum is inferred from the
-scattering along whatever track exists and is not truncated by an interaction, so it is the
-natural candidate to replace range. The CC0$\pi$ analysis uses this pairing, range
-for contained tracks and MCS for exiting ones. Measured on $122\,878$ truth-matched pion
-tracks (\texttt{trk\_mcs\_muon\_mom\_v}, filled for $99.9\%$ of them):
-
-\begin{center}\small
-\begin{tabular}{lcccccc}
-\toprule
-true $p_\pi$ [GeV/$c$] & $\langle$len$\rangle$ & $\langle$range/true$\rangle$ & RMS
- & $\langle$MCS/true$\rangle$ & RMS \\\midrule
-$0.175$--$0.250$ & $25$~cm & $0.834$ & $0.16$ & $4.335$ & $14.1$ \\
-$0.320$--$0.420$ & $46$~cm & $0.629$ & $0.23$ & $2.438$ & $7.2$ \\
-$0.550$--$0.800$ & $71$~cm & $0.446$ & $0.18$ & $1.423$ & $3.5$ \\
-$0.800$--$1.500$ & $84$~cm & $\mathbf{0.319}$ & $0.16$ & $\mathbf{1.011}$ & $2.1$ \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\noindent In the top bin range is biased to $0.319$ (the saturation), while MCS is
-essentially unbiased at $1.011$; but MCS carries a $210\%$ RMS
-there and $1400\%$ in the lowest bin, which makes it unusable as a per-event estimator. The
-reason is structural and explains why the CC0$\pi$ recipe does not transfer: that analysis
-applies MCS to exiting tracks, which are long by construction, whereas the problematic pions
-here are contained but interacting, $25$--$84$~cm long, and MCS needs of order a metre.
-
-The CC0$\pi$ note also uses the disagreement between the two estimators as a track-quality
-BDT input rather than as an estimator. The motivation applies here: a pion that interacts has a
-truncated range but an untruncated MCS, so the fractional difference
-$(p_\mathrm{range}-p_\mathrm{MCS})/p_\mathrm{range}$ should flag the events that
-degrade the response. Added to the golden-pion classifier, it ranks second of ten
-in importance, behind only the mean deflection, but it leaves the performance unchanged:
-
-\begin{center}\small
-\begin{tabular}{lcc}
-\toprule
-classifier inputs & ROC integral & diagonals at $\sim\!44\%$ efficiency \\\midrule
-baseline (nine variables) & $0.758$ & $99.1 / 33.1 / 24.5 / 15.4 / 9.1$ \\
-$+$ range$-$MCS difference & $0.757$ & $99.0 / 34.8 / 24.8 / 14.8 / 9.1$ \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\noindent The new variable is highly informative but not additionally informative: it is
-strongly correlated with the deflection variables already present, since both measure whether
-the track scattered heavily and ended abruptly. A high importance rank with an unchanged ROC
-integral is the signature of a redundant input. This independently supports the ceiling
-argument above: the classifier already extracts what the golden label can offer, and the limit
-is the physics of the label rather than the quality of the classifier.
-
-A further variant was not pursued. Retraining on the label ``range is
-accurate'', $|p_\mathrm{corr}/p_\mathrm{true}-1|<0.2$, would target the quantity of interest
-directly and would raise the diagonals, but it would select on the answer:
-keeping events where the estimator happens to be right sculpts the response by construction
-and inflates the diagonal without measuring anything, the same effect described for the tight
-BDT working points below. The golden label is used because it is a physical property
-of the pion, independent of how well it was reconstructed.
-
-
-\subsubsection{Tight working points.} The $>0.15$ row appears better than
-perfect truth selection ($46.9, 42.2, 36.1, 19.5\%$), which is impossible for an unbiased
-classifier. This arises because a hard cut on
-the classifier preferentially keeps long tracks: inside the top true bin, the surviving
-tracks have a mean length of $120.8$~cm against $78.2$~cm for all pions, and a mean
-reconstructed momentum of $0.406$ against $0.307$~GeV/$c$. The cut is thus partly a cut on
-the reconstructed momentum itself, which raises the diagonal by construction while sculpting
-the spectrum. The apparent gain is circular, and the tight working points are not used.
-This is the failure mode anticipated for track length as a direct input; it enters here
-through the deflection variables, which correlate with length, even though length itself was
-excluded from training.
-
-\subsubsection{Residual bias of golden pions.} Golden pions still reconstruct at
-$\langle p^{\rm corr}/p^{\rm true}\rangle = 0.73$ on this sample. Interaction is therefore
-not the only problem: the momentum conversion is itself biased. A single flat rescaling does
-not repair it: applying the best global factor drops the first bin from $98.9$ to
-$49.1\%$ and leaves $0/5$ bins passing, because the bias is momentum-dependent, as
-the saturation curve of Figure~\ref{fig:ppi_sat} shows.
-
-Coarser binning helps but is not sufficient. Collapsing to two bins ($0.175$,
-$0.230$, $\infty$) gives $98.7$ and $58.3\%$ with perfect golden selection, an improvement
-but still short of $0.68$. Only a single bin, i.e.\ no differential measurement,
-passes trivially.
+The two tightest working points exceed the truth-level row only because a hard cut on the classifier
+preferentially keeps long tracks, and so cuts on the reconstructed momentum itself; they are not used
+(\S\ref{sec:golden_details}).
 
 \subsubsection{Summary of the classifier study.} The classifier matches the published
 benchmark, but the $p_\pi$ differential measurement above $\sim\!0.23$~GeV/$c$ cannot be made
@@ -538,9 +592,11 @@ to meet the BNB binning criterion with a range-based estimator, with or without 
 golden-pion cut. The BNB analysis meets that criterion because its resolved bins
 ($0.10$--$0.16$, $0.16$--$0.19$, $0.19$--$0.22$) all lie below the $0.175$~GeV/$c$
 threshold of this analysis, in the region where range still tracks momentum; above $0.22$ it
-uses a single wide bin and an overflow. The options for this analysis are therefore to lower
-the pion threshold toward $0.10$~GeV/$c$ and resolve the region where the estimator works, to
-report a two-bin-plus-overflow $p_\pi$ result, or to replace the range-based estimator. The golden-pion BDT can contribute to any of these but does
+uses a single wide bin and an overflow. The options for this analysis were therefore to lower
+the pion threshold toward $0.10$~GeV/$c$ and resolve the region where the estimator works (tested
+and not adopted, \S\ref{sec:supp_lowppi}), to report a coarse $p_\pi$ result with an open upper
+region (adopted, \S\ref{sec:ppi2bin_adopted}), or to replace the range-based estimator
+(\S\ref{sec:ppi_estimators}). The golden-pion BDT can contribute to any of these but does
 not by itself solve the problem.
 
 \medskip\noindent\fbox{\parbox{0.97\linewidth}{The limitation described in this subsection
@@ -559,7 +615,7 @@ The other inclusive observables are unaffected: the angular variables and $p_\mu
 their shape information, and the total cross section does not use this estimator.
 
 \subsubsection{Proton-tagged response.} The second route to a sharper $p_\pi$
-response is the proton tag. It was measured for FHC, RHC and the combined exposure:
+response is the proton tag. It was measured for FHC, RHC and the combined configuration:
 at the same two-bin edges the proton-tagged response is indistinguishable from the
 inclusive one, and marginally worse rather than better. The migration-diagonal
 test gives
@@ -578,7 +634,7 @@ inclusive \texttt{CC1mu1piXp} & FHC & $1056$ & $91.0\%$ & $75.5\%$ & yes \\\midr
 \end{center}
 
 \noindent measured on the \texttt{numuMC} overlays named in the corresponding
-\texttt{file\_properties} lists, selected signal, with the reconstructed momentum
+\texttt{file\_properties} lists, selected signal (analysis sample), with the reconstructed momentum
 mass-corrected as in the bin configuration. All four rows clear the criterion in both
 bins, and the proton-tagged values lie about two points below the inclusive ones.
 The three proton-tagged configurations agree to better than a
@@ -592,16 +648,16 @@ and the efficiency, but not what happens to the pion downstream, so there is
 no mechanism by which it would sharpen the momentum response, and the measurement confirms
 this.
 
-The proton-tagged $p_\pi$ measurement is therefore reported in its own right, as
-the pion-momentum cross section of an exclusive final state that also yields $W$ and TKI, and
-not as a repair of the inclusive one. The inclusive $p_\pi$ in three regions also meets the
+The proton-tagged $p_\pi$ extraction is therefore the pion-momentum cross section of an
+exclusive final state that also yields $W$ and TKI, a \statValidation{} (Table~\ref{tab:pt_status}),
+not a repair of the inclusive one. The inclusive $p_\pi$ in three regions also meets the
 adopted criterion.
 
 \begin{table}[htbp]\centering
 \caption{Two-bin $p_\pi$ on the proton-tagged \texttt{CC1mu1pi1p} selection, all three beam
   configurations. $d\sigma/dp_\pi$ in $10^{-38}$~cm$^2$/(GeV/$c$)/Ar; bin~1 is
   $[0.175,0.205]$~GeV/$c$, bin~2 everything above. All curves are $A_C$-smeared. The
-  proton-tagged \texttt{xsec} configs declare only the tune and the fake data, so no
+  proton-tagged \texttt{xsec} configs declare only the tune and the pseudo-data, so no
   generator rows appear. Regenerated from the release
   (\texttt{report/tools/ppi2bin\_tables.py}); the uncertainty row is the total.}
 \label{tab:ppi2bin_1p}
@@ -633,14 +689,14 @@ $\chi^2/\mathrm{ndf}$ & \multicolumn{2}{c|}{$0.02/2$ ($p=0.99$)} & \multicolumn{
   \caption{The two-bin $p_\pi$ cross section on the proton-tagged \texttt{CC1mu1pi1p}
     selection, the graphical form of Tab.~\ref{tab:ppi2bin_1p}. The first bin is that of the
     inclusive result of Fig.~\ref{fig:ppi2bin_xsec}, and the second is the union of the two
-    upper inclusive regions, since three regions fail the $0.50$ criterion in this sample. The
+    upper inclusive regions, since three regions fail the $0.50$ criterion in the proton-tagged analysis sample. The
     bins are drawn equal-width.}
   \label{fig:ppi2bin_1p}
 \end{figure}
 
 All three extractions close, with $\chi^2$ of $0.02$, $1.21$ and $0.48$ on two bins.
 The two proton-tagged regions meet the stricter $0.68$ criterion ($0.74/0.75$ in
-FHC and RHC). The proton-tagged version is reported because it belongs to the exclusive
+FHC and RHC). The proton-tagged version is extracted because it belongs to the exclusive
 final state, not because it is required to make $p_\pi$ measurable.
 
 \subsubsection{The least-populated bin.} The RHC first bin unfolds to $0.37$ times its
@@ -650,9 +706,9 @@ content. Independent throws move it by more than $\pm1\sigma$. The bin holds too
 events to constrain the cross section, and any real-data value in it should be read with its
 uncertainty rather than its central value.
 
-\subsubsection{Choice of boundary for the proton-tagged selection.} The $0.205$~GeV/$c$
+\subsubsection{Choice of boundary for the proton-tagged sample.} The $0.205$~GeV/$c$
 boundary was independently preferred
-by the migration-level edge scan run on the proton-tagged selection
+by the migration-level edge scan run on the proton-tagged sample
 (\texttt{macros/ppi\_binning\_scan.C}, FHC; \texttt{logs/binning\_scan/1p\_fhc.txt}) as
 well as by the inclusive scan, so it is not simply inherited. It was not
 re-optimised through a separate universe, covariance and unfolding production for every
@@ -680,137 +736,8 @@ golden-pion selection & $0.327$ & $0.18$ & no gain above $0.8$~GeV/$c$ \\
 \end{tabular}
 \end{center}
 
-\paragraph{Calorimetric energy.} Deposited charge stops at the
-interaction point just as range does, so $\langle$calo/true$\rangle$ falls from $1.136$ to
-$0.383$ across the momentum range while the RMS is three to five times that of range
-($1.007$ to $0.313$, against $0.157$ to $0.158$). Calorimetry is subject to the same
-truncation as range, with more noise.
-
-\paragraph{Golden-pion selection.} Splitting the
-sample by the truth label shows that golden pions are not well reconstructed either, and that
-their advantage disappears at high momentum, where it would be needed:
-
-\begin{center}\small
-\begin{tabular}{lccc}
-\toprule
-true $p_\pi$ [GeV/$c$] & golden fraction & golden $\langle$range/true$\rangle$ & non-golden \\\midrule
-$0.175$--$0.250$ & $77.8\%$ & $0.873$ & $0.699$ \\
-$0.320$--$0.420$ & $44.1\%$ & $0.705$ & $0.570$ \\
-$0.550$--$0.800$ & $21.4\%$ & $0.507$ & $0.429$ \\
-$0.800$--$1.500$ & $17.2\%$ & $\mathbf{0.327}$ & $\mathbf{0.317}$ \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\noindent Above $0.8$~GeV/$c$ the golden and non-golden values are identical to within one
-per cent. The reason is physical: a $1$~GeV/$c$ pion has a CSDA range of several metres in
-argon and cannot stop inside a $2.5$~m TPC unless it has already lost most of its energy
-through processes that truncate or break the track. ``Golden'' at high momentum therefore
-selects a pathological subsample rather than a clean one. This is why the classifier of
-\S\ref{sec:golden_bdt} reaches a ceiling: above $\sim\!0.5$~GeV/$c$ there is no clean
-subsample to find.
-
-\paragraph{Multivariate regression.} A
-BDTG regression on $p_\pi^{\rm true}$, using range, MCS, calorimetry, length, the three
-deflection variables, the four Bragg likelihoods, track score and daughter count, was trained
-on Runs 1 and 4 and evaluated on the held-out Run 2. It largely removes the saturation in the
-mean, $\langle$pred/true$\rangle$ running $1.196$ to $0.722$ against $0.835$ to $0.319$ for
-range, at comparable RMS. Rebuilding $W_{\pi p}$ with it:
-
-\begin{center}\small
-\begin{tabular}{lcc}
-\toprule
-pion estimator & $W$ bias & $W$ RMS \\\midrule
-range (analysis)   & $-0.127$ & $0.144$ \\
-BDTG regression    & $\mathbf{-0.005}$ & $0.119$ \\
-true $p_\pi$ (ceiling) & $+0.003$ & $\mathbf{0.046}$ \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\noindent The bias falls by a factor of $25$, which is relevant independently of binning:
-a $-127$~MeV/$c^2$ shift distorts the whole $W$ distribution. The resolution improves only from
-$0.144$ to $0.119$ against a ceiling of $0.046$, so the regression recovers about a quarter of
-what is available.
-
-Its effect on the binning is a redistribution of the migration rather than an overall
-improvement. The six-bin diagonals move
-from $98/30/19/19/13/6\%$ to $63/38/33/43/52/56\%$: the top bin improves nearly tenfold, but
-the first bin degrades from $98\%$ to $63\%$, and in the two-bin scheme the worst bin falls
-from $73\%$ to $58\%$. That degradation is regression to the mean, the estimator being pulled
-toward the sample centre, and it damages the low-$W$ region where the resonance physics sits.
-The same pattern appears in $p_\pi$ itself, where the first bin falls from $99.2\%$ to
-$60.6\%$ while the top bin rises from $0.5\%$ to $33.2\%$.
-
-Two considerations argue against adopting it. The estimator would be MC-trained and would
-sit upstream of every observable, so its model dependence would become a systematic on every
-result rather than on one cut. And the trade it offers moves measurability out of the region
-of interest. It is not adopted.
-
-\paragraph{Remaining handles.} The ceiling measurements above bound what is available:
-a perfect pion momentum would give $W_{\pi p}$ a resolution of $0.046$, a factor of three
-better than the regression achieves and enough to support several bins. The information is
-carried away by the interaction products, so the approach that addresses the cause is to
-recover their energy: the pion and its daughters treated as a mini-calorimeter, using the
-per-PFP calorimetric energies and daughter links already present in the input files. For the
-proton-tagged sample there is a second, independent handle in transverse kinematic imbalance,
-where the muon and proton constrain the pion transverse momentum without using the pion's own
-reconstruction at all, at the cost of Fermi-motion smearing of order $250$~MeV/$c$. The
-transverse-imbalance route has not been tried; the daughter-recovery route was tested next.
-
-
-
-\paragraph{Recovery of the interaction products.} The ceiling
-measurements above locate the missing information in the secondaries produced when the pion
-interacts, so the natural remedy is to treat the pion and its products as a single
-calorimeter, and this was tested. PeLEE carries no parent index, so association is geometric,
-by PFP start point relative to the pion track end, optionally restricted to the generation
-immediately below the pion in the Pandora hierarchy. The hierarchy restriction is needed: at a
-$40$~cm radius the unrestricted sum collects $0.371$~GeV in the lowest momentum bin, where
-only $0.034$~GeV is missing, so it is dominated by unrelated activity.
-
-With the hierarchy cut applied, on Run 1:
-
-\begin{center}\small
-\begin{tabular}{lccccc}
-\toprule
-true $p_\pi$ [GeV/$c$] & $\langle$KE missing$\rangle$ & \multicolumn{4}{c}{$\langle\sum E$ of daughters within $R\rangle$ [GeV]} \\
- & & $5$~cm & $10$~cm & $20$~cm & $40$~cm \\\midrule
-$0.175$--$0.420$ & $0.034$ & $0.023$ & $0.026$ & $0.029$ & $0.037$ \\
-$0.420$--$0.800$ & $0.246$ & $0.040$ & $0.048$ & $0.055$ & $0.062$ \\
-$0.800$--$1.500$ & $\mathbf{0.659}$ & $0.056$ & $0.074$ & $0.091$ & $\mathbf{0.104}$ \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\noindent ``KE missing'' is the pion's true kinetic energy less the calorimetric energy of its
-own track. In the top momentum bin $659$~MeV is unaccounted for and the visible daughters
-supply $104$~MeV, of which about $37$~MeV is the baseline seen even in the lowest bin where
-almost nothing is missing. Genuine recovery is therefore of order $10\%$ at high momentum and
-$25\%$ in the middle bin.
-
-The effect on the binning was tested directly rather than inferred from the bias, and the
-daughter sum does not change the binning assessment. Adding the daughter energy improves $\langle$reco/true$\rangle$
-everywhere, the top bin moving from $0.373$ to $0.470$ and the first bin becoming nearly
-unbiased at $0.953$, and it roughly triples the upper migration diagonals. Neither is
-sufficient: the best upper diagonal rises from $5.5\%$ to $15.7\%$, against the $68\%$ of
-the BNB criterion. In the two-bin scheme there is no net gain and arguably a loss, the worst
-bin improving from
-$61.4\%$ to $71.0\%$ while the first degrades from $97.7\%$ to $82.4\%$, the same
-regression-to-the-mean behaviour seen with the multivariate estimator. Since both bins already
-clear the criterion with plain range, the daughter association would add a new systematic
-without improving the response. The coarse $p_\pi$ binning is therefore robust against every
-estimator tested, which the binning study alone could not establish.
-
-The recovered energy is far too small to change the measurement, and the reason is physical
-rather than algorithmic. Pion absorption on argon, $\pi A\to NN\ldots$, deposits much of the energy in
-nucleons, roughly half of which are neutrons and therefore invisible in liquid argon; the
-charged products are frequently short and fall below the threshold to be reconstructed as
-separate particles. The energy is therefore not only unassociated but largely undetected. Applying
-the daughter sum would move $\langle$reco/true$\rangle$ in the top bin from $0.32$ to about
-$0.42$, still less than half of truth.
-
-\paragraph{Summary of the estimator survey.} Five approaches were measured:
+\paragraph{Summary of the estimator survey.} Five approaches were measured
+(\S\S\ref{sec:golden_details} and~\ref{sec:estimator_details}):
 range, calorimetry, MCS, golden-pion tagging and a multivariate regression, together with
 recovery of the interaction products. Each is limited by the same fact, that a charged pion
 which interacts before stopping destroys the information a non-magnetised detector uses to
@@ -823,255 +750,23 @@ proton-tagged sample, transverse kinematic imbalance constrains the pion transve
 from the muon and proton alone. It is limited by Fermi motion, of order $250$~MeV/$c$, which
 is comparable to the present uncertainties rather than smaller, so it would help
 but would not change the character of the measurement. Without it,
-$p_\pi$ is a coarse measurement in a few wide regions and $W_{\pi p}$ an integrated one at
-this exposure, and both are limited by physics rather than by analysis choices.
+$p_\pi$ is a coarse measurement in a few wide regions at this exposure and no differential
+$W_{\pi p}$ result is reported, both because of physics rather than of analysis choices.
 
-
-\subsection{The rejected five-bin $p_\pi$ response}
-\label{sec:supp_resp5}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.6\textwidth]{fw_resp_ppi}
-  \caption{Smearceptance matrix of the rejected five-bin $p_\pi$ scheme (FHC): reconstructed
-    events pile into the lowest bin from every true bin, the diagnostic that motivated the
-    merged regions of \S\ref{sec:ppi2bin_adopted}; the released three-region response is in the
-    analysis note.}
-  \label{fig:resp_ppi5}
-\end{figure}
-
-\section[Extending the pion threshold below 0.175\,GeV/\textit{c} (not adopted)]{Extending the pion threshold below 0.175\,GeV/\textit{c} (not adopted)\scopetag{inclusive}}
-\label{sec:supp_lowppi}
-
-The extension described here was tested and not adopted; the measurement threshold is
-$p_\pi>0.175$~GeV/$c$.
-
-\paragraph{Test with a low-momentum bin.} For the test, a $[0.113,0.175]\GeVc$ bin is
-prepended to the pion-momentum binning, lowering the measured phase space to the $\nu_e$
-threshold. The truth-level signal
-below $0.175\GeVc$ is recovered from the stored signal-component branches (the
-reconstruction reproduces \texttt{MC\_Signal} above $0.175\GeVc$ to $0.4\%$, the
-residual being the unstored kaon veto); $3323$ true signal events populate the new
-bin. Its selection efficiency is $2.2\%$, an order of magnitude below the
-$15$--$17\%$ of the standard bins (Table~\ref{tab:pithresh_eff}), as expected
-from the reconstruction turn-on. The Wiener--SVD extraction nevertheless remains
-well behaved with the bin included: the $M_A^\mathrm{RES}$ fake-data closure gives
-$\chi^2/\mathrm{ndf}=1.41/6$ ($p=0.97$) and the flux term is unchanged
-($17\%$ reco, $18.4\%$ unfolded, amplification $1.08\times$). In this test the bin
-therefore adds information, at the price of a large per-bin uncertainty driven by the
-low efficiency.
-
-For the test the generator predictions were regenerated on the six-bin scheme (the ppi
-histogram uses $p_\pi>0.113$ while the other observables retain $p_\pi>0.175$,
-mirroring the analysis). GENIE, NuWro and NEUT all provide the low bin; GiBUU could
-not be re-binned as its generator-level event record was not retained, so it is
-omitted from the extended $p_\pi$ comparison. Against the (fake) data the
-generators give $\chi^2/\mathrm{ndf} = 11.1/6$ (GENIE, $p=0.09$), $7.0/6$ (NuWro,
-$p=0.33$) and $6.3/6$ (NEUT, $p=0.39$): NEUT and NuWro describe the extended
-spectrum well, while GENIE is mildly disfavoured, consistent with the known GENIE
-over-prediction of low-momentum CC$\pi^{\pm}$ production.
-
-\begin{center}\small
-\captionof{table}{Selection efficiency per true $p_\pi$ bin with the low-momentum
-  bin added. The new $[0.113,0.175]\GeVc$ bin sits at $2.2\%$, an order of
-  magnitude below the standard bins.}
-\label{tab:pithresh_eff}
-\begin{tabular}{lccc}
-\toprule
-True $p_\pi$ [\GeVc] & $N_\mathrm{true}$ & $N_\mathrm{reco}$ & Efficiency \\
-\midrule
-$\mathbf{0.113}$--$\mathbf{0.175}$ (new) & 3323 & 74 & $\mathbf{2.2\%}$ \\
-$0.175$--$0.250$ & 3368 & 526 & $15.6\%$ \\
-$0.250$--$0.320$ & 2190 & 367 & $16.8\%$ \\
-$0.320$--$0.420$ & 2831 & 479 & $16.9\%$ \\
-$0.420$--$0.550$ & 2499 & 410 & $16.4\%$ \\
-$0.550$--$1.000$ & 2933 & 429 & $14.6\%$ \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-% =============================================================================
-
-\section[Momentum thresholds and the first binning optimisation]{Momentum thresholds and the first binning optimisation\scopetag{inclusive}}
-\label{sec:binopt}
-% =============================================================================
-
-The first binning optimisation gave $p_\pi$ five bins, $\theta_{\mu\pi}$ seven and
-$\cos\theta_\pi$ five. The response and $A_C$ tests of \S\ref{sec:ppi_bias} and
-\S\ref{sec:binning_recheck} coarsened or re-binned these, and the binning review of
-\S\ref{sec:binreview} replaced them; the reported binnings are those of the analysis note's
-appendix.
-
-\subsection{Momentum-threshold validation}
-The two signal-definition momentum thresholds sit at the selection efficiency
-turn-on, measured against a threshold-free true signal (the CC $\nu_\mu$
-$1\mu1\pi^\pm$ topology with the momentum/angle cuts removed):
-
-\begin{center}\small
-\begin{tabular}{lccc}
-\toprule
-Threshold & below & above & turn-on \\
-\midrule
-$p_\mu > 0.15$~GeV/c  & $\sim$0--1.5\% & $\sim$9--12\%  & 0.145$\to$0.155 \\
-$p_\pi > 0.175$~GeV/c & $\sim$0--3\%   & $\sim$12--16\% & 0.165$\to$0.185 \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\noindent Both are correctly placed: lowering them would add near-zero-efficiency
-phase space, raising them would discard measurable signal. The reconstructed pion
-momentum (muon-hypothesis range) is biased low and increasingly so with momentum
-(mean reco$-$true $\approx0$ at threshold, $-0.15$~GeV/c at 0.40) from the
-$\mu$-vs-$\pi$ mass hypothesis plus pion re-interaction; a pion-hypothesis mass
-correction is applied to the $p_\pi$ reco bins.
-
-\subsection{Binning optimisation}
-Bins were designed to be at least the local RMS detector resolution wide (so the
-response stays well conditioned and the Wiener-SVD does not amplify the correlated
-flux/cross-section uncertainty) and to hold $\geq45$ selected-signal events
-(statistical floor). This lowers the total fractional uncertainty in every
-observable, chiefly through the statistical and unfolding-amplified terms; the
-flux/beamline term is correlated across bins and sets a floor:
-
-\begin{center}\small
-\begin{tabular}{lccc}
-\toprule
-Observable & bins & Total before & Total after \\
-\midrule
-$p_\mu$          & 22$\to$7 & 33.2\% & \textbf{25.0\%} \\
-$p_\pi$          & 5$\to$5  & 27.7\% & 27.0\% \\
-$\cos\theta_\mu$ & 12$\to$5 & 31.3\% & \textbf{26.7\%} \\
-$\cos\theta_\pi$ & 12$\to$5 & 48.5\% & \textbf{33.9\%} \\
-$\theta_{\mu\pi}$& 9$\to$7  & 28.4\% & \textbf{23.5\%} \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-
-\subsection{Re-check of the optimised binnings}
-\label{sec:binning_recheck}
-The binnings of the optimisation stage were coarsened where $A_C$ smearing left no
-resolved information ($\cos\theta_\pi$ $5\to4$, $\theta_{\mu\pi}$ $7\to5$). The resulting
-binnings, called released below, were then re-tested with the final normalisation, weights,
-beam-off treatment, fake-data throw and detector variations, all of which condition the
-response, to find whether finer binnings are admissible. The test had two stages. The first
-is a pre-screen on the processed files
-(\texttt{macros/binning\_screen.C}): for the released binning and finer candidates of each
-observable, the column-normalised migration diagonal per true bin, the efficiency per
-bin and the selected events per reconstructed bin, with the per-run scales and the
-central-value weight, and the $0.68$ diagonal criterion applied to every bin. In the second,
-the candidates that passed were built and unfolded in full (universes, covariance, closure) and compared with the released extraction on the $A_C$ row
-sums, the $A_C$ conditioning ($s_{\min}/s_1$), the data-statistical term, the per-bin
-total uncertainties and the closure ratios.
-
-\begin{center}\small
-\captionof{table}{Binning re-check; ``released'' denotes the binning under test, and the forward-split five-bin $\cos\theta_\pi$ row is the reported binning. Pre-screen: smallest column-normalised migration diagonal over the true
-  bins of the released binning and of each finer candidate, FHC / RHC. The two-bin $p_\pi$
-  row is evaluated here with a lower edge on the first reconstructed bin, which the
-  released configuration does not have (the framework's own diagonals are $0.91$ and
-  $0.76$); the finer $p_\pi$ candidates fail in their upper bins regardless.}
-\label{tab:binning_screen}
-\begin{tabular}{llcc}
-\toprule
-Observable & Binning & min.\ diagonal FHC / RHC & criterion \\
-\midrule
-$p_\mu$ & released 7 & $0.33$ / $0.31$ & fails already (MCS resolution; \S\ref{sec:binopt}) \\
-        & 8, 9 bins & $0.17$ / $0.18$, $0.22$ / $0.22$ & fail \\
-$\cos\theta_\mu$ & released 5 & $0.68$ / $0.68$ & at the limit \\
-        & 6, 7 bins & $0.64$ / $0.63$, $0.61$ / $0.61$ & fail \\
-$\theta_\mu$ & released 5 & $0.67$ / $0.65$ & at the limit \\
-        & 7 bins & $0.63$ / $0.62$ & fail \\
-$\cos\theta_\pi$ & released 4 & $0.81$ / $0.83$ & pass \\
-        & 5 (backward split) & $0.77$ / $0.77$ & pass \\
-        & 5 (forward split) & $0.74$ / $0.76$ & pass \\
-        & 6 bins & $0.73$ / $0.75$ & pass \\
-$\theta_{\mu\pi}$ & released 5 & $0.79$ / $0.79$ & pass \\
-        & 6, 7 bins & $0.74$ / $0.73$, $0.75$ / $0.73$ & pass \\
-$p_\pi$ & released 2 & $0.58$ / $0.56$ (see caption) & --- \\
-        & 3, 4 bins & $0.39$ / $0.40$, $0.29$ / $0.29$ & fail \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\begin{center}\small
-\captionof{table}{Binning re-check; ``released'' denotes the binning under test, and the forward-split five-bin $\cos\theta_\pi$ row is the reported binning. Full extraction of the candidates that passed the pre-screen, FHC / RHC:
-  range of the $A_C$ row sums, $A_C$ conditioning $s_{\min}/s_1$, bin-averaged
-  data-statistical term, range of the per-bin total uncertainty, and range of the per-bin
-  closure ratio to the $A_C$-smeared truth. Backward split: edges $-1,-0.3,0.2,0.5,0.75,1$;
-  forward split: $-1,-0.1,0.35,0.6,0.8,1$; six bins: $-1,-0.4,0,0.3,0.55,0.75,1$;
-  $\theta_{\mu\pi}$ six bins: $0,0.55,0.75,0.95,1.3,1.85,2.6$~rad; seven bins:
-  $0,0.5,0.7,0.9,1.15,1.45,1.9,2.6$~rad.}
-\label{tab:binning_cands}
-\scriptsize\setlength{\tabcolsep}{3pt}
-\begin{tabular}{lccccc}
-\toprule
-Binning & $A_C$ row sums & $s_{\min}/s_1$ & data stat & per-bin unc. & closure \\
-\midrule
-$\cos\theta_\pi$ rel.\ 4 & $0.71$--$0.82$ / $0.79$--$0.86$ & $0.27$ / $0.24$ & $12.0$ / $11.5\%$ & $30$--$49$ / $32$--$55\%$ & $0.95$--$1.09$ / $0.94$--$1.07$ \\
-backward split 5 & $0.65$--$0.76$ / $0.63$--$0.80$ & $0.20$ / $0.27$ & $16.0$ / $15.2\%$ & $29$--$73$ / $34$--$91\%$ & $0.83$--$1.08$ / $0.87$--$1.03$ \\
-forward split 5 & $0.68$--$0.77$ / $0.70$--$0.84$ & $0.46$ / $0.38$ & $12.7$ / $12.3\%$ & $30$--$53$ / $33$--$48\%$ & $0.89$--$1.07$ / $0.90$--$1.05$ \\
-6 bins & $0.73$--$0.84$ / $0.77$--$0.89$ & $0.18$ / $0.15$ & $19.0$ / $16.3\%$ & $32$--$91$ / $32$--$54\%$ & $0.66$--$1.13$ / $0.81$--$1.23$ \\
-\midrule
-$\theta_{\mu\pi}$ rel.\ 5 & $0.52$--$1.03$ / $0.58$--$1.15$ & $0.008$ / $0.002$ & $8.2$ / $8.4\%$ & $35$--$40$ / $30$--$39\%$ & $0.95$--$1.06$ / $1.03$--$1.08$ \\
-6 bins & $0.56$--$1.29$ / $0.58$--$1.36$ & $0.002$ / $0.000$ & $8.4$ / $10.2\%$ & $34$--$40$ / $30$--$41\%$ & $0.95$--$1.06$ / $1.03$--$1.11$ \\
-7 bins & $0.63$--$1.41$ / $0.65$--$1.06$ & $0.000$ / $0.000$ & $11.5$ / $11.2\%$ & $37$--$40$ / $32$--$46\%$ & $0.85$--$1.04$ / $0.87$--$1.14$ \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\noindent $p_\mu$, $\cos\theta_\mu$, $\theta_\mu$ and $p_\pi$ cannot go finer:
-their released binnings already sit at or below the diagonal criterion, set by the MCS
-momentum resolution and the angular resolution against the neutrino direction, and every
-finer candidate fails it. $\theta_{\mu\pi}$ admits six or seven bins by the diagonal and
-closes acceptably, but the additional bins carry no resolved information: the smallest
-singular value of $A_C$, already $0.008$ of the largest at five bins, goes to zero, and
-the row sums overshoot to $1.3$--$1.4$ in the bins the regularisation has to fill in, so
-the released five bins stand. $\cos\theta_\pi$ is the one observable with room, and only
-in the forward hemisphere where the events are: splitting the backward region produces a
-bin of $73$--$91\%$ uncertainty that closes at $0.83$--$0.87$, and six bins do the same,
-whereas the forward split (edges $-1,-0.1,0.35,0.6,0.8,1$) keeps every diagonal above
-$0.74$, keeps the per-bin uncertainties in the released range, raises the data-statistical
-term by only $0.7\%$ and improves the conditioning of $A_C$ ($s_{\min}/s_1$ from
-$0.27$ to $0.46$ in FHC, $0.24$ to $0.38$ in RHC) while closing to $0.89$--$1.07$. This is
-the only change the re-check supports, and it is the reported binning. The generator
-predictions are computed at these edges from the event-level files (the unchanged
-observables reproduce the prediction files of the four-bin scheme to machine precision,
-which also verifies the generator chain end to end), and the D'Agostini cross-check is run
-on it. No control-region distribution uses $\cos\theta_\pi$, so the frozen sideband binning
-is unaffected. The proton-tagged $\cos\theta_\pi$ keeps its four bins.
-
-The released binnings of the proton-tagged observables were re-tested on the maximin scan
-against a relaxed $0.50$ diagonal criterion as well as the nominal $0.68$. Twenty-six
-candidate binnings pass the relaxed diagonal, and every one of them fails on the
-conditioning of $A_C$. The single exception is a two-bin $W_\mathrm{had}$ ($0.58/0.54$),
-which is better conditioned than the released six-bin scheme but was not adopted at this
-stage, since two bins buy that conditioning by discarding the shape $W_\mathrm{had}$ is
-measured for. The re-check therefore changes no released proton-tagged binning. The one
-proton-tagged binning set at this stage is that of $\theta_p$, whose edges were taken from
-the RHC chain rather than the FHC one after the scan was run on both: at the same four bins
-they condition three to four times better in both usable configurations.
-
-\paragraph{Revisions from the binning review.}
-The review of \S\ref{sec:binreview}, on the corrected exposure and with the edges optimised at every
-bin count rather than chosen by hand, revises three of the conclusions above. First, the released
-five-bin $\cos\theta_\mu$ and $\theta_\mu$ fail the $0.68$ criterion (worst diagonals $0.67$ and
-$0.65$), optimised edges at the same five bins pass it, and both variables admit finer binnings that
-retain more shape. Second, the proton-tagged candidates were rejected on a conditioning threshold that
-the released binnings themselves do not meet; the review measures the retained shape by the Wiener
-filter factors of $A_C$ instead. Third, the six-bin $W_\mathrm{had}$ fails $0.68$ in all six bins and
-$0.50$ in five, and the RHC-derived $\theta_p$ edges leave $21$ selected events in the last bin. The
-binnings adopted from the review replace those of this section.
 
 \section[Binning review against the 0.68 and 0.50 migration criteria]{Binning review against the 0.68 and 0.50 migration criteria\scopetag{shared}}
 \label{sec:binreview}
 
-The review starts from the binnings produced by the first optimisation and its re-check
-(\S\ref{sec:binopt}), referred to below as the released binnings; the binnings adopted from it
-are listed in the last paragraph.
+The review established the rule and the binnings of \S\ref{sec:final_binning}. It starts from the
+binnings produced by the first optimisation and its re-check (\S\ref{sec:binopt}), which are called
+the released binnings below and in the tables.
+
+\subsection{Criteria and selection rule}
 
 \paragraph{Admissibility criteria.}
 A true bin is admissible when most of its selected signal is reconstructed in the same bin: the
-diagonal of the column-normalised migration matrix must reach $0.68$, the value used in the BNB
+diagonal of the column-normalised migration matrix, measured on the analysis sample
+(\S\ref{sec:ppi_samples}), must reach $0.68$, the value used in the BNB
 CC$1\pi$ measurements, or $0.50$, the relaxed criterion adopted for this analysis. The criterion bounds how much
 of a bin's content the unfolding moves between bins, and therefore how strongly the result leans on
 the modelled migrations. It is applied in FHC and in RHC; the combined configuration inherits the
@@ -1109,7 +804,7 @@ count, were extracted in full in FHC, RHC and combined: $141$ extractions with u
 unfolding and closure (SLURM 3428213, 3428222, 3428223, 3433027 and 3433033), and the proton
 momentum $p_p$ added to the proton-tagged family in two to five bins (SLURM 3433088): $153$
 extractions in all (\texttt{data\_release/binreview\_eval\_2026-09-26.tsv}). They carry the tune and
-fake-data predictions only. A partition
+pseudo-data predictions only. A partition
 has the same diagonals in $\cos\theta_\mu$ and in $\theta_\mu$, and the $\theta_\mu$ grid is finer
 at forward angles, so the eight- and ten-bin $\theta_\mu$ partitions, written in $\cos\theta_\mu$,
 are $\cos\theta_\mu$ candidates as well.
@@ -1125,16 +820,82 @@ and~\ref{tab:binreview_1p} the selected binnings, and Table~\ref{tab:binreview_e
 (\texttt{report/tools/binreview\_tables.py},
 \texttt{data\_release/binreview\_choices\_2026-09-26.tsv}).
 
+\subsection{Consequences and adopted binnings}
+
+\paragraph{Consequences of the two criteria.}
+The released binnings fall into three groups. The seven-bin $p_\mu$ and the six-bin $W_{\rm had}$
+fail both criteria, and the $\theta_p$ and $\theta_{\pi p}$ study binnings fall below the event floor:
+these change whichever criterion is adopted. The five-bin $\cos\theta_\mu$ and $\theta_\mu$ and the
+two-bin $\delta\alpha_T$ fail $0.68$ only; rebinning the muon angles to meet it gains information,
+while $\delta\alpha_T$ loses a second component whose filter factor is only $0.2$. The remaining
+binnings, $p_\pi$, $\cos\theta_\pi$, $\theta_{\mu\pi}$, $\delta p_T$, $\delta\phi_T$ and $p_n$, pass
+both; of these $\cos\theta_\pi$ gains $0.45$ degrees of freedom at seven bins under either criterion,
+and the others are at or near their information limit.
+
+Where the two criteria select different binnings, the relaxed one adds $0.2$ to $0.6$ degrees of
+freedom per beam: $p_\mu$ (six bins against four), $p_\pi$ (three against two), $\cos\theta_\mu$
+(eight against seven), $\theta_\mu$ (ten against eight), $\delta\phi_T$ (three against two) and
+$\theta_{\pi p}$ (four against three); for $p_p$ (three against two) the gain is $0.15/0.12$.
+$\delta\alpha_T$ and $W_{\pi p}$ gain a second bin whose component the data do not determine. A new component measured at signal-to-noise above one appears
+only for $p_\pi$ in RHC, $\theta_\mu$ and $\delta\phi_T$ in the combined configuration (where
+$\theta_\mu$ loses one in RHC) and $\theta_{\pi p}$ in FHC and RHC. The price is diagonals down to
+$0.50$: bins in which up to half of the selected events come
+from neighbouring true bins, with a correspondingly stronger dependence of the result on the
+modelled migrations.
+
+\paragraph{Choice of criterion.}
+The $0.68$ criterion is that of the BNB measurements. Applied to every observable, it would end the
+exemption of $p_\mu$, which rests on the regularisation absorbing migrations that the criterion
+exists to limit. Where it differs from $0.50$ it forgoes at most $0.64$ degrees of freedom per beam,
+and in all but five observable and beam combinations no component that the data determine at
+signal-to-noise above one; its cost falls on $p_\mu$, which would drop from seven bins to four and
+from three well-measured components to two. The $0.50$ criterion also ends the exemption. It keeps
+six $p_\mu$ bins, with two well-measured components as well, three $p_\pi$ regions and eight
+$\cos\theta_\mu$ bins, and it accepts bins in which up to half of the selected events come from
+neighbouring true bins. The analysis uses the $0.50$ criterion for both families. The
+stronger dependence on the modelled migrations that it admits is tested by the alternative-model
+closure and the ensembles, both repeated on the adopted binnings
+(\noteref{Sec.}{par:ensemble}; \noteref{Sec.}{sec:altmodel}).
+
+\paragraph{Adopted binnings.}
+The adopted binnings are those the rule selects under $0.50$ (Table~\ref{tab:binreview_edges}), with
+four exceptions. $\cos\theta_\pi$ keeps its five bins, which pass both criteria ($0.74/0.76$); the
+seven bins the rule selects would add $0.44/0.46$ degrees of freedom. $\theta_{\mu\pi}$ keeps its
+five bins ($0.79/0.79$), which retain as much as the six selected in FHC and $0.2$ less in RHC.
+$\delta\alpha_T$ keeps its split at $120^\circ$: the rule's $122.5^\circ$ raises the worst diagonal
+from $0.66$ to $0.67$ and changes the trace by less than $0.02$. The proton-tagged $p_\pi$ keeps two
+regions, because the three-region binning fails $0.50$ in the proton-tagged sample. $\theta_\mu$ is
+not reported: a partition has the same diagonals in $\theta_\mu$ as in $\cos\theta_\mu$, and the
+cosine retains up to one degree of freedom more, because the regularisation acts on the density per
+unit of the variable (\S\ref{sec:thetavar}). The binnings are therefore: $p_\mu$ six bins and
+$\cos\theta_\mu$ eight in both families; $p_\pi$ three regions in the inclusive family and two in the
+proton-tagged one; $\cos\theta_\pi$ five and four; $\theta_{\mu\pi}$ five; $W_{\rm had}$ two regions
+split at $1.18$~GeV/$c^2$; $\delta\phi_T$ three bins; $\delta p_T$, $\delta\alpha_T$ and $p_n$ two;
+$\theta_p$ and $\theta_{\pi p}$ four at their maximin edges; and $p_p$ three. No differential
+$W_{\pi p}$ result is reported. Table~\ref{tab:binning} and \ptref{Table}{tab:pt_binning} list the
+edges.
+
+For every replaced binning the generator predictions were computed at the new edges from the
+event-level generator files, and the universes, covariances and result files were rebuilt
+(\S\ref{sec:pipeline}); the ensembles, the alternative-model closure and the D'Agostini cross-check
+were repeated on the adopted binnings. The control-region binnings are frozen separately
+(\S\ref{sec:cr_protocol}) and do not change.
+
+\subsection{Evidence for each observable}
+
+The worst diagonals of Tables~\ref{tab:binreview_incl} and~\ref{tab:binreview_1p} are measured on the
+analysis sample (\S\ref{sec:ppi_samples}).
+
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.92\textwidth]{binreview_dfs_incl}\\[4pt]
   \includegraphics[width=\textwidth]{binreview_dfs_1p}
   \caption{Degrees of freedom for signal (trace of $A_C$) against the number of bins, inclusive (top)
     and proton-tagged (bottom), FHC, RHC and combined. Lines join the maximin binnings; the star is
-    the released binning (for $\theta_p$ and $\theta_{\pi p}$ the proposed study binning), drawn just
+    the released binning (for $\theta_p$ and $\theta_{\pi p}$ the study binning), drawn just
     left of its bin count; squares are the $\theta_\mu$ partitions written in $\cos\theta_\mu$. A
     filled marker passes $0.68$ in FHC and RHC, an open one $0.50$ only, a cross neither. The
-    three-bin $W_{\rm had}$ is built at an event floor of $30$, below that of the family. Fake data.}
+    three-bin $W_{\rm had}$ is built at an event floor of $30$, below that of the family. Pseudo-data; analysis sample.}
   \label{fig:binreview_dfs}
 \end{figure}
 
@@ -1211,8 +972,8 @@ $0.531/0.535$,
 per-bin uncertainty up to $325\%$).
 
 \emph{$W_{\pi p}$.} No two-bin partition passes $0.68$. Under $0.50$ a split at $1.20$~GeV/$c^2$
-passes by $0.003$, with a second filter factor of $0.29/0.27$: a normalisation, not a shape. The
-differential $W_{\pi p}$ shape is not reported under either criterion.
+passes by $0.003$, with a second filter factor of $0.29/0.27$: a normalisation, not a shape. Under
+either criterion no differential $W_{\pi p}$ result is reported.
 
 \emph{$\delta p_T$ and $p_n$.} The released two bins pass both criteria ($0.74/0.72$ and
 $0.77/0.75$). The three-bin maximin partitions pass $0.50$ but lower the trace in FHC and RHC
@@ -1262,199 +1023,6 @@ the three-bin $p_\pi$ fails $0.50$ ($0.48/0.51$) and the five-bin maximin $\thet
 at $0.84/0.86$. The seven- and eight-bin $\cos\theta_\mu$ pass $0.68$ ($0.70/0.71$) and $0.50$
 ($0.65/0.68$) there as well.
 
-\paragraph{Consequences of the two criteria.}
-The released binnings fall into three groups. The seven-bin $p_\mu$ and the six-bin $W_{\rm had}$
-fail both criteria, and the $\theta_p$ and $\theta_{\pi p}$ study binnings fall below the event floor:
-these change whichever criterion is adopted. The five-bin $\cos\theta_\mu$ and $\theta_\mu$ and the
-two-bin $\delta\alpha_T$ fail $0.68$ only; rebinning the muon angles to meet it gains information,
-while $\delta\alpha_T$ loses a second component whose filter factor is only $0.2$. The remaining
-binnings, $p_\pi$, $\cos\theta_\pi$, $\theta_{\mu\pi}$, $\delta p_T$, $\delta\phi_T$ and $p_n$, pass
-both; of these $\cos\theta_\pi$ gains $0.45$ degrees of freedom at seven bins under either criterion,
-and the others are at or near their information limit.
-
-Where the two criteria select different binnings, the relaxed one adds $0.2$ to $0.6$ degrees of
-freedom per beam: $p_\mu$ (six bins against four), $p_\pi$ (three against two), $\cos\theta_\mu$
-(eight against seven), $\theta_\mu$ (ten against eight), $\delta\phi_T$ (three against two) and
-$\theta_{\pi p}$ (four against three); for $p_p$ (three against two) the gain is $0.15/0.12$.
-$\delta\alpha_T$ and $W_{\pi p}$ gain a second bin whose component the data do not determine. A new component measured at signal-to-noise above one appears
-only for $p_\pi$ in RHC, $\theta_\mu$ and $\delta\phi_T$ in the combined configuration (where
-$\theta_\mu$ loses one in RHC) and $\theta_{\pi p}$ in FHC and RHC. The price is diagonals down to
-$0.50$: bins in which up to half of the selected events come
-from neighbouring true bins, with a correspondingly stronger dependence of the result on the
-modelled migrations.
-
-\paragraph{Choice of criterion.}
-The $0.68$ criterion is that of the BNB measurements. Applied to every observable, it would end the
-exemption of $p_\mu$, which rests on the regularisation absorbing migrations that the criterion
-exists to limit. Where it differs from $0.50$ it forgoes at most $0.64$ degrees of freedom per beam,
-and in all but five observable and beam combinations no component that the data determine at
-signal-to-noise above one; its cost falls on $p_\mu$, which would drop from seven bins to four and
-from three well-measured components to two. The $0.50$ criterion also ends the exemption. It keeps
-six $p_\mu$ bins, with two well-measured components as well, three $p_\pi$ regions and eight
-$\cos\theta_\mu$ bins, and it accepts bins in which up to half of the selected events come from
-neighbouring true bins. The analysis uses the $0.50$ criterion for both families. The
-stronger dependence on the modelled migrations that it admits is tested by the alternative-model
-closure and the ensembles, both repeated on the adopted binnings
-(\noteref{Sec.}{par:ensemble}; \noteref{Sec.}{sec:altmodel}).
-
-\paragraph{Adopted binnings.}
-The adopted binnings are those the rule selects under $0.50$ (Table~\ref{tab:binreview_edges}), with
-four exceptions. $\cos\theta_\pi$ keeps its five bins, which pass both criteria ($0.74/0.76$); the
-seven bins the rule selects would add $0.44/0.46$ degrees of freedom. $\theta_{\mu\pi}$ keeps its
-five bins ($0.79/0.79$), which retain as much as the six selected in FHC and $0.2$ less in RHC.
-$\delta\alpha_T$ keeps its split at $120^\circ$: the rule's $122.5^\circ$ raises the worst diagonal
-from $0.66$ to $0.67$ and changes the trace by less than $0.02$. The proton-tagged $p_\pi$ keeps two
-regions, because the three-region binning fails $0.50$ in the proton-tagged sample. $\theta_\mu$ is
-not reported: a partition has the same diagonals in $\theta_\mu$ as in $\cos\theta_\mu$, and the
-cosine retains up to one degree of freedom more, because the regularisation acts on the density per
-unit of the variable (\S\ref{sec:thetavar}). The binnings are therefore: $p_\mu$ six bins and
-$\cos\theta_\mu$ eight in both families; $p_\pi$ three regions in the inclusive family and two in the
-proton-tagged one; $\cos\theta_\pi$ five and four; $\theta_{\mu\pi}$ five; $W_{\rm had}$ two regions
-split at $1.18$~GeV/$c^2$; $\delta\phi_T$ three bins; $\delta p_T$, $\delta\alpha_T$ and $p_n$ two;
-$\theta_p$ and $\theta_{\pi p}$ four at their maximin edges; and $p_p$ three. The differential
-$W_{\pi p}$ shape is not reported. \noteref{Table}{tab:binning} lists the edges.
-
-For every replaced binning the generator predictions were computed at the new edges from the
-event-level generator files, and the universes, covariances and result files were rebuilt
-(\S\ref{sec:pipeline}); the ensembles, the alternative-model closure and the D'Agostini cross-check
-were repeated on the adopted binnings. The control-region binnings are frozen separately
-(\S\ref{sec:cr_protocol}) and do not change.
-
-\section[The muon angle: \texorpdfstring{$\cos\theta_\mu$}{cos(theta mu)} versus \texorpdfstring{$\theta_\mu$}{theta mu}]{The muon angle: \texorpdfstring{$\cos\theta_\mu$}{cos(theta mu)} versus \texorpdfstring{$\theta_\mu$}{theta mu}\scopetag{inclusive}}
-\label{sec:supp_ang}
-
-\subsection{Angular variable: $\cos\theta_\mu$ versus $\theta_\mu$}
-\label{sec:thetavar}
-
-The muon angle is reported only as $\cos\theta_\mu$. The binning review
-(\S\ref{sec:binreview}) shows that the same partition of the angle retains up to one degree of
-freedom more as $\cos\theta_\mu$ than as $\theta_\mu$, because the regulariser acts on the density,
-so a $\theta_\mu$ result adds no information to a $\cos\theta_\mu$ result with the same bins.
-The comparison below uses the five-bin $\cos\theta_\mu$ and $\theta_\mu$ binnings that
-preceded the review.
-
-In those binnings the two variables spanned the same full range but were different
-partitions of it: the $\theta_\mu$ edges ($0.43$, $0.62$, $0.84$, $1.17$~rad) are not the
-$\arccos$ images of the $\cos\theta_\mu$ edges ($0.45$, $0.64$, $0.86$, $1.10$~rad). The two
-behave very differently under the Wiener--SVD additional smearing $A_C$, which affects how
-the measurement compares to models.
-
-In $\cos\theta_\mu$ the signal is sharply forward-peaked: the last two bins
-($\cos\theta_\mu>0.8$) hold most of the rate, and $A_C$ suppresses the integral of any
-truth-level prediction strongly (row sums $0.17$--$0.39$ in FHC at that binning,
-against $0.66$--$0.91$ for $p_\mu$). Because the same $A_C$ is applied to the data, the tune
-and every generator, they are compared on equal footing.
-
-The suppression is not a property of the shape of the truth distribution. Across the
-observables the $A_C$ integral factor shows no correlation with peakedness: $W_{\pi p}$ is
-the sharpest distribution in the analysis (peak-to-minimum ratio $36$) yet its factor is
-$0.75$, $\delta p_T$ is comparatively flat (ratio $10$) at $0.70$, and the six-bin
-$W_\mathrm{had}$ then under study, neither sharp nor flat, was the most suppressed at $0.61$; the
-inclusive $\cos\theta_\mu$ factors sat far below all of
-these ($0.17$--$0.39$ against $0.66$--$0.91$ for $p_\mu$) because its response is the
-worst conditioned, not because its peak is the sharpest. Within $\cos\theta_\mu$ itself
-NEUT and NuWro are the flattest of the five truth-level curves (peak-to-minimum
-$3.8$ and $4.3$, against $16.3$ for the tune) and are smeared no differently from the
-others: no smeared generator bin is negative and both sit above the tune in
-every bin. $A_C$ is the Wiener
-filter acting on the SVD modes of the response: it removes whatever the data cannot
-statistically constrain, which is set by the conditioning of the response for that
-observable and binning, not by the shape of the truth distribution, and it is not
-norm-preserving, so it can suppress or enhance.
-
-\subsubsection*{Bin widths in the regularisation operator}
-\label{sec:reg_widths}
-
-Wiener--SVD regularises with a matrix $C$; this analysis uses the second-derivative form,
-built on the density with the actual bin widths, because of what the plain tridiagonal
-stencil $(1,-2,1)$ does on these binnings. That stencil is a second
-derivative only on a uniform grid; these binnings are strongly non-uniform, with
-width ratios up to $14{:}1$ (Table~\ref{tab:reg_widths}), so on them it is not a second
-derivative at all. It is near-singular, its row sums are the $10^{-6}$ regularisation
-floor, and its near-null direction is the constant vector rather than anything physical.
-The Wiener filter is then free to retain that direction alone, which is a rank-1 $A_C$
-that passes normalisation and discards shape.
-
-The FHC $\theta_\mu$ extraction is the clearest case, because its bin widths span a factor
-of $10.4$. Unfolded with the uniform stencil, the unfolded data, the $A_C$-smeared truth,
-the MicroBooNE tune and all four generators share the same normalised shape to four
-decimal places (Table~\ref{tab:thetamu_rank1}): writing the four generator predictions as
-the columns of an input matrix and their $A_C$-smeared counterparts as the columns of the
-output matrix, the inputs are full rank ($s_2/s_1=5.0\times10^{-2}$) while the outputs
-give $s_2/s_1=2.8\times10^{-6}$. Every shape degree of freedom is annihilated, each model
-is mapped onto one common curve and only its normalisation survives; any agreement with the
-data is then true by construction, and a model comparison made on such an extraction is
-meaningless. $\cos\theta_\mu$, the next most non-uniform binning at $14.5$, is the other
-observable strongly affected; the remaining observables sit at width ratios of $3$--$6$
-and are affected far less.
-
-\begin{table}[htbp]\centering
-\caption{FHC $\theta_\mu$ unfolded with a uniform-grid second-derivative stencil: normalised bin contents.
-Five independent inputs, the measurement and four generator predictions plus the tune,
-collapse onto one shape, the signature of a rank-1 $A_C$.}
-\label{tab:thetamu_rank1}
-\begin{tabular}{lcccccc}
-\toprule
- & bin 1 & bin 2 & bin 3 & bin 4 & bin 5\\\midrule
-Unfolded data          & 0.1485 & 0.3361 & 0.2899 & 0.1934 & 0.0321\\
-$A_C$-smeared truth    & 0.1484 & 0.3359 & 0.2901 & 0.1933 & 0.0323\\
-MicroBooNE tune        & 0.1484 & 0.3359 & 0.2901 & 0.1934 & 0.0322\\
-NEUT                   & 0.1484 & 0.3359 & 0.2901 & 0.1934 & 0.0322\\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\paragraph{The operator used.} Both derivative regularisation matrices difference the
-density on the actual grid: each column is divided by its bin width and the stencil uses
-the true spacings between bin centres, with a one-sided first-derivative stencil at the
-ends. (A Dirichlet closure was rejected: it asserts the distribution vanishes at the
-edges, which is false here, $\cos\theta_\mu$ peaks at its upper edge.) With no widths
-supplied the code reduces to the uniform stencil. The widths are passed in by the
-unfolding application, which holds the slice definitions that the cross-section extractor
-does not. The effect on the conditioning of $A_C$, measured as $s_2/s_1$ of the smearing
-matrix itself, is given in Table~\ref{tab:reg_widths}: every inclusive observable improves
-and none is degraded except combined $\cos\theta_\mu$, marginally; in the proton-tagged
-family combined $W_{\pi p}$ ($0.022$) and $\delta\phi_T$ ($0.083$) would be as
-compromised as FHC $\theta_\mu$ under the uniform stencil.
-
-\begin{table}[htbp]\centering
-\caption{$A_C$ conditioning $s_2/s_1$ with the uniform-grid stencil (``uniform'') and
-  with the width-aware operator (``width-aware''), measured on one fake-data pass at the binnings under test (the $\cos\theta_\pi$ row is a five-bin scheme other than the reported one);
-  the width-aware values of the reported binnings follow from the released matrices. With the
-  bin-width ratio of each observable. A value approaching zero means the smearing matrix
-  has collapsed onto a single mode and the extraction carries no shape information.}
-\label{tab:reg_widths}
-\small
-\begin{tabular}{lcccccc}
-\toprule
- & width & \multicolumn{2}{c}{FHC} & \multicolumn{2}{c}{RHC} & COMB \\
-observable & ratio & uniform & width-aware & uniform & width-aware & uniform $\to$ width-aware \\\midrule
-$p_\mu$              & $6.3$  & $0.34$ & $0.90$ & $0.31$ & $0.94$ & $0.19 \to 0.68$ \\
-$\cos\theta_\mu$     & $14.5$ & $0.46$ & $0.57$ & $0.45$ & $0.55$ & $0.42 \to 0.39$ \\
-$\cos\theta_\pi$     & $3.6$  & $0.67$ & $0.71$ & $0.55$ & $0.79$ & $0.55 \to 0.74$ \\
-$\theta_{\mu\pi}$    & $3.0$  & $0.42$ & $0.85$ & $0.47$ & $0.65$ & $0.42 \to 0.46$ \\
-$\theta_\mu$         & $10.4$ & $\mathbf{0.015}$ & $\mathbf{0.51}$ & $0.22$ & $0.62$ & $\mathbf{0.045 \to 0.38}$ \\
-$p_\pi$ (2 bins)     & ---    & $0.46$ & $0.53$ & $0.41$ & $0.44$ & $0.29 \to 0.40$ \\\midrule
-\multicolumn{7}{l}{\emph{proton-tagged, combined configuration}} \\
-$W_{\pi p}$          & --- & \multicolumn{4}{c}{} & $\mathbf{0.022 \to 0.60}$ \\
-$W_\mathrm{had}$     & --- & \multicolumn{4}{c}{} & $0.23 \to 0.86$ \\
-$\delta p_T$         & --- & \multicolumn{4}{c}{} & $0.25 \to 0.93$ \\
-$\delta\alpha_T$     & --- & \multicolumn{4}{c}{} & $0.24 \to 0.48$ \\
-$\delta\phi_T$       & --- & \multicolumn{4}{c}{} & $\mathbf{0.083 \to 0.85}$ \\
-$p_n$                & --- & \multicolumn{4}{c}{} & $0.21 \to 0.88$ \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\paragraph{$\theta_\mu$ with the width-aware operator.} The fake data are Poisson throws from the
-MicroBooNE tune, so the tune is the model that should fit best, and it does
-(FHC $\theta_\mu$, $\chi^2$ on five bins: tune $2.14$, $p=0.83$; GENIE $5.55$; GiBUU
-$6.07$; NEUT $8.46$; NuWro $9.10$; closure $1.52$, $p=0.91$). Under the uniform stencil
-every model gave $2.8$--$4.7$, indistinguishable, because every model had been mapped onto
-the same curve. At those binnings the $\theta_\mu$ $\chi^2$ were systematically larger than the
-$\cos\theta_\mu$ ones for every model, the truth included.
-
-\part{Proton-tagged observables}
 \section[Hadronic mass]{Hadronic mass\scopetag{proton-tagged}}
 \label{sec:supp_w}
 
@@ -1465,7 +1033,7 @@ In the six-bin scheme, $W_{\pi p}$ shows the least model tension of the proton-t
 observables. The origin is the binning, not physics.
 
 The six bin edges were chosen for equal population, without reference to the resolution.
-The resolution and the bin widths, measured on selected signal in FHC Runs 1/2/4, are:
+The resolution and the bin widths, measured on selected signal in FHC Runs 1/2/4 (analysis sample), are:
 
 \begin{center}\small
 \begin{tabular}{lcc}
@@ -1492,7 +1060,8 @@ reconstructed from the pion and proton momenta, so it inherits the saturation of
 range-based pion momentum described in \S\ref{sec:ppi_bias}; its resolution cannot be
 better than that of its inputs.
 
-An exhaustive edge scan, with the procedure and criterion used for $p_\pi$, gives:
+An exhaustive edge scan on the analysis sample, with the procedure and criterion used for $p_\pi$,
+gives:
 
 \begin{center}\small
 \begin{tabular}{llc}
@@ -1518,7 +1087,7 @@ criterion, and two regions split at $1.18$~GeV/$c^2$ as the only admissible binn
 \paragraph{Two-bin scheme split at $1.15$~GeV/$c^2$.} The boundary is more tightly
 constrained than for $p_\pi$, where any value between roughly $0.19$ and $0.22$ satisfies
 the criterion. Here only one choice satisfies both the diagonal criterion and the
-$100$-event floor:
+$100$-event floor, and it is the scheme extracted in \S\ref{sec:wpipr_limits}:
 
 \begin{center}\small
 \begin{tabular}{lccr l}
@@ -1552,14 +1121,15 @@ population at the cost of the upper-bin diagonal, and no scanned edge satisfies 
 requirements at once.
 
 The apparent $W_{\pi p}$ agreement at six bins therefore does not persist in a binning the
-detector can resolve, and the differential shape is not reported: at this exposure the
-proton-tagged sample supports an integrated cross section. $W_\mathrm{had}$ carries the same
+detector can resolve. No differential $W_{\pi p}$ result is reported. The topology-level one-bin
+total cross section of the proton-tagged sample remains measurable, but it is not described as a
+$W_{\pi p}$ measurement. $W_\mathrm{had}$ carries the same
 limitation, since it depends on the same pion momentum.
 
 
 
 
-\subsection{Limits on the $W_{\pi p}$ measurement}
+\subsection{Limits of the $W_{\pi p}$ extraction}
 \label{sec:wpipr_limits}
 
 The two-bin $W_{\pi p}$ scheme of \S\ref{sec:w_binning} was run through the full
@@ -1622,14 +1192,14 @@ while diag$_2$ collapses from $0.927$ to $0.004$. There is no edge at which both
 simultaneously populated and diagonal, and no three-bin combination does better: the
 third-bin diagonal never exceeds $0.347$.
 
-At this exposure $W_{\pi p}$ does not support a shape measurement, and it is
-quoted as an integrated cross section unless the pion momentum improves. That integrated
-number is a one-bin extraction rather than a regularised unfolding: with a single bin there
+At this exposure $W_{\pi p}$ does not support a shape measurement unless the pion momentum
+improves. No differential $W_{\pi p}$ result is reported. The topology-level one-bin total cross
+section of the proton-tagged sample remains measurable, but it is not described as a $W_{\pi p}$
+measurement. It is a one-bin extraction rather than a regularised unfolding: with a single bin there
 is nothing to unfold, since the response is $1\times1$, $A_C$ is trivially unity and the
 regularisation has no effect. It is reported through the total flux-averaged cross-section
-path of \noteref{Sec.}{sec:total_xsec}, and integrated over the full range it is the same quantity as
-the total proton-tagged cross section. The corresponding integrated generator predictions are
-built by \texttt{generator\_predictions/newg4/make\_wpipr\_1bin.C}, summing the per-bin
+path of \noteref{Sec.}{sec:total_xsec}. Generator predictions integrated over the $W_{\pi p}$ range
+are built by \texttt{generator\_predictions/newg4/make\_wpipr\_1bin.C}, summing the per-bin
 cross sections of the six-bin flux-averaged predictions.
 
 \paragraph{Six-bin $W_{\pi p}$ closure, diagnostic only.} The six-bin extraction was
@@ -1642,7 +1212,7 @@ GiBUU $0.735$, NEUT $0.783\times10^{-38}$~cm$^2$/Ar, FHC) are in the release for
 diagnostic purpose.
 
 \begin{center}\small
-\captionof{table}{Six-bin $W_{\pi p}$ fake-data closure, diagnostic only (not reported as a
+\captionof{table}{Six-bin $W_{\pi p}$ pseudo-data closure, diagnostic only (not reported as a
   differential result). $\sigma_\mathrm{int}$ in $10^{-38}$~cm$^2$/Ar; columns as in
   \ptref{Table}{tab:wtki_fhc}.}
 \label{tab:wpipr_sixbin_closure}
@@ -1696,7 +1266,7 @@ $\cos\theta_\mu$ (\S\ref{sec:thetavar}).
   \caption{Proton-tagged (\texttt{CC1mu1pi1p}) cut-flow yields at full exposure (log
     scale; MC-prediction stack, Okabe-Ito: signal blue, background orange, EXT grey,
     dirt green). The last stage, IdentProton, is the leading-proton identification that
-    defines the subsample.}
+    defines the proton-tagged sample.}
   \label{fig:cutflow_1p}
 \end{figure}
 
@@ -1760,12 +1330,13 @@ $\cos\theta_\mu$ (\S\ref{sec:thetavar}).
 
 \begin{table}[H]
   \centering
-  \caption{Released binning of the nine proton-tagged observables specific to the family, read from
-    the data release (\texttt{curves\_1p\_*.tsv}). Every binning meets the $0.50$ migration
-    criterion with at least $50$ selected FHC signal events per bin (\S\ref{sec:binreview}); the
+  \caption{Binning of the nine proton-tagged observables specific to the family, read from
+    the data release (\texttt{curves\_1p\_*.tsv}). Every binning except the six-bin $W_{\pi p}$ meets the
+    $0.50$ migration criterion on the analysis sample with at least $50$ selected FHC signal events
+    per bin (\S\ref{sec:binreview}); the
     last bin of the momenta and masses is open at truth level (the upper edge listed is the
-    plotting boundary). $W_{\pi p}$ brackets the $\Delta(1232)$ peak but its differential shape is
-    not reported. The five inherited kinematic observables ($p_\mu$, $p_\pi$, $\cos\theta_\mu$,
+    plotting boundary). $W_{\pi p}$ brackets the $\Delta(1232)$ peak; no differential $W_{\pi p}$ result
+    is reported. The five inherited kinematic observables ($p_\mu$, $p_\pi$, $\cos\theta_\mu$,
     $\cos\theta_\pi$, $\theta_{\mu\pi}$) use the binnings of \ptref{Table}{tab:pt_binning}.}
   \label{tab:wtki_binning}
   \footnotesize
@@ -1774,7 +1345,7 @@ $\cos\theta_\mu$ (\S\ref{sec:thetavar}).
     Observable & Definition & Bins & Released bin edges \\
     \midrule
     $p_p$              & leading proton, range     & 3 & $0.3,\,0.42,\,0.6,\,1.5$~GeV/$c$ \\
-    $W_{\pi p}$        & $M(\pi p)$, direct        & 6 (withdrawn) & $1.08,\,1.19,\,1.23,\,1.27,\,1.34,\,1.47,\,2.9$~GeV/$c^2$ \\
+    $W_{\pi p}$        & $M(\pi p)$, direct        & 6 (\statNotReported) & $1.08,\,1.19,\,1.23,\,1.27,\,1.34,\,1.47,\,2.9$~GeV/$c^2$ \\
     $W_\mathrm{had}$   & calorimetric              & 2 & $0,\,1.18,\,2.74$~GeV/$c^2$ \\
     $\delta p_T$       & $|\vec p_T^{\,\mu}+\vec p_T^{\,\mathrm{had}}|$ & 2 & $0,\,0.3,\,2.5$~GeV/$c$ \\
     $\delta\alpha_T$   & TKI angle                 & 2 & $0,\,120,\,180^\circ$ \\
@@ -1856,13 +1427,13 @@ are therefore proxies, not the initial-state nucleon momentum. The generator
 predictions apply the identical formulas to the generator final states
 (Sec.~\ref{sec:acwtki}), so the comparison is like for like; a truth-level closure of
 this prescription against a pion-production-specific definition, and a quantification of
-the bias from the residual-mass assumption, have not been performed and are listed in
+the bias from the residual-mass assumption, have not been performed (prerequisite P4) and are listed in
 Sec.~\ref{N-sec:limitations}.
 
 
 
 \paragraph{Two exposure conventions in the processed files.}
-One normalisation point is specific to this subsample. The processed
+One normalisation point is specific to the proton-tagged sample. The processed
 ntuples use two POT conventions: the files behind the inclusive selection store the
 total run MC POT duplicated in every file of a multi-file run, whereas the
 proton-tagged files store each file's own POT. Normalising by the individual file
@@ -1907,7 +1478,7 @@ comparisons read off any panel are made on equal footing.
     matrices \texttt{A\_C\_1p\_FHC5\_*.tsv}; equal to the ratio of the
     $A_C$-smeared to the truth-level integral for a flat prediction.}
   \label{tab:acwtki}
-  \par\smallskip\noindent{\footnotesize $^{\dagger}$ From the current extraction; these observables are not yet in the data release.}
+  \par\smallskip\noindent{\footnotesize $^{\dagger}$ \statSecondary{} (Table~\ref{tab:pt_status}); $W_{\pi p}$ is \statNotReported{} and the others are each a \statValidation{}.}
   \begin{tabular}{lc}
       \toprule
       Observable & mean $A_C$ row sum \\
@@ -1931,17 +1502,155 @@ comparisons read off any panel are made on equal footing.
 \end{table}
 
 
+\section[Two-dimensional pairs]{Two-dimensional pairs\scopetag{shared}}
+\label{sec:supp_2d}
 
-% =============================================================================
+Eight two-dimensional pairs were screened and extracted in the three configurations. A
+two-dimensional binning is a flat list of analysis bins ordered slice by slice, so the extraction
+uses the same machinery, and the integrated normalisation of the two-dimensional chain agrees with
+the one-bin total to a median of $1.5\%$ once each is compared with its own $A_C$-smeared truth.
+Two pairs are usable, both in the combined configuration only: $\theta_p\times\delta p_T$
+($s_{\min}/s_1=0.611$) and $\cos\theta_\pi\times\cos\theta_\mu$ ($0.564$) (Table~\ref{tab:2dextract}).
+Combining the beam modes roughly doubles their conditioning ($0.43\to0.61$ and $0.25\to0.56$), through
+the larger sample and the shared flux rather than through any separation of $\nu$ and $\bar\nu$. The
+pairs built on $W_{\pi p}$ are not usable, as the $39\%$ leakage between its outer bins implies.
 
+The two usable pairs are each a \statSecondary{} in the combined configuration only:
+$d^2\sigma/d\theta_p\,d\delta p_T$ on the proton-tagged sample, presented in the proton-tagged note,
+and $d^2\sigma/d\cos\theta_\pi\,d\cos\theta_\mu$ on the inclusive sample, presented in
+\noteref{Sec.}{sec:incl_2d}. Their FHC and RHC extractions and the other six pairs are
+\statNotReported{} (Tables~\ref{tab:inventory} and~\ref{tab:pt_status}). The single-mode extractions
+of the two pairs are not shape measurements, because their responses cannot be inverted. Every
+one-dimensional result is quoted per beam mode as well as combined; whether a result available only in
+the combined configuration is acceptable requires a collaboration decision (prerequisite R1).
 
-\part{Extraction and validation}
+The pair $\theta_{\pi p}\times W_{\pi p}$ conditions at $0.537$, as well as the two usable pairs, yet
+its extraction carries no usable information: a $78\%$ data-statistical term, per-bin uncertainties up
+to $276\%$ and closure ratios down to $-0.80$. Conditioning bounds how much of the response can be
+inverted and says nothing about how much data survives in the inverted directions, so the two must be
+read together. Conversely, $\cos\theta_\mu\times p_\mu$ screened best of the eight on the migration
+diagonal ($0.70/0.68$, analysis sample) and is rank-deficient in FHC ($0.002$), while
+$\theta_p\times\delta p_T$ screened worst of the proton-tagged pairs and conditions best of all. The
+migration diagonal is a necessary condition, not a sufficient one; the one-dimensional binning review
+measures what the regularised response retains by the Wiener filter factors of $A_C$
+(\S\ref{sec:binreview}).
+
+\begin{table}[H]
+  \centering
+  \caption{The eight two-dimensional pairs (inner $\times$ outer), ordered by the conditioning of
+    $A_C$ in the combined configuration. The last three columns refer to the combined configuration:
+    the bin-averaged data-statistical term, the range of the per-bin total uncertainty and the range of
+    the closure ratio against the $A_C$-smeared truth. Pseudo-data.}
+  \label{tab:2dextract}
+  \small
+  \begin{tabular}{lcccccc}
+    \toprule
+    & \multicolumn{3}{c}{$s_{\min}/s_1$} & \multicolumn{3}{c}{combined configuration} \\
+    \cmidrule(lr){2-4}\cmidrule(lr){5-7}
+    Pair & FHC & RHC & COMB & data stat. & unc.\ [\%] & closure \\
+    \midrule
+    $\theta_p\times\delta p_T$ & $0.433$ & $0.332$ & $\mathbf{0.611}$ & $13.3\%$ & $29$--$103$ & $0.70$--$1.36$ \\
+    $\cos\theta_\pi\times\cos\theta_\mu$ & $0.245$ & $0.315$ & $\mathbf{0.564}$ & $14.9\%$ & $33$--$64$ & $0.91$--$1.26$ \\
+    $\theta_{\pi p}\times W_{\pi p}$ & $0.379$ & $0.214$ & $0.537$ & $78.3\%$ & $39$--$276$ & $-0.80$--$1.22$ \\
+    $\cos\theta_\pi\times\theta_{\mu\pi}$ & $0.037$ & $0.133$ & $0.171$ & $25.5\%$ & $29$--$93$ & $0.96$--$1.29$ \\
+    $\cos\theta_\mu\times p_\mu$ & $0.002$ & $0.261$ & $0.106$ & $9.0\%$ & $33$--$57$ & $0.97$--$1.04$ \\
+    $\theta_p\times W_{\pi p}$ & $0.012$ & $0.152$ & $0.112$ & $200.4\%$ & $36$--$568$ & $0.23$--$1.03$ \\
+    $\cos\theta_\pi\times p_\pi$ & $0.024$ & $0.158$ & $0.052$ & $13.8\%$ & $32$--$62$ & $0.96$--$1.11$ \\
+    $\theta_{\pi p}\times\delta p_T$ & $0.023$ & $0.035$ & $0.027$ & $10.4\%$ & $26$--$52$ & $0.89$--$1.15$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section[Bin widths in the regularisation operator]{Bin widths in the regularisation operator\scopetag{shared}}
+\label{sec:reg_widths}
+
+Wiener--SVD regularises with a matrix $C$; this analysis uses the second-derivative form,
+built on the density with the actual bin widths, because of what the plain tridiagonal
+stencil $(1,-2,1)$ does on these binnings. That stencil is a second
+derivative only on a uniform grid; these binnings are strongly non-uniform, with
+width ratios up to $14{:}1$ (Table~\ref{tab:reg_widths}), so on them it is not a second
+derivative at all. It is near-singular, its row sums are the $10^{-6}$ regularisation
+floor, and its near-null direction is the constant vector rather than anything physical.
+The Wiener filter is then free to retain that direction alone, which is a rank-1 $A_C$
+that passes normalisation and discards shape.
+
+The FHC $\theta_\mu$ extraction at its pre-review binning (\S\ref{sec:thetavar}) is the clearest
+case, because its bin widths span a factor of $10.4$. Unfolded with the uniform stencil, the unfolded data, the $A_C$-smeared truth,
+the MicroBooNE tune and all four generators share the same normalised shape to four
+decimal places (Table~\ref{tab:thetamu_rank1}): writing the four generator predictions as
+the columns of an input matrix and their $A_C$-smeared counterparts as the columns of the
+output matrix, the inputs are full rank ($s_2/s_1=5.0\times10^{-2}$) while the outputs
+give $s_2/s_1=2.8\times10^{-6}$. Every shape degree of freedom is annihilated, each model
+is mapped onto one common curve and only its normalisation survives; any agreement with the
+data is then true by construction, and a model comparison made on such an extraction is
+meaningless. $\cos\theta_\mu$, the next most non-uniform binning at $14.5$, is the other
+observable strongly affected; the remaining observables sit at width ratios of $3$--$6$
+and are affected far less.
+
+\begin{table}[htbp]\centering
+\caption{FHC $\theta_\mu$ unfolded with a uniform-grid second-derivative stencil: normalised bin contents.
+Five independent inputs, the measurement and four generator predictions plus the tune,
+collapse onto one shape, the signature of a rank-1 $A_C$.}
+\label{tab:thetamu_rank1}
+\begin{tabular}{lcccccc}
+\toprule
+ & bin 1 & bin 2 & bin 3 & bin 4 & bin 5\\\midrule
+Unfolded data          & 0.1485 & 0.3361 & 0.2899 & 0.1934 & 0.0321\\
+$A_C$-smeared truth    & 0.1484 & 0.3359 & 0.2901 & 0.1933 & 0.0323\\
+MicroBooNE tune        & 0.1484 & 0.3359 & 0.2901 & 0.1934 & 0.0322\\
+NEUT                   & 0.1484 & 0.3359 & 0.2901 & 0.1934 & 0.0322\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{The operator used.} Both derivative regularisation matrices difference the
+density on the actual grid: each column is divided by its bin width and the stencil uses
+the true spacings between bin centres, with a one-sided first-derivative stencil at the
+ends. (A Dirichlet closure was rejected: it asserts the distribution vanishes at the
+edges, which is false here, $\cos\theta_\mu$ peaks at its upper edge.) With no widths
+supplied the code reduces to the uniform stencil. The widths are passed in by the
+unfolding application, which holds the slice definitions that the cross-section extractor
+does not. The effect on the conditioning of $A_C$, measured as $s_2/s_1$ of the smearing
+matrix itself, is given in Table~\ref{tab:reg_widths}: every inclusive observable improves
+and none is degraded except combined $\cos\theta_\mu$, marginally; in the proton-tagged
+family combined $W_{\pi p}$ ($0.022$) and $\delta\phi_T$ ($0.083$) would be as
+compromised as FHC $\theta_\mu$ under the uniform stencil.
+
+\begin{table}[htbp]\centering
+\caption{$A_C$ conditioning $s_2/s_1$ with the uniform-grid stencil (``uniform'') and
+  with the width-aware operator (``width-aware''), measured on one pseudo-data pass at the binnings under test (the $\cos\theta_\pi$ row is a five-bin scheme other than the reported one);
+  the width-aware values of the reported binnings follow from the released matrices. With the
+  bin-width ratio of each observable. A value approaching zero means the additional-smearing matrix
+  has collapsed onto a single mode and the extraction carries no shape information.}
+\label{tab:reg_widths}
+\small
+\begin{tabular}{lcccccc}
+\toprule
+ & width & \multicolumn{2}{c}{FHC} & \multicolumn{2}{c}{RHC} & COMB \\
+observable & ratio & uniform & width-aware & uniform & width-aware & uniform $\to$ width-aware \\\midrule
+$p_\mu$              & $6.3$  & $0.34$ & $0.90$ & $0.31$ & $0.94$ & $0.19 \to 0.68$ \\
+$\cos\theta_\mu$     & $14.5$ & $0.46$ & $0.57$ & $0.45$ & $0.55$ & $0.42 \to 0.39$ \\
+$\cos\theta_\pi$     & $3.6$  & $0.67$ & $0.71$ & $0.55$ & $0.79$ & $0.55 \to 0.74$ \\
+$\theta_{\mu\pi}$    & $3.0$  & $0.42$ & $0.85$ & $0.47$ & $0.65$ & $0.42 \to 0.46$ \\
+$\theta_\mu$         & $10.4$ & $\mathbf{0.015}$ & $\mathbf{0.51}$ & $0.22$ & $0.62$ & $\mathbf{0.045 \to 0.38}$ \\
+$p_\pi$ (2 bins)     & ---    & $0.46$ & $0.53$ & $0.41$ & $0.44$ & $0.29 \to 0.40$ \\\midrule
+\multicolumn{7}{l}{\emph{proton-tagged, combined configuration}} \\
+$W_{\pi p}$          & --- & \multicolumn{4}{c}{} & $\mathbf{0.022 \to 0.60}$ \\
+$W_\mathrm{had}$     & --- & \multicolumn{4}{c}{} & $0.23 \to 0.86$ \\
+$\delta p_T$         & --- & \multicolumn{4}{c}{} & $0.25 \to 0.93$ \\
+$\delta\alpha_T$     & --- & \multicolumn{4}{c}{} & $0.24 \to 0.48$ \\
+$\delta\phi_T$       & --- & \multicolumn{4}{c}{} & $\mathbf{0.083 \to 0.85}$ \\
+$p_n$                & --- & \multicolumn{4}{c}{} & $0.21 \to 0.88$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \section[The D'Agostini cross-check]{The D'Agostini cross-check\scopetag{inclusive}}
 \label{sec:crosschecks}
 
 Seven unfolding methods, listed below, are run in parallel with the Wiener-SVD extraction. The D'Agostini comparison (Table~\ref{tab:dagostini} and the
-numbers around it) is evaluated on the released fake data. The closure figures of the other
-methods were evaluated on a different fake-data throw; the comparison they support is a
+numbers around it) is evaluated on the released pseudo-data. The closure figures of the other
+methods were evaluated on a different pseudo-data throw; the comparison they support is a
 property of the operators and does not depend on the throw.
 
 \begin{table}[H]
@@ -1952,7 +1661,7 @@ property of the operators and does not depend on the throw.
     \toprule
     Label & Description \\
     \midrule
-    \texttt{wiener\_svd}   & Wiener-SVD (primary result) \\
+    \texttt{wiener\_svd}   & Wiener-SVD (every reported result) \\
     \texttt{bin\_by\_bin}  & Efficiency correction only; no migration unfolding \\
     \texttt{ibu}           & D'Agostini iterative Bayesian, 4 iterations \\
     \texttt{tikhonov}      & Tikhonov-regularised least-squares, $\tau = 1.0$ \\
@@ -1985,7 +1694,7 @@ physical or acceptance effect.
   \caption{Wiener-SVD vs.\ D'Agostini (iterative Bayesian, 4~iterations) integrated
     cross section, averaged over the five inclusive observables ($p_\mu$, three-region $p_\pi$,
     $\cos\theta_\mu$, $\cos\theta_\pi$, $\theta_{\mu\pi}$; $10^{-38}$~cm$^2$/Ar), evaluated on the
-    released fake data (\texttt{xsec\_analyzer/dagostini\_050.sh}). D'Agostini carries no $A_C$ smearing, so
+    released pseudo-data (\texttt{xsec\_analyzer/dagostini\_050.sh}). D'Agostini carries no $A_C$ smearing, so
     it recovers a $30$--$35\%$ higher total, and it is flat across observables (spread $1.0\%$ FHC,
     $1.1\%$ RHC, $0.5\%$ combined) where the Wiener-SVD integrals spread by $21$--$31\%$,
     so the observable-to-observable variation of $\sigma_\mathrm{int}$ in
@@ -2010,13 +1719,13 @@ physical or acceptance effect.
 \section[Identity closure: unfolding the prediction with itself]{Identity closure: unfolding the prediction with itself\scopetag{shared}}
 \label{sec:identity}
 
-The fake-data closure tests reported in the body compare an unfolded Poisson throw against
+The pseudo-data closure tests reported in the analysis notes compare an unfolded Poisson throw against
 the truth it was thrown from. They therefore test the whole chain at once, and a modest
 $\chi^2$ can hide a genuine inconsistency inside the unfolding itself, because the
 statistical fluctuation of the throw is the dominant term.
 
 The identity test removes that fluctuation. Wiener--SVD returns
-$\hat{x} = U r$ for a measured reco vector $r$, and defines the additional smearing matrix
+$\hat{x} = U r$ for a measured reco vector $r$, and defines the additional-smearing matrix
 as $A_C = U R$, where $R$ is the response (smearceptance) matrix. Feeding an exact
 prediction $r = R\,t$ back through the chain must therefore return
 \begin{equation}
@@ -2028,15 +1737,17 @@ identity directly:
   \bigl\| U R - A_C \bigr\|_\infty \;\overset{!}{=}\; 0 .
 \end{equation}
 This is stronger than a single-vector test and independent of the data. It is sensitive to
-the failure mode a fake-data test cannot see: the unfolding matrix and the smearing matrix
+the failure mode a pseudo-data test cannot see: the unfolding matrix and the additional-smearing
+matrix
 being built from different responses, or from responses evaluated in different universes,
 which would bias every extracted cross section by a fixed factor while leaving the closure
 $\chi^2$ untouched.
 
 The check is implemented inside \texttt{UnfolderNuMI} and runs on every extraction, printing
-a \texttt{[IDENTITY]} line. All $51$ released extractions (five inclusive observables
-and twelve proton-tagged ones, each in three beam configurations) pass it.
-The worst deviation over the $51$ extractions is
+a \texttt{[IDENTITY]} line. All $59$ released extractions pass it: five inclusive and twelve
+proton-tagged observables, each in three beam configurations, the two proton angles in three
+configurations and the two combined two-dimensional results. The worst deviation over the $59$
+extractions is
 $6.1\times10^{-5}$ relative, on FHC $\cos\theta_\mu$; the $\cos\theta_\mu$ extractions of the two
 families are the only ones above $4\times10^{-6}$. These are the
 rounding errors of the singular-value decomposition and the matrix products that follow it,
@@ -2049,7 +1760,7 @@ operator carries factors of $1/w_j$ that span decades across a binning with a wi
 to $56{:}1$, so the matrix products accumulate more floating-point error. $\cos\theta_\mu$, whose
 eight bins have the largest width ratio in the analysis, is the worst case. The identity itself
 holds exactly; only the arithmetic that verifies it is noisier. The unfolding construction is therefore exactly self-consistent,
-and every deviation seen in the fake-data closure tests is attributable to the statistical
+and every deviation seen in the pseudo-data closure tests is attributable to the statistical
 throw and to the response model, not to the unfolding implementation.
 
 % =============================================================================
@@ -2057,7 +1768,7 @@ throw and to the response model, not to the unfolding implementation.
 \label{sec:supp_total}
 
 The measurement is the one-bin extraction of \noteref{Sec.}{sec:total_xsec} on the
-Poisson-thrown fake data (one true bin over the full $\cos\theta_\mu$ range, no overflow,
+Poisson-thrown pseudo-data (one true bin over the full $\cos\theta_\mu$ range, no overflow,
 Wiener filter off, $A_C\equiv1$; \texttt{data\_release/total\_xsec.tsv}), with its full
 universe-propagated uncertainty; at unblinding it becomes the real beam-on extraction.
 It agrees with all four generators within $0.8\sigma$: standalone GENIE sits
@@ -2067,9 +1778,10 @@ $0.5$--$0.8\sigma$ low, while GiBUU, NEUT and NuWro lie within $0.8\sigma$.
   \centering
   \caption{Total flux-averaged cross section from the one-bin extraction
     (\noteref{Sec.}{sec:total_xsec}; $10^{-38}$~cm$^2$/Ar), compared with the flux-averaged
-    generator predictions. The measurement uncertainty is the complete configured one-bin
-    covariance (flux, cross section, re-interaction, detector, POT, targets and statistics;
-    MCS-momentum, beamline-geometry, beam-off gate-ratio and Run-2 stand-in terms are not propagated,
+    generator predictions. The measurement uncertainty is the official one-bin
+    covariance (flux, cross section, re-interaction, detector, POT, targets and statistics; the MCS
+    momentum-scale term is zero for the total, which uses no reconstructed muon momentum; the
+    beamline-geometry, beam-off gate-ratio and Run-2 stand-in terms lie outside it, prerequisite U7,
     \noteref{Sec.}{sec:limitations}). \texttt{data\_release/total\_xsec.tsv}. Values in
     parentheses give each generator's deviation from the measurement in units of the
     measurement uncertainty. The generator predictions are integrated over the full binning with open upper bins
@@ -2089,29 +1801,32 @@ Config & Measurement & GENIE & GiBUU & NEUT & NuWro \\
 The systematic breakdown by source (bin-averaged fractional uncertainty in cross-section
 space) is given for all three configurations in Tables~\ref{tab:systbreak_fhc}--%
 \ref{tab:systbreak_comb}. The flux (PPFX) term dominates throughout, followed by the
-detector variations; the data-statistical term reflects the fake-data POT of each
+detector variations; the data-statistical term reflects the pseudo-data POT of each
 configuration. The largest detector entry is that of FHC $p_\pi$, $34.2\%$; elsewhere the detector
-term is $16.6$--$26.9\%$.
+term is $16.6$--$26.9\%$. The tables use the official covariance: the MCS momentum-scale row is the
+data-side term, computed outside the framework and non-zero only for $p_\mu$ (\noteref{Sec.}{sec:mcs}).
 
 \begin{center}\scriptsize
 \captionof{table}{FHC (\{Run~1,2,4,5\}) systematic breakdown by source, bin-averaged
   fractional uncertainty (\%), from the released systematics dumps (\texttt{logs/systdump}); ``Prediction total'' excludes
-  the data statistics.}
+  the data statistics. The MCS momentum-scale row is the data-side term that the official covariance
+  adds to the framework covariance.}
 \label{tab:systbreak_fhc}
 \begin{tabular}{lccccc}
 \toprule
 Source & $p_\mu$ & $p_\pi$ & $\cos\theta_\mu$ & $\cos\theta_\pi$ & $\theta_{\mu\pi}$ \\
 \midrule
-\textbf{Prediction total} & \textbf{39.3} & \textbf{56.7} & \textbf{39.6} & \textbf{39.0} & \textbf{37.1} \\
+\textbf{Prediction total} & \textbf{40.6} & \textbf{56.7} & \textbf{39.6} & \textbf{39.0} & \textbf{37.1} \\
 Cross section (GENIE) & 11.9 & 16.6 & 10.9 & 11.4 & 10.6 \\
 Flux (PPFX) & 30.0 & 38.5 & 26.6 & 27.1 & 28.8 \\
 Detector & 21.2 & 34.2 & 25.4 & 23.2 & 19.9 \\
 Reinteraction & 4.2 & 13.3 & 3.5 & 5.1 & 4.1 \\
+MCS momentum scale & 8.5 & 0.0 & 0.0 & 0.0 & 0.0 \\
 MC stat & 3.8 & 6.1 & 5.2 & 4.2 & 2.8 \\
 EXT stat & 1.1 & 2.3 & 1.7 & 1.2 & 1.0 \\
 Data stat & 12.1 & 19.3 & 16.6 & 13.6 & 8.9 \\
 POT $+$ targets & 3.8 & 5.0 & 3.5 & 3.4 & 3.6 \\
-\textbf{Total (incl.\ data stat)} & \textbf{41.2} & \textbf{60.0} & \textbf{43.1} & \textbf{41.5} & \textbf{38.3} \\
+\textbf{Total (incl.\ data stat)} & \textbf{42.4} & \textbf{60.0} & \textbf{43.1} & \textbf{41.5} & \textbf{38.3} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -2124,38 +1839,40 @@ POT $+$ targets & 3.8 & 5.0 & 3.5 & 3.4 & 3.6 \\
 \toprule
 Source & $p_\mu$ & $p_\pi$ & $\cos\theta_\mu$ & $\cos\theta_\pi$ & $\theta_{\mu\pi}$ \\
 \midrule
-\textbf{Prediction total} & \textbf{40.6} & \textbf{41.1} & \textbf{36.9} & \textbf{38.5} & \textbf{32.6} \\
+\textbf{Prediction total} & \textbf{42.0} & \textbf{41.1} & \textbf{36.9} & \textbf{38.5} & \textbf{32.6} \\
 Cross section (GENIE) & 12.6 & 13.7 & 9.7 & 10.8 & 10.7 \\
 Flux (PPFX) & 29.4 & 27.7 & 24.6 & 25.2 & 25.2 \\
 Detector & 23.8 & 24.0 & 23.5 & 25.5 & 16.6 \\
 Reinteraction & 4.4 & 10.6 & 4.3 & 5.1 & 3.7 \\
+MCS momentum scale & 10.8 & 0.0 & 0.0 & 0.0 & 0.0 \\
 MC stat & 3.7 & 3.7 & 5.3 & 3.6 & 2.4 \\
 EXT stat & 1.6 & 1.1 & 1.2 & 1.0 & 0.6 \\
 Data stat & 13.2 & 12.7 & 18.4 & 12.3 & 8.4 \\
 POT $+$ targets & 4.0 & 3.9 & 3.4 & 3.5 & 3.5 \\
-\textbf{Total (incl.\ data stat)} & \textbf{42.9} & \textbf{43.1} & \textbf{41.4} & \textbf{40.5} & \textbf{33.7} \\
+\textbf{Total (incl.\ data stat)} & \textbf{44.2} & \textbf{43.1} & \textbf{41.4} & \textbf{40.5} & \textbf{33.7} \\
 \bottomrule
 \end{tabular}
 \end{center}
 
 \begin{center}\scriptsize
-\captionof{table}{Combined FHC$+$RHC systematic breakdown by source, bin-averaged
+\captionof{table}{Combined-configuration (FHC$+$RHC) systematic breakdown by source, bin-averaged
   fractional uncertainty (\%); same provenance as Table~\ref{tab:systbreak_fhc}.}
 \label{tab:systbreak_comb}
 \begin{tabular}{lccccc}
 \toprule
 Source & $p_\mu$ & $p_\pi$ & $\cos\theta_\mu$ & $\cos\theta_\pi$ & $\theta_{\mu\pi}$ \\
 \midrule
-\textbf{Prediction total} & \textbf{39.0} & \textbf{45.9} & \textbf{33.1} & \textbf{37.5} & \textbf{33.6} \\
+\textbf{Prediction total} & \textbf{40.1} & \textbf{45.9} & \textbf{33.1} & \textbf{37.5} & \textbf{33.6} \\
 Cross section (GENIE) & 11.7 & 14.9 & 8.4 & 10.7 & 10.1 \\
 Flux (PPFX) & 27.9 & 31.0 & 22.8 & 25.7 & 25.8 \\
 Detector & 23.7 & 26.9 & 21.2 & 23.0 & 18.0 \\
 Reinteraction & 4.0 & 12.6 & 3.6 & 5.1 & 3.5 \\
+MCS momentum scale & 8.8 & 0.0 & 0.0 & 0.0 & 0.0 \\
 MC stat & 2.8 & 3.3 & 3.4 & 2.9 & 1.9 \\
 EXT stat & 1.1 & 1.1 & 0.9 & 0.8 & 0.5 \\
 Data stat & 9.5 & 11.0 & 11.5 & 9.7 & 6.6 \\
 POT $+$ targets & 3.7 & 4.2 & 3.1 & 3.5 & 3.4 \\
-\textbf{Total (incl.\ data stat)} & \textbf{40.3} & \textbf{47.3} & \textbf{35.2} & \textbf{38.8} & \textbf{34.2} \\
+\textbf{Total (incl.\ data stat)} & \textbf{41.4} & \textbf{47.3} & \textbf{35.2} & \textbf{38.8} & \textbf{34.2} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -2178,9 +1895,9 @@ appears in the data release and in \noteref{Appendix}{app:binning} is only the f
 adopted to assign the region a width for plotting, not a kinematic limit. The released
 $d\sigma/dp_\pi$ values are therefore bin-averaged densities over very different intervals
 ($0.030$, $0.055$ and $0.74\GeVc$), and the panel draws the three at equal visual width,
-flagged on the axis, so the plotted area does not represent cross section. The primary
-statement of the result is the three bin-integrated partial cross sections
-(Table~\ref{tab:ppi_partial}); the density representation is secondary, since it depends on
+flagged on the axis, so the plotted area does not represent cross section. The result is
+stated as the three bin-integrated partial cross sections
+(Table~\ref{tab:ppi_partial}); the density representation derives from them and depends on
 the conventional plotting width of the open region. These are the partial cross sections,
 $\sigma_i=(d\sigma/dp_\pi)_i\,\Delta p_{\pi,i}$, which do not depend on the choice of plotting
 boundary for the two lower regions and depend on it for the upper one only through the
@@ -2215,7 +1932,7 @@ range estimator, as the survey of pion momentum estimators shows
 
 \subsection{Interpretation of the closure \texorpdfstring{$\chi^2$}{chi-squared} values}
 The closure $\chi^2$ quoted for each extraction compares the unfolded result with the
-fake-data truth using the complete configured systematic covariance, and the resulting $p$-values
+pseudo-data truth using the complete configured systematic covariance, and the resulting $p$-values
 cluster near unity (median $0.98$ across all fifty-one extractions; eleven lie below $0.9$
 and the lowest is $0.20$). This is
 not a sign of excellent agreement with the model.  For a self-closure with
@@ -2228,7 +1945,7 @@ the flux, cross-section and exposure terms are common-mode and largely cancel in
 difference while still inflating the covariance used to judge it.  Recomputing the same
 comparison with the statistical covariance alone raises $\chi^2/\mathrm{ndf}$ from
 $0.02$--$0.2$ to $0.5$--$0.8$, much nearer the expected value. The table below was evaluated
-on a different fake-data throw from the released one and illustrates the effect; the released
+on a different pseudo-data throw from the released one and illustrates the effect; the released
 closure values are those of \noteref{Tables}{tab:fhc}--\ref{N-tab:comb}.
 
 \begin{center}
@@ -2280,8 +1997,8 @@ proton-tagged RHC sample has a positive row sum with the eight adopted bins.
 
 This is therefore not an RHC-specific defect but the regularisation pushing back against the
 least-determined bin of the observable: for $W_{\pi p}$, the same top bin that is only
-$2\%$ diagonal in the six-bin response and is the reason the $W_{\pi p}$ differential shape is
-not reported.  A negative row is not forbidden, since $A_C$ is a regularisation
+$2\%$ diagonal in the six-bin response and is the reason no differential $W_{\pi p}$ result is
+reported.  A negative row is not forbidden, since $A_C$ is a regularisation
 operator rather than a probability matrix, but a prediction smeared through one is being
 told that raising the truth in that bin lowers the measured content, which is a
 statement about the regularisation and not about the detector. That row should be used with
@@ -2304,7 +2021,7 @@ whole chain (thrown, universes rebuilt from that throw, unfolded), and the per-b
   p_i \;=\; \frac{\hat{x}_i - \left(A_C\,x_{\rm CV}\right)_i}{\sigma_i}
 \]
 formed against the fixed central-value truth smeared by that member's own $A_C$.  (The
-per-throw fake-data truth is not a valid reference: it follows the Poisson draw, so
+per-throw pseudo-data truth is not a valid reference: it follows the Poisson draw, so
 numerator and reference fluctuate together and the width comes out too small.)
 
 The throws follow the weight rule of \noteref{Eq.}{eq:safeweight}, and the extractions are
@@ -2376,7 +2093,7 @@ $\cos\theta_\mu$ over the common $\approx1\%$ is the only part that can be attri
 to $A_C$. No correction is applied and no uncertainty is assigned; a larger ensemble
 would settle whether the common offset is real.
 
-A truncated read of the fake data occurs when two ensembles sharing a throw number write the
+A truncated read of the pseudo-data occurs when two ensembles sharing a throw number write the
 same throw file at the same time and a member opens it mid-write, seeing part of the tree. Ten of the $600$ members were first built from such a
 read. Four RHC-total members (Run~2 read at $47$--$72\%$) and one FHC
 $\cos\theta_\mu$ member ($43\%$) were affected materially; they widened the RHC-total pull width
@@ -2416,7 +2133,7 @@ the updated NuMI flux with the fixed geometry bug and Geant~v4.10.4; the same
 signal topology (exactly one $\pi^\pm$, zero $\pi^0$ or heavier mesons, any number
 of protons, charged current), and the same systematic suite, PPFX flux
 hadronic universes (the 12 beamline-geometry unisims the $\nu_e$ analysis carries are
-evaluated but not in this analysis's released covariance, \noteref{Sec.}{sec:limitations}), the
+evaluated but not in this analysis's official covariance, prerequisite U7, \noteref{Sec.}{sec:limitations}), the
 600-universe GENIE cross-section multisim with unisims, the Geant4 reinteraction
 reweighting, the standard detector-variation set, and $2\%$ / $1\%$ / $100\%$
 POT / target / dirt normalisation uncertainties. The FHC beam-on data POT per run
@@ -2438,16 +2155,16 @@ whereas our muon-track topology uses $\theta_{\mu\pi}<2.6$~rad ($149^\circ$).
 (v)~\textbf{Regularisation:} the $\nu_e$ analysis smooths on the first derivative,
 this analysis on the second (\S\ref{sec:reg_widths}). (vi)~\textbf{Scope:}
 both analyses cover Runs~1--5 in FHC and RHC; the present measurement reports FHC,
-RHC, and their combination.
+RHC and the combined configuration.
 
 % =============================================================================
 \subsection{The combined configuration and its inputs}
 \label{sec:combtruth}
 
 The integrated cross section extracted from a given configuration is not a
-configuration-independent number: it depends on the additional smearing matrix $A_C$,
+configuration-independent number: it depends on the additional-smearing matrix $A_C$,
 which differs per configuration and per observable, so comparisons across configurations
-are made observable by observable and against the fake-data truth rather than between
+are made observable by observable and against the pseudo-data truth rather than between
 measurements. Two tests compare the combined configuration with its inputs.
 
 \paragraph{The combined truth against the exposure-weighted average of its inputs.}
@@ -2487,7 +2204,6 @@ external user's arithmetic exposes it.
 % =============================================================================
 
 
-\part{Control regions}
 \section[Control regions: the opening request and its sign-off]{Control regions: the opening request and its sign-off\scopetag{inclusive}}
 \label{sec:request}
 % =============================================================================
@@ -2498,7 +2214,7 @@ the signal region stays blind. \noteref{Sec.}{sec:sidebands} gives the region de
 numbers are those of the frozen state identified in the box below.
 
 \medskip\noindent\fbox{\parbox{0.97\linewidth}{\textbf{Analysis state.} Repository tag \texttt{cr-freeze-2026-09-06};
-fake data: one Poisson throw per run of the central-value prediction with the unified
+pseudo-data: one Poisson throw per run of the central-value prediction with the unified
 weight rule (\noteref{Sec.}{sec:mc}); binning: the released edges of \noteref{Appendix}{app:binning}
 (five-bin forward-split $\cos\theta_\pi$, the $p_\pi$ binning then in use); normalisation: per-run
 exposure, per-run beam-off gate ratios, per-configuration flux; detector variations:
@@ -2583,7 +2299,7 @@ and cross-section uncertainty: the control regions test the background model reg
 region, not the overall normalisation.
 
 \paragraph{Scope of the pseudo-data studies.}
-The sideband machinery has been exercised on Poisson-thrown central-value pseudo-data.
+The control-region machinery has been exercised on Poisson-thrown central-value pseudo-data.
 Those studies validate the selection logic, the per-run exposure scaling, the
 central-value weighting and, in the full-stack variant of \S\ref{sec:cr_fullstack}, the
 exact bookkeeping path that beam-on data will follow. They do not validate the
@@ -2591,7 +2307,7 @@ background model: the pseudo-data are drawn from the same simulation that suppli
 prediction, so agreement is guaranteed up to statistics. The background model is the
 largest untested assumption in the analysis, and the control regions exist to test it. The control-region comparison is made at reconstruction level, so it does not
 depend on the unfolding or on the alternative-generator closure that is required before
-the signal region is opened (\noteref{Sec.}{sec:limitations}).
+the signal region is opened (prerequisite U3, \noteref{Sec.}{sec:limitations}).
 
 \begin{table}[H]
   \centering
@@ -2664,12 +2380,12 @@ Repository tag and release checksum recorded & analysis-state box above & \\
 \multicolumn{3}{l}{\emph{Required later, before the signal region is opened}}\\
 \midrule
 Control-region results reviewed; any discrepancy treated under \S\ref{sec:cr_protocol} & pending & conveners \\
-Model-distortion fake-data closure (reweighted GENIE, FHC) & done, \noteref{Sec.}{sec:validation} & \\
-Model-distortion fake-data closure, proton-tagged family (FHC) & done, \ptref{Sec.}{sec:pt_altmodel}; low-imbalance $\delta p_T$/$p_n$ bins biased $1.1$--$1.2\sigma$ under GENIE u545 & \\
+Model-distortion pseudo-data closure (reweighted GENIE, FHC) & done, \noteref{Sec.}{sec:validation} & \\
+Model-distortion pseudo-data closure, proton-tagged family (FHC) & done, \ptref{Sec.}{sec:pt_altmodel}; low-imbalance $\delta p_T$/$p_n$ bins biased $1.1$--$1.2\sigma$ under GENIE u545 & \\
 Statistical-coverage ensembles, proton-tagged family ($W_{\rm had}$, $\delta p_T$, $p_n$) & done, \ptref{Sec.}{sec:pt_ensemble}; pull widths $0.99$--$1.08$, integral offsets within $0.7\%$ & \\
-Independent-generator (NuWro or GiBUU) fake-data closure & pending: the existing NuWro overlay failed validation against the standalone prediction and is not used, \noteref{Sec.}{sec:limitations} & \\
+Independent-generator pseudo-data closure (prerequisite U3): a NuWro overlay with the full detector simulation, validated against standalone NuWro on the same flux, unfolded with the nominal response & pending: the existing NuWro overlay failed validation against the standalone prediction and is not used, \noteref{Sec.}{sec:limitations} & \\
 Flux constants confirmed as PPFX-corrected central values & pending, \noteref{Sec.}{sec:flux_status} & flux contact \\
-MCS muon-momentum scale ($\pm5\%$, data side) evaluated on $p_\mu$ in FHC, RHC and combined and released as \texttt{cov\_MCSscale.txt} & done, \noteref{Sec.}{sec:mcs}; at most $0.56\sigma$ (FHC open top bin), $0.42\sigma$ (combined) and $0.30\sigma$ (RHC); exactly zero for the other inclusive observables, which carry no reco-$p_\mu$ cut; not yet inside the framework covariance; proton-tagged observables evaluated (at most $0.62\sigma$, FHC $p_\mu$; \ptref{Sec.}{sec:pt_mcs}) & \\
+MCS muon-momentum scale ($\pm5\%$, data side) evaluated on $p_\mu$ in FHC, RHC and combined and released as \texttt{cov\_MCSscale.txt} & done, \noteref{Sec.}{sec:mcs}; at most $0.56\sigma$ (FHC open top bin), $0.42\sigma$ (combined) and $0.30\sigma$ (RHC); exactly zero for the other inclusive observables, which carry no reco-$p_\mu$ cut; computed outside the framework and part of the official covariance (\texttt{cov\_total\_plusMCS.txt}) and of every summary table; size to be confirmed by prerequisite U4; proton-tagged observables evaluated (at most $0.62\sigma$, FHC $p_\mu$; \ptref{Sec.}{sec:pt_mcs}) & \\
 Final empty-cache reproduction of the release to be unblinded & pending, \S\ref{sec:pipeline} & \\
 Inverted pion-PID region for the CC$0\pi$ misidentification transfer & pending & \\
 Inverted-proton-PID region before any proton-tagged result & pending, \S\ref{sec:cr_1p_scope} & \\
@@ -2680,7 +2396,7 @@ Inverted-proton-PID region before any proton-tagged result & pending, \S\ref{sec
 \paragraph{Expected yields and precision.}
 \noteref{Table}{tab:sideband_yields} gives the expected composition per region and beam. The
 raw statistical precision of the data samples is $0.6\%$ (CC$0\pi$), $0.8\%$ ($\pi^0$)
-and $6\%$ (multi-$\pi$) for the combined exposure. The neutrino-MC prediction in each
+and $6\%$ (multi-$\pi$) for the combined configuration. The neutrino-MC prediction in each
 region carries the flux, cross-section and re-interaction uncertainties of
 Table~\ref{tab:cr_syst}, including the detector variations. The regions carry a
 few-per-cent sensitivity to the signal normalisation in principle (the CC$0\pi$ region
@@ -2700,8 +2416,8 @@ tree holds the signal at its central value in any case.
 The four regions are disjoint from the signal region by construction: CC$0\pi$ and
 multi-$\pi$ require $n_\pi=0$ and $n_\pi\ge2$ against the signal region's $n_\pi=1$; the
 $\pi^0$ region requires the shower veto to fail; the cosmic region requires the
-opening-angle cut to fail. An event-by-event check on the sideband-instrumented
-files confirms this: the number of events carrying both the signal-region
+opening-angle cut to fail. An event-by-event check on the files instrumented with
+the control-region flags confirms this: the number of events carrying both the signal-region
 flag and any control-region flag is exactly zero in the Monte Carlo and in the pseudo-data
 of every configuration. The regions are not mutually exclusive: multi-$\pi$ does not
 apply the shower veto, so events with two pion candidates and a failed shower veto belong to
@@ -2765,7 +2481,7 @@ region by background class and the transfer factors.
     $40$ EXT events in the region against $23$ in the signal region, $T=0.58$, FHC). }
   \label{tab:cr_transfer}
   \scriptsize
-  \begin{tabular}{lrrrrrcccc}
+  \begin{tabular}{@{}p{4.2cm}rrrrrcccc@{}}
     \toprule
     Class & SR & CC$0\pi$ & multi-$\pi$ & $\pi^0$ & cosmic & $T_{\mathrm{CC}0\pi}$ & $T_{\mathrm{multi}}$ & $T_{\pi^0}$ & $T_{\mathrm{cosmic}}$ \\
     \midrule
@@ -2797,7 +2513,7 @@ region by background class and the transfer factors.
 
 The neutrino-MC prediction in each region carries the flux, cross-section and hadron
 re-interaction uncertainties evaluated directly from the multisim weights on the
-sideband-instrumented files with the same weight conventions as the extraction and the detector-variation term from the Run-4
+files instrumented with the control-region flags, with the same weight conventions as the extraction and the detector-variation term from the Run-4
 detector-variation samples, which carry the region flags. Table~\ref{tab:cr_transfer_unc}
 gives the uncertainty on the transfer factor of each region's target class, computed as a
 ratio in every universe and variation.
@@ -2806,7 +2522,7 @@ ratio in every universe and variation.
   \centering
   \caption{Normalisation uncertainty (\%) of the neutrino-MC prediction in the signal region
     and in each control region: flux (PPFX), cross-section (GENIE multisim) and hadron
-    re-interaction multisims evaluated on the sideband-instrumented files with the
+    re-interaction multisims evaluated on the files instrumented with the control-region flags, with the
     extraction's weight conventions, and the detector term from the
     Run-4 detector-variation samples, which carry the region flags (eight variations against the detector-variation central value, summed in quadrature as
     in the extraction). ``Total'' is the quadrature sum. The last column is the
@@ -2817,7 +2533,7 @@ ratio in every universe and variation.
     \noteref{Tables}{tab:cutflow} and~\ref{N-tab:sideband_yields} and the pseudo-data throws;
     the yields agree between the tables.}
   \label{tab:cr_syst}
-  \small
+  \footnotesize\setlength{\tabcolsep}{3pt}
   \begin{tabular}{llrcccccc}
     \toprule
     Beam & Region & $\nu$-MC yield & flux & cross section & re-interaction & detector & total & corr.\ with SR (flux) \\
@@ -2853,7 +2569,7 @@ ratio in every universe and variation.
     class it is quoted in parentheses after the detector entry and, where it exceeds the
     entry, it replaces it in the total. }
   \label{tab:cr_transfer_unc}
-  \small
+  \footnotesize\setlength{\tabcolsep}{3pt}
   \begin{tabular}{lllccccccc}
     \toprule
     Beam & Region & Target class & $T$ & flux & cross section & re-int. & MC stat & detector & total \\
@@ -2932,8 +2648,8 @@ gives the two definitions side by side.
     the two as there. The non-target row is all neutrino background other than the target
     class, the leverage denominator of Sec.~\ref{sec:request}; the CC$0\pi$ line is part of it.}
   \label{tab:cr_pi0_final}
-  \small
-  \begin{tabular}{lrrrr}
+  \footnotesize\setlength{\tabcolsep}{3pt}
+  \begin{tabular}{@{}p{7.2cm}rrrr@{}}
     \toprule
     & \multicolumn{2}{c}{FHC} & \multicolumn{2}{c}{RHC} \\
     & frozen & with cut & frozen & with cut \\
@@ -3184,13 +2900,13 @@ been implemented. The proton-tagged control-region programme is consequently not
 ready for equivalent approval, and opening the inherited proton-tagged regions, while
 useful diagnostically, would not validate the proton-tagged background model.
 
-\subsection[Control regions for the proton-tagged subsample]{Control regions for the proton-tagged subsample\scopetag{proton-tagged}}
+\subsection[Control regions for the proton-tagged sample]{Control regions for the proton-tagged sample\scopetag{proton-tagged}}
 \label{sec:sidebands_1p}
 
 The proton-tagged selection inherits its cut logic from the inclusive selection, and with it
-the four sideband definitions of \noteref{Sec.}{sec:sidebands}: the reprocessed proton-tagged
+the four control-region definitions of \noteref{Sec.}{sec:sidebands}: the reprocessed proton-tagged
 files already carry the four region flags. No new definitions or reprocessing are
-required to exercise the background model of the W/TKI measurement; the same four regions
+required to exercise the background model of the proton-tagged extractions; the same four regions
 can be evaluated either as inherited (the inclusive phase space) or with a reconstructed
 tagged proton additionally required, which places them in the same phase space as the
 measurement itself. Table~\ref{tab:sidebands_1p} gives both.
@@ -3204,7 +2920,7 @@ proton requirement costs about a third of the statistics
 (CC$0\pi$: $12\,181\to8\,386$ pseudo-data events for FHC) but suppresses the beam-off contribution by roughly
 a factor six ($1\,358\to225$, FHC CC$0\pi$, Table~\ref{tab:sidebands_1p}): cosmic-induced events rarely contain a reconstructed
 proton above threshold, so the proton tag is itself a strong cosmic rejector, and the EXT
-normalisation matters far less in the proton-tagged measurement than in the inclusive one. The pseudo-data to
+normalisation matters far less in the proton-tagged extractions than in the inclusive ones. The pseudo-data to
 neutrino-MC ratios of the two large regions stay at $0.987$--$1.007$ with the tag, so the
 per-run bookkeeping holds in the proton-tagged phase space as well; the small regions
 scatter more widely ($0.85$--$1.52$), which on $37$--$62$ pseudo-data events is Poisson
@@ -3228,7 +2944,7 @@ through resolution.
 
 \begin{table}[H]
   \centering
-  \caption{Sideband yields for the proton-tagged subsample at full exposure, evaluated
+  \caption{Control-region yields for the proton-tagged sample at full exposure, evaluated
     with the inherited definitions both as-is and with a tagged proton additionally
     required. ``Sig.'' is the proton-tagged signal contamination of the neutrino MC.
     $N_\mathrm{data}/N_{\nu\mathrm{MC}}$ compares the Poisson-thrown pseudo-data with the
@@ -3351,7 +3067,6 @@ variant.
 % =============================================================================
 
 
-\part{Selection and infrastructure}
 \section[Selection studies]{Selection studies\scopetag{inclusive}}
 \label{sec:supp_moved}
 
@@ -3381,7 +3096,7 @@ $D_{\text{run}}/\text{MC}_{\text{run}}$), and the EXT by the per-run trigger rat
 (per-run gate ratios, \noteref{Sec.}{sec:mc}). A single per-mode factor would differ from the
 per-run scheme by about $2\%$ in the FHC final-cut signal, a small and nearly uniform
 re-weighting of the run mixture that moves efficiency and purity by $<0.5\%$. The per-run
-scheme is used because real beam-on data require it. The fake data are thrown
+scheme is used because real beam-on data require it. The pseudo-data are thrown
 from the same per-run-scaled prediction, so the closure tests the bookkeeping of the
 scheme, not its correctness against data.
 
@@ -3435,51 +3150,28 @@ across the iterations, and it fixes the two opening-angle choices.
 \end{table}
 
 
-\subsection{Cosmic-direction cuts considered and rejected}
-\label{sec:supp_cosmiccut}
-
-\paragraph{Directional cut against residual cosmics.} Part of the
-surviving beam-off sample is thought to consist of broken cosmic muon tracks, in which the
-break is reconstructed as a vertex and the track direction bears no relation to it. Such
-events carry a directional signature, which is seen in the data: among selected events the
-beam-off sample is enriched at backward reconstructed muon angles by nearly an order of magnitude
-relative to signal.
+\subsection{Momentum-threshold validation}
+The two signal-definition momentum thresholds sit at the selection efficiency
+turn-on, measured against a threshold-free true signal (the CC $\nu_\mu$
+$1\mu1\pi^\pm$ topology with the momentum/angle cuts removed):
 
 \begin{center}\small
 \begin{tabular}{lccc}
 \toprule
-reco $\cos\theta_\mu$ & EXT (beam-off) & MC signal & enrichment \\\midrule
-$<0$    & $31.8\%$ & $4.1\%$ & $7.8\times$ \\
-$<-0.5$ & $9.1\%$  & $1.4\%$ & $6.4\times$ \\
+Threshold & below & above & turn-on \\
+\midrule
+$p_\mu > 0.15$~GeV/c  & $\sim$0--1.5\% & $\sim$9--12\%  & 0.145$\to$0.155 \\
+$p_\pi > 0.175$~GeV/c & $\sim$0--3\%   & $\sim$12--16\% & 0.165$\to$0.185 \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-\noindent Despite this enrichment, a cut does not pay off. At the final cut the FHC sample is $833$
-signal, $23$ beam-off and $1\,418$ predicted events in total (\noteref{Table}{tab:cutflow}). A
-$\cos\theta_\mu<0$ requirement would remove about $32\%$ of the beam-off background, about $7$ events,
-and about $4\%$ of the signal, about $33$ events. The beam-off background is subtracted from the data
-directly, and that subtraction is unbiased by construction, so removing part of it only reduces the
-statistical uncertainty of the subtraction. That uncertainty is $4.2$ events for the $23$, dominated by
-the $8$ selected Run-1 beam-off events scaled by $1.23$ for Run~1 and by $0.76$ for Run~2; the cut
-would reduce it to about $3.5$ events. Losing $33$ signal events to reduce the uncertainty by less than
-one event is a net loss.
-
-The same bound applies to any cosmic cut. The beam-off background is $1.6\%$ of the selected sample
-and is subtracted without bias, so removing all of it with no signal loss would gain about $4$ events
-of statistical uncertainty on a sample of $1\,418$. Any cut costing more than about $0.5\%$ of the
-signal is a net loss regardless of how efficiently it tags cosmic rays. The residual beam-off
-contribution is therefore left in place and handled by subtraction.
-
-A more selective variant has not been tested. The CC0$\pi$ analysis tags mis-directed tracks with
-a calorimetric direction-preference flag in coincidence with a poor
-forward-muon fit, $\chi^2_\mu>6$, which fires on tracks whose $dE/dx$ profile disagrees with
-the assigned direction rather than on backward-going tracks as such. That would not cut
-genuine backward muons, which outnumber mis-reconstructed ones here by roughly $8{:}1$. Both
-quantities exist in the input ntuples but are not carried into the processed files. Such a
-cut is bounded by the same $\approx6$-event ceiling on the EXT statistical uncertainty, so it
-could not bring a significant improvement.
-
+\noindent Both are correctly placed: lowering them would add near-zero-efficiency
+phase space, raising them would discard measurable signal. The reconstructed pion
+momentum (muon-hypothesis range) is biased low and increasingly so with momentum
+(mean reco$-$true $\approx0$ at threshold, $-0.15$~GeV/c at 0.40) from the
+$\mu$-vs-$\pi$ mass hypothesis plus pion re-interaction; a pion-hypothesis mass
+correction is applied to the $p_\pi$ reco bins.
 
 \subsection{Combined-configuration reconstruction-level spectra}
 \label{sec:supp_chain_comb}
@@ -3496,7 +3188,7 @@ configuration; the FHC and RHC spectra are in the analysis note.
   \vspace{3mm}
   \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{step1_reco_costhpi_COMB}\caption{$\cos\theta_\pi$}\end{subfigure}\hfill
   \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{step1_reco_thmupi_COMB}\caption{$\theta_{\mu\pi}$}\end{subfigure}\hfill
-  \caption{Stage 1, combined: selected reconstructed spectra at the combined FHC$+$RHC exposure.}
+  \caption{Stage 1, combined: selected reconstructed spectra in the combined configuration.}
   \label{fig:chain_reco_comb}
 \end{figure}
 
@@ -3559,9 +3251,615 @@ The release was built from the processed ntuples in a single pass with every cac
 universe deleted, so no intermediate result is carried over. A clean-cache rebuild of the
 same kind reproduced a previous release bin by bin to $10^{-9}$ (recorded in the change
 log); repeating that comparison on the release to be unblinded is on the pre-unblinding
-list (\noteref{Sec.}{sec:limitations}).
+list (prerequisite U6, \noteref{Sec.}{sec:limitations}).
 
 
+
+
+\part{Rejected alternatives and development history}
+\section[The first binning optimisation]{The first binning optimisation\scopetag{inclusive}}
+\label{sec:binopt}
+
+\noindent\emph{Historical configuration, not used in the submitted results. The change log gives the chronology.}
+
+The first binning optimisation gave $p_\pi$ five bins, $\theta_{\mu\pi}$ seven and
+$\cos\theta_\pi$ five. The response and $A_C$ tests of \S\ref{sec:ppi_bias} and
+\S\ref{sec:binning_recheck} coarsened or re-binned these, and the binning review of
+\S\ref{sec:binreview} replaced them; the binnings of the results are those of
+\S\ref{sec:final_binning}.
+
+\subsection{Binning optimisation}
+Bins were designed to be at least the local RMS detector resolution wide (so the
+response stays well conditioned and the Wiener-SVD does not amplify the correlated
+flux/cross-section uncertainty) and to hold $\geq45$ selected-signal events
+(statistical floor). This lowers the total fractional uncertainty in every
+observable, chiefly through the statistical and unfolding-amplified terms; the
+flux/beamline term is correlated across bins and sets a floor:
+
+\begin{center}\small
+\begin{tabular}{lccc}
+\toprule
+Observable & bins & Total before & Total after \\
+\midrule
+$p_\mu$          & 22$\to$7 & 33.2\% & \textbf{25.0\%} \\
+$p_\pi$          & 5$\to$5  & 27.7\% & 27.0\% \\
+$\cos\theta_\mu$ & 12$\to$5 & 31.3\% & \textbf{26.7\%} \\
+$\cos\theta_\pi$ & 12$\to$5 & 48.5\% & \textbf{33.9\%} \\
+$\theta_{\mu\pi}$& 9$\to$7  & 28.4\% & \textbf{23.5\%} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+
+\subsection{Re-check of the optimised binnings}
+\label{sec:binning_recheck}
+The binnings of the optimisation stage were coarsened where $A_C$ smearing left no
+resolved information ($\cos\theta_\pi$ $5\to4$, $\theta_{\mu\pi}$ $7\to5$). The resulting
+binnings, called released below, were then re-tested with the final normalisation, weights,
+beam-off treatment, pseudo-data throw and detector variations, all of which condition the
+response, to find whether finer binnings are admissible. The test had two stages. The first
+is a pre-screen on the processed files
+(\texttt{macros/binning\_screen.C}): for the released binning and finer candidates of each
+observable, the column-normalised migration diagonal per true bin, the efficiency per
+bin and the selected events per reconstructed bin, with the per-run scales and the
+central-value weight, and the $0.68$ diagonal criterion applied to every bin. In the second,
+the candidates that passed were built and unfolded in full (universes, covariance, closure) and compared with the released extraction on the $A_C$ row
+sums, the $A_C$ conditioning ($s_{\min}/s_1$), the data-statistical term, the per-bin
+total uncertainties and the closure ratios.
+
+\begin{center}\small
+\captionof{table}{Binning re-check; ``released'' denotes the binning under test, and the forward-split five-bin $\cos\theta_\pi$ row is the reported binning. Pre-screen: smallest column-normalised migration diagonal, on the analysis sample, over the true
+  bins of the released binning and of each finer candidate, FHC / RHC. The two-bin $p_\pi$
+  row is evaluated here with a lower edge on the first reconstructed bin, which the
+  released configuration does not have (the framework's own diagonals are $0.91$ and
+  $0.76$); the finer $p_\pi$ candidates fail in their upper bins regardless.}
+\label{tab:binning_screen}
+\begin{tabular}{llcc}
+\toprule
+Observable & Binning & min.\ diagonal FHC / RHC & criterion \\
+\midrule
+$p_\mu$ & released 7 & $0.33$ / $0.31$ & fails already (MCS resolution; \S\ref{sec:binopt}) \\
+        & 8, 9 bins & $0.17$ / $0.18$, $0.22$ / $0.22$ & fail \\
+$\cos\theta_\mu$ & released 5 & $0.68$ / $0.68$ & at the limit \\
+        & 6, 7 bins & $0.64$ / $0.63$, $0.61$ / $0.61$ & fail \\
+$\theta_\mu$ & released 5 & $0.67$ / $0.65$ & at the limit \\
+        & 7 bins & $0.63$ / $0.62$ & fail \\
+$\cos\theta_\pi$ & released 4 & $0.81$ / $0.83$ & pass \\
+        & 5 (backward split) & $0.77$ / $0.77$ & pass \\
+        & 5 (forward split) & $0.74$ / $0.76$ & pass \\
+        & 6 bins & $0.73$ / $0.75$ & pass \\
+$\theta_{\mu\pi}$ & released 5 & $0.79$ / $0.79$ & pass \\
+        & 6, 7 bins & $0.74$ / $0.73$, $0.75$ / $0.73$ & pass \\
+$p_\pi$ & released 2 & $0.58$ / $0.56$ (see caption) & --- \\
+        & 3, 4 bins & $0.39$ / $0.40$, $0.29$ / $0.29$ & fail \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{center}\small
+\captionof{table}{Binning re-check; ``released'' denotes the binning under test, and the forward-split five-bin $\cos\theta_\pi$ row is the reported binning. Full extraction of the candidates that passed the pre-screen, FHC / RHC:
+  range of the $A_C$ row sums, $A_C$ conditioning $s_{\min}/s_1$, bin-averaged
+  data-statistical term, range of the per-bin total uncertainty, and range of the per-bin
+  closure ratio to the $A_C$-smeared truth. Backward split: edges $-1,-0.3,0.2,0.5,0.75,1$;
+  forward split: $-1,-0.1,0.35,0.6,0.8,1$; six bins: $-1,-0.4,0,0.3,0.55,0.75,1$;
+  $\theta_{\mu\pi}$ six bins: $0,0.55,0.75,0.95,1.3,1.85,2.6$~rad; seven bins:
+  $0,0.5,0.7,0.9,1.15,1.45,1.9,2.6$~rad.}
+\label{tab:binning_cands}
+\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lccccc}
+\toprule
+Binning & $A_C$ row sums & $s_{\min}/s_1$ & data stat & per-bin unc. & closure \\
+\midrule
+$\cos\theta_\pi$ rel.\ 4 & $0.71$--$0.82$ / $0.79$--$0.86$ & $0.27$ / $0.24$ & $12.0$ / $11.5\%$ & $30$--$49$ / $32$--$55\%$ & $0.95$--$1.09$ / $0.94$--$1.07$ \\
+backward split 5 & $0.65$--$0.76$ / $0.63$--$0.80$ & $0.20$ / $0.27$ & $16.0$ / $15.2\%$ & $29$--$73$ / $34$--$91\%$ & $0.83$--$1.08$ / $0.87$--$1.03$ \\
+forward split 5 & $0.68$--$0.77$ / $0.70$--$0.84$ & $0.46$ / $0.38$ & $12.7$ / $12.3\%$ & $30$--$53$ / $33$--$48\%$ & $0.89$--$1.07$ / $0.90$--$1.05$ \\
+6 bins & $0.73$--$0.84$ / $0.77$--$0.89$ & $0.18$ / $0.15$ & $19.0$ / $16.3\%$ & $32$--$91$ / $32$--$54\%$ & $0.66$--$1.13$ / $0.81$--$1.23$ \\
+\midrule
+$\theta_{\mu\pi}$ rel.\ 5 & $0.52$--$1.03$ / $0.58$--$1.15$ & $0.008$ / $0.002$ & $8.2$ / $8.4\%$ & $35$--$40$ / $30$--$39\%$ & $0.95$--$1.06$ / $1.03$--$1.08$ \\
+6 bins & $0.56$--$1.29$ / $0.58$--$1.36$ & $0.002$ / $0.000$ & $8.4$ / $10.2\%$ & $34$--$40$ / $30$--$41\%$ & $0.95$--$1.06$ / $1.03$--$1.11$ \\
+7 bins & $0.63$--$1.41$ / $0.65$--$1.06$ & $0.000$ / $0.000$ & $11.5$ / $11.2\%$ & $37$--$40$ / $32$--$46\%$ & $0.85$--$1.04$ / $0.87$--$1.14$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent $p_\mu$, $\cos\theta_\mu$, $\theta_\mu$ and $p_\pi$ cannot go finer:
+their released binnings already sit at or below the diagonal criterion, set by the MCS
+momentum resolution and the angular resolution against the neutrino direction, and every
+finer candidate fails it. $\theta_{\mu\pi}$ admits six or seven bins by the diagonal and
+closes acceptably, but the additional bins carry no resolved information: the smallest
+singular value of $A_C$, already $0.008$ of the largest at five bins, goes to zero, and
+the row sums overshoot to $1.3$--$1.4$ in the bins the regularisation has to fill in, so
+the released five bins stand. $\cos\theta_\pi$ is the one observable with room, and only
+in the forward hemisphere where the events are: splitting the backward region produces a
+bin of $73$--$91\%$ uncertainty that closes at $0.83$--$0.87$, and six bins do the same,
+whereas the forward split (edges $-1,-0.1,0.35,0.6,0.8,1$) keeps every diagonal above
+$0.74$, keeps the per-bin uncertainties in the released range, raises the data-statistical
+term by only $0.7\%$ and improves the conditioning of $A_C$ ($s_{\min}/s_1$ from
+$0.27$ to $0.46$ in FHC, $0.24$ to $0.38$ in RHC) while closing to $0.89$--$1.07$. This is
+the only change the re-check supports, and it is the reported binning. The generator
+predictions are computed at these edges from the event-level files (the unchanged
+observables reproduce the prediction files of the four-bin scheme to machine precision,
+which also verifies the generator chain end to end), and the D'Agostini cross-check is run
+on it. No control-region distribution uses $\cos\theta_\pi$, so the frozen control-region binning
+is unaffected. The proton-tagged $\cos\theta_\pi$ keeps its four bins.
+
+The released binnings of the proton-tagged observables were re-tested on the maximin scan
+against a relaxed $0.50$ diagonal criterion as well as the nominal $0.68$. Twenty-six
+candidate binnings pass the relaxed diagonal, and every one of them fails on the
+conditioning of $A_C$. The single exception is a two-bin $W_\mathrm{had}$ ($0.58/0.54$),
+which is better conditioned than the released six-bin scheme but was not adopted at this
+stage, since two bins buy that conditioning by discarding the shape $W_\mathrm{had}$ is
+measured for. The re-check therefore changes no released proton-tagged binning. The one
+proton-tagged binning set at this stage is that of $\theta_p$, whose edges were taken from
+the RHC chain rather than the FHC one after the scan was run on both: at the same four bins
+they condition three to four times better in both usable configurations.
+
+\paragraph{Revisions from the binning review.}
+The review of \S\ref{sec:binreview}, on the corrected exposure and with the edges optimised at every
+bin count rather than chosen by hand, revises three of the conclusions above. First, the released
+five-bin $\cos\theta_\mu$ and $\theta_\mu$ fail the $0.68$ criterion (worst diagonals $0.67$ and
+$0.65$), optimised edges at the same five bins pass it, and both variables admit finer binnings that
+retain more shape. Second, the proton-tagged candidates were rejected on a conditioning threshold that
+the released binnings themselves do not meet; the review measures the retained shape by the Wiener
+filter factors of $A_C$ instead. Third, the six-bin $W_\mathrm{had}$ fails $0.68$ in all six bins and
+$0.50$ in five, and the RHC-derived $\theta_p$ edges leave $21$ selected events in the last bin. The
+binnings adopted from the review replace those of this section.
+
+\section[The muon angle: \texorpdfstring{$\cos\theta_\mu$}{cos(theta mu)} versus \texorpdfstring{$\theta_\mu$}{theta mu}]{The muon angle: \texorpdfstring{$\cos\theta_\mu$}{cos(theta mu)} versus \texorpdfstring{$\theta_\mu$}{theta mu}\scopetag{inclusive}}
+\label{sec:supp_ang}
+
+\noindent\emph{Historical configuration, not used in the submitted results. The change log gives the chronology.}
+
+\subsection{Angular variable: $\cos\theta_\mu$ versus $\theta_\mu$}
+\label{sec:thetavar}
+
+The muon angle is reported only as $\cos\theta_\mu$. The binning review
+(\S\ref{sec:binreview}) shows that the same partition of the angle retains up to one degree of
+freedom more as $\cos\theta_\mu$ than as $\theta_\mu$, because the regulariser acts on the density,
+so a $\theta_\mu$ result adds no information to a $\cos\theta_\mu$ result with the same bins.
+The comparison below uses the five-bin $\cos\theta_\mu$ and $\theta_\mu$ binnings that
+preceded the review.
+
+In those binnings the two variables spanned the same full range but were different
+partitions of it: the $\theta_\mu$ edges ($0.43$, $0.62$, $0.84$, $1.17$~rad) are not the
+$\arccos$ images of the $\cos\theta_\mu$ edges ($0.45$, $0.64$, $0.86$, $1.10$~rad). The two
+behave very differently under the additional-smearing matrix $A_C$ of the Wiener--SVD unfolding,
+which affects how
+the measurement compares to models.
+
+In $\cos\theta_\mu$ the signal is sharply forward-peaked: the last two bins
+($\cos\theta_\mu>0.8$) hold most of the rate, and $A_C$ suppresses the integral of any
+truth-level prediction strongly (row sums $0.17$--$0.39$ in FHC at that binning,
+against $0.66$--$0.91$ for $p_\mu$). Because the same $A_C$ is applied to the data, the tune
+and every generator, they are compared on equal footing.
+
+The suppression is not a property of the shape of the truth distribution. Across the
+observables the $A_C$ integral factor shows no correlation with peakedness: $W_{\pi p}$ is
+the sharpest distribution in the analysis (peak-to-minimum ratio $36$) yet its factor is
+$0.75$, $\delta p_T$ is comparatively flat (ratio $10$) at $0.70$, and the six-bin
+$W_\mathrm{had}$ then under study, neither sharp nor flat, was the most suppressed at $0.61$; the
+inclusive $\cos\theta_\mu$ factors sat far below all of
+these ($0.17$--$0.39$ against $0.66$--$0.91$ for $p_\mu$) because its response is the
+worst conditioned, not because its peak is the sharpest. Within $\cos\theta_\mu$ itself
+NEUT and NuWro are the flattest of the five truth-level curves (peak-to-minimum
+$3.8$ and $4.3$, against $16.3$ for the tune) and are smeared no differently from the
+others: no smeared generator bin is negative and both sit above the tune in
+every bin. $A_C$ is the Wiener
+filter acting on the SVD modes of the response: it removes whatever the data cannot
+statistically constrain, which is set by the conditioning of the response for that
+observable and binning, not by the shape of the truth distribution, and it is not
+norm-preserving, so it can suppress or enhance.
+
+\paragraph{$\theta_\mu$ with the width-aware operator.} The pseudo-data are Poisson throws from the
+MicroBooNE tune, so the tune is the model that should fit best, and it does
+(FHC $\theta_\mu$, $\chi^2$ on five bins: tune $2.14$, $p=0.83$; GENIE $5.55$; GiBUU
+$6.07$; NEUT $8.46$; NuWro $9.10$; closure $1.52$, $p=0.91$). Under the uniform stencil (\S\ref{sec:reg_widths})
+every model gave $2.8$--$4.7$, indistinguishable, because every model had been mapped onto
+the same curve. At those binnings the $\theta_\mu$ $\chi^2$ were systematically larger than the
+$\cos\theta_\mu$ ones for every model, the truth included.
+
+\section[Extending the pion threshold below 0.175\,GeV/\textit{c} (not adopted)]{Extending the pion threshold below 0.175\,GeV/\textit{c} (not adopted)\scopetag{inclusive}}
+\label{sec:supp_lowppi}
+
+\noindent\emph{Rejected alternative, not used in the submitted results. The change log gives the chronology.}
+
+The extension described here was tested and not adopted; the measurement threshold is
+$p_\pi>0.175$~GeV/$c$.
+
+\paragraph{Test with a low-momentum bin.} For the test, a $[0.113,0.175]\GeVc$ bin is
+prepended to the pion-momentum binning, lowering the measured phase space to the $\nu_e$
+threshold. The truth-level signal
+below $0.175\GeVc$ is recovered from the stored signal-component branches (the
+reconstruction reproduces \texttt{MC\_Signal} above $0.175\GeVc$ to $0.4\%$, the
+residual being the unstored kaon veto); $3323$ true signal events populate the new
+bin. Its selection efficiency is $2.2\%$, an order of magnitude below the
+$15$--$17\%$ of the standard bins (Table~\ref{tab:pithresh_eff}), as expected
+from the reconstruction turn-on. The Wiener--SVD extraction nevertheless remains
+well behaved with the bin included: the $M_A^\mathrm{RES}$ pseudo-data closure gives
+$\chi^2/\mathrm{ndf}=1.41/6$ ($p=0.97$) and the flux term is unchanged
+($17\%$ reco, $18.4\%$ unfolded, amplification $1.08\times$). In this test the bin
+therefore adds information, at the price of a large per-bin uncertainty driven by the
+low efficiency.
+
+For the test the generator predictions were regenerated on the six-bin scheme (the ppi
+histogram uses $p_\pi>0.113$ while the other observables retain $p_\pi>0.175$,
+mirroring the analysis). GENIE, NuWro and NEUT all provide the low bin; GiBUU could
+not be re-binned as its generator-level event record was not retained, so it is
+omitted from the extended $p_\pi$ comparison. Against the pseudo-data the
+generators give $\chi^2/\mathrm{ndf} = 11.1/6$ (GENIE, $p=0.09$), $7.0/6$ (NuWro,
+$p=0.33$) and $6.3/6$ (NEUT, $p=0.39$): NEUT and NuWro describe the extended
+spectrum well, while GENIE is mildly disfavoured, consistent with the known GENIE
+over-prediction of low-momentum CC$\pi^{\pm}$ production.
+
+\begin{center}\small
+\captionof{table}{Selection efficiency per true $p_\pi$ bin with the low-momentum
+  bin added. The new $[0.113,0.175]\GeVc$ bin sits at $2.2\%$, an order of
+  magnitude below the standard bins.}
+\label{tab:pithresh_eff}
+\begin{tabular}{lccc}
+\toprule
+True $p_\pi$ [\GeVc] & $N_\mathrm{true}$ & $N_\mathrm{reco}$ & Efficiency \\
+\midrule
+$\mathbf{0.113}$--$\mathbf{0.175}$ (new) & 3323 & 74 & $\mathbf{2.2\%}$ \\
+$0.175$--$0.250$ & 3368 & 526 & $15.6\%$ \\
+$0.250$--$0.320$ & 2190 & 367 & $16.8\%$ \\
+$0.320$--$0.420$ & 2831 & 479 & $16.9\%$ \\
+$0.420$--$0.550$ & 2499 & 410 & $16.4\%$ \\
+$0.550$--$1.000$ & 2933 & 429 & $14.6\%$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section[The rejected five-bin p pi response]{The rejected five-bin \texorpdfstring{$p_\pi$}{p pi} response\scopetag{inclusive}}
+\label{sec:supp_resp5}
+
+\noindent\emph{Rejected configuration, not used in the submitted results. The change log gives the chronology.}
+
+The migration diagonals of this response and the reasons for rejecting it are in \S\ref{sec:ppi_bias}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.6\textwidth]{fw_resp_ppi}
+  \caption{Smearceptance matrix of the rejected five-bin $p_\pi$ scheme (FHC, analysis sample): reconstructed
+    events pile into the lowest bin from every true bin, the diagnostic that motivated the
+    merged regions of \S\ref{sec:ppi2bin_adopted}; the three-region response of the results is in the
+    analysis note.}
+  \label{fig:resp_ppi5}
+\end{figure}
+
+\section[Golden-pion classifier: details]{Golden-pion classifier: details\scopetag{inclusive}}
+\label{sec:golden_details}
+
+\noindent\emph{Rejected alternative, not used in the submitted results. The change log gives the chronology.}
+
+\subsection{Available inputs}
+The BNB note supplies a tested recipe, and all four of its BDT inputs are
+available in this analysis. The Bragg likelihood ratios (\texttt{trk\_bragg\_pion},
+\texttt{\_mip}, \texttt{\_mu}, \texttt{\_p}) and the track--shower score are in the
+ntuples; the multi-pion pion-ID BDT in this analysis trains on exactly those,
+and the descendant counts are \texttt{pfp\_trk\_daughters\_v} /
+\texttt{pfp\_shr\_daughters\_v}. Wiggliness is available under a different name: the PeLEE
+ntuples carry \texttt{trk\_avg\_deflection\_stdev\_v} (with companions
+\texttt{\_mean\_v} and \texttt{\_separation\_mean\_v}), which is the standard
+deviation of the angular deflection between adjacent track points. It is fully populated
+and is carried forward by \texttt{ProcessNTuples}.
+
+\subsection{Track wiggliness as a golden-pion tag}
+The variable was tested on truth-matched charged pions in the Run-1 FHC overlay, calling a
+pion ``golden-like'' when the mass-corrected range momentum recovers the true momentum to
+within $20\%$, and ``interacting'' when it recovers less than $60\%$. The two populations
+separate clearly, but golden pions are the wigglier ones, by about a factor two in the
+mean ($0.0048$ against $0.0027$), the opposite of the naive expectation. This is not a
+momentum artefact: it persists when binned in track length, with the ratio staying at
+$0.51$--$0.63$ from $5$~cm to $400$~cm.
+
+The sign has a physical explanation. A pion that stops travels its full range and
+scatters strongly through its final slow centimetres, so the deflection spread averaged
+along the track is large. A pion that interacts hadronically is cut short while still fast
+and never reaches that wiggly end, so its track is straighter. High wiggliness is thus a
+signature of having stopped, which is the population for which a range-based
+momentum is meaningful.
+
+As a single cut it is useful: on this sample the golden fraction is $39.9\%$ before
+any cut, and requiring \texttt{trk\_avg\_deflection\_stdev\_v}$\,>0.001$ keeps $86.8\%$ of
+golden pions while rejecting $48.8\%$ of interacting ones, raising the golden fraction to
+$53.0\%$. A tighter cut at $0.002$ gives $57.8\%$ efficiency and $55.7\%$ golden. For
+comparison, the BNB four-variable BDT reaches $67.7\%$ golden at roughly half the
+generic-selection efficiency, so one variable recovers a good part of the gain, and the
+remaining three variables, all available here, could recover more.
+
+Three options follow, in increasing order of effort: rebin $p_\pi$ against
+a migration criterion, which on the numbers above means one or two resolved intervals at
+threshold plus a wide open region; add a golden-pion cut for the $p_\pi$ cross section
+built from the available variables, accepting the factor-two efficiency loss the
+BNB analysis accepts; or reproduce the BNB BDT in full. None changes the total or angular
+results, which do not use this estimator. The first option, applied with the $0.50$
+criterion of the analysis (\S\ref{sec:binreview}), gives the adopted binning
+(\S\ref{sec:ppi2bin_adopted}); the classifier was trained and tested and does not
+change this conclusion (\S\ref{sec:golden_bdt}).
+
+\subsection{Variable ranking}
+The variable ranking of the classifier of \S\ref{sec:golden_bdt} is dominated by the deflection
+variables (\texttt{wmean}, then \texttt{wstd}); the Bragg ratios contribute essentially nothing,
+although Bragg was expected to carry the stopping signature.
+
+\subsection{Track-sample and analysis-sample diagonals}
+Table~\ref{tab:golden_compare} is built on the track sample (\S\ref{sec:ppi_samples}). On it the
+five-bin scheme reads $99/24/13/6/6\%$ and the two-bin scheme $98/62\%$, against $96/35/21/10/6\%$ and
+$91/76\%$ on the analysis sample. The track-sample figures are therefore not the analysis response,
+and the $62\%$ does not mean that the inclusive $p_\pi$ measurement fails the usable-bin criterion: on
+the analysis sample the upper bin of the two-bin scheme is at $76\%$. The comparisons made within the
+table, between rows of the same sample, are valid as they stand.
+
+\subsection{Multiple Coulomb scattering as estimator and classifier input}
+Range
+saturates because the pion interacts before stopping, which
+truncates the track. Multiple-Coulomb-scattering (MCS) momentum is inferred from the
+scattering along whatever track exists and is not truncated by an interaction, so it is the
+natural candidate to replace range. The CC0$\pi$ analysis uses this pairing, range
+for contained tracks and MCS for exiting ones. Measured on $122\,878$ truth-matched pion
+tracks (\texttt{trk\_mcs\_muon\_mom\_v}, filled for $99.9\%$ of them):
+
+\begin{center}\small
+\begin{tabular}{lcccccc}
+\toprule
+true $p_\pi$ [GeV/$c$] & $\langle$len$\rangle$ & $\langle$range/true$\rangle$ & RMS
+ & $\langle$MCS/true$\rangle$ & RMS \\\midrule
+$0.175$--$0.250$ & $25$~cm & $0.834$ & $0.16$ & $4.335$ & $14.1$ \\
+$0.320$--$0.420$ & $46$~cm & $0.629$ & $0.23$ & $2.438$ & $7.2$ \\
+$0.550$--$0.800$ & $71$~cm & $0.446$ & $0.18$ & $1.423$ & $3.5$ \\
+$0.800$--$1.500$ & $84$~cm & $\mathbf{0.319}$ & $0.16$ & $\mathbf{1.011}$ & $2.1$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent In the top bin range is biased to $0.319$ (the saturation), while MCS is
+essentially unbiased at $1.011$; but MCS carries a $210\%$ RMS
+there and $1400\%$ in the lowest bin, which makes it unusable as a per-event estimator. The
+reason is structural and explains why the CC0$\pi$ recipe does not transfer: that analysis
+applies MCS to exiting tracks, which are long by construction, whereas the problematic pions
+here are contained but interacting, $25$--$84$~cm long, and MCS needs of order a metre.
+
+The CC0$\pi$ note also uses the disagreement between the two estimators as a track-quality
+BDT input rather than as an estimator. The motivation applies here: a pion that interacts has a
+truncated range but an untruncated MCS, so the fractional difference
+$(p_\mathrm{range}-p_\mathrm{MCS})/p_\mathrm{range}$ should flag the events that
+degrade the response. Added to the golden-pion classifier, it ranks second of ten
+in importance, behind only the mean deflection, but it leaves the performance unchanged:
+
+\begin{center}\small
+\begin{tabular}{lcc}
+\toprule
+classifier inputs & ROC integral & diagonals at $\sim\!44\%$ efficiency \\\midrule
+baseline (nine variables) & $0.758$ & $99.1 / 33.1 / 24.5 / 15.4 / 9.1$ \\
+$+$ range$-$MCS difference & $0.757$ & $99.0 / 34.8 / 24.8 / 14.8 / 9.1$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent The new variable is highly informative but not additionally informative: it is
+strongly correlated with the deflection variables already present, since both measure whether
+the track scattered heavily and ended abruptly. A high importance rank with an unchanged ROC
+integral is the signature of a redundant input. This independently supports the ceiling
+argument above: the classifier already extracts what the golden label can offer, and the limit
+is the physics of the label rather than the quality of the classifier.
+
+A further variant was not pursued. Retraining on the label ``range is
+accurate'', $|p_\mathrm{corr}/p_\mathrm{true}-1|<0.2$, would target the quantity of interest
+directly and would raise the diagonals, but it would select on the answer:
+keeping events where the estimator happens to be right sculpts the response by construction
+and inflates the diagonal without measuring anything, the same effect described for the tight
+BDT working points below. The golden label is used because it is a physical property
+of the pion, independent of how well it was reconstructed.
+
+
+\subsection{Tight working points}
+The $>0.15$ row of Table~\ref{tab:golden_compare} appears better than
+perfect truth selection ($46.9, 42.2, 36.1, 19.5\%$), which is impossible for an unbiased
+classifier. This arises because a hard cut on
+the classifier preferentially keeps long tracks: inside the top true bin, the surviving
+tracks have a mean length of $120.8$~cm against $78.2$~cm for all pions, and a mean
+reconstructed momentum of $0.406$ against $0.307$~GeV/$c$. The cut is thus partly a cut on
+the reconstructed momentum itself, which raises the diagonal by construction while sculpting
+the spectrum. The apparent gain is circular, and the tight working points are not used.
+This is the failure mode anticipated for track length as a direct input; it enters here
+through the deflection variables, which correlate with length, even though length itself was
+excluded from training.
+
+\subsection{Residual bias of golden pions}
+Golden pions still reconstruct at
+$\langle p^{\rm corr}/p^{\rm true}\rangle = 0.73$ on the track sample. Interaction is therefore
+not the only problem: the momentum conversion is itself biased. A single flat rescaling does
+not repair it: applying the best global factor drops the first bin from $98.9$ to
+$49.1\%$ and leaves $0/5$ bins passing, because the bias is momentum-dependent, as
+the saturation curve of Figure~\ref{fig:ppi_sat} shows.
+
+Coarser binning helps but is not sufficient. Collapsing to two bins ($0.175$,
+$0.230$, $\infty$) gives $98.7$ and $58.3\%$ with perfect golden selection, an improvement
+but still short of $0.68$. Only a single bin, i.e.\ no differential measurement,
+passes trivially.
+
+\section[Pion-momentum estimators: detailed studies]{Pion-momentum estimators: detailed studies\scopetag{inclusive}}
+\label{sec:estimator_details}
+
+\noindent\emph{Rejected alternatives, not used in the submitted results. The change log gives the chronology.}
+
+\paragraph{Calorimetric energy.} Deposited charge stops at the
+interaction point just as range does, so $\langle$calo/true$\rangle$ falls from $1.136$ to
+$0.383$ across the momentum range while the RMS is three to five times that of range
+($1.007$ to $0.313$, against $0.157$ to $0.158$). Calorimetry is subject to the same
+truncation as range, with more noise.
+
+\paragraph{Golden-pion selection.} Splitting the
+sample by the truth label shows that golden pions are not well reconstructed either, and that
+their advantage disappears at high momentum, where it would be needed:
+
+\begin{center}\small
+\begin{tabular}{lccc}
+\toprule
+true $p_\pi$ [GeV/$c$] & golden fraction & golden $\langle$range/true$\rangle$ & non-golden \\\midrule
+$0.175$--$0.250$ & $77.8\%$ & $0.873$ & $0.699$ \\
+$0.320$--$0.420$ & $44.1\%$ & $0.705$ & $0.570$ \\
+$0.550$--$0.800$ & $21.4\%$ & $0.507$ & $0.429$ \\
+$0.800$--$1.500$ & $17.2\%$ & $\mathbf{0.327}$ & $\mathbf{0.317}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent Above $0.8$~GeV/$c$ the golden and non-golden values are identical to within one
+per cent. The reason is physical: a $1$~GeV/$c$ pion has a CSDA range of several metres in
+argon and cannot stop inside a $2.5$~m TPC unless it has already lost most of its energy
+through processes that truncate or break the track. ``Golden'' at high momentum therefore
+selects a pathological subsample rather than a clean one. This is why the classifier of
+\S\ref{sec:golden_bdt} reaches a ceiling: above $\sim\!0.5$~GeV/$c$ there is no clean
+subsample to find.
+
+\paragraph{Multivariate regression.} A
+BDTG regression on $p_\pi^{\rm true}$, using range, MCS, calorimetry, length, the three
+deflection variables, the four Bragg likelihoods, track score and daughter count, was trained
+on Runs 1 and 4 and evaluated on the held-out Run 2. It largely removes the saturation in the
+mean, $\langle$pred/true$\rangle$ running $1.196$ to $0.722$ against $0.835$ to $0.319$ for
+range, at comparable RMS. Rebuilding $W_{\pi p}$ with it:
+
+\begin{center}\small
+\begin{tabular}{lcc}
+\toprule
+pion estimator & $W$ bias & $W$ RMS \\\midrule
+range (analysis)   & $-0.127$ & $0.144$ \\
+BDTG regression    & $\mathbf{-0.005}$ & $0.119$ \\
+true $p_\pi$ (ceiling) & $+0.003$ & $\mathbf{0.046}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent The bias falls by a factor of $25$, which is relevant independently of binning:
+a $-127$~MeV/$c^2$ shift distorts the whole $W$ distribution. The resolution improves only from
+$0.144$ to $0.119$ against a ceiling of $0.046$, so the regression recovers about a quarter of
+what is available.
+
+Its effect on the binning is a redistribution of the migration rather than an overall
+improvement. The six-bin diagonals move
+from $98/30/19/19/13/6\%$ to $63/38/33/43/52/56\%$: the top bin improves nearly tenfold, but
+the first bin degrades from $98\%$ to $63\%$, and in the two-bin scheme the worst bin falls
+from $73\%$ to $58\%$. That degradation is regression to the mean, the estimator being pulled
+toward the sample centre, and it damages the low-$W$ region where the resonance physics sits.
+The same pattern appears in $p_\pi$ itself, where the first bin falls from $99.2\%$ to
+$60.6\%$ while the top bin rises from $0.5\%$ to $33.2\%$.
+
+Two considerations argue against adopting it. The estimator would be MC-trained and would
+sit upstream of every observable, so its model dependence would become a systematic on every
+result rather than on one cut. And the trade it offers moves measurability out of the region
+of interest. It is not adopted.
+
+\paragraph{Remaining handles.} The ceiling measurements above bound what is available:
+a perfect pion momentum would give $W_{\pi p}$ a resolution of $0.046$, a factor of three
+better than the regression achieves and enough to support several bins. The information is
+carried away by the interaction products, so the approach that addresses the cause is to
+recover their energy: the pion and its daughters treated as a mini-calorimeter, using the
+per-PFP calorimetric energies and daughter links already present in the input files. For the
+proton-tagged sample there is a second, independent handle in transverse kinematic imbalance,
+where the muon and proton constrain the pion transverse momentum without using the pion's own
+reconstruction at all, at the cost of Fermi-motion smearing of order $250$~MeV/$c$. The
+transverse-imbalance route has not been tried; the daughter-recovery route was tested next.
+
+
+
+\paragraph{Recovery of the interaction products.} The ceiling
+measurements above locate the missing information in the secondaries produced when the pion
+interacts, so the natural remedy is to treat the pion and its products as a single
+calorimeter, and this was tested. PeLEE carries no parent index, so association is geometric,
+by PFP start point relative to the pion track end, optionally restricted to the generation
+immediately below the pion in the Pandora hierarchy. The hierarchy restriction is needed: at a
+$40$~cm radius the unrestricted sum collects $0.371$~GeV in the lowest momentum bin, where
+only $0.034$~GeV is missing, so it is dominated by unrelated activity.
+
+With the hierarchy cut applied, on Run 1:
+
+\begin{center}\small
+\begin{tabular}{lccccc}
+\toprule
+true $p_\pi$ [GeV/$c$] & $\langle$KE missing$\rangle$ & \multicolumn{4}{c}{$\langle\sum E$ of daughters within $R\rangle$ [GeV]} \\
+ & & $5$~cm & $10$~cm & $20$~cm & $40$~cm \\\midrule
+$0.175$--$0.420$ & $0.034$ & $0.023$ & $0.026$ & $0.029$ & $0.037$ \\
+$0.420$--$0.800$ & $0.246$ & $0.040$ & $0.048$ & $0.055$ & $0.062$ \\
+$0.800$--$1.500$ & $\mathbf{0.659}$ & $0.056$ & $0.074$ & $0.091$ & $\mathbf{0.104}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent ``KE missing'' is the pion's true kinetic energy less the calorimetric energy of its
+own track. In the top momentum bin $659$~MeV is unaccounted for and the visible daughters
+supply $104$~MeV, of which about $37$~MeV is the baseline seen even in the lowest bin where
+almost nothing is missing. Genuine recovery is therefore of order $10\%$ at high momentum and
+$25\%$ in the middle bin.
+
+The effect on the binning was tested directly rather than inferred from the bias, and the
+daughter sum does not change the binning assessment. Adding the daughter energy improves $\langle$reco/true$\rangle$
+everywhere, the top bin moving from $0.373$ to $0.470$ and the first bin becoming nearly
+unbiased at $0.953$, and it roughly triples the upper migration diagonals. Neither is
+sufficient: the best upper diagonal rises from $5.5\%$ to $15.7\%$, against the $68\%$ of
+the BNB criterion. In the two-bin scheme there is no net gain and arguably a loss, the worst
+bin improving from
+$61.4\%$ to $71.0\%$ while the first degrades from $97.7\%$ to $82.4\%$, the same
+regression-to-the-mean behaviour seen with the multivariate estimator. Since both bins already
+clear the criterion with plain range, the daughter association would add a new systematic
+without improving the response. The coarse $p_\pi$ binning is therefore robust against every
+estimator tested, which the binning study alone could not establish.
+
+The recovered energy is far too small to change the measurement, and the reason is physical
+rather than algorithmic. Pion absorption on argon, $\pi A\to NN\ldots$, deposits much of the energy in
+nucleons, roughly half of which are neutrons and therefore invisible in liquid argon; the
+charged products are frequently short and fall below the threshold to be reconstructed as
+separate particles. The energy is therefore not only unassociated but largely undetected. Applying
+the daughter sum would move $\langle$reco/true$\rangle$ in the top bin from $0.32$ to about
+$0.42$, still less than half of truth.
+
+\section[Cosmic-direction cuts considered and rejected]{Cosmic-direction cuts considered and rejected\scopetag{inclusive}}
+\label{sec:supp_cosmiccut}
+
+\noindent\emph{Rejected alternative, not used in the submitted results. The change log gives the chronology.}
+
+\paragraph{Directional cut against residual cosmics.} Part of the
+surviving beam-off sample is thought to consist of broken cosmic muon tracks, in which the
+break is reconstructed as a vertex and the track direction bears no relation to it. Such
+events carry a directional signature, which is seen in the data: among selected events the
+beam-off sample is enriched at backward reconstructed muon angles by nearly an order of magnitude
+relative to signal.
+
+\begin{center}\small
+\begin{tabular}{lccc}
+\toprule
+reco $\cos\theta_\mu$ & EXT (beam-off) & MC signal & enrichment \\\midrule
+$<0$    & $31.8\%$ & $4.1\%$ & $7.8\times$ \\
+$<-0.5$ & $9.1\%$  & $1.4\%$ & $6.4\times$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent Despite this enrichment, a cut does not pay off. At the final cut the FHC sample is $833$
+signal, $23$ beam-off and $1\,418$ predicted events in total (\noteref{Table}{tab:cutflow}). A
+$\cos\theta_\mu<0$ requirement would remove about $32\%$ of the beam-off background, about $7$ events,
+and about $4\%$ of the signal, about $33$ events. The beam-off background is subtracted from the data
+directly, and that subtraction is unbiased by construction, so removing part of it only reduces the
+statistical uncertainty of the subtraction. That uncertainty is $4.2$ events for the $23$, dominated by
+the $8$ selected Run-1 beam-off events scaled by $1.23$ for Run~1 and by $0.76$ for Run~2; the cut
+would reduce it to about $3.5$ events. Losing $33$ signal events to reduce the uncertainty by less than
+one event is a net loss.
+
+The same bound applies to any cosmic cut. The beam-off background is $1.6\%$ of the selected sample
+and is subtracted without bias, so removing all of it with no signal loss would gain about $4$ events
+of statistical uncertainty on a sample of $1\,418$. Any cut costing more than about $0.5\%$ of the
+signal is a net loss regardless of how efficiently it tags cosmic rays. The residual beam-off
+contribution is therefore left in place and handled by subtraction.
+
+A more selective variant has not been tested. The CC0$\pi$ analysis tags mis-directed tracks with
+a calorimetric direction-preference flag in coincidence with a poor
+forward-muon fit, $\chi^2_\mu>6$, which fires on tracks whose $dE/dx$ profile disagrees with
+the assigned direction rather than on backward-going tracks as such. That would not cut
+genuine backward muons, which outnumber mis-reconstructed ones here by roughly $8{:}1$. Both
+quantities exist in the input ntuples but are not carried into the processed files. Such a
+cut is bounded by the same $\approx6$-event ceiling on the EXT statistical uncertainty, so it
+could not bring a significant improvement.
 
 
 \part{Physics background}
@@ -3734,7 +4032,7 @@ GiBUU predictions for pion angular distributions and for the backward-hemisphere
 $d\sigma/d\cos\theta_\pi$ can differ substantially from those of cascade-based
 generators, which makes GiBUU a useful cross-check of FSI systematics.
 
-Because the present results are extracted on central-value fake data, no data/MC
+Because the present results are extracted on central-value pseudo-data, no data/MC
 deficit is measured here. The analysis does provide the spread of the standalone
 generators in the measured phase space, a factor of $\sim\!1.6$ between GENIE and NEUT
 (Table~\ref{tab:total_xsec}), which brackets the injected \uboone{} tune. The over-prediction

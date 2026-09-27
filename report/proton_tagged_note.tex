@@ -83,6 +83,9 @@
 \externaldocument[N-]{analysis_note}
 \newcommand{\noteref}[2]{#1~\ref{N-#2} of the inclusive analysis note}
 \newcommand{\crref}[2]{#1~\ref{CR-#2} of the control-sample note}
+% shared status vocabulary and the reference macro used by the shared tables (2026-09-27)
+\input{shared/status_vocab}
+\newcommand{\inclref}[2]{\noteref{#1}{#2}}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning}
 % Every result figure shows fake data. The stamp is drawn over the graphic by LaTeX so it cannot be
@@ -105,66 +108,110 @@
   \vspace{0.8cm}
   {\large Companion to the inclusive analysis note\par}
   \vspace{0.5cm}
-  {\normalsize\bfseries Secondary analysis under validation, not part of the inclusive-analysis
-    unblinding request\par}
+  {\normalsize\bfseries Secondary results proposed for approval and validation-only products\par}
   \vspace{1.5cm}
   {\large Ishanee Pophale and Jarek Nowak\par}
   \vspace{0.5cm}
   {\normalsize\itshape Lancaster University\par}
   \vspace{2cm}
   \begin{abstract}
-    The inclusive CC$1\mu1\pi Xp$ measurement of the companion note is repeated on the subsample in
-    which a proton candidate with $p_p>0.3\GeVc$ is also reconstructed. The proton gives access to the
-    visible hadronic system: the proton momentum, a calorimetric hadronic-mass proxy, the transverse
-    kinematic imbalance between the muon and the $\pi p$ system, the proton polar angle and the
-    pion--proton opening angle. All are extracted in the three NuMI configurations with the Wiener-SVD
-    machinery of the inclusive analysis and are provided with their additional-smearing matrices and
-    covariances. The one-bin total cross section is proposed as a secondary result. The differential
-    and two-dimensional results are validation products until an inverted-proton-PID control region
-    exists, the hadronic-mass proxy and $p_n$ are validated for pion production, and the model
+    The inclusive CC$\pi^{\pm}$ measurement of the companion note is repeated on the subsample in which
+    a proton candidate with $p_p>0.3\GeVc$ is also reconstructed. The proton gives access to the
+    visible hadronic system: the proton momentum and direction, the pion--proton opening angle, a
+    calorimetric hadronic-mass proxy and the transverse kinematic imbalance between the muon and the
+    $\pi p$ system. The cross sections are averaged over the $\nu_\mu+\bar\nu_\mu$ flux integrated above
+    $60$~MeV and extracted in the FHC, RHC and combined configurations with the Wiener-SVD machinery of
+    the inclusive analysis, each with its additional-smearing matrix and covariance. The one-bin total
+    cross section, $d\sigma/d\theta_p$ and $d\sigma/d\theta_{\pi p}$, and the combined-configuration
+    $d^2\sigma/d\theta_p\,d\delta p_T$ are proposed as secondary results. The proton momentum, the
+    hadronic-mass proxy, the transverse-kinematic-imbalance observables and the muon and pion
+    observables on this sample are validation-only products until an inverted-proton-PID control region
+    exists, the hadronic-mass and $p_n$ prescriptions are validated for pion production, and the model
     sensitivity of the low-imbalance bins ($1.1$--$1.2\sigma$ under a coherent GENIE variation) is
-    carried in the covariance or excluded. The differential $W_{\pi p}$ shape cannot be measured at this
-    exposure and is not reported. Ensembles of fake-data experiments give correctly sized statistical
-    uncertainties (pull widths $0.94$--$1.08$). All results are extracted from fake data.
+    treated. No differential $W_{\pi p}$ result is reported. The one-bin total carries a $42$--$47\%$
+    uncertainty; ensembles of pseudo-experiments give pull widths of $0.94$--$1.08$. All results are
+    extracted from pseudo-data.
   \end{abstract}
   \vfill
   \tableofcontents
 \end{titlepage}
 
-\begin{center}\fbox{\parbox{0.94\textwidth}{\textbf{Status of the results.}
-\emph{Proposed secondary result:} the proton-tagged one-bin total cross section.
-\emph{Validation only:} $p_p$, $W_{\rm had}$, $\delta p_T$, $\delta\alpha_T$, $\delta\phi_T$, $p_n$,
-the muon and pion observables of the inclusive analysis on this subsample, $\theta_p$,
-$\theta_{\pi p}$ and the two-dimensional pairs. \emph{Not reported:} the differential $W_{\pi p}$
-shape. \emph{Taken from the inclusive note:} exposure, flux, target count, event weights, detector
-variations, the unfolding implementation and the covariance conventions.}}
-\end{center}
+% =============================================================================
+\section{Summary and decision requested}
+\label{sec:pt_decision}
+% =============================================================================
+
+This note presents the proton-tagged measurement, the inclusive CC$\pi^\pm$ selection with a
+reconstructed proton above $0.3\GeVc$. All results are extracted from pseudo-data: the signal region is
+blind. The decision requested is stated below; the same statement opens the analysis note.
+
+\input{shared/decision_box}
+
+Table~\ref{tab:pt_status} gives the status of every proton-tagged product and the prerequisites that
+block it (Table~\ref{tab:prerequisites}, Section~\ref{sec:pt_prereq}). No differential $W_{\pi p}$
+result is reported. The topology-level one-bin total cross section remains measurable, but it is not
+described as a $W_{\pi p}$ measurement.
+
+\input{tables/pt_status}
 
 % =============================================================================
 \section{Introduction}
 \label{sec:pt_intro}
 % =============================================================================
 
-The inclusive analysis~\cite{incl_note} measures charged-current single-charged-pion production
-with any number of nucleons in the final state. Requiring in addition a reconstructed proton gives
-access to the whole visible hadronic system and to two classes of observable that the inclusive
-measurement cannot provide: the hadronic invariant mass, which probes the $\Delta(1232)$ and
-higher resonances, and the transverse kinematic imbalance (TKI) between the muon and the hadronic
-system, which is sensitive to Fermi motion and to final-state interactions.
+The inclusive analysis~\cite{incl_note} measures charged-current single-charged-pion production with
+any number of nucleons in the final state. Requiring in addition a reconstructed proton gives access to
+the whole visible hadronic system and to observables that the inclusive measurement cannot provide.
+
+The proposed results address three questions. The one-bin total measures how often a
+CC$\pi^\pm$ interaction produces a proton above $0.3\GeVc$, which depends on the resonance decay, on
+nucleon final-state interactions and on the nuclear model: among the generators the ratio of the
+proton-tagged to the inclusive FHC total ranges from $0.52$ (NuWro) to $0.65$ (GiBUU), with $0.61$ for
+the tune. The proton-tagged totals themselves span $0.50$ (GENIE) to $0.78\times10^{-38}$~cm$^2$/Ar
+(NEUT) in FHC, against a $42$--$47\%$ uncertainty on the measured total, so at the present exposure the
+total separates only the lowest and highest predictions, by about one standard deviation. The proton
+polar angle $\theta_p$ measures the proton direction, and the pion--proton opening angle $\theta_{\pi p}$
+how the momentum of the hadronic system is shared between the pion and the proton, which the
+transverse-kinematic-imbalance (TKI) observables of the summed system cannot see. The
+two-dimensional $\theta_p\times\delta p_T$ relates the proton direction to the transverse imbalance.
+
+The other differential products, the hadronic-mass proxy $W_\mathrm{had}$, the TKI observables and the
+proton momentum, are validation-only. They are extracted, validated and released with the same chain,
+and they show where the proton-tagged extraction is sensitive to the model, but they are not proposed
+until the prerequisites of Section~\ref{sec:pt_prereq} are met.
 
 The proton requirement changes more than the sample size. The signal definition acquires a proton
-threshold and a leading-proton convention. The reconstruction acquires a proton candidate that is
-the leading true proton in $82\%$ of selected signal events. Two observables, $p_n$ and the
-hadronic-mass proxy, rely on a single-nucleon residual-mass prescription written for quasi-elastic
-kinematics and not yet validated for pion production. The detector uncertainty, evaluated on the
-smaller sample, reaches $75\%$ in the sparsest extractions. The inclusive measurement carries none of
-these, and the two analyses are therefore documented and approved separately.
+threshold and a leading-proton convention. The reconstruction acquires a proton candidate that is the
+leading true proton in $82\%$ of selected signal events. Two observables, $p_n$ and the hadronic-mass
+proxy, rely on a single-nucleon residual-mass prescription written for quasi-elastic kinematics and not
+yet validated for pion production. The detector uncertainty, evaluated on the smaller sample, reaches
+$75\%$ in the sparsest extractions. The inclusive measurement carries none of these, and the two
+analyses are therefore documented and approved separately. Table~\ref{tab:pt_dependency} lists what
+this note takes from the analysis note and what it defines itself.
 
-Everything that the two analyses share is described in the inclusive note and not repeated here:
-the beam, exposure and flux (\noteref{Sec.}{sec:flux}), the samples and event weights
-(\noteref{Sec.}{sec:mc}), the inclusive selection (\noteref{Sec.}{sec:selection}), the extraction
-(\noteref{Sec.}{sec:unfolding}) and the uncertainty model (\noteref{Sec.}{sec:systematics}). The
-optimisation studies and diagnostics behind the choices made here are in the technical supplement.
+\begin{table}[H]
+  \centering
+  \caption{Where each element of the proton-tagged measurement is defined.}
+  \label{tab:pt_dependency}
+  \small
+  \begin{tabular}{@{}ll@{}}
+    \toprule
+    Element & Defined in \\
+    \midrule
+    Beam, exposure, flux and target count & \noteref{Sec.}{sec:flux} \\
+    Samples, event weights and beam-off normalisation & \noteref{Sec.}{sec:mc} \\
+    Base selection (ten cuts) & \noteref{Sec.}{sec:selection} \\
+    Unfolding and additional-smearing matrix $A_C$ & \noteref{Sec.}{sec:unfolding} \\
+    Shared uncertainty model & \noteref{Sec.}{sec:systematics} \\
+    Migration criterion and binning rule & \noteref{Sec.}{sec:binning_rule} \\
+    Proton requirement, signal and proton candidate & Section~\ref{sec:pt_selection} \\
+    Proton-tagged observables and binnings & Section~\ref{sec:pt_observables} \\
+    Proton-specific uncertainties & Section~\ref{sec:pt_extraction} \\
+    Validation of the proton-tagged extractions & Section~\ref{sec:pt_validation} \\
+    Prerequisites & Section~\ref{sec:pt_prereq} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
 
 % =============================================================================
 \section{Signal definition and selection}
@@ -286,21 +333,6 @@ the FHC binnings.
 
 \input{tables/binning_1p}
 
-\subsection{The differential \texorpdfstring{$W_{\pi p}$}{W pi p} shape is not reported}
-\label{sec:pt_wpip_withdrawn}
-
-The pion--proton invariant mass would show the $\Delta(1232)$ directly and motivated the
-proton-tagged subsample. At the present exposure its shape cannot be measured with any binning
-tried. The six-bin scheme that resolves the resonance region has a highest bin with a $2\%$
-diagonal, so nearly every event reconstructed there comes from another true bin. Two bins restore
-the response but leave no shape: the best split, at $1.20$~GeV/$c^2$, passes the $0.50$ criterion by
-$0.003$, and its second Wiener filter factor is $0.29$ in FHC and $0.27$ in RHC. A closure test
-against the $A_C$-smeared truth cannot change this, since it tests whether the response was inverted
-correctly and cannot restore information the response does not contain. The six-bin extractions
-remain in the result directory, flagged in \texttt{index\_extractions.tsv}, and their closure and
-generator curves are shown as diagnostics in \suppref{Sec.}{sec:w_binning}; they are not results.
-The sample supports the integrated cross section and $W_\mathrm{had}$ in two regions.
-
 % =============================================================================
 \section{Extraction and uncertainties}
 \label{sec:pt_extraction}
@@ -329,8 +361,7 @@ this sample.
 \subsection{Muon momentum scale}
 \label{sec:pt_mcs}
 
-The muon momentum scale is varied as in the inclusive analysis (\noteref{Sec.}{sec:mcs}): in the fake
-data alone, every muon whose momentum is measured by multiple Coulomb scattering is scaled by
+The muon momentum scale is varied as in the inclusive analysis (\noteref{Sec.}{sec:mcs}): in the pseudo-data alone, every muon whose momentum is measured by multiple Coulomb scattering is scaled by
 $1\pm0.05$, while the simulation, the response and the selection stay nominal, and each variation is
 unfolded with the nominal response. The half-difference of the two results is taken as a fully
 correlated term. In this sample the muon momentum also enters $W_\mathrm{had}$, $\delta p_T$,
@@ -348,10 +379,10 @@ below $0.15\sigma$ for $\delta p_T$. For the two-bin $\delta p_T$ the downward s
 selected events across the edge at $0.3\GeVc$ in one direction as in the other, so its result equals
 the nominal one and the half-difference is set by the upward scale alone. Adding the term raises the
 per-bin total uncertainty by at most $18\%$ of itself for $p_\mu$ (FHC) and by at most $7\%$ for the
-derived observables. The term is provided as \texttt{cov\_MCSscale.txt} and
-\texttt{cov\_total\_plusMCS.txt} in the release directory of each extraction
-(\texttt{data\_release/mcs\_scale\_1p\_2026-09-27.tsv}) and is not yet included in the covariance
-computed by the framework.
+derived observables. The term is part of the official covariance of every result: it is released as
+\texttt{cov\_MCSscale.txt}, and \texttt{cov\_total\_plusMCS.txt} is the framework covariance plus this
+term (\texttt{data\_release/mcs\_scale\_1p\_2026-09-27.tsv}). Every uncertainty quoted in this note
+includes it; the closure $\chi^2$ and the robustness biases are quoted with the framework covariance.
 
 \begin{table}[H]
   \centering
@@ -390,35 +421,144 @@ computed by the framework.
 
 The beamline-geometry flux term, the uncertainty of the beam-off gate ratios and the use of the Run-1
 beam-off sample for Run~2 are bounded in the inclusive note (\noteref{Sec.}{sec:notincov}) and are
-not included in the covariance. The beam-off background of the proton-tagged sample is three to four
+not included in the official covariance (U7). The beam-off background of the proton-tagged sample is three to four
 times smaller than that of the inclusive sample, so the last two are smaller still.
 
 % =============================================================================
-\section{Results}
-\label{sec:wtki}
+\section{Validation}
+\label{sec:pt_validation}
 % =============================================================================
 
-All results are extracted from fake data, Poisson fluctuations of the central-value simulation at
-the recorded exposure, and every figure carries the label ``BLINDED: CV PSEUDO-DATA''. The extractions
-are listed in Table~\ref{tab:pt_inventory}.
+The validation follows the ladder of the inclusive analysis (\noteref{Sec.}{sec:validation};
+Table~\ref{tab:validation_ladder}): closure under the nominal model, statistical coverage with
+ensembles, and robustness to a different interaction model are done for the proton-tagged
+extractions listed below; for $\theta_p$, $\theta_{\pi p}$ and the two-dimensional result the last two
+remain to be done (V1), and the generator and control-region steps are prerequisites (U2, U3, P1).
 
-\input{tables/inventory_1p}
+\input{shared/validation_ladder}
+
+\subsection{Closure under the nominal model}
+\label{sec:pt_closure}
+
+The pseudo-data are unfolded and compared with the $A_C$-smeared truth of the throw
+(Tables~\ref{tab:wtki_fhc}--\ref{tab:wtki_comb}). In FHC the $\chi^2$ is well below the number of bins
+for every observable, and the integral ratios are $0.93$--$1.18$. These ratios compare the unfolded
+result with the $A_C$-smeared truth, so the $A_C$ suppression cancels and the departures from unity
+reflect the statistical realisation of the throw and any residual bias; the largest are in
+$\cos\theta_\mu$ ($1.18$) and $\delta\alpha_T$ ($0.93$). In RHC and combined the closure gives
+$\chi^2/\mathrm{ndf}\lesssim1$ for every observable except RHC $\cos\theta_\pi$ ($6.0/4$). As in the inclusive
+analysis, the systematic terms are common to the pseudo-data and the reference, so the closure
+$p$-values cluster near unity and the statistical coverage is tested with ensembles.
+
+\subsection{Statistical coverage}
+\label{sec:pt_ensemble}
+
+Three extractions were repeated on $100$ statistically independent pseudo-data sets each, with the
+procedure of the inclusive ensembles (\suppref{Sec.}{sec:supp_ensemble}). Every member is a run-by-run
+Poisson throw of the central-value prediction carried through the whole chain: the universes are
+rebuilt from the throw and the result is unfolded. Each unfolded bin is compared with the fixed
+central-value truth smeared by that member's own $A_C$,
+\[
+  p_i \;=\; \frac{\hat{x}_i - \left(A_C\,x_{\rm CV}\right)_i}{\sigma_i}.
+\]
+The three extractions span the family: $W_{\rm had}$ in two regions in FHC, the two-bin $\delta p_T$ in
+FHC, and the two-bin $p_n$ in the combined configuration, which also exercises the combination of the
+beam modes. For all $1600$ input files the number of events read by the universe builder agrees with
+the entries on disk, so no member read an incomplete file.
+
+\input{tables/ensemble_1p}
+
+Against the statistical covariance the pull widths are $0.94$--$1.08$, each known to about $\pm7\%$,
+and the $68\%$ and $95\%$ coverages are $62$--$72\%$ and $92$--$97\%$. The widest case is the two-bin
+$\delta p_T$ (width $1.08$, $68\%$ coverage $62\%$), within two standard deviations of nominal; its two
+bins are correlated, so its $200$ pulls are fewer than $200$ independent tests. Bin by bin, every mean
+is within $0.16$ of zero and every width is $0.92$--$1.09$. The statistical uncertainties of the
+proton-tagged results are therefore correctly sized.
+
+Against the full covariance the widths are $0.26$--$0.40$. The systematic part of the uncertainty is
+two to three times the statistical part, as in the inclusive analysis, and the ensembles do not test
+it, since every member is thrown from the same central-value model; that is the role of the
+alternative-model test below. The ensemble-mean integrals agree with the reference within $0.7\%$, at
+most $0.8$ standard errors of the mean. The other proton-tagged observables were not run individually.
+
+\subsection{Robustness to a different interaction model}
+\label{sec:pt_altmodel}
+
+The pseudo-data are thrown from a reweighted interaction model and unfolded with the nominal response
+(\noteref{Sec.}{sec:altmodel}). The two variations of the inclusive analysis are used, GENIE multisim
+universe~545, a coherent variation of all interaction parameters, and the $\Delta\to N\pi$ decay-angle
+unisim, with the same universes and seeds; the weight applies to signal and background alike.
+$W_\mathrm{had}$, the four TKI observables, $\cos\theta_\pi$ and $p_p$ are extracted in FHC. The truth
+of the pseudo-data is that of the alternative model, so the closure measures the bias from the model
+mismatch, quoted in units of the per-bin uncertainty (Table~\ref{tab:pt_altmodel}).
+
+\begin{table}[H]
+  \centering
+  \caption{Alternative-model closure of the proton-tagged extractions, FHC: unfolded result against the
+    alternative model's own truth. ``ratio'' is the mean unfolded/truth over bins holding at least $10\%$
+    of the largest truth; ``bias'' is the largest per-bin deviation in units of the uncertainty of that
+    bin, over every bin.}
+  \label{tab:pt_altmodel}
+  \small
+  \begin{tabular}{llccc}
+    \toprule
+    Observable & Variation & ratio & max.\ deviation & bias (bin) \\
+    \midrule
+    $W_\mathrm{had}$ (2 regions) & GENIE u545 & $0.83$ & $29\%$ & $-0.40\sigma$ (1) \\
+                     & $\Delta\to N\pi$ angular & $1.23$ & $58\%$ & $+0.89\sigma$ (1) \\
+    $\delta p_T$ (2 bins) & GENIE u545 & $0.66$ & $35\%$ & $-1.14\sigma$ (1) \\
+                     & $\Delta\to N\pi$ angular & $1.04$ & $4\%$ & $+0.14\sigma$ (1) \\
+    $\delta\alpha_T$ (2 bins) & GENIE u545 & $0.85$ & $24\%$ & $-0.57\sigma$ (1) \\
+                     & $\Delta\to N\pi$ angular & $1.03$ & $8\%$ & $+0.19\sigma$ (2) \\
+    $\delta\phi_T$ (3 bins) & GENIE u545 & $0.78$ & $38\%$ & $-0.60\sigma$ (2) \\
+                     & $\Delta\to N\pi$ angular & $1.22$ & $51\%$ & $+0.85\sigma$ (2) \\
+    $p_n$ (2 bins) & GENIE u545 & $1.01$ & $34\%$ & $-1.16\sigma$ (1) \\
+                     & $\Delta\to N\pi$ angular & $1.08$ & $15\%$ & $+0.16\sigma$ (2) \\
+    $\cos\theta_\pi$ & GENIE u545 & $0.96$ & $10\%$ & $-0.37\sigma$ (1) \\
+                     & $\Delta\to N\pi$ angular & $0.94$ & $24\%$ & $-0.55\sigma$ (3) \\
+    $p_p$ (3 bins) & GENIE u545 & $0.92$ & $9\%$ & $-0.19\sigma$ (2) \\
+                     & $\Delta\to N\pi$ angular & $1.08$ & $17\%$ & $+0.37\sigma$ (1) \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Under the $\Delta\to N\pi$ variation no bin exceeds $0.9\sigma$, although the two $W_\mathrm{had}$
+regions and the three $\delta\phi_T$ bins return $22$--$23\%$ high on average. Under the coherent GENIE
+variation the low $\delta p_T$ and $p_n$ bins, the small-imbalance region closest to quasi-elastic
+kinematics, return $35\%$ below the alternative truth, $-1.1$ and $-1.2\sigma$, while that truth moved
+by only $1\%$. The shift therefore enters through the response and the background, through the change
+the varied model makes to the composition of the proton-tagged sample and to the proton-tagging
+efficiency, which the nominal response does not follow. The inclusive analysis shows a bias of this
+size in one sparse bin only (\noteref{Sec.}{sec:altmodel}). The uncertainty covers the shift at about
+one standard deviation, so the extraction does not fail, but the small-imbalance bins of the TKI
+observables are model-sensitive at the level of their own uncertainty. A measurement in them needs
+either this model dependence in the covariance or a demonstration with a validated independent
+generator that the shift does not occur.
+
+% =============================================================================
+\section{Results proposed for approval}
+\label{sec:pt_proposed}
+% =============================================================================
+
+The results of this section are proposed as \statSecondary{}s, subject to the prerequisites of
+Table~\ref{tab:pt_status}.
 
 \subsection{Total cross section}
 \label{sec:pt_total}
 
 The total cross section is extracted as a single bin, as in the inclusive analysis
 (\noteref{Sec.}{sec:total_xsec}): nothing is regularised and $A_C=1$, so the one-bin result is the
-physical total in the measured phase space and does not depend on an observable. It is the
-proposed secondary result (Table~\ref{tab:pt_total}). A closed-form evaluation on the central-value
+physical total in the measured phase space and does not depend on an observable
+(Table~\ref{tab:pt_total}). A closed-form evaluation on the central-value
 prediction reproduces the one-bin extraction of that prediction to four digits ($0.6269$, $0.5506$
 and $0.5831$ for FHC, RHC and combined). The extracted RHC/FHC ratio is $0.873$, against $0.878$ for
 the tune.
 
 \begin{table}[H]
   \centering
-  \caption{Proton-tagged total flux-averaged cross sections ($10^{-38}$~cm$^2$/Ar) in the measured
-    phase space, from the one-bin extraction on fake data. $N_\mathrm{sel}$ and $N_\mathrm{bkg}$ are the
+  \caption{Proton-tagged total cross sections ($10^{-38}$~cm$^2$/Ar) in the measured phase space,
+    averaged over the $\nu_\mu+\bar\nu_\mu$ flux integrated above $60$~MeV, from the one-bin extraction on
+    pseudo-data. $N_\mathrm{sel}$ and $N_\mathrm{bkg}$ are the
     predicted selected count and background ($\nu$-background $+$ EXT $+$ dirt) of the central-value
     prediction and $\varepsilon$ the selection efficiency; ``stat'' is the data-statistical term,
     ``syst'' all other terms and ``total'' their quadrature sum; ``truth'' is the realised truth of the
@@ -440,20 +580,91 @@ The flux-averaged FHC generator totals in the proton-tagged phase space are $0.5
 (NuWro), $0.74$ (GiBUU) and $0.78\times10^{-38}$~cm$^2$/Ar (NEUT), a factor $1.6$ between the lowest
 and the highest, around the tune value of $0.63$.
 
+\subsection{Proton angles \texorpdfstring{$\theta_p$}{theta p} and
+  \texorpdfstring{$\theta_{\pi p}$}{theta pi p}}
+\label{sec:wtki_ang}
+
+$\theta_p$ uses the stored proton direction;
+$\theta_{\pi p}$ is written by a reprocessing of the proton-tagged tree that leaves every other branch
+unchanged. Both are binned in four bins and unfold well, with closure $\chi^2$ of $3.6/4$, $0.09/4$
+and $1.5/4$ for $\theta_p$ and $0.29/4$, $0.57/4$ and $0.24/4$ for $\theta_{\pi p}$ in FHC, RHC and
+combined (Fig.~\ref{fig:newobs_xsec}). $\theta_{\pi p}$ retains the most shape: the trace of $A_C$ is
+$2.1$--$2.2$, with three components measured at a signal-to-noise ratio above one in FHC and RHC, at
+the price of a last bin whose total uncertainty reaches $94\%$ (FHC) and $141\%$ (RHC). $\theta_p$ has
+a trace of $2.1$ in FHC and RHC ($2.3$ combined) and a largest per-bin uncertainty of $41\%$ (FHC)
+and $84\%$ (RHC); its smallest diagonal passes the $0.68$ criterion by $0.002$ in RHC. Both
+distributions are strongly forward peaked, and the generators differ mainly in normalisation, so
+these observables discriminate between models through their integrals. Their binnings follow the rule
+of \noteref{Sec.}{sec:binning_rule}; the screening of the two-dimensional pairs is described in
+\suppref{Sec.}{sec:supp_2d}.
+
+\begin{figure}[H]
+  \centering
+  \blindfig[\textwidth]{newobs_xsec}
+  \caption{The two proton angles in the three configurations: $\theta_p$ (top row) and
+    $\theta_{\pi p}$ (bottom row), for FHC, RHC and combined. Points are the unfolded pseudo-data with the
+    total uncertainty, the grey histogram is the $A_C$-smeared pseudo-data truth, and the four coloured
+    histograms are the generator predictions; the integrated cross sections are given in the legends.}
+  \label{fig:newobs_xsec}
+\end{figure}
+
+\subsection{Two-dimensional \texorpdfstring{$\theta_p\times\delta p_T$}{theta p x delta pT}}
+\label{sec:2d}
+
+The double-differential cross section $d^2\sigma/d\theta_p\,d\delta p_T$ is proposed in the combined
+configuration only. It is binned in two regions of $\theta_p$ (edges $0$, $0.8$, $\pi$~rad) inside two
+of $\delta p_T$ ($0$, $0.3\GeVc$ and above); the four analysis bins are ordered outer slice by outer
+slice and extracted with the same machinery as the one-dimensional results. It is one of eight pairs
+screened (\suppref{Sec.}{sec:supp_2d}). Combining the beam modes raises the conditioning $s_{\min}/s_1$
+of its $A_C$ from $0.433$ (FHC) and $0.332$ (RHC) to $0.611$, through the larger sample and the shared
+flux; the FHC and RHC extractions are \statNotReported. The combined result has a bin-averaged
+data-statistical term of $13.3\%$ and per-bin total uncertainties of $29$--$103\%$; it closes against the
+$A_C$-smeared truth with $\chi^2=1.91/4$ and per-bin ratios of $0.70$--$1.36$
+(Figs.~\ref{fig:2dslices} and~\ref{fig:2dmap}). Because it uses $\delta p_T$, it depends on the muon
+momentum and carries the muon-momentum-scale term, which moves its cells by at most $16\%$ of their
+value and $0.20\sigma$ and leaves its integral unchanged; its low-imbalance bins share the model
+sensitivity of P3. Before approval it requires V1, R1 and P1--P3 in addition to the inclusive
+prerequisites. Its covariance, $A_C$ and curves are released as \texttt{1p\_COMB\_thetap\_dpt2d}.
+
+\begin{figure}[H]
+  \centering
+  \blindfig[0.66\textwidth]{bkgfit/xsec2d_thetap_dpt_COMB_slices}
+  \caption{$d^2\sigma/d\theta_p\,d\delta p_T$ in the combined configuration, as slices in $\delta p_T$.
+    Points are the unfolded pseudo-data with the total uncertainty, the grey histogram is the
+    $A_C$-smeared truth of the pseudo-data and the coloured histograms are the generator predictions,
+    smeared with $A_C$. Each slice has its own vertical scale.}
+  \label{fig:2dslices}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \blindfig[0.82\textwidth]{bkgfit/xsec2d_thetap_dpt_COMB_map}
+  \caption{The same result as a map: $d^2\sigma/d\theta_p\,d\delta p_T$ per cell with its total
+    uncertainty (left) and the ratio to the $A_C$-smeared truth (right). Cells are drawn with equal size
+    and labelled by their ranges.}
+  \label{fig:2dmap}
+\end{figure}
+
+% =============================================================================
+\section{Validation-only products}
+\label{sec:pt_validation_only}
+% =============================================================================
+
 \subsection{Differential cross sections}
 \label{sec:pt_diff}
 
-The differential results carry their full covariances but are not proposed for approval, for the
-reasons given in \S\ref{sec:pt_prereq}. Tables~\ref{tab:wtki_fhc}--\ref{tab:wtki_comb} give the
+The differential results of this section are \statValidation{}s: they carry their full covariances
+and are released, but they are not proposed for approval until the prerequisites listed for them in
+Table~\ref{tab:pt_status} are met. Tables~\ref{tab:wtki_fhc}--\ref{tab:wtki_comb} give the
 integrated cross section of each unfolded result and its closure against the $A_C$-smeared truth of
-the fake data, and Figs.~\ref{fig:dsigma_ccpi1p_fhc}--\ref{fig:dsigma_ccpi1p_comb} show the six
+the pseudo-data, and Figs.~\ref{fig:dsigma_ccpi1p_fhc}--\ref{fig:dsigma_ccpi1p_comb} show the six
 observables specific to this sample.
 
 \begin{table}[H]
   \centering
-  \caption{FHC proton-tagged results from fake data. $\sigma_\mathrm{int}$ is the integrated unfolded
+  \caption{FHC proton-tagged results from pseudo-data. $\sigma_\mathrm{int}$ is the integrated unfolded
     cross section over the measured phase space ($10^{-38}$~cm$^2$/Ar); ``unf./truth'' is the ratio of
-    its integral to that of the $A_C$-smeared truth; $\chi^2$ compares the unfolded fake data with the
+    its integral to that of the $A_C$-smeared truth; $\chi^2$ compares the unfolded pseudo-data with the
     $A_C$-smeared truth bin by bin (ndf = number of bins). The upper block lists the observables specific
     to the sample, the lower block the muon and pion observables of the inclusive analysis. The proton
     angles are in \S\ref{sec:wtki_ang}.}
@@ -540,282 +751,125 @@ The generator predictions are computed at truth level from the event-level final
 generator (GENIE~\cite{genie,genie3} and GiBUU~\cite{gibuu} natively, NuWro~\cite{nuwro} and
 NEUT~\cite{neut,neut2021} from their event vectors), with the proton-tagged
 signal definition and the observable definitions of the selection (\suppref{Sec.}{sec:wtki_reco}),
-and combined over the $\nu_\mu$ and $\bar\nu_\mu$ flux of each configuration. All curves, the tune and
-the fake-data truth included, are smeared with $A_C$ (\suppref{Sec.}{sec:acwtki}). In the reported
-binnings the generators differ almost entirely in normalisation: their shapes and that of the tune
-agree with the unfolded points within the uncertainties in every panel, so the present exposure does
-not discriminate between their treatments of Fermi motion and final-state interactions. A comparison
-in which data and prediction used different axes would show shape differences of a factor of
-several, so the frame is stated with every transverse quantity.
+and combined over the $\nu_\mu$ and $\bar\nu_\mu$ flux of the configuration. They exist for every
+observable of this section in FHC, and for $p_p$ in RHC and combined; for $W_\mathrm{had}$ and the TKI
+observables in RHC and combined, and for the muon and pion observables on this sample, no generator
+prediction has been produced, and those panels show the unfolded pseudo-data, their truth and the tune
+only. All curves, the tune and the pseudo-data truth included, are smeared with $A_C$
+(\suppref{Sec.}{sec:acwtki}). In FHC the generators differ almost entirely in normalisation: their
+shapes and that of the tune agree with the unfolded points within the uncertainties in every panel, so
+the present exposure does not discriminate between their treatments of Fermi motion and final-state
+interactions. A comparison in which data and prediction used different axes would show shape
+differences of a factor of several, so the frame is stated with every transverse quantity.
 
 \begin{figure}[H]
   \centering
-  \blindfig[\textwidth]{dsigma_ccpi1p_noW_FHC5}
-  \caption{Proton-tagged differential cross sections, FHC: the calorimetric hadronic mass
-    $W_\mathrm{had}$, the transverse-kinematic-imbalance observables $\delta p_T$, $\delta\alpha_T$,
-    $\delta\phi_T$ and $p_n$, and the proton momentum $p_p$. Unfolded fake data (black points) are
-    compared with the $A_C$-smeared fake-data truth (grey dashed), the \uboone{} tune~\cite{uboone_tune} (black) and the
-    GENIE (blue), GiBUU (green), NEUT (purple) and NuWro (orange) predictions for the same phase space.
-    $\delta\alpha_T$ rises towards $180^\circ$, the signature of final-state interactions.}
+  \blindfig[\textwidth]{dsigma_ccpi1p_noW_FHC5_a}\\[4pt]
+  \blindfig[\textwidth]{dsigma_ccpi1p_noW_FHC5_b}
+  \caption{Proton-tagged differential cross sections, FHC: $W_\mathrm{had}$, $p_p$ and $p_n$ (top) and
+    $\delta p_T$, $\delta\alpha_T$ and $\delta\phi_T$ (bottom). Unfolded pseudo-data (points) are compared
+    with the $A_C$-smeared pseudo-data truth (grey dashed) and the \uboone{} tune~\cite{uboone_tune} (black) and the GENIE (blue), GiBUU (green), NEUT (purple) and NuWro (orange) predictions for the same phase space. The last bin of each open-ended
+    observable is hatched and labelled with its range; its height is the bin integral divided by the
+    plotted width. $\delta\alpha_T$ rises towards $180^\circ$, the signature of final-state interactions.}
   \label{fig:dsigma_ccpi1p_fhc}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-  \blindfig[\textwidth]{dsigma_ccpi1p_noW_RHCFULL}
-  \caption{The six proton-tagged observables of Fig.~\ref{fig:dsigma_ccpi1p_fhc} for RHC.}
+  \blindfig[\textwidth]{dsigma_ccpi1p_noW_RHCFULL_a}\\[4pt]
+  \blindfig[\textwidth]{dsigma_ccpi1p_noW_RHCFULL_b}
+  \caption{Proton-tagged differential cross sections, RHC: $W_\mathrm{had}$, $p_p$ and $p_n$ (top) and
+    $\delta p_T$, $\delta\alpha_T$ and $\delta\phi_T$ (bottom). Unfolded pseudo-data (points) are compared
+    with the $A_C$-smeared pseudo-data truth (grey dashed) and the \uboone{} tune (black); generator predictions are shown for $p_p$ only. The last bin of each open-ended
+    observable is hatched and labelled with its range; its height is the bin integral divided by the
+    plotted width.}
   \label{fig:dsigma_ccpi1p_rhc}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-  \blindfig[\textwidth]{dsigma_ccpi1p_noW_COMB}
-  \caption{The six proton-tagged observables of Fig.~\ref{fig:dsigma_ccpi1p_fhc} for the combined
-    configuration.}
+  \blindfig[\textwidth]{dsigma_ccpi1p_noW_COMB_a}\\[4pt]
+  \blindfig[\textwidth]{dsigma_ccpi1p_noW_COMB_b}
+  \caption{Proton-tagged differential cross sections, the combined configuration: $W_\mathrm{had}$, $p_p$ and $p_n$ (top) and
+    $\delta p_T$, $\delta\alpha_T$ and $\delta\phi_T$ (bottom). Unfolded pseudo-data (points) are compared
+    with the $A_C$-smeared pseudo-data truth (grey dashed) and the \uboone{} tune (black); generator predictions are shown for $p_p$ only. The last bin of each open-ended
+    observable is hatched and labelled with its range; its height is the bin integral divided by the
+    plotted width.}
   \label{fig:dsigma_ccpi1p_comb}
 \end{figure}
 
-\subsection{Proton angles \texorpdfstring{$\theta_p$}{theta p} and
-  \texorpdfstring{$\theta_{\pi p}$}{theta pi p}}
-\label{sec:wtki_ang}
-
-The two proton angles are proposed as secondary scope. $\theta_p$ uses the stored proton direction;
-$\theta_{\pi p}$ is written by a reprocessing of the proton-tagged tree that leaves every other branch
-unchanged. Both are binned in four bins and unfold well, with closure $\chi^2$ of $3.6/4$, $0.09/4$
-and $1.5/4$ for $\theta_p$ and $0.29/4$, $0.57/4$ and $0.24/4$ for $\theta_{\pi p}$ in FHC, RHC and
-combined (Fig.~\ref{fig:newobs_xsec}). $\theta_{\pi p}$ retains the most shape: the trace of $A_C$ is
-$2.1$--$2.2$, with three components measured at a signal-to-noise ratio above one in FHC and RHC, at
-the price of a last bin whose total uncertainty reaches $94\%$ (FHC) and $141\%$ (RHC). $\theta_p$ has
-a trace of $2.1$ in FHC and RHC ($2.3$ combined) and a largest per-bin uncertainty of $41\%$ (FHC)
-and $84\%$ (RHC); its smallest diagonal passes the $0.68$ criterion by $0.002$ in RHC. Both
-distributions are strongly forward peaked, and the generators differ mainly in normalisation, so
-these observables discriminate between models through their integrals. The binning study, the
-generator predictions and the two-dimensional programme are documented in a separate note.
-
-\begin{figure}[H]
-  \centering
-  \blindfig[\textwidth]{newobs_xsec}
-  \caption{The two proton angles in the three configurations: $\theta_p$ (top row) and
-    $\theta_{\pi p}$ (bottom row), for FHC, RHC and combined. Points are the unfolded fake data with the
-    total uncertainty, the grey histogram is the $A_C$-smeared fake-data truth, and the four coloured
-    histograms are the generator predictions; the integrated cross sections are given in the legends.}
-  \label{fig:newobs_xsec}
-\end{figure}
-
-\subsection{Two-dimensional cross sections}
-\label{sec:2d}
-
-Eight two-dimensional pairs were screened and extracted in the three configurations. A
-two-dimensional binning is a flat list of analysis bins ordered slice by slice, so the extraction
-uses the same machinery, and the integrated normalisation of the two-dimensional chain agrees with
-the one-bin total to a median of $1.5\%$ once each is compared with its own $A_C$-smeared truth.
-Two pairs are usable, both in the combined configuration only: $\theta_p\times\delta p_T$
-($s_{\min}/s_1=0.611$) and $\cos\theta_\pi\times\cos\theta_\mu$ ($0.564$) (Table~\ref{tab:2dextract}).
-Combining the beam modes roughly doubles their conditioning ($0.43\to0.61$ and $0.25\to0.56$), through
-the larger sample and the shared flux rather than through any separation of $\nu$ and $\bar\nu$. The
-pairs built on $W_{\pi p}$ are not usable, as the $39\%$ leakage between its outer bins implies.
-
-The pair $\theta_{\pi p}\times W_{\pi p}$ conditions at $0.537$, as well as the two usable pairs, yet
-its extraction carries no usable information: a $78\%$ data-statistical term, per-bin uncertainties up
-to $276\%$ and closure ratios down to $-0.80$. Conditioning bounds how much of the response can be
-inverted and says nothing about how much data survives in the inverted directions, so the two must be
-read together. Conversely, $\cos\theta_\mu\times p_\mu$ screened best of the eight on the migration
-diagonal ($0.70/0.68$) and is rank-deficient in FHC ($0.002$), while $\theta_p\times\delta p_T$
-screened worst of the proton-tagged pairs and conditions best of all. The migration diagonal is a
-necessary condition, not a sufficient one; the one-dimensional binning review measures what the
-regularised response retains by the Wiener filter factors of $A_C$ (\suppref{Sec.}{sec:binreview}).
-
-\begin{table}[H]
-  \centering
-  \caption{The eight two-dimensional pairs (inner $\times$ outer), ordered by the conditioning of
-    $A_C$ in the combined configuration. The last three columns refer to the combined configuration:
-    the bin-averaged data-statistical term, the range of the per-bin total uncertainty and the range of
-    the closure ratio against the $A_C$-smeared truth. Fake data.}
-  \label{tab:2dextract}
-  \small
-  \begin{tabular}{lcccccc}
-    \toprule
-    & \multicolumn{3}{c}{$s_{\min}/s_1$} & \multicolumn{3}{c}{combined configuration} \\
-    \cmidrule(lr){2-4}\cmidrule(lr){5-7}
-    Pair & FHC & RHC & COMB & data stat. & unc.\ [\%] & closure \\
-    \midrule
-    $\theta_p\times\delta p_T$ & $0.433$ & $0.332$ & $\mathbf{0.611}$ & $13.3\%$ & $29$--$103$ & $0.70$--$1.36$ \\
-    $\cos\theta_\pi\times\cos\theta_\mu$ & $0.245$ & $0.315$ & $\mathbf{0.564}$ & $14.9\%$ & $33$--$64$ & $0.91$--$1.26$ \\
-    $\theta_{\pi p}\times W_{\pi p}$ & $0.379$ & $0.214$ & $0.537$ & $78.3\%$ & $39$--$276$ & $-0.80$--$1.22$ \\
-    $\cos\theta_\pi\times\theta_{\mu\pi}$ & $0.037$ & $0.133$ & $0.171$ & $25.5\%$ & $29$--$93$ & $0.96$--$1.29$ \\
-    $\cos\theta_\mu\times p_\mu$ & $0.002$ & $0.261$ & $0.106$ & $9.0\%$ & $33$--$57$ & $0.97$--$1.04$ \\
-    $\theta_p\times W_{\pi p}$ & $0.012$ & $0.152$ & $0.112$ & $200.4\%$ & $36$--$568$ & $0.23$--$1.03$ \\
-    $\cos\theta_\pi\times p_\pi$ & $0.024$ & $0.158$ & $0.052$ & $13.8\%$ & $32$--$62$ & $0.96$--$1.11$ \\
-    $\theta_{\pi p}\times\delta p_T$ & $0.023$ & $0.035$ & $0.027$ & $10.4\%$ & $26$--$52$ & $0.89$--$1.15$ \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-Figures~\ref{fig:2dslices} and~\ref{fig:2dmap} show the two usable pairs, as slices in the outer
-variable, the form in which a double-differential result is usually published and compared with
-generators, and as maps of the same numbers, which show where the measurement has support. Each
-slice panel has its own vertical scale, because the outer bins differ by an order of magnitude, and
-the maps are drawn on equal-size cells labelled by their ranges for the same reason.
-
-\begin{figure}[H]
-  \centering
-  \blindfig[0.66\textwidth]{bkgfit/xsec2d_thetap_dpt_COMB_slices}\\[6pt]
-  \blindfig[0.98\textwidth]{bkgfit/xsec2d_costhpi_costhmu_COMB_slices}
-  \caption{The two usable two-dimensional results as slices in the outer variable, combined
-    configuration: $\theta_p\times\delta p_T$ (top) and $\cos\theta_\pi\times\cos\theta_\mu$
-    (bottom). Points are the unfolded fake data with the total uncertainty, the grey histogram is
-    the $A_C$-smeared fake-data truth and the four coloured histograms are the generator
-    predictions.}
-  \label{fig:2dslices}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
-  \blindfig[0.82\textwidth]{bkgfit/xsec2d_thetap_dpt_COMB_map}\\[6pt]
-  \blindfig[0.90\textwidth]{bkgfit/xsec2d_costhpi_costhmu_COMB_map}
-  \caption{The same two results as maps: $\mathrm{d}^2\sigma/\mathrm{d}X\,\mathrm{d}Y$ per cell with
-    its total uncertainty (left) and the ratio to the $A_C$-smeared truth (right), for
-    $\theta_p\times\delta p_T$ (top) and $\cos\theta_\pi\times\cos\theta_\mu$ (bottom). Cells are
-    equal-size and labelled by their ranges. The closure panels are flat within their uncertainties,
-    which are the measurement uncertainty divided by the truth.}
-  \label{fig:2dmap}
-\end{figure}
-
-The single-mode extractions of these two pairs are not shape measurements, because their responses
-cannot be inverted, and are not shown. Every one-dimensional result is quoted per beam mode as well as
-combined; whether a result available only in the combined configuration is acceptable requires a
-collaboration decision.
-
 % =============================================================================
-\section{Validation}
-\label{sec:pt_validation}
+\section{Products not reported}
+\label{sec:pt_notreported}
 % =============================================================================
 
-The validation follows that of the inclusive analysis (\noteref{Sec.}{sec:validation}): closure under
-the nominal model, statistical coverage with ensembles, and robustness to a different interaction
-model.
+No differential $W_{\pi p}$ result is reported. The topology-level one-bin total cross section of the
+proton-tagged sample remains measurable (\S\ref{sec:pt_total}), but it is not described as a $W_{\pi p}$
+measurement. Of the two-dimensional pairs screened, those built on $W_{\pi p}$ and
+$\theta_{\pi p}\times\delta p_T$ cannot be inverted or carry no usable information, and the FHC and RHC
+extractions of $\theta_p\times\delta p_T$ are not shape measurements (\suppref{Sec.}{sec:supp_2d});
+none of them is reported.
 
-\subsection{Closure under the nominal model}
-\label{sec:pt_closure}
+\subsection{The differential \texorpdfstring{$W_{\pi p}$}{W pi p} shape is not reported}
+\label{sec:pt_wpip_withdrawn}
 
-The fake data are unfolded and compared with the $A_C$-smeared truth of the throw
-(Tables~\ref{tab:wtki_fhc}--\ref{tab:wtki_comb}). In FHC the $\chi^2$ is well below the number of bins
-for every observable, and the integral ratios are $0.93$--$1.18$. These ratios compare the unfolded
-result with the $A_C$-smeared truth, so the $A_C$ suppression cancels and the departures from unity
-reflect the statistical realisation of the throw and any residual bias; the largest are in
-$\cos\theta_\mu$ ($1.18$) and $\delta\alpha_T$ ($0.93$). In RHC and combined the closure gives
-$\chi^2/\mathrm{ndf}\lesssim1$ for every observable except RHC $\cos\theta_\pi$ ($6.0/4$). As in the inclusive
-analysis, the systematic terms are common to the fake data and the reference, so the closure
-$p$-values cluster near unity and the statistical coverage is tested with ensembles.
-
-\subsection{Statistical coverage}
-\label{sec:pt_ensemble}
-
-Three extractions were repeated on $100$ statistically independent fake-data sets each, with the
-procedure of the inclusive ensembles (\suppref{Sec.}{sec:supp_ensemble}). Every member is a run-by-run
-Poisson throw of the central-value prediction carried through the whole chain: the universes are
-rebuilt from the throw and the result is unfolded. Each unfolded bin is compared with the fixed
-central-value truth smeared by that member's own $A_C$,
-\[
-  p_i \;=\; \frac{\hat{x}_i - \left(A_C\,x_{\rm CV}\right)_i}{\sigma_i}.
-\]
-The three extractions span the family: $W_{\rm had}$ in two regions in FHC, the two-bin $\delta p_T$ in
-FHC, and the two-bin $p_n$ in the combined configuration, which also exercises the combination of the
-beam modes. For all $1600$ input files the number of events read by the universe builder agrees with
-the entries on disk, so no member read an incomplete file.
-
-\input{tables/ensemble_1p}
-
-Against the statistical covariance the pull widths are $0.94$--$1.08$, each known to about $\pm7\%$,
-and the $68\%$ and $95\%$ coverages are $62$--$72\%$ and $92$--$97\%$. The widest case is the two-bin
-$\delta p_T$ (width $1.08$, $68\%$ coverage $62\%$), within two standard deviations of nominal; its two
-bins are correlated, so its $200$ pulls are fewer than $200$ independent tests. Bin by bin, every mean
-is within $0.16$ of zero and every width is $0.92$--$1.09$. The statistical uncertainties of the
-proton-tagged results are therefore correctly sized.
-
-Against the full covariance the widths are $0.26$--$0.40$. The systematic part of the uncertainty is
-two to three times the statistical part, as in the inclusive analysis, and the ensembles do not test
-it, since every member is thrown from the same central-value model; that is the role of the
-alternative-model test below. The ensemble-mean integrals agree with the reference within $0.7\%$, at
-most $0.8$ standard errors of the mean. The other proton-tagged observables were not run individually.
-
-\subsection{Robustness to a different interaction model}
-\label{sec:pt_altmodel}
-
-The fake data are thrown from a reweighted interaction model and unfolded with the nominal response
-(\noteref{Sec.}{sec:altmodel}). The two variations of the inclusive analysis are used, GENIE multisim
-universe~545, a coherent variation of all interaction parameters, and the $\Delta\to N\pi$ decay-angle
-unisim, with the same universes and seeds; the weight applies to signal and background alike.
-$W_\mathrm{had}$, the four TKI observables, $\cos\theta_\pi$ and $p_p$ are extracted in FHC. The truth
-of the fake data is that of the alternative model, so the closure measures the bias from the model
-mismatch, quoted in units of the per-bin uncertainty (Table~\ref{tab:pt_altmodel}).
-
-\begin{table}[H]
-  \centering
-  \caption{Alternative-model closure of the proton-tagged extractions, FHC: unfolded result against the
-    alternative model's own truth. ``ratio'' is the mean unfolded/truth over bins holding at least $10\%$
-    of the largest truth; ``bias'' is the largest per-bin deviation in units of the uncertainty of that
-    bin, over every bin.}
-  \label{tab:pt_altmodel}
-  \small
-  \begin{tabular}{llccc}
-    \toprule
-    Observable & Variation & ratio & max.\ deviation & bias (bin) \\
-    \midrule
-    $W_\mathrm{had}$ (2 regions) & GENIE u545 & $0.83$ & $29\%$ & $-0.40\sigma$ (1) \\
-                     & $\Delta\to N\pi$ angular & $1.23$ & $58\%$ & $+0.89\sigma$ (1) \\
-    $\delta p_T$ (2 bins) & GENIE u545 & $0.66$ & $35\%$ & $-1.14\sigma$ (1) \\
-                     & $\Delta\to N\pi$ angular & $1.04$ & $4\%$ & $+0.14\sigma$ (1) \\
-    $\delta\alpha_T$ (2 bins) & GENIE u545 & $0.85$ & $24\%$ & $-0.57\sigma$ (1) \\
-                     & $\Delta\to N\pi$ angular & $1.03$ & $8\%$ & $+0.19\sigma$ (2) \\
-    $\delta\phi_T$ (3 bins) & GENIE u545 & $0.78$ & $38\%$ & $-0.60\sigma$ (2) \\
-                     & $\Delta\to N\pi$ angular & $1.22$ & $51\%$ & $+0.85\sigma$ (2) \\
-    $p_n$ (2 bins) & GENIE u545 & $1.01$ & $34\%$ & $-1.16\sigma$ (1) \\
-                     & $\Delta\to N\pi$ angular & $1.08$ & $15\%$ & $+0.16\sigma$ (2) \\
-    $\cos\theta_\pi$ & GENIE u545 & $0.96$ & $10\%$ & $-0.37\sigma$ (1) \\
-                     & $\Delta\to N\pi$ angular & $0.94$ & $24\%$ & $-0.55\sigma$ (3) \\
-    $p_p$ (3 bins) & GENIE u545 & $0.92$ & $9\%$ & $-0.19\sigma$ (2) \\
-                     & $\Delta\to N\pi$ angular & $1.08$ & $17\%$ & $+0.37\sigma$ (1) \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-Under the $\Delta\to N\pi$ variation no bin exceeds $0.9\sigma$, although the two $W_\mathrm{had}$
-regions and the three $\delta\phi_T$ bins return $22$--$23\%$ high on average. Under the coherent GENIE
-variation the low $\delta p_T$ and $p_n$ bins, the small-imbalance region closest to quasi-elastic
-kinematics, return $35\%$ below the alternative truth, $-1.1$ and $-1.2\sigma$, while that truth moved
-by only $1\%$. The shift therefore enters through the response and the background, through the change
-the varied model makes to the composition of the proton-tagged sample and to the proton-tagging
-efficiency, which the nominal response does not follow. The inclusive analysis shows a bias of this
-size in one sparse bin only (\noteref{Sec.}{sec:altmodel}). The uncertainty covers the shift at about
-one standard deviation, so the extraction does not fail, but the small-imbalance bins of the TKI
-observables are model-sensitive at the level of their own uncertainty. A measurement in them needs
-either this model dependence in the covariance or a demonstration with a validated independent
-generator that the shift does not occur.
+The pion--proton invariant mass would show the $\Delta(1232)$ directly and motivated the
+proton-tagged subsample. At the present exposure its shape cannot be measured with any binning
+tried. The six-bin scheme that resolves the resonance region has a highest bin with a $2\%$
+diagonal, so nearly every event reconstructed there comes from another true bin. Two bins restore
+the response but leave no shape: the best split, at $1.20$~GeV/$c^2$, passes the $0.50$ criterion by
+$0.003$, and its second Wiener filter factor is $0.29$ in FHC and $0.27$ in RHC. A closure test
+against the $A_C$-smeared truth cannot change this, since it tests whether the response was inverted
+correctly and cannot restore information the response does not contain. The six-bin extractions
+remain in the result directory, flagged in \texttt{index\_extractions.tsv}, and their closure and
+generator curves are shown as diagnostics in \suppref{Sec.}{sec:w_binning}; they are not results.
+The sample supports the topology-level one-bin total and, as a validation-only product,
+$W_\mathrm{had}$ in two regions.
 
 % =============================================================================
-\section{Limitations and approval prerequisites}
+\section{Prerequisites}
 \label{sec:pt_prereq}
 % =============================================================================
 
-The one-bin total is proposed as a secondary result on the same footing as the inclusive results,
-with the unblinding requirements of \noteref{Sec.}{sec:unblinding}. Before any proton-tagged
-differential result can be proposed, the following are required:
-\begin{enumerate}\itemsep2pt
-  \item an inverted-proton-PID control region, compared with beam-on data, which separates the
-    proton$\to$pion and pion$\to$proton misidentification directions (\S\ref{sec:prmatch});
-  \item a validation of $p_n$ and of $W_{\rm had}$ for pion production, whose single-nucleon
-    prescriptions were written for quasi-elastic kinematics;
-  \item a treatment of the model sensitivity of the low-imbalance $\delta p_T$ and $p_n$ bins, either in
-    the covariance or excluded by an independent generator (\S\ref{sec:pt_altmodel});
-  \item a bound on the effect of wrong proton candidates, which supply $74\%$ of the large migrations
-    in $\theta_p$ (\S\ref{sec:prmatch});
-  \item for the two-dimensional results, an assessment of whether their effective rank and statistical
-    support make them measurements, and a decision on results available only in the combined
-    configuration (\S\ref{sec:2d}).
-\end{enumerate}
-The statistical coverage of the family is demonstrated by the ensembles of \S\ref{sec:pt_ensemble},
-and its sensitivity to the interaction model is measured by the test of \S\ref{sec:pt_altmodel}.
+Table~\ref{tab:prerequisites} lists every prerequisite with its criterion, owner, evidence and what it
+blocks; it is the same table as in the analysis note. The proton-tagged results proposed for approval
+require the inclusive prerequisites U1--U3 and U5--U7, U4 for $\theta_p\times\delta p_T$, and the
+proton-tagged items listed for each in Table~\ref{tab:pt_status}.
+
+The existing inclusive control regions do not validate the dominant proton-candidate
+misidentification mode of this sample: the multi-$\pi$ region constrains the proton$\to$pion direction,
+while the $12.6\%$ of wrong candidates come mainly from the pion$\to$proton direction
+(\S\ref{sec:prmatch}). Until an inverted-proton-PID region is defined and validated (P1), no
+proton-tagged result is unblinded, and the distributions whose migrations are dominated by the
+proton-candidate assignment, $\theta_p$, $\theta_{\pi p}$ and $\theta_p\times\delta p_T$, carry the
+additional term of P2.
+
+Two concerns about the transverse observables are separate and have separate remedies. The first is
+the validity of the reconstruction: $W_\mathrm{had}$ and $p_n$ use a residual-mass prescription derived
+for quasi-elastic kinematics, and whether the reconstructed quantities follow the physical quantities
+they are named for in pion production has not been shown; the remedy is a truth-level validation or a
+redefinition of the observables as the proxies they are (P4). The second is model sensitivity: the low
+$\delta p_T$ and $p_n$ bins move by $1.1$--$1.2\sigma$ under the coherent GENIE variation while their
+truth moves by $1\%$ (\S\ref{sec:pt_altmodel}); the remedy is an explicit model term in the covariance,
+the removal of those bins, or an independent-generator test that shows no such shift (P3).
+
+\input{shared/prerequisites}
+
+% =============================================================================
+\section{Summary}
+\label{sec:pt_summary}
+% =============================================================================
+
+The proton-tagged selection adds to the inclusive selection a contained proton candidate above
+$0.3\GeVc$, at $11.5\%$ efficiency and $50$--$52\%$ purity; the candidate is the leading true proton in
+$82\%$ of selected signal events. The one-bin total cross section, $d\sigma/d\theta_p$ and
+$d\sigma/d\theta_{\pi p}$ in the three configurations, and $d^2\sigma/d\theta_p\,d\delta p_T$ in the
+combined configuration are proposed as \statSecondary{}s; the other proton-tagged extractions are
+\statValidation{}s, and no differential $W_{\pi p}$ result is reported. The extraction closes, and
+ensembles give correctly sized statistical uncertainties. The low-imbalance bins of $\delta p_T$ and $p_n$
+are model-sensitive at the level of their uncertainty. Every proton-tagged result stays blind until the
+inverted-proton-PID control region exists and the prerequisites of Table~\ref{tab:prerequisites} that
+apply to it are complete.
 
 \input{glossary}
 \begin{thebibliography}{99}

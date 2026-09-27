@@ -83,6 +83,9 @@
 \externaldocument[P-]{proton_tagged_note}
 \newcommand{\ptref}[2]{#1~\ref{P-#2} of the proton-tagged note}
 \newcommand{\crref}[2]{#1~\ref{CR-#2} of the control-sample note}
+% shared status vocabulary and the reference macro used by the shared tables (2026-09-27)
+\input{shared/status_vocab}
+\newcommand{\inclref}[2]{#1~\ref{#2}}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning}
 % Every result figure shows fake data. The stamp is drawn over the graphic by LaTeX so it cannot be
@@ -106,7 +109,7 @@
   Single Pion Production Differential Cross Sections on Argon
   with the MicroBooNE Detector in the NuMI Beam\par}
   \vspace{0.8cm}
-  {\large Analysis note for the full FHC, RHC and combined exposures\par}
+  {\large Analysis note for the FHC, RHC and combined configurations of the full NuMI exposure\par}
 
 
   \vspace{1.5cm}
@@ -115,35 +118,142 @@
   {\normalsize\textit{Lancaster University}\par}
   \vspace{2cm}
   \begin{abstract}
-    We measure flux-averaged $\nu_\mu+\bar\nu_\mu$ charged-current single-charged-pion
-    (CC$\pi^{\pm}$) cross sections on argon with the full \uboone{} NuMI exposure, in three
-    configurations: forward horn current (FHC, $7.766\times10^{20}$~POT), reverse horn current
-    (RHC, $11.082\times10^{20}$~POT) and their combination ($18.848\times10^{20}$~POT).
+    We measure flux-averaged $\nu_\mu+\bar\nu_\mu$ charged-current single-charged-pion (CC$\pi^{\pm}$)
+    cross sections on argon with the \uboone{} detector in the NuMI beam: one muon and one charged pion,
+    any number of nucleons and no neutral pion, with $p_\mu>0.15\GeVc$, $p_\pi>0.175\GeVc$ and a
+    muon--pion opening angle below $2.6$~rad. The cross sections are averaged over the
+    $\nu_\mu+\bar\nu_\mu$ flux integrated above $60$~MeV, which includes the part of the spectrum below
+    the pion-production threshold and so lowers the flux-averaged value.
 
-    The selection requires a muon candidate and exactly one contained charged-pion candidate
-    attached to a vertex in the fiducial volume, vetoes electromagnetic showers and limits the
-    muon--pion opening angle to $2.6$~rad. It reaches $17.5\%$ efficiency at $58$--$59\%$ purity.
-    Differential cross sections in the muon momentum, the cosine of the muon polar angle, the pion
-    polar angle, the muon--pion opening angle and the pion momentum (three regions) are extracted by
-    Wiener-SVD unfolding. The total flux-averaged cross section is
-    extracted with the same machinery as a single bin. Every result comes with its
-    additional-smearing matrix $A_C$, through which a prediction must be passed before comparison,
-    and with a covariance that contains the flux, interaction-model, hadron re-interaction,
-    detector, normalisation and statistical terms. The total cross section carries a $38\%$
-    uncertainty, dominated by the flux ($28$--$30\%$) and detector ($20$--$22\%$) terms.
+    The full NuMI exposure is analysed in three configurations: forward horn current (FHC,
+    $7.766\times10^{20}$~POT), reverse horn current (RHC, $11.082\times10^{20}$~POT) and their
+    combination ($18.848\times10^{20}$~POT). The selection requires a muon candidate and exactly one
+    contained charged-pion candidate and reaches $17.5\%$ efficiency at $58$--$59\%$ purity.
 
-    The signal region is blind, and all results are extracted from Poisson
-    fluctuations of the central-value simulation. Four background control regions, disjoint from the
-    signal region, are defined for a comparison with beam-on data under a frozen procedure, and the
-    request to open them is part of this note. The
-    extraction is validated by closure, by ensembles of $100$ independent pseudo-experiments in six
-    extractions (pull widths $0.95$--$1.07$) and by pseudo-data from reweighted interaction models
-    (largest bias $1.2\sigma$, in one sparse bin). A closure test with an independent generator remains to be done.
+    The primary results are $d\sigma/dp_\mu$, $d\sigma/d\cos\theta_\mu$, $d\sigma/d\cos\theta_\pi$,
+    $d\sigma/d\theta_{\mu\pi}$, the cross section in three regions of pion momentum and the one-bin
+    total cross section; the two-dimensional $d^2\sigma/d\cos\theta_\pi\,d\cos\theta_\mu$ in the combined
+    configuration is proposed as a secondary result. The differential results are extracted by
+    Wiener-SVD unfolding and provided with their additional-smearing matrices $A_C$ and a covariance that
+    contains the flux, interaction-model, re-interaction, detector, muon-momentum-scale, normalisation
+    and statistical terms. The total cross section carries a $38\%$ uncertainty, dominated by the flux
+    ($28$--$30\%$, the $17\%$ flux normalisation amplified by the background subtraction) and the
+    detector ($20$--$22\%$).
+
+    The extraction passes closure, ensembles of pseudo-experiments (pull widths $0.95$--$1.07$) and
+    pseudo-data from reweighted interaction models (largest bias $1.2\sigma$, in one sparse bin); a
+    closure test with an independent generator is outstanding. The signal region is blind and all
+    results are extracted from pseudo-data. Approval of the analysis and of its reported observables is
+    requested; opening the signal region requires the prerequisites of Section~\ref{sec:unblinding},
+    among them the confirmation of the absolute flux normalisation and the independent-generator
+    closure.
   \end{abstract}
   \vfill
   \tableofcontents
 \end{titlepage}
 
+
+% =============================================================================
+\section{Summary and decision requested}
+\label{sec:decision}
+% =============================================================================
+
+This note presents the measurement of the inclusive charged-current single-charged-pion cross section
+on argon with the full \uboone{} NuMI exposure, in FHC, RHC and their combination. The measured
+phase space, the flux and target conventions and the reported observables are defined in
+Section~\ref{sec:measdef}. All results are extracted from pseudo-data, Poisson fluctuations of the
+central-value simulation at the recorded exposure: the signal region is blind. The decision requested
+is stated below; the same statement opens the proton-tagged note~\cite{pt_note}.
+
+\input{shared/decision_box}
+
+Table~\ref{tab:inventory} gives the status of every inclusive product in the four categories used
+throughout: \statPrimary, \statSecondary, \statValidation{} and \statNotReported. The prerequisites
+that block each product are defined, with their criteria, owners and blocking level, in
+Table~\ref{tab:prerequisites} (Section~\ref{sec:unblinding}). The proton-tagged products and their
+statuses are listed in the proton-tagged note.
+
+\input{tables/inventory}
+
+The analysis is documented in three documents (Fig.~\ref{fig:docmap}). This note defines the
+measurement and contains everything needed to approve it. The proton-tagged note repeats the
+measurement on the subsample with a reconstructed proton and refers to this note for everything the
+two share. The technical supplement gives the final configuration in one place, the studies behind each
+choice and the alternatives that were rejected. The corrections that shaped the analysis are recorded
+in the change log, and the numerical results in \texttt{report/data\_release/}.
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[font=\small,
+      doc/.style={draw, rounded corners=2pt, align=left, inner sep=4pt, text width=5.2cm},
+      ar/.style={-{Latex[length=2mm]}, thick}]
+    \node[doc, fill=blue!6] (an) {\textbf{Analysis note} (this document)\\measurement definition, selection,
+      extraction, uncertainty model, validation, inclusive results, prerequisites};
+    \node[doc, fill=orange!8, right=12mm of an] (pt) {\textbf{Proton-tagged note}\\proton requirement,
+      observables, proton-tagged results and prerequisites};
+    \node[doc, fill=green!8, below=9mm of an] (su) {\textbf{Technical supplement}\\final configuration,
+      evidence for each choice, rejected alternatives};
+    \node[doc, fill=gray!10, below=9mm of pt] (dr) {\textbf{Data release}\\curves, $A_C$, covariances,
+      status of every extraction};
+    \draw[ar] (pt) -- node[above, font=\scriptsize]{uses} (an);
+    \draw[ar] (an) -- node[left, font=\scriptsize]{evidence} (su);
+    \draw[ar] (pt.south west) -- (su.north east);
+    \draw[ar] (an.south east) -- (dr.north west);
+    \draw[ar] (pt) -- (dr);
+  \end{tikzpicture}
+  \caption{The documents of the analysis. The proton-tagged note takes the beam, exposure, samples,
+    base selection, extraction and uncertainty model from this note; both notes refer to the technical
+    supplement for the evidence behind their choices; the data release holds the numerical results of
+    both.}
+  \label{fig:docmap}
+\end{figure}
+
+% =============================================================================
+\section{Measurement definition}
+\label{sec:measdef}
+% =============================================================================
+
+Table~\ref{tab:measdef} defines the measurement. Every result of this note refers to this definition;
+the sections given in the last column describe each element.
+
+\begin{table}[H]
+  \centering
+  \caption{Definition of the inclusive measurement.}
+  \label{tab:measdef}
+  \footnotesize
+  \begin{tabular}{@{}p{3.1cm}p{9.9cm}p{1.5cm}@{}}
+    \toprule
+    Element & Definition & Section \\
+    \midrule
+    Interaction & $\nu_\mu$ or $\bar\nu_\mu$ charged current on argon; $\nu_\mu\to\mu^-\pi^+$ and
+      $\bar\nu_\mu\to\mu^+\pi^-$ are both signal (charge-blind) & \ref{sec:signal} \\
+    Final state & Exactly one muon and exactly one charged pion among the primary particles; no neutral
+      pion, kaon or other meson; any number of protons and neutrons & \ref{sec:signal} \\
+    Coherent production & Part of the signal & \ref{sec:signal} \\
+    Vertex & True vertex in the fiducial volume $10<x<246$, $-101<y<101$, $10<z<986$~cm, excluding
+      $675.1<z<775.1$~cm & \ref{sec:fv} \\
+    Phase space & $p_\mu>0.15\GeVc$, $p_\pi>0.175\GeVc$, $\theta_{\mu\pi}<2.6$~rad & \ref{sec:signal} \\
+    Neutrino direction & Angles and transverse quantities about the neutrino direction: the true direction
+      of each event at truth level, the NuMI target-to-vertex direction at reconstruction level
+      ($28.6^\circ$ from the detector $z$ axis) & \ref{sec:beamdir} \\
+    Flux & $\Phi_{\nu_\mu}+\Phi_{\bar\nu_\mu}$ of the new-G4 PPFX central value, integrated above
+      $60$~MeV: FHC $6.81159$, RHC $6.44646$, combined $6.59691\times10^{-10}$~cm$^{-2}$~POT$^{-1}$; the
+      threshold includes the flux below the pion-production threshold & \ref{sec:flux_status} \\
+    Exposure & FHC $7.766$, RHC $11.082$, combined $18.848\times10^{20}$~POT; each run normalised to its
+      own recorded exposure & \ref{sec:mc} \\
+    Target & $N_\mathrm{Ar}=8.710\times10^{29}$ argon nuclei in the fiducial volume & \ref{sec:flux_status} \\
+    Normalisation & Cross section per argon nucleus, $10^{-38}$~cm$^2$/Ar;
+      $d\sigma/dx|_j=\hat N_j/(\Delta x_j\,\Phi\,N_\mathrm{Ar})$ & \ref{sec:unfolding} \\
+    Unfolding & Wiener-SVD; each differential result estimates $A_C\,x_\mathrm{true}$, and a prediction is
+      compared after multiplication by $A_C$; the one-bin total has $A_C=1$ & \ref{sec:ac_rowsums} \\
+    Observables & $p_\mu$ (6 bins), $p_\pi$ (3 regions), $\cos\theta_\mu$ (8), $\cos\theta_\pi$ (5),
+      $\theta_{\mu\pi}$ (5), one-bin total; FHC, RHC and combined. $\cos\theta_\pi\times\cos\theta_\mu$
+      ($2\times3$), combined only & App.~\ref{app:binning} \\
+    Covariance & Flux, interaction model, re-interaction, detector, muon momentum scale, POT, target
+      count, simulation, beam-off and data statistics & \ref{sec:systematics} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
 
 % =============================================================================
 \section{Introduction}
@@ -196,7 +306,7 @@ regularised unfolding, and the covariance matrix of the uncertainties.
       mc/.style={box, fill=orange!8},
       res/.style={box, fill=green!8},
       ar/.style={-{Latex[length=2mm]}, thick}]
-    \node[data] (d) {beam data\\(here: fake data)};
+    \node[data] (d) {beam data\\(here: pseudo-data)};
     \node[data, below=5mm of d] (ext) {beam-off data};
     \node[mc, below=5mm of ext] (mc) {simulation\\$+$ universes};
     \node[box, right=12mm of ext] (sel) {selection\\\S\ref{sec:selection}};
@@ -226,17 +336,14 @@ estimate $A_C$ times the true spectrum, so a prediction is compared after multip
 (\S\ref{sec:ac_rowsums}); $A_C$ does not preserve the normalisation, and the total cross section is
 taken from the one-bin extraction, for which $A_C=1$ (\S\ref{sec:total_xsec}).
 
-The signal region is blind. All results are extracted from fake data, Poisson fluctuations of the
+The signal region is blind. All results are extracted from pseudo-data, Poisson fluctuations of the
 central-value simulation at the recorded exposure, and every figure of an unfolded result carries
 the label ``BLINDED: CV PSEUDO-DATA''. The four background control regions are disjoint from the
 signal region and are to be compared with beam-on data under the frozen procedure of
 \S\ref{sec:cr}.
 
-The inclusive analysis, that is the signal definition, event selection, background treatment,
-unfolding, uncertainty model and the result set of Table~\ref{tab:inventory}, is presented for
-approval, together with the request to compare the control regions with beam-on data. Opening the
-signal region further requires the items listed in \S\ref{sec:unblinding}, among them the
-confirmation of the absolute flux normalisation.
+The decision requested and the status of each result are given in Section~\ref{sec:decision}; the
+prerequisites for opening the signal region are listed in Section~\ref{sec:unblinding}.
 
 The proton-tagged subsample, which adds hadronic-mass and transverse-kinematic-imbalance
 observables, is analysed in a companion note~\cite{pt_note}. The optimisation studies and
@@ -272,11 +379,11 @@ pion absorption, and a proton reconstructed as the pion, bring such events into 
 \label{sec:generators}
 
 Four generators are compared with the results; the model choices relevant to this measurement are
-listed in Table~\ref{tab:gen_config}. The response and the fake data are built from the \uboone{}
+listed in Table~\ref{tab:gen_config}. The response and the pseudo-data are built from the \uboone{}
 tune of GENIE~v3~\cite{uboone_tune}. In the measured phase space the standalone generators span a
 factor of $1.6$ in the total cross section, from GENIE (lowest) to NEUT (highest)
 (\suppref{Table}{tab:total_xsec}), and bracket the tune. Since the present results are extracted
-from fake data, the model comparisons test the procedure; the spread indicates the size of the
+from pseudo-data, the model comparisons test the procedure; the spread indicates the size of the
 model differences the measurement is expected to resolve.
 
 \begin{table}[H]
@@ -463,14 +570,14 @@ running (runs $3490$--$4950$) is not used. Every run is normalised to its own ex
 prediction contains the run periods in the proportion of the recorded data.
 
 The analysis is blind and the beam-on data of the signal region are not used. Each configuration
-is extracted from fake data thrown run by run at that run's exposure, so every fake-data sample
+is extracted from pseudo-data thrown run by run at that run's exposure, so every pseudo-data sample
 has the same run structure as the beam-on sample it stands in for. At unblinding the beam-on files
-of the same runs, with the same POT and trigger counts, replace the fake data.
+of the same runs, with the same POT and trigger counts, replace the pseudo-data.
 
 \begin{table}[H]
   \centering
   \caption{Exposure by run period. ``MC POT'' is the simulated exposure of each period and ``Data
-    POT'' the recorded exposure to which the fake data of that period are thrown. Each run is
+    POT'' the recorded exposure to which the pseudo-data of that period are thrown. Each run is
     normalised independently by Scale $=$ (Data POT)$/$(MC POT), so the prediction is the
     data-weighted mixture of run periods, the normalisation a per-run beam-on dataset produces. The
     per-run factors range from $0.045$ to $0.116$; a single factor per horn mode would weight the
@@ -588,7 +695,7 @@ the samples.
   \centering
   \caption{Input samples (final, full FHC$+$RHC). ``$n$'' is the number of overlay
     files; ``MC POT'' is the summed native simulated exposure ($\times10^{20}$). The
-    blind Poisson-thrown fake data stands in for the (unused) beam-on data; the
+    blind Poisson-thrown pseudo-data stands in for the (unused) beam-on data; the
     detector variations use the native Run-4 FHC and RHC samples. The per-file lists
     and POT and trigger values are in the configuration files of the analysis.}
   \label{tab:samples}
@@ -602,7 +709,7 @@ the samples.
     Dirt MC (interactions outside the cryostat) & GENIE NuMI dirt overlays per run and horn mode (FHC Run~1 stands in for FHC Run~2, RHC Run~3b for RHC Runs~1 and~2) & 7 & n/a \\
     EXT (beam-off)         & cosmic data, per run, horn-mode-independent        & 7 & n/a \\
     Detector variations    & Run-4 FHC $+$ Run-4 RHC, CV $+$ 8 knobs each       & 18 & n/a \\
-    Fake data (blind)      & Poisson-thrown central value, per configuration    & n/a & n/a \\
+    Pseudo-data (blind)      & Poisson-thrown central value, per configuration    & n/a & n/a \\
     Beam-on data           & blinded, not used until unblinding              & n/a & n/a \\
     \bottomrule
   \end{tabular}
@@ -616,7 +723,7 @@ Each simulated event is weighted by
 where $\text{Scale}[\text{run}] = (\text{run Data POT})/(\text{run MC POT})$ is the per-run factor
 of Table~\ref{tab:pot}, $w_{\mathrm{PPFX}}$ the PPFX central-value flux correction and
 $w_{\mathrm{tune}}$ the GENIE tune weight. In the framework each overlay file receives the exposure
-of its run from the matching beam-on (here fake-data) entry, and the simulated exposure of a run is
+of its run from the matching beam-on (here pseudo-data) entry, and the simulated exposure of a run is
 the sum of the distinct exposure values stored in its files, which is the run total under both
 file conventions in use. One rule is applied to every event weight,
 \begin{equation}
@@ -996,8 +1103,8 @@ $17.6\%$ and $58.2\%$ combined).
 \begin{table}[H]
   \centering
   \caption{Cut-flow yields at full exposure for FHC, RHC and combined, from the simulation (the
-    expectation of the fake data). The yields carry the full central-value weight, tune $\times$ PPFX
-    $\times$ normalisation (\S\ref{sec:mc}, with Eq.~\eqref{eq:safeweight}), as in the fake-data throw
+    expectation of the pseudo-data). The yields carry the full central-value weight, tune $\times$ PPFX
+    $\times$ normalisation (\S\ref{sec:mc}, with Eq.~\eqref{eq:safeweight}), as in the pseudo-data throw
     and the unfolding, so the final-cut yields agree with Table~\ref{tab:cutcount} to $1\%$. Signal and
     ``Bkg'' (all other neutrino interactions: out of FV, NC, CC$1\pi^0$, CC$0\pi$, CC$N\pi$, CC$K$ and
     other CC) come from the $\nu_\mu$ overlays scaled per run to the recorded exposure
@@ -1148,7 +1255,7 @@ variables of the two candidates and two topological variables at the final cut, 
     \includegraphics[width=\textwidth]{final_ntracks}
     \caption{Number of primary tracks.}
   \end{subfigure}
-  \caption{Topological variables at the final cut, fake data and simulation.}
+  \caption{Topological variables at the final cut, pseudo-data and simulation.}
   \label{fig:final_topo}
 \end{figure}
 
@@ -1292,7 +1399,7 @@ The regions use the per-run normalisation and the central-value weights of the m
   \small
   \begin{tabular}{llrrrrrc}
     \toprule
-    Beam & Sideband & Pseudo-data & Signal & $\nu$ bkg & EXT & Dirt & Sig.\ frac. \\
+    Beam & Control region & Pseudo-data & Signal & $\nu$ bkg & EXT & Dirt & Sig.\ frac. \\
     \midrule
     FHC & CC$0\pi$ & $10\,613$ & $987$ & $9\,703$ & $1\,080$ & $49$ & $9.2\%$ \\
     FHC & multi-$\pi$ & $102$ & $27$ & $83$ & $5.4$ & $0.1$ & $24.4\%$ \\
@@ -1367,7 +1474,7 @@ to the pseudo-data tests the complete bookkeeping (\suppref{Sec.}{sec:cr_fullsta
     \toprule
     & Signal frac.\ & \multicolumn{3}{c}{$N_\mathrm{data}/N_{\nu\mathrm{MC}}$} \\
     \cmidrule(lr){3-5}
-    Sideband & (of $\nu$MC) & FHC & RHC & Combined \\
+    Control region & (of $\nu$MC) & FHC & RHC & Combined \\
     \midrule
     CC$0\pi$      & $\sim9\%$ & $0.99$ & $0.99$ & $0.99$ \\
     multi-$\pi$   & $\sim23\%$ & $0.93$ & $1.10$ & $1.03$ \\
@@ -1420,7 +1527,7 @@ space in which the unfolding operates, with all analysis slices concatenated.
 configuration with the per-run factors of \S\ref{sec:mc}, and the simulation is split into signal
 and background (Fig.~\ref{fig:chain_reco}). At the final cut the purity is $58$--$59\%$
 (Table~\ref{tab:cutflow}), so about $40\%$ of the selected events are background. The points are
-the fake data.
+the pseudo-data.
 
 \paragraph{Background subtraction.} The estimated background is subtracted bin by bin
 (Fig.~\ref{fig:chain_bsub}). The neutrino background is taken from the simulation, the cosmic-ray
@@ -1450,7 +1557,7 @@ the result (\S\ref{sec:ac_rowsums}).
   \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{step1_reco_costhpi}\caption{$\cos\theta_\pi$}\end{subfigure}\hfill
   \begin{subfigure}[b]{0.32\textwidth}\includegraphics[width=\textwidth]{step1_reco_thmupi}\caption{$\theta_{\mu\pi}$}\end{subfigure}\hfill
   \caption{Stage 1, FHC: selected reconstructed spectra scaled to the full exposure, with
-    the MC split into signal and background. Points are the Poisson-thrown fake data.
+    the MC split into signal and background. Points are the Poisson-thrown pseudo-data.
     The RHC equivalent is Fig.~\ref{fig:chain_reco_rhc} and the combined one
     \suppref{Fig.}{fig:chain_reco_comb}.}
   \label{fig:chain_reco}
@@ -1527,6 +1634,38 @@ migration diagonals quoted in the text, for example $91\%$, $51\%$ and $52\%$ fo
 $p_\pi$ regions, are elements of the column-normalised $M$, obtained by dividing each column of $S$ by its
 sum.
 
+\subsection{Binning and the migration criterion}
+\label{sec:binning_rule}
+
+The migration diagonal of a bin is the element $M_{jj}$ of the column-normalised migration matrix:
+the fraction of selected signal events generated in true bin $j$ that are reconstructed in bin $j$.
+A small diagonal means that the content of the reconstructed bin comes mostly from other true bins and
+that the unfolded value of the bin depends on the modelled migrations.
+
+The Booster-beam CC$1\pi^\pm$ measurement required every diagonal to exceed $0.68$ and every bin to
+hold at least $100$ predicted events. That threshold is a convention of that analysis, not a general
+requirement, and it was set for a spectrum and estimators different from those here. In this
+measurement the muon momentum is measured by multiple Coulomb scattering for $63\%$ of the muons, with
+a $30\%$ resolution comparable to the bin widths, and the range-based pion momentum saturates near
+$0.34\GeVc$. Under $0.68$ the $p_\mu$ distribution would be reduced to four bins, $p_\pi$ to two
+regions and $\cos\theta_\mu$ to seven bins.
+
+The binnings of this analysis meet a diagonal of $0.50$ in FHC and in RHC: at most half of the selected
+events of a bin come from neighbouring true bins. Three further requirements protect the result
+(\suppref{Sec.}{sec:final_binning}). Every bin holds at least $70$ selected FHC signal events ($50$ in
+the proton-tagged sample), so that the response is not dominated by its own statistical fluctuations.
+Among the binnings that pass, the one with the fewest bins that reaches $90\%$ of the largest trace of
+$A_C$ is chosen; the trace counts the degrees of freedom that the data determine, so a bin whose
+content would be supplied by the regularisation adds nothing to it and is not added. Finally, the
+stronger dependence on the modelled migrations that the $0.50$ criterion admits is tested directly on
+the adopted binnings by the ensembles and by the pseudo-data from reweighted models
+(\S\ref{sec:validation}).
+
+Three inclusive observables meet $0.50$ but not $0.68$: $p_\mu$ (smallest diagonal $0.57$ in FHC,
+$0.59$ in RHC), $p_\pi$ in three regions ($0.51$, $0.53$) and $\cos\theta_\mu$ ($0.66$, $0.66$).
+$\cos\theta_\pi$ and $\theta_{\mu\pi}$ meet $0.68$. In the proton-tagged sample $\delta\alpha_T$,
+$\delta\phi_T$ and $\theta_{\pi p}$ meet only $0.50$ (\ptref{Sec.}{sec:pt_observables}).
+
 \subsection{Regularised unfolding}
 \label{sec:unfmethods}
 
@@ -1550,7 +1689,7 @@ $\hat{s}_j=\varepsilon_j^{-1}\sum_i P(C_j|E_i)(m_i-b_i)$. The prior $\pi_j$, ini
 simulation, is replaced by the result and the procedure iterated; the number of iterations is the
 regularisation parameter, with few iterations biased towards the prior and many iterations noisy.
 There is no $A_C$, and predictions are compared directly. The residual bias is towards the prior and
-can only be evaluated with fake data that differ from the prior. The uncertainty is the data
+can only be evaluated with pseudo-data that differ from the prior. The uncertainty is the data
 covariance propagated through the iterations at fixed prior.
 
 \begin{table}[H]\centering\small
@@ -1577,10 +1716,9 @@ D'Agostini serves as a cross-check (\suppref{Sec.}{sec:crosschecks}). Its integr
 of the iteration count and of the observable, and lies $30$--$35\%$ above the Wiener-SVD integrals
 averaged over the observables, depending on the configuration; this is consistent with the spread of the Wiener-SVD integrals
 between observables (Table~\ref{tab:sigint_all}) being caused by the $A_C$ smearing, which the row
-sums of \S\ref{sec:ac_rowsums} show directly. With fake data equal in expectation to the
+sums of \S\ref{sec:ac_rowsums} show directly. With pseudo-data equal in expectation to the
 central-value simulation that also serves as its prior, D'Agostini returns its prior, so the
-stability of its integral does not measure its bias for a different truth; that requires fake
-data from a different model (\S\ref{sec:altmodel}).
+stability of its integral does not measure its bias for a different truth; that requires pseudo-data from a different model (\S\ref{sec:altmodel}).
 
 \subsection{Wiener-SVD implementation and normalisation}
 
@@ -1668,9 +1806,9 @@ five observables at the final cut, with the simulated signal and the background 
     \caption{$\theta_{\mu\pi}$}
   \end{subfigure}
   \caption{Reconstructed-space spectra at the final cut for all five observables,
-    FHC full exposure (Runs~1$+$2$+$4$+$5): Poisson-thrown central-value fake data
+    FHC full exposure (Runs~1$+$2$+$4$+$5): Poisson-thrown central-value pseudo-data
     (black points), stacked signal (blue), beam background (orange), dirt (green),
-    and EXT (grey).  The fake data is drawn from the central-value Monte Carlo and so
+    and EXT (grey).  The pseudo-data is drawn from the central-value Monte Carlo and so
     agrees with the stacked prediction by construction (a reco-level self-closure);
     the differential results and their closure against the $A_C$-smeared truth are
     shown in Fig.~\ref{fig:dsigma_current}.}
@@ -1848,13 +1986,16 @@ the quoted numbers are the overall mean (bias) and RMS (resolution).
 \label{sec:systematics}
 % =============================================================================
 
-Every result carries flux, interaction-model, hadron re-interaction, detector, POT, target-count
-and statistical terms. Each is a covariance matrix built from the universes or variation samples of
-its source, propagated through the unfolding with the error-propagation matrix and provided per
-component (\S\ref{sec:ac_rowsums}); Table~\ref{tab:systematics} lists the sources and their sizes.
-Four identified effects lie outside this configured covariance: the MCS momentum scale, evaluated
-in \S\ref{sec:mcs} and provided as a separate matrix for $p_\mu$, the beamline-geometry flux term,
-the beam-off gate ratios and the Run-2 beam-off substitution (\S\ref{sec:notincov}).
+Every result carries flux, interaction-model, hadron re-interaction, detector, muon-momentum-scale,
+POT, target-count and statistical terms. Each is a covariance matrix built from the universes or
+variation samples of its source, propagated through the unfolding with the error-propagation matrix
+and provided per component (\S\ref{sec:ac_rowsums}); Table~\ref{tab:systematics} lists the sources
+and their sizes. The muon-momentum-scale term is evaluated on the data side outside the extraction
+framework (\S\ref{sec:mcs}) and added to the framework covariance: the sum is the official
+covariance of every result (\texttt{cov\_total\_plusMCS.txt} in the release), and every uncertainty
+quoted in this note includes it. Three identified effects lie outside the official covariance: the
+beamline-geometry flux term, the beam-off gate ratios and the Run-2 beam-off substitution
+(\S\ref{sec:notincov}; prerequisite U7).
 
 \begin{table}[H]
   \centering
@@ -1872,10 +2013,11 @@ Source & Branch / method & Range (\%) \\
     Hadron re-interaction   & \texttt{weightsReint} & $3.5$--$13.3$ \\
     POT counting            & Beam toroids          & $2.8$--$4.5$ \\
     Target count            & FV geometry           & $1.4$--$2.2$ \\
+    MCS momentum scale      & data-side variation   & $0.0$--$10.8$ \\
     \midrule
     MC statistics           & universe spread       & $1.9$--$6.1$ \\
     EXT statistics          & beam-off sample       & $0.5$--$2.3$ \\
-    Data statistics         & thrown fake data      & $6.6$--$19.3$ \\
+    Data statistics         & thrown pseudo-data      & $6.6$--$19.3$ \\
     \midrule
     Prediction total        & quadrature sum        & $32.6$--$56.7$ \\
     Total                   & incl.\ data stats     & $33.7$--$60.0$ \\
@@ -1905,16 +2047,17 @@ with Table~\ref{tab:fhc}.
 \toprule
 Source & $p_\mu$ & $p_\pi$ & $\cos\theta_\mu$ & $\cos\theta_\pi$ & $\theta_{\mu\pi}$ \\
 \midrule
-\textbf{Prediction total} & \textbf{39.3} & \textbf{56.7} & \textbf{39.6} & \textbf{39.0} & \textbf{37.1} \\
+\textbf{Prediction total} & \textbf{40.6} & \textbf{56.7} & \textbf{39.6} & \textbf{39.0} & \textbf{37.1} \\
 Cross section (GENIE) & 11.9 & 16.6 & 10.9 & 11.4 & 10.6 \\
 Flux (PPFX) & 30.0 & 38.5 & 26.6 & 27.1 & 28.8 \\
 Detector & 21.2 & 34.2 & 25.4 & 23.2 & 19.9 \\
 Reinteraction & 4.2 & 13.3 & 3.5 & 5.1 & 4.1 \\
+MCS momentum scale & 8.5 & 0.0 & 0.0 & 0.0 & 0.0 \\
 MC stat & 3.8 & 6.1 & 5.2 & 4.2 & 2.8 \\
 EXT stat & 1.1 & 2.3 & 1.7 & 1.2 & 1.0 \\
 Data stat & 12.1 & 19.3 & 16.6 & 13.6 & 8.9 \\
 POT $+$ targets & 3.8 & 5.0 & 3.5 & 3.4 & 3.6 \\
-\textbf{Total (incl.\ data stat)} & \textbf{41.2} & \textbf{60.0} & \textbf{43.1} & \textbf{41.5} & \textbf{38.3} \\
+\textbf{Total (incl.\ data stat)} & \textbf{42.4} & \textbf{60.0} & \textbf{43.1} & \textbf{41.5} & \textbf{38.3} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -1977,7 +2120,7 @@ The momentum of $63\%$ of the selected muons is measured by multiple Coulomb sca
 and resolution are not varied by the detector-variation samples. The momentum of a selected muon is
 exactly the range value when the track is contained and exactly the MCS value when it exits, so
 the MCS component can be scaled on its own. A momentum-scale error is a difference between data and
-simulation, so the variation is applied to the data side: the fake data are thrown again with every
+simulation, so the variation is applied to the data side: the pseudo-data are thrown again with every
 MCS-measured muon momentum multiplied by $1\pm0.05$, while the simulation, the response and the
 selection stay nominal, and each variation is unfolded with the nominal response. The
 half-difference of the two results is taken as a fully correlated term. The size of the variation,
@@ -1994,12 +2137,14 @@ moving by $-2.1\%$ and $-0.7\%$. In RHC the five lowest bins move by $10$--$13\%
 ($0.23$--$0.30\sigma$) and the highest by $10\%$ ($0.21\sigma$); the RHC integral moves by $-8.2\%$
 and $+0.9\%$. Adding the term raises the per-bin total uncertainty from $31$--$47\%$ to $35$--$47\%$
 (FHC, with $31\%$ to $35\%$ in the highest bin), from $34$--$43\%$ to $37$--$44\%$ (combined) and
-from $41$--$49\%$ to $43$--$50\%$ (RHC). The term is provided for the three $p_\mu$ extractions as \texttt{cov\_MCSscale.txt},
-together with \texttt{cov\_total\_plusMCS.txt}, and is not yet included in the covariance computed
-by the framework.
+from $41$--$49\%$ to $43$--$50\%$ (RHC). The term is released as \texttt{cov\_MCSscale.txt} for every extraction and is part of the official
+covariance, \texttt{cov\_total\_plusMCS.txt}, which is the framework covariance plus this term; the
+uncertainty and model-comparison tables of this note are computed with it. The closure $\chi^2$ and the
+biases of the robustness tests (\S\ref{sec:validation}) are quoted with the framework covariance,
+since they test the extraction rather than the uncertainty of the data.
 
 The selection applies no requirement on the reconstructed muon momentum, and no other inclusive
-observable depends on it. The scaled fake data therefore give results identical to the nominal ones
+observable depends on it. The scaled pseudo-data therefore give results identical to the nominal ones
 for $\cos\theta_\mu$, $\cos\theta_\pi$, $\theta_{\mu\pi}$, $p_\pi$ and the total cross section, as
 verified by extraction for FHC $\cos\theta_\mu$, $\cos\theta_\pi$, $p_\pi$ and the total at the earlier
 binnings. The reconstructed bins of these observables do not use the muon momentum, so this holds
@@ -2009,7 +2154,8 @@ since it is made at reconstruction level with the same estimator in data and sim
 \subsection{Effects not included in the covariance}
 \label{sec:notincov}
 
-Besides the MCS scale, three effects are evaluated or bounded but not included in the covariance.
+Three effects are evaluated or bounded but not included in the official covariance; including them
+is prerequisite U7.
 The beamline-geometry flux term ($1.6$--$3.3\%$) is discussed above. The covariance contains the
 statistical uncertainty of the beam-off samples but no uncertainty on the per-run gate ratios, nor
 on the use of the Run-1 beam-off sample for Run~2, which is $16\%$ of the FHC and $23\%$ of the RHC
@@ -2022,22 +2168,19 @@ either would add $0.3\%$ to the total uncertainty.
 \label{sec:validation}
 % =============================================================================
 
-The validation uses simulation, where the true answer is known, and has three parts.
-\begin{enumerate}\itemsep3pt
-  \item \textbf{Closure under the nominal model.} Fake data thrown from the simulation that built
-    the response are unfolded, and the truth must be recovered. This tests the implementation: the
-    matrices, the binning, the normalisation and the bookkeeping. It is reported with every
-    extraction as the closure $\chi^2$ and is passed.
-  \item \textbf{Statistical coverage.} Many independent Poisson realisations are carried through
-    the whole chain, and the spread of the results is compared with the uncertainty each reports.
-    This is passed for six extractions covering the three configurations.
-  \item \textbf{Robustness to a different model.} Fake data whose truth differs from the model of
-    the response are unfolded, which measures the bias from the regularisation and the nominal
-    response. With reweighted GENIE fake data the largest bias is $1.18\sigma$, in one sparse bin
-    (\S\ref{sec:altmodel}); a test with an independent generator has not yet been possible.
-\end{enumerate}
-The first two parts test the procedure; the third measures how much of a result comes from the data
-and how much from the model used to unfold it.
+The validation proceeds in steps, each asking a question that the steps before it cannot answer
+(Table~\ref{tab:validation_ladder}). Closure under the nominal model tests the implementation: the
+matrices, the binning, the normalisation and the bookkeeping. It is necessary but not sufficient,
+since a result can close while being determined largely by the modelled migrations or by the
+regularisation; the migration criterion and the trace of $A_C$ (\S\ref{sec:binning_rule}) address
+that separately. Ensembles of pseudo-experiments test whether the statistical uncertainties are
+correctly sized. Pseudo-data from a reweighted model measure the bias from the regularisation and the
+nominal response for model changes that reweighting can reach, and a generator with its own detector
+simulation tests model changes that it cannot. The control regions test the background model with
+data. The first three steps are complete for the primary results; the last three are prerequisites
+(Table~\ref{tab:prerequisites}).
+
+\input{shared/validation_ladder}
 
 \subsection{Closure under the nominal model}
 
@@ -2047,7 +2190,7 @@ extraction as the $\chi^2$ against the $A_C$-smeared truth of the throw, and the
 to true integral averages $0.996$ over the fifteen inclusive extractions ($0.946$--$1.047$). The
 test cannot detect a wrong model, since the model is the same on both sides, nor a wrongly sized
 uncertainty, since a single throw does not sample the distribution of throws. The closure $\chi^2$
-uses the full covariance, whose systematic terms are common to the fake data and the reference and
+uses the full covariance, whose systematic terms are common to the pseudo-data and the reference and
 cancel in the residual while still entering the covariance; its $p$-values therefore cluster near
 unity and are not a sensitive test. The statistical coverage is tested with ensembles.
 
@@ -2098,12 +2241,12 @@ measurement and is not corrected. The proton-tagged extractions have their own e
 \subsection{Robustness to a different interaction model}
 \label{sec:altmodel}
 
-Here the fake data are thrown from a reweighted interaction model, while the response, the
+Here the pseudo-data are thrown from a reweighted interaction model, while the response, the
 efficiency and the background prediction remain nominal, so the bias that appears is the combined
-effect of the regularisation and of a response built from the wrong model. The fake-data universe
+effect of the regularisation and of a response built from the wrong model. The pseudo-data universe
 of the framework is filled from the thrown files at truth and reconstruction level, so the truth
 used for comparison is that of the alternative model, and the reweighting applies to signal and
-background alike. The fake data are reconstructed GENIE events reweighted event by event to an
+background alike. The pseudo-data are reconstructed GENIE events reweighted event by event to an
 alternative parameter set, with the same detector simulation, unfolded with the nominal response and
 compared using the nominal covariance. This is a model-distortion test; a test with a different
 generator and its own detector simulation would be stronger and is pending.
@@ -2173,12 +2316,19 @@ $\cos\theta_\pi$ and $p_\pi$, while $\cos\theta_\mu$ comes back $6\%$ high; unde
 variation the RHC ratios are $0.99$--$1.16$. The same test for the proton-tagged extractions is
 reported in the companion note (\ptref{Sec.}{sec:pt_altmodel}).
 
-\paragraph{Independent-generator closure.} The one existing NuWro overlay, for Run-1 FHC, is not used
-for this test. Its normalisation disagrees with the standalone NuWro prediction for the same flux:
-its true signal rate per POT is $1.76$ times that of GENIE, against $1.6$ expected from the
-standalone NuWro cross section and the flux. Its production could not be traced, so a closure test
-with it would test the sample rather than the extraction. A validated NuWro or GiBUU overlay
-is required (\S\ref{sec:unblinding}).
+\paragraph{Independent-generator closure.} Reweighting reaches only changes of the parameters of the
+nominal model. A generator with a different resonance model, non-resonant treatment and final-state
+interactions, simulated through the detector, tests changes that reweighting cannot reach
+(prerequisite U3). The test uses a NuWro overlay with the full detector simulation for FHC and RHC.
+The overlay is first validated against standalone NuWro on the same flux: its signal rate per POT must
+agree with the standalone prediction. Pseudo-data thrown from it are then unfolded with the nominal
+response for every primary and proposed result, and compared with the $A_C$-smeared NuWro truth. The
+test passes if every bin holding at least $10\%$ of the largest truth lies within $1\sigma$ of its total
+uncertainty and every integral within its uncertainty; a failure blocks the opening of the signal
+region. The one existing NuWro overlay, for Run-1 FHC, cannot serve: its true signal rate per POT is
+$1.76$ times that of GENIE, against $1.6$ expected from the standalone NuWro cross section and the
+flux, and its production could not be traced, so a closure test with it would test the sample rather
+than the extraction.
 
 
 % =============================================================================
@@ -2190,14 +2340,15 @@ is required (\S\ref{sec:unblinding}).
 \subsection{Result set}
 \label{sec:status_matrix}
 
-Table~\ref{tab:inventory} lists every extraction of the analysis. The primary results are the
-fifteen inclusive differential extractions, five observables in three configurations, and the three
-one-bin totals. Each carries the covariance of the configured uncertainty model, detector variations
-included; the effects outside it are listed in \S\ref{sec:notincov} and \S\ref{sec:mcs}. The
+The status of every inclusive product is given in Table~\ref{tab:inventory}
+(Section~\ref{sec:decision}). The \statPrimary{}s are the fifteen differential extractions, five
+observables in three configurations, and the three one-bin totals; the two-dimensional
+$\cos\theta_\pi\times\cos\theta_\mu$ in the combined configuration is a \statSecondary{}
+(\S\ref{sec:incl_2d}). Each carries the official covariance, detector variations and the
+muon-momentum-scale term included; the effects outside it are listed in \S\ref{sec:notincov}. The
 detector term of the inclusive results is $17$--$27\%$ ($34\%$ for FHC $p_\pi$). The proton-tagged
 extractions are reported in the companion note.
 
-\input{tables/inventory}
 
 Table~\ref{tab:infocontent} gives, for the FHC results, the number of bins, the smallest migration
 diagonal, the range of the $A_C$ row sums, the trace of $A_C$, which is the number of degrees of
@@ -2211,17 +2362,17 @@ corresponding bin is determined largely by the regularisation.
 
 Tables~\ref{tab:fhc}--\ref{tab:comb} summarise the differential results of the three
 configurations, and Figs.~\ref{fig:dsigma_current}--\ref{fig:dsigma_comb} show them. All are
-extracted from fake data, and all recover the $A_C$-smeared truth of the fake data in every
+extracted from pseudo-data, and all recover the $A_C$-smeared truth of the pseudo-data in every
 observable.
 
 \begin{center}\small
-\captionof{table}{FHC (Runs 1, 2, 4, 5; data POT $7.766\times10^{20}$): integrated cross section, the two largest systematic terms, the systematic total (all terms except the data statistics) and the closure against the $A_C$-smeared truth of the fake data, from the covariance and result files. The flux term is discussed in \S\ref{sec:fluxanatomy}.}
+\captionof{table}{FHC (Runs 1, 2, 4, 5; data POT $7.766\times10^{20}$): integrated cross section, the two largest systematic terms, the systematic total (all terms except the data statistics) and the closure against the $A_C$-smeared truth of the pseudo-data, from the covariance and result files. The flux term is discussed in \S\ref{sec:fluxanatomy}.}
     \label{tab:fhc}
 \begin{tabular}{lccccc}
 \toprule
 Observable & $\sigma_\mathrm{int}$ & Flux & Detector & Syst.\ total & Closure $\chi^2/\mathrm{ndf}$ \\
 \midrule
-      $p_\mu$            & $0.814$ & $30.0\%$ & $21.2\%$ & $39.3\%$ & $0.82/6$ ($p=0.99$) \\
+      $p_\mu$            & $0.814$ & $30.0\%$ & $21.2\%$ & $40.6\%$ & $0.82/6$ ($p=0.99$) \\
       $p_\pi$            & $0.830$ & $38.5\%$ & $34.2\%$ & $56.7\%$ & $1.01/3$ ($p=0.80$) \\
       $\cos\theta_\mu$   & $0.713$ & $26.6\%$ & $25.4\%$ & $39.6\%$ & $2.39/8$ ($p=0.97$) \\
       $\cos\theta_\pi$   & $0.668$ & $27.1\%$ & $23.2\%$ & $39.0\%$ & $1.21/5$ ($p=0.94$) \\
@@ -2246,7 +2397,7 @@ The generator predictions are averaged over the RHC flux composition.
 The combined measurement uses the summed response of the fourteen overlay files,
 $5.6\times10^{6}$ events, with each horn mode normalised to its own exposure
 ($1.885\times10^{21}$~POT in total). The prediction thus weights the two modes by their recorded
-exposure, $0.70{:}1$, rather than by their simulated exposure, $0.62{:}1$, and the fake data are
+exposure, $0.70{:}1$, rather than by their simulated exposure, $0.62{:}1$, and the pseudo-data are
 thrown at the same rates. The combined generator predictions are the fluence-weighted average of the
 two modes, $0.425$ FHC and $0.575$ RHC, each mode weighted by $\Phi_\mathrm{tot}\times$POT.
 
@@ -2268,13 +2419,13 @@ flux having a smaller hadron-production uncertainty, but the unfolded terms are 
 background subtraction multiplies both by $1+B/S$ (\S\ref{sec:fluxanatomy}).
 
 \begin{center}\small
-\captionof{table}{RHC (Runs 1, 2, 3, 4; data POT $1.1082\times10^{21}$): integrated cross section, the two largest systematic terms, the systematic total (all terms except the data statistics) and the closure against the $A_C$-smeared truth of the fake data, from the covariance and result files. The flux term is discussed in \S\ref{sec:fluxanatomy}.}
+\captionof{table}{RHC (Runs 1, 2, 3, 4; data POT $1.1082\times10^{21}$): integrated cross section, the two largest systematic terms, the systematic total (all terms except the data statistics) and the closure against the $A_C$-smeared truth of the pseudo-data, from the covariance and result files. The flux term is discussed in \S\ref{sec:fluxanatomy}.}
     \label{tab:rhc}
 \begin{tabular}{lccccc}
 \toprule
 Observable & $\sigma_\mathrm{int}$ & Flux & Detector & Syst.\ total & Closure $\chi^2/\mathrm{ndf}$ \\
 \midrule
-      $p_\mu$            & $0.644$ & $29.4\%$ & $23.8\%$ & $40.6\%$ & $0.44/6$ ($p=1.00$) \\
+      $p_\mu$            & $0.644$ & $29.4\%$ & $23.8\%$ & $42.0\%$ & $0.44/6$ ($p=1.00$) \\
       $p_\pi$            & $0.727$ & $27.7\%$ & $24.0\%$ & $41.1\%$ & $0.01/3$ ($p=1.00$) \\
       $\cos\theta_\mu$   & $0.694$ & $24.6\%$ & $23.5\%$ & $36.9\%$ & $0.98/8$ ($p=1.00$) \\
       $\cos\theta_\pi$   & $0.615$ & $25.2\%$ & $25.5\%$ & $38.5\%$ & $0.49/5$ ($p=0.99$) \\
@@ -2284,13 +2435,13 @@ Observable & $\sigma_\mathrm{int}$ & Flux & Detector & Syst.\ total & Closure $\
 \end{center}
 
 \begin{center}\small
-\captionof{table}{Combined (data POT $1.8848\times10^{21}$): integrated cross section, the two largest systematic terms, the systematic total (all terms except the data statistics) and the closure against the $A_C$-smeared truth of the fake data, from the covariance and result files. The flux term is discussed in \S\ref{sec:fluxanatomy}.}
+\captionof{table}{Combined (data POT $1.8848\times10^{21}$): integrated cross section, the two largest systematic terms, the systematic total (all terms except the data statistics) and the closure against the $A_C$-smeared truth of the pseudo-data, from the covariance and result files. The flux term is discussed in \S\ref{sec:fluxanatomy}.}
     \label{tab:comb}
 \begin{tabular}{lccccc}
 \toprule
 Observable & $\sigma_\mathrm{int}$ & Flux & Detector & Syst.\ total & Closure $\chi^2/\mathrm{ndf}$ \\
 \midrule
-      $p_\mu$            & $0.742$ & $27.9\%$ & $23.7\%$ & $39.0\%$ & $0.08/6$ ($p=1.00$) \\
+      $p_\mu$            & $0.742$ & $27.9\%$ & $23.7\%$ & $40.1\%$ & $0.08/6$ ($p=1.00$) \\
       $p_\pi$            & $0.762$ & $31.0\%$ & $26.9\%$ & $45.9\%$ & $0.21/3$ ($p=0.98$) \\
       $\cos\theta_\mu$   & $0.744$ & $22.8\%$ & $21.2\%$ & $33.1\%$ & $1.29/8$ ($p=1.00$) \\
       $\cos\theta_\pi$   & $0.649$ & $25.7\%$ & $23.0\%$ & $37.5\%$ & $0.58/5$ ($p=0.99$) \\
@@ -2302,8 +2453,8 @@ Observable & $\sigma_\mathrm{int}$ & Flux & Detector & Syst.\ total & Closure $\
 \begin{figure}[H]\centering
   \blindfig[0.98\textwidth]{dsigma_FHC5}
   \caption{Differential cross sections $d\sigma/dx$ of the five distributions, FHC full exposure,
-    extracted from fake data. The points are the Wiener-SVD estimator $A_C\,x_{\rm true}$; shown are the
-    unfolded fake data (black points), the $A_C$-smeared truth of the fake data (grey dashed), the
+    extracted from pseudo-data. The points are the Wiener-SVD estimator $A_C\,x_{\rm true}$; shown are the
+    unfolded pseudo-data (black points), the $A_C$-smeared truth of the pseudo-data (grey dashed), the
     \uboone{} tune (black solid) and the four generator predictions (GENIE, GiBUU, NEUT, NuWro), all
     smeared with $A_C$. The unfolded points recover the injected truth in every observable, the closure
     summarised in Table~\ref{tab:fhc}.}
@@ -2312,14 +2463,14 @@ Observable & $\sigma_\mathrm{int}$ & Flux & Detector & Syst.\ total & Closure $\
 
 \begin{figure}[H]\centering
   \blindfig[0.98\textwidth]{dsigma_RHCFULL}
-  \caption{RHC differential cross sections from fake data, with the generator predictions averaged
+  \caption{RHC differential cross sections from pseudo-data, with the generator predictions averaged
     over the RHC flux. Same layout as Fig.~\ref{fig:dsigma_current}.}
   \label{fig:dsigma_rhc}
 \end{figure}
 
 \begin{figure}[H]\centering
   \blindfig[0.98\textwidth]{dsigma_COMB}
-  \caption{Combined FHC$+$RHC differential cross sections from fake data normalised per horn mode,
+  \caption{Combined FHC$+$RHC differential cross sections from pseudo-data normalised per horn mode,
     with the fluence-weighted combination of the generator predictions. Same layout as
     Fig.~\ref{fig:dsigma_current}.}
   \label{fig:dsigma_comb}
@@ -2327,7 +2478,8 @@ Observable & $\sigma_\mathrm{int}$ & Flux & Detector & Syst.\ total & Closure $\
 
 \begin{center}\small
 \captionof{table}{Integrated cross section $\sigma_\mathrm{int}$ of each unfolded differential result over
-  the measured phase space ($10^{-38}$~cm$^2$/Ar), from fake data, with the flux of each configuration.
+  the measured phase space ($10^{-38}$~cm$^2$/Ar), from pseudo-data, with the $\nu_\mu+\bar\nu_\mu$ flux of each
+  configuration integrated above $60$~MeV.
   The value differs between observables because $A_C$ does not preserve the normalisation; the
   D'Agostini cross-check (\suppref{Sec.}{sec:crosschecks}) gives a total $12$--$55\%$ higher,
   independent of the observable to $1\%$ and equal to the one-bin total, and the $A_C$ row sums of
@@ -2351,9 +2503,10 @@ $\theta_{\mu\pi}$ & $0.796$ & $0.831$ & $0.860$ \\
 The error bars of the unfolded points are the square roots of the diagonal of the total covariance
 propagated through the unfolding: flux (PPFX multisims), cross section (GENIE multisims and
 unisims), detector variations~\cite{uboone_detvar}, hadron re-interaction~\cite{geant4reweight},
-POT and target number, and the data, simulation and beam-off statistical terms. For FHC $p_\mu$ the
-bin-averaged total is $41.2\%$ ($39.3\%$ without the data statistics, Table~\ref{tab:systbreak}),
-with flux $30.0\%$, detector $21.2\%$, data statistics $12.1\%$ and cross section $11.9\%$. The
+POT and target number, the muon momentum scale, and the data, simulation and beam-off statistical
+terms. For FHC $p_\mu$ the bin-averaged total is $42.4\%$ ($40.6\%$ without the data statistics,
+Table~\ref{tab:systbreak}), with flux $30.0\%$, detector $21.2\%$, data statistics $12.1\%$, cross
+section $11.9\%$ and muon momentum scale $8.5\%$. The
 one-bin total (\S\ref{sec:total_xsec}) has its own breakdown from the same universes, systematic
 $\oplus$ statistical $=38.0\%\oplus4.5\%$ in FHC; without regularisation its flux and detector
 terms are not redistributed between bins.
@@ -2369,7 +2522,7 @@ prediction. The differential form, with a conventional width for the upper bin
 
 \begin{table}[H]
   \centering
-  \caption{The $p_\pi$ result as bin integrals ($10^{-38}$~cm$^2$/Ar), from fake data. The upper
+  \caption{The $p_\pi$ result as bin integrals ($10^{-38}$~cm$^2$/Ar), from pseudo-data. The upper
     region is open-ended and has no width. The uncertainties are the total of the covariance. All three
     bins are $A_C$-smeared, so a prediction is compared after multiplication by $A_C$.}
   \label{tab:ppi_partial_main}
@@ -2446,7 +2599,7 @@ in smeared space.
 \subsection{Model comparisons}
 \label{sec:chi2}
 
-Table~\ref{tab:chi2_incl} gives the $\chi^2$ of the unfolded fake data against each prediction, for
+Table~\ref{tab:chi2_incl} gives the $\chi^2$ of the unfolded pseudo-data against each prediction, for
 every observable and configuration. All predictions are smeared with $A_C$, so the comparison is
 made in the space of the measurement, with the full covariance. The truth column is the closure test.
 
@@ -2459,27 +2612,27 @@ FHC $\cos\theta_\mu$, in line with the other observables.
 
 \begin{table}[H]
   \centering
-  \caption{$\chi^2$/ndf of the unfolded fake data against each $A_C$-smeared prediction,
-    for the inclusive selection. ``truth'' is the fake-data truth (the closure test).}
+  \caption{$\chi^2$/ndf of the unfolded pseudo-data against each $A_C$-smeared prediction,
+    for the inclusive selection. ``truth'' is the pseudo-data truth (the closure test).}
   \label{tab:chi2_incl}
   \small
   \begin{tabular}{llcccccc}
 \toprule
 Beam & Observable & truth & uB tune & GENIE & GiBUU & NEUT & NuWro \\
 \midrule
-    FHC  & $p_\mu$                & $0.82/6$ & $1.52/6$ & $2.73/6$ & $1.47/6$ & $2.65/6$ & $1.41/6$ \\
+    FHC  & $p_\mu$                & $0.82/6$ & $1.29/6$ & $2.24/6$ & $1.27/6$ & $2.27/6$ & $1.35/6$ \\
          & $p_\pi$                & $1.01/3$ & $1.20/3$ & $1.56/3$ & $4.13/3$ & $1.83/3$ & $2.26/3$ \\
          & $\cos\theta_\mu$       & $2.39/8$ & $1.75/8$ & $2.37/8$ & $2.57/8$ & $3.93/8$ & $4.88/8$ \\
          & $\cos\theta_\pi$       & $1.21/5$ & $1.21/5$ & $1.92/5$ & $2.56/5$ & $2.26/5$ & $3.09/5$ \\
          & $\theta_{\mu\pi}$      & $0.39/5$ & $0.47/5$ & $0.82/5$ & $0.67/5$ & $2.71/5$ & $3.16/5$ \\
     \midrule
-    RHC  & $p_\mu$                & $0.44/6$ & $0.76/6$ & $0.83/6$ & $0.57/6$ & $0.90/6$ & $1.25/6$ \\
+    RHC  & $p_\mu$                & $0.44/6$ & $0.76/6$ & $0.83/6$ & $0.57/6$ & $0.88/6$ & $1.24/6$ \\
          & $p_\pi$                & $0.01/3$ & $0.01/3$ & $0.58/3$ & $0.71/3$ & $0.26/3$ & $0.27/3$ \\
          & $\cos\theta_\mu$       & $0.98/8$ & $1.27/8$ & $1.84/8$ & $0.71/8$ & $6.36/8$ & $10.39/8$ \\
          & $\cos\theta_\pi$       & $0.49/5$ & $0.43/5$ & $1.27/5$ & $2.86/5$ & $1.79/5$ & $1.08/5$ \\
          & $\theta_{\mu\pi}$      & $0.19/5$ & $0.34/5$ & $2.52/5$ & $3.54/5$ & $0.46/5$ & $1.08/5$ \\
     \midrule
-    comb & $p_\mu$                & $0.08/6$ & $0.23/6$ & $1.36/6$ & $0.31/6$ & $1.04/6$ & $0.63/6$ \\
+    comb & $p_\mu$                & $0.08/6$ & $0.22/6$ & $1.15/6$ & $0.24/6$ & $0.85/6$ & $0.62/6$ \\
          & $p_\pi$                & $0.21/3$ & $0.26/3$ & $0.89/3$ & $2.66/3$ & $0.70/3$ & $1.19/3$ \\
          & $\cos\theta_\mu$       & $1.29/8$ & $1.17/8$ & $2.17/8$ & $1.30/8$ & $5.24/8$ & $9.52/8$ \\
          & $\cos\theta_\pi$       & $0.58/5$ & $0.52/5$ & $1.65/5$ & $2.70/5$ & $1.63/5$ & $2.06/5$ \\
@@ -2525,17 +2678,17 @@ The counts carry the full central-value weight (tune $\times$ PPFX $\times$ norm
 \S\ref{sec:mc}); the PPFX weight averages $0.944$ on selected signal, so a count without it would
 lie $3$--$6\%$ above the prediction used in the unfolding.
 
-Table~\ref{tab:cutcount} gives the total cross sections. The $\sigma$ column is the one-bin extraction from fake data and fluctuates
+Table~\ref{tab:cutcount} gives the total cross sections. The $\sigma$ column is the one-bin extraction from pseudo-data and fluctuates
 around the tune by the Poisson throw; the realised truth of the throw is listed, and the ratio to it
 is $0.990$--$0.991$ with $\chi^2/1\ll1$ in the three configurations. The uncertainty is that of the
 one-bin extraction itself. The ratio RHC/FHC of the tune is $0.900$; the extracted ratio from the
-fake data is $0.901$.
+pseudo-data is $0.901$.
 
 \begin{table}[H]
   \centering
-  \caption{Total flux-averaged cross sections ($10^{-38}$~cm$^2$/Ar) in the
-    measured phase space, from the one-bin extraction (\S\ref{sec:total_xsec}) on the
-    Poisson-thrown central-value fake data. $N_\mathrm{sel}$ and $N_\mathrm{bkg}$ are the
+  \caption{Total cross sections ($10^{-38}$~cm$^2$/Ar) in the measured phase space, averaged over the
+    $\nu_\mu+\bar\nu_\mu$ flux integrated above $60$~MeV, from the one-bin extraction (\S\ref{sec:total_xsec}) on the
+    Poisson-thrown central-value pseudo-data. $N_\mathrm{sel}$ and $N_\mathrm{bkg}$ are the
     predicted selected count and background ($\nu$-background $+$ EXT $+$ dirt) of the
     central-value prediction and $\varepsilon$ the selection efficiency, from the
     cut-and-count check; $\sigma$ is the one-bin extraction with its full
@@ -2566,6 +2719,43 @@ for all three configurations). The one-bin total lies $0.5$--$0.8\sigma$ above G
 $0.8\sigma$ of the other three; the spread of the generators, a factor $1.6$, is larger than any of
 these differences.
 
+\subsection{Two-dimensional cross section (secondary result)}
+\label{sec:incl_2d}
+
+The double-differential cross section $d^2\sigma/d\cos\theta_\pi\,d\cos\theta_\mu$ is proposed as a
+\statSecondary{} in the combined configuration only. It is binned in two regions of
+$\cos\theta_\pi$ (edges $-1$, $0.35$, $1$) inside three of $\cos\theta_\mu$ ($-1$, $0.65$, $0.85$, $1$);
+the six analysis bins are ordered outer slice by outer slice and extracted with the same machinery as
+the one-dimensional results, a two-dimensional binning being a flat list of analysis bins. The pair is
+one of eight screened (\suppref{Sec.}{sec:supp_2d}). Combining the beam modes raises the conditioning
+$s_{\min}/s_1$ of its $A_C$ from $0.245$ (FHC) and $0.315$ (RHC) to $0.564$, through the larger sample
+and the shared flux; the FHC and RHC extractions cannot be inverted and are \statNotReported. The
+combined result has a bin-averaged data-statistical term of $14.9\%$ and per-bin total uncertainties of
+$33$--$64\%$; it closes against the $A_C$-smeared truth of the pseudo-data with $\chi^2=0.88/6$, with
+per-bin ratios of $0.91$--$1.26$ (Figs.~\ref{fig:incl2d_slices} and~\ref{fig:incl2d_map}). Before it
+can be approved, its statistical calibration and robustness must be demonstrated (prerequisite V1) and
+the collaboration must accept a result quoted in the combined configuration only (R1). Its covariance,
+$A_C$ and curves are released as \texttt{incl\_COMB\_costhpi\_costhmu2d}.
+
+\begin{figure}[H]
+  \centering
+  \blindfig[0.98\textwidth]{bkgfit/xsec2d_costhpi_costhmu_COMB_slices}
+  \caption{$d^2\sigma/d\cos\theta_\pi\,d\cos\theta_\mu$ in the combined configuration, as slices in
+    $\cos\theta_\mu$. Points are the unfolded pseudo-data with the total uncertainty, the grey histogram
+    is the $A_C$-smeared truth of the pseudo-data and the coloured histograms are the generator
+    predictions, smeared with $A_C$. Each slice has its own vertical scale.}
+  \label{fig:incl2d_slices}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \blindfig[0.90\textwidth]{bkgfit/xsec2d_costhpi_costhmu_COMB_map}
+  \caption{The same result as a map: $d^2\sigma/d\cos\theta_\pi\,d\cos\theta_\mu$ per cell with its total
+    uncertainty (left) and the ratio to the $A_C$-smeared truth (right). Cells are drawn with equal size
+    and labelled by their ranges.}
+  \label{fig:incl2d_map}
+\end{figure}
+
 \subsection{Proton-tagged subsample}
 \label{sec:wtki}
 
@@ -2582,11 +2772,10 @@ validation, and it is not part of the approval request.
 % =============================================================================
 
 \paragraph{Blind signal region.}
-The signal region has not been examined in beam-on data, and every result is extracted from fake
-data. The results therefore demonstrate the extraction and its uncertainties, not the cross section.
+The signal region has not been examined in beam-on data, and every result is extracted from pseudo-data. The results therefore demonstrate the extraction and its uncertainties, not the cross section.
 The background model enters strongly at $58$--$59\%$ purity, with a proton reconstructed as the pion
 as the largest neutrino background, and closure tests cannot probe it because the same simulation
-provides the fake data and the background estimate. The four control regions are defined to test it
+provides the pseudo-data and the background estimate. The four control regions are defined to test it
 at reconstruction level with beam-on data (\S\ref{sec:cr}).
 
 \paragraph{Pion momentum.}
@@ -2598,7 +2787,7 @@ the trained classifier, which places the limit in the physics of pion interactio
 the estimator. For this reason $p_\pi$ is reported in three regions.
 
 \paragraph{Model dependence.}
-The closure tests use fake data from the model of the response. The test with reweighted
+The closure tests use pseudo-data from the model of the response. The test with reweighted
 interaction models bounds the model bias at $1.18\sigma$ (\S\ref{sec:altmodel}), but a test with an
 independent generator and its own detector simulation has not been made. The model dependence of
 the efficiency matters most for the one-bin total, a single efficiency averaged over the phase space,
@@ -2612,9 +2801,9 @@ extractions (\S\ref{par:ensemble}). No correction or uncertainty is assigned; th
 inside the statistical uncertainty of a single measurement.
 
 \paragraph{Muon momentum scale.}
-The MCS momentum-scale term (\S\ref{sec:mcs}) is provided as a separate covariance for $p_\mu$ and is
-not yet part of the covariance computed by the framework. Its size, $\pm5\%$, rests on an assumption
-that a data-driven comparison of MCS and range momenta on contained muons should confirm.
+The MCS momentum-scale term (\S\ref{sec:mcs}) is part of the official covariance. Its size, $\pm5\%$,
+rests on an assumption that a comparison of MCS and range momenta of contained muons in data is to
+confirm (prerequisite U4).
 
 \paragraph{Two totals.}
 The Wiener-SVD differential result estimates $A_C x_{\rm true}$, with row sums as low as $0.26$, so
@@ -2625,30 +2814,31 @@ one-bin extraction.
 proton mis-assignment, which no control region yet constrains, and the transverse-kinematic
 prescription) are discussed in the companion note~\cite{pt_note}.
 
-\subsection{Requirements before the signal region is opened}
+\subsection{Prerequisites}
 \label{sec:unblinding}
 
-The prerequisites are listed as a checklist in \suppref{Sec.}{sec:request}. The main ones are:
-\begin{enumerate}\itemsep2pt
-  \item written confirmation from the NuMI flux contact that the integrated flux constants of
-    Table~\ref{tab:flux} are PPFX-corrected central values (\S\ref{sec:flux_status});
-  \item the comparison of the control regions with beam-on data under the frozen procedure, and the
-    treatment of any discrepancy under that procedure (\S\ref{sec:cr_procedure});
-  \item a closure test with a validated independent-generator overlay (\S\ref{sec:altmodel});
-  \item the data-driven check of the $\pm5\%$ MCS scale and the inclusion of the term in the
-    framework covariance (\S\ref{sec:mcs});
-  \item the beam-on POT and gate counts of the unblinded files, checked against the run lists of
-    those files, in place of the fake-data values; the Run-1 beam-off sample remains the Run-2
-    substitute (\S\ref{sec:mc});
-  \item a final reproduction of the result set from empty caches.
-\end{enumerate}
+Table~\ref{tab:prerequisites} lists every prerequisite, with its criterion, its owner and the
+evidence expected, and what it blocks. The same table appears in the proton-tagged note and the
+technical supplement. For the inclusive results the signal region can be opened once U1--U6 are
+complete; U7 is required before publication. U4 applies to the results that use the muon momentum. The
+flux confirmation (U1) concerns the three integrated fluxes of Table~\ref{tab:flux}: the NuMI flux
+group is asked to confirm in writing that they are the PPFX-corrected central values that correspond to
+the per-event PPFX weights of the simulation (\S\ref{sec:flux_status}). The beam-on exposure check
+(U5) replaces the recorded exposures of Table~\ref{tab:pot} by values summed over the runs contained in
+each beam-on file.
+
+\input{shared/prerequisites}
+
 Any correction to the background model follows the frozen procedure of
-\suppref{Sec.}{sec:cr_protocol}. No switch is needed for the beam-off treatment at unblinding: the framework recognises fake data by
+\suppref{Sec.}{sec:cr_protocol}. No switch is needed for the beam-off treatment at unblinding: the framework recognises pseudo-data by
 the presence of simulated truth, and it refuses a beam-on file of the signal region unless an
-explicit unblinding switch is set. Five automated checks protect the result set against regressions:
+explicit unblinding switch is set. Six automated checks protect the result set against regressions:
 the normalisation manifest, the assertion coupling the systematics configuration to the file lists,
-the staleness check, the table-consistency check and the blinding guard
-(\suppref{Sec.}{sec:pipeline}).
+the staleness check, the table-consistency check, the blinding guard (\suppref{Sec.}{sec:pipeline}),
+and a cross-document check (\texttt{report/tools/check\_documents.py}) that the three documents quote
+the same exposures, fluxes and target count, use only the four status labels, take the decision, the
+prerequisites and the validation ladder from their single shared source, and agree with the status
+column of the release index.
 
 % =============================================================================
 \section{Summary}
@@ -2658,7 +2848,7 @@ the staleness check, the table-consistency check and the blinding guard
 We have developed a measurement of $\nu_\mu+\bar\nu_\mu$ charged-current single charged-pion
 production on argon with the full \uboone{} NuMI exposure: forward horn current
 ($7.766\times10^{20}$~POT), reverse horn current ($1.1082\times10^{21}$~POT) and their combination
-($1.8848\times10^{21}$~POT). The signal region is blind, and all results are extracted from fake data
+($1.8848\times10^{21}$~POT). The signal region is blind, and all results are extracted from pseudo-data
 thrown from the central-value simulation; no statement about a generator is yet a statement about
 nature.
 
@@ -2672,13 +2862,16 @@ event, $28.6^\circ$ from the detector axis.
 \paragraph{Results.}
 In each configuration the total flux-averaged cross section and five differential distributions are
 measured: $d\sigma/dp_\mu$, $d\sigma/d\cos\theta_\mu$, $d\sigma/d\cos\theta_\pi$,
-$d\sigma/d\theta_{\mu\pi}$, and $p_\pi$ in three regions. The binnings meet a $0.50$ migration
-criterion (App.~\ref{app:binning}). The total
+$d\sigma/d\theta_{\mu\pi}$, and $p_\pi$ in three regions; these and the total are the
+\statPrimary{}s. The combined-configuration $d^2\sigma/d\cos\theta_\pi\,d\cos\theta_\mu$ is a
+\statSecondary{}. The binnings meet a $0.50$ migration criterion (\S\ref{sec:binning_rule}). The
+cross sections are averaged over the $\nu_\mu+\bar\nu_\mu$ flux integrated above $60$~MeV. The total
 cross section carries a $38\%$ uncertainty, with flux $28$--$30\%$ and detector $20$--$22\%$; the
 flux term is the $17\%$ flux normalisation multiplied by $1+B/S$ through the background subtraction.
 The differential results carry $33$--$46\%$ bin-averaged uncertainty without the data statistics
-($57\%$ for FHC $p_\pi$). Each differential result is provided with its additional-smearing matrix
-$A_C$, which must be applied to a prediction before comparison, and with its covariance by source.
+($57\%$ for FHC $p_\pi$), including the muon-momentum-scale term. Each differential result is provided
+with its additional-smearing matrix $A_C$, which must be applied to a prediction before comparison,
+and with its covariance by source.
 
 \paragraph{Background.}
 The background, $41$--$42\%$ of the selected sample, is taken from the simulation and from beam-off
@@ -2688,8 +2881,8 @@ validated with pseudo-data and are to be compared with beam-on data under a froz
 \paragraph{Validation.}
 Closure recovers the input in every extraction, with a mean ratio of $0.996$ over the fifteen
 inclusive extractions. Ensembles of $100$ pseudo-experiments in six extractions give pull widths of
-$0.95$--$1.07$ and correct coverage in all three configurations. Fake data from reweighted
-interaction models bias no bin by more than $1.18\sigma$. The identity $UR=A_C$ holds to
+$0.95$--$1.07$ and correct coverage in all three configurations. Pseudo-data from reweighted
+interaction models bias no bin by more than $1.18\sigma$ (Table~\ref{tab:validation_ladder}). The identity $UR=A_C$ holds to
 $6.1\times10^{-5}$ (\suppref{App.}{sec:identity}), and the $A_C$ row sums show that the difference
 between the integrals of the differential results is the additional smearing. The result set is
 rebuilt from the processed ntuples with empty caches in a single pass; an independent rebuild into a
@@ -2699,9 +2892,10 @@ relative $4\times10^{-8}$, the precision of the text files.
 
 \paragraph{Limitations.}
 The saturation of the range-based pion momentum near $0.34\GeVc$ limits $p_\pi$ to three regions and is
-the main physics limitation of the selection. Before the signal region is opened, the flux
-normalisation must be confirmed, the control regions compared with beam-on data and a closure test
-with an independent generator made (\S\ref{sec:unblinding}).
+the main physics limitation of the selection. Before the signal region is opened, the prerequisites
+U1--U6 of Table~\ref{tab:prerequisites} must be complete: among them the confirmation of the flux
+normalisation, the comparison of the control regions with beam-on data and a closure test with an
+independent generator (\S\ref{sec:unblinding}).
 
 
 

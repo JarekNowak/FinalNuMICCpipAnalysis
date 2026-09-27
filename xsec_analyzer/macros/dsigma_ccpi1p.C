@@ -2,11 +2,15 @@
 // CC1mu1pi1p (W/TKI) observables. Reads the UnfolderNuMI closure dumps
 // closure_hists_xsec_ccpi1p_<CFG>_<obs>.root (h_unfolded_nuwro = unfolded fake data,
 // h_fakedata_truth = A_C-smeared truth, h_genie_tune = MicroBooNE tune) and draws one
-// 6-panel figure per config. No external generator predictions exist for these
-// observables yet, so only data/truth/tune are shown. Auto-scales the y-axis to
-// include every curve (no clipping).
+// multi-panel figure per config. The A_C-smeared generator predictions are drawn wherever the
+// sidecar carries them (h_gen_*). Auto-scales the y-axis to include every curve (no clipping).
 //   usage: root -l -b -q 'macros/dsigma_ccpi1p.C("FHC5")'  (or RHCFULL / COMB)
+// 2026-09-27 (review 6.1-6.3): physics notation and units from dsigma_style.h, larger text, one
+// legend per figure, open-ended top bins hatched and labelled; the "wtki_noW" set is also written
+// as two three-panel figures, _a (W_had, p_p, p_n) and _b (delta p_T, delta alpha_T, delta phi_T).
+// Review terminology: "CV pseudo-data"; a panel without generator curves carries a note.
 #include <vector>
+#include "dsigma_style.h"
 // set = "wtki" (the six W/TKI observables, default) or "incl" (the five inclusive-kinematic
 // observables measured on the proton-tagged selection, which were re-run 2026-08-19)
 void dsigma_ccpi1p(const char* cfg = "FHC5", const char* set = "wtki") {
@@ -24,42 +28,16 @@ void dsigma_ccpi1p(const char* cfg = "FHC5", const char* set = "wtki") {
   const char* obs_wtki[6] = {"Wpipr","Whad","dpt2bin","dalphat2bin","dphit3bin","pn2bin"};
   const char* obs_noW[6]  = {"Whad","dpt2bin","dalphat2bin","dphit3bin","pn2bin","pp"};   // pp: proton momentum (2026-09-26)
   const char* obs_incl[6] = {"pmu","ppi2bin","costhmu","costhpi","thmupi","thmupi"};
-  // display names: the closure files are keyed on ppi2bin but the panel should read p_pi
-  const char* disp_incl[6] = {"pmu","ppi","costhmu","costhpi","thmupi",""};
   const char* obs[6];
   for ( int i = 0; i < 6; ++i ) obs[i] = incl ? obs_incl[i] : ( noW ? obs_noW[i] : obs_wtki[i] );
   const int n_panel = incl ? 5 : 6;
-  const char* obsX_wtki[6] = {"W_{#pi p} [GeV/c^{2}]","W_{had} [GeV/c^{2}]",
-                         "#deltap_{T} [GeV/c]","#delta#alpha_{T} [deg]",
-                         "#delta#phi_{T} [deg]","p_{n} [GeV/c]"};
-  const char* obsX_noW[6]  = {"W_{had} [GeV/c^{2}]","#deltap_{T} [GeV/c]",
-                         "#delta#alpha_{T} [deg]","#delta#phi_{T} [deg]","p_{n} [GeV/c]","p_{p} [GeV/c]"};
-  const char* obsX_incl[6] = {"p_{#mu} [GeV/c]","p_{#pi} [GeV/c]","cos#theta_{#mu}",
-                         "cos#theta_{#pi}","#theta_{#mu#pi} [rad]",""};
-  const char* obsX[6];
-  for ( int i = 0; i < 6; ++i ) obsX[i] = incl ? obsX_incl[i] : ( noW ? obsX_noW[i] : obsX_wtki[i] );
-  gStyle->SetOptStat(0);
-  TCanvas c(Form("ds1p_%s",cfg), "", 1800, 1100);
-  c.Divide(3, 2);
+  // panel titles and axis labels (physics notation, units) come from ds_obs() in dsigma_style.h
+  gStyle->SetOptStat(0); gStyle->SetOptTitle(0);
   std::vector<TObject*> keep;
 
-  // If the x-axis does not start at zero, ROOT only labels the first "round" tick, so the
-  // bottom-left corner reads as the origin (0,0) even though it is not. Draw the actual
-  // lower limit under the left edge of the frame.
-  auto mark_xmin = [](TH1* h){
-    double xmin = h->GetXaxis()->GetXmin();
-    if ( xmin <= 0. ) return;
-    TLatex* t = new TLatex();
-    t->SetNDC(); t->SetTextSize(0.045); t->SetTextAlign(23);
-    t->DrawLatex( gPad->GetLeftMargin(), gPad->GetBottomMargin()-0.055,
-                  Form("%g", xmin) );
-  };
-
+  std::vector<DsPanel> P(n_panel);
   for (int o = 0; o < n_panel; ++o) {
-    c.cd(o+1);
-    // roomy margins so the axis titles/labels are not clipped or crowded in a 3x2 montage
-    gPad->SetBottomMargin(0.16); gPad->SetLeftMargin(0.17); gPad->SetTopMargin(0.09);
-    gPad->SetRightMargin(0.04);
+    P[o].key = obs[o];
     TFile* f = TFile::Open(Form("%sclosure_hists_xsec_ccpi1p_%s_%s.root", PROC, cfg, obs[o]));
     if (!f || f->IsZombie()) { printf("  missing closure %s %s\n", cfg, obs[o]); continue; }
     TH1D* hunf = (TH1D*)f->Get("h_unfolded_nuwro");
@@ -69,28 +47,15 @@ void dsigma_ccpi1p(const char* cfg = "FHC5", const char* set = "wtki") {
     hunf = (TH1D*)hunf->Clone(); hunf->SetDirectory(0); keep.push_back(hunf);
     if (htru) { htru=(TH1D*)htru->Clone(); htru->SetDirectory(0); keep.push_back(htru); }
     if (htun) { htun=(TH1D*)htun->Clone(); htun->SetDirectory(0); keep.push_back(htun); }
-    std::string disp = incl ? disp_incl[o] : obs[o];
-    if ( disp.size() > 4 && ( disp.substr(disp.size()-4) == "2bin" || disp.substr(disp.size()-4) == "3bin" ) ) disp = disp.substr(0, disp.size()-4);
-    hunf->SetTitle(Form("%s;%s;d#sigma/dx [10^{-38} cm^{2}/Ar]", disp.c_str(), obsX[o]));
-    hunf->SetMarkerStyle(20); hunf->SetMarkerSize(0.8);
+    hunf->SetMarkerStyle(20); hunf->SetMarkerSize(1.1);
     hunf->SetLineColor(kBlack); hunf->SetMarkerColor(kBlack);
-    // Axis formatting: the default division count crams too many tick labels into a
-    // narrow pad and they collide (e.g. the 1.1-1.5 GeV W_pipr range). Use few, well
-    // separated divisions and set explicit title/label sizes + offsets.
-    hunf->GetXaxis()->SetNdivisions(505);
-    hunf->GetXaxis()->SetTitleSize(0.055); hunf->GetXaxis()->SetLabelSize(0.048);
-    hunf->GetXaxis()->SetTitleOffset(1.20);
-    hunf->GetYaxis()->SetNdivisions(505);
-    hunf->GetYaxis()->SetTitleSize(0.050); hunf->GetYaxis()->SetLabelSize(0.045);
-    hunf->GetYaxis()->SetTitleOffset(1.55);
-    hunf->GetYaxis()->SetMaxDigits(3);
     // Generator overlays: use the A_C-SMEARED predictions dumped by the unfolder
     // (h_gen_<Label>), NOT the raw truth-level FTE files. The data and the uB tune both
     // live in the A_C-smeared measurement space, so every model must be smeared the same
     // way; drawing raw generators here made them look systematically high.
     const char* gens[4]={"h_gen_GENIE","h_gen_GiBUU","h_gen_NEUT","h_gen_NuWro"};
     int gcol[4]={TColor::GetColor("#0072B2"),TColor::GetColor("#009E73"),TColor::GetColor("#CC79A7"),TColor::GetColor("#D55E00")};
-    int gsty[4]={1,2,7,9}; const char* glab[4]={"GENIE","GiBUU","NEUT","NuWro"};
+    int gsty[4]={1,2,7,9};
     std::vector<TH1D*> gh; std::vector<int> gi;
     for (int g=0;g<4;++g){
       TH1D* hg0=(TH1D*)f->Get(gens[g]);
@@ -101,6 +66,16 @@ void dsigma_ccpi1p(const char* cfg = "FHC5", const char* set = "wtki") {
       }
     }
     f->Close();
+    // A panel without generator curves says why: the RHC and combined W_had/TKI sidecars carry none
+    // (the FHC ones do), and the inclusive-kinematic observables of this sample have none at all.
+    if ( gh.empty() ) {
+      bool fhc = false;
+      if ( std::string(cfg) != "FHC5" ) {
+        TFile* ff = TFile::Open(Form("%sclosure_hists_xsec_ccpi1p_FHC5_%s.root", PROC, obs[o]));
+        if ( ff && !ff->IsZombie() ) { for ( auto gname : gens ) if ( ff->Get(gname) ) fhc = true; ff->Close(); }
+      }
+      P[o].gen_note = fhc ? "generator predictions: FHC only" : "no generator predictions";
+    }
     // y-axis max over data(+error), truth, tune and every generator curve
     double ymax = 0.;
     for (int b=1;b<=hunf->GetNbinsX();++b) ymax = std::max(ymax, hunf->GetBinContent(b)+hunf->GetBinError(b));
@@ -108,17 +83,30 @@ void dsigma_ccpi1p(const char* cfg = "FHC5", const char* set = "wtki") {
     if (htun) for (int b=1;b<=htun->GetNbinsX();++b) ymax = std::max(ymax, htun->GetBinContent(b));
     for (auto hg:gh) for (int b=1;b<=hg->GetNbinsX();++b) ymax = std::max(ymax, hg->GetBinContent(b));
     hunf->SetMinimum(0); hunf->SetMaximum(1.35*ymax);
-    hunf->Draw("E1");
-    TLegend* lg = new TLegend(0.38,0.66,0.88,0.90); lg->SetBorderSize(0); lg->SetFillStyle(0); lg->SetTextSize(0.040); lg->SetNColumns(2);
-    lg->AddEntry(hunf, "Unfolded fake data", "lep");
-    if (htru) { htru->SetLineColor(kGray+2); htru->SetLineWidth(2); htru->SetLineStyle(2); htru->Draw("hist same"); lg->AddEntry(htru,"Truth (A_{C})","l"); }
-    if (htun) { htun->SetLineColor(kBlack); htun->SetLineWidth(2); htun->Draw("hist same"); lg->AddEntry(htun,"uB tune","l"); }
-    for (size_t k=0;k<gh.size();++k){ gh[k]->Draw("hist same"); lg->AddEntry(gh[k], glab[gi[k]], "l"); }
-    hunf->Draw("E1 same");
-    mark_xmin(hunf);
-    lg->Draw(); keep.push_back(lg);
+    if (htru) { htru->SetLineColor(kGray+2); htru->SetLineWidth(2); htru->SetLineStyle(2); }
+    if (htun) { htun->SetLineColor(kBlack); htun->SetLineWidth(2); }
+    P[o].data = hunf; P[o].truth = htru; P[o].tune = htun; P[o].gen = gh; P[o].gidx = gi;
+    // open-ended top bin: its physical lower edge, from the result file
+    if ( ds_obs(obs[o])->open_top ) P[o].open_lo = hunf->GetXaxis()->GetBinLowEdge(hunf->GetNbinsX());
   }
+  std::vector<DsPanel*> all;
+  for (auto& p : P) if (p.data) all.push_back(&p);
+
+  // text in pixels for a 1800 px wide figure printed at the text width (~9 pt titles); 700 px tall
+  // panels leave room for the full vertical-axis title with its units
+  const DsStyle S = { /*title*/34, /*label*/31, /*binlabel*/31, /*legend*/34, /*ptitle*/38, /*note*/30,
+                      /*lm*/0.215, /*rm*/0.045, /*tm*/0.095, /*bm*/0.16, /*xoff*/1.3, /*yoff*/1.85 };
   TString out = Form("unfold_output/dsigma_ccpi1p%s_%s.pdf", incl ? "_incl" : ( noW ? "_noW" : "" ), cfg);
-  c.SaveAs(out);
-  printf("wrote %s\n", out.Data());
+  ds_figure(out.Data(), all, 3, 2, 1800, 700, 150, S, cfg, keep);
+  if ( noW ) {
+    // the same six panels as two three-panel figures, large enough to read at the text width
+    auto pick = [&](std::vector<const char*> keys) {
+      std::vector<DsPanel*> v;
+      for (auto k : keys) for (auto& p : P) if (p.data && p.key == k) v.push_back(&p);
+      return v;
+    };
+    TString a = out, b = out; a.ReplaceAll(".pdf", "_a.pdf"); b.ReplaceAll(".pdf", "_b.pdf");
+    ds_figure(a.Data(), pick({"Whad","pp","pn2bin"}),               3, 1, 1800, 700, 150, S, cfg, keep);
+    ds_figure(b.Data(), pick({"dpt2bin","dalphat2bin","dphit3bin"}), 3, 1, 1800, 700, 150, S, cfg, keep);
+  }
 }

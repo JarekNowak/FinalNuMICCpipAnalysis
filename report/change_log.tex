@@ -1229,6 +1229,64 @@ offsets $-0.4$ to $-1.1\%$ at $0.4$--$1.8\sigma$ of the mean
     case, not corrupt reads.
 \end{itemize}
 
+\section{Response to the collaboration review (2026-09-27)}
+
+\subsection{Decisions}
+\begin{itemize}\itemsep1pt
+  \item Four status labels only: \emph{Primary result}, \emph{Secondary result proposed for approval},
+    \emph{Validation-only product}, \emph{Not reported}. The status of every product is kept in one
+    file, \texttt{report/status.tsv}, from which the status tables of both notes and the status column
+    of \texttt{data\_release/index\_extractions.tsv} are generated.
+  \item Proposed for approval as secondary results: the proton-tagged one-bin total; the proton-tagged
+    $\theta_p$ and $\theta_{\pi p}$ (FHC, RHC, combined); the two-dimensional $\theta_p\times\delta p_T$
+    (proton-tagged sample) and $\cos\theta_\pi\times\cos\theta_\mu$ (inclusive sample), combined
+    configuration only. Earlier drafts called $\theta_p$, $\theta_{\pi p}$ and the two pairs ``proposed
+    secondary'' in some places and validation-only in others. The inclusive pair moved from the
+    proton-tagged note to the analysis note.
+  \item The MCS muon-momentum-scale term is part of the official covariance of every result
+    (\texttt{cov\_total\_plusMCS.txt}); every uncertainty and model-comparison table is regenerated with
+    it (\texttt{report/tools/official\_cov.py}). FHC $p_\mu$ moves from $39.3\%$ to $40.6\%$ systematic
+    and from $41.2\%$ to $42.4\%$ total; the model $\chi^2$ of $p_\mu$ decrease (FHC GENIE $2.73\to2.24$).
+    The closure $\chi^2$ and the robustness biases stay with the framework covariance.
+  \item The independent-generator closure is defined: a validated NuWro overlay, every bin holding at
+    least $10\%$ of the largest truth within $1\sigma$, every integral within its uncertainty (U3).
+\end{itemize}
+
+\subsection{Release}
+\begin{itemize}\itemsep1pt
+  \item $\theta_p$ and $\theta_{\pi p}$ (three configurations) and the two combined two-dimensional
+    results were added to the data release with their covariances, $A_C$ and curves
+    (\texttt{xsec\_analyzer/slurm/harvest\_proposed\_local.sh}, \texttt{report/tools/export\_2d.py}). The
+    re-harvest reproduced the unfolded results, truths and $A_C$ exactly; the combined generator curves
+    of the two-dimensional results moved by $0.3$--$1.1\%$, because their files predated the correction
+    of the combined generator weights ($8.857\to7.766\times10^{20}$ FHC exposure).
+  \item The MCS term of the new entries is exactly zero for $\theta_p$, $\theta_{\pi p}$ and
+    $\cos\theta_\pi\times\cos\theta_\mu$; for $\theta_p\times\delta p_T$, which uses the muon momentum
+    through $\delta p_T$, it was extracted (SLURM 3433847): at most $16\%$ of a cell and $0.20\sigma$,
+    integral unchanged.
+  \item The release README states the $60$~MeV flux convention, the status labels, the official
+    covariance and the file schema.
+\end{itemize}
+
+\subsection{Documents}
+\begin{itemize}\itemsep1pt
+  \item Both notes open with the same decision box and a status table; the inclusive note has a
+    measurement-definition table, a section on the migration criterion and binning rule, the validation
+    ladder, and a numbered prerequisite table with criteria, owners, evidence and blocking levels, shared
+    verbatim by the three documents (\texttt{report/shared/}).
+  \item The proton-tagged note is restructured: decision and status, scientific purpose, selection,
+    observables, extraction, validation, proposed results, validation-only products, products not
+    reported, prerequisites. Reconstruction validity (P4) and model sensitivity (P3) are separate
+    prerequisites.
+  \item The figures use physics notation, the open-ended last bins are hatched and labelled, and the
+    six-panel proton-tagged figures are split in two.
+  \item The proton-tagged W$_\mathrm{had}$ and TKI observables have no generator predictions in RHC and
+    combined, and the proton-tagged $p_\mu$ none in any configuration; the note says so.
+  \item Terminology: pseudo-data, control region, combined configuration
+    (\texttt{report/tools/terminology.py}). A cross-document check, \texttt{report/tools/check\_documents.py},
+    enforces the shared sources, the status vocabulary and the adopted exposures, fluxes and target count.
+\end{itemize}
+
 \section{Muon momentum-scale term for the proton-tagged observables (2026-09-27)}
 
 The data-side MCS momentum scale ($\pm5\%$) is evaluated for the proton-tagged observables that use

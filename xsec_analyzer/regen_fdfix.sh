@@ -81,6 +81,7 @@ for set in wtki wtki_noW incl; do
   root.exe -l -b -q "macros/dsigma_ccpi1p.C(\"FHC5\",\"$set\")" > "$LOG/dsigma_ccpi1p_${set}.log" 2>&1
 done
 cp unfold_output/dsigma_ccpi1p_FHC5.pdf "$FIG/" 2>/dev/null; cp unfold_output/dsigma_ccpi1p_noW_FHC5.pdf "$FIG/" 2>/dev/null; cp unfold_output/dsigma_ccpi1p_incl_FHC5.pdf "$FIG/" 2>/dev/null
+cp unfold_output/dsigma_ccpi1p_noW_FHC5_[ab].pdf "$FIG/" 2>/dev/null   # three-panel halves of the noW figure (2026-09-27)
 echo "---- ppi2bin + systbreak figures ----"
 for cfg in FHC5 RHCFULL COMB; do root.exe -l -b -q "macros/ppi2bin_figs.C(\"$cfg\")" > "$LOG/ppi2bin_${cfg}.log" 2>&1 || echo "  ppi2bin $cfg FAIL"; done
 for cfg in fhc5 rhcfull comb; do root.exe -l -b -q "macros/systbreak_fig.C(\"$cfg\")" > "$LOG/systbreak_${cfg}.log" 2>&1 || echo "  systbreak $cfg FAIL"; done

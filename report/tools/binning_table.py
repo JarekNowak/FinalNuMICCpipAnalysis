@@ -58,6 +58,6 @@ L = table('tab:pt_binning',
           r'  \caption{Bin edges of the proton-tagged observables, from the result files. The binnings meet the $0.50$'
           r' migration criterion (\suppref{Sec.}{sec:binreview}) and are the same in the three configurations.}',
           [line(lab, curve_edges('1p', o), op) for o, lab, op in P1] + [line(lab, sidecar_edges(o), False) for o, lab in STUDY],
-          r'$^{\dagger}$ Proposed secondary scope (\S\ref{sec:wtki_ang}).\par ' + OPEN)
+          r'$^{\dagger}$ Released as a \statSecondary{} (\S\ref{sec:wtki_ang}).\par ' + OPEN)
 open(os.path.join(REP, 'tables', 'binning_1p.tex'), 'w').write('\n'.join(L) + '\n')
 print('wrote tables/binning.tex and tables/binning_1p.tex')

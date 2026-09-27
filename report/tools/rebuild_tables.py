@@ -3,7 +3,9 @@
 # the counting log. Locator: the first \begin{tabular} AFTER the label, which must lie before
 # the enclosing \end{table} / \end{center}. (The previous patcher located tables by proximity
 # and, for captions longer than 400 characters, rewrote the PRECEDING table.)
-import re,sys,csv,math,glob,collections
+import re,sys,csv,math,glob,collections,os
+sys.path.insert(0,os.path.dirname(os.path.abspath(__file__)))
+import official_cov as oc
 R='/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/report/'
 D='/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/logs/systdump'; LG='/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/logs/fdfix/'
 CLF=sys.argv[1]; CNT=sys.argv[2]
@@ -20,8 +22,9 @@ CF={'FHC5':'fhc5','RHCFULL':'rhcfull','COMB':'comb'}; CFS=['FHC5','RHCFULL','COM
 INCL=['pmu','ppi3bin','costhmu','costhpi','thmupi']; P1=['Whad','dpt2bin','dalphat2bin','dphit3bin','pn2bin','pp','pmu','ppi2bin','costhmu','costhpi','thmupi']; P1ALL=['Wpipr']+P1
 DU={}
 for c in CFS:
-    for o in INCL: DU[('incl',c,o)]=load(f"{D}/{CF[c]}_{'ppi' if o=='ppi3bin' else o}.dump")
-    for o in P1ALL: DU[('1p',c,o)]=load(f"{D}/1p_{CF[c]}_{o}.dump")
+    # 2026-09-27: official covariance = framework + MCS term (official_cov.py); PredTotal/total are official
+    for o in INCL: DU[('incl',c,o)]=oc.summary('incl',c,o)
+    for o in P1ALL: DU[('1p',c,o)]=oc.summary('1p',c,o)
 LAB={'pmu':r'$p_\mu$','ppi2bin':r'$p_\pi$','ppi3bin':r'$p_\pi$','costhmu':r'$\cos\theta_\mu$','costhpi':r'$\cos\theta_\pi$','thmupi':r'$\theta_{\mu\pi}$',
      'Wpipr':r'$W_{\pi p}$','Whad':r'$W_\mathrm{had}$','dpt2bin':r'$\delta p_T$','dalphat2bin':r'$\delta\alpha_T$','dphit3bin':r'$\delta\phi_T$','pn2bin':r'$p_n$','pp':r'$p_p$'}
 # model chi2 from unfolder logs
@@ -60,7 +63,12 @@ rows=[f"{LAB[o]:<17} & "+' & '.join(f"${DU[('incl',c,o)]['sigma_int']:.3f}$" for
 patch('tab:sigint_all',T('lccc','Observable & FHC & RHC & Combined',rows))
 # --- tab:chi2_incl and tab:chi2_theta
 def chirow(beam,o,c,first):
-    x=chi2log('incl',c,o); cells=[f"${x[m][0]:.2f}/{x[m][1]}$" for m in ['truth','MicroBooNE Tune','GENIE','GiBUU','NEUT','NuWro']]
+    # truth: the unfolder's closure chi2 (framework covariance plus the covariance of the fake-data truth);
+    # models: recomputed with the official covariance (framework + MCS), official_cov.chi2
+    x=chi2log('incl',c,o); cells=[f"${x['truth'][0]:.2f}/{x['truth'][1]}$"]
+    mcs=DU[('incl',c,o)]['MCS']>0      # without an MCS term the official covariance is the framework one: keep the unfolder value
+    for col,m in [('tune_smeared','MicroBooNE Tune'),('GENIE_smeared','GENIE'),('GiBUU_smeared','GiBUU'),('NEUT_smeared','NEUT'),('NuWro_smeared','NuWro')]:
+        v,n=oc.chi2('incl',c,o,col) if mcs else x[m]; cells.append(f"${v:.2f}/{n}$")
     return f"    {beam if first else '':<4} & {LAB[o]:<22} & "+' & '.join(cells)+' \\\\'
 rows=[]
 for beam,c in [('FHC','FHC5'),('RHC','RHCFULL'),('comb','COMB')]:
@@ -77,7 +85,7 @@ for lab,c in [('tab:wtki_fhc','FHC5'),('tab:wtki_rhc','RHCFULL'),('tab:wtki_comb
         if o=='pp': rows.append('      \\midrule')
     patch(lab,T('lccc','Observable & $\\sigma_\\mathrm{int}$ & unf./truth & $\\chi^2/\\mathrm{ndf}$',rows))
 # --- systbreak tables
-ROWS=[('\\textbf{Prediction total}','PredTotal'),('Cross section (GENIE)','xsec_total'),('Flux (PPFX)','flux_total'),('Detector','DET'),('Reinteraction','reint'),('MC stat','MCstats'),('EXT stat','EXTstats'),('Data stat','DataStats'),('POT $+$ targets','POTT'),('\\textbf{Total (incl.\\ data stat)}','total')]
+ROWS=[('\\textbf{Prediction total}','PredTotal'),('Cross section (GENIE)','xsec_total'),('Flux (PPFX)','flux_total'),('Detector','DET'),('Reinteraction','reint'),('MCS momentum scale','MCS'),('MC stat','MCstats'),('EXT stat','EXTstats'),('Data stat','DataStats'),('POT $+$ targets','POTT'),('\\textbf{Total (incl.\\ data stat)}','total')]
 def sb(c):
     rows=[]
     for lab,key in ROWS:
@@ -93,7 +101,7 @@ for lab,c in [('tab:systbreak_fhc','FHC5'),('tab:systbreak_rhc','RHCFULL'),('tab
 def rng(fam,key,bold=False):
     vs=[(det(DU[(fam,c,o)]) if key=='DET' else DU[(fam,c,o)][key]) for c in CFS for o in (INCL if fam=='incl' else P1ALL)]
     return (f"$\\mathbf{{{min(vs):.1f}}}$--$\\mathbf{{{max(vs):.1f}}}$" if bold else f"${min(vs):.1f}$--${max(vs):.1f}$")
-SR=[('Flux (PPFX multisims)','\\texttt{weightsFlux}','flux_total',0),('Detector response','Dedicated samples','DET',0),('Cross-section model','\\texttt{weightsGenie}','xsec_total',0),('Hadron re-interaction','\\texttt{weightsReint}','reint',0),('POT counting','Beam toroids','POT',0),('Target count','FV geometry','numTargets',0),None,('MC statistics','universe spread','MCstats',0),('EXT statistics','beam-off sample','EXTstats',0),('Data statistics','thrown fake data','DataStats',0),None,('Prediction total','quadrature sum','PredTotal',0),('Total','incl.\\ data stats','total',0)]
+SR=[('Flux (PPFX multisims)','\\texttt{weightsFlux}','flux_total',0),('Detector response','Dedicated samples','DET',0),('Cross-section model','\\texttt{weightsGenie}','xsec_total',0),('Hadron re-interaction','\\texttt{weightsReint}','reint',0),('POT counting','Beam toroids','POT',0),('Target count','FV geometry','numTargets',0),('MCS momentum scale','data-side variation','MCS',0),None,('MC statistics','universe spread','MCstats',0),('EXT statistics','beam-off sample','EXTstats',0),('Data statistics','thrown fake data','DataStats',0),None,('Prediction total','quadrature sum','PredTotal',0),('Total','incl.\\ data stats','total',0)]
 # 2026-09-27: inclusive only; the analysis note carries no proton-tagged numbers
 rows=['    \\midrule' if r is None else f"    {r[0]:<24}& {r[1]:<22}& {rng('incl',r[2],r[3])} \\\\" for r in SR]
 patch('tab:systematics',T('L{3.8cm} L{3.8cm} c','Source & Branch / method & Range (\\%)',rows))

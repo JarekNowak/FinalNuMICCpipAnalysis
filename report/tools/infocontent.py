@@ -32,11 +32,12 @@ def min_diag(o):
 
 
 def total(o):
-    # bin-averaged total uncertainty including data statistics: the "Total (incl. data stat)" row of tab:systbreak
-    for line in open(f"{DUMP}/fhc5_{LOGKEY.get(o, o)}.dump"):
-        p = line.split()
-        if len(p) == 3 and p[0] == '[SYSTDUMP]' and p[1] == 'total': return float(p[2])
-    raise KeyError(o)
+    # bin-averaged total uncertainty including data statistics, with the official covariance
+    # (framework + MCS term, official_cov.py): the "Total (incl. data stat)" row of tab:systbreak
+    import sys, os
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import official_cov as oc
+    return oc.summary('incl', 'FHC5', o)['total']
 
 
 rows = []

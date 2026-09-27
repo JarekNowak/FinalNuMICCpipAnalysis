@@ -62,6 +62,30 @@ scan tool report/tools/ensemble_entry_scan.py); statistical pull widths 0.94-1.0
 at <=2.0 sigma (data_release/ensemble_2026-09-26.tsv, ensemble_1p_2026-09-26.tsv). configs/adopt050 can
 be removed once no ensemble refers to it.
 
+## Review response (2026-09-27): decisions and new work
+
+Decisions (user): proposed secondary results = proton-tagged one-bin total, theta_p, theta_pi_p (3 configs),
+2D theta_p x delta p_T (pt sample) and cos theta_pi x cos theta_mu (INCLUSIVE sample; documented in the
+analysis note), combined only; all other pt products validation-only; W_pipr not reported. MCS term is part
+of the OFFICIAL covariance (cov_total_plusMCS.txt; report/tools/official_cov.py feeds every table).
+Independent-generator closure = validated NuWro overlay, criterion in shared/prerequisites.tex (U3).
+Single sources: report/status.tsv (statuses -> inventory.py, index_extractions.py), report/shared/
+{status_vocab,decision_box,prerequisites,validation_ladder}.tex; report/tools/check_documents.py enforces.
+
+New work implied by the decisions (prerequisite IDs of shared/prerequisites.tex):
+R-V1. Ensembles (100 members) and the alternative-model test for theta_p, theta_pi_p and the two 2D results.
+R-P2. Wrong-proton-candidate covariance term for theta_p, theta_pi_p, theta_p x delta p_T (needs P1 first).
+R-P1. Inverted-proton-PID control region (definition, pseudo-data validation).
+R-P4. Truth-level validity study of W_had and p_n for pion production (or redefine as proxies, W_cal).
+R-P3. Model term for the low delta p_T / p_n bins (or remove them / rely on U3).
+R-R1. Collaboration decision on combined-only 2D results.
+R-U3. Request/produce a validated NuWro overlay (FHC+RHC, full detector simulation).
+R-U7. Put beamline-geometry, gate-ratio and Run-2 stand-in terms into the covariance.
+R-G1. Generator predictions are missing (NaN in the release curves) for the proton-tagged W_had and TKI
+      observables in RHC and COMB, and for the muon and pion observables of the proton-tagged sample in every
+      configuration (their xsec configs
+      have no Prediction lines). Validation-only products, so not blocking; produce them before promotion.
+
 ## Documents (from the 2026-09-27 revision)
 
 D1. Supplement tab:cr_syst: the FHC rows (SR 1581, CC0pi 12192, pi0 6646, multi-pi 124, cosmic 75) are
