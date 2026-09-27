@@ -1,7 +1,23 @@
-# TODO — state at 2026-09-26
+# TODO — state at 2026-09-27
 
 
 Last commit: see git log. Untracked NuWro generator dirs remain (NuWro closure dropped; leave or delete).
+
+## CRITICAL (blocks unblinding)
+
+C1. **FHC Run-1 residual: POT bookkeeping to be clarified by the user (2026-09-27).** Run 1 sits 13 ± 2 %
+    below the other five periods in the control regions (free Run-1 factor 0.869 ± 0.022, Δχ² = 37), which
+    no correlated term covers. Leading hypothesis, not yet verified: the POT was counted on a different run
+    list than the files contain. Our Run-1 beam-on file holds 829 runs; the FNAL copy holds 923 (the extra
+    94 carry ~8 % of events). If 2.192e20 / 5,748,692 were summed over 923 runs, Run 1 is normalised ~8 %
+    high. Runs 4b/4d/5 go the other way: our files are supersets (+5.5/+1.9/+5.5 %) of the good-run lists;
+    if their POT was counted on the good-run lists they read a few % high. Together roughly the observed
+    offset (event-fraction arithmetic, not a fit; the missing Run-1 runs have 3.9 events/subrun vs 8.2, so
+    the POT fraction may differ). **User to obtain** the per-run POT/triggers (beam database, or the
+    per-directory POT files missing from the rsync) and state which run list each exposure was counted on.
+    Then: if confirmed, correct the exposures or filter the files to the counted run lists (beam-on and
+    beam-off) and re-run the CR protocol; if not, check the Run-1 overlay normalisation (MC POT 2.3282e21)
+    and the Run-1 detector-condition modelling. Details in item 3 and item 15.
 
 ## Done 2026-09-24 (second session)
 
@@ -46,6 +62,22 @@ scan tool report/tools/ensemble_entry_scan.py); statistical pull widths 0.94-1.0
 at <=2.0 sigma (data_release/ensemble_2026-09-26.tsv, ensemble_1p_2026-09-26.tsv). configs/adopt050 can
 be removed once no ensemble refers to it.
 
+## Documents (from the 2026-09-27 revision)
+
+D1. Supplement tab:cr_syst: the FHC rows (SR 1581, CC0pi 12192, pi0 6646, multi-pi 124, cosmic 75) are
+    on the pre-Run-1-fix exposure (current tab:cr_transfer: 1393 / 10690 / 5847 / 110 / 65.2); RHC rows
+    agree. No generator script found; regenerate the FHC column (and its uncertainty percentages).
+    The multi-pi/pi0 overlap text "47 of the 124 FHC multi-pi" and tab:cr_pi0_final (FHC pi0 target 3331
+    vs 2931, signal 662 vs 582) look to be on the same old exposure.
+D2. DONE 2026-09-27: proton-tagged MCS term (SLURM 3433817, all 30 OK): max 0.62 sigma (FHC p_mu top
+    bin), derived observables <= 0.37 sigma; written into sec:pt_mcs, supplement status row, change log;
+    data_release/mcs_scale_1p_2026-09-27.tsv and cov/1p_*/cov_MCSscale.txt. Two-bin dpt: the downward
+    scale's edge crossings cancel exactly in raw counts (4/4 FHC, 2/2 RHC), so dn05 == nominal (checked).
+D4. Beam-on control-region material is held out of the three documents in beam_on_held_out.tex/.json
+    (2026-09-27, user request); merge back when the CR comparison is presented. The change log still
+    carries beam-on CR history.
+D3. PRD/PRL paper drafts date from 2026-09-19 (theta_mu, 0.68-era edges); bring onto the release.
+
 ## Open analysis items (need a decision or work)
 
 3. **FHC Run-1 residual (gating for unblinding).** On the corrected exposure the frozen global test
@@ -64,8 +96,7 @@ be removed once no ensemble refers to it.
    0.56σ (FHC open top bin), 0.42σ combined, 0.30σ RHC. Other inclusive observables: the term is exactly ZERO (2026-09-24): the selection has no
    reco-p_mu cut and no other inclusive observable reads the muon momentum, so the scaled fake data give
    bit-identical results (FHC5 cosθμ/cosθπ/p_π/total checked; SLURM 3427873 cancelled after 9/36).
-   Still to do: the proton-tagged TKI observables (δp_T, δα_T, p_n use the muon momentum vector; needs
-   mcs_scale_fakedata on the w/ fake data), and inclusion inside the framework covariance rather than as a released
+   Proton-tagged observables DONE 2026-09-27 (see D2). Still to do: inclusion inside the framework covariance rather than as a released
    add-on. Decide whether ±5 % is the right prior (the note argues from the −10 % estimator bias).
 
 5. **Proton-tagged model sensitivity.** Low-imbalance δp_T and p_n bins are −1.1/−1.2σ under the

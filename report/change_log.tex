@@ -1229,6 +1229,81 @@ offsets $-0.4$ to $-1.1\%$ at $0.4$--$1.8\sigma$ of the mean
     case, not corrupt reads.
 \end{itemize}
 
+\section{Muon momentum-scale term for the proton-tagged observables (2026-09-27)}
+
+The data-side MCS momentum scale ($\pm5\%$) is evaluated for the proton-tagged observables that use
+the muon momentum: $p_\mu$, $W_\mathrm{had}$, $\delta p_T$, $\delta\alpha_T$ and $p_n$, in FHC, RHC and
+combined (SLURM 3433817, \texttt{xsec\_analyzer/run\_mcs\_1p.sh}). The scaled fake data
+(\texttt{macros/mcs\_scale\_fakedata\_1p.C}) recompute $W_\mathrm{had}$ and the TKI variables from the
+scaled muon; with a scale of one they reproduce the stored branches exactly. The largest term is
+$0.62\sigma$ (FHC, open highest $p_\mu$ bin); for the derived observables it is at most $0.37\sigma$
+(lower $W_\mathrm{had}$ region, combined). $\delta\phi_T$ and the observables that do not use the muon
+momentum carry exactly zero. Released as \texttt{cov\_MCSscale.txt} and \texttt{cov\_total\_plusMCS.txt}
+under \texttt{data\_release/cov/1p\_*} and summarised in \texttt{data\_release/mcs\_scale\_1p\_2026-09-27.tsv}
+(\texttt{report/tools/mcs\_eval.py all 1p}); not yet inside the framework covariance.
+
+\section{Document revision of 2026-09-27}
+
+The three documents were revised for order and consistency. No result moved; the items below are
+statements that were wrong or inconsistent and are now corrected, and material that moved between
+documents.
+
+\subsection{Beam-on control-region material held out}
+The three documents are written as they stand before the control regions are compared with beam-on
+data. The eighteen passages that used beam-on data (the comparison subsection of the analysis note
+with its figure, and the sentences of the abstract, introduction, limitations, unblinding
+requirements and summary, one clause of the proton-tagged note, and the control-region outcome and
+one cross-check clause of the supplement) are kept verbatim, with their replacements, in
+\texttt{report/beam\_on\_held\_out.tex} and \texttt{beam\_on\_held\_out.json} for merging back.
+The analysis note label \texttt{sec:cr\_outcome} is replaced by \texttt{sec:cr\_procedure}.
+
+\subsection{Inclusive analysis note}
+\begin{itemize}\itemsep1pt
+  \item The RHC paragraph of the results stated that no RHC dirt sample exists and that the FHC dirt
+    overlay was scaled to the RHC exposure. The RHC configuration uses the RHC dirt overlays of
+    Runs~3b, 4a and~4b, with Run~3b standing in for Runs~1 and~2; the text and the sample table now
+    say so.
+  \item The summary quoted $30$--$46\%$ bin-averaged uncertainty without data statistics and $67\%$
+    for FHC $p_\pi$; the tables give $33$--$46\%$ and $57\%$. The column ``Total'' of the per-configuration
+    result tables is the systematic total without the data statistics and is now labelled so.
+  \item The detector appendix stated that track momentum is obtained from curvature (there is no
+    magnetic field), that the NuMI spill is $1.6~\mu$s (that is the Booster spill; NuMI is about
+    $10~\mu$s), that the signals are digitised inside the cryostat, and listed a cosmic BDT that the
+    selection does not use. It was rewritten. The proton-tagged note no longer repeats it.
+  \item Proton-tagged numbers were removed from the inclusive note (the proton-tagged column of the
+    systematics table, the proton-tagged rows of the total cross-section table, the proton-tagged
+    binning, cut parameters, alternative binnings and $W_{\pi p}$ appendix) and now appear only in the
+    proton-tagged note, which has its own totals, binning and inventory tables. The generators
+    (\texttt{rebuild\_tables.py}, \texttt{binning\_table.py}, \texttt{inventory.py}) write one table per
+    note.
+  \item The validation of the background fit (toys, injections, Markov chain, pull-mean convergence)
+    moved to the control-region part of the technical supplement.
+  \item Release dates were removed from the running text of the ensembles and appendices.
+\end{itemize}
+
+\subsection{Proton-tagged note}
+\begin{itemize}\itemsep1pt
+  \item Restructured in the order introduction, selection, observables and binning, extraction and
+    uncertainties, results, validation, prerequisites.
+  \item The text on the pair $\theta_{\pi p}\times W_{\pi p}$ quoted a conditioning of $0.560$, a
+    $58\%$ data-statistical term, per-bin uncertainties up to $545\%$ and a closure ratio of $-0.40$,
+    values of an earlier extraction; it now quotes the table ($0.537$, $78.3\%$, up to $276\%$, down
+    to $-0.80$).
+  \item The efficiency is quoted as $11.5\%$ (FHC), as in the cut-and-count table, not $11.4\%$; the
+    largest detector term as $75\%$, not $100\%$.
+\end{itemize}
+
+\subsection{Technical supplement}
+\begin{itemize}\itemsep1pt
+  \item Reordered into parts on pion momentum and binning, proton-tagged observables, extraction and
+    validation, control regions, and selection and infrastructure: the pion-estimator survey and the
+    five-bin $p_\pi$ response moved to the pion-momentum section, the D'Agostini cross-check, the total
+    cross section, the $A_C$ row sums and the ensembles to the validation part.
+  \item The abstract stated that $p_\pi$ is reduced to two bins; it is measured in three regions.
+  \item A reference intended for the extraction ensembles pointed to the background-fit toys.
+  \item Prose revised throughout; tables, figures and numbers unchanged.
+\end{itemize}
+
 \section{Open items}
 
 The following remain outstanding following the 2026-09-07 review. None is a correction awaiting application;
@@ -1258,8 +1333,8 @@ yet made.
     keep their binnings and their ensembles. No test of this kind remains outstanding.
   \item \textbf{Systematic terms not in the released covariance:} the MCS muon momentum-scale
     term is evaluated at $\pm5\%$ on the data side and released as a separate component for $p_\mu$
-    in all three configurations (up to $0.35\sigma$ per bin in FHC and combined, $0.85\sigma$ in the
-    RHC open top bin), is exactly zero for the other inclusive observables, and is not propagated
+    in all three configurations (up to $0.56\sigma$ per bin in FHC, $0.42\sigma$ combined and
+    $0.30\sigma$ in RHC), is exactly zero for the other inclusive observables, and is not propagated
     inside the framework; the beam-off gate-ratio and Run-2 stand-in terms ($\lesssim0.4\%$
     of the total); the beamline-geometry flux term ($\lesssim0.2\%$).
   \item \textbf{Muon-momentum shape in the control regions:} the two-dimensional comparison with

@@ -54,7 +54,7 @@ for lab,c in [('tab:fhc','FHC5'),('tab:rhc','RHCFULL'),('tab:comb','COMB')]:
     for o in INCL:
         d=DU[('incl',c,o)]; cl=CL[('incl',c,o)]
         rows.append(f"      {LAB[o]:<18} & ${d['sigma_int']:.3f}$ & ${d['flux_total']:.1f}\\%$ & ${det(d):.1f}\\%$ & ${d['PredTotal']:.1f}\\%$ & ${float(cl['chi2']):.2f}/{cl['ndf']}$ ($p={float(cl['pval']):.2f}$) \\\\")
-    patch(lab,T('lccccc','Observable & $\\sigma_\\mathrm{int}$ & Flux & Detector & Total & Closure $\\chi^2/\\mathrm{ndf}$',rows))
+    patch(lab,T('lccccc','Observable & $\\sigma_\\mathrm{int}$ & Flux & Detector & Syst.\\ total & Closure $\\chi^2/\\mathrm{ndf}$',rows))
 # --- tab:sigint_all
 rows=[f"{LAB[o]:<17} & "+' & '.join(f"${DU[('incl',c,o)]['sigma_int']:.3f}$" for c in CFS)+' \\\\' for o in INCL]
 patch('tab:sigint_all',T('lccc','Observable & FHC & RHC & Combined',rows))
@@ -93,9 +93,10 @@ for lab,c in [('tab:systbreak_fhc','FHC5'),('tab:systbreak_rhc','RHCFULL'),('tab
 def rng(fam,key,bold=False):
     vs=[(det(DU[(fam,c,o)]) if key=='DET' else DU[(fam,c,o)][key]) for c in CFS for o in (INCL if fam=='incl' else P1ALL)]
     return (f"$\\mathbf{{{min(vs):.1f}}}$--$\\mathbf{{{max(vs):.1f}}}$" if bold else f"${min(vs):.1f}$--${max(vs):.1f}$")
-SR=[('Flux (PPFX multisims)','\\texttt{weightsFlux}','flux_total',0),('Detector response','Dedicated samples','DET',0),('Cross-section model','\\texttt{weightsGenie}','xsec_total',0),('Hadron re-interaction','\\texttt{weightsReint}','reint',0),('POT counting','Beam toroids','POT',0),('Target count','FV geometry','numTargets',0),None,('MC statistics','universe spread','MCstats',0),('EXT statistics','beam-off sample','EXTstats',0),('Data statistics','thrown fake data','DataStats',0),None,('\\textbf{Prediction total}','quadrature sum','PredTotal',1),('\\textbf{Total}','incl.\\ data stats','total',1)]
-rows=['      \\midrule' if r is None else f"      {r[0]:<24}& {r[1]:<22}& {rng('incl',r[2],r[3])} & {rng('1p',r[2],r[3])} \\\\" for r in SR]
-patch('tab:systematics',T('L{3.4cm} L{3.4cm} c c','Source & Branch / method & Inclusive (\\%) & Proton-tagged (\\%)',rows))
+SR=[('Flux (PPFX multisims)','\\texttt{weightsFlux}','flux_total',0),('Detector response','Dedicated samples','DET',0),('Cross-section model','\\texttt{weightsGenie}','xsec_total',0),('Hadron re-interaction','\\texttt{weightsReint}','reint',0),('POT counting','Beam toroids','POT',0),('Target count','FV geometry','numTargets',0),None,('MC statistics','universe spread','MCstats',0),('EXT statistics','beam-off sample','EXTstats',0),('Data statistics','thrown fake data','DataStats',0),None,('Prediction total','quadrature sum','PredTotal',0),('Total','incl.\\ data stats','total',0)]
+# 2026-09-27: inclusive only; the analysis note carries no proton-tagged numbers
+rows=['    \\midrule' if r is None else f"    {r[0]:<24}& {r[1]:<22}& {rng('incl',r[2],r[3])} \\\\" for r in SR]
+patch('tab:systematics',T('L{3.8cm} L{3.8cm} c','Source & Branch / method & Range (\\%)',rows))
 # --- tab:ppi_partial
 def part(c):
     rows=[l.split('\t') for l in open(R+f'data_release/curves_incl_{c}_ppi3bin.tsv') if not l.startswith('#') and not l.startswith('bin')]
@@ -129,14 +130,16 @@ FAMK={'CC1mu1piXp':'incl','CC1mu1pi1p':'1p'}; CFGK={'FHC':'fhc5','RHC':'rhcfull'
 def fmt(x):
     if x>=1000: return f"{int(round(x)):,}".replace(',', '\\,')
     return f"{x:.1f}" if x<10 else f"{int(round(x))}"
-rows=['    \\multicolumn{11}{l}{\\emph{Inclusive $\\mathrm{CC}\\,1\\mu1\\pi Xp$}} \\\\']
-for fam,title in [('CC1mu1piXp',None),('CC1mu1pi1p','    \\multicolumn{11}{l}{\\emph{Proton-tagged $\\mathrm{CC}\\,1\\mu1\\pi1p$ ($p_p>0.3$~GeV/$c$)}} \\\\')]:
-    if title: rows.append('    \\midrule'); rows.append(title)
+def cc_rows(fam):
+    rows=[]
     for cfg in ['FHC','RHC','Combined']:
         v=vals[(fam,cfg)]; t=TX[(FAMK[fam],CFGK[cfg])]
         assert abs(float(t['tune_cv'])-v['sig'])<6e-4, (fam,cfg,t['tune_cv'],v['sig'])
         rows.append(f"    {cfg:<8} & ${fmt(v['nsel'])}$ & ${fmt(v['bkg'])}$ & ${100*v['eff']:.1f}$ & ${float(t['sigma']):.3f}\\pm{float(t['err_total']):.3f}$ & ${float(t['stat_pct']):.1f}$ & ${float(t['syst_pct']):.1f}$ & ${float(t['total_pct']):.1f}$ & ${float(t['truth_realised']):.3f}$ & ${float(t['sigma_over_truth']):.3f}$ & ${float(t['chi2_truth']):.3f}$ \\\\")
-patch('tab:cutcount',T('lrrcccccccc','Config & $N_\\mathrm{sel}$ & $N_\\mathrm{bkg}$ & $\\varepsilon$ [\\%] & $\\sigma$ & stat [\\%] & syst [\\%] & total [\\%] & truth & $\\sigma$/truth & $\\chi^2/1$',rows))
+    return rows
+CCH='Config & $N_\\mathrm{sel}$ & $N_\\mathrm{bkg}$ & $\\varepsilon$ [\\%] & $\\sigma$ & stat [\\%] & syst [\\%] & total [\\%] & truth & $\\sigma$/truth & $\\chi^2/1$'
+patch('tab:cutcount',T('lrrcccccccc',CCH,cc_rows('CC1mu1piXp')))
+patch('tab:pt_total',T('lrrcccccccc',CCH,cc_rows('CC1mu1pi1p')))   # proton-tagged note
 rows=[]; dev={}
 for cfg in ['FHC','RHC','Combined']:
     t=TX[('incl',CFGK[cfg])]; g=gens[('CC1mu1piXp',cfg)]; sig=float(t['sigma']); err=float(t['err_total'])

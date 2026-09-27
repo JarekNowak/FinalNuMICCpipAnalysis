@@ -7,8 +7,14 @@ sample) scaled by 1 +- 0.05 while the simulation, the response and the selection
 bin-configuration scaling moved data and simulation together and therefore bounded only the
 regulariser's response to a remapped variable, not the systematic; it is superseded by this.
 
-For observables other than p_mu the scale enters only through the p_mu acceptance (the selection
-cuts on the muon candidate momentum), so the effect is a small, nearly flat normalisation shift.
+For the inclusive observables other than p_mu the term is exactly zero: the selection has no reco-p_mu
+cut and no other reco binning reads the muon momentum, so the scaled fake data give bit-identical results.
+
+Proton-tagged family (2026-09-27, family argument 1p): macros/mcs_scale_fakedata_1p.C scales the same
+muons in the w/ fake data and recomputes delta p_T, delta alpha_T, p_n and W_had from the scaled muon
+(s=1 reproduces the stored branches exactly). Extractions in rebuild_alt/ccpi1p_<CFG>_<obs>_mcsdata{up,dn}05
+(xsec_analyzer/run_mcs_1p.sh); covariances in data_release/cov/1p_<CFG>_<obs>/. delta phi_T reads only
+the muon direction, and W_pipr, p_p, p_pi and the angles no muon momentum: zero by construction.
 
 Per bin: half-difference D_i = (x_up - x_dn)/2 of the unfolded result, quoted as a fraction of the
 nominal and in units of the released total uncertainty; the covariance C_ij = D_i D_j (fully
@@ -17,8 +23,8 @@ data_release/cov/incl_<CFG>_<obs>/cov_MCSscale.txt, with cov_total_plusMCS.txt =
 For the one-bin totals (obs=total) there is no cov directory: the half-difference is reported against
 err_total of data_release/total_xsec.tsv and nothing is written except the summary row.
 
-    python3 report/tools/mcs_eval.py [FHC5|RHCFULL|COMB] [obs]      (default FHC5 pmu)
-    python3 report/tools/mcs_eval.py all                            (every CFG x observable -> summary tsv)
+    python3 report/tools/mcs_eval.py [FHC5|RHCFULL|COMB] [obs] [incl|1p]   (default FHC5 pmu incl)
+    python3 report/tools/mcs_eval.py all [incl|1p]                       (every CFG x observable -> summary tsv)
 
 RHC and combined (2026-09-24): the RHC fake data are scaled the same way
 (mcs_scale_fakedata.C(s,tag,"rhc")); the combined variation scales FHC and RHC together, i.e. one
@@ -28,6 +34,8 @@ import numpy as np, uproot, os, sys
 RB='/data/uboone/processed/rebuild_alt/'; LIVE='/data/uboone/processed/'
 R='/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/report/'
 OBS_ALL=['pmu','costhmu','ppi3bin','costhpi','thmupi','total']   # 2026-09-26: theta_mu dropped, p_pi in three regions
+OBS_1P=['pmu','Whad','dpt2bin','dalphat2bin','pn2bin','dphit3bin','Wpipr','pp','ppi2bin','costhmu','costhpi','thmupi']
+MUMOM_1P={'pmu','Whad','dpt2bin','dalphat2bin','pn2bin'}   # reco observables built from the muon momentum magnitude
 def cov(path):
     n=None; C=None
     for l in open(path):
@@ -47,17 +55,19 @@ def total_err(CFG):
     raise KeyError(CFG)
 CONF='/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/xsec_analyzer/configs/'
 BINCFG={'ppi3bin':'ccpi_ppi_bin_config_3bin.txt'}
-def uses_mcs_branch(obs):
+def uses_mcs_branch(obs,fam='incl'):
     """True when the live reco bin definitions read the scaled branch. The variation rescales only
     CC1mu1piXp_candidate_muon_mom_reco and keeps the selection flag nominal, so an observable whose reco
     bins do not read it sees bit-identical fake data at any binning: its term is zero by construction."""
+    if fam=='1p': return obs in MUMOM_1P
     t=open(CONF+BINCFG.get(obs,f'ccpi_{obs}_bin_config_opt.txt')).read()
     return 'muon_mom' in t
-def evaluate(CFG,obs,quiet=False):
-    up_f=RB+f'closure_hists_xsec_ccpi_{CFG}_{obs}_mcsdataup05.root'; dn_f=RB+f'closure_hists_xsec_ccpi_{CFG}_{obs}_mcsdatadn05.root'
-    nom=uproot.open(LIVE+f'closure_hists_xsec_{CFG}_{obs}.root')['h_unfolded_nuwro']
+def evaluate(CFG,obs,quiet=False,fam='incl'):
+    pre='ccpi_' if fam=='incl' else 'ccpi1p_'
+    up_f=RB+f'closure_hists_xsec_{pre}{CFG}_{obs}_mcsdataup05.root'; dn_f=RB+f'closure_hists_xsec_{pre}{CFG}_{obs}_mcsdatadn05.root'
+    nom=uproot.open(LIVE+f"closure_hists_xsec_{'' if fam=='incl' else 'ccpi1p_'}{CFG}_{obs}.root")['h_unfolded_nuwro']
     v=nom.values(); e=nom.errors(); w=np.diff(nom.axis().edges()); n=len(v)
-    if obs!='total' and not uses_mcs_branch(obs):
+    if obs!='total' and not uses_mcs_branch(obs,fam):
         up=dn=v.copy()                          # zero by construction (2026-09-26, binnings of the 0.50 criterion)
         if not quiet: print(f'== {CFG} {obs}: reco binning does not read the muon momentum -> term identically zero')
     else:
@@ -72,13 +82,13 @@ def evaluate(CFG,obs,quiet=False):
     res=dict(cfg=CFG,obs=obs,nbins=n,up_int=Iu,dn_int=Id,half_int=H,max_frac=np.max(abs(D)/v),max_sig=np.max(abs(D)/e),
              frac=D/v,sig=D/e)
     if quiet: return res
-    print(f'== {CFG} {obs}')
+    print(f'== {fam} {CFG} {obs}')
     print('bin   nominal   up/nom   dn/nom   half-diff/nom   half-diff/sigma_tot')
     for i in range(n): print(f'{i+1:>3}  {v[i]:8.4f}  {up[i]/v[i]:7.3f}  {dn[i]/v[i]:7.3f}  {D[i]/v[i]:+13.3f}  {D[i]/e[i]:+12.2f}')
     print(f'integral: nominal {I:.4f}  up {Iu:.3f}  dn {Id:.3f}  half-diff {H:+.3%}')
     print(f'mean |half-diff|/nom {np.mean(abs(D)/v):.3%}, max |half-diff|/sigma {np.max(abs(D)/e):.2f}')
     if obs!='total':
-        REL=R+f'data_release/cov/incl_{CFG}_{obs}/'
+        REL=R+f'data_release/cov/{fam}_{CFG}_{obs}/'
         Db=D*w                      # release units: bin integrals
         C=np.outer(Db,Db); Ct=cov(REL+'cov_total.txt')
         assert Ct.shape==(n,n)
@@ -89,15 +99,16 @@ def evaluate(CFG,obs,quiet=False):
     return res
 if __name__=='__main__':
     if len(sys.argv)>1 and sys.argv[1]=='all':
+        fam=sys.argv[2] if len(sys.argv)>2 else 'incl'
         rows=[]
         for CFG in ['FHC5','RHCFULL','COMB']:
-            for obs in OBS_ALL:
-                r=evaluate(CFG,obs)
+            for obs in (OBS_ALL if fam=='incl' else OBS_1P):
+                r=evaluate(CFG,obs,fam=fam)
                 if r is None: print(f'== {CFG} {obs}: not extracted yet'); continue
                 rows.append(r)
-        out=R+'data_release/mcs_scale_2026-09-26.tsv'
+        out=R+('data_release/mcs_scale_2026-09-26.tsv' if fam=='incl' else 'data_release/mcs_scale_1p_2026-09-27.tsv')
         with open(out,'w') as o:
-            o.write('# Data-side MCS momentum-scale (+-5%) term per released inclusive extraction: integral shift for the up/down\n'
+            o.write(f"# Data-side MCS momentum-scale (+-5%) term per released {'inclusive' if fam=='incl' else 'proton-tagged'} extraction: integral shift for the up/down\n"
                     '# variations, the half-difference of the integral, and the largest per-bin half-difference as a fraction of\n'
                     '# the nominal and in units of the released total uncertainty (mcs_eval.py; cov_MCSscale.txt per directory).\n')
             o.write('config\tobservable\tbins\tup_int\tdn_int\thalf_int_pct\tmax_bin_pct\tmax_bin_sigma\tper_bin_pct\n')
@@ -105,4 +116,4 @@ if __name__=='__main__':
         print('wrote',out)
     else:
         CFG=sys.argv[1] if len(sys.argv)>1 else 'FHC5'; obs=sys.argv[2] if len(sys.argv)>2 else 'pmu'
-        evaluate(CFG,obs)
+        evaluate(CFG,obs,fam=sys.argv[3] if len(sys.argv)>3 else 'incl')
