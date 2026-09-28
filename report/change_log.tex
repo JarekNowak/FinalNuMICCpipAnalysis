@@ -1410,6 +1410,30 @@ $\cos\theta_\pi\times\cos\theta_\mu$, now have both tests.
   \item Four tables that ran into the margin were narrowed.
 \end{itemize}
 
+\section{Approval material moved to a separate document (2026-09-28)}
+
+The analysis note, the proton-tagged note and the technical supplement describe the analysis as it
+stands. The material of the approval process moved to a new document, \texttt{approval\_request.tex}:
+\begin{itemize}\itemsep1pt
+  \item the decision requested from the collaboration (no longer boxed), the status tables with their
+    prerequisites column, the prerequisite table with the criteria of U1--U7, P1--P4 and R1, and the
+    validation ladder;
+  \item from the supplement, the request to inspect the control regions, the frozen analysis state, the
+    points the collaboration is asked to ratify, the approval checklist, the approval rules within the
+    frozen procedure and the sign-off.
+\end{itemize}
+In the three documents the validation ladder is replaced by paragraphs of text, the sections on
+prerequisites by sections on limitations, and statements of what is still needed by statements of what
+has and has not been done. The analysis note starts with the introduction, followed by the measurement
+definition; its status table is in the results section. The status tables of the three documents no
+longer carry a prerequisites column (\texttt{report/tools/inventory.py} writes both versions; the closing
+quotes of ``yes'' in their captions were lost to a quoting error and are restored). The three boxed
+statements of the supplement are text. \texttt{report/tools/check\_documents.py} now refuses a
+prerequisite identifier in an analysis document and accepts the decision list, the prerequisites and
+the validation ladder only in \texttt{approval\_request.tex}. The status label ``Secondary result
+proposed for approval'' is shortened to ``Secondary result'' in the documents, the release index and the
+checks. No number changed.
+
 \section{Open items}
 
 The following remain outstanding following the 2026-09-07 review. None is a correction awaiting application;

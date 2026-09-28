@@ -64,8 +64,8 @@ The inclusive analysis note and the proton-tagged note state what is measured an
 that support their choices are collected here in four parts.
 \begin{itemize}\itemsep2pt
   \item \textbf{Final configuration} (Part~I): the status of every result, the final binnings and
-    the rule that selected them, the extraction configuration and uncertainty model, the validation
-    criteria and prerequisites, and the schema of the data release.
+    the rule that selected them, the extraction configuration and uncertainty model, the validation,
+    and the schema of the data release.
   \item \textbf{Evidence for the choices} (Part~II): the range estimator of the pion momentum and
     its saturation; the binnings under the $0.68$ and $0.50$ migration criteria; the hadronic-mass
     observables, the proton-tagged selection and its additional smearing; the two-dimensional pairs;
@@ -87,16 +87,10 @@ shared with the analysis notes.
 \section[Status of the results]{Status of the results\scopetag{shared}}
 \label{sec:supp_status}
 
-The decision requested from the collaboration is the following.
-
-\input{shared/decision_box}
-
-Table~\ref{tab:inventory} gives the status of every inclusive product, the configurations in which it
-is reported and the prerequisites that block it.
+Table~\ref{tab:inventory} gives the status of every inclusive product and the configurations in which
+it is reported, and Table~\ref{tab:pt_status} the same for the proton-tagged products.
 
 \input{tables/inventory}
-
-Table~\ref{tab:pt_status} gives the same for the proton-tagged products.
 
 \input{tables/pt_status}
 
@@ -137,11 +131,9 @@ point; \S\ref{sec:binreview} gives the consequences of both. Everything in Part~
 first binning optimisation, the five-bin $p_\pi$ response and the $\theta_\mu$ parameterisation, is
 historical and is not used in the submitted results.
 
-\medskip\noindent\fbox{\parbox{0.97\linewidth}{Closure is necessary but not sufficient. A result may
-close while remaining dominated by modelled migrations or by the regularisation; the migration
-criterion and the Wiener filter factors are therefore imposed as independent information-content
-criteria.}}
-\medskip
+A result can close while it is determined largely by the modelled migrations or by the
+regularisation, so the migration criterion and the Wiener filter factors are applied as separate
+criteria of the information a binning retains.
 
 \section[Extraction configuration and uncertainty model]{Extraction configuration and uncertainty model\scopetag{shared}}
 \label{sec:supp_extraction}
@@ -177,31 +169,35 @@ included in every quoted uncertainty and every summary table, among them the sys
 Tables~\ref{tab:systbreak_fhc}--\ref{tab:systbreak_comb} (\noteref{Sec.}{sec:mcs}). The closure
 $\chi^2$ and the biases of the robustness tests are quoted with the framework covariance, since they
 test the extraction rather than the uncertainty of the data. Three terms lie outside the official
-covariance and are to be included before publication (prerequisite U7): the beamline-geometry flux
-term, the uncertainty of the per-run beam-off gate ratios and that of the use of the Run-1 beam-off
+covariance: the beamline-geometry flux term, the uncertainty of the per-run beam-off gate ratios and that of the use of the Run-1 beam-off
 sample for Run~2.
 
-\section[Validation criteria and prerequisites]{Validation criteria and prerequisites\scopetag{shared}}
+\section[Validation]{Validation\scopetag{shared}}
 \label{sec:supp_validation}
 
-The validation ladder (Table~\ref{tab:validation_ladder}) orders the tests of the extraction so that
-each answers a question the earlier ones cannot: the identity and pseudo-data closures test the
-implementation (\S\ref{sec:identity}), the ensembles the size of the statistical uncertainties
-(\S\ref{sec:supp_ensemble}), the pseudo-data from reweighted models the robustness to a model that
-reweighting can reach (\noteref{Sec.}{sec:altmodel}), the independent-generator closure the robustness
-to one that it cannot, and the control regions the background model (\S\ref{sec:request}).
+The tests of the extraction go from the implementation to the model. The identity closure and the
+pseudo-data closure test the implementation (\S\ref{sec:identity}). Every extraction closes: the
+inclusive ones with $\chi^2\le2.39/8$ and integral ratios of $0.946$--$1.047$, the proton-tagged ones
+with $\chi^2\le6.01/4$ (RHC $\cos\theta_\pi$) and ratios of $0.93$--$1.18$, and the two two-dimensional
+results with cell ratios of $0.70$--$1.36$. A result can close while it is determined largely by the
+modelled migrations or by the regularisation, so the migration criterion and the trace of $A_C$ are
+applied as separate criteria (\S\ref{sec:final_binning}).
 
-\input{shared/validation_ladder}
+Ensembles of $100$ pseudo-experiments test the size of the statistical uncertainties
+(\S\ref{sec:supp_ensemble}). Seven inclusive and ten proton-tagged extractions were run, the proton
+angles in every configuration and the two two-dimensional results among them; the pull widths are
+$0.95$--$1.07$ and $0.94$--$1.08$, and the $68\%$ coverages $63$--$73\%$ and $62$--$72\%$.
 
-The prerequisites (Table~\ref{tab:prerequisites}) give, for each item, its criterion, its owner and
-what it blocks. The independent-generator closure (U3) unfolds, with the nominal response,
-pseudo-data from a NuWro overlay with the full detector simulation that has been validated against
-standalone NuWro on the same flux; it passes if every bin holding at least $10\%$ of the largest truth
-lies within $1\sigma$ of its total uncertainty and every integral within its uncertainty, and it
-blocks unblinding. The NuWro overlay available so far failed that validation and is not used
-(\noteref{Sec.}{sec:limitations}).
+Pseudo-data from two reweighted interaction models, GENIE multisim universe~545 and the
+$\Delta\to N\pi$ angular unisim, test the robustness to a model that reweighting can reach
+(\noteref{Sec.}{sec:altmodel}, \ptref{Sec.}{sec:pt_altmodel}). The largest bias is $1.18\sigma$, in one
+sparse inclusive bin (FHC $\cos\theta_\mu$); in the proton-tagged sample the low $\delta p_T$ and $p_n$
+bins move by $-1.14\sigma$ and $-1.16\sigma$. The proton angles and the two two-dimensional results stay
+within $0.79\sigma$.
 
-\input{shared/prerequisites}
+No closure test with an independent generator has been made; the NuWro overlay available so far
+disagrees with standalone NuWro and is not used (\noteref{Sec.}{sec:limitations}). The control regions,
+which test the background model, have been studied with pseudo-data only (\S\ref{sec:request}).
 
 \section[Data-release schema]{Data-release schema\scopetag{shared}}
 \label{sec:release_schema}
@@ -255,12 +251,10 @@ two-dimensional results. Uncertainties and correlations are taken from the covar
 \section[Pion momentum: the range estimator and its saturation]{Pion momentum: the range estimator and its saturation\scopetag{inclusive}}
 \label{sec:supp_ppi}
 
-\medskip\noindent\fbox{\parbox{0.97\linewidth}{\textbf{Final adopted configuration.} The inclusive
-$p_\pi$ is measured in three regions with edges $[0.175, 0.205, 0.26, \infty)$~GeV/$c$, and the
-proton-tagged $p_\pi$ in two regions, $[0.175, 0.205, \infty)$~GeV/$c$. The five-bin configurations
-are rejected diagnostics, not results. The golden-pion, MCS, calorimetric, regression and
-daughter-recovery studies justify keeping the coarse range-based measurement.}}
-\medskip
+The inclusive $p_\pi$ is measured in three regions with edges $[0.175, 0.205, 0.26, \infty)$~GeV/$c$,
+and the proton-tagged $p_\pi$ in two regions, $[0.175, 0.205, \infty)$~GeV/$c$. The five-bin
+configurations are diagnostics, not results. The golden-pion, MCS, calorimetric, regression and
+daughter-recovery studies of this section support the coarse range-based measurement.
 
 \subsection{Track sample and analysis sample}
 \label{sec:ppi_samples}
@@ -599,11 +593,10 @@ region (adopted, \S\ref{sec:ppi2bin_adopted}), or to replace the range-based est
 (\S\ref{sec:ppi_estimators}). The golden-pion BDT can contribute to any of these but does
 not by itself solve the problem.
 
-\medskip\noindent\fbox{\parbox{0.97\linewidth}{The limitation described in this subsection
-concerns attempts to recover a finer multi-bin $p_\pi$
-spectrum, and its numbers are for the loose truth-matched track sample. It does not
-apply to the adopted three-region analysis-sample result (\S\ref{sec:ppi2bin_adopted},
-Table~\ref{tab:ppi2bin}), whose migration diagonals are $91\%$, $51\%$ and $52\%$.}}
+The limitation described in this subsection concerns attempts to recover a finer multi-bin $p_\pi$
+spectrum, and its numbers are for the loose truth-matched track sample. It does not apply to the
+adopted three-region result on the analysis sample (\S\ref{sec:ppi2bin_adopted},
+Table~\ref{tab:ppi2bin}), whose migration diagonals are $91\%$, $51\%$ and $52\%$.
 
 \subsubsection{Scope of the $p_\pi$ result.} Two routes to a finer $p_\pi$ measurement were
 tested. The golden-pion classifier does not repair the response even at perfect truth-level
@@ -1427,8 +1420,8 @@ are therefore proxies, not the initial-state nucleon momentum. The generator
 predictions apply the identical formulas to the generator final states
 (Sec.~\ref{sec:acwtki}), so the comparison is like for like; a truth-level closure of
 this prescription against a pion-production-specific definition, and a quantification of
-the bias from the residual-mass assumption, have not been performed (prerequisite P4) and are listed in
-Sec.~\ref{N-sec:limitations}.
+the bias from the residual-mass assumption, have not been performed
+(\ptref{Sec.}{sec:pt_limitations}).
 
 
 
@@ -1521,8 +1514,8 @@ and $d^2\sigma/d\cos\theta_\pi\,d\cos\theta_\mu$ on the inclusive sample, presen
 \noteref{Sec.}{sec:incl_2d}. Their FHC and RHC extractions and the other six pairs are
 \statNotReported{} (Tables~\ref{tab:inventory} and~\ref{tab:pt_status}). The single-mode extractions
 of the two pairs are not shape measurements, because their responses cannot be inverted. Every
-one-dimensional result is quoted per beam mode and for the combination; whether a result available only in
-the combined configuration is acceptable requires a collaboration decision (prerequisite R1).
+one-dimensional result is quoted per beam mode and for the combination; the two two-dimensional
+results are quoted in the combined configuration only.
 
 The pair $\theta_{\pi p}\times W_{\pi p}$ conditions at $0.537$, as do the two usable pairs, yet
 its extraction carries no usable information: a $78\%$ data-statistical term, per-bin uncertainties up
@@ -1781,8 +1774,8 @@ $0.5$--$0.8\sigma$ low, while GiBUU, NEUT and NuWro lie within $0.8\sigma$.
     generator predictions. The measurement uncertainty is the official one-bin
     covariance (flux, cross section, re-interaction, detector, POT, targets and statistics; the MCS
     momentum-scale term is zero for the total, which uses no reconstructed muon momentum; the
-    beamline-geometry, beam-off gate-ratio and Run-2 stand-in terms lie outside it, prerequisite U7,
-    \noteref{Sec.}{sec:limitations}). \texttt{data\_release/total\_xsec.tsv}. Values in
+    beamline-geometry, beam-off gate-ratio and Run-2 stand-in terms lie outside it,
+    \noteref{Sec.}{sec:notincov}). \texttt{data\_release/total\_xsec.tsv}. Values in
     parentheses give each generator's deviation from the measurement in units of the
     measurement uncertainty. The generator predictions are integrated over the full binning with open upper bins
     (a closed upper edge on $p_\mu$ or $p_\pi$ would discard $4$--$8\%$ of each prediction).}
@@ -2106,8 +2099,8 @@ this way, and the entry-count scan of their $2000$ inputs and of the proton-tagg
 ensemble finds no truncated read; the members short by one entry are the boundary case of an
 event with $\cos\theta_\mu=1.0$ exactly (change log).
 
-The study covers the inclusive sample in all three configurations. The results proposed for approval
-since then have their own $100$-member ensembles (prerequisite V1): the inclusive
+The study covers the inclusive sample in all three configurations. The two-dimensional results and
+the proton angles have their own $100$-member ensembles: the inclusive
 $\cos\theta_\pi\times\cos\theta_\mu$ (\noteref{Sec.}{sec:incl_2d}), and on the proton-tagged sample
 $\theta_p$ and $\theta_{\pi p}$ in each configuration and $\theta_p\times\delta p_T$, with statistical
 pull widths of $0.94$--$1.04$ (\texttt{data\_release/ensemble\_v1\_2026-09-28.tsv}). The pulls of a
@@ -2139,7 +2132,7 @@ the updated NuMI flux with the fixed geometry bug and Geant~v4.10.4; the same
 signal topology (exactly one $\pi^\pm$, zero $\pi^0$ or heavier mesons, any number
 of protons, charged current), and the same systematic suite, PPFX flux
 hadronic universes (the 12 beamline-geometry unisims the $\nu_e$ analysis carries are
-evaluated but not in this analysis's official covariance, prerequisite U7, \noteref{Sec.}{sec:limitations}), the
+evaluated but not in this analysis's official covariance, \noteref{Sec.}{sec:notincov}), the
 600-universe GENIE cross-section multisim with unisims, the Geant4 reinteraction
 reweighting, the standard detector-variation set, and $2\%$ / $1\%$ / $100\%$
 POT / target / dirt normalisation uncertainties. The FHC beam-on data POT per run
@@ -2210,46 +2203,26 @@ external user's arithmetic exposes it.
 % =============================================================================
 
 
-\section[Control regions: the opening request and its sign-off]{Control regions: the opening request and its sign-off\scopetag{inclusive}}
+\section[Control regions: definitions and roles]{Control regions: definitions and roles\scopetag{inclusive}}
 \label{sec:request}
 % =============================================================================
 
-The decision requested of the collaboration is permission to inspect beam-on data in four
-reconstruction-level control regions of the inclusive $\mathrm{CC}\,1\mu1\pi Xp$ selection while
-the signal region stays blind. \noteref{Sec.}{sec:sidebands} gives the region definitions; the
-numbers are those of the frozen state identified in the box below.
-
-\medskip\noindent\fbox{\parbox{0.97\linewidth}{\textbf{Analysis state.} Repository tag \texttt{cr-freeze-2026-09-06};
-pseudo-data: one Poisson throw per run of the central-value prediction with the unified
-weight rule (\noteref{Sec.}{sec:mc}); binning: the released edges of \noteref{Appendix}{app:binning}
-(five-bin forward-split $\cos\theta_\pi$, the $p_\pi$ binning then in use); normalisation: per-run
-exposure, per-run beam-off gate ratios, per-configuration flux; detector variations:
-native Run-4 FHC and RHC samples; data release: \texttt{report/data\_release/}, checksum
-manifest \texttt{MANIFEST.sha256} (\texttt{b8ebc69e3bc91434}). Every table marked
-``current frozen release'' is generated from this state.}}
-\medskip
-
-\paragraph{Request.}
-We request approval to inspect beam-on data in four control regions: CC$0\pi$,
-multi-$\pi$, $\pi^0$ and large muon--pion opening angle (called ``cosmic'' below for
-brevity: it is cosmic-enriched, $34$--$41\%$ beam-off, not cosmic-pure).
-Throughout, ``beam-off'', ``EXT'' and ``cosmic data'' name the same data-driven
-component, the beam-off trigger sample scaled by gate counts; ``signal contamination''
-means the inclusive signal unless the proton-tagged selection is named. Each region is
-anchored by the inversion of one nominal signal requirement; requirements that become
-undefined once that inversion is made, or that would sculpt the targeted control sample,
-are dropped as listed in Table~\ref{tab:cr_defs}. Each region is disjoint from the
-signal region at reconstruction level (demonstrated event by event,
-\S\ref{sec:cr_overlap}); their expected signal contaminations are $8$--$24\%$. The
-signal region remains blind. Before the regions are opened, the selections, the
-run-dependent normalisation, the beam-off scaling, the displayed observables and binning,
-the covariance construction, the goodness-of-fit tests and the permitted responses to a
-discrepancy are frozen as written in \S\ref{sec:cr_protocol}. Control-region data will be
-compared with the complete prediction (neutrino MC $+$ beam-off $+$ dirt) separately in
-FHC and RHC, with the combined configuration as a cross-check. Any discrepancy beyond
-the pre-declared criteria requires a documented treatment and renewed approval before
-the signal region is opened. The proton-tagged control regions are not part of
-this request (\S\ref{sec:cr_1p_scope}).
+The four reconstruction-level control regions of the inclusive $\mathrm{CC}\,1\mu1\pi Xp$ selection
+are CC$0\pi$, multi-$\pi$, $\pi^0$ and large muon--pion opening angle (called ``cosmic'' below for
+brevity: it is cosmic-enriched, $34$--$41\%$ beam-off, not cosmic-pure); \noteref{Sec.}{sec:sidebands}
+gives their definitions. Throughout, ``beam-off'', ``EXT'' and ``cosmic data'' name the same data-driven
+component, the beam-off trigger sample scaled by gate counts; ``signal contamination'' means the
+inclusive signal unless the proton-tagged selection is named. Each region is anchored by the inversion
+of one nominal signal requirement; requirements that become undefined once that inversion is made, or
+that would sculpt the targeted control sample, are dropped as listed in Table~\ref{tab:cr_defs}. Each
+region is disjoint from the signal region at reconstruction level (demonstrated event by event,
+\S\ref{sec:cr_overlap}); their expected signal contaminations are $8$--$24\%$. The selections, the
+run-dependent normalisation, the beam-off scaling, the displayed observables and binning, the covariance
+construction, the goodness-of-fit tests and the responses to a discrepancy are fixed in
+\S\ref{sec:cr_protocol} before beam-on data in the regions are examined. The data are compared with the
+complete prediction (neutrino MC $+$ beam-off $+$ dirt) separately in FHC and RHC, with the combined
+configuration as a cross-check. The proton-tagged control regions are discussed in
+\S\ref{sec:cr_1p_scope}.
 
 \paragraph{Role of each region.} The transfer factors of \S\ref{sec:cr_transfer} set
 the physics role of each region.
@@ -2264,17 +2237,15 @@ the physics role of each region.
     dominated by the detector variations. It is therefore a validation test rather than
     a per-cent-level constraint, and it is conditionally eligible for a fitted
     normalisation correction under \S\ref{sec:cr_protocol}. The direct test of the
-    misidentification probability is an inverted pion-PID region, which does not exist
-    yet and is listed among the prerequisites for opening the signal region.
+    misidentification probability would be an inverted pion-PID region, which has not been
+    defined.
   \item \textbf{$\pi^0$} tests the shower veto and the CC$+$NC~$\pi^0$ background. Its
     target purity is $50.1\%$ (FHC) and $51.0\%$ (RHC) of the neutrino MC, its transfer
     factor $0.02$ with a $17$--$19\%$ uncertainty set by the Monte-Carlo-statistical
-    floor of the detector-variation samples. For this opening the region is
-    diagnostic only. Approval to inspect it does not authorise a fitted correction; a
-    proposal to fit the CC$+$NC~$\pi^0$ normalisation would require a separate
-    documented review after the pre-fit result has been recorded, with the fit model,
-    the leverage of the fixed components, the transfer uncertainty and its floor, and
-    the expected effect on the signal-region prediction.
+    floor of the detector-variation samples. The region is diagnostic only; a fit of the
+    CC$+$NC~$\pi^0$ normalisation is considered only after the pre-fit result is recorded,
+    together with the fit model, the leverage of the fixed components, the transfer
+    uncertainty and its floor, and the effect on the signal-region prediction.
   \item \textbf{Multi-$\pi$} is diagnostic only. Its transfer factor is $\simeq2.5$
     (the signal region holds more of the target class than the region does) and its
     target purity $47\%$; it is not used to fit or constrain the signal-region
@@ -2311,9 +2282,9 @@ central-value weighting and, in the full-stack variant of \S\ref{sec:cr_fullstac
 exact bookkeeping path that beam-on data will follow. They do not validate the
 background model: the pseudo-data are drawn from the same simulation that supplies the
 prediction, so agreement is guaranteed up to statistics. The background model is the
-largest untested assumption in the analysis, and the control regions exist to test it. The control-region comparison is made at reconstruction level, so it does not
-depend on the unfolding or on the alternative-generator closure that is required before
-the signal region is opened (prerequisite U3, \noteref{Sec.}{sec:limitations}).
+largest untested assumption in the analysis, and the control regions exist to test it. The
+control-region comparison is made at reconstruction level, so it does not depend on the unfolding or
+on a closure test with an independent generator.
 
 \begin{table}[H]
   \centering
@@ -2351,54 +2322,6 @@ comparison of \S\ref{sec:cr_pi0_final} finds no material change in target purity
 leading-shower-energy shape. The no-cut definition is retained because it provides
 $11$--$14\%$ more events, not because the study demonstrated a material bias from the
 cut.
-
-\paragraph{Points the collaboration is asked to ratify.}
-(i)~The $\pi^0$ definition without the final multiplicity cut (Table~\ref{tab:cr_defs});
-the comparison with the version retaining it is in \S\ref{sec:cr_pi0_final} and will
-not be used to modify the region after beam-on inspection. (ii)~The $\pi^0$
-target class CC$+$NC~$\pi^0$, adopted by the analysers (the NC$\pi^0$
-events the shower veto is also meant to remove had been counted under ``NC and
-$\nu_e$CC''; $\nu_\mu$CC~$\pi^0$ alone is $46\%$ of the region), together with the
-region's diagnostic-only status for this opening. Purity is defined throughout as the
-target class's share of the neutrino-MC prediction in the region, beam-off and
-dirt being separately constrained components; both the class definition and the
-denominator were settled after the purities were known, which is one reason the region
-is diagnostic-only. (iii)~The roles of the other three regions as stated above, and the
-frozen procedure of \S\ref{sec:cr_protocol}.
-
-\paragraph{Approval checklist.}
-\begin{center}\small
-\begin{tabular}{p{7.2cm}p{4.6cm}p{2.6cm}}
-\toprule
-Item & Status / evidence & Sign-off \\
-\midrule
-\multicolumn{3}{l}{\emph{Required before the control regions are opened}}\\
-\midrule
-Control-region definitions frozen & Table~\ref{tab:cr_defs} & \\
-Signal-region overlap zero, event by event & \S\ref{sec:cr_overlap} & \\
-Plot list and binning frozen & \S\ref{sec:cr_protocol} item~1 & \\
-Pre-fit covariance, global statistic and thresholds frozen & \S\ref{sec:cr_protocol} items~2--3; null calibration Fig.~\ref{fig:cr_null_calibration} & \\
-Response to a discrepancy frozen & \S\ref{sec:cr_protocol} item~4 & \\
-$\pi^0$ definition and target class ratified; diagnostic-only status recorded & this section, (i)--(ii) & conveners \\
-Flux and detector-systematics contacts have reviewed their parts & pending & contacts \\
-Repository tag and release checksum recorded & analysis-state box above & \\
-\midrule
-\multicolumn{3}{l}{\emph{Required later, before the signal region is opened}}\\
-\midrule
-Control-region results reviewed; any discrepancy treated under \S\ref{sec:cr_protocol} & pending & conveners \\
-Model-distortion pseudo-data closure (reweighted GENIE, FHC) & done, \noteref{Sec.}{sec:validation} & \\
-Model-distortion pseudo-data closure, proton-tagged family (FHC) & done, \ptref{Sec.}{sec:pt_altmodel}; low-imbalance $\delta p_T$/$p_n$ bins biased $1.1$--$1.2\sigma$ under GENIE u545 & \\
-Statistical-coverage ensembles, proton-tagged family ($W_{\rm had}$, $\delta p_T$, $p_n$) & done, \ptref{Sec.}{sec:pt_ensemble}; pull widths $0.94$--$1.08$, integral offsets within $0.7\%$ & \\
-Ensembles and alternative-model closure of the results proposed since then, $\theta_p$, $\theta_{\pi p}$, $\theta_p\times\delta p_T$ and $\cos\theta_\pi\times\cos\theta_\mu$ (prerequisite V1) & done, \ptref{Sec.}{sec:pt_ensemble}, \ptref{Sec.}{sec:pt_altmodel}, \noteref{Sec.}{sec:incl_2d}; pull widths $0.94$--$1.04$, largest bias $0.79\sigma$ & \\
-Independent-generator pseudo-data closure (prerequisite U3): a NuWro overlay with the full detector simulation, validated against standalone NuWro on the same flux, unfolded with the nominal response & pending: the existing NuWro overlay failed validation against the standalone prediction and is not used, \noteref{Sec.}{sec:limitations} & \\
-Flux constants confirmed as PPFX-corrected central values & pending, \noteref{Sec.}{sec:flux_status} & flux contact \\
-MCS muon-momentum scale ($\pm5\%$, data side) evaluated on $p_\mu$ in FHC, RHC and combined and released as \texttt{cov\_MCSscale.txt} & done, \noteref{Sec.}{sec:mcs}; at most $0.56\sigma$ (FHC open top bin), $0.42\sigma$ (combined) and $0.30\sigma$ (RHC); exactly zero for the other inclusive observables, which carry no reco-$p_\mu$ cut; computed outside the framework and part of the official covariance (\texttt{cov\_total\_plusMCS.txt}) and of every summary table; size to be confirmed by prerequisite U4; proton-tagged observables evaluated (at most $0.62\sigma$, FHC $p_\mu$; \ptref{Sec.}{sec:pt_mcs}) & \\
-Final empty-cache reproduction of the release to be unblinded & pending, \S\ref{sec:pipeline} & \\
-Inverted pion-PID region for the CC$0\pi$ misidentification transfer & pending & \\
-Inverted-proton-PID region before any proton-tagged result & pending, \S\ref{sec:cr_1p_scope} & \\
-\bottomrule
-\end{tabular}
-\end{center}
 
 \paragraph{Expected yields and precision.}
 \noteref{Table}{tab:sideband_yields} gives the expected composition per region and beam. The
@@ -2627,8 +2550,8 @@ the last subtracted from the same generator with a reconstruction bias of $+30$-
 for below-threshold pions (\noteref{Table}{tab:pithresh}). Second, the CC$0\pi$ region constrains
 the CC$0\pi$ rate, not the proton-as-pion misidentification that carries it into
 the signal region ($T=0.03$, detector-dominated); an inverted pion-PID, proton-enriched
-region would test the misidentification without touching the signal region and is not
-part of this request.
+region would test the misidentification without touching the signal region and has not
+been defined.
 
 
 \subsection{The $\pi^0$ region with and without the final multiplicity cut}
@@ -2729,8 +2652,7 @@ transfer uncertainty, and changes the frozen shape by less than a percent, so no
 \S\ref{sec:cr_protocol} item~4(ii) turns on it. The premise that retaining the cut would
 sculpt the region towards single-shower events is not borne out at the level of the
 composition; it holds only for the multiplicity distributions, which are not
-compared. The collaboration is asked to ratify the frozen definition with this comparison
-in view.
+compared.
 
 
 \begin{figure}[H]
@@ -2745,10 +2667,9 @@ in view.
   \label{fig:cr_null_calibration}
 \end{figure}
 
-\subsection{Frozen procedure for opening the control regions}
+\subsection{Frozen procedure for the comparison with beam-on data}
 \label{sec:cr_protocol}
-The analysers proposed the procedure below for ratification with the approval. It is
-frozen, and any departure from it is itself a change requiring approval.
+The procedure below is fixed before beam-on data in the control regions are examined.
 
 \begin{enumerate}\itemsep2pt
   \item \textbf{What is examined.} For each of the four regions: the event total, and the
@@ -2830,25 +2751,23 @@ frozen, and any departure from it is itself a change requiring approval.
     production or calibration boundary); the exclusion then removes the period from
     both the control-region comparison and the measurement with its exposure
     removed from the normalisation, changes the flux weighting, the detector covariance
-    and the response, and therefore requires a new frozen release and explicit approval.
+    and the response, and therefore makes a new frozen release.
     If no defect is established the period stays in the analysis and the discrepancy is
     treated through the model responses below. No cut or binning may be changed and a
     single bin is never removed.
     (ii)~\emph{Fitted normalisation correction (c).} Permitted only for CC$0\pi$ and
     $\pi^0$ (target-class purity above $50\%$ of the neutrino-MC prediction; target
-    classes $\nu_\mu$CC~$0\pi$ and CC$+$NC~$\pi^0$, adopted, ratification
-    requested in Sec.~\ref{sec:request}) and only if the
+    classes $\nu_\mu$CC~$0\pi$ and CC$+$NC~$\pi^0$) and only if the
     region's shape test 2(b) passes, so that the discrepancy is consistent with a pure
     normalisation shift: a one-parameter fit of the target class, to FHC and RHC
     simultaneously, applied if it improves the fit by a likelihood-ratio test at
     $p<0.01$. The $\pi^0$ region meets the purity rule narrowly ($50.1$/$51.0\%$) and
     with a class and denominator settled after the purities were known
-    (Sec.~\ref{sec:request}), so its eligibility is not pre-authorised: a fitted
-    $\pi^0$ correction may be proposed only after the pre-fit
-    control-region result is documented, and the fit model, the leverage of the fixed
-    components, the transfer-factor uncertainty and its Monte-Carlo-statistical floor
-    are reviewed by the collaboration before the correction is propagated to the signal
-    region. CC$0\pi$ ($72\%$) is pre-authorised under the same rule. The two fitted
+    (Sec.~\ref{sec:request}), so a fitted $\pi^0$ correction is considered only after the
+    pre-fit control-region result is documented, together with the fit model, the leverage
+    of the fixed components, the transfer-factor uncertainty and its Monte-Carlo-statistical
+    floor, before any correction is propagated to the signal region. CC$0\pi$ ($72\%$) is
+    eligible under the same rule. The two fitted
     regions are disjoint by construction (CC$0\pi$ requires the shower veto to pass,
     $\pi^0$ requires it to fail), so a simultaneous fit counts no event twice; the
     multi-$\pi$/$\pi^0$ overlap ($47/124$ FHC, $68/159$ RHC events) concerns a
@@ -2873,8 +2792,7 @@ frozen, and any departure from it is itself a change requiring approval.
     (iv)~\emph{Model revision (d).} If the post-treatment global $\chi^2$, computed
     with the fitted normalisation or the added uncertainty in place and reported
     separately from the pre-fit value of item~3, still has $p<0.05$, or a region remains
-    flagged, the background model is revised and renewed collaboration approval is
-    required before the signal region is opened. The pass/fail test of item~3 is always
+    flagged, the background model is revised before the signal region is opened. The pass/fail test of item~3 is always
     the pre-fit one; the post-treatment value is labelled as such wherever it is quoted.
     The response letters used here and in Sec.~\ref{sec:request} are (a)~no action,
     (b)~added uncertainty, (c)~fitted normalisation correction, (d)~model revision. FHC and RHC share one background
@@ -2892,20 +2810,16 @@ frozen, and any departure from it is itself a change requiring approval.
   \item \textbf{Prohibited responses.} Changing any signal-selection cut; changing the
     binning of any released observable; choosing a generator or tune after inspecting the
     regions; bin-by-bin reweighting; and any use of the beam-on signal-region sample.
-  \item \textbf{Sign-off.} The analysis conveners, the flux and detector-systematics
-    contacts, and the collaboration review committee, on the basis of a short report
-    containing the comparisons of item~1 and the response chosen from item~4.
 \end{enumerate}
 
 \subsection{Scope: inclusive regions only}
 \label{sec:cr_1p_scope}
-The request of Sec.~\ref{sec:request} covers the four inclusive regions. The proton-tagged
+The procedure of Sec.~\ref{sec:cr_protocol} covers the four inclusive regions. The proton-tagged
 regions of \S\ref{sec:sidebands_1p} apply the proton tag rather than inverting it and
 therefore do not constrain the $\approx\!13\%$ proton mis-tag background that most
-affects the hadronic observables; the inverted-proton-PID region that would do so has not yet
-been implemented. The proton-tagged control-region programme is therefore not
-ready for equivalent approval, and opening the inherited proton-tagged regions, while
-useful diagnostically, would not validate the proton-tagged background model.
+affects the hadronic observables; the inverted-proton-PID region that would do so has not been
+implemented. The inherited proton-tagged regions are useful diagnostically but do not validate the
+proton-tagged background model.
 
 \subsection[Control regions for the proton-tagged sample]{Control regions for the proton-tagged sample\scopetag{proton-tagged}}
 \label{sec:sidebands_1p}
@@ -3257,8 +3171,7 @@ the result tables and the blinding:
 The release was built from the processed ntuples in a single pass with every cached
 universe deleted, so no intermediate result is carried over. A clean-cache rebuild of the
 same kind reproduced a previous release bin by bin to $10^{-9}$ (recorded in the change
-log); repeating that comparison on the release to be unblinded is on the pre-unblinding
-list (prerequisite U6, \noteref{Sec.}{sec:limitations}).
+log); that comparison has not been repeated on the current release.
 
 
 

@@ -90,6 +90,11 @@ R-G1. DONE 2026-09-27: generator predictions added to the 25 proton-tagged extra
 
 ## Documents (from the 2026-09-27 revision)
 
+D5. DONE 2026-09-28: the three documents describe the analysis as it stands. Decision list, status tables with
+    prerequisites, prerequisite table, validation ladder and the control-region request (analysis state,
+    points to ratify, approval checklist, sign-off) moved to report/approval_request.tex; ladder -> prose;
+    prerequisites sections -> limitations. check_documents.py refuses prerequisite IDs in the analysis documents.
+
 D1. Supplement tab:cr_syst: the FHC rows (SR 1581, CC0pi 12192, pi0 6646, multi-pi 124, cosmic 75) are
     on the pre-Run-1-fix exposure (current tab:cr_transfer: 1393 / 10690 / 5847 / 110 / 65.2); RHC rows
     agree. No generator script found; regenerate the FHC column (and its uncertainty percentages).

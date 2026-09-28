@@ -133,7 +133,7 @@
     The primary results are $d\sigma/dp_\mu$, $d\sigma/d\cos\theta_\mu$, $d\sigma/d\cos\theta_\pi$,
     $d\sigma/d\theta_{\mu\pi}$, the cross section in three regions of pion momentum and the one-bin
     total cross section; the two-dimensional $d^2\sigma/d\cos\theta_\pi\,d\cos\theta_\mu$ in the combined
-    configuration is proposed as a secondary result. The differential results are extracted by
+    configuration is a secondary result. The differential results are extracted by
     Wiener-SVD unfolding and provided with their additional-smearing matrices $A_C$ and a covariance that
     contains the flux, interaction-model, re-interaction, detector, muon-momentum-scale, normalisation
     and statistical terms. The total cross section carries a $38\%$ uncertainty, dominated by the flux
@@ -141,119 +141,14 @@
     detector ($20$--$22\%$).
 
     The extraction passes closure, ensembles of pseudo-experiments (pull widths $0.95$--$1.07$) and
-    pseudo-data from reweighted interaction models (largest bias $1.2\sigma$, in one sparse bin); a
-    closure test with an independent generator is outstanding. The signal region is blind and all
-    results are extracted from pseudo-data. Approval of the analysis and of its reported observables is
-    requested; opening the signal region requires the prerequisites of Section~\ref{sec:unblinding},
-    among them the confirmation of the absolute flux normalisation and the independent-generator
-    closure.
+    pseudo-data from reweighted interaction models (largest bias $1.2\sigma$, in one sparse bin); no
+    closure test with an independent generator has been made. The signal region is blind, and all
+    results are extracted from pseudo-data.
   \end{abstract}
   \vfill
   \tableofcontents
 \end{titlepage}
 
-
-% =============================================================================
-\section{Summary and decision requested}
-\label{sec:decision}
-% =============================================================================
-
-This note presents the measurement of the inclusive charged-current single-charged-pion cross section
-on argon with the full \uboone{} NuMI exposure, in FHC, RHC and their combination. The measured
-phase space, the flux and target conventions and the reported observables are defined in
-Section~\ref{sec:measdef}. All results are extracted from pseudo-data, Poisson fluctuations of the
-central-value simulation at the recorded exposure: the signal region is blind. The decision requested
-is stated below; the same statement opens the proton-tagged note~\cite{pt_note}.
-
-\input{shared/decision_box}
-
-Table~\ref{tab:inventory} gives the status of every inclusive product in the four categories used
-throughout: \statPrimary, \statSecondary, \statValidation{} and \statNotReported. The prerequisites
-that block each product are defined, with their criteria, owners and blocking level, in
-Table~\ref{tab:prerequisites} (Section~\ref{sec:unblinding}). The proton-tagged products and their
-statuses are listed in the proton-tagged note.
-
-\input{tables/inventory}
-
-The analysis is documented in three documents (Fig.~\ref{fig:docmap}). This note defines the
-measurement and contains everything needed to approve it. The proton-tagged note repeats the
-measurement on the subsample with a reconstructed proton and refers to this note for everything the
-two share. The technical supplement gives the final configuration in one place, the studies behind each
-choice and the alternatives that were rejected. The corrections that shaped the analysis are recorded
-in the change log, and the numerical results in \texttt{report/data\_release/}.
-
-\begin{figure}[H]
-  \centering
-  \begin{tikzpicture}[font=\small,
-      doc/.style={draw, rounded corners=2pt, align=left, inner sep=4pt, text width=5.2cm},
-      ar/.style={-{Latex[length=2mm]}, thick}]
-    \node[doc, fill=blue!6] (an) {\textbf{Analysis note} (this document)\\measurement definition, selection,
-      extraction, uncertainty model, validation, inclusive results, prerequisites};
-    \node[doc, fill=orange!8, right=12mm of an] (pt) {\textbf{Proton-tagged note}\\proton requirement,
-      observables, proton-tagged results and prerequisites};
-    \node[doc, fill=green!8, below=9mm of an] (su) {\textbf{Technical supplement}\\final configuration,
-      evidence for each choice, rejected alternatives};
-    \node[doc, fill=gray!10, below=9mm of pt] (dr) {\textbf{Data release}\\curves, $A_C$, covariances,
-      status of every extraction};
-    \draw[ar] (pt) -- node[above, font=\scriptsize]{uses} (an);
-    \draw[ar] (an) -- node[left, font=\scriptsize]{evidence} (su);
-    \draw[ar] (pt.south west) -- (su.north east);
-    \draw[ar] (an.south east) -- (dr.north west);
-    \draw[ar] (pt) -- (dr);
-  \end{tikzpicture}
-  \caption{The documents of the analysis. The proton-tagged note takes the beam, exposure, samples,
-    base selection, extraction and uncertainty model from this note; both notes refer to the technical
-    supplement for the evidence behind their choices; the data release holds the numerical results of
-    both.}
-  \label{fig:docmap}
-\end{figure}
-
-% =============================================================================
-\section{Measurement definition}
-\label{sec:measdef}
-% =============================================================================
-
-Table~\ref{tab:measdef} defines the measurement. Every result of this note refers to this definition;
-the sections given in the last column describe each element.
-
-\begin{table}[H]
-  \centering
-  \caption{Definition of the inclusive measurement.}
-  \label{tab:measdef}
-  \footnotesize
-  \begin{tabular}{@{}p{3.1cm}p{9.9cm}p{1.5cm}@{}}
-    \toprule
-    Element & Definition & Section \\
-    \midrule
-    Interaction & $\nu_\mu$ or $\bar\nu_\mu$ charged current on argon; $\nu_\mu\to\mu^-\pi^+$ and
-      $\bar\nu_\mu\to\mu^+\pi^-$ are both signal (charge-blind) & \ref{sec:signal} \\
-    Final state & Exactly one muon and exactly one charged pion among the primary particles; no neutral
-      pion, kaon or other meson; any number of protons and neutrons & \ref{sec:signal} \\
-    Coherent production & Part of the signal & \ref{sec:signal} \\
-    Vertex & True vertex in the fiducial volume $10<x<246$, $-101<y<101$, $10<z<986$~cm, excluding
-      $675.1<z<775.1$~cm & \ref{sec:fv} \\
-    Phase space & $p_\mu>0.15\GeVc$, $p_\pi>0.175\GeVc$, $\theta_{\mu\pi}<2.6$~rad & \ref{sec:signal} \\
-    Neutrino direction & Angles and transverse quantities about the neutrino direction: the true direction
-      of each event at truth level, the NuMI target-to-vertex direction at reconstruction level
-      ($28.6^\circ$ from the detector $z$ axis) & \ref{sec:beamdir} \\
-    Flux & $\Phi_{\nu_\mu}+\Phi_{\bar\nu_\mu}$ of the new-G4 PPFX central value, integrated above
-      $60$~MeV: FHC $6.81159$, RHC $6.44646$, combined $6.59691\times10^{-10}$~cm$^{-2}$~POT$^{-1}$; the
-      threshold includes the flux below the pion-production threshold & \ref{sec:flux_status} \\
-    Exposure & FHC $7.766$, RHC $11.082$, combined $18.848\times10^{20}$~POT; each run normalised to its
-      own recorded exposure & \ref{sec:mc} \\
-    Target & $N_\mathrm{Ar}=8.710\times10^{29}$ argon nuclei in the fiducial volume & \ref{sec:flux_status} \\
-    Normalisation & Cross section per argon nucleus, $10^{-38}$~cm$^2$/Ar;
-      $d\sigma/dx|_j=\hat N_j/(\Delta x_j\,\Phi\,N_\mathrm{Ar})$ & \ref{sec:unfolding} \\
-    Unfolding & Wiener-SVD; each differential result estimates $A_C\,x_\mathrm{true}$, and a prediction is
-      compared after multiplication by $A_C$; the one-bin total has $A_C=1$ & \ref{sec:ac_rowsums} \\
-    Observables & $p_\mu$ (6 bins), $p_\pi$ (3 regions), $\cos\theta_\mu$ (8), $\cos\theta_\pi$ (5),
-      $\theta_{\mu\pi}$ (5), one-bin total; FHC, RHC and combined. $\cos\theta_\pi\times\cos\theta_\mu$
-      ($2\times3$), combined only & App.~\ref{app:binning} \\
-    Covariance & Flux, interaction model, re-interaction, detector, muon momentum scale, POT, target
-      count, simulation, beam-off and data statistics & \ref{sec:systematics} \\
-    \bottomrule
-  \end{tabular}
-\end{table}
 
 % =============================================================================
 \section{Introduction}
@@ -339,18 +234,93 @@ taken from the one-bin extraction, for which $A_C=1$ (\S\ref{sec:total_xsec}).
 The signal region is blind. All results are extracted from pseudo-data, Poisson fluctuations of the
 central-value simulation at the recorded exposure, and every figure of an unfolded result carries
 the label ``BLINDED: CV PSEUDO-DATA''. The four background control regions are disjoint from the
-signal region and are to be compared with beam-on data under the frozen procedure of
-\S\ref{sec:cr}.
+signal region; they have been studied with pseudo-data, and the procedure for their comparison with
+beam-on data is fixed in advance (\S\ref{sec:cr}).
 
-The decision requested and the status of each result are given in Section~\ref{sec:decision}; the
-prerequisites for opening the signal region are listed in Section~\ref{sec:unblinding}.
+The analysis is documented in three documents (Fig.~\ref{fig:docmap}). This note defines the
+measurement and describes the selection, the extraction, the uncertainties, the validation and the
+inclusive results. The proton-tagged subsample, which adds hadronic-mass and
+transverse-kinematic-imbalance observables, is analysed in a companion note~\cite{pt_note}, which
+refers to this note for everything the two share. The technical supplement gives the final
+configuration in one place, the studies behind each choice and the alternatives that were rejected.
+The corrections that shaped the analysis are recorded in the change log, and the numerical results,
+with the additional-smearing and covariance matrices of every extraction, in
+\texttt{report/data\_release/}. The decision requested from the collaboration and the prerequisites
+for opening the signal region are collected in a separate document.
 
-The proton-tagged subsample, which adds hadronic-mass and transverse-kinematic-imbalance
-observables, is analysed in a companion note~\cite{pt_note}. The optimisation studies and
-cross-checks behind the choices described here are collected in the technical supplement. The
-additional-smearing and covariance matrices of every extraction are provided as text files in
-\texttt{report/data\_release/}.
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[font=\small,
+      doc/.style={draw, rounded corners=2pt, align=left, inner sep=4pt, text width=5.2cm},
+      ar/.style={-{Latex[length=2mm]}, thick}]
+    \node[doc, fill=blue!6] (an) {\textbf{Analysis note} (this document)\\measurement definition, selection,
+      extraction, uncertainty model, validation, inclusive results, limitations};
+    \node[doc, fill=orange!8, right=12mm of an] (pt) {\textbf{Proton-tagged note}\\proton requirement,
+      observables, proton-tagged results and limitations};
+    \node[doc, fill=green!8, below=9mm of an] (su) {\textbf{Technical supplement}\\final configuration,
+      evidence for each choice, rejected alternatives};
+    \node[doc, fill=gray!10, below=9mm of pt] (dr) {\textbf{Data release}\\curves, $A_C$, covariances,
+      status of every extraction};
+    \draw[ar] (pt) -- node[above, font=\scriptsize]{uses} (an);
+    \draw[ar] (an) -- node[left, font=\scriptsize]{evidence} (su);
+    \draw[ar] (pt.south west) -- (su.north east);
+    \draw[ar] (an.south east) -- (dr.north west);
+    \draw[ar] (pt) -- (dr);
+  \end{tikzpicture}
+  \caption{The documents of the analysis. The proton-tagged note takes the beam, exposure, samples,
+    base selection, extraction and uncertainty model from this note; both notes refer to the technical
+    supplement for the evidence behind their choices; the data release holds the numerical results of
+    both.}
+  \label{fig:docmap}
+\end{figure}
 
+
+% =============================================================================
+\section{Measurement definition}
+\label{sec:measdef}
+% =============================================================================
+
+Table~\ref{tab:measdef} defines the measurement. Every result of this note refers to this definition;
+the sections given in the last column describe each element.
+
+\begin{table}[H]
+  \centering
+  \caption{Definition of the inclusive measurement.}
+  \label{tab:measdef}
+  \footnotesize
+  \begin{tabular}{@{}p{3.1cm}p{9.9cm}p{1.5cm}@{}}
+    \toprule
+    Element & Definition & Section \\
+    \midrule
+    Interaction & $\nu_\mu$ or $\bar\nu_\mu$ charged current on argon; $\nu_\mu\to\mu^-\pi^+$ and
+      $\bar\nu_\mu\to\mu^+\pi^-$ are both signal (charge-blind) & \ref{sec:signal} \\
+    Final state & Exactly one muon and exactly one charged pion among the primary particles; no neutral
+      pion, kaon or other meson; any number of protons and neutrons & \ref{sec:signal} \\
+    Coherent production & Part of the signal & \ref{sec:signal} \\
+    Vertex & True vertex in the fiducial volume $10<x<246$, $-101<y<101$, $10<z<986$~cm, excluding
+      $675.1<z<775.1$~cm & \ref{sec:fv} \\
+    Phase space & $p_\mu>0.15\GeVc$, $p_\pi>0.175\GeVc$, $\theta_{\mu\pi}<2.6$~rad & \ref{sec:signal} \\
+    Neutrino direction & Angles and transverse quantities about the neutrino direction: the true direction
+      of each event at truth level, the NuMI target-to-vertex direction at reconstruction level
+      ($28.6^\circ$ from the detector $z$ axis) & \ref{sec:beamdir} \\
+    Flux & $\Phi_{\nu_\mu}+\Phi_{\bar\nu_\mu}$ of the new-G4 PPFX central value, integrated above
+      $60$~MeV: FHC $6.81159$, RHC $6.44646$, combined $6.59691\times10^{-10}$~cm$^{-2}$~POT$^{-1}$; the
+      threshold includes the flux below the pion-production threshold & \ref{sec:flux_status} \\
+    Exposure & FHC $7.766$, RHC $11.082$, combined $18.848\times10^{20}$~POT; each run normalised to its
+      own recorded exposure & \ref{sec:mc} \\
+    Target & $N_\mathrm{Ar}=8.710\times10^{29}$ argon nuclei in the fiducial volume & \ref{sec:flux_status} \\
+    Normalisation & Cross section per argon nucleus, $10^{-38}$~cm$^2$/Ar;
+      $d\sigma/dx|_j=\hat N_j/(\Delta x_j\,\Phi\,N_\mathrm{Ar})$ & \ref{sec:unfolding} \\
+    Unfolding & Wiener-SVD; each differential result estimates $A_C\,x_\mathrm{true}$, and a prediction is
+      compared after multiplication by $A_C$; the one-bin total has $A_C=1$ & \ref{sec:ac_rowsums} \\
+    Observables & $p_\mu$ (6 bins), $p_\pi$ (3 regions), $\cos\theta_\mu$ (8), $\cos\theta_\pi$ (5),
+      $\theta_{\mu\pi}$ (5), one-bin total; FHC, RHC and combined. $\cos\theta_\pi\times\cos\theta_\mu$
+      ($2\times3$), combined only & App.~\ref{app:binning} \\
+    Covariance & Flux, interaction model, re-interaction, detector, muon momentum scale, POT, target
+      count, simulation, beam-off and data statistics & \ref{sec:systematics} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
 
 % =============================================================================
 \section{Physics context}
@@ -658,10 +628,7 @@ selected signal), so the integrated flux that divides the event rate must be the
 central value. The central-value histograms of the new-G4 flux file are taken to be that central
 value. An integral of the uncorrected GEANT4 flux would lower every absolute cross section by
 $5$--$6\%$. The integrated values were validated in four independent ways: standalone NuWro and
-GENIE event generation on the same flux, the numbers of the flux author, and a GENIE closure. A
-written confirmation from the NuMI flux contact that the constants of Table~\ref{tab:flux} are
-PPFX-corrected central values, consistent with the per-event weighting, is required before the
-signal region is opened\todo{ask flux expert}.
+GENIE event generation on the same flux, the numbers of the flux author, and a GENIE closure.
 
 The number of argon nuclei in the fiducial volume is
 \begin{equation}
@@ -1072,9 +1039,8 @@ directions and does not depend on $\hat{u}_\nu$.
 \label{sec:selection_1p}
 Requiring in addition a contained proton candidate with $p_p>0.3\GeVc$ selects a proton-tagged
 subsample with one further cut. It gives access to hadronic-mass and transverse-kinematic-imbalance
-observables but carries its own proton-assignment and model-dependence requirements; it is
-described in the companion note (\ptref{Sec.}{sec:pt_selection}) and is not part of the approval
-request.
+observables, with its own proton-assignment requirements and model dependence, and is described in
+the companion note (\ptref{Sec.}{sec:pt_selection}).
 
 
 % =============================================================================
@@ -1467,8 +1433,8 @@ to the pseudo-data tests the complete bookkeeping (\suppref{Sec.}{sec:cr_fullsta
     Poisson throw of the neutrino simulation to the simulation itself: the two large regions
     (CC$0\pi$, $\pi^0$) are within $1\%$ of unity in the three configurations, and the two small
     regions (multi-$\pi$, cosmic) scatter within their Poisson uncertainties ($8$--$11\%$). The test
-    checks the region definitions and the per-run normalisation; the background model is to be
-    tested with beam-on data (\S\ref{sec:cr_procedure}).}
+    checks the region definitions and the per-run normalisation, not the background model
+    (\S\ref{sec:cr_procedure}).}
   \label{tab:sidebands}
   \begin{tabular}{llccc}
     \toprule
@@ -1487,19 +1453,19 @@ to the pseudo-data tests the complete bookkeeping (\suppref{Sec.}{sec:cr_fullsta
 \subsection{Comparison with beam-on data}
 \label{sec:cr_procedure}
 
-The four regions are to be compared with beam-on data at reconstruction level under a procedure
-fixed before the data are examined: frozen region definitions, a pre-agreed test statistic and the
-conditions under which a correction to the background model may be applied
-(\suppref{Sec.}{sec:request} and \suppref{Sec.}{sec:cr_protocol}). No beam-on sample of Run~2 exists,
-so Run~2 is removed from both data and prediction in this comparison. The pseudo-data studies of
-\S\ref{sec:sidebands} and the full-stack test of \suppref{Sec.}{sec:cr_fullstack} exercise the same
-path with simulated data.
+The comparison of the four regions with beam-on data is made at reconstruction level under a
+procedure fixed before the data are examined: frozen region definitions, a pre-agreed test statistic
+and the conditions under which a correction to the background model is applied
+(\suppref{Sec.}{sec:cr_protocol}). No beam-on sample of Run~2 exists, so Run~2 is removed from both
+data and prediction in this comparison. The pseudo-data studies of \S\ref{sec:sidebands} and the
+full-stack test of \suppref{Sec.}{sec:cr_fullstack} exercise the same path with simulated data; the
+comparison with beam-on data has not been made.
 
 A normalisation fit propagated under the frozen rules cannot reduce the uncertainty of the
 measurement. Conditioning the prediction on the control-region totals could, through the flux and
 detector correlations: on an Asimov dataset it reduces the uncertainty of the one-bin total from
-$35.8\%$ to $11.3\%$. Adopting such a constraint would change the role of the control regions and
-requires a collaboration decision.
+$35.8\%$ to $11.3\%$. Such a constraint is not used; it would change the role of the control
+regions.
 
 \subsection{Validation of the background fit}
 
@@ -1995,7 +1961,7 @@ framework (\S\ref{sec:mcs}) and added to the framework covariance: the sum is th
 covariance of every result (\texttt{cov\_total\_plusMCS.txt} in the release), and every uncertainty
 quoted in this note includes it. Three identified effects lie outside the official covariance: the
 beamline-geometry flux term, the beam-off gate ratios and the Run-2 beam-off substitution
-(\S\ref{sec:notincov}; prerequisite U7).
+(\S\ref{sec:notincov}).
 
 \begin{table}[H]
   \centering
@@ -2124,8 +2090,8 @@ simulation, so the variation is applied to the data side: the pseudo-data are th
 MCS-measured muon momentum multiplied by $1\pm0.05$, while the simulation, the response and the
 selection stay nominal, and each variation is unfolded with the nominal response. The
 half-difference of the two results is taken as a fully correlated term. The size of the variation,
-$\pm5\%$, is to be confirmed by a data-driven comparison of the MCS and range momenta of contained
-muons (\S\ref{sec:unblinding}).
+$\pm5\%$, is assumed; it has not been compared with the difference between the MCS and range momenta
+of contained muons in data.
 
 For FHC $d\sigma/dp_\mu$ the half-difference is $5$--$8\%$ of the bin value in the five lowest
 bins, $0.11$--$0.19\sigma$ of the per-bin uncertainty, and $17\%$ with the opposite sign in the open
@@ -2154,8 +2120,7 @@ since it is made at reconstruction level with the same estimator in data and sim
 \subsection{Effects not included in the covariance}
 \label{sec:notincov}
 
-Three effects are evaluated or bounded but not included in the official covariance; including them
-is prerequisite U7.
+Three effects are evaluated or bounded but not included in the official covariance.
 The beamline-geometry flux term ($1.6$--$3.3\%$) is discussed above. The covariance contains the
 statistical uncertainty of the beam-off samples but no uncertainty on the per-run gate ratios, nor
 on the use of the Run-1 beam-off sample for Run~2, which is $16\%$ of the FHC and $23\%$ of the RHC
@@ -2168,19 +2133,22 @@ either would add $0.3\%$ to the total uncertainty.
 \label{sec:validation}
 % =============================================================================
 
-The validation proceeds in steps, each asking a question that the steps before it cannot answer
-(Table~\ref{tab:validation_ladder}). Closure under the nominal model tests the implementation: the
-matrices, the binning, the normalisation and the bookkeeping. It is necessary but not sufficient,
-since a result can close while being determined largely by the modelled migrations or by the
-regularisation; the migration criterion and the trace of $A_C$ (\S\ref{sec:binning_rule}) address
-that separately. Ensembles of pseudo-experiments test whether the statistical uncertainties are
-correctly sized. Pseudo-data from a reweighted model measure the bias from the regularisation and the
-nominal response for model changes that reweighting can reach, and a generator with its own detector
-simulation tests model changes that it cannot. The control regions test the background model with
-data. The first three steps are complete for the primary results; the last three are prerequisites
-(Table~\ref{tab:prerequisites}).
+Closure under the nominal model tests the implementation: the matrices, the binning, the
+normalisation and the bookkeeping. A result can close and still be determined largely by the modelled
+migrations or by the regularisation, which the migration criterion and the trace of $A_C$ test
+separately (\S\ref{sec:binning_rule}). Every inclusive extraction closes, with $\chi^2\le2.39/8$ and
+ratios of unfolded to true integral of $0.946$--$1.047$.
 
-\input{shared/validation_ladder}
+Ensembles of pseudo-experiments test whether the statistical uncertainties are correctly sized. Six
+one-dimensional extractions and the two-dimensional result were each repeated on $100$ pseudo-data sets;
+the pull widths are $0.95$--$1.07$ and the $68\%$ coverage is $63$--$73\%$ (\S\ref{par:ensemble}).
+
+Pseudo-data from reweighted interaction models measure the bias from the regularisation and the nominal
+response when the true model differs from the nominal one. Two variations were unfolded in FHC and
+RHC; the largest bias is $1.18\sigma$, in one sparse $\cos\theta_\mu$ bin (\S\ref{sec:altmodel}).
+Reweighting reaches only changes of the parameters of the nominal model, and no closure test with a
+generator that has its own detector simulation has been made. The control regions, which test the
+background model, have been studied with pseudo-data only (\S\ref{sec:cr}).
 
 \subsection{Closure under the nominal model}
 
@@ -2249,7 +2217,7 @@ used for comparison is that of the alternative model, and the reweighting applie
 background alike. The pseudo-data are reconstructed GENIE events reweighted event by event to an
 alternative parameter set, with the same detector simulation, unfolded with the nominal response and
 compared using the nominal covariance. This is a model-distortion test; a test with a different
-generator and its own detector simulation would be stronger and is pending.
+generator and its own detector simulation would be stronger and has not been made.
 
 Two variations are used, in FHC and RHC. The first is GENIE multisim universe~545, a simultaneous
 variation of all interaction parameters, chosen because it changes the shapes more than the rate:
@@ -2318,17 +2286,20 @@ reported in the companion note (\ptref{Sec.}{sec:pt_altmodel}).
 
 \paragraph{Independent-generator closure.} Reweighting reaches only changes of the parameters of the
 nominal model. A generator with a different resonance model, non-resonant treatment and final-state
-interactions, simulated through the detector, tests changes that reweighting cannot reach
-(prerequisite U3). The test uses a NuWro overlay with the full detector simulation for FHC and RHC.
-The overlay is first validated against standalone NuWro on the same flux: its signal rate per POT must
-agree with the standalone prediction. Pseudo-data thrown from it are then unfolded with the nominal
-response for every primary and proposed result, and compared with the $A_C$-smeared NuWro truth. The
-test passes if every bin holding at least $10\%$ of the largest truth lies within $1\sigma$ of its total
-uncertainty and every integral within its uncertainty; a failure blocks the opening of the signal
-region. The one existing NuWro overlay, for Run-1 FHC, cannot serve: its true signal rate per POT is
-$1.76$ times that of GENIE, against $1.6$ expected from the standalone NuWro cross section and the
-flux, and its production could not be traced, so a closure test with it would test the sample rather
-than the extraction.
+interactions, simulated through the detector, would test changes that reweighting cannot reach. No
+such test has been made. The one existing NuWro overlay, for Run-1 FHC, cannot serve: its true signal
+rate per POT is $1.76$ times that of GENIE, against $1.6$ expected from the standalone NuWro cross
+section and the flux, and its production could not be traced, so a closure test with it would test
+the sample rather than the extraction.
+
+\paragraph{Blinding and automated checks.} The framework recognises pseudo-data by the presence of
+simulated truth and refuses a beam-on file of the signal region unless an explicit unblinding switch is
+set, so the beam-off treatment is the same for pseudo-data and data. Six automated checks protect the
+result set against regressions: the normalisation manifest, the assertion coupling the systematics
+configuration to the file lists, the staleness check, the table-consistency check, the blinding guard
+(\suppref{Sec.}{sec:pipeline}), and a cross-document check (\texttt{report/tools/check\_documents.py})
+that the documents quote the same exposures, fluxes and target count, use only the four status labels,
+and agree with the status column of the release index.
 
 
 % =============================================================================
@@ -2340,14 +2311,15 @@ than the extraction.
 \subsection{Result set}
 \label{sec:status_matrix}
 
-The status of every inclusive product is given in Table~\ref{tab:inventory}
-(Section~\ref{sec:decision}). The \statPrimary{}s are the fifteen differential extractions, five
+The status of every inclusive product is given in Table~\ref{tab:inventory}. The \statPrimary{}s are the fifteen differential extractions, five
 observables in three configurations, and the three one-bin totals; the two-dimensional
 $\cos\theta_\pi\times\cos\theta_\mu$ in the combined configuration is a \statSecondary{}
 (\S\ref{sec:incl_2d}). Each carries the official covariance, detector variations and the
 muon-momentum-scale term included; the effects outside it are listed in \S\ref{sec:notincov}. The
 detector term of the inclusive results is $17$--$27\%$ ($34\%$ for FHC $p_\pi$). The proton-tagged
 extractions are reported in the companion note.
+
+\input{tables/inventory}
 
 
 Table~\ref{tab:infocontent} gives, for the FHC results, the number of bins, the smallest migration
@@ -2735,7 +2707,7 @@ $33$--$64\%$; it closes against the $A_C$-smeared truth of the pseudo-data with 
 per-bin ratios of $0.91$--$1.26$ (Figs.~\ref{fig:incl2d_slices} and~\ref{fig:incl2d_map}). Its
 covariance, $A_C$ and curves are released as \texttt{incl\_COMB\_costhpi\_costhmu2d}.
 
-The result was validated as the one-dimensional ones were (prerequisite V1). Over $100$ pseudo-data
+The result was validated as the one-dimensional ones were. Over $100$ pseudo-data
 sets (\S\ref{par:ensemble}) the statistical pull width is $1.03$ and the $68\%$ and $95\%$ coverages are
 $67\%$ and $94\%$, so the statistical uncertainties are correctly sized. The ensemble mean lies below the
 reference in the slice $\cos\theta_\mu<0.65$: by $11\%$ in the cell with $\cos\theta_\pi<0.35$, the
@@ -2750,8 +2722,7 @@ $54\%$ to $55\%$. Under the two alternative models of \S\ref{sec:altmodel} the r
 alternative truth to within $0.61\sigma$ in every cell. The GENIE variation changes the true cells by
 $-27\%$ to $+16\%$, and the result follows it to within $0.30\sigma$; under the angular variation the
 cell with $\cos\theta_\pi<0.35$ and $0.65<\cos\theta_\mu<0.85$ returns $0.74$ of the alternative
-truth ($-0.61\sigma$). Before the result can be approved, the collaboration must accept a result quoted
-in the combined configuration only (R1).
+truth ($-0.61\sigma$).
 
 \begin{figure}[H]
   \centering
@@ -2779,11 +2750,11 @@ The proton-tagged subsample, the inclusive selection with a reconstructed proton
 $0.3\GeVc$, is measured separately~\cite{pt_note}: a one-bin total, the proton momentum, the
 calorimetric hadronic mass, four transverse-kinematic-imbalance observables, two proton angles and
 two-dimensional pairs. It has its own signal definition, proton-assignment requirements and
-validation, and it is not part of the approval request.
+validation.
 
 
 % =============================================================================
-\section{Limitations and requirements for unblinding}
+\section{Limitations}
 \label{sec:limitations}
 % =============================================================================
 
@@ -2818,8 +2789,8 @@ inside the statistical uncertainty of a single measurement.
 
 \paragraph{Muon momentum scale.}
 The MCS momentum-scale term (\S\ref{sec:mcs}) is part of the official covariance. Its size, $\pm5\%$,
-rests on an assumption that a comparison of MCS and range momenta of contained muons in data is to
-confirm (prerequisite U4).
+is assumed and has not been compared with the difference between the MCS and range momenta of
+contained muons in data.
 
 \paragraph{Two totals.}
 The Wiener-SVD differential result estimates $A_C x_{\rm true}$, with row sums as low as $0.26$, so
@@ -2830,31 +2801,6 @@ one-bin extraction.
 proton mis-assignment, which no control region yet constrains, and the transverse-kinematic
 prescription) are discussed in the companion note~\cite{pt_note}.
 
-\subsection{Prerequisites}
-\label{sec:unblinding}
-
-Table~\ref{tab:prerequisites} lists every prerequisite, with its criterion, its owner and the
-evidence expected, and what it blocks. The same table appears in the proton-tagged note and the
-technical supplement. For the inclusive results the signal region can be opened once U1--U6 are
-complete; U7 is required before publication. U4 applies to the results that use the muon momentum. The
-flux confirmation (U1) concerns the three integrated fluxes of Table~\ref{tab:flux}: the NuMI flux
-group is asked to confirm in writing that they are the PPFX-corrected central values that correspond to
-the per-event PPFX weights of the simulation (\S\ref{sec:flux_status}). The beam-on exposure check
-(U5) replaces the recorded exposures of Table~\ref{tab:pot} by values summed over the runs contained in
-each beam-on file.
-
-\input{shared/prerequisites}
-
-Any correction to the background model follows the frozen procedure of
-\suppref{Sec.}{sec:cr_protocol}. No switch is needed for the beam-off treatment at unblinding: the framework recognises pseudo-data by
-the presence of simulated truth, and it refuses a beam-on file of the signal region unless an
-explicit unblinding switch is set. Six automated checks protect the result set against regressions:
-the normalisation manifest, the assertion coupling the systematics configuration to the file lists,
-the staleness check, the table-consistency check, the blinding guard (\suppref{Sec.}{sec:pipeline}),
-and a cross-document check (\texttt{report/tools/check\_documents.py}) that the three documents quote
-the same exposures, fluxes and target count, use only the four status labels, take the decision, the
-prerequisites and the validation ladder from their single shared source, and agree with the status
-column of the release index.
 
 % =============================================================================
 \section{Summary}
@@ -2891,14 +2837,14 @@ and with its covariance by source.
 
 \paragraph{Background.}
 The background, $41$--$42\%$ of the selected sample, is taken from the simulation and from beam-off
-data. Four control regions, disjoint from the signal region, test the prediction; they have been
-validated with pseudo-data and are to be compared with beam-on data under a frozen procedure.
+data. Four control regions, disjoint from the signal region, are defined to test the prediction; they
+have been studied with pseudo-data, and their comparison with beam-on data has not been made.
 
 \paragraph{Validation.}
 Closure recovers the input in every extraction, with a mean ratio of $0.996$ over the fifteen
-inclusive extractions. Ensembles of $100$ pseudo-experiments in six extractions give pull widths of
+inclusive extractions. Ensembles of $100$ pseudo-experiments in seven extractions give pull widths of
 $0.95$--$1.07$ and correct coverage in all three configurations. Pseudo-data from reweighted
-interaction models bias no bin by more than $1.18\sigma$ (Table~\ref{tab:validation_ladder}). The identity $UR=A_C$ holds to
+interaction models bias no bin by more than $1.18\sigma$ (\S\ref{sec:altmodel}). The identity $UR=A_C$ holds to
 $6.1\times10^{-5}$ (\suppref{App.}{sec:identity}), and the $A_C$ row sums show that the difference
 between the integrals of the differential results is the additional smearing. The result set is
 rebuilt from the processed ntuples with empty caches in a single pass; an independent rebuild into a
@@ -2908,10 +2854,9 @@ relative $4\times10^{-8}$, the precision of the text files.
 
 \paragraph{Limitations.}
 The saturation of the range-based pion momentum near $0.34\GeVc$ limits $p_\pi$ to three regions and is
-the main physics limitation of the selection. Before the signal region is opened, the prerequisites
-U1--U6 of Table~\ref{tab:prerequisites} must be complete: among them the confirmation of the flux
-normalisation, the comparison of the control regions with beam-on data and a closure test with an
-independent generator (\S\ref{sec:unblinding}).
+the main physics limitation of the selection. The control regions have not been compared with
+beam-on data, and no closure test with an independent generator has been made
+(\S\ref{sec:limitations}).
 
 
 

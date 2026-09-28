@@ -10,7 +10,7 @@ import numpy as np
 
 R = '/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/report/'; D = R + 'data_release/'
 LOGS = '/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/logs/fdfix/'
-LABEL = {'primary': 'Primary result', 'secondary': 'Secondary result proposed for approval',
+LABEL = {'primary': 'Primary result', 'secondary': 'Secondary result',
          'validation': 'Validation-only product', 'notreported': 'Not reported'}
 CF = {'fhc5': 'FHC5', 'rhcfull': 'RHCFULL', 'comb': 'COMB'}
 

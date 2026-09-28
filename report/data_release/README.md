@@ -24,7 +24,7 @@ level in `../status.tsv`, the single source used by the analysis documents):
 
 - **Primary result**: inclusive p_mu, p_pi (three regions), cos(theta_mu), cos(theta_pi),
   theta_mu_pi and the inclusive one-bin total, FHC/RHC/combined.
-- **Secondary result proposed for approval**: proton-tagged one-bin total; proton-tagged theta_p
+- **Secondary result**: proton-tagged one-bin total; proton-tagged theta_p
   and theta_pi_p (FHC/RHC/combined); the two-dimensional theta_p x delta p_T (proton-tagged) and
   cos(theta_pi) x cos(theta_mu) (inclusive), combined configuration only.
 - **Validation-only product**: every other proton-tagged extraction.

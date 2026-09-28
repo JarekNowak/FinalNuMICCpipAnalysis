@@ -1,0 +1,222 @@
+\input{common_preamble}
+
+% Cross-document references: this document collects the approval request and the prerequisites that were
+% moved out of the analysis note, the proton-tagged note and the technical supplement on 2026-09-28.
+\usepackage{xr}
+\externaldocument[N-]{analysis_note}
+\externaldocument[P-]{proton_tagged_note}
+\externaldocument[S-]{technical_supplement}
+\newcommand{\noteref}[2]{#1~\ref{N-#2} of the analysis note}
+\newcommand{\ptref}[2]{#1~\ref{P-#2} of the proton-tagged note}
+\newcommand{\suppref}[2]{#1~\ref{S-#2} of the technical supplement}
+\newcommand{\inclref}[2]{\noteref{#1}{#2}}
+\input{shared/status_vocab}
+
+\begin{document}
+\begin{center}
+{\LARGE\bfseries Approval request and prerequisites\par}
+\vspace{0.4cm}
+{\large Measurement of $\nu_\mu+\bar\nu_\mu$ charged-current single-pion production on argon in the NuMI
+beam with the \uboone{} detector\par}
+\vspace{0.4cm}
+{\large Ishanee Pophale and Jarek Nowak\par}
+\vspace{0.2cm}
+{\normalsize\itshape Lancaster University\par}
+\end{center}
+\vspace{0.4cm}
+
+This document contains the decision requested from the collaboration, the status of every result with
+the prerequisites that apply to it, the validation ladder, and the request to compare the control
+regions with beam-on data. The analysis is described in the analysis note, the proton-tagged note and
+the technical supplement.
+
+\tableofcontents
+
+% =============================================================================
+\section{Decision requested}
+\label{sec:ar_decision}
+% =============================================================================
+
+\input{shared/decision_box}
+
+% =============================================================================
+\section{Status of the results}
+\label{sec:ar_status}
+% =============================================================================
+
+Tables~\ref{tab:inventory_prereq} and~\ref{tab:pt_status_prereq} give the status of every inclusive and
+proton-tagged product and the prerequisites of Table~\ref{tab:prerequisites} that apply to it.
+
+\input{tables/inventory_prereq}
+
+\input{tables/pt_status_prereq}
+
+% =============================================================================
+\section{Validation ladder}
+\label{sec:ar_ladder}
+% =============================================================================
+
+Table~\ref{tab:validation_ladder} lists the validation steps with their status and criteria. Closure, the
+ensembles and the reweighted-model test are complete for the primary and the secondary results; the
+independent-generator closure (U3), the control-region comparison (U2, and P1 for the proton
+mis-assignment) and the prerequisites for opening the signal region are not.
+
+\input{shared/validation_ladder}
+
+% =============================================================================
+\section{Prerequisites}
+\label{sec:ar_prereq}
+% =============================================================================
+
+\paragraph{Inclusive results.} The inclusive signal region can be opened once U1--U6 are complete; U7 is
+required before publication, and U4 applies to the results that use the muon momentum. The flux
+confirmation (U1) concerns the three integrated fluxes of \noteref{Table}{tab:flux}: the NuMI flux group
+is asked to confirm in writing that they are the PPFX-corrected central values that correspond to the
+per-event PPFX weights of the simulation (\noteref{Sec.}{sec:flux_status}). The beam-on exposure check
+(U5) replaces the recorded exposures of \noteref{Table}{tab:pot} by values summed over the runs contained
+in each beam-on file. The size of the MCS momentum-scale variation, $\pm5\%$, is to be confirmed by a
+comparison of the MCS and range momenta of contained muons in data (U4; \noteref{Sec.}{sec:mcs}). The
+clean-cache reproduction of \suppref{Sec.}{sec:pipeline} is to be repeated on the release to be unblinded
+(U6), and the three terms outside the official covariance (\noteref{Sec.}{sec:notincov}) are to be
+included before publication (U7).
+
+\paragraph{Independent-generator closure (U3).} The test uses a NuWro overlay with the full detector
+simulation for FHC and RHC. The overlay is first validated against standalone NuWro on the same flux: its
+signal rate per POT must agree with the standalone prediction. Pseudo-data thrown from it are then
+unfolded with the nominal response for every primary and secondary result and compared with the
+$A_C$-smeared NuWro truth. The test passes if every bin holding at least $10\%$ of the largest truth lies
+within $1\sigma$ of its total uncertainty and every integral within its uncertainty; the signal region is
+not opened unless it passes. The one existing NuWro overlay, for Run-1 FHC, cannot serve
+(\noteref{Sec.}{sec:altmodel}).
+
+\paragraph{Proton-tagged results.} The proton-tagged secondary results require the inclusive
+prerequisites U1--U3 and U5--U7, U4 for $\theta_p\times\delta p_T$, and the proton-tagged items listed
+for each in Table~\ref{tab:pt_status_prereq}. The inclusive control regions do not validate the dominant
+proton-candidate misidentification of this sample (\ptref{Sec.}{sec:pt_limitations}). Until an
+inverted-proton-PID region is defined and validated (P1), no proton-tagged result is unblinded, and
+$\theta_p$, $\theta_{\pi p}$ and $\theta_p\times\delta p_T$, whose migrations are dominated by the
+proton-candidate assignment, carry the additional term of P2. The reconstruction of $W_\mathrm{had}$ and
+$p_n$ needs a truth-level validation for pion production or a redefinition of the observables as the
+proxies they are (P4). The model sensitivity of the low $\delta p_T$ and $p_n$ bins needs an explicit
+model term in the covariance, the removal of those bins, or an independent-generator test that shows no
+such shift (P3).
+
+\paragraph{Reporting decision (R1).} Every one-dimensional result is quoted per beam mode and for the
+combination. The responses of the two two-dimensional results can be inverted only in the combined
+configuration, and whether a result available only there is acceptable is a collaboration decision.
+
+\input{shared/prerequisites}
+
+% =============================================================================
+\section{Control regions: request and sign-off}
+\label{sec:ar_cr}
+% =============================================================================
+
+The decision requested of the collaboration is permission to inspect beam-on data in four
+reconstruction-level control regions of the inclusive $\mathrm{CC}\,1\mu1\pi Xp$ selection while the
+signal region stays blind. \noteref{Sec.}{sec:sidebands} gives the region definitions and
+\suppref{Sec.}{sec:request} their roles.
+
+\paragraph{Analysis state.} Repository tag \texttt{cr-freeze-2026-09-06};
+pseudo-data: one Poisson throw per run of the central-value prediction with the unified
+weight rule (\noteref{Sec.}{sec:mc}); binning: the released edges of \noteref{Appendix}{app:binning}
+(five-bin forward-split $\cos\theta_\pi$, the $p_\pi$ binning then in use); normalisation: per-run
+exposure, per-run beam-off gate ratios, per-configuration flux; detector variations:
+native Run-4 FHC and RHC samples; data release: \texttt{report/data\_release/}, checksum
+manifest \texttt{MANIFEST.sha256} (\texttt{b8ebc69e3bc91434}).
+
+\paragraph{Request.}
+We request approval to inspect beam-on data in four control regions: CC$0\pi$,
+multi-$\pi$, $\pi^0$ and large muon--pion opening angle (called ``cosmic'' below for
+brevity: it is cosmic-enriched, $34$--$41\%$ beam-off, not cosmic-pure).
+Throughout, ``beam-off'', ``EXT'' and ``cosmic data'' name the same data-driven
+component, the beam-off trigger sample scaled by gate counts; ``signal contamination''
+means the inclusive signal unless the proton-tagged selection is named. Each region is
+anchored by the inversion of one nominal signal requirement; requirements that become
+undefined once that inversion is made, or that would sculpt the targeted control sample,
+are dropped as listed in \suppref{Table}{tab:cr_defs}. Each region is disjoint from the
+signal region at reconstruction level (demonstrated event by event,
+\suppref{Sec.}{sec:cr_overlap}); their expected signal contaminations are $8$--$24\%$. The
+signal region remains blind. Before the regions are opened, the selections, the
+run-dependent normalisation, the beam-off scaling, the displayed observables and binning,
+the covariance construction, the goodness-of-fit tests and the permitted responses to a
+discrepancy are frozen as written in \suppref{Sec.}{sec:cr_protocol}. Control-region data will be
+compared with the complete prediction (neutrino MC $+$ beam-off $+$ dirt) separately in
+FHC and RHC, with the combined configuration as a cross-check. Any discrepancy beyond
+the pre-declared criteria requires a documented treatment and renewed approval before
+the signal region is opened. The proton-tagged control regions are not part of
+this request (\suppref{Sec.}{sec:cr_1p_scope}).
+
+\paragraph{Points the collaboration is asked to ratify.}
+(i)~The $\pi^0$ definition without the final multiplicity cut (\suppref{Table}{tab:cr_defs});
+the comparison with the version retaining it is in \suppref{Sec.}{sec:cr_pi0_final} and will
+not be used to modify the region after beam-on inspection. (ii)~The $\pi^0$
+target class CC$+$NC~$\pi^0$, adopted by the analysers (the NC$\pi^0$
+events the shower veto is also meant to remove had been counted under ``NC and
+$\nu_e$CC''; $\nu_\mu$CC~$\pi^0$ alone is $46\%$ of the region), together with the
+region's diagnostic-only status for this opening. Purity is defined throughout as the
+target class's share of the neutrino-MC prediction in the region, beam-off and
+dirt being separately constrained components; both the class definition and the
+denominator were settled after the purities were known, which is one reason the region
+is diagnostic-only. (iii)~The roles of the other three regions as stated above, and the
+frozen procedure of \suppref{Sec.}{sec:cr_protocol}. The collaboration is also asked to ratify the frozen $\pi^0$ definition
+with the comparison of \suppref{Sec.}{sec:cr_pi0_final} in view.
+
+\paragraph{Approval within the procedure.} The analysers propose the procedure of
+\suppref{Sec.}{sec:cr_protocol} for ratification with the approval. It is frozen, and any departure from
+it is itself a change requiring approval. The exclusion of a run period (item~4(i)) requires a new frozen
+release and explicit approval. The $\pi^0$ region is diagnostic only for this opening: approval to
+inspect it does not authorise a fitted correction, and a fitted $\pi^0$ correction may be proposed only
+after the pre-fit result is documented, with the fit model, the leverage of the fixed components, the
+transfer-factor uncertainty and its floor reviewed by the collaboration before the correction is
+propagated to the signal region; a CC$0\pi$ correction is pre-authorised under the rule of item~4(ii).
+If the post-treatment test still fails (item~4(iv)), the background model is revised and renewed
+collaboration approval is required before the signal region is opened. Conditioning the prediction on
+the control-region totals, which on an Asimov dataset reduces the uncertainty of the one-bin total from
+$35.8\%$ to $11.3\%$ (\noteref{Sec.}{sec:cr_procedure}), would change the role of the control regions and
+requires a collaboration decision.
+
+\paragraph{Sign-off.} The analysis conveners, the flux and detector-systematics contacts, and the
+collaboration review committee, on the basis of a short report containing the comparisons of item~1 and
+the response chosen from item~4 of the procedure.
+
+\paragraph{Proton-tagged regions.} The proton-tagged control regions are not part of this request: they
+apply the proton tag rather than inverting it and do not constrain the proton mis-tag background
+(\suppref{Sec.}{sec:cr_1p_scope}), so the proton-tagged control-region programme is not ready for
+equivalent approval.
+
+\paragraph{Approval checklist.}
+\begin{center}\small
+\begin{tabular}{p{7.2cm}p{4.6cm}p{2.6cm}}
+\toprule
+Item & Status / evidence & Sign-off \\
+\midrule
+\multicolumn{3}{l}{\emph{Required before the control regions are opened}}\\
+\midrule
+Control-region definitions frozen & \suppref{Table}{tab:cr_defs} & \\
+Signal-region overlap zero, event by event & \suppref{Sec.}{sec:cr_overlap} & \\
+Plot list and binning frozen & item~1 of \suppref{Sec.}{sec:cr_protocol} & \\
+Pre-fit covariance, global statistic and thresholds frozen & items~2--3 of \suppref{Sec.}{sec:cr_protocol}; null calibration \suppref{Fig.}{fig:cr_null_calibration} & \\
+Response to a discrepancy frozen & item~4 of \suppref{Sec.}{sec:cr_protocol} & \\
+$\pi^0$ definition and target class ratified; diagnostic-only status recorded & points (i)--(ii), this section & conveners \\
+Flux and detector-systematics contacts have reviewed their parts & pending & contacts \\
+Repository tag and release checksum recorded & analysis state, this section & \\
+\midrule
+\multicolumn{3}{l}{\emph{Required later, before the signal region is opened}}\\
+\midrule
+Control-region results reviewed; any discrepancy treated under \suppref{Sec.}{sec:cr_protocol} & pending & conveners \\
+Model-distortion pseudo-data closure (reweighted GENIE, FHC) & done, \noteref{Sec.}{sec:validation} & \\
+Model-distortion pseudo-data closure, proton-tagged family (FHC) & done, \ptref{Sec.}{sec:pt_altmodel}; low-imbalance $\delta p_T$/$p_n$ bins biased $1.1$--$1.2\sigma$ under GENIE u545 & \\
+Statistical-coverage ensembles, proton-tagged family ($W_{\rm had}$, $\delta p_T$, $p_n$) & done, \ptref{Sec.}{sec:pt_ensemble}; pull widths $0.94$--$1.08$, integral offsets within $0.7\%$ & \\
+Ensembles and alternative-model closure of the results proposed since then, $\theta_p$, $\theta_{\pi p}$, $\theta_p\times\delta p_T$ and $\cos\theta_\pi\times\cos\theta_\mu$ (prerequisite V1) & done, \ptref{Sec.}{sec:pt_ensemble}, \ptref{Sec.}{sec:pt_altmodel}, \noteref{Sec.}{sec:incl_2d}; pull widths $0.94$--$1.04$, largest bias $0.79\sigma$ & \\
+Independent-generator pseudo-data closure (prerequisite U3): a NuWro overlay with the full detector simulation, validated against standalone NuWro on the same flux, unfolded with the nominal response & pending: the existing NuWro overlay failed validation against the standalone prediction and is not used, \noteref{Sec.}{sec:limitations} & \\
+Flux constants confirmed as PPFX-corrected central values & pending, \noteref{Sec.}{sec:flux_status} & flux contact \\
+MCS muon-momentum scale ($\pm5\%$, data side) evaluated on $p_\mu$ in FHC, RHC and combined and released as \texttt{cov\_MCSscale.txt} & done, \noteref{Sec.}{sec:mcs}; at most $0.56\sigma$ (FHC open top bin), $0.42\sigma$ (combined) and $0.30\sigma$ (RHC); exactly zero for the other inclusive observables, which carry no reco-$p_\mu$ cut; computed outside the framework and part of the official covariance (\texttt{cov\_total\_plusMCS.txt}) and of every summary table; size to be confirmed by prerequisite U4; proton-tagged observables evaluated (at most $0.62\sigma$, FHC $p_\mu$; \ptref{Sec.}{sec:pt_mcs}) & \\
+Final empty-cache reproduction of the release to be unblinded & pending, \suppref{Sec.}{sec:pipeline} & \\
+Inverted pion-PID region for the CC$0\pi$ misidentification transfer & pending & \\
+Inverted-proton-PID region before any proton-tagged result & pending, \suppref{Sec.}{sec:cr_1p_scope} & \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\end{document}

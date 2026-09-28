@@ -6,9 +6,11 @@ This refuses the package (exit 1) when
   1. a superseded exposure, flux or trigger value appears in prose (they drifted in earlier releases);
   2. the exposures, fluxes or target count appear with a value other than the adopted one;
   3. a status label other than the four of shared/status_vocab.tex is used ("proposed secondary", ...);
-  4. a document does not \\input the shared decision box, prerequisites or validation ladder, or carries
-     its own copy of them;
-  5. a prerequisite identifier (U1..., P1..., V1, R1) is used that shared/prerequisites.tex does not define;
+  4. an analysis document \\inputs the decision list, the prerequisites or the validation ladder (since
+     2026-09-28 they belong to approval_request.tex only), or approval_request.tex does not \\input them or
+     carries its own copy;
+  5. an analysis document uses a prerequisite identifier (U1..., P1..., V1, R1), or approval_request.tex or
+     status.tsv uses one that shared/prerequisites.tex does not define;
   6. the status column of data_release/index_extractions.tsv disagrees with report/status.tsv;
   7. an old term remains in prose (report/tools/terminology.py --check).
     python3 report/tools/check_documents.py
@@ -17,9 +19,9 @@ import os, re, sys, csv, subprocess
 
 HERE = os.path.dirname(os.path.abspath(__file__)); REP = os.path.dirname(HERE)
 DOCS = ['analysis_note.tex', 'proton_tagged_note.tex', 'technical_supplement.tex']
-SHARED = {'decision_box': ['analysis_note.tex', 'proton_tagged_note.tex', 'technical_supplement.tex'],
-          'prerequisites': ['analysis_note.tex', 'proton_tagged_note.tex', 'technical_supplement.tex'],
-          'validation_ladder': ['analysis_note.tex', 'proton_tagged_note.tex', 'technical_supplement.tex']}
+REQ = 'approval_request.tex'          # the decision, the prerequisites and the validation ladder (2026-09-28)
+SHARED = ['decision_box', 'prerequisites', 'validation_ladder']
+IDRX = r'\b([UPVR]\d)\b(?=[\s,;.)\-]|--)'
 STALE = [r'3\.283\s*\\times\s*10\^\{20\}', r'9\\?,?846\\?,?635', r'8\.857\s*\\times', r'6\.60865', r'19\.939']
 ADOPTED = {  # quantity: (regex capturing the value, adopted value)
     'FHC exposure': (r'FHC[^.]{0,60}?\$([0-9.]+)\\times10\^\{20\}\$~POT', {'7.766'}),
@@ -27,7 +29,8 @@ ADOPTED = {  # quantity: (regex capturing the value, adopted value)
     'FHC flux': (r'FHC\s*\$?([0-9.]{7})\$?[,;]\s*RHC', {'6.81159'}),
     'target count': (r'N_\{?\\?mathrm\{Ar\}\}?\s*=\s*([0-9.]+)\\times10\^\{29\}', {'8.710', '8.71'}),
 }
-OLD_STATUS = [r'proposed secondary', r'secondary scope', r'validation product(?!s? \()', r'\bwithdrawn\b']
+OLD_STATUS = [r'proposed secondary', r'secondary scope', r'validation product(?!s? \()', r'\bwithdrawn\b',
+              r'proposed for approval']          # the long secondary label, shortened 2026-09-28
 
 
 def strip(t):
@@ -36,7 +39,7 @@ def strip(t):
 
 def main():
     bad = []
-    txt = {d: strip(open(os.path.join(REP, d)).read()) for d in DOCS}
+    txt = {d: strip(open(os.path.join(REP, d)).read()) for d in DOCS + [REQ]}
     for d, t in txt.items():
         for rx in STALE:
             for m in re.finditer(rx, t):
@@ -53,21 +56,23 @@ def main():
             for m in re.finditer(rx, prose, flags=re.I):
                 ctx = prose[max(0, m.start() - 40):m.end() + 20].replace('\n', ' ')
                 bad.append(f'{d}: status wording outside the vocabulary: "...{ctx}..."')
-    for f, users in SHARED.items():
+    for f in SHARED:
         body = strip(open(os.path.join(REP, 'shared', f + '.tex')).read())
         key = re.search(r'\\label\{([^}]*)\}', body)
-        for d in users:
-            if f'\\input{{shared/{f}}}' not in txt[d]:
-                bad.append(f'{d}: does not \\input shared/{f}.tex')
+        if f'\\input{{shared/{f}}}' not in txt[REQ]:
+            bad.append(f'{REQ}: does not \\input shared/{f}.tex')
+        for d in DOCS + [REQ]:
+            if d in DOCS and f'\\input{{shared/{f}}}' in txt[d]:
+                bad.append(f'{d}: \\inputs shared/{f}.tex, which belongs to {REQ}')
             if key and f'\\label{{{key.group(1)}}}' in txt[d]:
                 bad.append(f'{d}: carries its own copy of {key.group(1)}')
-    if '\\input{shared/decision_box}' not in txt['analysis_note.tex'].split('\\section{Measurement definition}')[0]:
-        bad.append('analysis_note.tex: the decision box is not at the beginning')
     pre = open(os.path.join(REP, 'shared', 'prerequisites.tex')).read()
     defined = set(re.findall(r'^([UPVR]\d+) &', pre, flags=re.M))
-    used = set()
-    for d, t in txt.items():
-        used |= set(re.findall(r'\b([UPVR]\d)\b(?=[\s,;.)\-]|--)', t))
+    for d in DOCS:
+        for m in re.finditer(IDRX, txt[d]):
+            ctx = txt[d][max(0, m.start() - 40):m.end() + 20].replace('\n', ' ')
+            bad.append(f'{d}: prerequisite identifier {m.group(1)} in an analysis document: "...{ctx}..."')
+    used = set(re.findall(IDRX, txt[REQ]))
     for l in open(os.path.join(REP, 'status.tsv')):
         if not l.startswith('#'):
             for rng in re.findall(r'([UPVR])(\d)--[UPVR]?(\d)', l):
@@ -75,7 +80,7 @@ def main():
             used |= set(re.findall(r'\b([UPVR]\d)\b', l))
     for u in sorted(used - defined):
         bad.append(f'prerequisite identifier {u} is used but not defined in shared/prerequisites.tex')
-    lab = {'primary': 'Primary result', 'secondary': 'Secondary result proposed for approval',
+    lab = {'primary': 'Primary result', 'secondary': 'Secondary result',
            'validation': 'Validation-only product', 'notreported': 'Not reported'}
     lines = [l for l in open(os.path.join(REP, 'status.tsv')) if l.strip() and not l.startswith('#')]
     st = {}
@@ -94,13 +99,13 @@ def main():
         want = lab[r['status']] if r[col] == 'Y' or r['status'] == 'notreported' else lab['notreported']
         if status != want:
             bad.append(f'index: {f[0]} status "{status}", status.tsv gives "{want}"')
-    t = subprocess.run([sys.executable, os.path.join(HERE, 'terminology.py'), '--check'] + [os.path.join(REP, d) for d in DOCS],
+    t = subprocess.run([sys.executable, os.path.join(HERE, 'terminology.py'), '--check'] + [os.path.join(REP, d) for d in DOCS + [REQ]],
                        capture_output=True, text=True)
     if t.returncode:
         bad += ['terminology: ' + x for x in t.stdout.split('\n') if x]
     if bad:
         print(f'DOCUMENT CONSISTENCY FAILURES ({len(bad)}):'); [print('  ' + b) for b in bad]; sys.exit(1)
-    print(f'documents consistent: {len(DOCS)} documents, {len(defined)} prerequisites, '
+    print(f'documents consistent: {len(DOCS)} documents and {REQ}, {len(defined)} prerequisites, '
           f'{len(st)} released observable keys with a status')
 
 
