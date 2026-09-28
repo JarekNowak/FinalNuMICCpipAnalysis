@@ -4,15 +4,16 @@
 # are available for the statistics-only pull test; the SLURM ensemble job deletes its work directory.
 # Members already done are skipped, so the script can be re-run while the ensemble is still filling.
 #   CFG = fhc5 | rhcfull | comb | 1p_fhc5 | 1p_comb ; OBS = pmu | costhmu | ppi2bin | total ; NMAX default 100.
+#   Two-dimensional OBS (*_2d, 2026-09-28) read their slice configs from configs/d2.
 # (2026-09-19: generalised from the FHC-only form, which read xsec_fhc_OBS_tT.txt and wrote statcov_OBS_tT.)
 set -u
 CFG=${1:?cfg}; OBS=${2:?obs}; NMAX=${3:-100}
 REPO=/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/xsec_analyzer; PROC=/data/uboone/processed
 export LD_LIBRARY_PATH="/usr/lib64/flexiblas:$(root-config --libdir):$REPO/lib:${LD_LIBRARY_PATH:-}"; export XSEC_ANALYZER_DIR="$REPO"
 if [[ "$CFG" == 1p_* ]]; then   # proton-tagged ensembles (slurm_ensemble_1p.sbatch): ccpi1p slice configs
-  case "$OBS" in *2bin) SL=configs/ccpi1p_${OBS%2bin}_slice_config_2bin.txt;; *3bin) SL=configs/ccpi1p_${OBS%3bin}_slice_config_3bin.txt;; *) SL=configs/ccpi1p_${OBS}_slice_config.txt;; esac
+  case "$OBS" in *2bin) SL=configs/ccpi1p_${OBS%2bin}_slice_config_2bin.txt;; *3bin) SL=configs/ccpi1p_${OBS%3bin}_slice_config_3bin.txt;; *_2d) SL=configs/d2/ccpi1p_${OBS%_2d}_slice_config_2d.txt;; *) SL=configs/ccpi1p_${OBS}_slice_config.txt;; esac
 else
-  case "$OBS" in ppi2bin) SL=configs/ccpi_ppi_slice_config_2bin.txt;; ppi3bin) SL=configs/ccpi_ppi_slice_config_3bin.txt;; total) SL=configs/ccpi_total_slice_config_opt.txt;; *) SL=configs/ccpi_${OBS}_slice_config_opt.txt;; esac
+  case "$OBS" in ppi2bin) SL=configs/ccpi_ppi_slice_config_2bin.txt;; ppi3bin) SL=configs/ccpi_ppi_slice_config_3bin.txt;; total) SL=configs/ccpi_total_slice_config_opt.txt;; *_2d) SL=configs/d2/ccpi_${OBS%_2d}_slice_config_2d.txt;; *) SL=configs/ccpi_${OBS}_slice_config_opt.txt;; esac
 fi
 ok=0; skip=0; fail=0
 for T in $(seq 1 "$NMAX"); do

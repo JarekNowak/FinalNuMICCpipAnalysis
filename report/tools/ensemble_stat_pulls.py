@@ -19,10 +19,13 @@ def evaluate(obs, NMAX=100, quiet=False):
             elif p[0] not in ('numYbins','xbin') and len(p)==3: C[(int(p[0]),int(p[1]))]=float(p[2])
         return n,C
     pull_full=[]; pull_stat=[]; ints=[]; refs=[]; nb=None
+    # two-dimensional tags (*_2d, 2026-09-28): the sidecar of slice 0 holds only the first outer slice; the
+    # all-slice sidecar holds every analysis bin in the covariance order, as bin integrals (unit widths)
+    side='closure_hists_all_xsec_' if obs.endswith('_2d') else 'closure_hists_xsec_'
     for t in range(1,NMAX+1):
         import os
-        if not os.path.exists(P+f'closure_hists_xsec_{obs}_t{t}.root'): continue
-        f=ROOT.TFile.Open(P+f'closure_hists_xsec_{obs}_t{t}.root')
+        if not os.path.exists(P+f'{side}{obs}_t{t}.root'): continue
+        f=ROOT.TFile.Open(P+f'{side}{obs}_t{t}.root')
         if not f or f.IsZombie(): continue
         u=f.Get('h_unfolded_nuwro'); r=f.Get('h_genie_tune')
         import os

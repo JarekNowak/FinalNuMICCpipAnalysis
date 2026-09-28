@@ -48,6 +48,7 @@ n=$(grep -c "_t${T}\.root" "$FPM"); want=4; [ "$CFG" = comb ] && want=8
 case "$OBS" in
   ppi2bin) BIN="$CONF/ccpi_ppi_bin_config_2bin.txt"; SLICE="$CONF/ccpi_ppi_slice_config_2bin.txt";;
   ppi3bin) BIN="$CONF/ccpi_ppi_bin_config_3bin.txt"; SLICE="$CONF/ccpi_ppi_slice_config_3bin.txt";;   # 2026-09-26
+  *_2d)    BIN="$CONF/ccpi_${OBS%_2d}_bin_config_2d.txt"; SLICE="$CONF/ccpi_${OBS%_2d}_slice_config_2d.txt";;   # 2026-09-27: two-dimensional (CONF=configs/d2)
   *)       BIN="$CONF/ccpi_${OBS}_bin_config_opt.txt"; SLICE="$CONF/ccpi_${OBS}_slice_config_opt.txt";;
 esac
 XC0="$CONF/ccpi_xsec_config_numi_${OBS}_${CFG}.txt"

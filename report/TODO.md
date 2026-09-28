@@ -1,4 +1,4 @@
-# TODO — state at 2026-09-27
+# TODO — state at 2026-09-28
 
 
 Last commit: see git log. Untracked NuWro generator dirs remain (NuWro closure dropped; leave or delete).
@@ -73,7 +73,10 @@ Single sources: report/status.tsv (statuses -> inventory.py, index_extractions.p
 {status_vocab,decision_box,prerequisites,validation_ladder}.tex; report/tools/check_documents.py enforces.
 
 New work implied by the decisions (prerequisite IDs of shared/prerequisites.tex):
-R-V1. Ensembles (100 members) and the alternative-model test for theta_p, theta_pi_p and the two 2D results.
+R-V1. DONE 2026-09-28: alternative-model test (3433849, 3433979; altmodel_eval.py V1): max 0.79 sigma (theta_p bin 2,
+      u545); ensembles 100 members x 8 (3433855-62; ens_v1.sh, ensemble_tables_v1.py): stat widths 0.94-1.04, no
+      truncated read. Inclusive 2D sparsest cell (cos th_mu<0.65, cos th_pi<0.35) sits 11% low (0.58 stat sigma),
+      integral 1.2% low (3.4 sigma of the mean): reported, not corrected. V1 dropped from status.tsv.
 R-P2. Wrong-proton-candidate covariance term for theta_p, theta_pi_p, theta_p x delta p_T (needs P1 first).
 R-P1. Inverted-proton-PID control region (definition, pseudo-data validation).
 R-P4. Truth-level validity study of W_had and p_n for pion production (or redefine as proxies, W_cal).
@@ -81,10 +84,9 @@ R-P3. Model term for the low delta p_T / p_n bins (or remove them / rely on U3).
 R-R1. Collaboration decision on combined-only 2D results.
 R-U3. Request/produce a validated NuWro overlay (FHC+RHC, full detector simulation).
 R-U7. Put beamline-geometry, gate-ratio and Run-2 stand-in terms into the covariance.
-R-G1. Generator predictions are missing (NaN in the release curves) for the proton-tagged W_had and TKI
-      observables in RHC and COMB, and for the muon and pion observables of the proton-tagged sample in every
-      configuration (their xsec configs
-      have no Prediction lines). Validation-only products, so not blocking; produce them before promotion.
+R-G1. DONE 2026-09-27: generator predictions added to the 25 proton-tagged extractions that lacked them
+      (RHC/COMB W_had+TKI from existing gen2d/*_1p_ext files; muon/pion observables from new gen2d/*_1p_inc
+      readers, regen_1pinc.sh); measurements bit-identical. W_pipr RHC/COMB still without (not reported).
 
 ## Documents (from the 2026-09-27 revision)
 

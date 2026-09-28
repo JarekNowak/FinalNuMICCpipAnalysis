@@ -1,6 +1,6 @@
 \input{common_preamble}
 
-% ---- cross-document references to the analysis note ----
+% Cross-document references to the analysis note
 \usepackage{xr}
 \externaldocument[N-]{analysis_note}
 \externaldocument[P-]{proton_tagged_note}
@@ -132,7 +132,7 @@ Each one-dimensional binning is selected by the following rule, established by t
 Four adopted binnings differ from the one the rule selects, for the reasons given in
 \S\ref{sec:binreview}: $\cos\theta_\pi$ and $\theta_{\mu\pi}$ keep five bins, $\delta\alpha_T$ keeps its
 split at $120^\circ$, and the proton-tagged $p_\pi$ keeps two regions. The $0.68$ criterion of the BNB
-CC$1\pi$ measurement is the precedent for the migration criterion and serves as a stricter comparison
+CC$1\pi$ measurement is the precedent for the migration criterion and provides a stricter comparison
 point; \S\ref{sec:binreview} gives the consequences of both. Everything in Part~III, including the
 first binning optimisation, the five-bin $p_\pi$ response and the $\theta_\mu$ parameterisation, is
 historical and is not used in the submitted results.
@@ -289,7 +289,7 @@ distinct effects follow, and only the first is corrected.
 
 First, the mass hypothesis biases the estimate low, because for a given range a
 pion carries more momentum than a muon. The size is $\sim\!17$--$19\%$ from the CSDA
-range scaling, essentially independent of momentum. This effect is corrected in the reco
+range scaling, largely independent of momentum. This effect is corrected in the reco
 bin definitions rather than in the branch: \texttt{ccpi\_ppi\_bin\_config\_opt.txt} applies
 a kinetic-energy-preserving $\mu\to\pi$ mass swap, $E_\mu \to T \to E_\pi \to p_\pi$,
 before binning. In the lowest true bin $\langle p^{\rm reco}/p^{\rm true}\rangle$ goes from
@@ -308,7 +308,7 @@ information about the energy of the pion.
 
 \begin{table}[htbp]\centering
 \caption{Pion momentum reconstruction versus truth, selected signal, Run-1 FHC. ``raw'' is
-  the \texttt{candidate\_pion\_mom\_reco} branch; ``corr.'' additionally applies the
+  the \texttt{candidate\_pion\_mom\_reco} branch; ``corr.'' also applies the
   $\mu\to\pi$ mass swap used by the reco bin definitions. The mass correction removes the
   bias at threshold; nothing removes the saturation above it.}
 \label{tab:ppi_sat}
@@ -365,7 +365,7 @@ the generic selection. The BDT separates golden from non-golden pions using trac
 adjacent points along the fitted track, a direct handle on scattering), the number of
 reconstructed descendant particles, the track--shower score, and the Bragg likelihood
 ratio. The note quotes the cost and benefit: efficiency falls from $20.3\%$ to
-$9.5\%$ and purity is essentially unchanged ($51.9\to49.5\%$), while the golden fraction of
+$9.5\%$ and purity is largely unchanged ($51.9\to49.5\%$), while the golden fraction of
 the selected signal rises from $36.3\%$ to $67.7\%$. The same logic is applied to the muon
 momentum, restricting that cross section to contained muons ($8.4\%$ efficiency,
 $56.1\%$ purity) so that it uses range only.
@@ -1053,7 +1053,7 @@ width ratio                        & $\mathbf{35.7}$ & $13.0$ \\
 of $101$--$142$~MeV/$c^2$: they are two to three times narrower than the detector can
 resolve. The bias alone, $-111$~MeV/$c^2$, is larger than three of the six bin widths. The
 migration diagonals are correspondingly low, $87.6/22.3/11.7/12.0/10.0/2.3\%$: only the
-first bin is measured, and the top bin, at $2.3\%$, is essentially unmeasured.
+first bin is measured, and the top bin, at $2.3\%$, is largely unmeasured.
 
 The five-bin $p_\pi$ scheme fails in the same way and for the same reason. $W_{\pi p}$ is
 reconstructed from the pion and proton momenta, so it inherits the saturation of the
@@ -1521,10 +1521,10 @@ and $d^2\sigma/d\cos\theta_\pi\,d\cos\theta_\mu$ on the inclusive sample, presen
 \noteref{Sec.}{sec:incl_2d}. Their FHC and RHC extractions and the other six pairs are
 \statNotReported{} (Tables~\ref{tab:inventory} and~\ref{tab:pt_status}). The single-mode extractions
 of the two pairs are not shape measurements, because their responses cannot be inverted. Every
-one-dimensional result is quoted per beam mode as well as combined; whether a result available only in
+one-dimensional result is quoted per beam mode and for the combination; whether a result available only in
 the combined configuration is acceptable requires a collaboration decision (prerequisite R1).
 
-The pair $\theta_{\pi p}\times W_{\pi p}$ conditions at $0.537$, as well as the two usable pairs, yet
+The pair $\theta_{\pi p}\times W_{\pi p}$ conditions at $0.537$, as do the two usable pairs, yet
 its extraction carries no usable information: a $78\%$ data-statistical term, per-bin uncertainties up
 to $276\%$ and closure ratios down to $-0.80$. Conditioning bounds how much of the response can be
 inverted and says nothing about how much data survives in the inverted directions, so the two must be
@@ -1633,14 +1633,14 @@ $\cos\theta_\mu$     & $14.5$ & $0.46$ & $0.57$ & $0.45$ & $0.55$ & $0.42 \to 0.
 $\cos\theta_\pi$     & $3.6$  & $0.67$ & $0.71$ & $0.55$ & $0.79$ & $0.55 \to 0.74$ \\
 $\theta_{\mu\pi}$    & $3.0$  & $0.42$ & $0.85$ & $0.47$ & $0.65$ & $0.42 \to 0.46$ \\
 $\theta_\mu$         & $10.4$ & $\mathbf{0.015}$ & $\mathbf{0.51}$ & $0.22$ & $0.62$ & $\mathbf{0.045 \to 0.38}$ \\
-$p_\pi$ (2 bins)     & ---    & $0.46$ & $0.53$ & $0.41$ & $0.44$ & $0.29 \to 0.40$ \\\midrule
+$p_\pi$ (2 bins)     & --     & $0.46$ & $0.53$ & $0.41$ & $0.44$ & $0.29 \to 0.40$ \\\midrule
 \multicolumn{7}{l}{\emph{proton-tagged, combined configuration}} \\
-$W_{\pi p}$          & --- & \multicolumn{4}{c}{} & $\mathbf{0.022 \to 0.60}$ \\
-$W_\mathrm{had}$     & --- & \multicolumn{4}{c}{} & $0.23 \to 0.86$ \\
-$\delta p_T$         & --- & \multicolumn{4}{c}{} & $0.25 \to 0.93$ \\
-$\delta\alpha_T$     & --- & \multicolumn{4}{c}{} & $0.24 \to 0.48$ \\
-$\delta\phi_T$       & --- & \multicolumn{4}{c}{} & $\mathbf{0.083 \to 0.85}$ \\
-$p_n$                & --- & \multicolumn{4}{c}{} & $0.21 \to 0.88$ \\
+$W_{\pi p}$          & --  & \multicolumn{4}{c}{} & $\mathbf{0.022 \to 0.60}$ \\
+$W_\mathrm{had}$     & --  & \multicolumn{4}{c}{} & $0.23 \to 0.86$ \\
+$\delta p_T$         & --  & \multicolumn{4}{c}{} & $0.25 \to 0.93$ \\
+$\delta\alpha_T$     & --  & \multicolumn{4}{c}{} & $0.24 \to 0.48$ \\
+$\delta\phi_T$       & --  & \multicolumn{4}{c}{} & $\mathbf{0.083 \to 0.85}$ \\
+$p_n$                & --  & \multicolumn{4}{c}{} & $0.21 \to 0.88$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -2071,7 +2071,7 @@ whether the severe $A_C$ suppression in $\cos\theta_\mu$ would distort its uncer
 
 Against the full covariance the pull width
 is $0.22$--$0.46$ for the differential results and $0.11$ for the totals, and coverage is
-essentially $100\%$: the quoted
+nearly $100\%$: the quoted
 uncertainty is two to five times the throw-to-throw spread for the differential results and about
 nine times for the totals, because the ensemble varies
 only the data statistics while the denominator carries flux, detector and cross-section
@@ -2106,11 +2106,17 @@ this way, and the entry-count scan of their $2000$ inputs and of the proton-tagg
 ensemble finds no truncated read; the members short by one entry are the boundary case of an
 event with $\cos\theta_\mu=1.0$ exactly (change log).
 
-The study covers the inclusive sample in all three configurations. The proton-tagged family,
-where the statistics are sparser, has three further $100$-member ensembles ($W_{\rm had}$ in its two
-regions and the two-bin $\delta p_T$ in FHC, the two-bin $p_n$ combined): statistical pull widths
-$0.94$--$1.08$, $68\%$ coverage $62$--$72\%$ and integral offsets within $0.7\%$
-(\ptref{Sec.}{sec:pt_ensemble}, \texttt{data\_release/ensemble\_1p\_2026-09-26.tsv}).
+The study covers the inclusive sample in all three configurations. The results proposed for approval
+since then have their own $100$-member ensembles (prerequisite V1): the inclusive
+$\cos\theta_\pi\times\cos\theta_\mu$ (\noteref{Sec.}{sec:incl_2d}), and on the proton-tagged sample
+$\theta_p$ and $\theta_{\pi p}$ in each configuration and $\theta_p\times\delta p_T$, with statistical
+pull widths of $0.94$--$1.04$ (\texttt{data\_release/ensemble\_v1\_2026-09-28.tsv}). The pulls of a
+two-dimensional result are read from its all-slice closure file, which holds every analysis bin in the
+order of the covariance. The proton-tagged family, where the statistics are sparser, has in addition
+three ensembles of validation-only products ($W_{\rm had}$ in its two regions and the two-bin
+$\delta p_T$ in FHC, the two-bin $p_n$ combined): statistical pull widths $0.94$--$1.08$, $68\%$
+coverage $62$--$72\%$ and integral offsets within $0.7\%$ (\ptref{Sec.}{sec:pt_ensemble},
+\texttt{data\_release/ensemble\_1p\_2026-09-26.tsv}).
 
 
 % =============================================================================
@@ -2382,7 +2388,8 @@ Repository tag and release checksum recorded & analysis-state box above & \\
 Control-region results reviewed; any discrepancy treated under \S\ref{sec:cr_protocol} & pending & conveners \\
 Model-distortion pseudo-data closure (reweighted GENIE, FHC) & done, \noteref{Sec.}{sec:validation} & \\
 Model-distortion pseudo-data closure, proton-tagged family (FHC) & done, \ptref{Sec.}{sec:pt_altmodel}; low-imbalance $\delta p_T$/$p_n$ bins biased $1.1$--$1.2\sigma$ under GENIE u545 & \\
-Statistical-coverage ensembles, proton-tagged family ($W_{\rm had}$, $\delta p_T$, $p_n$) & done, \ptref{Sec.}{sec:pt_ensemble}; pull widths $0.99$--$1.08$, integral offsets within $0.7\%$ & \\
+Statistical-coverage ensembles, proton-tagged family ($W_{\rm had}$, $\delta p_T$, $p_n$) & done, \ptref{Sec.}{sec:pt_ensemble}; pull widths $0.94$--$1.08$, integral offsets within $0.7\%$ & \\
+Ensembles and alternative-model closure of the results proposed since then, $\theta_p$, $\theta_{\pi p}$, $\theta_p\times\delta p_T$ and $\cos\theta_\pi\times\cos\theta_\mu$ (prerequisite V1) & done, \ptref{Sec.}{sec:pt_ensemble}, \ptref{Sec.}{sec:pt_altmodel}, \noteref{Sec.}{sec:incl_2d}; pull widths $0.94$--$1.04$, largest bias $0.79\sigma$ & \\
 Independent-generator pseudo-data closure (prerequisite U3): a NuWro overlay with the full detector simulation, validated against standalone NuWro on the same flux, unfolded with the nominal response & pending: the existing NuWro overlay failed validation against the standalone prediction and is not used, \noteref{Sec.}{sec:limitations} & \\
 Flux constants confirmed as PPFX-corrected central values & pending, \noteref{Sec.}{sec:flux_status} & flux contact \\
 MCS muon-momentum scale ($\pm5\%$, data side) evaluated on $p_\mu$ in FHC, RHC and combined and released as \texttt{cov\_MCSscale.txt} & done, \noteref{Sec.}{sec:mcs}; at most $0.56\sigma$ (FHC open top bin), $0.42\sigma$ (combined) and $0.30\sigma$ (RHC); exactly zero for the other inclusive observables, which carry no reco-$p_\mu$ cut; computed outside the framework and part of the official covariance (\texttt{cov\_total\_plusMCS.txt}) and of every summary table; size to be confirmed by prerequisite U4; proton-tagged observables evaluated (at most $0.62\sigma$, FHC $p_\mu$; \ptref{Sec.}{sec:pt_mcs}) & \\
@@ -2896,7 +2903,7 @@ The request of Sec.~\ref{sec:request} covers the four inclusive regions. The pro
 regions of \S\ref{sec:sidebands_1p} apply the proton tag rather than inverting it and
 therefore do not constrain the $\approx\!13\%$ proton mis-tag background that most
 affects the hadronic observables; the inverted-proton-PID region that would do so has not yet
-been implemented. The proton-tagged control-region programme is consequently not
+been implemented. The proton-tagged control-region programme is therefore not
 ready for equivalent approval, and opening the inherited proton-tagged regions, while
 useful diagnostically, would not validate the proton-tagged background model.
 
@@ -2908,7 +2915,7 @@ the four control-region definitions of \noteref{Sec.}{sec:sidebands}: the reproc
 files already carry the four region flags. No new definitions or reprocessing are
 required to exercise the background model of the proton-tagged extractions; the same four regions
 can be evaluated either as inherited (the inclusive phase space) or with a reconstructed
-tagged proton additionally required, which places them in the same phase space as the
+tagged proton also required, which places them in the same phase space as the
 measurement itself. Table~\ref{tab:sidebands_1p} gives both.
 
 All four regions are more
@@ -2945,7 +2952,7 @@ through resolution.
 \begin{table}[H]
   \centering
   \caption{Control-region yields for the proton-tagged sample at full exposure, evaluated
-    with the inherited definitions both as-is and with a tagged proton additionally
+    with the inherited definitions both as-is and with a tagged proton also
     required. ``Sig.'' is the proton-tagged signal contamination of the neutrino MC.
     $N_\mathrm{data}/N_{\nu\mathrm{MC}}$ compares the Poisson-thrown pseudo-data with the
     CV-weighted neutrino MC; EXT and dirt are listed for scale.}
@@ -3330,7 +3337,7 @@ $\cos\theta_\pi$ & released 4 & $0.81$ / $0.83$ & pass \\
         & 6 bins & $0.73$ / $0.75$ & pass \\
 $\theta_{\mu\pi}$ & released 5 & $0.79$ / $0.79$ & pass \\
         & 6, 7 bins & $0.74$ / $0.73$, $0.75$ / $0.73$ & pass \\
-$p_\pi$ & released 2 & $0.58$ / $0.56$ (see caption) & --- \\
+$p_\pi$ & released 2 & $0.58$ / $0.56$ (see caption) & -- \\
         & 3, 4 bins & $0.39$ / $0.40$, $0.29$ / $0.29$ & fail \\
 \bottomrule
 \end{tabular}
@@ -3384,7 +3391,7 @@ on it. No control-region distribution uses $\cos\theta_\pi$, so the frozen contr
 is unaffected. The proton-tagged $\cos\theta_\pi$ keeps its four bins.
 
 The released binnings of the proton-tagged observables were re-tested on the maximin scan
-against a relaxed $0.50$ diagonal criterion as well as the nominal $0.68$. Twenty-six
+against a relaxed $0.50$ diagonal criterion in addition to the nominal $0.68$. Twenty-six
 candidate binnings pass the relaxed diagonal, and every one of them fails on the
 conditioning of $A_C$. The single exception is a two-bin $W_\mathrm{had}$ ($0.58/0.54$),
 which is better conditioned than the released six-bin scheme but was not adopted at this
@@ -3580,7 +3587,7 @@ change this conclusion (\S\ref{sec:golden_bdt}).
 
 \subsection{Variable ranking}
 The variable ranking of the classifier of \S\ref{sec:golden_bdt} is dominated by the deflection
-variables (\texttt{wmean}, then \texttt{wstd}); the Bragg ratios contribute essentially nothing,
+variables (\texttt{wmean}, then \texttt{wstd}); the Bragg ratios contribute almost nothing,
 although Bragg was expected to carry the stopping signature.
 
 \subsection{Track-sample and analysis-sample diagonals}
@@ -3614,7 +3621,7 @@ $0.800$--$1.500$ & $84$~cm & $\mathbf{0.319}$ & $0.16$ & $\mathbf{1.011}$ & $2.1
 \end{center}
 
 \noindent In the top bin range is biased to $0.319$ (the saturation), while MCS is
-essentially unbiased at $1.011$; but MCS carries a $210\%$ RMS
+unbiased at $1.011$ within uncertainties; but MCS carries a $210\%$ RMS
 there and $1400\%$ in the lowest bin, which makes it unusable as a per-event estimator. The
 reason is structural and explains why the CC0$\pi$ recipe does not transfer: that analysis
 applies MCS to exiting tracks, which are long by construction, whereas the problematic pions
@@ -3637,7 +3644,7 @@ $+$ range$-$MCS difference & $0.757$ & $99.0 / 34.8 / 24.8 / 14.8 / 9.1$ \\
 \end{tabular}
 \end{center}
 
-\noindent The new variable is highly informative but not additionally informative: it is
+\noindent The new variable is informative but provides no additional information: it is
 strongly correlated with the deflection variables already present, since both measure whether
 the track scattered heavily and ended abruptly. A high importance rank with an unchanged ROC
 integral is the signature of a redundant input. This independently supports the ceiling
@@ -3810,7 +3817,7 @@ The recovered energy is far too small to change the measurement, and the reason 
 rather than algorithmic. Pion absorption on argon, $\pi A\to NN\ldots$, deposits much of the energy in
 nucleons, roughly half of which are neutrons and therefore invisible in liquid argon; the
 charged products are frequently short and fall below the threshold to be reconstructed as
-separate particles. The energy is therefore not only unassociated but largely undetected. Applying
+separate particles. The energy is therefore unassociated and largely undetected. Applying
 the daughter sum would move $\langle$reco/true$\rangle$ in the top bin from $0.32$ to about
 $0.42$, still less than half of truth.
 
@@ -4054,11 +4061,11 @@ targets ordered chronologically.
     cross-section extraction.}
   \label{tab:supp_prevmeas}
   \small
-  \begin{tabular}{L{2.1cm} L{1.4cm} C{1.4cm} C{0.8cm} L{4.8cm}}
+  \begin{tabular}{L{2.6cm} L{1.4cm} C{1.4cm} C{0.8cm} L{4.8cm}}
     \toprule
     Experiment & Target & $\langle E_\nu\rangle$ (GeV) & Type & Key result / reference \\
     \midrule
-    ANL 12-ft~\cite{anl_radecky1982}     & D         & 1.0   & T & Bubble chamber; foundational $\sigma$ vs $E_\nu$ \\
+    ANL 12-ft~\cite{anl_radecky1982}     & D         & 1.0   & T & Bubble chamber; first $\sigma$ vs $E_\nu$ \\
     BNL 7-ft~\cite{bnl_kitagaki1986}     & D         & 1.5   & T & Higher statistics; 15\% normalisation tension with ANL \\
     K2K~\cite{k2k_rodriguez2008}         & C         & 1.3   & T & First accelerator CC$\pi^+$ on carbon near detector \\
     MiniBooNE~\cite{miniboone_ccpi}      & CH$_2$    & 0.7   & D & $Q^2$, $W$, $p_\mu$, $\theta_\mu$; 20\% excess over NUANCE \\
@@ -4183,7 +4190,7 @@ present analysis.  The flux-integrated total cross section is
   \sigma = (3.75 \pm 0.07_{\rm stat} \pm 0.80_{\rm syst})\times10^{-38}~\text{cm}^2/\text{Ar}
 \end{equation*}
 at mean neutrino energy $\langle E_\nu \rangle \approx 0.8$~GeV. Most generators
-reproduce the data within uncertainties; a notable exception is the muon angle with
+reproduce the data within uncertainties; an exception is the muon angle with
 respect to the beam, where all tested generators overestimate the cross section at
 very forward angles ($\cos\theta_\mu \to 1$)~\cite{uboone_bnb2026_ccpi}. That
 pion momentum differential cross section was the first such measurement on an argon

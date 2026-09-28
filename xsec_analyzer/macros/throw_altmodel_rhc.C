@@ -10,6 +10,7 @@
 //
 //   root -l -b -q 'macros/throw_altmodel_rhc.C("weight_All_UBGenie",545,"altgenie",1)'
 //   root -l -b -q 'macros/throw_altmodel_rhc.C("weight_Theta_Delta2Npi_UBGenie",0,"altdelta",1)'
+//   THROW_DIR=/data/uboone/processed/w/ root -l -b -q '...'   (proton-tagged trees; same universes and seeds)
 #include <vector>
 #include <string>
 
@@ -19,7 +20,8 @@ static double safe_w_r( double w ) {
 
 static void throw_alt_group( std::vector<const char*> infiles, const char* outfile,
                              double dpot, double mcpot, const char* wbranch, int univ, int seed ) {
-  const char* P = "/data/uboone/processed/";
+  // THROW_DIR overrides the directory (e.g. /data/uboone/processed/w/ for the proton-tagged trees, 2026-09-27)
+  const char* P = gSystem->Getenv("THROW_DIR") ? gSystem->Getenv("THROW_DIR") : "/data/uboone/processed/";
   double potscale = dpot / mcpot;
   gRandom->SetSeed( seed );
   TChain cin( "stv_tree" );

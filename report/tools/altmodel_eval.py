@@ -18,6 +18,7 @@ inside the systematic uncertainty is a measurement that survives the model being
 comparable to it is a limit on the result.
 
     python3 report/tools/altmodel_eval.py [FHC5|RHCFULL] [incl|1p]
+    python3 report/tools/altmodel_eval.py V1      (proton angles FHC and the two combined 2D results)
     (1p = the proton-tagged family: W_had, the TKI variables, cos theta_pi and p_p, FHC only)
 """
 import os, sys
@@ -77,5 +78,32 @@ def main():
               % (min(x[2] for x in rows), max(x[2] for x in rows)))
 
 
+def main_v1():
+    """Prerequisite V1 (2026-09-27): the results proposed for approval that were outside the earlier round,
+    the proton angles (FHC, like the other proton-tagged observables) and the two combined-only
+    two-dimensional results (all-slice closure files; nominal from rebuild_2d)."""
+    items = [('theta_p', f'{RB}/closure_hists_xsec_ccpi1p_FHC5_thetap_{{tag}}.root'),
+             ('theta_pi_p', f'{RB}/closure_hists_xsec_ccpi1p_FHC5_thpipr_{{tag}}.root'),
+             ('cos th_pi x cos th_mu', f'{RB}/closure_hists_all_xsec_ccpi_COMB_costhpi_costhmu_{{tag}}.root'),
+             ('theta_p x delta p_T', f'{RB}/closure_hists_all_xsec_ccpi1p_COMB_thetap_dpt_{{tag}}.root')]
+    print('%-22s %-22s %5s %8s %8s %9s %9s' % ('result', 'variation', 'bins', 'ratio', 'max dev', 'bias/sigma', 'worst bin'))
+    rows = []
+    for lab, tmpl in items:
+        for tag, desc in TAGS:
+            d = load(tmpl.format(tag=tag))
+            if d is None:
+                print('%-22s %-22s %s' % (lab, desc, 'pending')); continue
+            ok = d['t'] > 0; full = ok & (d['t'] >= 0.1 * d['t'].max())
+            r = d['v'][full] / d['t'][full]; pull = (d['v'][ok] - d['t'][ok]) / d['e'][ok]
+            i = int(np.argmax(np.abs(pull)))
+            print('%-22s %-22s %5d %8.3f %8.1f%% %9.2f %9d' % (lab, desc, full.sum(), np.mean(r),
+                  100 * np.max(np.abs(r - 1)), pull[i], np.flatnonzero(ok)[i] + 1))
+            rows.append((lab, tag, np.mean(r), np.max(np.abs(r - 1)), np.abs(pull).max()))
+    if rows:
+        print('\nlargest |bias| over all bins and variations: %.2f sigma of the quoted uncertainty' % max(x[4] for x in rows))
+
+
+if __name__ == '__main__' and len(sys.argv) > 1 and sys.argv[1] == 'V1':
+    main_v1(); sys.exit(0)
 if __name__ == '__main__':
     main()

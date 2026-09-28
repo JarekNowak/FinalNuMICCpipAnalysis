@@ -1280,11 +1280,17 @@ offsets $-0.4$ to $-1.1\%$ at $0.4$--$1.8\sigma$ of the mean
     prerequisites.
   \item The figures use physics notation, the open-ended last bins are hatched and labelled, and the
     six-panel proton-tagged figures are split in two.
-  \item The proton-tagged W$_\mathrm{had}$ and TKI observables have no generator predictions in RHC and
-    combined, and the proton-tagged $p_\mu$ none in any configuration; the note says so.
+  \item The proton-tagged W$_\mathrm{had}$ and TKI observables had no generator predictions in RHC and
+    combined, and the muon and pion observables of the proton-tagged sample none in any configuration.
+    The RHC and combined W$_\mathrm{had}$ and TKI predictions existed but were not referenced by the
+    configurations; the muon and pion ones were produced with new readers that reuse the proton-tagged
+    signal definition (\texttt{generator\_predictions/gen2d/*\_1p\_inc*}, \texttt{regen\_1pinc.sh}).
+    The $25$ extractions were unfolded again: unfolded results, truths, $A_C$ and every covariance are
+    bit-identical, and only the generator curves were added.
   \item Terminology: pseudo-data, control region, combined configuration
-    (\texttt{report/tools/terminology.py}). A cross-document check, \texttt{report/tools/check\_documents.py},
-    enforces the shared sources, the status vocabulary and the adopted exposures, fluxes and target count.
+    (\nolinkurl{report/tools/terminology.py}). A cross-document check,
+    \nolinkurl{report/tools/check_documents.py}, enforces the shared sources, the status vocabulary and the
+    adopted exposures, fluxes and target count.
 \end{itemize}
 
 \section{Muon momentum-scale term for the proton-tagged observables (2026-09-27)}
@@ -1362,6 +1368,48 @@ The analysis note label \texttt{sec:cr\_outcome} is replaced by \texttt{sec:cr\_
   \item Prose revised throughout; tables, figures and numbers unchanged.
 \end{itemize}
 
+\section{Validation of the results proposed for approval (2026-09-28)}
+
+Prerequisite V1 is complete. The results proposed for approval on 2026-09-27 that had not been through
+the validation of the other extractions, $\theta_p$ and $\theta_{\pi p}$ (FHC, RHC, combined) and the
+two combined-configuration two-dimensional results, $\theta_p\times\delta p_T$ and
+$\cos\theta_\pi\times\cos\theta_\mu$, now have both tests.
+
+\begin{itemize}\itemsep1pt
+  \item \textbf{Alternative models.} GENIE multisim universe~545 and the $\Delta\to N\pi$ angular unisim,
+    as for the other extractions: the proton angles in FHC and $\cos\theta_\pi\times\cos\theta_\mu$
+    (SLURM 3433849), $\theta_p\times\delta p_T$ (SLURM 3433979), in the combined configuration for the
+    two-dimensional results (\texttt{xsec\_analyzer/run\_altmodel\_v1.sh}, \texttt{configs/alt},
+    \texttt{report/tools/altmodel\_eval.py V1}). No bin moves by more than $0.79\sigma$, the second
+    $\theta_p$ bin under the GENIE variation, which returns all four $\theta_p$ bins $9$--$28\%$ low while
+    their truth moves by $-3\%$; the two-dimensional results stay within $0.74\sigma$ (proton-tagged) and
+    $0.61\sigma$ (inclusive).
+  \item \textbf{Ensembles.} $100$ members for each of the eight extractions (SLURM 3433855--3433862,
+    \texttt{xsec\_analyzer/ens\_v1.sh}): statistical pull widths $0.94$--$1.04$, coverage nominal, no
+    truncated read in the $4800$ inputs ($33$ inputs of the inclusive two-dimensional ensemble are one
+    entry short, the boundary case of an event at $\cos\theta_\mu=1$ exactly). In the sparsest inclusive two-dimensional cell
+    ($\cos\theta_\mu<0.65$, $\cos\theta_\pi<0.35$) the ensemble mean lies $11\%$ below the reference,
+    $0.58$ statistical and $0.17$ total standard deviations, and the ensemble-mean integral lies $1.2\%$
+    below it ($3.4$ standard errors of the mean); no correction is applied
+    (\texttt{data\_release/ensemble\_v1\_2026-09-28.tsv}).
+  \item \textbf{Status.} V1 is removed from the prerequisites of the three products in
+    \texttt{report/status.tsv}, and the prerequisite table marks it complete.
+  \item \textbf{Tools.} The statistical-covariance step (\texttt{slurm/ens\_statcov.sh}) and the pull
+    evaluation (\texttt{report/tools/ensemble\_stat\_pulls.py}) accept two-dimensional extractions, whose
+    pulls are read from the all-slice closure file. The proton-tagged ensemble table has one row per
+    extraction and includes the new ones (\texttt{report/tools/ensemble\_tables\_v1.py},
+    \texttt{ensemble\_tables\_1p.py}).
+\end{itemize}
+
+\subsection{Documents}
+\begin{itemize}\itemsep1pt
+  \item The authors' revision of the wording of the three documents is adopted; no number changed.
+  \item The label ``Secondary result proposed for approval'' was made plural by appending ``s'', which
+    printed ``\ldots\ proposed for approvals''; a plural form is now defined in
+    \texttt{shared/status\_vocab.tex}.
+  \item Four tables that ran into the margin were narrowed.
+\end{itemize}
+
 \section{Open items}
 
 The following remain outstanding following the 2026-09-07 review. None is a correction awaiting application;
@@ -1388,7 +1436,8 @@ yet made.
     $\cos\theta_\mu$, combined $p_\pi$, proton-tagged FHC $W_{\rm had}$) have their own $100$-member
     ensembles (2026-09-27): statistical pull widths $0.94$--$1.07$, coverage nominal, offsets
     $0.4$--$1.1\%$ at $\le2.0\sigma$; the one-bin totals and the proton-tagged $\delta p_T$ and $p_n$
-    keep their binnings and their ensembles. No test of this kind remains outstanding.
+    keep their binnings and their ensembles. The results proposed for approval on 2026-09-27 have
+    theirs (2026-09-28). No test of this kind remains outstanding.
   \item \textbf{Systematic terms not in the released covariance:} the MCS muon momentum-scale
     term is evaluated at $\pm5\%$ on the data side and released as a separate component for $p_\mu$
     in all three configurations (up to $0.56\sigma$ per bin in FHC, $0.42\sigma$ combined and
@@ -1433,7 +1482,7 @@ band correctly; the systematic part remains untested by construction.
 \section{Superseded values that may still be encountered}
 
 \begin{center}\small\setlength{\tabcolsep}{4pt}
-\begin{tabular}{lp{4.2cm}p{6.2cm}}
+\begin{tabular}{p{4.3cm}p{4.2cm}p{6.4cm}}
 \toprule
 Quantity & superseded value & status \\
 \midrule

@@ -1,0 +1,14 @@
+# Pseudo-data ensembles of prerequisite V1: Poisson throws of the central-value prediction, run by run, each
+# carried through univmake + UnfolderNuMI (slurm_ensemble_1p.sbatch, slurm_ensemble_cfg.sbatch; ens_v1.sh); pulls
+# against the fixed central-value truth smeared by each member's own A_C. Statistical reference = DataStats
+# covariance of the member; full = total covariance. Offsets are of the ensemble-mean integral from the reference
+# integral. Two-dimensional bins are ordered outer slice by outer slice, inner variable fastest.
+extraction	members	bins	pull_mean_stat	pull_width_stat	cov68_stat	cov95_stat	pull_mean_full	pull_width_full	cov68_full	cov95_full	mean_integral	reference_integral	offset_pct	offset_sigma_of_mean	throw_to_throw_sd_pct	bin_pull_means_stat	bin_pull_widths_stat
+1p_fhc5_thetap	100	4	-0.09	1.01	67.5	93.8	-0.02	0.39	98.2	100.0	0.5441	0.5495	-0.97	-0.8	11.7	-0.05,-0.19,-0.05,-0.07	1.02,1.07,1.01,0.94
+1p_rhcfull_thetap	100	4	-0.04	0.97	69.5	95.8	-0.02	0.37	99.2	100.0	0.3368	0.3412	-1.30	-1.4	9.4	-0.27,0.02,-0.09,0.17	0.93,0.95,1.06,0.89
+1p_comb_thetap	100	4	-0.12	1.03	64.8	94.8	-0.03	0.32	99.5	100.0	0.4723	0.4782	-1.24	-1.5	8.2	-0.19,-0.07,-0.07,-0.15	0.95,0.96,1.10,1.09
+1p_fhc5_thpipr	100	4	-0.02	1.00	67.2	94.2	-0.00	0.40	99.0	100.0	0.4261	0.4270	-0.21	-0.3	8.0	-0.10,0.14,0.08,-0.22	1.08,0.95,0.94,1.00
+1p_rhcfull_thpipr	100	4	-0.06	0.94	71.5	96.0	-0.01	0.26	100.0	100.0	0.3682	0.3706	-0.66	-0.8	8.3	-0.06,-0.03,-0.05,-0.09	0.84,1.01,0.94,1.00
+1p_comb_thpipr	100	4	-0.01	1.02	65.2	93.8	0.00	0.35	99.5	100.0	0.3922	0.3919	0.07	0.1	9.2	-0.07,0.11,0.02,-0.11	1.00,1.07,1.07,0.96
+1p_comb_thetap_dpt_2d	100	4	-0.05	1.04	66.8	94.2	-0.02	0.40	98.0	100.0	0.4713	0.4743	-0.64	-1.3	5.1	-0.11,-0.12,-0.06,0.08	1.10,1.00,1.08,0.99
+comb_costhpi_costhmu_2d	100	6	-0.16	1.03	67.3	94.2	-0.04	0.26	99.8	100.0	0.7100	0.7184	-1.17	-3.4	3.5	-0.58,-0.20,-0.12,-0.00,-0.04,-0.04	1.01,0.95,1.01,1.12,0.98,0.98
