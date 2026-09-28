@@ -32,7 +32,8 @@ def table(label):
     spec=re.match(r'\\begin\{tabular\}\{(.*?)\}\s*$',body.split('\n')[0]).group(1); ncol=len(re.findall(r'[lcrp]\{[^}]*\}|[lcr]|[LR]\{[^}]*\}',spec.replace('|','')))
     rows=[l for l in body.split('\n') if '&' in l]
     for l in rows:
-        if l.count('&')+1!=ncol: bad.append(f"{label}: row has {l.count('&')+1} columns, header declares {ncol}: {l.strip()[:60]}")
+        width=l.count('&')+1+sum(int(k)-1 for k in re.findall(r'\\multicolumn\{(\d+)\}',l))   # spanned columns count
+        if width!=ncol: bad.append(f"{label}: row has {width} columns, header declares {ncol}: {l.strip()[:60]}")
     return rows
 def num(cell): 
     m=re.search(r'-?[0-9]+\.[0-9]+',cell); return float(m.group()) if m else None
@@ -50,12 +51,12 @@ for l in table('tab:sigint_all') or []:
     if c[0] in INV:
         for j,cfg in [(1,'fhc5'),(2,'rhcfull'),(3,'comb')]:
             if abs(num(c[j])-float(res[('incl',cfg,INV[c[0]])]['sigma_int']))>6e-4: bad.append(f"tab:sigint_all {INV[c[0]]} {cfg}: {c[j]}")
-for lab,cfg in [('tab:wtki_fhc','fhc5'),('tab:wtki_rhc','rhcfull'),('tab:wtki_comb','comb')]:
-    for l in table(lab) or []:
-        c=[x.strip() for x in l.split('&')]
-        if c[0] in INV1:
+for l in table('tab:wtki') or []:          # 2026-09-28: FHC, RHC, combined side by side
+    c=[x.strip() for x in l.split('&')]
+    if c[0] in INV1:
+        for k,cfg in [(1,'fhc5'),(4,'rhcfull'),(7,'comb')]:
             r=res[('1p',cfg,INV1[c[0]])]
-            if abs(num(c[1])-float(r['sigma_int']))>6e-4 or abs(num(c[3])-float(r['chi2_truth']))>0.006: bad.append(f"{lab} {INV1[c[0]]}: {c[1]} {c[3]} vs {r['sigma_int']} {r['chi2_truth']}")
+            if abs(num(c[k])-float(r['sigma_int']))>6e-4 or abs(num(c[k+2])-float(r['chi2_truth']))>0.006: bad.append(f"tab:wtki {cfg} {INV1[c[0]]}: {c[k]} {c[k+2]} vs {r['sigma_int']} {r['chi2_truth']}")
 beam=None
 for l in table('tab:chi2_incl') or []:
     c=[x.strip() for x in l.split('&')]

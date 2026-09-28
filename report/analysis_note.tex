@@ -99,6 +99,9 @@
   \end{tikzpicture}}
 
 
+\input{glyphtounicode}
+\pdfgentounicode=1
+
 \begin{document}
 
 
@@ -118,8 +121,10 @@
   {\normalsize\textit{Lancaster University}\par}
   \vspace{2cm}
   \begin{abstract}
-    We measure flux-averaged $\nu_\mu+\bar\nu_\mu$ charged-current single-charged-pion (CC$\pi^{\pm}$)
-    cross sections on argon with the \uboone{} detector in the NuMI beam: one muon and one charged pion,
+    This note describes the measurement of flux-averaged $\nu_\mu+\bar\nu_\mu$ charged-current
+    single-charged-pion (CC$\pi^{\pm}$) cross sections on argon with the \uboone{} detector in the NuMI
+    beam. The signal region is blind, and every cross section quoted is extracted from central-value
+    pseudo-data. The signal is one muon and one charged pion,
     any number of nucleons and no neutral pion, with $p_\mu>0.15\GeVc$, $p_\pi>0.175\GeVc$ and a
     muon--pion opening angle below $2.6$~rad. The cross sections are averaged over the
     $\nu_\mu+\bar\nu_\mu$ flux integrated above $60$~MeV, which includes the part of the spectrum below
@@ -142,8 +147,7 @@
 
     The extraction passes closure, ensembles of pseudo-experiments (pull widths $0.95$--$1.07$) and
     pseudo-data from reweighted interaction models (largest bias $1.2\sigma$, in one sparse bin); no
-    closure test with an independent generator has been made. The signal region is blind, and all
-    results are extracted from pseudo-data.
+    closure test with an independent generator has been made.
   \end{abstract}
   \vfill
   \tableofcontents
@@ -176,14 +180,9 @@ unfolding~\cite{wienervsd}.
 \subsection{Measurement overview}
 \label{sec:status}
 
-The two horn polarities are analysed as independent measurements, FHC ($7.766\times10^{20}$~POT)
-and RHC ($11.082\times10^{20}$~POT), each with its own exposure and integrated flux, and as their
-combination ($18.848\times10^{20}$~POT). The signal is defined by the particles that leave the
-nucleus: one muon, one charged pion, no neutral pion and any number of nucleons, with the vertex
-in the fiducial volume and $p_\mu>0.15\GeVc$, $p_\pi>0.175\GeVc$ and
-$\theta_{\mu\pi}<2.6$~rad (\S\ref{sec:signal}). Coherent pion production satisfies this definition
-and is part of the signal. All polar angles are measured about the neutrino direction, which at
-the \uboone{} position is $28.6^\circ$ from the detector axis (\S\ref{sec:beamdir}).
+The two horn polarities are analysed as independent measurements, FHC and RHC, each with its own
+exposure and integrated flux, and as their combination; the signal, the phase space and the conventions
+are defined in Section~\ref{sec:measdef}.
 
 Figure~\ref{fig:chain} shows the extraction. The same selection is applied to the beam data, to
 the beam-off data that measure the cosmic-ray background, and to the simulation. The simulated
@@ -388,8 +387,7 @@ softer and broader than the Booster flux and has a $35\%$ $\bar\nu_\mu$ componen
 flux-averaged cross section divides by the whole flux above $60$~MeV while pion production starts
 near $0.3$~GeV; the value of about $1.0\times10^{-38}$~cm$^2$/Ar found here is therefore not
 directly comparable with the Booster result (\S\ref{sec:flux_status}). Among other experiments, the
-T2K off-axis measurement on carbon~\cite{t2k_ccpip} has the most similar spectrum. A longer survey
-is given in \suppref{App.}{sec:supp_physics}.
+T2K off-axis measurement on carbon~\cite{t2k_ccpip} has the most similar spectrum.
 
 \begin{table}[H]
   \centering
@@ -1578,7 +1576,7 @@ Two matrices are used, and they differ by the efficiency. The migration matrix
   M_{ij} = P(\text{reco in bin } i \,|\, \text{true in bin } j,\ \text{selected}),
   \qquad \textstyle\sum_i M_{ij} = 1,
 \end{equation}
-describes how selected events move between bins. The smearceptance matrix also contains the
+describes how selected events move between bins. The response matrix also contains the
 probability to be selected,
 \begin{equation}
   S_{ij} = \varepsilon_j\, M_{ij},
@@ -1805,7 +1803,7 @@ five observables at the final cut, with the simulated signal and the background 
   \label{fig:reco_spectra_comb}
 \end{figure}
 
-Figure~\ref{fig:response} shows the smearceptance matrices of the five observables. The
+Figure~\ref{fig:response} shows the response matrices of the five observables. The
 column-normalised diagonals of the FHC responses are $0.86$--$0.91$ in the best-resolved bin of
 each angular observable (the forward bin of $\cos\theta_\mu$ and the first bin of the others) and
 $0.66$--$0.88$ elsewhere in $\cos\theta_\mu$, $\cos\theta_\pi$ and $\theta_{\mu\pi}$. For the six
@@ -1846,7 +1844,7 @@ upper region is an inclusive region rather than a resolved point of a spectrum
     \includegraphics[width=\textwidth]{fw_resp_thmupi}
     \caption{$\theta_{\mu\pi}$}
   \end{subfigure}
-  \caption{Smearceptance matrices $S_{ij}=\varepsilon_j M_{ij}$, FHC, exactly as passed to
+  \caption{Response matrices $S_{ij}=\varepsilon_j M_{ij}$, FHC, exactly as passed to
     the unfolder, at the binning of the results, including the three-region $p_\pi$ response ($91\%$,
     $51\%$ and $52\%$ column-normalised diagonals); the rejected five-bin $p_\pi$ response, which shows
     the reconstructed events piling into the lowest bin from every true bin, is
@@ -1983,7 +1981,7 @@ Source & Branch / method & Range (\%) \\
     \midrule
     MC statistics           & universe spread       & $1.9$--$6.1$ \\
     EXT statistics          & beam-off sample       & $0.5$--$2.3$ \\
-    Data statistics         & thrown pseudo-data      & $6.6$--$19.3$ \\
+    Data statistics         & thrown pseudo-data    & $6.6$--$19.3$ \\
     \midrule
     Prediction total        & quadrature sum        & $32.6$--$56.7$ \\
     Total                   & incl.\ data stats     & $33.7$--$60.0$ \\
@@ -2195,7 +2193,7 @@ expected                & $0$     & $1$    & $68\%$ / $95\%$ \\
 With $100$ members each width is determined to about $\pm13\%$. The widths are consistent with one
 and the coverage with its nominal value, so the statistical uncertainties are correctly sized in the
 three configurations, and the strongly suppressed observables behave like the well-conditioned
-ones. Against the full covariance the pull widths are $0.22$--$0.46$ ($0.11$ for the totals) with
+ones. Against the full framework covariance, without the MCS term, the pull widths are $0.22$--$0.46$ ($0.11$ for the totals) with
 nearly complete coverage, because the ensemble varies only the data statistics while the full
 uncertainty also contains the flux, detector and cross-section terms, which are the same in every
 member; this is the origin of the closure $p$-values near unity. The ensemble means lie below the
@@ -2206,7 +2204,7 @@ measurement and is not corrected. The two-dimensional result has its own ensembl
 (\S\ref{sec:incl_2d}), and the proton-tagged extractions have theirs (\ptref{Sec.}{sec:pt_ensemble}). The construction of the reference and the full-covariance pulls are described in
 \suppref{Sec.}{sec:supp_ensemble}.
 
-\subsection{Robustness to a different interaction model}
+\subsection{Robustness to reweighted interaction-model variations}
 \label{sec:altmodel}
 
 Here the pseudo-data are thrown from a reweighted interaction model, while the response, the
@@ -2231,8 +2229,8 @@ the differences between the tune and the standalone generators.
   \caption{Unfolding pseudo-data from an alternative interaction model with the nominal response, FHC (upper block) and RHC (lower).
     ``Ratio'' is the mean of unfolded over the alternative model's own truth, over the bins holding at
     least $10\%$ of the largest truth; ``max dev'' is the largest per-bin departure from unity among
-    those bins, and ``bias'' the largest per-bin departure over every bin, expressed in units of the
-    uncertainty that bin carries.}
+    those bins, and ``bias'' the largest per-bin departure over every bin, in units of the framework
+    uncertainty of that bin (without the MCS term).}
   \label{tab:altmodel}
   \small
   \begin{tabular}{llccc}
@@ -2311,7 +2309,8 @@ and agree with the status column of the release index.
 \subsection{Result set}
 \label{sec:status_matrix}
 
-The status of every inclusive product is given in Table~\ref{tab:inventory}. The \statPrimary{}s are the fifteen differential extractions, five
+The status of every inclusive product is given in Table~\ref{tab:inventory}. \statDefinitions{} The
+\statPrimary{}s are the fifteen differential extractions, five
 observables in three configurations, and the three one-bin totals; the two-dimensional
 $\cos\theta_\pi\times\cos\theta_\mu$ in the combined configuration is a \statSecondary{}
 (\S\ref{sec:incl_2d}). Each carries the official covariance, detector variations and the
@@ -2658,20 +2657,15 @@ pseudo-data is $0.901$.
 
 \begin{table}[H]
   \centering
-  \caption{Total cross sections ($10^{-38}$~cm$^2$/Ar) in the measured phase space, averaged over the
-    $\nu_\mu+\bar\nu_\mu$ flux integrated above $60$~MeV, from the one-bin extraction (\S\ref{sec:total_xsec}) on the
-    Poisson-thrown central-value pseudo-data. $N_\mathrm{sel}$ and $N_\mathrm{bkg}$ are the
-    predicted selected count and background ($\nu$-background $+$ EXT $+$ dirt) of the
-    central-value prediction and $\varepsilon$ the selection efficiency, from the
-    cut-and-count check; $\sigma$ is the one-bin extraction with its full
-    universe-propagated uncertainty, ``stat'' its data-statistical term, ``syst'' the
-    prediction total (flux, cross section, re-interaction, detector, POT, targets, MC and
-    EXT statistics) and ``total'' their quadrature sum; ``truth'' is the realised truth of
-    the throw and $\chi^2/1$ the closure against it. MC counts carry the framework's
-    central-value weight (tune $\times$ PPFX $\times$ normalisation), the same as
-    Table~\ref{tab:cutflow}; the two differ by $\lesssim1\%$ because the yield comparison uses the
-    Run-1 dirt overlay with per-mode scale factors rather than the per-run dirt files.
-   }
+  \caption{Total cross sections ($10^{-38}$~cm$^2$/Ar) in the measured phase space from the one-bin
+    extraction (\S\ref{sec:total_xsec}) on central-value pseudo-data, averaged over the
+    $\nu_\mu+\bar\nu_\mu$ flux above $60$~MeV, which includes the flux below the pion-production
+    threshold. $N_\mathrm{sel}$ and $N_\mathrm{bkg}$ (neutrino background $+$ beam-off $+$ dirt) are the
+    selected count and background of the central-value prediction and $\varepsilon$ the selection
+    efficiency; ``stat'' is the data-statistical term, ``syst'' all other terms and ``total'' their
+    quadrature sum; ``truth'' is the realised truth of the throw and $\chi^2/1$ the closure against it.
+    The counts differ from Table~\ref{tab:cutflow} by $\lesssim1\%$ because they use the Run-1 dirt
+    overlay with per-mode scale factors.}
   \label{tab:cutcount}
   \footnotesize
   \begin{tabular}{lrrcccccccc}
@@ -2776,26 +2770,17 @@ the estimator. For this reason $p_\pi$ is reported in three regions.
 \paragraph{Model dependence.}
 The closure tests use pseudo-data from the model of the response. The test with reweighted
 interaction models bounds the model bias at $1.18\sigma$ (\S\ref{sec:altmodel}), but a test with an
-independent generator and its own detector simulation has not been made. The model dependence of
+independent generator and its own detector simulation has not been made. Reweighting probes only
+model changes expressible through the event weights; it does not change final-state multiplicities or
+kinematic correlations outside the support of the nominal simulation. The model dependence of
 the efficiency matters most for the one-bin total, a single efficiency averaged over the phase space,
 and for the open-ended $p_\pi>0.26$~GeV/$c$ region, inside which the efficiency varies strongly with
 the true momentum.
-
-\paragraph{Ensemble offset.}
-The ensembles place the mean result $0.4$--$1.1\%$ below the reference, at $0.6$--$1.8$ standard
-deviations of the mean ($0.8\%$ at $2.0$ for the RHC total), with the same sign in all six
-extractions (\S\ref{par:ensemble}). No correction or uncertainty is assigned; the offset is well
-inside the statistical uncertainty of a single measurement.
 
 \paragraph{Muon momentum scale.}
 The MCS momentum-scale term (\S\ref{sec:mcs}) is part of the official covariance. Its size, $\pm5\%$,
 is assumed and has not been compared with the difference between the MCS and range momenta of
 contained muons in data.
-
-\paragraph{Two totals.}
-The Wiener-SVD differential result estimates $A_C x_{\rm true}$, with row sums as low as $0.26$, so
-the sum of a differential result is not the physical total cross section. The physical total is the
-one-bin extraction.
 
 \paragraph{Proton-tagged results.} The limitations specific to the proton-tagged subsample (the
 proton mis-assignment, which no control region yet constrains, and the transverse-kinematic
@@ -2979,94 +2964,34 @@ $\cos\theta_\mu$ only; the comparison of the two parameterisations is recorded i
 
 \section{The \uboone{} detector}
 \label{sec:detector}
-
-\subsection{Operating principle}
 \label{sec:lartpc}
-
-A liquid argon time projection chamber (LArTPC) records three-dimensional images of the ionisation
-left by charged particles. It relies on two properties of liquid argon:
-\begin{enumerate}[noitemsep]
-  \item ionisation electrons are not captured by argon and, in sufficiently pure argon
-    (O$_2$-equivalent contamination below about $100$~ppt), drift over metres in an electric field;
-  \item argon scintillates at $128$~nm, tens of thousands of photons per MeV of deposited energy, which gives
-    the time of an interaction to a few nanoseconds.
-\end{enumerate}
-The electric field drifts the ionisation electrons to sense-wire planes at the anode, which record
-three two-dimensional projections of each track. The coordinate along the drift direction follows
-from the drift velocity and the arrival time of the signal relative to the interaction time given
-by the scintillation light.
-
-\uboone{} took data from October 2015 to July 2021 at Fermilab, on axis in the Booster Neutrino
-Beam and off axis in the NuMI beam~\cite{uboone_nim,numi_beam}.
-
-\subsection{Active volume and electric field}
 \label{sec:tpc}
-
-The active volume measures $256$~cm along the drift direction ($x$), $233$~cm vertically ($y$) and
-$1037$~cm along the Booster beam direction ($z$), about $85$~tonnes of liquid argon. The cathode at
-$x=256$~cm is held at $-70$~kV and the anode wire planes are at $x=0$, which gives a drift field of
-$273$~V/cm, a drift velocity of about $1.1$~mm/$\mu$s and a maximum drift time of about $2.3$~ms.
-The argon is recirculated through filters that remove oxygen and water, keeping the electron
-lifetime long compared with the drift time.
-
-\subsection{Wire readout}
 \label{sec:wires}
-
-Three wire planes with $3$~mm pitch read out the drifting charge:
-\begin{itemize}[noitemsep]
-  \item U (first induction), $2400$ wires at $+60^\circ$ to the vertical;
-  \item V (second induction), $2400$ wires at $-60^\circ$ to the vertical;
-  \item Y (collection), $3456$ vertical wires.
-\end{itemize}
-The induction planes are transparent to the drifting electrons and record bipolar induced signals;
-the collection plane collects the charge and records unipolar signals. Cold front-end ASICs mounted
-on the wire frames amplify and shape the signals inside the cryostat, which lowers the electronic
-noise. The signals are digitised outside the cryostat by $12$-bit ADCs at $16$~MHz and stored at
-$2$~MHz in readout windows of $4.8$~ms, about twice the maximum drift time, around each trigger.
-
-A region of unresponsive wires spans $675.1<z<775.1$~cm. Tracks that cross it have degraded
-calorimetry and range; the fiducial volume excludes it for the vertex (\S\ref{sec:fv}).
-
-\subsection{Photon detection system}
 \label{sec:pmt}
-
-Thirty-two $8$-inch photomultiplier tubes behind the anode wire planes detect the scintillation
-light, shifted to visible wavelengths by tetraphenyl-butadiene. The light provides the trigger: the
-software trigger requires optical activity in coincidence with the beam spill, about $10~\mu$s for
-NuMI. It also allows the charge of a reconstructed interaction to be matched to a flash in time and
-position, which rejects cosmic-ray activity outside the spill.
-
-\subsection{Calibration}
 \label{sec:calibration}
-
-\begin{itemize}[noitemsep]
-  \item A UV laser system~\cite{uboone_laser} produces straight ionisation tracks at known positions.
-    Their reconstructed distortions, together with cosmic-ray muons, give the map of the space-charge
-    distortion~\cite{sce}, which is applied to reconstructed positions; the distortions reach several
-    centimetres near the faces of the TPC.
-  \item Through-going cosmic-ray muons calibrate the relative response across the detector and in
-    time, and stopping muons calibrate the absolute energy scale through their $dE/dx$ near the end of
-    the track.
-  \item Michel electrons from stopped muons check the calorimetric reconstruction at energies below
-    about $50$~MeV.
-\end{itemize}
-
-\subsection{Cosmic rays and reconstruction}
 \label{sec:cosmics}
 
-At the surface the detector is crossed by cosmic-ray muons at a rate of several kHz, so each readout
-window contains tens of cosmic-ray tracks unrelated to the neutrino interaction. The rejection
-proceeds in stages: the software trigger and flash matching in time with the spill, and the Pandora
-topological score (Cut~3), which separates neutrino-like from cosmic-like topologies. The cosmic-ray
-tagger~\cite{uboone_crt}, scintillator panels around the cryostat, is installed from Run~3 onwards
-and not used in this analysis: it is absent for Runs~1 and~2, and a cut would need a tagging
-systematic of its own. The remaining beam-off background is subtracted (\S\ref{sec:mc}).
+\uboone{} is a liquid argon time projection chamber~\cite{uboone_nim} that took data at Fermilab from
+October 2015 to July 2021, on axis in the Booster Neutrino Beam and off axis in the NuMI
+beam~\cite{numi_beam}. Ionisation electrons drift in a $273$~V/cm field (cathode at $-70$~kV), at about
+$1.1$~mm/$\mu$s, across the $256$~cm drift length ($x$) of the $256\times233\times1037$~cm$^3$ active volume,
+about $85$~tonnes of argon, to three wire planes of $3$~mm pitch: two induction planes (U and V, $2400$
+wires each at $\pm60^\circ$ to the vertical) and a collection plane (Y, $3456$ vertical wires). The signals
+are amplified by cold front-end electronics, digitised outside the cryostat at $16$~MHz and stored at
+$2$~MHz in $4.8$~ms windows. Unresponsive wires span $675.1<z<775.1$~cm, which the fiducial volume excludes
+for the vertex (\S\ref{sec:fv}). Thirty-two photomultiplier tubes behind the wire planes detect the
+$128$~nm scintillation light: the software trigger requires light in coincidence with the $10~\mu$s NuMI
+spill, and matching the charge of an interaction to a flash rejects cosmic-ray activity outside it.
 
-Hits are reconstructed into particles by the Pandora multi-algorithm pattern
-recognition~\cite{pandora,uboone_pandora}, which organises them in a hierarchy with the neutrino
-interaction at the top. The momentum of a track is estimated from its range when it stops in the
-detector and from multiple Coulomb scattering otherwise~\cite{uboone_mcs}. Particle identification
-uses the log-likelihood ratio of the $dE/dx$ profile along the track~\cite{uboone_llr}
+A UV laser~\cite{uboone_laser} and cosmic-ray muons give the map of the space-charge distortion~\cite{sce},
+which reaches several centimetres near the faces of the TPC; through-going muons calibrate the relative
+response and stopping muons the energy scale. At the surface each readout window contains tens of
+cosmic-ray tracks. They are rejected by the trigger and flash matching and by the Pandora topological score
+(Cut~3); the cosmic-ray tagger~\cite{uboone_crt}, installed from Run~3, is not used because it is absent
+for Runs~1 and~2, and the remaining beam-off background is subtracted (\S\ref{sec:mc}).
+Pandora~\cite{pandora,uboone_pandora} reconstructs the hits into a hierarchy of particles. Track momentum
+comes from range for contained tracks and from multiple Coulomb scattering otherwise~\cite{uboone_mcs},
+and particle identification from the log-likelihood ratio of the $dE/dx$ profile~\cite{uboone_llr}
 (\S\ref{sec:selection}).
 
 \begin{thebibliography}{99}
@@ -3219,35 +3144,6 @@ uses the log-likelihood ratio of the $dE/dx$ profile along the track~\cite{uboon
   ``A multidimensional unfolding method based on Bayes' theorem,''
   \textit{Nucl.\ Instrum.\ Methods A} \textbf{362}, 487--498 (1995).
 
-\bibitem{lu_tki}
-  X.-G.~Lu, L.~Pickering, S.~Dolan, G.~Barr, D.~Coplowe, Y.~Uchida, D.~Wark,
-  M.~O.~Wascko, A.~Weber, and T.~Yuan,
-  ``Measurement of nuclear effects in neutrino interactions with minimal
-  dependence on neutrino energy,''
-  \textit{Phys.\ Rev.\ C} \textbf{94}, 015503 (2016).
-
-\bibitem{furmanski_pn}
-  A.~P.~Furmanski and J.~T.~Sobczyk,
-  ``Neutrino energy reconstruction from one-muon and one-proton events,''
-  \textit{Phys.\ Rev.\ C} \textbf{95}, 065501 (2017).
-
-\bibitem{rs_coherent}
-  D.~Rein and L.~M.~Sehgal,
-  ``Coherent $\pi^0$ production in neutrino reactions,''
-  \textit{Nucl.\ Phys.\ B} \textbf{223}, 29--44 (1983).
-
-\bibitem{berger_sehgal_coherent}
-  C.~Berger and L.~M.~Sehgal,
-  ``Partially conserved axial vector current and coherent pion production by
-  low energy neutrinos,''
-  \textit{Phys.\ Rev.\ D} \textbf{79}, 053003 (2009).
-
-\bibitem{genieccpi}
-  MicroBooNE Collaboration, P.~Abratenko \textit{et al.},
-  ``First Measurement of Energy-Dependent Inclusive Muon-Neutrino
-  Charged-Current Cross Sections on Argon with the MicroBooNE Detector,''
-  \textit{Phys.\ Rev.\ Lett.} \textbf{128}, 151801 (2022), arXiv:2110.14023 [hep-ex].
-
 \bibitem{uboone_nim}
   MicroBooNE Collaboration, R.~Acciarri \textit{et al.},
   ``Design and Construction of the MicroBooNE Detector,''
@@ -3314,29 +3210,11 @@ uses the log-likelihood ratio of the $dE/dx$ profile along the track~\cite{uboon
   production cross sections on mineral oil at $E_\nu \in 0.5$--$2.0$~GeV,''
   \textit{Phys.\ Rev.\ D} \textbf{83}, 052007 (2011).
 
-\bibitem{minerva_tki}
-  X.-G.~Lu \textit{et al.}\ (MINERvA Collaboration),
-  ``Measurement of final-state correlations in neutrino muon-proton mesonless
-  production on hydrocarbon at $\langle E_\nu\rangle=3$~GeV,''
-  Phys.\ Rev.\ Lett.\ \textbf{121}, 022504 (2018).
-
 \bibitem{minerva_ccpi}
   B.~Eberly \textit{et al.}\ (MINERvA Collaboration),
   ``Charged pion production in $\nu_\mu$ interactions on hydrocarbon at
   $\langle E_\nu \rangle = 4.0$~GeV,''
   \textit{Phys.\ Rev.\ D} \textbf{92}, 092008 (2015).
-
-\bibitem{minerva_fe}
-  C.~L.~McGivern \textit{et al.}\ (MINERvA Collaboration),
-  ``Cross sections for $\nu_\mu$ and $\bar{\nu}_\mu$ induced pion production on
-  hydrocarbon in the few-GeV region using MINERvA,''
-  \textit{Phys.\ Rev.\ D} \textbf{94}, 052005 (2016).
-
-\bibitem{minerva_lownu}
-  MINERvA Collaboration, J.~Wolcott \textit{et al.},
-  ``Evidence for Quasielastic Charge Current Antineutrino Scattering Off
-  Protons in Hydrocarbon at $\langle E_{\bar\nu} \rangle = 3.5$~GeV,''
-  \textit{Phys.\ Rev.\ Lett.} \textbf{116}, 081802 (2016).
 
 \bibitem{t2k_ccpip}
   K.~Abe \textit{et al.}\ (T2K Collaboration),
@@ -3368,5 +3246,6 @@ uses the log-likelihood ratio of the $dE/dx$ profile along the track~\cite{uboon
 \bibitem{pt_note} I.~Pophale and J.~Nowak, ``Measurement of proton-tagged charged-current
   single-charged-pion production on argon in the NuMI beam with \uboone{},'' companion analysis
   note (secondary analysis under validation).
+
 \end{thebibliography}
 \end{document}

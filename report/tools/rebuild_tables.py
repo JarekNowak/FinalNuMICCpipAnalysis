@@ -77,13 +77,19 @@ for beam,c in [('FHC','FHC5'),('RHC','RHCFULL'),('comb','COMB')]:
 patch('tab:chi2_incl',T('llcccccc','Beam & Observable & truth & uB tune & GENIE & GiBUU & NEUT & NuWro',rows))
 # tab:chi2_theta (cos theta_mu against theta_mu) retired 2026-09-26 with theta_mu
 # --- tab:wtki_*
-for lab,c in [('tab:wtki_fhc','FHC5'),('tab:wtki_rhc','RHCFULL'),('tab:wtki_comb','COMB')]:
-    rows=[]
-    for o in P1:
+# 2026-09-28: one table for the three configurations (review: shorter documents)
+rows=[]
+for o in P1:
+    cells=[]
+    for c in CFS:
         d=DU[('1p',c,o)]; cl=CL[('1p',c,o)]
-        rows.append(f"      {LAB[o]:<18} & ${d['sigma_int']:.3f}$ & ${float(cl['unf_over_truth']):.2f}$ & ${float(cl['chi2']):.2f}/{cl['ndf']}$ \\\\")
-        if o=='pp': rows.append('      \\midrule')
-    patch(lab,T('lccc','Observable & $\\sigma_\\mathrm{int}$ & unf./truth & $\\chi^2/\\mathrm{ndf}$',rows))
+        cells.append(f"${d['sigma_int']:.3f}$ & ${float(cl['unf_over_truth']):.2f}$ & ${float(cl['chi2']):.2f}/{cl['ndf']}$")
+    rows.append(f"      {LAB[o]:<18} & "+' & '.join(cells)+" \\\\")
+    if o=='pp': rows.append('      \\midrule')
+hdr=('& \\multicolumn{3}{c}{FHC} & \\multicolumn{3}{c}{RHC} & \\multicolumn{3}{c}{Combined} \\\\\n'
+     '\\cmidrule(lr){2-4}\\cmidrule(lr){5-7}\\cmidrule(lr){8-10}\n'
+     'Observable'+' & $\\sigma_\\mathrm{int}$ & ratio & $\\chi^2/n$'*3)
+patch('tab:wtki',T('lccccccccc',hdr,rows))
 # --- systbreak tables
 ROWS=[('\\textbf{Prediction total}','PredTotal'),('Cross section (GENIE)','xsec_total'),('Flux (PPFX)','flux_total'),('Detector','DET'),('Reinteraction','reint'),('MCS momentum scale','MCS'),('MC stat','MCstats'),('EXT stat','EXTstats'),('Data stat','DataStats'),('POT $+$ targets','POTT'),('\\textbf{Total (incl.\\ data stat)}','total')]
 def sb(c):
@@ -101,7 +107,7 @@ for lab,c in [('tab:systbreak_fhc','FHC5'),('tab:systbreak_rhc','RHCFULL'),('tab
 def rng(fam,key,bold=False):
     vs=[(det(DU[(fam,c,o)]) if key=='DET' else DU[(fam,c,o)][key]) for c in CFS for o in (INCL if fam=='incl' else P1ALL)]
     return (f"$\\mathbf{{{min(vs):.1f}}}$--$\\mathbf{{{max(vs):.1f}}}$" if bold else f"${min(vs):.1f}$--${max(vs):.1f}$")
-SR=[('Flux (PPFX multisims)','\\texttt{weightsFlux}','flux_total',0),('Detector response','Dedicated samples','DET',0),('Cross-section model','\\texttt{weightsGenie}','xsec_total',0),('Hadron re-interaction','\\texttt{weightsReint}','reint',0),('POT counting','Beam toroids','POT',0),('Target count','FV geometry','numTargets',0),('MCS momentum scale','data-side variation','MCS',0),None,('MC statistics','universe spread','MCstats',0),('EXT statistics','beam-off sample','EXTstats',0),('Data statistics','thrown fake data','DataStats',0),None,('Prediction total','quadrature sum','PredTotal',0),('Total','incl.\\ data stats','total',0)]
+SR=[('Flux (PPFX multisims)','\\texttt{weightsFlux}','flux_total',0),('Detector response','Dedicated samples','DET',0),('Cross-section model','\\texttt{weightsGenie}','xsec_total',0),('Hadron re-interaction','\\texttt{weightsReint}','reint',0),('POT counting','Beam toroids','POT',0),('Target count','FV geometry','numTargets',0),('MCS momentum scale','data-side variation','MCS',0),None,('MC statistics','universe spread','MCstats',0),('EXT statistics','beam-off sample','EXTstats',0),('Data statistics','thrown pseudo-data','DataStats',0),None,('Prediction total','quadrature sum','PredTotal',0),('Total','incl.\\ data stats','total',0)]
 # 2026-09-27: inclusive only; the analysis note carries no proton-tagged numbers
 rows=['    \\midrule' if r is None else f"    {r[0]:<24}& {r[1]:<22}& {rng('incl',r[2],r[3])} \\\\" for r in SR]
 patch('tab:systematics',T('L{3.8cm} L{3.8cm} c','Source & Branch / method & Range (\\%)',rows))
