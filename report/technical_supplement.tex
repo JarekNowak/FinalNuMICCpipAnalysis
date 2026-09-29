@@ -1,6 +1,97 @@
-\input{common_preamble}
+\documentclass[11pt,a4paper]{article}
 
-% Cross-document references to the analysis note
+% ── Packages (only those available on this installation) ──────────────────────
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{listings}
+\usepackage{float}
+\usepackage{placeins}
+\IfFileExists{todonotes.sty}{\usepackage{todonotes}}{\newcommand{\todo}[2][]{}}
+
+% ── Figure path ───────────────────────────────────────────────────────────────
+\graphicspath{{figures/}}
+
+% ── Hyperref setup ────────────────────────────────────────────────────────────
+\hypersetup{
+  colorlinks = true,
+  linkcolor  = blue!70!black,
+  citecolor  = green!50!black,
+  urlcolor   = blue!70!black,
+}
+
+% ── Custom commands ───────────────────────────────────────────────────────────
+\newcommand{\numu}{$\nu_\mu$}
+\newcommand{\numubar}{$\bar{\nu}_\mu$}
+\newcommand{\ccpip}{$\mathrm{CC}\pi^{\pm}$}
+\newcommand{\pmu}{$p_\mu$}
+\newcommand{\ppi}{$p_\pi$}
+\newcommand{\costhmu}{$\cos\theta_\mu$}
+\newcommand{\costhpi}{$\cos\theta_\pi$}
+\newcommand{\thmupi}{$\theta_{\mu\pi}$}
+\newcommand{\uboone}{MicroBooNE}
+\newcommand{\GeVc}{\,\text{GeV}\!/c}
+\newcommand{\pot}{\,\text{POT}}
+\newcommand{\cm}{\,\text{cm}}
+
+% inline math shorthand so they work inside math mode too
+\newcommand{\pmuM}{p_\mu}
+\newcommand{\ppiM}{p_\pi}
+\newcommand{\cthmuM}{\cos\theta_\mu}
+\newcommand{\cthpiM}{\cos\theta_\pi}
+\newcommand{\thmupM}{\theta_{\mu\pi}}
+
+% ── Listings (C++ snippets) ───────────────────────────────────────────────────
+\lstset{
+  language=C++,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\bfseries\color{blue!70!black},
+  commentstyle=\itshape\color{gray},
+  backgroundcolor=\color{gray!10},
+  frame=single,
+  framerule=0.4pt,
+  numbers=none,
+  breaklines=true,
+}
+
+% ── Table column helpers ──────────────────────────────────────────────────────
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+% Let TeX stretch spacing on hard-to-break lines (long \texttt paths/code) to keep
+% text out of the margin.
+\emergencystretch=3em
+
+% ─────────────────────────────────────────────────────────────────────────────
+
+
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+% Every result figure shows fake data. The stamp is drawn over the graphic by LaTeX so it cannot be
+% dropped by regenerating the figure, and so black points are never mistaken for beam-on data.
+\newcommand{\blindfig}[2][\textwidth]{%
+  \begin{tikzpicture}
+    \node[inner sep=0pt] (img) {\includegraphics[width=#1]{#2}};
+    \node[anchor=north east, fill=red!12, draw=red!60!black, rounded corners=1pt, inner sep=2pt,
+          font=\scriptsize\bfseries\sffamily, text=red!60!black] at ([xshift=-2pt,yshift=-2pt]img.north east)
+          {BLINDED: CV PSEUDO-DATA};
+  \end{tikzpicture}}
+
+
+\input{glyphtounicode}
+\pdfgentounicode=1
+
+% Cross-document references to the analysis note and the proton-tagged note
 \usepackage{xr}
 \externaldocument[N-]{analysis_note}
 \externaldocument[P-]{proton_tagged_note}
@@ -27,6 +118,8 @@ Production on Argon in the NuMI Beam\par}
 \vspace{0.8cm}
 {\large Companion to the inclusive and proton-tagged analysis notes\par}
 \vspace{0.5cm}
+\today, {\large version 1.6}
+
 \vspace{1.5cm}
 {\large Ishanee Pophale and Jarek Nowak\par}
 \vspace{0.5cm}
@@ -82,15 +175,16 @@ Each section is tagged with the measurement it serves: \textsc{[inclusive]},
 shared with the analysis notes.
 
 \part{Final configuration}
-\section[Status of the results]{Status of the results\scopetag{shared}}
-\label{sec:supp_status}
 
-Table~\ref{tab:inventory} gives the status of every inclusive product and the configurations in which
-it is reported, and Table~\ref{tab:pt_status} the same for the proton-tagged products. \statDefinitions{}
+%\section[Status of the results]{Status of the results\scopetag{shared}}
+%\label{sec:supp_status}
 
-\input{tables/inventory}
+%Table~\ref{tab:inventory} gives the status of every inclusive product and the configurations in which
+%it is reported, and Table~\ref{tab:pt_status} the same for the proton-tagged products. \statDefinitions{}
 
-\input{tables/pt_status}
+%\input{tables/inventory}
+
+%\input{tables/pt_status}
 
 \section[Final binnings and the binning rule]{Final binnings and the binning rule\scopetag{shared}}
 \label{sec:final_binning}
@@ -167,7 +261,7 @@ included in every quoted uncertainty and every summary table, among them the sys
 Tables~\ref{tab:systbreak_fhc}--\ref{tab:systbreak_comb} (\noteref{Sec.}{sec:mcs}). The closure
 $\chi^2$ and the biases of the robustness tests are quoted with the framework covariance, since they
 test the extraction rather than the uncertainty of the data. Three terms lie outside the official
-covariance: the beamline-geometry flux term, the uncertainty of the per-run beam-off gate ratios and that of the use of the Run-1 beam-off
+covariance: the beamline-geometry flux term, the uncertainty of the per-run beam-off trigger ratios and that of the use of the Run-1 beam-off
 sample for Run~2.
 
 \section[Validation]{Validation\scopetag{shared}}
@@ -239,8 +333,7 @@ two-dimensional results. Uncertainties and correlations are taken from the covar
     \texttt{cov/<tag>/unfolded\_signal.txt} & The unfolded bin integrals. \\
     \texttt{total\_xsec.tsv} & The one-bin total cross sections, with their uncertainty breakdown. \\
     \texttt{index\_extractions.tsv} & Every extraction, with its status. \\
-    \texttt{../status.tsv} & The status of every product, the single source of Tables~\ref{tab:inventory}
-      and~\ref{tab:pt_status} (in \texttt{report/}, next to the release). \\
+    \texttt{../status.tsv} & The status of every product (in \texttt{report/}, next to the release). \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -640,7 +733,7 @@ no mechanism by which it would sharpen the momentum response, and the measuremen
 this.
 
 The proton-tagged $p_\pi$ extraction is therefore the pion-momentum cross section of an
-exclusive final state that also yields $W$ and TKI, a \statValidation{} (Table~\ref{tab:pt_status}),
+exclusive final state that also yields $W$ and TKI, a \statValidation{},
 not a repair of the inclusive one. The inclusive $p_\pi$ in three regions also meets the
 adopted criterion.
 
@@ -792,8 +885,8 @@ points. The partitions relevant to either criterion, from the coarsest that
 could replace the released binning to the finest passing $0.50$, and for the angles also the
 partition at the released five bins, which separates the effect of the edges from that of the bin
 count, were extracted in full in FHC, RHC and combined: $141$ extractions with universes, covariance,
-unfolding and closure (SLURM 3428213, 3428222, 3428223, 3433027 and 3433033), and the proton
-momentum $p_p$ added to the proton-tagged family in two to five bins (SLURM 3433088): $153$
+unfolding and closure , and the proton
+momentum $p_p$ added to the proton-tagged family in two to five bins: $153$
 extractions in all (\texttt{data\_release/binreview\_eval\_2026-09-26.tsv}). They carry the tune and
 pseudo-data predictions only. A partition
 has the same diagonals in $\cos\theta_\mu$ and in $\theta_\mu$, and the $\theta_\mu$ grid is finer
@@ -1204,8 +1297,7 @@ diagnostic purpose.
 
 \begin{center}\small
 \captionof{table}{Six-bin $W_{\pi p}$ pseudo-data closure, diagnostic only (not reported as a
-  differential result). $\sigma_\mathrm{int}$ in $10^{-38}$~cm$^2$/Ar; columns as in
-  \ptref{Table}{tab:wtki}.}
+  differential result). $\sigma_\mathrm{int}$ in $10^{-38}$~cm$^2$/Ar.}
 \label{tab:wpipr_sixbin_closure}
 \begin{tabular}{lccc}
 \toprule
@@ -1270,7 +1362,7 @@ $\cos\theta_\mu$ (\S\ref{sec:thetavar}).
     $\nu_\mu$ overlays POT-scaled per run, reprocessed with the proton-tagged selection
     and the full central-value weight under the safe-weight rule
     (\texttt{reprocess\_cutflow\_cf\_1p.sh}); EXT from the per-run beam-off
-    samples scaled by the run gate ratios; dirt from the GENIE NuMI dirt overlay
+    samples scaled by the run trigger ratios; dirt from the GENIE NuMI dirt overlay
     (\texttt{macros/cutflow\_yields\_1p.C}). The final row agrees with the
     proton-tagged cut-and-count check (\ptref{Table}{tab:pt_total}). Pred.\ $=$ Signal $+$ Bkg $+$ EXT $+$ Dirt. Eff.\ is the cumulative signal efficiency relative to the generated signal (the None stage, where all true signal is counted); Pur.\ $=$ Signal/Pred.}
   \label{tab:cutflow_1p}
@@ -1469,7 +1561,7 @@ comparisons read off any panel are made on equal footing.
     matrices \texttt{A\_C\_1p\_FHC5\_*.tsv}; equal to the ratio of the
     $A_C$-smeared to the truth-level integral for a flat prediction.}
   \label{tab:acwtki}
-  \par\smallskip\noindent{\footnotesize $^{\dagger}$ \statSecondary{} (Table~\ref{tab:pt_status}); $W_{\pi p}$ is \statNotReported{} and the others are each a \statValidation{}.}
+  \par\smallskip\noindent{\footnotesize $^{\dagger}$ \statSecondary{}; $W_{\pi p}$ is \statNotReported{} and the others are each a \statValidation{}.}
   \begin{tabular}{lc}
       \toprule
       Observable & mean $A_C$ row sum \\
@@ -1510,7 +1602,7 @@ The two usable pairs are each a \statSecondary{} in the combined configuration o
 $d^2\sigma/d\theta_p\,d\delta p_T$ on the proton-tagged sample, presented in the proton-tagged note,
 and $d^2\sigma/d\cos\theta_\pi\,d\cos\theta_\mu$ on the inclusive sample, presented in
 \noteref{Sec.}{sec:incl_2d}. Their FHC and RHC extractions and the other six pairs are
-\statNotReported{} (Tables~\ref{tab:inventory} and~\ref{tab:pt_status}). The single-mode extractions
+\statNotReported{}. The single-mode extractions
 of the two pairs are not shape measurements, because their responses cannot be inverted. Every
 one-dimensional result is quoted per beam mode and for the combination; the two two-dimensional
 results are quoted in the combined configuration only.
@@ -1772,7 +1864,7 @@ $0.5$--$0.8\sigma$ low, while GiBUU, NEUT and NuWro lie within $0.8\sigma$.
     generator predictions. The measurement uncertainty is the official one-bin
     covariance (flux, cross section, re-interaction, detector, POT, targets and statistics; the MCS
     momentum-scale term is zero for the total, which uses no reconstructed muon momentum; the
-    beamline-geometry, beam-off gate-ratio and Run-2 stand-in terms lie outside it,
+    beamline-geometry, beam-off trigger-ratio and Run-2 stand-in terms lie outside it,
     \noteref{Sec.}{sec:notincov}). \texttt{data\_release/total\_xsec.tsv}. Values in
     parentheses give each generator's deviation from the measurement in units of the
     measurement uncertainty. The generator predictions are integrated over the full binning with open upper bins
@@ -2209,7 +2301,7 @@ The four reconstruction-level control regions of the inclusive $\mathrm{CC}\,1\m
 are CC$0\pi$, multi-$\pi$, $\pi^0$ and large muon--pion opening angle (called ``cosmic'' below for
 brevity: it is cosmic-enriched, $34$--$41\%$ beam-off, not cosmic-pure); \noteref{Sec.}{sec:sidebands}
 gives their definitions. Throughout, ``beam-off'', ``EXT'' and ``cosmic data'' name the same data-driven
-component, the beam-off trigger sample scaled by gate counts; ``signal contamination'' means the
+component, the beam-off trigger sample scaled by trigger counts; ``signal contamination'' means the
 inclusive signal unless the proton-tagged selection is named. Each region is anchored by the inversion
 of one nominal signal requirement; requirements that become undefined once that inversion is made, or
 that would sculpt the targeted control sample, are dropped as listed in Table~\ref{tab:cr_defs}. Each
@@ -2640,7 +2732,7 @@ efficiency and purity of the released measurement are those of
 \noindent\emph{Per-run scaling.} The yields above and in \noteref{Table}{tab:cutflow} use
 the per-run POT factors of \noteref{Table}{tab:pot} (each run scaled by its own
 $D_{\text{run}}/\text{MC}_{\text{run}}$), and the EXT by the per-run trigger ratios
-(per-run gate ratios, \noteref{Sec.}{sec:mc}). A single per-mode factor would differ from the
+(per-run trigger ratios, \noteref{Sec.}{sec:mc}). A single per-mode factor would differ from the
 per-run scheme by about $2\%$ in the FHC final-cut signal, a small and nearly uniform
 re-weighting of the run mixture that moves efficiency and purity by $<0.5\%$. The per-run
 scheme is used because real beam-on data require it. The pseudo-data are thrown
@@ -2896,7 +2988,7 @@ subtraction by about $4$ events; any cut that costs more than about $0.5\%$ of t
 $\cos\theta_\mu<0$ cut would remove about $7$ beam-off and $33$ signal events. The calorimetric direction flag
 of the CC$0\pi$ analysis is bounded by the same ceiling.
 
-\input{glossary}
+%\input{glossary}
 
 \begin{thebibliography}{99}
 \bibitem{minerva_tki}
