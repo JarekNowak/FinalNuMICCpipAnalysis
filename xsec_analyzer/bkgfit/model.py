@@ -11,6 +11,7 @@ Inputs are the templates of macros/bkgfit_templates.C. Conventions follow the ex
 Class parameters multiply the class templates IN EVERY UNIVERSE, so a fitted normalisation keeps its
 correlation with the flux and cross-section terms (the (1+B/S) coherence of the extraction).
 """
+import os
 import numpy as np
 import uproot
 
@@ -46,7 +47,7 @@ def bin_label(i):
 
 class Templates:
     """All template arrays in memory."""
-    def __init__(self, path='/data/uboone/processed/bkgfit/templates.root'):
+    def __init__(self, path=os.environ.get('BKGFIT_TEMPLATES', '/data/uboone/processed/bkgfit/templates.root')):
         f = uproot.open(path)
         keys = set(k.split(';')[0] for k in f.keys())
         self.cv = np.array([f[f'cv_{p}'].values().reshape(NC, NB) for p in PERIODS])          # [P,C,B]

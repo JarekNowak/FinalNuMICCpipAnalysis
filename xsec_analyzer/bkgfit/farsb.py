@@ -12,14 +12,15 @@ decided by three numbers per variant, which this script measures:
   composition       the background mix by class -- a far sideband that constrains a DIFFERENT
                     mixture than the near one is not a purer version of it, it is another region.
 
-Everything is at data exposure, with the per-period MC scales, beam-off gate ratios and dirt
-scaling of macros/bkgfit_templates.C (kept in sync by hand; see sb_samples).
+Everything is at data exposure, with the per-period MC scales and beam-off gate ratios of
+macros/bkgfit_templates.C (kept in sync by hand; see sb_samples) and the per-run dirt of bkgfit/dirt.py.
 
   python3 -m bkgfit.farsb [--quick]      (--quick: first MC file per period only)
 """
 import sys, os
 import numpy as np
 import uproot, awkward as ak
+from .dirt import dirt_perrun
 
 S = 'CC1mu1piXp'
 P = '/data/uboone/processed/sb_pi0/'
@@ -28,6 +29,10 @@ PNAME = ['FHC_R1', 'FHC_R2', 'FHC_R4', 'FHC_R5', 'RHC_R1', 'RHC_R2', 'RHC_R3', '
 POT = [2.192, 1.268, 2.075, 2.231, 0.6053, 2.591, 5.003, 2.883]
 G1, G3, G4, G5, OCCX = 4582248.27, 32649128.65, 34831148.625, 19256341.475, 0.98
 DIRT = P + 'xsec-ana-prodgenie_numi_uboone_overlay_dirt_fhc_mcc9_run1_v28_all_snapshot.root'
+RUN = [1, 2, 4, 5, 11, 12, 13, 14]          # file-properties run number of each period
+# per-run dirt (bkgfit/dirt.py): the far-cut variables (sb_nprimtrk, sb_nnonproton) are carried by the
+# sb_pi0/ Run-1 sample and by the 2026-10-01 per-run reprocess in cf/; the region flags agree in every copy
+DIRT_DIR = lambda run: P if run in (1, 2) else '/data/uboone/processed/cf/'
 
 
 def samples():
@@ -136,6 +141,7 @@ def read(path, is_mc):
 def main():
     quick = '--quick' in sys.argv
     mc, ext, data = samples()
+    dirts = dirt_perrun('comb', where=DIRT_DIR)
     V = variants()
     nu = np.zeros((len(V), len(CLASSES)))   # neutrino MC by class
     eo = np.zeros(len(V))                   # beam-off
@@ -149,8 +155,8 @@ def main():
             print(f'== {name} skipped (no beam-on file)', flush=True); continue
         files = [(f, s, 'mc') for f, s in (mc[p][:1] if quick else mc[p])]
         files += [(f, s, 'ext') for f, s in ext[p]]
-        sdirt = 0.092402 * 0.65 * POT[p] / 8.857 if p < 4 else 0.071666 * 0.65 * POT[p] / 11.082
-        files += [(DIRT, sdirt, 'dirt')] + [(f, 1.0, 'data') for f in data[p]]
+        # dirt: this period's sample(s), data POT / dirt POT; the CV weight carries the 0.65 once
+        files += [(f, s, 'dirt') for r, f, s in dirts if r == RUN[p]] + [(f, 1.0, 'data') for f in data[p]]
         for path, scale, kind in files:
             if not os.path.exists(path):
                 print(f'   MISSING {os.path.basename(path)}'); continue

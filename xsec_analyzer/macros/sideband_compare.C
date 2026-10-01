@@ -12,6 +12,7 @@
 // real per-run beam-on files (ONLY when explicitly unblinding the control regions).
 //   usage:  root -l -b -q 'macros/sideband_compare.C("fhc","fake")'   // or rhc/comb, beamon
 #include "sb_guard.h"   // blinding guard on every beam-on file (2026-09-06)
+#include "dirt_perrun.h" // per-run dirt normalisation (2026-10-01)
 #include <vector>
 #include <string>
 #include "TRandom3.h"
@@ -50,7 +51,7 @@ void sideband_compare(const char* mode="fhc", const char* datasrc="fake",
   // stay untouched; point it back at the standard dir once those carry sb_.
   const char* P=dir;
   std::vector<Src> mc; std::vector<std::string> data;
-  double sc_ext, sc_dirt;
+  double sc_ext;
   auto FHCmc=[&](){ const char* rn[4]={"Run1_fhc_new_numi_flux_fhc_pandora_ntuple",
       "Run2_fhc_new_numi_flux_fhc_pandora_ntuple","Run4_fhc_new_numi_flux_fhc_pandora_ntuple",
       "reweightedPPFX_numi_nu_overlay_pion_ntuples_run5_fhc"}; double sc[4]={0.09415,0.05085,0.07323,0.11560};
@@ -64,12 +65,11 @@ void sideband_compare(const char* mode="fhc", const char* datasrc="fake",
   std::string m=mode;
   // sc_ext carries the 2% NuMI beam-occupancy factor the framework applies on top of the
   // beam-on/beam-off trigger ratio (SystematicsCalculator.cxx: "* 0.98"); it was missing
-  // here, over-counting EXT by 2%. sc_dirt for "comb" sums both modes' exposures, matching
-  // sc_ext -- the old two-branch ternary silently gave comb the FHC-only dirt scale.
+  // here, over-counting EXT by 2%. The dirt is normalised per run (dirt_perrun.h, 2026-10-01).
   const double NUMI_EXT_OCC = 0.98;
-  if(m=="fhc"){FHCmc();FHCdata();sc_ext=NUMI_EXT_OCC*5.9313;sc_dirt=0.081020*0.65;}
-  else if(m=="rhc"){RHCmc();RHCdata();sc_ext=NUMI_EXT_OCC*6.1584;sc_dirt=0.071666*0.65;}
-  else {FHCmc();RHCmc();FHCdata();RHCdata();sc_ext=NUMI_EXT_OCC*12.0898;sc_dirt=(0.081020+0.071666)*0.65;}
+  if(m=="fhc"){FHCmc();FHCdata();sc_ext=NUMI_EXT_OCC*5.9313;}
+  else if(m=="rhc"){RHCmc();RHCdata();sc_ext=NUMI_EXT_OCC*6.1584;}
+  else {FHCmc();RHCmc();FHCdata();RHCdata();sc_ext=NUMI_EXT_OCC*12.0898;}
   // real beam-on files would replace `data` here when unblinding the control regions.
   if(std::string(datasrc)=="beamon"){ printf("  [beamon requested — real-data control-region unblinding; not wired until authorised]\n"); return; }
   // "fakestack": the full-stack technical test requested at review. The pseudo-data are the
@@ -110,8 +110,10 @@ void sideband_compare(const char* mode="fhc", const char* datasrc="fake",
     // sb_ flags. sc_ext (pooled sample) is no longer used for EXT.
     std::vector<Src> extv; add_ext(extv, m.c_str());
     double Next=0; for(auto&x:extv){ TChain ce("stv_tree"); ce.Add(x.file.c_str()); Next+=wsum(ce,F,false)*x.scale; }
-    TChain cd("stv_tree"); cd.Add(Form("%sxsec-ana-prodgenie_numi_uboone_overlay_dirt_fhc_mcc9_run1_v28_all_snapshot.root",P));
-    double Ndirt=wsum(cd,F,true)*sc_dirt;
+    // dirt: each run's sample(s), data POT / dirt POT; the CV weight carries the 0.65 once. The
+    // proton-tagged flags live in the w/ dirt trees, the inclusive ones in processed/.
+    double Ndirt=0; for(auto& d : dirt_perrun(m, std::string(sel)=="CC1mu1pi1p" ? "/data/uboone/processed/w/" : "/data/uboone/processed/")){
+      TChain cd("stv_tree"); cd.Add(d.file.c_str()); Ndirt+=wsum(cd,F,true)*d.scale; }
     double Ndata=0; for(auto&d:data){ sb_guard_data(d); TChain c("stv_tree"); c.Add(d.c_str()); Ndata+=wsum(c,F,false); }
     // The fake data is a Poisson throw of the neutrino MC only, so the machinery/
     // normalisation check compares it to the CV-weighted neutrino MC (sig+nubkg).

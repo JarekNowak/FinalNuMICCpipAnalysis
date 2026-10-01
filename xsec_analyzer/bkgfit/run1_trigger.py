@@ -26,6 +26,7 @@ hypotheses. The one that puts the ratios at unity is the exposure the data actua
 """
 import os
 import numpy as np
+import uproot
 
 from .farsb import read, klass, CLASSES, P, BO, G1, OCCX, DIRT
 
@@ -58,11 +59,13 @@ def main():
             print('MISSING', f); return
     mc, ext, dat = read(MC_R1, True), read(EXT_R1, False), read(DATA_R1, False)
     dirt = read(DIRT, True)
+    # until 2026-10-01: 0.092402 * 0.65 * pot / 8.857 (overlay POT, 0.65 twice), about 9x too small
+    DIRT_POT = float(uproot.open(DIRT)['summed_pot'].member('fVal'))
 
     print('%-24s %8s %9s %9s %9s %8s' % ('', 'region', 'nu MC', 'beam-off', 'dirt', 'data'))
     for name, h in HYP.items():
         print(f'\n--- {name}: {h["pot"]}e20 POT, {h["trig"]:.0f} triggers')
-        sd = 0.092402 * 0.65 * h['pot'] / 8.857          # dirt, as bkgfit_templates.C scales it
+        sd = h['pot'] * 1e20 / DIRT_POT                   # dirt: data POT / dirt POT, the 0.65 is in the CV weight
         se = OCCX * h['trig'] / G1                        # beam-off, by gate ratio
         for lab, key in REGIONS:
             m = mc[key]; e = ext[key]; d = dat[key]; dt = dirt[key]

@@ -12,6 +12,7 @@
 //       FHC exposure; RHC runs 1,3,4 = 8.491/11.082 = 76.6% of the RHC exposure.
 //   usage: root -l -b -q 'macros/sb_plots_data.C("fhc")'
 #include "sb_guard.h"
+#include "dirt_perrun.h" // per-run dirt normalisation (2026-10-01)
 #include <vector>
 #include <string>
 struct Src { std::string file; double scale; };
@@ -26,7 +27,7 @@ void sb_plots_data(const char* mode="fhc", bool compact=false){
   const char* R4[4]={"numi_pelee_ntuple_beam_off_run4a_rhc_ana.root","numi_pelee_ntuple_beam_off_run4b_rhc_ana.root","numi_pelee_ntuple_beam_off_run4c_fhc_ana.root","numi_pelee_ntuple_beam_off_run4d_fhc_ana.root"};
   const char* R5="numi_pelee_ntuple_beam_off_run5_fhc_ana.root";
   const double G1=4582248.27, G3=32649128.65, G4=34831148.625, G5=19256341.475, OCCX=0.98;
-  std::vector<Src> mc, ext; std::vector<std::string> data; double sc_dirt; double pot_frac; TString runs;
+  std::vector<Src> mc, ext; std::vector<std::string> data; double pot_frac; TString runs;
   if(std::string(mode)=="fhc"){
     // Run 2 dropped: no beam-on file.  Scales are those of the exposure table.
     mc.push_back({std::string(P)+"xsec-ana-Run1_fhc_new_numi_flux_fhc_pandora_ntuple.root",0.09415});
@@ -36,7 +37,7 @@ void sb_plots_data(const char* mode="fhc", bool compact=false){
     for(auto f:R4) ext.push_back({std::string(E)+f,OCCX*4131149./G4});
     ext.push_back({std::string(E)+R5,OCCX*5154196./G5});
     for(auto r:{"run1","run4c","run4d","run5"}) data.push_back(std::string(B)+"xsec-ana-beamon_fhc_"+r+".root");
-    pot_frac=(2.192+2.075+2.231)/7.766; sc_dirt=0.092402*0.65*(2.192+2.075+2.231)/8.857; runs="Runs 1, 4, 5 (no Run-2 beam-on)";  // dirt: 0.092402 is per 8.857e20 (per-POT form)
+    pot_frac=(2.192+2.075+2.231)/7.766; runs="Runs 1, 4, 5 (no Run-2 beam-on)";
   } else {
     mc.push_back({std::string(P)+"xsec-ana-Run1_rhc_new_numi_flux_rhc_pandora_ntuple.root",0.06728});
     for(auto s:{"Run4a_rhc","Run4b_rhc","Run4c_rhc"}) mc.push_back({std::string(P)+"xsec-ana-"+std::string(s)+"_new_numi_flux_rhc_pandora_ntuple.root",0.08847});
@@ -45,7 +46,7 @@ void sb_plots_data(const char* mode="fhc", bool compact=false){
     ext.push_back({std::string(E)+R3B,OCCX*10349610./G3});
     for(auto f:R4) ext.push_back({std::string(E)+f,OCCX*6304167./G4});
     for(auto r:{"run1","run3b","run4a","run4b"}) data.push_back(std::string(B)+"xsec-ana-beamon_rhc_"+r+".root");
-    pot_frac=(0.6053+5.003+2.883)/11.082; sc_dirt=0.071666*0.65*pot_frac; runs="Runs 1, 3, 4 (no Run-2 beam-on)";
+    pot_frac=(0.6053+5.003+2.883)/11.082; runs="Runs 1, 3, 4 (no Run-2 beam-on)";
   }
   for(auto&d:data){ if(gSystem->AccessPathName(d.c_str())){ printf("MISSING %s -- run not yet processed, aborting\n",d.c_str()); return; } }
   const char* CVW="(TMath::Finite(tuned_cv_weight*ppfx_cv_weight*normalisation_weight)&&(tuned_cv_weight*ppfx_cv_weight*normalisation_weight)>=0&&(tuned_cv_weight*ppfx_cv_weight*normalisation_weight)<=30?tuned_cv_weight*ppfx_cv_weight*normalisation_weight:1)";
@@ -70,7 +71,7 @@ void sb_plots_data(const char* mode="fhc", bool compact=false){
       h->Add(tmp,scale); tmp->SetDirectory(0); delete tmp; };
     for(auto&x:mc){ fill(hsig,x.file,x.scale,F+" && CC1mu1piXp_MC_Signal",true); fill(hbkg,x.file,x.scale,F+" && !CC1mu1piXp_MC_Signal",true); }
     for(auto&x:ext) fill(hext,x.file,x.scale,F,false);
-    fill(hdirt,std::string(P)+"xsec-ana-prodgenie_numi_uboone_overlay_dirt_fhc_mcc9_run1_v28_all_snapshot.root",sc_dirt,F,true);
+    for(auto& d : dirt_perrun(mode,"/data/uboone/processed/",{2,12})) fill(hdirt,d.file,d.scale,F,true);   // no Run 2; data POT / dirt POT
     for(auto&d:data){ sb_guard_data(d); fill(hdat,d,1.0,F,false); }   // NO Poisson EXT/dirt added: real data
     for(int b=1;b<=hdat->GetNbinsX();b++) hdat->SetBinError(b,sqrt(std::max(0.,hdat->GetBinContent(b))));
     double D=hdat->Integral(0,hdat->GetNbinsX()+1), S=hsig->Integral(0,hsig->GetNbinsX()+1), Bk=hbkg->Integral(0,hbkg->GetNbinsX()+1),

@@ -9,8 +9,8 @@ import matplotlib.pyplot as plt
 from . import model as M
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-LOG = os.path.abspath(os.path.join(HERE, '..', '..', 'logs', 'bkgfit'))
-FIG = os.path.abspath(os.path.join(HERE, '..', '..', 'report', 'figures', 'bkgfit')); os.makedirs(FIG, exist_ok=True)
+LOG = os.environ.get('BKGFIT_LOG') or os.path.abspath(os.path.join(HERE, '..', '..', 'logs', 'bkgfit'))
+FIG = os.environ.get('BKGFIT_FIG') or os.path.abspath(os.path.join(HERE, '..', '..', 'report', 'figures', 'bkgfit')); os.makedirs(FIG, exist_ok=True)
 SER = ['#2a78d6', '#eb6834', '#1baf7a', '#eda100', '#e87ba4', '#008300', '#4a3aa7', '#e34948']
 MARK = ['o', 's', '^', 'D', 'v', 'P']
 INK, INK2, GRID, SURF = '#0b0b0b', '#52514e', '#e4e3df', '#fcfcfb'

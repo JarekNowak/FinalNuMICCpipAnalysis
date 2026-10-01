@@ -3,6 +3,7 @@
 // frozen binning of configs/sideband_plots.txt. Prediction stack: signal contamination,
 // nu background, beam-off (per-run scaled), dirt.   root -l -b -q 'macros/sb_plots.C("fhc")'
 #include "sb_guard.h"   // blinding guard on every beam-on file (2026-09-06)
+#include "dirt_perrun.h" // per-run dirt normalisation (2026-10-01)
 #include <vector>
 #include <string>
 struct Src { std::string file; double scale; };
@@ -16,13 +17,13 @@ static void add_ext(std::vector<Src>& v, const char* m){
   else { v.push_back({std::string(E)+R1,OCCX*1458253./G1}); v.push_back({std::string(E)+R1,OCCX*5422907./G1}); v.push_back({std::string(E)+R3B,OCCX*10349610./G3}); for(auto f:R4) v.push_back({std::string(E)+f,OCCX*6304167./G4}); }
 }
 void sb_plots(const char* mode="fhc"){
-  gStyle->SetOptStat(0); const char* P="/data/uboone/processed/sb/"; std::vector<Src> mc, ext; std::vector<std::string> data; double sc_dirt;
+  gStyle->SetOptStat(0); const char* P="/data/uboone/processed/sb/"; std::vector<Src> mc, ext; std::vector<std::string> data;
   if(std::string(mode)=="fhc"){ const char* rn[4]={"Run1_fhc_new_numi_flux_fhc_pandora_ntuple","Run2_fhc_new_numi_flux_fhc_pandora_ntuple","Run4_fhc_new_numi_flux_fhc_pandora_ntuple","reweightedPPFX_numi_nu_overlay_pion_ntuples_run5_fhc"}; double sc[4]={0.09415,0.05085,0.07323,0.11560};
-    for(int i=0;i<4;i++) mc.push_back({std::string(P)+"xsec-ana-"+rn[i]+".root",sc[i]}); for(auto r:{"run1","run2","run4","run5"}) data.push_back(std::string(P)+"xsec-ana-fakedata_fhc_"+r+".root"); sc_dirt=0.092402*0.65; }
+    for(int i=0;i<4;i++) mc.push_back({std::string(P)+"xsec-ana-"+rn[i]+".root",sc[i]}); for(auto r:{"run1","run2","run4","run5"}) data.push_back(std::string(P)+"xsec-ana-fakedata_fhc_"+r+".root"); }
   else { const char* rn[5]={"Run1_rhc","Run2_rhc","Run4a_rhc","Run4b_rhc","Run4c_rhc"}; double sc[5]={0.06728,0.04478,0.08847,0.08847,0.08847};
     for(int i=0;i<5;i++) mc.push_back({std::string(P)+"xsec-ana-"+rn[i]+"_new_numi_flux_rhc_pandora_ntuple.root",sc[i]});
     for(auto s:{"aa","ab","ac","ad","ae"}) mc.push_back({std::string(P)+"xsec-ana-Run3_rhc_new_numi_flux_rhc_pandora_ntuple_"+std::string(s)+".root",0.09066});
-    for(auto r:{"run1","run2","run3","run4"}) data.push_back(std::string(P)+"xsec-ana-fakedata_rhc_"+r+".root"); sc_dirt=0.071666*0.65; }
+    for(auto r:{"run1","run2","run3","run4"}) data.push_back(std::string(P)+"xsec-ana-fakedata_rhc_"+r+".root"); }
   add_ext(ext,mode);
   const char* CVW="(TMath::Finite(tuned_cv_weight*ppfx_cv_weight*normalisation_weight)&&(tuned_cv_weight*ppfx_cv_weight*normalisation_weight)>=0&&(tuned_cv_weight*ppfx_cv_weight*normalisation_weight)<=30?tuned_cv_weight*ppfx_cv_weight*normalisation_weight:1)";
   struct V { const char* reg; const char* name; const char* br; int nb; double lo,hi; const char* ttl; };
@@ -46,7 +47,7 @@ void sb_plots(const char* mode="fhc"){
       h->Add(tmp,scale); tmp->SetDirectory(0); delete tmp; };
     for(auto&x:mc){ fill(hsig,x.file,x.scale,F+" && CC1mu1piXp_MC_Signal",true); fill(hbkg,x.file,x.scale,F+" && !CC1mu1piXp_MC_Signal",true); }
     for(auto&x:ext) fill(hext,x.file,x.scale,F,false);
-    fill(hdirt,std::string(P)+"xsec-ana-prodgenie_numi_uboone_overlay_dirt_fhc_mcc9_run1_v28_all_snapshot.root",sc_dirt,F,true);
+    for(auto& d : dirt_perrun(mode)) fill(hdirt,d.file,d.scale,F,true);   // data POT / dirt POT; CV weight carries the 0.65
     for(auto&d:data){ sb_guard_data(d); fill(hdat,d,1.0,F,false); }
     for(int b=1;b<=hdat->GetNbinsX();b++){ double e=hext->GetBinContent(b)+hdirt->GetBinContent(b); hdat->SetBinContent(b,hdat->GetBinContent(b)+rng.Poisson(e)); hdat->SetBinError(b,sqrt(hdat->GetBinContent(b))); }
     c.cd(++pad); gPad->SetLeftMargin(0.14); gPad->SetBottomMargin(0.14);

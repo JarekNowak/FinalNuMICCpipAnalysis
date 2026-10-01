@@ -1484,7 +1484,32 @@ one-bin FHC total already subtracts a background of $590.0$ events, $6.6$ of the
 cut becomes $6.6$, $9.5$ and $16.0$ events (FHC, RHC, combined) instead of $1.1$, $1.0$ and $2.1$; the
 purities become $58.5$, $57.4$ and $57.9\%$ ($51.9$, $49.7$ and $50.7\%$ proton-tagged). The cut-flow tables,
 the cut-and-count tables, the cut-flow figures and the quoted purities are regenerated. The control-region
-macros carry the same placeholder; their correction is the next step.
+macros carried the same placeholder; their correction follows.
+
+\section{Dirt normalisation in the control regions (2026-10-01)}
+
+The control-region macros (\texttt{sideband\_compare.C}, \texttt{sb\_protocol.C}, \texttt{sb\_protocol\_data.C},
+\texttt{sb\_plots.C}, \texttt{sb\_plots\_data.C}, \texttt{sb\_perrun\_data.C}, \texttt{bkgfit\_templates.C}) and three
+scripts found with them (\texttt{bkgfit/farsb.py}, \texttt{bkgfit/run1\_trigger.py},
+\texttt{pi0final/sb\_pi0\_final\_yields.C}) used the same placeholder, the $0.65$ applied twice in most of them.
+All now take each run's dirt sample scaled by the data POT over its own POT, from the file list of the release
+(\texttt{macros/dirt\_perrun.h}, \texttt{bkgfit/dirt.py}). The control-region dirt rises seven- to twentyfold:
+$342/460/803$ events in CC$0\pi$ (FHC/RHC/combined), $93/124/216$ in $\pi^0$, $18.5/35.8/54$ in the cosmic region
+and $0.5/1.7/2.1$ in multi-$\pi$. The neutrino and beam-off components, the selection and the cross sections are
+unchanged. In the analysis note the dirt column of the control-region yields, the purity of the cosmic region
+($4.1\%$) and of the selection without the opening-angle cut ($54.2\%$), the beam-off share of the cosmic region
+($33/26\%$, now of the complete prediction) and its statistics ($283$ events, $21\%$) change. In the supplement the
+full-stack test ($0.96$--$1.12$), the frozen-procedure statistics on pseudo-data (global $\chi^2=2.29/8$, pulls
+within $\pm0.8$, shape tests $p>0.12$, single-region power $12\%$ and $44$--$62\%$, common-shift blind spot $50\%$,
+null calibration $5.2\%$ and $1.1\%$), the shares of the fixed components, now with the dirt, and the
+background-fit validation change. These numbers, the proton-tagged control-region table and the beam-off shares had
+not been regenerated after the Run-1 exposure correction of 2026-09-19 and now include it. With beam-on data
+(control-sample note) the frozen global test gives $\chi^2=6.03/8$ ($p=0.64$; it was $8.11/8$), the joint fit
+gives CC$0\pi$ at $0.975\pm0.191$, the FHC Run-1 residual is unchanged ($0.862\pm0.021$), the cosmic region
+moves from $1.21$ to $0.98$ and its far versions fall to $0.79$ and $0.76$. The supplement's comparison with the
+$\nu_e$ analysis listed a $100\%$ dirt normalisation uncertainty among the shared conventions; this analysis
+carries none, and the comparison now says so, with the bound that a $100\%$ variation moves the one-bin totals
+by at most $0.9\%$.
 
 \section{Open items}
 
@@ -1573,6 +1598,8 @@ Proton-tagged $\sigma$, all obs.    & 2026-08-18 values & superseded 2026-08-31,
 Cut-and-count totals                & $1.06/0.98/1.02$; $1.03\pm0.43$ / $0.93\pm0.42$ / $0.98\pm0.40$ (borrowed systematic) & now the one-bin extraction $1.03\pm0.40$ / $0.93\pm0.35$ / $0.97\pm0.37$ \\
 Proton-tagged purity                & $47$--$48\%$     & now $52/50/51\%$ \\
 Signal-region dirt (final cut)      & $1.1/1.0/2.1$ (FHC/RHC/comb.) & now $6.6/9.5/16.0$; inclusive purity $58.8/57.7/58.2\%$ now $58.5/57.4/57.9\%$ (2026-10-01) \\
+Control-region dirt (FHC)           & $49/0.1/10/1.9$ (CC$0\pi$/multi-$\pi$/$\pi^0$/cosmic) & now $342/0.5/93/18.5$ (2026-10-01) \\
+Control-region global $\chi^2$      & pseudo-data $0.66/8$; beam-on $8.11/8$ & now $2.29/8$ and $6.03/8$ (2026-10-01) \\
 Ensemble offset and pull widths     & $2.5\%$ at $2.1\sigma$; widths $1.04/0.96$ & now $0.5$--$2.7\%$ at $\le1.9\sigma$; widths $1.08/0.97/1.02$; 2026-09-20: six ensembles (FHC/RHC/COMB, $46$--$100$ members) $0.4$--$1.3\%$ at $\le1.5\sigma$, widths $0.90$--$1.10$; 2026-09-24: $100$ members each, race-corrupted members re-run, $0.4$--$1.1\%$ at $\le2.0\sigma$, widths $0.92$--$1.07$; 2026-09-27 (binnings of the 0.50 criterion): widths $0.95$--$1.07$ inclusive, $0.94$--$1.08$ proton-tagged, offsets $0.3$--$1.1\%$ at $\le2.0\sigma$ \\
 FHC beam-off in the signal region   & $128$, then $13$, then $30$ & now $23$ (per-run gates, corrected Run-1 exposure) \\
 Combined generator weights (FHC:RHC) & $0.458{:}0.542$ & now $0.425{:}0.575$ (2026-09-24) \\

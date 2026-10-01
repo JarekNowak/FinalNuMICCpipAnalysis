@@ -18,8 +18,8 @@ from . import fit as F
 from . import gain as Gn
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-LOG = os.path.abspath(os.path.join(HERE, '..', '..', 'logs', 'bkgfit')); os.makedirs(LOG, exist_ok=True)
-FIG = os.path.abspath(os.path.join(HERE, '..', '..', 'report', 'figures', 'bkgfit')); os.makedirs(FIG, exist_ok=True)
+LOG = os.environ.get('BKGFIT_LOG') or os.path.abspath(os.path.join(HERE, '..', '..', 'logs', 'bkgfit')); os.makedirs(LOG, exist_ok=True)
+FIG = os.environ.get('BKGFIT_FIG') or os.path.abspath(os.path.join(HERE, '..', '..', 'report', 'figures', 'bkgfit')); os.makedirs(FIG, exist_ok=True)
 FIT_BINS = M.CC0PI + M.PI0 + [M.COSMIC]
 ALL = M.PERIODS
 

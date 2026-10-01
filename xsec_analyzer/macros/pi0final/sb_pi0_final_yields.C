@@ -10,14 +10,15 @@
 #include "TCanvas.h"
 #include "TStyle.h"
 #include "TLegend.h"
+#include "../dirt_perrun.h" // per-run dirt normalisation (2026-10-01)
 struct Src { std::string file; double scale; };
 void sb_pi0_final_yields(const char* mode="fhc"){
-  const char* P="/data/uboone/processed/sb_pi0/"; std::vector<Src> mc, ext; double sc_dirt;
+  const char* P="/data/uboone/processed/sb_pi0/"; std::vector<Src> mc, ext;
   if(std::string(mode)=="fhc"){ const char* rn[4]={"Run1_fhc_new_numi_flux_fhc_pandora_ntuple","Run2_fhc_new_numi_flux_fhc_pandora_ntuple","Run4_fhc_new_numi_flux_fhc_pandora_ntuple","reweightedPPFX_numi_nu_overlay_pion_ntuples_run5_fhc"}; double sc[4]={0.09415,0.05085,0.07323,0.11560};
-    for(int i=0;i<4;i++) mc.push_back({std::string(P)+"xsec-ana-"+rn[i]+".root",sc[i]}); sc_dirt=0.081020*0.65; }
+    for(int i=0;i<4;i++) mc.push_back({std::string(P)+"xsec-ana-"+rn[i]+".root",sc[i]}); }
   else { const char* rn[5]={"Run1_rhc","Run2_rhc","Run4a_rhc","Run4b_rhc","Run4c_rhc"}; double sc[5]={0.06728,0.04478,0.08847,0.08847,0.08847};
     for(int i=0;i<5;i++) mc.push_back({std::string(P)+"xsec-ana-"+rn[i]+"_new_numi_flux_rhc_pandora_ntuple.root",sc[i]});
-    for(auto s:{"aa","ab","ac","ad","ae"}) mc.push_back({std::string(P)+"xsec-ana-Run3_rhc_new_numi_flux_rhc_pandora_ntuple_"+std::string(s)+".root",0.09066}); sc_dirt=0.071666*0.65; }
+    for(auto s:{"aa","ab","ac","ad","ae"}) mc.push_back({std::string(P)+"xsec-ana-Run3_rhc_new_numi_flux_rhc_pandora_ntuple_"+std::string(s)+".root",0.09066}); }
   // per-run beam-off, scaled by gates as in sb_protocol.C add_ext (same numbers)
   const char* E="/data/uboone/processed/sb_pi0/xsec-ana-";
   const char* R1="neutrinoselection_filt_run1_beamoff.root", *R3B="neutrinoselection_filt_run3b_beamoff.root";
@@ -46,7 +47,10 @@ void sb_pi0_final_yields(const char* mode="fhc"){
       for(int v=0;v<NV;v++){ TH1D h("hv","",nb[v],lo[v],hi[v]); c.Draw(TString(var[v])+">>hv",TString(CVW)+"*("+def[d]+")","goff"); H[d][v]->Add(&h,x.scale); } }
     for(int k=0;k<NC;k++){ TH1D h("h","",1,-0.5,1.5); c.Draw("0.5>>h",TString(CVW)+"*(("+cls[k]+") && CC1mu1piXp_Selected)","goff"); NSR[k]+=h.Integral(0,2)*x.scale; } }
   for(auto&x:ext){ TChain c("stv_tree"); c.Add(x.file.c_str()); for(int d=0;d<ND;d++){ TH1D h("h","",1,-0.5,1.5); c.Draw("0.5>>h",def[d],"goff"); Next[d]+=h.Integral(0,2)*x.scale; } }
-  { TChain c("stv_tree"); c.Add(Form("%sxsec-ana-prodgenie_numi_uboone_overlay_dirt_fhc_mcc9_run1_v28_all_snapshot.root",P)); for(int d=0;d<ND;d++){ TH1D h("h","",1,-0.5,1.5); c.Draw("0.5>>h",TString(CVW)+"*("+def[d]+")","goff"); Ndirt[d]+=h.Integral(0,2)*sc_dirt; } }
+  // dirt per run, data POT / dirt POT (the CV weight carries the 0.65 once; until 2026-10-01 the Run-1 sample
+  // alone at 0.081020/0.071666 x 0.65). sb_pi0_final is in the sb_pi0/ Run-1 sample and the cf/ per-run reprocess.
+  for(auto& ds : dirt_perrun_in(mode, [P](int run){ return std::string(run==1||run==2 ? P : "/data/uboone/processed/cf/"); })){
+    TChain c("stv_tree"); c.Add(ds.file.c_str()); for(int d=0;d<ND;d++){ TH1D h("h","",1,-0.5,1.5); c.Draw("0.5>>h",TString(CVW)+"*("+def[d]+")","goff"); Ndirt[d]+=h.Integral(0,2)*ds.scale; } }
   printf("\n==== %s: pi0 region, two definitions (CV-weighted, POT/gate-scaled)\n",mode);
   printf("%-34s %18s %18s %18s\n","", dn[0], dn[1], dn[2]);
   for(int k=0;k<NC;k++) printf("%-34s %18.1f %18.1f %18.1f\n",cln[k],N[0][k],N[1][k],N[2][k]);

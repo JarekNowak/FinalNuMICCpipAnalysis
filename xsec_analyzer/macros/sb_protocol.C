@@ -16,6 +16,7 @@
 // sideband_compare.C mode fakestack).
 //   root -l -b -q macros/sb_protocol.C
 #include "sb_guard.h"   // blinding guard on every beam-on file (2026-09-06)
+#include "dirt_perrun.h" // per-run dirt normalisation (2026-10-01)
 #include <vector>
 #include <string>
 #include <cmath>
@@ -81,16 +82,17 @@ void sb_protocol(){
     }
     delete el; };
   for(int m=0;m<NM;m++){
-    std::vector<Src> mc, ext; std::vector<std::string> data; double sc_dirt;
+    std::vector<Src> mc, ext; std::vector<std::string> data;
     if(m==0){ const char* rnm[4]={"Run1_fhc_new_numi_flux_fhc_pandora_ntuple","Run2_fhc_new_numi_flux_fhc_pandora_ntuple","Run4_fhc_new_numi_flux_fhc_pandora_ntuple","reweightedPPFX_numi_nu_overlay_pion_ntuples_run5_fhc"}; double sc[4]={0.09415,0.05085,0.07323,0.11560};
-      for(int i=0;i<4;i++) mc.push_back({std::string(P)+"xsec-ana-"+rnm[i]+".root",sc[i]}); for(auto r:{"run1","run2","run4","run5"}) data.push_back(std::string(P)+"xsec-ana-fakedata_fhc_"+r+".root"); sc_dirt=0.092402*0.65; }
+      for(int i=0;i<4;i++) mc.push_back({std::string(P)+"xsec-ana-"+rnm[i]+".root",sc[i]}); for(auto r:{"run1","run2","run4","run5"}) data.push_back(std::string(P)+"xsec-ana-fakedata_fhc_"+r+".root"); }
     else { const char* rnm[5]={"Run1_rhc","Run2_rhc","Run4a_rhc","Run4b_rhc","Run4c_rhc"}; double sc[5]={0.06728,0.04478,0.08847,0.08847,0.08847};
       for(int i=0;i<5;i++) mc.push_back({std::string(P)+"xsec-ana-"+rnm[i]+"_new_numi_flux_rhc_pandora_ntuple.root",sc[i]}); for(auto s:{"aa","ab","ac","ad","ae"}) mc.push_back({std::string(P)+"xsec-ana-Run3_rhc_new_numi_flux_rhc_pandora_ntuple_"+std::string(s)+".root",0.09066});
-      for(auto r:{"run1","run2","run3","run4"}) data.push_back(std::string(P)+"xsec-ana-fakedata_rhc_"+r+".root"); sc_dirt=0.071666*0.65; }
+      for(auto r:{"run1","run2","run3","run4"}) data.push_back(std::string(P)+"xsec-ana-fakedata_rhc_"+r+".root"); }
     add_ext(ext,modes[m]);
     for(auto& x:mc) loop(x.file.c_str(),x.scale,true,true,m,cvT,w2T,cvH[m],w2H[m]);
     for(auto& x:ext) loop(x.file.c_str(),x.scale,false,false,m,extT,ext2T,extH[m],ext2H[m]);
-    loop(Form("%sxsec-ana-prodgenie_numi_uboone_overlay_dirt_fhc_mcc9_run1_v28_all_snapshot.root",P),sc_dirt,true,false,m,dirtT,dirt2T,dirtH[m],dirt2H[m]);
+    // dirt: each run's sample(s), data POT / dirt POT; the CV weight carries the 0.65 once
+    for(auto& d : dirt_perrun(modes[m])) loop(d.file.c_str(),d.scale,true,false,m,dirtT,dirt2T,dirtH[m],dirt2H[m]);
     double dummy2[NK]={0}; std::vector<double> dh2(NB,0); for(auto& d:data){ sb_guard_data(d); loop(d.c_str(),1.0,false,false,m,dataT,dummy2,dataH[m],dh2); }
     // detector variations: CV + 8 knobs (unscaled; only ratios are used)
     double kT[NK]={0}, k2[NK]={0}; std::vector<double> kH(NB,0), kH2(NB,0);

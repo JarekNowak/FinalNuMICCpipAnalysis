@@ -2224,8 +2224,8 @@ of protons, charged current), and the same systematic suite, PPFX flux
 hadronic universes (the 12 beamline-geometry unisims the $\nu_e$ analysis carries are
 evaluated but not in this analysis's official covariance, \noteref{Sec.}{sec:notincov}), the
 600-universe GENIE cross-section multisim with unisims, the Geant4 reinteraction
-reweighting, the standard detector-variation set, and $2\%$ / $1\%$ / $100\%$
-POT / target / dirt normalisation uncertainties. The FHC beam-on data POT per run
+reweighting, the standard detector-variation set, and $2\%$ / $1\%$ POT / target
+normalisation uncertainties. The FHC beam-on data POT per run
 agrees exactly (Run~2 $1.268$, Run~4 $2.075\times10^{20}$).
 
 \emph{Differences reconciled or flagged.} (i)~\textbf{POT accounting:} the
@@ -2244,7 +2244,10 @@ whereas our muon-track topology uses $\theta_{\mu\pi}<2.6$~rad ($149^\circ$).
 (v)~\textbf{Regularisation:} the $\nu_e$ analysis smooths on the first derivative,
 this analysis on the second (\S\ref{sec:reg_widths}). (vi)~\textbf{Scope:}
 both analyses cover Runs~1--5 in FHC and RHC; the present measurement reports FHC,
-RHC and the combined configuration.
+RHC and the combined configuration. (vii)~\textbf{Dirt:} the $\nu_e$ analysis assigns a $100\%$ dirt
+normalisation uncertainty; this analysis assigns none. The dirt is $6.6$, $9.5$ and $16.0$ selected events
+(FHC, RHC, combined), $0.8$--$0.9\%$ of the selected signal, so a $100\%$ variation moves the one-bin totals
+by at most $0.9\%$, negligible against their $38\%$ uncertainty.
 
 % =============================================================================
 \subsection{The combined configuration and its inputs}
@@ -2356,10 +2359,10 @@ enough individually that no dedicated region is justified at this exposure.
 \paragraph{Sensitivity of the test and its blind direction.} The pass/fail statistic is
 a global normalisation $\chi^2$ over the eight (region, mode) totals with the full
 pre-fit covariance (\S\ref{sec:cr_protocol}). It detects a discrepancy confined to one
-region beyond $12\%$ of the CC$0\pi$ or $\pi^0$ total and beyond $50$--$62\%$ of the
+region beyond $12\%$ of the CC$0\pi$ or $\pi^0$ total and beyond $44$--$62\%$ of the
 multi-$\pi$ or cosmic total, an FHC/RHC inconsistency, and, through the
 normalisation-marginalised shape tests, a shape difference. A common
-normalisation shift of all regions fails it only beyond $58\%$, because the correlated
+normalisation shift of all regions fails it only beyond $50\%$, because the correlated
 flux, cross-section and detector terms absorb it. That blind direction is acceptable
 because it is the direction the signal-region measurement already carries as its flux
 and cross-section uncertainty: the control regions test the background model region by
@@ -2440,8 +2443,8 @@ for that; the per-region comparisons of \S\ref{sec:cr_protocol} do not.
 \label{sec:cr_fullstack}
 To exercise the path that beam-on data will take, the regions were compared with pseudo-data made of the
 neutrino-simulation throw plus an independent Poisson throw of the beam-off and dirt expectations,
-against the complete prediction. The data-to-prediction ratios are $0.99$--$1.05$ in FHC, $0.99$--$1.12$
-in RHC and $0.99$--$1.08$ combined, each within its statistical uncertainty ($0.6$--$10\%$). This tests
+against the complete prediction. The data-to-prediction ratios are $0.96$--$1.12$ in FHC, $0.99$--$1.12$
+in RHC and $0.99$--$1.06$ combined, each within $1.4$ times its statistical uncertainty ($0.6$--$10\%$). This tests
 the bookkeeping, not the physics. Figure~\ref{fig:sb_plots_fhc} shows the frozen FHC distributions
 with these pseudo-data in place of the beam-on points; the RHC distributions are drawn from the same
 list.
@@ -2569,7 +2572,7 @@ to the target class; the stored multiplicities allow item~4(i) of the procedure 
   \includegraphics[width=0.55\linewidth]{figures/cr_null_calibration.pdf}
   \caption{Null calibration of the global normalisation $\chi^2$ over the eight (region, mode) totals:
     $2\times10^5$ pseudo-experiments with the prediction drawn from its pre-fit covariance and
-    Poisson-fluctuated data, against the $\chi^2_8$ density. The full-stack pseudo-data value, $0.66$, is
+    Poisson-fluctuated data, against the $\chi^2_8$ density. The full-stack pseudo-data value, $2.29$, is
     low because those pseudo-data carry none of the prediction's systematic variation.}
   \label{fig:cr_null_calibration}
 \end{figure}
@@ -2592,15 +2595,15 @@ The procedure below is fixed before beam-on data in the control regions are exam
     marginalised, so that the common-mode flux and cross-section terms do not make the test powerless
     (\noteref{Sec.}{sec:chi2}); (c)~a global normalisation $\chi^2$ over the eight (region, mode) totals
     with the full pre-fit covariance, the single pass/fail statistic. On the full-stack pseudo-data the
-    global $\chi^2$ is $0.66/8$, the sixteen pulls lie within $\pm0.5$ and all twenty-two shape tests
-    have $p>0.47$. A discrepancy confined to one region fails the set at $95\%$ confidence beyond $12\%$
-    of the CC$0\pi$ or $\pi^0$ total and beyond $50$--$62\%$ of the multi-$\pi$ or cosmic total; a common
+    global $\chi^2$ is $2.29/8$, the sixteen pulls lie within $\pm0.8$ and all twenty-two shape tests
+    have $p>0.12$. A discrepancy confined to one region fails the set at $95\%$ confidence beyond $12\%$
+    of the CC$0\pi$ or $\pi^0$ total and beyond $44$--$62\%$ of the multi-$\pi$ or cosmic total; a common
     shift of all eight totals, which the correlated flux, cross-section and detector terms absorb, fails
-    it only beyond $58\%$. The regions test the background model region by region, not the overall
+    it only beyond $50\%$. The regions test the background model region by region, not the overall
     normalisation, which the measurement carries as its flux and cross-section uncertainty.
   \item \textbf{Acceptable agreement.} The set passes if the global $\chi^2$ has $p>0.05$. Under the null
     ($2\times10^5$ pseudo-experiments, Fig.~\ref{fig:cr_null_calibration}) the test fails at $p<0.05$ in
-    $5.1\%$ and at $p<0.01$ in $1.1\%$ of cases; the sampling noise of the covariance is not re-thrown.
+    $5.2\%$ and at $p<0.01$ in $1.1\%$ of cases; the sampling noise of the covariance is not re-thrown.
     A region with $|{\rm pull}|>2$ or shape $p<0.05$ is flagged for item~4 even when the set passes; with
     sixteen pulls and twenty-two shape tests about two false flags are expected. A single-bin excursion
     beyond $3\sigma$ with a passing total is examined for a reconstruction pathology but does not flag the
@@ -2621,9 +2624,9 @@ The procedure below is fixed before beam-on data in the control regions are exam
     after the pre-fit result is documented. The two fitted regions are disjoint. The fit rescales the
     target class in every systematic universe, so that its correlation with the signal-region prediction
     is kept; its uncertainty is the transfer-factor uncertainty or its floor, whichever is larger, added in
-    quadrature to the leverage of the components held fixed (the non-target background, beam-off and signal
-    contamination, with shares $0.80$, $0.23$, $0.20$ of the target in the $\pi^0$ region and $0.26$,
-    $0.15$, $0.13$ in CC$0\pi$).
+    quadrature to the leverage of the components held fixed (the non-target background, beam-off, signal
+    contamination and dirt, with shares $0.77$, $0.16$, $0.19$, $0.03$ of the target in the $\pi^0$ region and
+    $0.26$, $0.12$, $0.13$, $0.05$ in CC$0\pi$).
     (iii)~\emph{Added uncertainty (b).} Otherwise the prediction is left unchanged and the full observed
     discrepancy, as a fraction of the target class, is assigned as a normalisation uncertainty on that
     class in the signal region through its transfer factor.
@@ -2653,10 +2656,12 @@ The proton-tagged files carry the four inclusive region flags (\noteref{Sec.}{se
 regions can be evaluated with a tagged proton required, in the phase space of the measurement
 (Table~\ref{tab:sidebands_1p}). They are more signal-depleted than for the inclusive signal ($5.8$--$7.2\%$
 contamination in CC$0\pi$ and $\pi^0$). The tag costs about a third of the statistics but suppresses the
-beam-off contribution by about a factor six (FHC CC$0\pi$: $1\,358\to225$), since cosmic-induced events
+beam-off contribution by about a factor six (FHC CC$0\pi$: $1\,080\to179$), since cosmic-induced events
 rarely contain a reconstructed proton above threshold. The pseudo-data to simulation ratios of the two
-large regions stay at $0.99$--$1.01$, so the per-run bookkeeping holds; the small regions scatter by one
-to two standard deviations of their $37$--$62$ events. None of these regions constrains the mis-tag
+large regions stay at $0.98$--$1.01$, so the per-run bookkeeping holds. The multi-$\pi$ regions scatter
+within $1.3$ standard deviations; the cosmic region of this throw lies $4.1$ (FHC) and $3.5$ (combined)
+standard deviations high, from Runs~1 and~5, while forty ensemble throws reproduce its expectation there
+($6.4$ and $6.5$ events against $6.7$ and $6.5$). None of these regions constrains the mis-tag
 background, and cutting on a measured observable ($W_{\pi p}$, $p_n$, $\delta p_T$) cannot replace an
 inverted-PID region: the signal definition is inclusive in those variables, so such a cut splits the
 signal region (purity $47$--$53\%$ in every slice) rather than depleting it.
@@ -2672,18 +2677,18 @@ signal region (purity $47$--$53\%$ in every slice) rather than depleting it.
     \toprule
     Beam & Region & $N_\mathrm{data}$ & Signal & $\nu$ bkg & beam-off & Sig.\ frac.\ & $N_\mathrm{data}/N_{\nu\mathrm{MC}}$ \\
     \midrule
-    FHC & CC$0\pi$ & $8\,386$ & $486$ & $7\,886$ & $225$ & $5.8\%$ & $1.002$ \\
-    FHC & multi-$\pi$ & $59$ & $9.8$ & $46$ & $0.2$ & $17.7\%$ & $1.064$ \\
-    FHC & $\pi^0$ & $4\,011$ & $293$ & $3\,769$ & $189$ & $7.2\%$ & $0.987$ \\
-    FHC & cosmic & $39$ & $1.7$ & $24$ & $0.1$ & $6.5\%$ & $1.517$ \\
+    FHC & CC$0\pi$ & $7\,302$ & $428$ & $6\,922$ & $179$ & $5.8\%$ & $0.993$ \\
+    FHC & multi-$\pi$ & $46$ & $8.7$ & $41$ & $0.2$ & $17.7\%$ & $0.930$ \\
+    FHC & $\pi^0$ & $3\,497$ & $259$ & $3\,321$ & $148$ & $7.2\%$ & $0.977$ \\
+    FHC & cosmic & $42$ & $1.4$ & $21$ & $0.1$ & $6.2\%$ & $1.877$ \\
     RHC & CC$0\pi$ & $8\,621$ & $500$ & $8\,127$ & $197$ & $5.8\%$ & $0.999$ \\
     RHC & multi-$\pi$ & $62$ & $14$ & $58$ & $1.3$ & $19.8\%$ & $0.852$ \\
     RHC & $\pi^0$ & $4\,902$ & $333$ & $4\,534$ & $162$ & $6.8\%$ & $1.007$ \\
     RHC & cosmic & $37$ & $2.3$ & $29$ & $0.5$ & $7.5\%$ & $1.187$ \\
-    Comb & CC$0\pi$ & $17\,007$ & $985$ & $16\,013$ & $422$ & $5.8\%$ & $1.000$ \\
-    Comb & multi-$\pi$ & $121$ & $24$ & $104$ & $1.5$ & $18.9\%$ & $0.944$ \\
-    Comb & $\pi^0$ & $8\,913$ & $626$ & $8\,303$ & $351$ & $7.0\%$ & $0.998$ \\
-    Comb & cosmic & $76$ & $4.0$ & $53$ & $0.6$ & $7.1\%$ & $1.336$ \\
+    Comb & CC$0\pi$ & $15\,923$ & $928$ & $15\,049$ & $375$ & $5.8\%$ & $0.997$ \\
+    Comb & multi-$\pi$ & $108$ & $23$ & $99$ & $1.5$ & $18.9\%$ & $0.884$ \\
+    Comb & $\pi^0$ & $8\,399$ & $592$ & $7\,855$ & $310$ & $7.0\%$ & $0.994$ \\
+    Comb & cosmic & $79$ & $3.7$ & $50$ & $0.6$ & $6.9\%$ & $1.475$ \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -2692,12 +2697,12 @@ signal region (purity $47$--$53\%$ in every slice) rather than depleting it.
 \label{sec:bkgfit_validation}
 
 The background fit, the normalisation fit of the control-region target classes, is validated on
-simulation. Sets of $300$ toys give pull means of $0.02$--$0.07$, widths of $0.89$--$1.03$ and coverage of
-$67$--$75\%$. On Asimov data, injected shifts of a class are recovered exactly, a $30\%$ signal excess
-moves the normalisations by $0.13\sigma$ and a detector variation by at most $0.14\sigma$. A
+simulation. Sets of $300$ toys give pull means of $-0.05$ to $0.06$, widths of $0.90$--$1.08$ and coverage of
+$65$--$77\%$. On Asimov data, injected shifts of a class are recovered exactly, a $30\%$ signal excess
+moves the normalisations by at most $0.14\sigma$ and a detector variation by at most $0.15\sigma$. A
 likelihood-ratio test of common against beam-specific normalisations detects a $+15\%$ shift of the RHC
-simulation alone ($\Delta\chi^2=12.9/2$ on the totals). An adaptive Metropolis sampler reproduces the
-MIGRAD/MINOS intervals within $0.02$ in the mean and $2\%$ in the width. Ensembles of $10^5$ toys show
+simulation alone ($\Delta\chi^2=13.4/2$ on the totals). An adaptive Metropolis sampler reproduces the
+MIGRAD/MINOS intervals within $0.02$ in the mean and $3\%$ in the width. Ensembles of $10^5$ toys show
 that with the combined Neyman--Pearson data variance the pull mean of the two-dimensional fits does not
 converge to zero ($+0.02$ to $+0.03$, six to ten standard errors), because that variance depends on the
 fluctuating data; the offset vanishes when the prediction is the data variance, and the fit uses that
@@ -2752,9 +2757,9 @@ across the iterations, and it fixes the two opening-angle choices.
 \begin{enumerate}[label=(\roman*),noitemsep]
   \item The $2.6$~rad upper cut is kept. On the full exposure the events it removes are
     exactly those of the cosmic control region (\noteref{Table}{tab:sideband_yields}): in
-    FHC, $5.1$ signal, $60$ neutrino background, $40$ beam-off and $1.9$ dirt, a signal
-    purity of $4.7\%$. Dropping the cut would lower the signal-region purity from $58.5\%$
-    to $54.8\%$, raise its beam-off content from $23$ to $64$ events and recover only
+    FHC, $5.1$ signal, $60$ neutrino background, $40$ beam-off and $18.5$ dirt, a signal
+    purity of $4.1\%$. Dropping the cut would lower the signal-region purity from $58.5\%$
+    to $54.2\%$, raise its beam-off content from $23$ to $64$ events and recover only
     $2.7\%$ of the generated signal ($2055\to1999$ in the table). The removed region
     serves instead as the beam-off control region.
   \item No lower opening-angle cut is used. The small-angle region has high purity

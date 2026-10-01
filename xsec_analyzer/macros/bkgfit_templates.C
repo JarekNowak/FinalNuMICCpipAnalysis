@@ -21,6 +21,7 @@
 // (UBGenie * ppfx * norm; ppfx_all * tune * norm; reint and SCC * tune * ppfx * norm).
 //   root -l -b -q macros/bkgfit_templates.C+    -> /data/uboone/processed/bkgfit/templates.root
 #include "sb_guard.h"
+#include "dirt_perrun.h" // per-run dirt normalisation (2026-10-01)
 #include "TFile.h"
 #include "TTree.h"
 #include "TH1D.h"
@@ -165,7 +166,7 @@ void bkgfit_templates( const char* outdir = "/data/uboone/processed/bkgfit" ) {
   data[0] = { BO + "xsec-ana-beamon_fhc_run1.root" }; data[2] = { BO + "xsec-ana-beamon_fhc_run4c.root", BO + "xsec-ana-beamon_fhc_run4d.root" };
   data[3] = { BO + "xsec-ana-beamon_fhc_run5.root" }; data[4] = { BO + "xsec-ana-beamon_rhc_run1.root" };
   data[6] = { BO + "xsec-ana-beamon_rhc_run3b.root" }; data[7] = { BO + "xsec-ana-beamon_rhc_run4a.root", BO + "xsec-ana-beamon_rhc_run4b.root" };
-  const std::string DIRT = P + "xsec-ana-prodgenie_numi_uboone_overlay_dirt_fhc_mcc9_run1_v28_all_snapshot.root";
+  const auto dirt_all = dirt_perrun( "comb" );
 
   gSystem->mkdir( outdir, true );
   TFile fo( Form( "%s/templates.root", outdir ), "RECREATE" );
@@ -188,9 +189,9 @@ void bkgfit_templates( const char* outdir = "/data/uboone/processed/bkgfit" ) {
     for ( auto& x : ext[p] ) fill_file( x.first, x.second, 1, false, e, e2, nullptr );
     write1( Form( "ext_%s", pname[p] ), e, NB ); write1( Form( "ext2_%s", pname[p] ), e2, NB );
     std::vector<double> d( NC * NB, 0. ), d2( NC * NB, 0. );
-    // dirt: the single run-1 snapshot scaled per mode exactly as sb_protocol_data.C, split by period exposure
-    double sdirt = p < 4 ? 0.092402 * 0.65 * POT[p] / 8.857 : 0.071666 * 0.65 * POT[p] / 11.082;
-    fill_file( DIRT, sdirt, 2, false, d, d2, nullptr );
+    // dirt: this period's sample(s), data POT / dirt POT (dirt_perrun.h); the CV weight carries the 0.65 once
+    { const int runid[NP] = { 1, 2, 4, 5, 11, 12, 13, 14 };
+      for ( const auto& ds : dirt_all ) if ( ds.run == runid[p] ) fill_file( ds.file, ds.scale, 2, false, d, d2, nullptr ); }
     std::vector<double> dsum( NB, 0. ), dsum2( NB, 0. );
     for ( int c = 0; c < NC; ++c ) for ( int i = 0; i < NB; ++i ) { dsum[i] += d[c * NB + i]; dsum2[i] += d2[c * NB + i]; }
     dsum[1] = 0; dsum2[1] = 0;   // generated signal is neutrino MC only
@@ -214,7 +215,7 @@ void bkgfit_templates( const char* outdir = "/data/uboone/processed/bkgfit" ) {
   }
   std::string meta = "NB=46 NC=10 NP=8; bins: 0 SR, 1 SIGGEN, 2-22 CC0pi cth[-1,0,0.45,0.65,0.8,0.9,0.95,1]xpmu[0.15,0.35,0.75,inf] (index 2+ic*3+ip), "
                      "23-43 PI0 same, 44 MULTI, 45 COSMIC; classes idx=2*c+nubar, c: 0 signal 1 CC0pi 2 pi0(CC+NC) 3 multipi 4 other; "
-                     "periods FHC_R1 FHC_R2 FHC_R4 FHC_R5 RHC_R1 RHC_R2 RHC_R3 RHC_R4; POT(1e20) 3.283 1.268 2.075 2.231 0.6053 2.591 5.003 2.883";
+                     "periods FHC_R1 FHC_R2 FHC_R4 FHC_R5 RHC_R1 RHC_R2 RHC_R3 RHC_R4; POT(1e20) 2.192 1.268 2.075 2.231 0.6053 2.591 5.003 2.883";
   TNamed tn( "bins", meta.c_str() ); fo.cd(); tn.Write();
   std::string nus; for ( auto& kv : nuniv ) nus += kv.first + "=" + std::to_string( kv.second ) + " ";
   TNamed tu( "nuniv", nus.c_str() ); tu.Write();
