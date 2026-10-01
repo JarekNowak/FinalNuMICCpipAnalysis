@@ -71,7 +71,7 @@ static void add_ext(std::vector<Src>& v, const char* m){
   }
 
 void one(const char* mode, const char* selname, const char* P, double dataPOT,
-         double flux_per_pot, std::vector<Src>& mc, double sc_ext, double sc_dirt,
+         double flux_per_pot, std::vector<Src>& mc, double sc_ext,
          double syst_frac, const char* gtag) {
   TString SEL = TString(selname)+"_Selected", SIG = TString(selname)+"_MC_Signal";
   double Nsig_gen=0, Nsig_sel=0, Nbkg_mc=0;
@@ -79,13 +79,38 @@ void one(const char* mode, const char* selname, const char* P, double dataPOT,
   std::vector<Src> extv; add_ext(extv, std::string(mode)=="FHC"?"fhc":(std::string(mode)=="RHC"?"rhc":"comb"));
   double Next = 0.;
   for (auto& s : extv) { TChain ce("stv_tree"); ce.Add(s.file.c_str()); Next += ce.GetEntries(SEL) * s.scale; }
-  double Ndirt = 0., dummy1 = 0., dummy2 = 0.;
-  // dirt: every selected dirt event is background (no signal in dirt), weighted like MC
+  double Ndirt = 0.;
+  // dirt: every selected dirt event is background (no signal in dirt), weighted like MC. PER RUN,
+  // as the framework normalises it (file_properties_numi_*.txt): each run's dirt sample(s) scaled by
+  // data POT[run] / summed_pot of those samples; CVW already contains the 0.65 dirt normalisation.
+  // (Until 2026-10-01 one Run-1 sample was scaled by data POT over the OVERLAY POT and by a second
+  // 0.65, which left the dirt about 9x (FHC) to 14x (RHC) low.)
   {
-    TChain cd("stv_tree"); cd.Add(Form("%sxsec-ana-prodgenie_numi_uboone_overlay_dirt_fhc_mcc9_run1_v28_all_snapshot.root",P));
-    TH1D h("h_dirt","",1,0,2);
-    cd.Draw("1>>h_dirt", TString(CVW)+"*("+SEL+")", "goff");
-    Ndirt = h.GetBinContent(1) * sc_dirt;
+    struct DirtRun { std::vector<std::string> alias; double data_pot; };
+    std::vector<DirtRun> druns;
+    const std::string m(mode);
+    if ( m=="FHC" || m=="Combined" ) {
+      druns.push_back({{"dirt_fhc_run1"},2.192e20});  druns.push_back({{"dirt_fhc_run2"},1.268e20});
+      druns.push_back({{"dirt_fhc_run4c","dirt_fhc_run4d"},2.075e20}); druns.push_back({{"dirt_fhc_run5"},2.231e20});
+    }
+    if ( m=="RHC" || m=="Combined" ) {
+      druns.push_back({{"dirt_rhc_run1"},0.6053e20}); druns.push_back({{"dirt_rhc_run2"},2.591e20});
+      druns.push_back({{"dirt_rhc_run3"},5.003e20});  druns.push_back({{"dirt_rhc_run4a","dirt_rhc_run4b"},2.883e20});
+    }
+    for ( auto& r : druns ) {
+      double pot = 0.;
+      for ( auto& a : r.alias ) {
+        TFile f(Form("%sxsec-ana-%s.root",P,a.c_str())); auto* sp=(TParameter<float>*)f.Get("summed_pot");
+        if ( !sp ) { printf("ERROR: no summed_pot in %sxsec-ana-%s.root\n",P,a.c_str()); continue; }
+        pot += sp->GetVal();
+      }
+      for ( auto& a : r.alias ) {
+        TChain cd("stv_tree"); cd.Add(Form("%sxsec-ana-%s.root",P,a.c_str()));
+        TH1D h("h_dirt","",1,0,2);
+        cd.Draw("1>>h_dirt", TString(CVW)+"*("+SEL+")", "goff");
+        Ndirt += h.GetBinContent(1) * r.data_pot / pot;
+      }
+    }
   }
 
   double Nbkg = Nbkg_mc + Next + Ndirt;
@@ -140,7 +165,7 @@ void total_xsec_counting() {
     for(auto s:{"aa","ab","ac","ad","ae"})
       mc.push_back({std::string(P)+"xsec-ana-Run3_rhc_new_numi_flux_rhc_pandora_ntuple_"+std::string(s)+".root", 0.09066}); };
 
-  // dirt scaled to the full mode exposure (D_total/summedMC*0.65), as in cutflow_yields.C.
+  // dirt: per run inside one() (data POT / dirt summed_pot), as the framework.
   // EXT scale = beam-on/beam-off GATE ratio x the 2% NuMI beam-occupancy factor. The pooled
   // beam-off file is the Run-1 FHC + Run-3b RHC samples, 4582248.27 + 32649128.65 =
   // 37231376.92 gates (analyser's table, 2026-09-02); the earlier 3821593 was an event
@@ -158,8 +183,8 @@ void total_xsec_counting() {
     std::vector<Src> fhc, rhc, comb;
     FHC(fhc,dirs[k]); RHC(rhc,dirs[k]); FHC(comb,dirs[k]); RHC(comb,dirs[k]);
     const bool incl = ( k == 0 );
-    one("FHC",      sels[k], dirs[k], 7.766e20,  6.81159e-10, fhc,  OCC*0.49875,  0.081020*0.65, sf[k][0], incl?"newg4":"");
-    one("RHC",      sels[k], dirs[k], 1.1082e21, 6.44646e-10, rhc,  OCC*0.63213,  0.071666*0.65, sf[k][1], incl?"rhc":"");
-    one("Combined", sels[k], dirs[k], 1.8848e21, 6.596906e-10, comb, OCC*1.13087, (0.081020+0.071666)*0.65, sf[k][2], incl?"comb":"");
+    one("FHC",      sels[k], dirs[k], 7.766e20,  6.81159e-10, fhc,  OCC*0.49875,  sf[k][0], incl?"newg4":"");
+    one("RHC",      sels[k], dirs[k], 1.1082e21, 6.44646e-10, rhc,  OCC*0.63213,  sf[k][1], incl?"rhc":"");
+    one("Combined", sels[k], dirs[k], 1.8848e21, 6.596906e-10, comb, OCC*1.13087, sf[k][2], incl?"comb":"");
   }
 }

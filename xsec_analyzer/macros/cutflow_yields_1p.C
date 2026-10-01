@@ -57,10 +57,31 @@ void cutflow_yields_1p(const char* mode="fhc") {
     }
   };
   add_ext(ext, mode);
-  double sc_dirt = ( (std::string(mode)=="fhc") ? 0.081020
-                   : (std::string(mode)=="rhc") ? 0.071666
-                   : (0.081020 + 0.071666) ) * 0.65;
-  dirt.push_back({std::string(P)+"xsec-ana-prodgenie_numi_uboone_overlay_dirt_fhc_mcc9_run1_v28_all_snapshot.root", sc_dirt});
+  // Dirt: PER RUN, as in cutflow_yields.C and the framework: each run's dirt sample(s) scaled by
+  // data POT[run] / summed_pot of those samples, read from the files. The cf_1p counters already
+  // carry the 0.65 dirt normalisation in the event weight, so it is not applied again. (Until
+  // 2026-10-01: a single factor 0.081020 FHC / 0.071666 RHC, data POT over the OVERLAY POT, times
+  // a second 0.65, which left the dirt about 9x (FHC) to 14x (RHC) low.)
+  auto dirt_pot=[&](const std::string& f){ double v=0.; TFile* x=TFile::Open(f.c_str());
+    if(x&&!x->IsZombie()){ auto* p=(TParameter<float>*)x->Get("summed_pot"); if(p) v=p->GetVal(); x->Close(); }
+    if(v<=0.) printf("ERROR: no summed_pot in %s\n", f.c_str()); return v; };
+  auto dfile=[&](const char* tag){ return std::string(P)+"xsec-ana-"+tag+".root"; };
+  const std::string D1 =dfile("prodgenie_numi_uboone_overlay_dirt_fhc_mcc9_run1_v28_all_snapshot");
+  const std::string D4C=dfile("numi_run4c_fhc_dirt_overlay_pandora_unified_reco2_run4c_ana");
+  const std::string D4D=dfile("numi_run4d_fhc_dirt_overlay_pandora_unified_reco2_run4d_ana");
+  const std::string D5 =dfile("run5_numi_fhc_dirt_overlay_pandora_ntuple_v08_00_00_67_slim_run5_ana_nonzerolifetime_goodruns");
+  const std::string D3B=dfile("neutrinoselection_filt_run3b_dirt_overlay");
+  const std::string D4A=dfile("run_4a_numi_rhc_dirt_overlay_pandora_unified_reco2_run4a_rhc_ana");
+  const std::string D4B=dfile("numi_run4b_rhc_dirt_overlay_pandora_unified_reco2_run4b_ana");
+  auto add_dirt_run=[&](std::vector<std::string> fs, double data_pot){
+    double pot=0.; for(auto& f:fs) pot+=dirt_pot(f);
+    for(auto& f:fs) dirt.push_back({f, data_pot/pot}); };
+  if(std::string(mode)=="fhc"||std::string(mode)=="comb"){
+    add_dirt_run({D1},2.192e20); add_dirt_run({D1},1.268e20);   // Run 2: Run-1 sample stands in
+    add_dirt_run({D4C,D4D},2.075e20); add_dirt_run({D5},2.231e20); }
+  if(std::string(mode)=="rhc"||std::string(mode)=="comb"){
+    add_dirt_run({D3B},0.6053e20); add_dirt_run({D3B},2.591e20);  // Runs 1, 2: Run-3b sample stands in
+    add_dirt_run({D3B},5.003e20); add_dirt_run({D4A,D4B},2.883e20); }
 
   double sig[11]={0}, tot[11]={0}, ex[11]={0}, dt[11]={0};
   // stages 1-10 from the histogram counters
