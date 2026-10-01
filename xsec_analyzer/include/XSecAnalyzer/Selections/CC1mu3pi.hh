@@ -19,7 +19,9 @@ class CC1mu3pi : public CC1mu1piXp {
   double pion_vtx_distance_cut()  const override { return 9.5; }
   bool   loose_pion_id()          const override { return true; }
   int    max_uncontained_pions()  const override { return 2; }
-  bool   apply_opening_angle_cut() const override { return false; }
+  // reco cut theta(mu, longest pion candidate) < 2.6 rad, the counterpart of the truth cut on
+  // the leading pion (decision of 2026-10-01; see CC1mu1piXp.cxx)
+  bool   apply_opening_angle_cut() const override { return true; }
   bool   apply_shower_veto()       const override { return false; }
   bool   apply_wire_gap_cuts()     const override { return false; }
   // per-pion threshold on all N pions: 0.10 GeV/c (pion tracking turn-on)

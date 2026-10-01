@@ -10,6 +10,7 @@
 
 #include <TMVA/Reader.h>
 #include "TFile.h"
+#include <algorithm>
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
@@ -929,8 +930,70 @@ if (isSignal) {
 //std::cout<<"after muon index" <<std::endl;
 }
 
+ if ( store_multipion_info() ) this->fill_multipion_truth( Event, isSignal );
+
  return isSignal;
 
+}
+
+// Truth bookkeeping for the multi-pion selections: the true primary charged pions
+// (hardest first), the pion and proton counts at the thresholds of the plan, the >=1p
+// subsample flag and the truth topology class. Reads the generator record only and
+// changes no quantity used by the selection.
+void CC1mu1piXp::fill_multipion_truth( AnalysisEvent* Event, bool is_signal ) {
+  struct TruePion { float mom, costh; int pdg; };
+  std::vector< TruePion > tp;
+  int n_pi0 = 0, n_pipm = 0, n_kaon = 0, n_other_meson = 0;
+  mc_n_pipm_thr010_ = 0; mc_n_pipm_thr0175_ = 0; mc_n_proton_sub_ = 0;
+  mc_lead_proton_mom_ = -1.f;
+  const TVector3 nu_dir = true_nu_dir( Event );
+  const size_t n = Event->mc_nu_daughter_pdg_ ? Event->mc_nu_daughter_pdg_->size() : 0u;
+  for ( size_t p = 0u; p < n; ++p ) {
+    const int pdg = Event->mc_nu_daughter_pdg_->at( p );
+    const TVector3 mom( Event->mc_nu_daughter_px_->at(p),
+      Event->mc_nu_daughter_py_->at(p), Event->mc_nu_daughter_pz_->at(p) );
+    const double pm = mom.Mag();
+    if ( std::abs(pdg) == PI_PLUS && pm > 0. ) {
+      ++n_pipm;
+      if ( pm > 0.10 )  ++mc_n_pipm_thr010_;
+      if ( pm > 0.175 ) ++mc_n_pipm_thr0175_;
+      tp.push_back( { static_cast<float>(pm),
+        static_cast<float>( mom.Unit().Dot( nu_dir ) ), pdg } );
+    }
+    else if ( pdg == PI_ZERO ) ++n_pi0;
+    else if ( pdg == PROTON ) {
+      if ( pm > subsample_proton_mom_threshold() ) ++mc_n_proton_sub_;
+      if ( pm > mc_lead_proton_mom_ ) mc_lead_proton_mom_ = pm;
+    }
+    else if ( std::abs(pdg) == 321 || pdg == 310 || pdg == 130 || pdg == 311 ) ++n_kaon;
+    else if ( is_meson_or_antimeson( pdg ) ) ++n_other_meson;
+  }
+  std::sort( tp.begin(), tp.end(),
+    []( const TruePion& a, const TruePion& b ){ return a.mom > b.mom; } );
+  for ( const auto& t : tp ) {
+    mc_pi_mom_->push_back( t.mom );
+    mc_pi_costh_->push_back( t.costh );
+    mc_pi_pdg_->push_back( t.pdg );
+  }
+  mc_n_kaons_out_ = n_kaon;
+  mc_signal_1p_ = is_signal && ( mc_n_proton_sub_ >= 1 );
+
+  // Topology class (exclusive, in the order of the enum).
+  const int abs_pdg = std::abs( Event->mc_nu_pdg_ );
+  const bool is_mc = ( abs_pdg == ELECTRON_NEUTRINO || abs_pdg == MUON_NEUTRINO
+    || abs_pdg == TAU_NEUTRINO );
+  if ( !is_mc ) mc_topology_ = kTopoNotMC;
+  else if ( !in_vertex_FV( this->true_FV(), Event->mc_nu_vx_, Event->mc_nu_vy_,
+    Event->mc_nu_vz_ ) ) mc_topology_ = kTopoOOFV;
+  else if ( Event->mc_nu_ccnc_ == NEUTRAL_CURRENT ) mc_topology_ = kTopoNC;
+  else if ( abs_pdg != MUON_NEUTRINO ) mc_topology_ = kTopoNonNumuCC;
+  else if ( is_signal ) mc_topology_ = kTopoSignal;
+  else if ( n_kaon > 0 || n_other_meson > 0 ) mc_topology_ = kTopoCCother;
+  else if ( n_pi0 > 0 ) mc_topology_ = kTopoCCpi0;
+  else if ( n_pipm == 0 ) mc_topology_ = kTopoCC0pi;
+  else if ( n_pipm == 1 ) mc_topology_ = kTopoCC1pi;
+  else if ( n_pipm == 2 ) mc_topology_ = kTopoCC2pi;
+  else mc_topology_ = kTopoCC3pi;
 }
 
 
@@ -1305,6 +1368,35 @@ for (size_t i_pfp_2 = 0; i_pfp_2 < Event->track_length_->size(); i_pfp_2++) {
 	  else if ( tp == 2212 )           ++n_reco_pion_proton_;
 	  else if ( std::abs(tp) == 13 )   ++n_reco_pion_muon_;
 	  else                             ++n_reco_pion_other_;
+	  // multi-pion bookkeeping: record every counted candidate (read-only)
+	  if ( store_multipion_info() ) {
+	    PionCandidate pc;
+	    pc.idx = static_cast<int>( i_pfp_2 );
+	    pc.contained = pi_contained ? 1 : 0;
+	    pc.len = Event->track_length_->at(i_pfp_2);
+	    pc.mom_range_mu = Event->track_range_mom_mu_->at(i_pfp_2);
+	    // muon-hypothesis range momentum converted to the pion mass at fixed kinetic
+	    // energy, the conversion the bin configurations apply to the single pion
+	    const double m_mu = 0.1056583755, m_pi = 0.13957039;
+	    const double T = std::sqrt( pc.mom_range_mu * pc.mom_range_mu + m_mu * m_mu ) - m_mu;
+	    pc.mom_range_pi = std::sqrt( std::max( 0., ( T + m_pi ) * ( T + m_pi ) - m_pi * m_pi ) );
+	    pc.mom_mcs = Event->track_mcs_mom_mu_->at(i_pfp_2);
+	    TVector3 dir( Event->track_dirx_->at(i_pfp_2), Event->track_diry_->at(i_pfp_2),
+	                  Event->track_dirz_->at(i_pfp_2) );
+	    pc.costh = ( dir.Mag() > 0. ) ? dir.Unit().Dot( reco_nu_dir(Event) ) : -2.f;
+	    pc.llr = Event->track_llr_pid_score_->at(i_pfp_2);
+	    pc.bdt = use_pion_bdt() ? mppi_output : -999.f;
+	    pc.dist = nu_to_track_dist_ib.Mag();
+	    pc.true_pdg = tp;
+	    pc.true_mom = -1.f; pc.true_costh = -2.f;
+	    if ( i_pfp_2 < Event->pfp_true_px_->size() ) {
+	      TVector3 tm( Event->pfp_true_px_->at(i_pfp_2), Event->pfp_true_py_->at(i_pfp_2),
+	                   Event->pfp_true_pz_->at(i_pfp_2) );
+	      pc.true_mom = tm.Mag();
+	      if ( tm.Mag() > 0. ) pc.true_costh = tm.Unit().Dot( true_nu_dir(Event) );
+	    }
+	    pion_candidates_.push_back( pc );
+	  }
 	}
 	// uncontained PID pions are tallied here; up to max_uncontained_pions() of them
 	// are folded into pion_number after the loop.
@@ -1341,6 +1433,36 @@ for (size_t i_pfp_2 = 0; i_pfp_2 < Event->track_length_->size(); i_pfp_2++) {
 // "maximum uncontainment" tolerance). Inclusive: max_uncontained_pions()==0, so
 // pion_number == n_contained_pion_ == the old count.
 pion_number = n_contained_pion_ + std::min( n_uncontained_pion_, max_uncontained_pions() );
+
+// multi-pion bookkeeping: counted candidates, longest track first (for contained
+// tracks this is also the order in range momentum)
+if ( store_multipion_info() ) {
+  std::sort( pion_candidates_.begin(), pion_candidates_.end(),
+    []( const PionCandidate& a, const PionCandidate& b ){ return a.len > b.len; } );
+  for ( const auto& pc : pion_candidates_ ) {
+    pic_idx_->push_back( pc.idx );
+    pic_contained_->push_back( pc.contained );
+    pic_len_->push_back( pc.len );
+    pic_mom_range_mu_->push_back( pc.mom_range_mu );
+    pic_mom_range_pi_->push_back( pc.mom_range_pi );
+    pic_mom_mcs_->push_back( pc.mom_mcs );
+    pic_costh_->push_back( pc.costh );
+    pic_llr_->push_back( pc.llr );
+    pic_bdt_->push_back( pc.bdt );
+    pic_dist_->push_back( pc.dist );
+    pic_true_pdg_->push_back( pc.true_pdg );
+    pic_true_mom_->push_back( pc.true_mom );
+    pic_true_costh_->push_back( pc.true_costh );
+  }
+  // opening angle between the muon and the longest counted pion candidate
+  if ( CandidateMuonIndex != -1 && !pion_candidates_.empty() ) {
+    const int li = pion_candidates_.front().idx;
+    TVector3 MU( Event->track_dirx_->at(CandidateMuonIndex), Event->track_diry_->at(CandidateMuonIndex),
+                 Event->track_dirz_->at(CandidateMuonIndex) );
+    TVector3 PI( Event->track_dirx_->at(li), Event->track_diry_->at(li), Event->track_dirz_->at(li) );
+    if ( MU.Mag() > 0. && PI.Mag() > 0. ) mu_leadpi_opening_angle_ = MU.Angle( PI );
+  }
+}
 
 // std::cout<<"This is fine 9" << std::endl;
 
@@ -1455,6 +1577,12 @@ bool pass_muongap       = muon_in_gap;
 bool pass_piongap       = pion_in_gap;
 bool pass_shower        = shower_cut;
 bool pass_opening       = opening_angle_cut;
+// Multi-pion selections (decision of 2026-10-01): the reco counterpart of the truth cut
+// theta(mu, leading pi) < 2.6 rad is the angle between the muon and the LONGEST counted pion
+// candidate. The inclusive selection keeps its own cut on the selected pion (unchanged).
+if ( store_multipion_info() ) {
+  pass_opening = ( mu_leadpi_opening_angle_ >= 0. && mu_leadpi_opening_angle_ < 2.6 );
+}
 // Track-multiplicity cut. For the inclusive selection (required_charged_pions()==1)
 // this is exactly (nonproton<4 && nPrimaryTracks<5); it relaxes by one per extra
 // required pion so the CC1mu2pi/CC1mu3pi multi-pion topologies are not rejected.
@@ -1481,6 +1609,15 @@ bool Passed =
     ( apply_shower_veto()        ? pass_shower  : true ) &&
     ( apply_opening_angle_cut()  ? pass_opening : true ) &&
     pass_final;
+
+  // multi-pion bookkeeping: per-stage pass bits (not cumulative), so a cut-flow in any
+  // stage order can be rebuilt per event from one processing pass
+  if ( store_multipion_info() ) {
+    const bool bits[10] = { pass_swtrig, pass_vertex, pass_topology, pass_tracklike,
+      pass_pioncontained, pass_muongap, pass_piongap, pass_shower, pass_opening, pass_final };
+    cutflow_bits_ = 0;
+    for ( int b = 0; b < 10; ++b ) if ( bits[b] ) cutflow_bits_ |= ( 1 << b );
+  }
 
   // --- background-control sidebands (signal-depleted; see CC1mu1piXp.hh) ---
   // Common preselection: software trigger, contained vertex, topology, muon track.
@@ -2380,8 +2517,36 @@ void CC1mu1piXp::define_output_branches() {
   set_branch( &candidate_pion_costh_reco, "candidate_pion_costh_reco");
   set_branch( &candidate_pion_costh_true, "candidate_pion_costh_true");
 
-
-
+  // Multi-pion bookkeeping (selections with N > 1 only; see CC1mu1piXp.hh)
+  if ( store_multipion_info() ) {
+    set_branch( pic_idx_,          "pic_idx" );
+    set_branch( pic_contained_,    "pic_contained" );
+    set_branch( pic_len_,          "pic_len" );
+    set_branch( pic_mom_range_mu_, "pic_mom_range_mu" );
+    set_branch( pic_mom_range_pi_, "pic_mom_range_pi" );
+    set_branch( pic_mom_mcs_,      "pic_mom_mcs" );
+    set_branch( pic_costh_,        "pic_costh" );
+    set_branch( pic_llr_,          "pic_llr" );
+    set_branch( pic_bdt_,          "pic_bdt" );
+    set_branch( pic_dist_,         "pic_dist" );
+    set_branch( pic_true_pdg_,     "pic_true_pdg" );
+    set_branch( pic_true_mom_,     "pic_true_mom" );
+    set_branch( pic_true_costh_,   "pic_true_costh" );
+    set_branch( mc_pi_mom_,        "mc_pi_mom" );
+    set_branch( mc_pi_costh_,      "mc_pi_costh" );
+    set_branch( mc_pi_pdg_,        "mc_pi_pdg" );
+    set_branch( &mc_n_pipm_thr010_,   "mc_n_pipm_thr010" );
+    set_branch( &mc_n_pipm_thr0175_,  "mc_n_pipm_thr0175" );
+    set_branch( &mc_n_proton_sub_,    "mc_n_proton_sub" );
+    set_branch( &mc_n_kaons_out_,     "mc_n_kaons" );
+    set_branch( &mc_lead_proton_mom_, "mc_lead_proton_mom" );
+    set_branch( &mc_signal_1p_,       "MC_Signal_1p" );
+    set_branch( &mc_topology_,        "mc_topology" );
+    set_branch( &cutflow_bits_,       "cutflow_bits" );
+    set_branch( &mu_leadpi_opening_angle_, "mu_leadpi_opening_angle" );
+    set_branch( &n_contained_pion_,   "n_contained_pion" );
+    set_branch( &n_uncontained_pion_, "n_uncontained_pion" );
+  }
 
 
 
@@ -2465,6 +2630,17 @@ void CC1mu1piXp::reset() {
   CandidatePionIndex = -1;
   TrueCandidateMuonP.SetXYZ(-1.0,-1.1,-1.0);
   TrueCandidatePionP.SetXYZ(-1.0,-1.1,-1.0);
+  // multi-pion bookkeeping
+  pion_candidates_.clear();
+  pic_idx_->clear(); pic_contained_->clear(); pic_len_->clear();
+  pic_mom_range_mu_->clear(); pic_mom_range_pi_->clear(); pic_mom_mcs_->clear();
+  pic_costh_->clear(); pic_llr_->clear(); pic_bdt_->clear(); pic_dist_->clear();
+  pic_true_pdg_->clear(); pic_true_mom_->clear(); pic_true_costh_->clear();
+  mc_pi_mom_->clear(); mc_pi_costh_->clear(); mc_pi_pdg_->clear();
+  mc_n_pipm_thr010_ = 0; mc_n_pipm_thr0175_ = 0; mc_n_proton_sub_ = 0; mc_n_kaons_out_ = 0;
+  mc_lead_proton_mom_ = -1.f; mc_signal_1p_ = false; mc_topology_ = kTopoNotMC;
+  cutflow_bits_ = 0;
+  mu_leadpi_opening_angle_ = -1.;
  // sig_truevertex_fv = 0;
  // sig_ccnc = 0;
  // sig_numu = 0;

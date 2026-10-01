@@ -98,6 +98,68 @@ protected:
   // reproduces the single-pion signal exactly.
   virtual double signal_pion_mom_threshold() const { return 0.175; }
 
+  // ---- Multi-pion bookkeeping (Phase 0 of report/MULTIPION_BNB_ADAPTATION_PLAN.md) ----
+  // Written only by selections with N > 1 charged pions, so the output of the inclusive
+  // CC1mu1piXp (and of CC1mu1pi1p, which inherits N = 1) is unchanged.
+  virtual bool store_multipion_info() const { return required_charged_pions() > 1; }
+  // Proton momentum threshold of the >=1p subsample (decision D1): the 0.3 GeV/c of the
+  // proton-tagged single-pion sample.
+  virtual double subsample_proton_mom_threshold() const { return 0.3; }
+  // Truth topology classes stored in <sel>_mc_topology. Class 0 is the signal of the
+  // selection that writes the branch; the others are exclusive and ordered as listed.
+  enum MultiPionTopology {
+    kTopoSignal = 0,      // MC_Signal of this selection
+    kTopoCC0pi = 1,       // numu(bar) CC in FV, no pi+-, no pi0, no other meson
+    kTopoCC1pi = 2,       // exactly one pi+- (any momentum), no pi0 / other meson, not signal
+    kTopoCC2pi = 3,       // exactly two pi+-, no pi0 / other meson, not signal
+    kTopoCC3pi = 4,       // three or more pi+-, no pi0 / other meson, not signal
+    kTopoCCpi0 = 5,       // at least one pi0 (any number of pi+-), no kaon / other meson
+    kTopoCCother = 6,     // kaon or other meson in the final state
+    kTopoNC = 7,
+    kTopoNonNumuCC = 8,   // nue / nutau CC
+    kTopoOOFV = 9,        // true vertex outside the FV (includes the dirt overlay)
+    kTopoNotMC = 10       // beam-off or beam-on data
+  };
+  void fill_multipion_truth( AnalysisEvent* event, bool is_signal );
+  // One counted pion candidate (track score >= 0.5 and pion ID passed, contained or not).
+  struct PionCandidate {
+    int idx; int contained; float len, mom_range_mu, mom_range_pi, mom_mcs, costh,
+      llr, bdt, dist; int true_pdg; float true_mom, true_costh;
+  };
+  std::vector< PionCandidate > pion_candidates_;
+  // per-candidate output vectors, longest track first
+  MyPointer< std::vector<int> >   pic_idx_;
+  MyPointer< std::vector<int> >   pic_contained_;
+  MyPointer< std::vector<float> > pic_len_;
+  MyPointer< std::vector<float> > pic_mom_range_mu_;
+  MyPointer< std::vector<float> > pic_mom_range_pi_;
+  MyPointer< std::vector<float> > pic_mom_mcs_;
+  MyPointer< std::vector<float> > pic_costh_;
+  MyPointer< std::vector<float> > pic_llr_;
+  MyPointer< std::vector<float> > pic_bdt_;
+  MyPointer< std::vector<float> > pic_dist_;
+  MyPointer< std::vector<int> >   pic_true_pdg_;
+  MyPointer< std::vector<float> > pic_true_mom_;
+  MyPointer< std::vector<float> > pic_true_costh_;
+  // true primary charged pions, hardest first
+  MyPointer< std::vector<float> > mc_pi_mom_;
+  MyPointer< std::vector<float> > mc_pi_costh_;
+  MyPointer< std::vector<int> >   mc_pi_pdg_;
+  int   mc_n_pipm_thr010_ = 0;    // true pi+- above 0.10 GeV/c
+  int   mc_n_pipm_thr0175_ = 0;   // true pi+- above 0.175 GeV/c
+  int   mc_n_proton_sub_ = 0;     // true protons above subsample_proton_mom_threshold()
+  int   mc_n_kaons_out_ = 0;      // true kaons (written; sig_mc_n_kaons is not)
+  float mc_lead_proton_mom_ = -1.f;
+  bool  mc_signal_1p_ = false;    // MC_Signal and >= 1 true proton above the threshold
+  int   mc_topology_ = kTopoNotMC;
+  // Per-stage pass bits (not cumulative): 0 swtrig, 1 vertex, 2 topology, 3 muon,
+  // 4 pion count/containment, 5 muon 3-plane, 6 pion 3-plane, 7 shower veto,
+  // 8 opening angle, 9 final multiplicity.
+  int   cutflow_bits_ = 0;
+  // reco angle between the muon and the longest counted pion candidate (multi-pion
+  // counterpart of the truth cut theta(mu, leading pi) < 2.6 rad); -1 when undefined
+  double mu_leadpi_opening_angle_ = -1.;
+
   TMVA::Reader * tmvaReader;
   TMVA::Reader * tmvaReader_mu;
   TMVA::Reader * tmvaReader_pi;
