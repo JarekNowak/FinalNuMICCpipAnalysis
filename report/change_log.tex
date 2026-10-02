@@ -1517,6 +1517,47 @@ The three documents with the two dirt corrections above are tagged as version~1.
 \texttt{v1.6.1}), an errata release of version~1.6. The cross sections, the covariances and the data release
 are those of version~1.6; the release notes list every changed number.
 
+\section{Bragg-pion requirement dropped from the pion identification (2026-10-02)}
+
+The pion identification of the single-pion selections required a Bragg-pion score of at least $0.08$. The
+beam-on, beam-off and dirt ntuples of the older production (FHC Run~1, RHC Runs~1 and~3b) do not carry this
+score, so the requirement passed every track in those samples while every overlay applied it. In the opened
+control regions the released identification passed $7$--$11\%$ more beam-on candidates than predicted in those
+three periods and not in the others; without the requirement the periods agree, and where the data carry the
+score the requirement, after the other cuts, is modelled to within $2.2\sigma$. At unblinding the one-bin cross
+sections would have been $4.7\%$ (combined, inclusive) and $4.6\%$ (proton-tagged) high. The requirement is
+dropped in every sample (commit \texttt{1fb6be9}); the pion BDT, LLR and MIP-BDT requirements are unchanged.
+
+The selection keeps $18.3\%$ of the signal at $57.3\%$ purity in FHC ($18.4\%$ and $56.6\%$ in RHC, $18.4\%$ and
+$56.9\%$ combined; previously $17.5$--$17.6\%$ at $57.4$--$58.5\%$), and the proton-tagged selection $12.1\%$ at
+$50$--$52\%$ (previously $11.5\%$). The pion candidate is a proton in $21\%$ of the selected events ($18\%$), and
+the CC$0\pi$ background rises from $215$ to $260$ events in FHC, $42\%$ of the neutrino background. The one-bin
+totals become $1.042$, $0.925$ and $0.975$ (FHC, RHC, combined; previously $1.034$, $0.932$, $0.975$), the
+differential integrals move by factors of $0.92$--$1.12$ (median $1.00$), and the mean inclusive closure ratio is
+$1.003$.
+
+Every overlay, beam-off, dirt and detector-variation sample of both trees was reprocessed, the pseudo-data were
+re-thrown with the release seeds (the same events; only the selection flags change), the $65$ universe files were
+rebuilt with the bin definitions read back from the previous files, and the release chain, the D'Agostini
+cross-check, the cut-flows, the tables and the figures were regenerated. The proton-rejection figure now shows the
+pion-BDT score. The final-cut topology figure, which still showed a NuWro pseudo-data set at the superseded Run-1
+exposure, is redrawn from the release samples. The counting cross-check now takes its systematic fractions from
+the current $p_\mu$ results, and the proton-tagged cut-flow dirt carries the proton-tagged counters (it had been
+processed with the inclusive selection). The binnings still meet the $0.50$ migration criterion (lowest diagonal
+$0.516$, the inclusive three-region $p_\pi$ in FHC).
+
+Carried over from version~1.6.1, made with the previous selection: the MCS momentum-scale term (added to the new
+framework covariance), the alternative-model closure, the ensembles, the study extractions, the binning-review
+studies and the control-region results and fits. Dropping the requirement moves events from the control regions into
+the signal region: about $6$--$7\%$ of the new signal region of the Run-4 and Run-5 beam-on data (about $85$
+predicted events) was in the opened control regions. The beam-on control-region skims made with the previous
+selection are withdrawn from use and will be remade; in Runs 1--3 the beam-on selection does not change.
+
+\section{Version 1.7 (2026-10-02)}
+
+The three documents with the change above are version~1.7. The cross sections, covariances and data release are
+regenerated; the release notes list the changed numbers.
+
 \section{Open items}
 
 The following remain outstanding following the 2026-09-07 review. None is a correction awaiting application;
@@ -1593,7 +1634,9 @@ band correctly; the systematic part remains untested by construction.
 \toprule
 Quantity & superseded value & status \\
 \midrule
-Mean inclusive closure ratio        & $1.106$, $1.001$, $1.016$, $1.018$ & now $1.010$ (five-bin $\cos\theta_\pi$ release) \\
+Mean inclusive closure ratio        & $1.106$, $1.001$, $1.016$, $1.018$, $1.010$, $0.996$ & now $1.003$ (version~1.7) \\
+Inclusive purity, final cut         & $58.5/57.4/57.9\%$ & $57.3/56.6/56.9\%$ without the Bragg-pion requirement (version~1.7) \\
+Inclusive selection efficiency      & $17.5$--$17.6\%$ & $18.3$--$18.4\%$ (version~1.7) \\
 RHC $W_{\pi p}$ cross section       & $-0.194$         & sign was a POT-convention artefact \\
 Combined detector systematic        & $42.3\%$         & $24.6\%$ at the fix; $21.4\%$ ($p_\mu$) in the current release \\
 Combined result / expected          & $0.910$          & $1.027$ at the fix (2026-08-28 pass) \\

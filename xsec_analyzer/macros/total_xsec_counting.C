@@ -175,10 +175,11 @@ void total_xsec_counting() {
   const double OCC = 0.98;
   // syst_frac = prediction-total fractional uncertainty of the released p_mu extraction
   // (report/current_results.tsv, PredTotal_pct; the same numbers as the note's
-  // per-configuration result tables): incl 41.1/44.5/40.6 %, 1p 49.3/37.6/42.0 %.
+  // per-configuration result tables): incl 39.5/41.9/39.7 %, 1p 45.1/52.4/50.4 % (FHC/RHC/combined;
+  // updated 2026-10-02 with the release without the Bragg-pion cut).
   const char* sels[2] = {"CC1mu1piXp","CC1mu1pi1p"};
   const char* dirs[2] = {P_incl, P_1p};
-  const double sf[2][3] = {{0.411,0.445,0.406},{0.493,0.376,0.420}};
+  const double sf[2][3] = {{0.395,0.419,0.397},{0.451,0.524,0.504}};
   for ( int k = 0; k < 2; ++k ) {
     std::vector<Src> fhc, rhc, comb;
     FHC(fhc,dirs[k]); RHC(rhc,dirs[k]); FHC(comb,dirs[k]); RHC(comb,dirs[k]);
