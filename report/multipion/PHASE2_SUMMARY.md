@@ -70,9 +70,31 @@ For 1π the background falls by 29% for 5% of the signal, the same in both perio
 67.0% in FHC Run 5, 57.2% to 63.6% in RHC Run 3); the proton-as-pion background falls from 199 to 78
 events, the true-pion backgrounds are unchanged (210 and 214). The released purity on these runs,
 58.0%, reproduces the published 57.9%. The statistical gain is small; the larger gain is systematic:
-the flux term scales as 17% x (1 + B/S), and B/S falls from 0.72 to 0.55 (2π: 2.78 to 1.82). The
-thresholds were set per track; a scan of thresholds at event level is running (SLURM 3450945,
-`/data/uboone/processed/mp_pid_scan`, `mp_pid_eval.py --scan`).
+the flux term scales as 17% x (1 + B/S), and B/S falls from 0.72 to 0.55 (2π: 2.78 to 1.82).
+
+The thresholds above were set per track. Scan at event level (SLURM 3450945, `mp_pid_eval.py --scan`,
+`phase2_eval_scan.md`), both periods:
+
+| Selection | Pion identification | Efficiency | Purity | B/S | Stat. unc. (one bin) |
+|---|---|---|---|---|---|
+| 1π | released | 17.57% | 58.0% | 0.72 | 4.97% |
+| 1π | P(π) > 0.20 | 17.58% | 63.3% | 0.58 | 4.76% |
+| 1π | P(π) > 0.3087 | 16.63% | 64.7% | 0.55 | 4.84% |
+| 1π | P(π) > 0.40 | 15.75% | 65.8% | 0.52 | 4.93% |
+| 2π | current | 18.25% | 26.4% | 2.78 | 13.6% |
+| 2π | P(π) > 0.10 | 19.32% | 28.2% | 2.55 | 12.8% |
+| 2π | P(π) > 0.15 | 17.81% | 31.5% | 2.18 | 12.7% |
+| 2π | P(π) > 0.2276 | 15.95% | 35.5% | 1.82 | 12.6% |
+| 2π | P(π) > 0.30 | 14.00% | 37.9% | 1.64 | 13.0% |
+| 3π | current | 10.12% | 10.8% | 8.28 | 66% |
+| 3π | P(π) > 0.10 | 8.95% | 16.5% | 5.05 | 57% |
+| 3π | P(π) > 0.2276 | 7.02% | 24.2% | 3.13 | 53% |
+| 3π | P(π) > 0.30 | 5.75% | 26.7% | 2.75 | 56% |
+
+At P(π) > 0.20 the 1π selection keeps the released efficiency with purity 63.3% and the smallest
+statistical uncertainty. The 2π and 3π statistical minima lie at the per-track thresholds, and the
+minimum is shallow. Raising the threshold lowers B/S further in all three; the working point is to
+be chosen on the total uncertainty (plan, Phase 2 item 4).
 
 ## Inputs missing from the older ntuple productions (found 2026-10-01)
 
