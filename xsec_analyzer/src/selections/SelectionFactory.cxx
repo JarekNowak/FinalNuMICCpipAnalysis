@@ -10,6 +10,7 @@
 #include "XSecAnalyzer/Selections/CC1mu1pi1p.hh"
 #include "XSecAnalyzer/Selections/CC1mu2pi.hh"
 #include "XSecAnalyzer/Selections/CC1mu3pi.hh"
+#include "XSecAnalyzer/Selections/NewPIDSelections.hh"
 
 
 SelectionFactory::SelectionFactory() {
@@ -45,6 +46,29 @@ else if ( selection_name == "CC1mu1piXp" ) {
   }
   else if ( selection_name == "CC1mu3pi" ) {
     sel = new CC1mu3pi;
+  }
+  // study selections with the particle classifier as pion identification
+  else if ( selection_name == "CC1mu1piXpNewPID" ) {
+    sel = new CC1mu1piXpNewPID;
+  }
+  else if ( selection_name == "CC1mu2piNewPID" ) {
+    sel = new CC1mu2piNewPID;
+  }
+  else if ( selection_name == "CC1mu3piNewPID" ) {
+    sel = new CC1mu3piNewPID;
+  }
+  // threshold variants "<NewPID selection>_tNN": P(pi) > NN/100
+  else if ( selection_name.rfind( "NewPID_t" ) != std::string::npos ) {
+    const size_t pos = selection_name.rfind( "_t" );
+    const std::string base = selection_name.substr( 0, pos );
+    const double cut = std::stod( selection_name.substr( pos + 2 ) ) / 100.;
+    if ( base == "CC1mu1piXpNewPID" ) sel = new CC1mu1piXpNewPID( cut, selection_name );
+    else if ( base == "CC1mu2piNewPID" ) sel = new CC1mu2piNewPID( cut, selection_name );
+    else if ( base == "CC1mu3piNewPID" ) sel = new CC1mu3piNewPID( cut, selection_name );
+    else {
+      std::cerr << "Selection name requested: " << selection_name << " has no NewPID base\n";
+      throw;
+    }
   }
 
   else {

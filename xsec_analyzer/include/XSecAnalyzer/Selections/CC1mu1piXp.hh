@@ -2,8 +2,11 @@
 
 // ROOT includes
 #include <cstdlib>
+#include <array>
+#include <memory>
 #include "TF1.h"
 #include <TMVA/Reader.h>
+#include <TMVA/RBDT.hxx>
 #include <TH1D.h>
 #include <TH2D.h>
 
@@ -91,6 +94,22 @@ protected:
   virtual bool   require_bragg_with_bdt() const { return false; }
   virtual double bragg_pion_cut()         const { return 0.08; }
   virtual bool   require_mip_with_bdt()   const { return false; }
+  // Multi-pion particle classifier (report/multipion/PHASE1_SUMMARY.md): XGBoost, four classes
+  // (muon, pion, proton, other), evaluated per candidate through ROOT's RBDT from
+  // booster_decision_tree/mp_pid/. eval_new_pid() computes the class probabilities (stored per
+  // candidate for N > 1); use_new_pid() makes P(pi) > new_pid_cut() the pion identification, with
+  // tracks no longer than new_pid_min_length() rejected. Off for the released selections; the
+  // *NewPID study selections switch it on.
+  virtual bool   use_new_pid() const { return false; }
+  virtual double new_pid_cut() const { return 0.5; }
+  virtual double new_pid_min_length() const { return 0.; }
+  virtual bool   eval_new_pid() const { return use_new_pid() || store_multipion_info(); }
+  // the 43 inputs of track i in the order of scripts/mp_pid_train.py --common, missing values as -9999
+  std::vector<float> mp_pid_features( const AnalysisEvent* ev, size_t i, double dist );
+  // class probabilities of track i, evaluated once per event and track for all selections
+  const std::array<float, 4>& mp_pid_cached( const AnalysisEvent* ev, size_t i, double dist );
+  std::unique_ptr< TMVA::Experimental::RBDT > mp_pid_;
+  float mp_pid_out_[4] = { -1.f, -1.f, -1.f, -1.f };   // P(mu), P(pi), P(p), P(other) of the current candidate
   // Per-pion true-momentum threshold applied to ALL N signal pions (via the softest
   // one). The single-pion measured phase space uses 0.175 GeV/c; the multi-pion
   // channels adopt 0.10 GeV/c (the pion tracking turn-on) -- see the threshold study
@@ -124,7 +143,7 @@ protected:
   // One counted pion candidate (track score >= 0.5 and pion ID passed, contained or not).
   struct PionCandidate {
     int idx; int contained; float len, mom_range_mu, mom_range_pi, mom_mcs, costh,
-      llr, bdt, dist; int true_pdg; float true_mom, true_costh;
+      llr, bdt, dist; int true_pdg; float true_mom, true_costh; float pid[4];
   };
   std::vector< PionCandidate > pion_candidates_;
   // per-candidate output vectors, longest track first
@@ -141,6 +160,11 @@ protected:
   MyPointer< std::vector<int> >   pic_true_pdg_;
   MyPointer< std::vector<float> > pic_true_mom_;
   MyPointer< std::vector<float> > pic_true_costh_;
+  // class probabilities of the particle classifier (-1 when it is not evaluated)
+  MyPointer< std::vector<float> > pic_pid_mu_;
+  MyPointer< std::vector<float> > pic_pid_pi_;
+  MyPointer< std::vector<float> > pic_pid_p_;
+  MyPointer< std::vector<float> > pic_pid_other_;
   // true primary charged pions, hardest first
   MyPointer< std::vector<float> > mc_pi_mom_;
   MyPointer< std::vector<float> > mc_pi_costh_;

@@ -35,7 +35,7 @@ SHARED_LIB := $(LIB_DIR)/libXSecAnalyzer.$(SHARED_LIB_SUFFIX)
 # ...) rebuilds nothing and you silently rerun stale binaries.
 CXXFLAGS := $(shell root-config --cflags) -I$(INCLUDE_DIR) -MMD -MP
 LDFLAGS := $(shell root-config --libs) \
-           -lTMVA -lTMVAGui \
+           -lTMVA -lTMVAGui -lTMVAUtils \
            -L$(LIB_DIR) -lXSecAnalyzer\
 
 ifneq ($(MAKECMDGOALS),debug)
@@ -86,9 +86,10 @@ $(SHARED_OBJECTS): %.o : %.cxx
 # -lTMVA is required here, not just in LDFLAGS: CC1mu1piXp uses TMVA::Reader, so
 # without it the library carries unresolved TMVA symbols and no DT_NEEDED entry.
 # Executables linked with LDFLAGS happened to work, but gSystem->Load() of this
-# library (xsroot, xsnotebook, ROOT macros) failed.
+# library (xsroot, xsnotebook, ROOT macros) failed. -lTMVAUtils provides
+# TMVA::Experimental::RBDT, which evaluates the multi-pion particle classifier.
 $(SHARED_LIB): $(ROOT_DICTIONARY) $(SHARED_OBJECTS)
-	$(CXX) $(CXXFLAGS) $(shell root-config --libs) -lTMVA -lTMVAGui \
+	$(CXX) $(CXXFLAGS) $(shell root-config --libs) -lTMVA -lTMVAGui -lTMVAUtils \
 	  -o $@ -fPIC -shared $^
 
 bin/ProcessNTuples: src/app/ProcessNTuples.C $(SHARED_LIB)

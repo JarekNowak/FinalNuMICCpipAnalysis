@@ -10,7 +10,10 @@
 
 #include <TMVA/Reader.h>
 #include "TFile.h"
+#include "TDirectory.h"
 #include <algorithm>
+#include <array>
+#include <cmath>
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
@@ -501,6 +504,21 @@ void CC1mu1piXp::define_constants() {
         book_bdt( tmvaReader_mppi,      "mp_pion_bdt" );
         book_bdt( tmvaReader_mppi_soft, "mp_pion_bdt_soft" );
         book_bdt( tmvaReader_mppi_hard, "mp_pion_bdt_hard" );
+
+        // multi-pion particle classifier (RBDT copy of the XGBoost model of
+        // scripts/mp_pid_train.py --unmatched --common), only for the selections that evaluate it
+        if ( eval_new_pid() ) {
+          const char* env_model = std::getenv( "CC1MU1PIXP_MP_PID_MODEL" );
+          const std::string model = env_model ? std::string( env_model )
+            : bdt_dir + "/mp_pid/mp_pid_rbdt_unmatched_common.root";
+          std::ifstream test( model );
+          if ( !test.good() ) throw std::runtime_error( "CC1mu1piXp: could not read the particle"
+            " classifier \"" + model + "\" (set CC1MU1PIXP_MP_PID_MODEL)" );
+          // RBDT opens and closes the model file; TContext restores the current directory,
+          // which is the output file here, or every later Write() goes to gROOT and fails
+          TDirectory::TContext keep_directory;
+          mp_pid_ = std::make_unique< TMVA::Experimental::RBDT >( "mp_pid", model );
+        }
 
 }
 
@@ -1303,6 +1321,13 @@ for (size_t i_pfp_2 = 0; i_pfp_2 < Event->track_length_->size(); i_pfp_2++) {
               trk_sce_end_z_v_tmva_pi = Event->track_endz_->at(i_pfp_2);
               tmvaOutput_pi= tmvaReader_pi->EvaluateMVA("BDT");
 
+              // particle classifier: class probabilities of this candidate
+              if ( mp_pid_ ) {
+                const std::array<float, 4>& p = mp_pid_cached( Event, i_pfp_2, nu_to_track_dist_ib.Mag() );
+                for ( int k = 0; k < 4; ++k ) mp_pid_out_[k] = p[k];
+              }
+              else for ( float& x : mp_pid_out_ ) x = -1.f;
+
               // dedicated multi-pion pion-ID BDT (only when in use; features/order match
               // training). Split mode picks the soft/hard reader + working point by length.
               if ( use_pion_bdt() ) {
@@ -1352,7 +1377,11 @@ for (size_t i_pfp_2 = 0; i_pfp_2 < Event->track_length_->size(); i_pfp_2++) {
 	bool pi_pid_strict = ( Event->track_length_->at(i_pfp_2) > 20)
 	  && (tmvaOutput > -0.1) && (tmvaOutput_pi > -0.1) && (bragg_pi >= 0.08);
 	bool pi_pid_core;
-	if ( use_pion_bdt() ) {
+	if ( use_new_pid() ) {
+	  pi_pid_core = ( Event->track_length_->at(i_pfp_2) > new_pid_min_length() )
+	    && ( mp_pid_out_[1] > new_pid_cut() );
+	}
+	else if ( use_pion_bdt() ) {
 	  bool bdt_pass  = ( mppi_output > mppi_cut );
 	  bool bragg_ok  = !require_bragg_with_bdt() || ( bragg_pi >= bragg_pion_cut() );  // proton rejection
 	  bool mip_ok    = !require_mip_with_bdt()   || ( tmvaOutput > -0.1 );
@@ -1386,6 +1415,7 @@ for (size_t i_pfp_2 = 0; i_pfp_2 < Event->track_length_->size(); i_pfp_2++) {
 	    pc.costh = ( dir.Mag() > 0. ) ? dir.Unit().Dot( reco_nu_dir(Event) ) : -2.f;
 	    pc.llr = Event->track_llr_pid_score_->at(i_pfp_2);
 	    pc.bdt = use_pion_bdt() ? mppi_output : -999.f;
+	    for ( int k = 0; k < 4; ++k ) pc.pid[k] = mp_pid_out_[k];
 	    pc.dist = nu_to_track_dist_ib.Mag();
 	    pc.true_pdg = tp;
 	    pc.true_mom = -1.f; pc.true_costh = -2.f;
@@ -1453,6 +1483,8 @@ if ( store_multipion_info() ) {
     pic_true_pdg_->push_back( pc.true_pdg );
     pic_true_mom_->push_back( pc.true_mom );
     pic_true_costh_->push_back( pc.true_costh );
+    pic_pid_mu_->push_back( pc.pid[0] ); pic_pid_pi_->push_back( pc.pid[1] );
+    pic_pid_p_->push_back( pc.pid[2] );  pic_pid_other_->push_back( pc.pid[3] );
   }
   // opening angle between the muon and the longest counted pion candidate
   if ( CandidateMuonIndex != -1 && !pion_candidates_.empty() ) {
@@ -2532,6 +2564,10 @@ void CC1mu1piXp::define_output_branches() {
     set_branch( pic_true_pdg_,     "pic_true_pdg" );
     set_branch( pic_true_mom_,     "pic_true_mom" );
     set_branch( pic_true_costh_,   "pic_true_costh" );
+    set_branch( pic_pid_mu_,       "pic_pid_mu" );
+    set_branch( pic_pid_pi_,       "pic_pid_pi" );
+    set_branch( pic_pid_p_,        "pic_pid_p" );
+    set_branch( pic_pid_other_,    "pic_pid_other" );
     set_branch( mc_pi_mom_,        "mc_pi_mom" );
     set_branch( mc_pi_costh_,      "mc_pi_costh" );
     set_branch( mc_pi_pdg_,        "mc_pi_pdg" );
@@ -2636,6 +2672,7 @@ void CC1mu1piXp::reset() {
   pic_mom_range_mu_->clear(); pic_mom_range_pi_->clear(); pic_mom_mcs_->clear();
   pic_costh_->clear(); pic_llr_->clear(); pic_bdt_->clear(); pic_dist_->clear();
   pic_true_pdg_->clear(); pic_true_mom_->clear(); pic_true_costh_->clear();
+  pic_pid_mu_->clear(); pic_pid_pi_->clear(); pic_pid_p_->clear(); pic_pid_other_->clear();
   mc_pi_mom_->clear(); mc_pi_costh_->clear(); mc_pi_pdg_->clear();
   mc_n_pipm_thr010_ = 0; mc_n_pipm_thr0175_ = 0; mc_n_proton_sub_ = 0; mc_n_kaons_out_ = 0;
   mc_lead_proton_mom_ = -1.f; mc_signal_1p_ = false; mc_topology_ = kTopoNotMC;
@@ -2646,6 +2683,62 @@ void CC1mu1piXp::reset() {
  // sig_numu = 0;
  // sig_one_muon = 0;
 
+}
+
+// Inputs of the particle classifier for PFParticle i, in the order of FEATURES in
+// scripts/mp_pid_train.py --common: the 43 inputs whose branches every sample carries (the older
+// beam-on, beam-off and dirt ntuples lack the Bragg-pion, truncated dE/dx, deflection, end-spacepoint,
+// hit-count and descendant branches). Value conventions of macros/mp_pid/dump_pid_tracks.C: a missing
+// entry, a non-finite value, any value <= -9998 and any |value| > 1e30 become -9999.
+std::vector<float> CC1mu1piXp::mp_pid_features( const AnalysisEvent* ev, size_t i, double dist ) {
+  auto vf = []( const auto& v, size_t j ) -> float {
+    return ( v && j < v->size() ) ? static_cast<float>( v->at( j ) ) : -9999.f; };
+  auto mf = [&]( const char* name ) -> float {
+    const auto it = ev->mp_pid_f_.find( name ); return it == ev->mp_pid_f_.end() ? -9999.f : vf( it->second, i ); };
+  const float ex = vf( ev->track_endx_, i ), ey = vf( ev->track_endy_, i ), ez = vf( ev->track_endz_, i );
+  const float sx = vf( ev->track_startx_, i ), sy = vf( ev->track_starty_, i ), sz = vf( ev->track_startz_, i );
+  const float mcs = vf( ev->track_mcs_mom_mu_, i ), rng = vf( ev->track_range_mom_mu_, i );
+  std::vector<float> f = {
+    vf( ev->track_length_, i ), vf( ev->pfp_track_score_, i ), static_cast<float>( dist ),
+    float( point_inside_FV( this->containment_FV(), ex, ey, ez ) ),
+    float( point_inside_FV( this->containment_FV(), sx, sy, sz ) ),
+    vf( ev->track_llr_pid_score_, i ), vf( ev->track_llr_pid_U_, i ), vf( ev->track_llr_pid_V_, i ),
+    vf( ev->track_llr_pid_Y_, i ),
+    vf( ev->trk_bragg_p_v, i ), vf( ev->trk_bragg_mu_v, i ), vf( ev->trk_bragg_mip_v, i ),
+    mf( "trk_bragg_p_u_v" ), mf( "trk_bragg_p_v_v" ), mf( "trk_bragg_mu_u_v" ), mf( "trk_bragg_mu_v_v" ),
+    mf( "trk_bragg_mip_u_v" ), mf( "trk_bragg_mip_v_v" ),
+    mf( "trk_pida_v" ), mf( "trk_pida_u_v" ), mf( "trk_pida_v_v" ),
+    vf( ev->track_chi2_proton_, i ), mf( "trk_pid_chimu_v" ), mf( "trk_pid_chipi_v" ), mf( "trk_pid_chika_v" ),
+    mf( "trk_pid_chipr_u_v" ), mf( "trk_pid_chipr_v_v" ), mf( "trk_pid_chimu_u_v" ), mf( "trk_pid_chimu_v_v" ),
+    mf( "trk_pid_chipi_u_v" ), mf( "trk_pid_chipi_v_v" ),
+    mf( "trk_calo_energy_y_v" ), mf( "trk_calo_energy_u_v" ), mf( "trk_calo_energy_v_v" ),
+    mcs, rng, ( rng > 0.f && mcs > 0.f ) ? mcs / rng : -9999.f, vf( ev->track_kinetic_energy_p_, i ),
+    vf( ev->pfp_hitsU_, i ), vf( ev->pfp_hitsV_, i ), vf( ev->pfp_hitsY_, i ),
+    vf( ev->pfp_trk_daughters_count_, i ), vf( ev->pfp_shr_daughters_count_, i ) };
+  if ( f.size() != 43 ) throw std::runtime_error( "CC1mu1piXp: particle-classifier input list out of step" );
+  for ( float& x : f ) if ( !std::isfinite( x ) || x <= -9998.f || std::fabs( x ) > 1e30f ) x = -9999.f;
+  return f;
+}
+
+// Classifier output for PFParticle i of the current event, cached for every CC1mu1piXp-derived
+// selection of the job (static), so that several selections, e.g. threshold variants, evaluate the
+// model once per track. The event is recognised by its vertex, PFParticle count and topological score;
+// two consecutive events agree in all of these only if one is a copy of the other, with the same
+// output. The inputs are the same in every selection (the vertex distance is computed identically).
+const std::array<float, 4>& CC1mu1piXp::mp_pid_cached( const AnalysisEvent* ev, size_t i, double dist ) {
+  static std::array<double, 5> key{ { -1e300, 0., 0., 0., 0. } };
+  static std::vector< std::array<float, 4> > out;
+  static std::vector<char> have;
+  const std::array<double, 5> k{ { ev->nu_vx_, ev->nu_vy_, ev->nu_vz_, double( ev->num_pf_particles_ ),
+    ev->topological_score_ } };
+  if ( k != key ) { key = k; out.assign( ev->num_pf_particles_, {} ); have.assign( ev->num_pf_particles_, 0 ); }
+  if ( i >= have.size() ) { out.resize( i + 1 ); have.resize( i + 1, 0 ); }
+  if ( !have[i] ) {
+    const std::vector<float> p = mp_pid_->Compute( mp_pid_features( ev, i, dist ) );
+    for ( int c = 0; c < 4; ++c ) out[i][c] = p.at( c );
+    have[i] = 1;
+  }
+  return out[i];
 }
 
 void CC1mu1piXp::define_category_map() {

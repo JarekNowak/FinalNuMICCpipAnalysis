@@ -120,6 +120,8 @@ Status 2026-10-01: items 2–4 done, re-run with the reco opening-angle cut (D6)
 
 ### Phase 1: particle classifier
 
+Status 2026-10-01: items 2–3 done with XGBoost, deployed through ROOT's RBDT instead of a TMVA retraining; item 1 moves to Phase 2, where the selection evaluates the model. Results in `report/multipion/PHASE1_SUMMARY.md`.
+
 1. Pass through `ProcessNTuples` and bind in `AnalysisEvent`: `trk_bragg_{p,mu,pion,mip}_v` per
    plane, `trk_pida_v`, `trk_pid_chipr_v`, `trk_pid_chipi_v`, `trk_trunk_dEdx_{u,v,y}_v`,
    `trk_end_spacepoints_v`, `trk_calo_energy_{u,v,y}_v`, guarded as the `swtrig_pre` binding is.
@@ -131,6 +133,8 @@ Status 2026-10-01: items 2–4 done, re-run with the reco opening-angle cut (D6)
    on the same tracks, separately for FHC and RHC and for π+ and π−.
 
 ### Phase 2: assignment and event classifier
+
+Status 2026-10-01: the classifier is evaluated in the selection (Phase 1 item 1) on the 43 inputs every ntuple production carries, and replaces the pion identification in study selections of the single-, two- and three-pion selections; items 1–4 not started. Results in `report/multipion/PHASE2_SUMMARY.md`.
 
 1. Enumerate the assignments of primary tracks to {μ, N × π, optional p, other}; keep the one with
    the largest summed log score and the runner-up.

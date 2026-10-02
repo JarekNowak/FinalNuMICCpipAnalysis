@@ -157,6 +157,15 @@ inline void set_event_branch_addresses(TTree& etree, AnalysisEvent& ev)
   // only the noise is removed.
   if ( etree.GetBranch("trk_bragg_pion_v") )
     set_object_input_branch_address( etree, "trk_bragg_pion_v", ev.trk_bragg_pion_v);
+
+  // Inputs of the multi-pion particle classifier that nothing else reads (2026-10-01), bound only
+  // when present. The map entries are created here, before binding, and never move afterwards.
+  for ( const char* b : { "trk_bragg_p_u_v", "trk_bragg_p_v_v", "trk_bragg_mu_u_v",
+    "trk_bragg_mu_v_v", "trk_bragg_mip_u_v", "trk_bragg_mip_v_v", "trk_pida_v", "trk_pida_u_v",
+    "trk_pida_v_v", "trk_pid_chimu_v", "trk_pid_chipi_v", "trk_pid_chika_v", "trk_pid_chipr_u_v",
+    "trk_pid_chipr_v_v", "trk_pid_chimu_u_v", "trk_pid_chimu_v_v", "trk_pid_chipi_u_v",
+    "trk_pid_chipi_v_v", "trk_calo_energy_y_v", "trk_calo_energy_u_v", "trk_calo_energy_v_v" } )
+    if ( etree.GetBranch( b ) ) set_object_input_branch_address( etree, b, ev.mp_pid_f_[ b ] );
   //set_object_input_branch_address( etree, "candidate_muon_mom_mcs", ev.candidate_muon_mom_mcs);
   //set_object_input_branch_address( etree, "candidate_muon_mom_true", ev.candidate_muon_mom_true);
 
