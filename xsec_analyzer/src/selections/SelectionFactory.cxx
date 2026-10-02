@@ -57,6 +57,17 @@ else if ( selection_name == "CC1mu1piXp" ) {
   else if ( selection_name == "CC1mu3piNewPID" ) {
     sel = new CC1mu3piNewPID;
   }
+  // released single-pion selection with the per-candidate PID diagnostic
+  else if ( selection_name == "CC1mu1piXpPIDDiag" ) {
+    sel = new CC1mu1piXpPIDDiag;
+  }
+  // released single-pion selections without the Bragg-pion cut
+  else if ( selection_name == "CC1mu1piXpNoBragg" ) {
+    sel = new CC1mu1piXpNoBragg;
+  }
+  else if ( selection_name == "CC1mu1pi1pNoBragg" ) {
+    sel = new CC1mu1pi1pNoBragg;
+  }
   // threshold variants "<NewPID selection>_tNN": P(pi) > NN/100
   else if ( selection_name.rfind( "NewPID_t" ) != std::string::npos ) {
     const size_t pos = selection_name.rfind( "_t" );

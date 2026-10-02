@@ -1157,6 +1157,7 @@ bool CC1mu1piXp::selection( AnalysisEvent* Event) {
 		   || (muon_bdt_score > best_muon_bdt_score)){
 			CandidateMuonIndex = i_pfp;
 			best_muon_bdt_score = muon_bdt_score;
+			mudiag_mip_bdt_ = tmvaOutput_mip;
 		}
 	}
 	//std::cout<<"CandidateMuonIndex5 is "<< CandidateMuonIndex <<std::endl;
@@ -1165,6 +1166,22 @@ bool CC1mu1piXp::selection( AnalysisEvent* Event) {
 
 if(sel_muoncandidate_tracklike_) {
     muon_candidate_counter++;
+}
+
+// PID diagnostic: the muon candidate's BDT inputs and outputs
+if ( store_pid_diag() && CandidateMuonIndex != -1 ) {
+  const size_t im = CandidateMuonIndex;
+  mudiag_bragg_p_   = Event->trk_bragg_p_v->at(im);
+  mudiag_bragg_mu_  = Event->trk_bragg_mu_v->at(im);
+  mudiag_bragg_mip_ = Event->trk_bragg_mip_v->at(im);
+  mudiag_bragg_pion_ = ( im < Event->trk_bragg_pion_v->size() ) ? Event->trk_bragg_pion_v->at(im) : -1.f;
+  mudiag_muon_bdt_ = best_muon_bdt_score;
+  if ( mp_pid_ ) {
+    TVector3 st( Event->track_startx_->at(im), Event->track_starty_->at(im), Event->track_startz_->at(im) );
+    const std::array<float, 4>& p = mp_pid_cached( Event, im, ( st - reco_primary_vtx ).Mag() );
+    mudiag_pid_mu_ = p[0]; mudiag_pid_pi_ = p[1]; mudiag_pid_p_ = p[2]; mudiag_pid_other_ = p[3];
+  }
+  mudiag_true_pdg_ = ( im < Event->pfp_true_pdg_->size() ) ? Event->pfp_true_pdg_->at(im) : 0;
 }
 
 //  std::cout<<" Selection E "<< std::endl;
@@ -1356,6 +1373,7 @@ for (size_t i_pfp_2 = 0; i_pfp_2 < Event->track_length_->size(); i_pfp_2++) {
 	double bragg_pi = 1.0;
 	if ( i_pfp_2 < Event->trk_bragg_pion_v->size() )
 	  bragg_pi = Event->trk_bragg_pion_v->at(i_pfp_2);
+	const bool bragg_pi_ok = !apply_bragg_pion_cut() || ( bragg_pi >= 0.08 );
 
 	// Decompose the pion identification so the multi-pion efficiency loss can be
 	// attributed to containment vs the LLR PID. pion_number keeps its original
@@ -1364,7 +1382,7 @@ for (size_t i_pfp_2 = 0; i_pfp_2 < Event->track_length_->size(); i_pfp_2++) {
 	bool ts05 = Event->pfp_track_score_->at(i_pfp_2) >= 0.5;  // nominal track-score cut
 	bool pi_contained = CandidatePionTrackEndContainment_1;
 	bool pi_pid_noLLR = (nu_to_track_dist_ib.Mag() <= 4) && ( Event->track_length_->at(i_pfp_2) > 20)
-	  && (tmvaOutput > -0.1) && (tmvaOutput_pi > -0.1) && (bragg_pi >= 0.08);
+	  && (tmvaOutput > -0.1) && (tmvaOutput_pi > -0.1) && bragg_pi_ok;
 	bool pi_pid_full  = pi_pid_noLLR && (Event->track_llr_pid_score_->at(i_pfp_2) > 0.1);
 	if ( pi_pid_full && ts05 ) pion_number_noContain_++;              // full PID, containment ignored
 	if ( pi_contained && pi_pid_noLLR && ts05 ) pion_number_noLLR_++; // contained, LLR dropped
@@ -1375,7 +1393,7 @@ for (size_t i_pfp_2 = 0; i_pfp_2 < Event->track_length_->size(); i_pfp_2++) {
 	// topology; loose_pion_id() (multi-pion) drops them and only keeps LLR>0.1.
 	// use_pion_bdt() (multi-pion) replaces the LLR cut with the dedicated pion-ID BDT.
 	bool pi_pid_strict = ( Event->track_length_->at(i_pfp_2) > 20)
-	  && (tmvaOutput > -0.1) && (tmvaOutput_pi > -0.1) && (bragg_pi >= 0.08);
+	  && (tmvaOutput > -0.1) && (tmvaOutput_pi > -0.1) && bragg_pi_ok;
 	bool pi_pid_core;
 	if ( use_new_pid() ) {
 	  pi_pid_core = ( Event->track_length_->at(i_pfp_2) > new_pid_min_length() )
@@ -1390,6 +1408,24 @@ for (size_t i_pfp_2 = 0; i_pfp_2 < Event->track_length_->size(); i_pfp_2++) {
 	  pi_pid_core = (Event->track_llr_pid_score_->at(i_pfp_2) > 0.1) && ( loose_pion_id() || pi_pid_strict );
 	}
 	bool pi_pid = (nu_to_track_dist_ib.Mag() <= pion_vtx_distance_cut()) && pi_pid_core;
+	if ( store_pid_diag() ) {
+	  pdiag_idx_->push_back( i_pfp_2 );
+	  pdiag_contained_->push_back( pi_contained ? 1 : 0 );
+	  pdiag_counted_->push_back( ( ts05 && pi_pid ) ? 1 : 0 );
+	  pdiag_true_pdg_->push_back( ( i_pfp_2 < Event->pfp_true_pdg_->size() ) ? Event->pfp_true_pdg_->at(i_pfp_2) : 0 );
+	  pdiag_ts_->push_back( Event->pfp_track_score_->at(i_pfp_2) );
+	  pdiag_len_->push_back( Event->track_length_->at(i_pfp_2) );
+	  pdiag_llr_->push_back( Event->track_llr_pid_score_->at(i_pfp_2) );
+	  pdiag_dist_->push_back( nu_to_track_dist_ib.Mag() );
+	  pdiag_bragg_p_->push_back( Event->trk_bragg_p_v->at(i_pfp_2) );
+	  pdiag_bragg_mu_->push_back( Event->trk_bragg_mu_v->at(i_pfp_2) );
+	  pdiag_bragg_mip_->push_back( Event->trk_bragg_mip_v->at(i_pfp_2) );
+	  pdiag_bragg_pion_->push_back( ( i_pfp_2 < Event->trk_bragg_pion_v->size() ) ? Event->trk_bragg_pion_v->at(i_pfp_2) : -1.f );
+	  pdiag_mip_bdt_->push_back( tmvaOutput );
+	  pdiag_pi_bdt_->push_back( tmvaOutput_pi );
+	  pdiag_pid_mu_->push_back( mp_pid_out_[0] ); pdiag_pid_pi_->push_back( mp_pid_out_[1] );
+	  pdiag_pid_p_->push_back( mp_pid_out_[2] );  pdiag_pid_other_->push_back( mp_pid_out_[3] );
+	}
 	// background-source diagnostic: true identity of each counted pion candidate
 	if ( ts05 && pi_pid ) {
 	  int tp = ( i_pfp_2 < Event->pfp_true_pdg_->size() ) ? Event->pfp_true_pdg_->at(i_pfp_2) : 0;
@@ -2584,6 +2620,25 @@ void CC1mu1piXp::define_output_branches() {
     set_branch( &n_uncontained_pion_, "n_uncontained_pion" );
   }
 
+  // PID diagnostic (CC1mu1piXpPIDDiag only; see CC1mu1piXp.hh)
+  if ( store_pid_diag() ) {
+    set_branch( pdiag_idx_, "pdiag_idx" );             set_branch( pdiag_contained_, "pdiag_contained" );
+    set_branch( pdiag_counted_, "pdiag_counted" );     set_branch( pdiag_true_pdg_, "pdiag_true_pdg" );
+    set_branch( pdiag_ts_, "pdiag_ts" );               set_branch( pdiag_len_, "pdiag_len" );
+    set_branch( pdiag_llr_, "pdiag_llr" );             set_branch( pdiag_dist_, "pdiag_dist" );
+    set_branch( pdiag_bragg_p_, "pdiag_bragg_p" );     set_branch( pdiag_bragg_mu_, "pdiag_bragg_mu" );
+    set_branch( pdiag_bragg_mip_, "pdiag_bragg_mip" ); set_branch( pdiag_bragg_pion_, "pdiag_bragg_pion" );
+    set_branch( pdiag_mip_bdt_, "pdiag_mip_bdt" );     set_branch( pdiag_pi_bdt_, "pdiag_pi_bdt" );
+    set_branch( pdiag_pid_mu_, "pdiag_pid_mu" );       set_branch( pdiag_pid_pi_, "pdiag_pid_pi" );
+    set_branch( pdiag_pid_p_, "pdiag_pid_p" );         set_branch( pdiag_pid_other_, "pdiag_pid_other" );
+    set_branch( &mudiag_bragg_p_, "mudiag_bragg_p" );     set_branch( &mudiag_bragg_mu_, "mudiag_bragg_mu" );
+    set_branch( &mudiag_bragg_mip_, "mudiag_bragg_mip" ); set_branch( &mudiag_bragg_pion_, "mudiag_bragg_pion" );
+    set_branch( &mudiag_mip_bdt_, "mudiag_mip_bdt" );     set_branch( &mudiag_muon_bdt_, "mudiag_muon_bdt" );
+    set_branch( &mudiag_pid_mu_, "mudiag_pid_mu" );       set_branch( &mudiag_pid_pi_, "mudiag_pid_pi" );
+    set_branch( &mudiag_pid_p_, "mudiag_pid_p" );         set_branch( &mudiag_pid_other_, "mudiag_pid_other" );
+    set_branch( &mudiag_true_pdg_, "mudiag_true_pdg" );
+  }
+
 
 
  // set_branch( &pion_number, "pion_number");
@@ -2676,6 +2731,15 @@ void CC1mu1piXp::reset() {
   mc_pi_mom_->clear(); mc_pi_costh_->clear(); mc_pi_pdg_->clear();
   mc_n_pipm_thr010_ = 0; mc_n_pipm_thr0175_ = 0; mc_n_proton_sub_ = 0; mc_n_kaons_out_ = 0;
   mc_lead_proton_mom_ = -1.f; mc_signal_1p_ = false; mc_topology_ = kTopoNotMC;
+  // PID diagnostic
+  for ( auto* v : { &pdiag_idx_, &pdiag_contained_, &pdiag_counted_, &pdiag_true_pdg_ } ) (*v)->clear();
+  for ( auto* v : { &pdiag_ts_, &pdiag_len_, &pdiag_llr_, &pdiag_dist_, &pdiag_bragg_p_, &pdiag_bragg_mu_,
+                    &pdiag_bragg_mip_, &pdiag_bragg_pion_, &pdiag_mip_bdt_, &pdiag_pi_bdt_, &pdiag_pid_mu_,
+                    &pdiag_pid_pi_, &pdiag_pid_p_, &pdiag_pid_other_ } ) (*v)->clear();
+  mudiag_bragg_p_ = mudiag_bragg_mu_ = mudiag_bragg_mip_ = mudiag_bragg_pion_ = -1.f;
+  mudiag_mip_bdt_ = mudiag_muon_bdt_ = -999.f;
+  mudiag_pid_mu_ = mudiag_pid_pi_ = mudiag_pid_p_ = mudiag_pid_other_ = -1.f;
+  mudiag_true_pdg_ = 0;
   cutflow_bits_ = 0;
   mu_leadpi_opening_angle_ = -1.;
  // sig_truevertex_fv = 0;

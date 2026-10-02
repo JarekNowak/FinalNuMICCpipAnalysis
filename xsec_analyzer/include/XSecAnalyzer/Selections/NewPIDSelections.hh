@@ -7,6 +7,7 @@
 // selection on its own pool (contained, vertex distance <= 4 cm, length > 20 cm), for the
 // multi-pion selections that of the split mp_pion_bdt. Not part of any released result.
 #include "XSecAnalyzer/Selections/CC1mu1piXp.hh"
+#include "XSecAnalyzer/Selections/CC1mu1pi1p.hh"
 #include "XSecAnalyzer/Selections/CC1mu2pi.hh"
 #include "XSecAnalyzer/Selections/CC1mu3pi.hh"
 
@@ -46,4 +47,32 @@ class CC1mu3piNewPID : public CC1mu3pi {
   double new_pid_cut() const override { return cut_; }
  private:
   double cut_;
+};
+
+// The released single-pion selection with the PID diagnostic switched on: every decision and
+// output of CC1mu1piXp, plus the per-candidate BDT inputs and outputs of the pion pool and the
+// muon candidate (pdiag_*, mudiag_*), for the data/prediction comparison of the PID variables in
+// the opened control regions (scripts/cr_pid_diag_check.py).
+class CC1mu1piXpPIDDiag : public CC1mu1piXp {
+ public:
+  CC1mu1piXpPIDDiag() : CC1mu1piXp() { this->set_selection_name( "CC1mu1piXpPIDDiag" ); }
+ protected:
+  bool store_pid_diag() const override { return true; }
+};
+
+// The released single-pion selections without the Bragg-pion >= 0.08 cut, in every sample: the
+// treatment the older-production beam-on, beam-off and dirt ntuples receive today because they lack
+// the branch. For sizing the fail-open effect at event level (scripts/bragg_cut_eval.py).
+class CC1mu1piXpNoBragg : public CC1mu1piXp {
+ public:
+  CC1mu1piXpNoBragg() : CC1mu1piXp() { this->set_selection_name( "CC1mu1piXpNoBragg" ); }
+ protected:
+  bool apply_bragg_pion_cut() const override { return false; }
+};
+
+class CC1mu1pi1pNoBragg : public CC1mu1pi1p {
+ public:
+  CC1mu1pi1pNoBragg() : CC1mu1pi1p() { this->set_selection_name( "CC1mu1pi1pNoBragg" ); }
+ protected:
+  bool apply_bragg_pion_cut() const override { return false; }
 };

@@ -92,6 +92,11 @@ protected:
   // Bragg cut on top of the BDT rejects the ambiguous protons the loose BDT lets through.
   // Muon cuts are NOT used (muon fraction is equal in signal and background).
   virtual bool   require_bragg_with_bdt() const { return false; }
+  // Bragg-pion >= 0.08 of the single-pion pion identification (proton rejection). It passes every
+  // track where trk_bragg_pion_v is absent, as in the beam-on, beam-off and dirt ntuples of the
+  // older production (FHC Run 1, RHC Runs 1 and 3b); false drops the cut for all samples
+  // (report/multipion/PHASE2_SUMMARY.md).
+  virtual bool   apply_bragg_pion_cut()   const { return true; }
   virtual double bragg_pion_cut()         const { return 0.08; }
   virtual bool   require_mip_with_bdt()   const { return false; }
   // Multi-pion particle classifier (report/multipion/PHASE1_SUMMARY.md): XGBoost, four classes
@@ -103,7 +108,7 @@ protected:
   virtual bool   use_new_pid() const { return false; }
   virtual double new_pid_cut() const { return 0.5; }
   virtual double new_pid_min_length() const { return 0.; }
-  virtual bool   eval_new_pid() const { return use_new_pid() || store_multipion_info(); }
+  virtual bool   eval_new_pid() const { return use_new_pid() || store_multipion_info() || store_pid_diag(); }
   // the 43 inputs of track i in the order of scripts/mp_pid_train.py --common, missing values as -9999
   std::vector<float> mp_pid_features( const AnalysisEvent* ev, size_t i, double dist );
   // class probabilities of track i, evaluated once per event and track for all selections
@@ -165,6 +170,22 @@ protected:
   MyPointer< std::vector<float> > pic_pid_pi_;
   MyPointer< std::vector<float> > pic_pid_p_;
   MyPointer< std::vector<float> > pic_pid_other_;
+  // ---- PID diagnostic (report/multipion/PHASE2_SUMMARY.md) ----
+  // Every candidate of the pion pool (generation 2, track score >= 0.3, LLR and Bragg values in
+  // range, not the muon candidate), before the pion identification, with the inputs and outputs
+  // of the MIP and pion BDTs, the Bragg-pion likelihood (-1 where the branch is absent), the
+  // class probabilities of the particle classifier and the released decision; and the same for
+  // the muon candidate. Written only by CC1mu1piXpPIDDiag, for data/prediction comparisons in the
+  // control-region skim; the decisions of the selection do not depend on it.
+  virtual bool store_pid_diag() const { return false; }
+  MyPointer< std::vector<int> >   pdiag_idx_, pdiag_contained_, pdiag_counted_, pdiag_true_pdg_;
+  MyPointer< std::vector<float> > pdiag_ts_, pdiag_len_, pdiag_llr_, pdiag_dist_, pdiag_bragg_p_,
+    pdiag_bragg_mu_, pdiag_bragg_mip_, pdiag_bragg_pion_, pdiag_mip_bdt_, pdiag_pi_bdt_,
+    pdiag_pid_mu_, pdiag_pid_pi_, pdiag_pid_p_, pdiag_pid_other_;
+  float mudiag_bragg_p_ = -1.f, mudiag_bragg_mu_ = -1.f, mudiag_bragg_mip_ = -1.f,
+    mudiag_bragg_pion_ = -1.f, mudiag_mip_bdt_ = -999.f, mudiag_muon_bdt_ = -999.f,
+    mudiag_pid_mu_ = -1.f, mudiag_pid_pi_ = -1.f, mudiag_pid_p_ = -1.f, mudiag_pid_other_ = -1.f;
+  int   mudiag_true_pdg_ = 0;
   // true primary charged pions, hardest first
   MyPointer< std::vector<float> > mc_pi_mom_;
   MyPointer< std::vector<float> > mc_pi_costh_;

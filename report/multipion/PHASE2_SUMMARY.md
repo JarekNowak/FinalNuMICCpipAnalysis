@@ -125,3 +125,55 @@ sentinel fractions agree between data and prediction everywhere. Not yet checked
 likelihoods behind the MIP and pion BDTs, which the processed control-region files do not keep; they
 need the raw beam-on files restricted to control-region events (the skim carries no event IDs, so the
 restriction has to come from re-running the selection in skim mode with the Bragg branches passed through).
+
+Investigation, step 2 (2026-10-02). `trk_bragg_pion_v` is absent from exactly the older-production
+samples: beam-on FHC Run 1, RHC Run 1 and Run 3b, beam-off Runs 1 and 3b, dirt Runs 1 and 3b. Every
+overlay, every detector-variation sample and all Run-4 and Run-5 beam-on, beam-off and dirt carry it.
+`CC1mu1piXpPIDDiag`, a twin of the released selection with identical decisions (all shared branches
+identical on the 30k slice), stores for every pion-pool candidate and for the muon candidate the Bragg
+likelihoods, the MIP, pion and muon BDT scores, the LLR and the classifier probabilities. The 8
+beam-on files and the matching overlays, beam-off and dirt (34 inputs, SLURM 3450955,
+`slurm/slurm_pid_diag_skim.sbatch`) were processed as the control-region skim; every output passed
+the skim guards. Comparison: `scripts/cr_pid_diag_check.py`, `cr_pid_diag_check.md`.
+
+- The variables both productions carry are mis-modelled alike in all six periods, with no pattern
+  separating the older-production ones: the proton Bragg likelihood of the pion candidates is lower in
+  data (mean -0.04 to -0.06, shape chi2 101–710 for 12–16 degrees of freedom) and with it the classifier's P(p); the MIP and
+  pion BDT scores are higher (+0.001 to +0.019); the muon candidate's muon Bragg likelihood and P(μ)
+  are lower. P(π) is modelled to chi2 23–36/19 on the candidates the identification acts on.
+- Pass fractions of those candidates (contained, vertex distance <= 4 cm, length > 20 cm), data over
+  prediction:
+
+| | FHC R1 (old) | FHC R4 | FHC R5 | RHC R1 (old) | RHC R3 (old) | RHC R4 |
+|---|---|---|---|---|---|---|
+| Released identification | 1.23 ± 0.05 | 1.04 ± 0.04 | 1.06 ± 0.04 | 1.04 ± 0.08 | 1.15 ± 0.03 | 0.99 ± 0.03 |
+| The same without Bragg-pion | 1.11 ± 0.04 | 1.04 ± 0.04 | 1.10 ± 0.04 | 0.97 ± 0.07 | 1.06 ± 0.03 | 0.98 ± 0.03 |
+| P(π) > 0.3087 | 1.14 ± 0.05 | 1.04 ± 0.05 | 1.08 ± 0.05 | 0.91 ± 0.08 | 1.06 ± 0.03 | 1.05 ± 0.04 |
+
+  In the older-production periods the released identification passes 7–11% more data candidates than
+  predicted on top of the ratio without the cut: the data skip the cut, the overlay applies it and
+  removes 7–11% of the candidates that pass the other three cuts. Where the data carry the branch, the
+  cut after the other three passes 90.1, 86.4 and 91.6% of the data candidates against 89.8, 89.6 and
+  91.0% predicted (FHC R4, R5, RHC R4). Without the cut, or with P(π), the older and newer periods agree.
+
+The older production is therefore not otherwise different, and the fail-open cut shows up in the
+opened control regions at the size the simulation predicts.
+
+Event level (`CC1mu1piXpNoBragg`, `CC1mu1pi1pNoBragg`: the released selections without the cut in every
+sample; release samples at data exposure, SLURM 3450989, `scripts/bragg_cut_eval.py`,
+`bragg_cut_eval.md`; on the 30k slice the extra counted pions are exactly the candidates that fail only
+the cut):
+
+| COMB, released / without the cut | Efficiency | Purity | B/S | Stat. unc. (one bin) | Bias at unblinding, cut as released |
+|---|---|---|---|---|---|
+| Inclusive | 17.55 / 18.39% | 57.9 / 56.9% | 0.73 / 0.76 | 3.06 / 3.01% | +4.7% |
+| Proton-tagged | 11.45 / 12.06% | 50.7 / 50.4% | 0.97 / 0.98 | 5.23 / 5.10% | +4.6% |
+
+The last column is the overlay change in the older-production periods over the released signal: the
+excess the one-bin cross section would carry if the older-production data are selected without the cut
+and the overlay with it (FHC +3.4%, RHC +5.7%; +5.5% and +8.4% if Run-2 data come from the older
+production). Per period the data would exceed the prediction by 4.3–7.3%. The released results
+(pseudo-data from the overlays) are unaffected. Dropping the cut everywhere costs one point of purity
+in the inclusive selection and 0.3 in the proton-tagged one, raises B/S by 0.03 and 0.01, and lowers
+the statistical uncertainty slightly. Decision of the user (2026-10-02): drop the cut in every sample of
+the released single-pion selections, with a new release before unblinding.
