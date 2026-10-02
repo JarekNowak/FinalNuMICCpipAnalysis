@@ -89,6 +89,11 @@ protected:
   // Bragg cut on top of the BDT rejects the ambiguous protons the loose BDT lets through.
   // Muon cuts are NOT used (muon fraction is equal in signal and background).
   virtual bool   require_bragg_with_bdt() const { return false; }
+  // Bragg-pion >= 0.08 in the single-pion pion identification (proton rejection). Off since
+  // 2026-10-02: the beam-on, beam-off and dirt ntuples of the older production (FHC Run 1, RHC
+  // Runs 1 and 3b) lack trk_bragg_pion_v, so the cut passed every track there while every overlay
+  // applied it (data excess of 4-7% per period, +4.7% on the combined one-bin cross section).
+  virtual bool   apply_bragg_pion_cut()   const { return false; }
   virtual double bragg_pion_cut()         const { return 0.08; }
   virtual bool   require_mip_with_bdt()   const { return false; }
   // Per-pion true-momentum threshold applied to ALL N signal pions (via the softest
