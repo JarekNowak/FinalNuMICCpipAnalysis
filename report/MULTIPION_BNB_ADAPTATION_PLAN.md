@@ -60,6 +60,11 @@ Checked in the code on 2026-10-01.
   branches but not χ², PIDA, trunk dE/dx, calorimetry or end spacepoints.
 - The framework already has `ConstrainedCalculator` and the `kSidebandRecoBin` reco-bin type, the
   same tool the BNB note used. Nothing calls it: `UnfolderNuMI` uses `MCC9SystematicsCalculator`.
+- The Bragg-pion requirement (≥ 0.08), dropped from the released single-pion selections on
+  `fix/bragg-pion` (2026-10-02), does not act in `CC1mu2pi` and `CC1mu3pi`: with `use_pion_bdt()` their
+  pion identification is the BDT alone (`require_bragg_with_bdt()` false). On this branch
+  `apply_bragg_pion_cut()` still defaults to true for the single-pion selection; the default of
+  `fix/bragg-pion` (false) is taken when the branches are merged.
 
 ## 3. Assessment
 
@@ -159,7 +164,7 @@ Status 2026-10-01: the classifier is evaluated in the selection (Phase 1 item 1)
    targeted class and the overlaps:
    - proton taken as a pion: event score just below the working point;
    - pion candidates that are proton-like (the 1μ3p analogue);
-   - one pion candidate too many;
+   - one pion candidate too many (the ≥ 3π sample, D8);
    - inverted event score.
 2. Draw one reco-level region map for the 1π, 2π and 3π analyses together:
    - A 1μ1π + protons sideband for the 2π analysis lies inside the still-blind 1π signal region.
@@ -175,8 +180,8 @@ Status 2026-10-01: the classifier is evaluated in the selection (Phase 1 item 1)
 
 ### Phase 5: extraction
 
-1. Configurations for the 2π one-bin total in FHC, RHC and combined, and the 3π one-bin total in
-   the combined configuration first. Generator predictions use the same signal definition.
+1. Configurations for the 2π one-bin total in FHC, RHC and combined first; the 3π one-bin total in
+   the combined configuration only as an exploratory study (D8). Generator predictions use the same signal definition.
 2. Validation as for 1π: identity closure, CV closure, 100-member ensembles, reweighted models, and
    an independent generator if a sample exists.
 3. Then the 2π differential observables that pass the binning rule.
@@ -195,6 +200,7 @@ Taken 2026-10-01:
 | D3 | The 2π signal region is treated as blind. Its overlap with the opened 1π multi-π control region is not known and is measured in simulation (Phase 4, item 2) |
 | D6 | The truth cut θ(μ, leading π) < 2.6 rad gets a reco counterpart: θ(μ, longest pion candidate) < 2.6 rad in CC1mu2pi and CC1mu3pi |
 | D7 | The overlap with the blind 1π signal region is kept (no exclusivity cut); those events are opened only after the 1π signal region |
+| D8 | (2026-10-02) The measurements stop at 2π; 3π stays exploratory. Events with three or more pion candidates are a control sample that constrains the 2π background, as the BNB note's 1μ3π sideband does. Four and five pions are not measurable at the full exposure (`report/multipion/highn_feasibility.md`, `scripts/mp_highn_feasibility.py`): combined, 3.1 selected four-pion signal events at 4.8% purity and 0.1 five-pion events; P(reco bin \| true bin) is 0.84, 0.48 and 0.33 for 1, 2 and ≥ 3 pions |
 
 Open:
 
