@@ -1546,16 +1546,34 @@ the current $p_\mu$ results, and the proton-tagged cut-flow dirt carries the pro
 processed with the inclusive selection). The binnings still meet the $0.50$ migration criterion (lowest diagonal
 $0.516$, the inclusive three-region $p_\pi$ in FHC).
 
-Carried over from version~1.6.1, made with the previous selection: the MCS momentum-scale term (added to the new
-framework covariance), the alternative-model closure, the ensembles, the study extractions, the binning-review
-studies and the control-region results and fits. Dropping the requirement moves events from the control regions into
-the signal region: about $6$--$7\%$ of the new signal region of the Run-4 and Run-5 beam-on data (about $85$
-predicted events) was in the opened control regions. The beam-on control-region skims made with the previous
-selection are withdrawn from use and will be remade; in Runs 1--3 the beam-on selection does not change.
+Carried over from version~1.6.1, made with the previous selection: the ensembles, the study extractions and the
+binning-review studies. The MCS momentum-scale term and the alternative-model closure are redone (next section).
+Dropping the requirement moves events from the control regions into the signal region: about $6$--$7\%$ of the new
+signal region of the Run-4 and Run-5 beam-on data (about $85$ predicted events) was in the opened control regions.
+The beam-on control-region skims made with the previous selection are withdrawn from use and have been remade; in
+Runs 1--3 the beam-on selection does not change.
 
-\section{Version 1.7 (2026-10-02)}
+\section{Muon momentum-scale term and alternative-model closure with the new selection (2026-10-03)}
 
-The three documents with the change above are version~1.7. The cross sections, covariances and data release are
+The data-side MCS term was evaluated again on pseudo-data re-thrown from the reprocessed samples with the release
+seeds. In $p_\mu$ it is at most $0.60\sigma$ (FHC, open highest bin; previously $0.56\sigma$), $0.44\sigma$ combined
+and $0.32\sigma$ in RHC; for FHC $p_\mu$ it is $9.7\%$ bin-averaged (previously $8.2\%$) and the total uncertainty
+$41.4\%$. For the proton-tagged observables it is at most $0.66\sigma$ ($p_\mu$, FHC), and $0.38\sigma$ for the
+derived observables. The official covariances, the summary tables and the systematic fractions of the counting
+cross-check are regenerated. The statement that the downward scale leaves the two-bin $\delta p_T$ unchanged no
+longer holds and is removed.
+
+The alternative-model closure was repeated with the same universes and seeds. The largest inclusive bias is
+$1.10\sigma$, in the third FHC $\cos\theta_\mu$ bin under the multisim variation (previously $1.18\sigma$ in the same
+bin under the angular variation), and RHC stays within $0.85\sigma$. The low-imbalance proton-tagged $\delta p_T$ and
+$p_n$ bins move by $-0.99\sigma$ and $-0.97\sigma$ under the multisim variation (previously $-1.14\sigma$ and
+$-1.16\sigma$); the proton angles stay within $0.79\sigma$, and the two-dimensional results within $0.74\sigma$
+(proton-tagged) and $0.55\sigma$ (inclusive). The note stated that the third FHC $\cos\theta_\mu$ bin has the
+smallest $A_C$ row sum of the eight; the second bin has, in version~1.6.1 as now, and the statement is removed.
+
+\section{Version 1.7 (2026-10-03)}
+
+The three documents with the changes above are version~1.7. The cross sections, covariances and data release are
 regenerated; the release notes list the changed numbers.
 
 \section{Open items}
@@ -1588,8 +1606,8 @@ yet made.
     theirs (2026-09-28). No test of this kind remains outstanding.
   \item \textbf{Systematic terms not in the released covariance:} the MCS muon momentum-scale
     term is evaluated at $\pm5\%$ on the data side and released as a separate component for $p_\mu$
-    in all three configurations (up to $0.56\sigma$ per bin in FHC, $0.42\sigma$ combined and
-    $0.30\sigma$ in RHC), is exactly zero for the other inclusive observables, and is not propagated
+    in all three configurations (up to $0.60\sigma$ per bin in FHC, $0.44\sigma$ combined and
+    $0.32\sigma$ in RHC), is exactly zero for the other inclusive observables, and is not propagated
     inside the framework; the beam-off gate-ratio and Run-2 stand-in terms ($\lesssim0.4\%$
     of the total); the beamline-geometry flux term ($\lesssim0.2\%$).
   \item \textbf{Muon-momentum shape in the control regions:} the two-dimensional comparison with
@@ -1637,6 +1655,8 @@ Quantity & superseded value & status \\
 Mean inclusive closure ratio        & $1.106$, $1.001$, $1.016$, $1.018$, $1.010$, $0.996$ & now $1.003$ (version~1.7) \\
 Inclusive purity, final cut         & $58.5/57.4/57.9\%$ & $57.3/56.6/56.9\%$ without the Bragg-pion requirement (version~1.7) \\
 Inclusive selection efficiency      & $17.5$--$17.6\%$ & $18.3$--$18.4\%$ (version~1.7) \\
+Largest alternative-model bias      & $1.18\sigma$ (inclusive); $-1.14/-1.16\sigma$ (proton-tagged $\delta p_T$/$p_n$) & $1.10\sigma$; $-0.99/-0.97\sigma$ (version~1.7) \\
+MCS term, FHC $p_\mu$              & $8.2\%$ bin-averaged, $0.56\sigma$ in the open bin & $9.7\%$, $0.60\sigma$ (version~1.7) \\
 RHC $W_{\pi p}$ cross section       & $-0.194$         & sign was a POT-convention artefact \\
 Combined detector systematic        & $42.3\%$         & $24.6\%$ at the fix; $21.4\%$ ($p_\mu$) in the current release \\
 Combined result / expected          & $0.910$          & $1.027$ at the fix (2026-08-28 pass) \\
@@ -1663,7 +1683,7 @@ Binning information measure         & $s_{\min}/s_1\gtrsim0.1$ & Wiener filter f
 Binnings (2026-09-26)               & $p_\mu$ 7, $\cos\theta_\mu$ 5, $p_\pi$ 2, $W_{\rm had}$ 6, $\delta\phi_T$ 2, $\theta_{\pi p}$ 3 bins & now 6, 8, 3 (inclusive), 2, 3, 4; $\theta_\mu$ dropped; $p_p$ added (3) \\
 $\theta_p$ bin edges                & $0,\,0.659,\,1.068,\,1.539,\,\pi$ (RHC-derived) & now the maximin $0,\,0.44,\,0.785,\,1.162,\,\pi$~rad \\
 Mean inclusive closure ratio        & $1.011$ (eighteen extractions) & $0.996$ (fifteen, 2026-09-26) \\
-Smallest inclusive $A_C$ row sum    & $0.05$ (RHC $\cos\theta_\mu$, five bins) & $0.26$ (RHC $\cos\theta_\mu$, eight bins) \\
+Smallest inclusive $A_C$ row sum    & $0.05$ (RHC $\cos\theta_\mu$, five bins) & $0.26$ (RHC $\cos\theta_\mu$, eight bins); now $0.33$ (RHC and combined $p_\mu$, version~1.7) \\
 Identity $UR=A_C$                   & $4.4\times10^{-6}$ & $6.1\times10^{-5}$ (eight-bin $\cos\theta_\mu$, width ratio $56{:}1$) \\
 Curve reproduction from $A_C$       & $1.2\times10^{-10}$ & relative $4\times10^{-8}$, the precision of the text files \\
 \bottomrule

@@ -25,7 +25,7 @@ import uproot
 KNOBS = ['LYdown', 'LYrayl', 'Recomb2', 'SCE', 'WMAngleXZ', 'WMAngleYZ', 'WMX', 'WMYZ']
 NBV = 48                          # 46 template bins + 2 virtual totals (see bkgfit.model)
 CTH = np.array([-1, 0.0, 0.45, 0.65, 0.8, 0.9, 0.95, 1.0]); PMU = np.array([0.15, 0.35, 0.75])
-OUT = '/data/uboone/processed/bkgfit/detvar_matched.npz'
+OUT = os.environ.get('BKGFIT_DETVAR_OUT', '/data/uboone/processed/bkgfit/detvar_matched.npz')   # override: a rebuild next to its own templates
 S = 'CC1mu1piXp'
 
 
