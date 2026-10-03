@@ -5,11 +5,16 @@ that builds the response, so it tests the implementation and is silent about mod
 extractions throw the pseudo-data from a reweighted interaction model and leave the response and the
 background prediction nominal. Two variations are used:
 
-  altgenie   GENIE multisim universe 545, a coherent all-parameter variation: rate x 1.04 on signal
-             (so this is a SHAPE test, not a normalisation one) with true-level shape distortions of
-             up to 29% in cos(theta_pi) and 24% in p_pi;
+  altgenie   GENIE multisim universe 545, a coherent all-parameter variation: signal rate x 1.035 (FHC)
+             and x 1.025 (RHC) (so this is a SHAPE test, not a normalisation one) with true-level changes
+             in the released bins of up to 28/30% in cos(theta_pi) and 20/22% in p_pi (FHC/RHC);
   altdelta   the Delta -> N pi decay angular unisim, a targeted change of the pion angular
              distribution in resonance events.
+
+Truth-level changes of the models (2026-10-03) are the ratio of the universe to the central value in the
+release universe files (weight_All_UBGenie_545_true, weight_Theta_Delta2Npi_UBGenie_0_true against
+weight_TunedCentralValue_UBGenie_0_true, overlays scaled per run): comparing the truths of two single throws
+adds several percent of Poisson noise per bin.
 
 The framework's FakeData universe is filled from the thrown files in truth and reco, so the truth it
 reports IS the alternative model's truth, and the closure it computes is the model-mismatch bias.
