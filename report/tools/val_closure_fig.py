@@ -1,6 +1,6 @@
 # val_closure_fig.py -- figure of the fake-data closure (unfolded / realised-truth integral) for the
 # 15 inclusive extractions (2026-09-26), from the TSV written by closure_tables.C.
-#     python3 report/tools/val_closure_fig.py closure_summary.tsv OUT.eps
+#     python3 report/tools/val_closure_fig.py report/results/closure_summary.tsv OUT.eps
 import sys, ROOT
 ROOT.gROOT.SetBatch(True); ROOT.gStyle.SetOptStat(0)
 rows=[l.rstrip('\n').split('\t') for l in open(sys.argv[1]) if l.startswith('incl\t')]

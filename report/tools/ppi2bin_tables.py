@@ -6,7 +6,7 @@ import csv, ROOT
 ROOT.gROOT.SetBatch(True)
 R='/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/report/'; P='/data/uboone/processed/'
 CF=[('FHC','FHC5','fhc5'),('RHC','RHCFULL','rhcfull'),('Combined','COMB','comb')]
-res={(r['family'],r['config'],r['observable']):r for f in ('current_results.tsv','current_results_1p_new.tsv') for r in csv.DictReader(open(R+f),delimiter='\t')}
+res={(r['family'],r['config'],r['observable']):r for f in ('current_results.tsv','current_results_1p_new.tsv') for r in csv.DictReader(open(R+'results/'+f),delimiter='\t')}
 def side(fam,T,key='ppi2bin',nb=2):
     f=ROOT.TFile.Open(P+f"closure_hists_xsec_{'ccpi1p_' if fam=='1p' else ''}{T}_{key}.root"); u=f.Get('h_unfolded_nuwro'); t=f.Get('h_fakedata_truth')
     out=[(u.GetBinContent(b),u.GetBinError(b),t.GetBinContent(b)) for b in range(1,nb+1)]; f.Close(); return out
@@ -14,7 +14,7 @@ def curves(fam,T,key='ppi2bin'):
     rows=[l.split('\t') for l in open(R+f'data_release/curves_{fam}_{T}_{key}.tsv') if l[0].isdigit()]
     hdr=[l for l in open(R+f'data_release/curves_{fam}_{T}_{key}.tsv') if l.startswith('bin')][0].split()
     return {c:[float(r[hdr.index(c)]) for r in rows] for c in hdr if c.endswith('_smeared')}
-t=open(R+'technical_supplement.tex').read()
+t=open(R+'notes/technical_supplement.tex').read()
 def replace_tab(label,body):
     global t; i=t.index('\\label{%s}'%label); a=t.index('\\begin{tabular}',i); b=t.index('\\end{tabular}',a)+len('\\end{tabular}'); t=t[:a]+body+t[b:]
 # inclusive: three regions since 2026-09-26 (binnings of the 0.50 migration criterion; files keyed ppi3bin)
@@ -45,6 +45,6 @@ rows.append('$\\sigma_\\mathrm{int}$ & '+' & '.join(f"\\multicolumn{{2}}{{{'c|' 
 rows.append('$\\chi^2/\\mathrm{ndf}$ & '+' & '.join(f"\\multicolumn{{2}}{{{'c|' if k<2 else 'c'}}}{{${float(res[('1p',c,'ppi2bin')]['chi2_truth']):.2f}/2$ ($p={float(res[('1p',c,'ppi2bin')]['p_truth']):.2f}$)}}" for k,(_,T,c) in enumerate(CF))+' \\\\')
 body='\\begin{tabular}{lcc|cc|cc}\n\\toprule\n & \\multicolumn{2}{c|}{FHC} & \\multicolumn{2}{c|}{RHC} & \\multicolumn{2}{c}{Combined} \\\\\n & bin 1 & bin 2 & bin 1 & bin 2 & bin 1 & bin 2 \\\\\\midrule\n'+'\n'.join(rows)+'\n\\bottomrule\n\\end{tabular}'
 replace_tab('tab:ppi2bin_1p',body)
-open(R+'technical_supplement.tex','w').write(t)
+open(R+'notes/technical_supplement.tex','w').write(t)
 print("incl:",{T:(round(S[T][0][0],2),round(S[T][1][0],2),round(S[T][2][0],2),res[('incl',c,'ppi3bin')]['sigma_int'],res[('incl',c,'ppi3bin')]['chi2_truth']) for _,T,c in CF})
 print("1p ratios:",{T:(round(S1[T][0][0]/S1[T][0][2],2),round(S1[T][1][0]/S1[T][1][2],2),res[('1p',c,'ppi2bin')]['chi2_truth']) for _,T,c in CF})

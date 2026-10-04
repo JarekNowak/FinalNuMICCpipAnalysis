@@ -18,7 +18,8 @@ for t in range(1, NMAX + 1):
     u = P + f'ens/univ_{tag}_t{t}.root'
     if not os.path.exists(u) or not os.path.exists(P + f'ens/closure_hists_xsec_{tag}_t{t}.root'): continue
     f = uproot.open(u); d = f[f.keys()[0].split(';')[0]]
-    throws = [k.split(';')[0] for k in d.keys() if '+throws+fakedata_' in k and '/' not in k]
+    # top level only: a recursive listing walks every universe histogram (~5e5 keys) of the file
+    throws = [k.split(';')[0] for k in d.keys(recursive=False) if '+throws+fakedata_' in k]
     for k in throws:
         fn = k.replace('+', '/')
         if fn not in ntree: ntree[fn] = uproot.open(fn)['stv_tree'].num_entries

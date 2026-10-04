@@ -34,7 +34,7 @@ def patch(path, header_line, blocks):
     body='\\begin{tabular}{lccc}\n\\toprule\n'+header_line+'\n\\midrule\n'+'\n'.join(blocks)+'\n\\midrule\nexpected                & $0$     & $1$    & $68\\%$ / $95\\%$ \\\\\n\\bottomrule\n\\end{tabular}'
     open(path,'w').write(t[:a]+body+t[b:]); print('patched',os.path.basename(path))
 stat=[row(t,l,'statistical only') for t,l in TAGS if t in res]; full=[row(t,l,'full') for t,l in TAGS if t in res]
-patch(R+'analysis_note.tex','Reference: statistical covariance & pull mean & pull width & 68\\% / 95\\% coverage \\\\', stat)
-patch(R+'technical_supplement.tex','Reference covariance & pull mean & pull width & 68\\% / 95\\% coverage \\\\', ['\\multicolumn{4}{l}{\\emph{statistical only}}\\\\']+stat+['\\midrule','\\multicolumn{4}{l}{\\emph{full}}\\\\']+full)
+patch(R+'notes/analysis_note.tex','Reference: statistical covariance & pull mean & pull width & 68\\% / 95\\% coverage \\\\', stat)
+patch(R+'notes/technical_supplement.tex','Reference covariance & pull mean & pull width & 68\\% / 95\\% coverage \\\\', ['\\multicolumn{4}{l}{\\emph{statistical only}}\\\\']+stat+['\\midrule','\\multicolumn{4}{l}{\\emph{full}}\\\\']+full)
 for tag,_ in TAGS:
     if tag in res: r=res[tag]; print(f"{tag:16s} n={r['members']:3d} stat width {r['statistical only']['width']:.2f} mean {r['statistical only']['mean']:+.2f} cov68 {100*r['statistical only']['cov68']:.1f}%  offset {r['offset_pct']:+.2f}% ({r['offset_sigma']:+.1f} sigma)")

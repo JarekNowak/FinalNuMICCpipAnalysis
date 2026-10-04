@@ -33,7 +33,7 @@ done
 
 # Derive the work list from the published results rather than from a hand-kept list, so
 # it cannot drift out of step with what is actually reported.
-RESULTS="$REPO/../report/current_results.tsv"
+RESULTS="$REPO/../report/results/current_results.tsv"
 [ -f "$RESULTS" ] || { echo "ERROR: $RESULTS not found" >&2; exit 1; }
 
 MANIFEST="$SCRIPTDIR/univmake_1p_manifest.list"

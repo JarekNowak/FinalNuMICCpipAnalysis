@@ -174,7 +174,7 @@ void total_xsec_counting() {
   // Dirt for "Combined" sums both modes' exposures.
   const double OCC = 0.98;
   // syst_frac = prediction-total fractional uncertainty of the released p_mu extraction
-  // (report/current_results.tsv, PredTotal_pct; the same numbers as the note's
+  // (report/results/current_results.tsv, PredTotal_pct; the same numbers as the note's
   // per-configuration result tables): incl 39.8/42.2/39.8 %, 1p 45.5/52.2/50.4 % (FHC/RHC/combined;
   // updated 2026-10-03: release without the Bragg-pion cut, MCS term re-evaluated).
   const char* sels[2] = {"CC1mu1piXp","CC1mu1pi1p"};

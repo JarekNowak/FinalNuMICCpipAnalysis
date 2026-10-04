@@ -5,7 +5,7 @@ for figures and tables: a single-column figure is 150/aspect + 20 words, a doubl
 300/(0.5*aspect) + 40, where aspect = width/height; a single-column table is 13 + 6.5 words per
 line and a double-column one 26 + 13 per line. Equations are counted as text. The limit is 3750.
 
-    python3 report/tools/prl_wordcount.py report/paper_prl_proton_tagged.tex
+    python3 report/tools/prl_wordcount.py report/papers/paper_prl_proton_tagged.tex
 """
 import re, sys, os, subprocess
 

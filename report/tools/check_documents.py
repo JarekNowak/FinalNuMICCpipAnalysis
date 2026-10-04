@@ -11,13 +11,13 @@ This refuses the package (exit 1) when
      carries its own copy;
   5. an analysis document uses a prerequisite identifier (U1..., P1..., V1, R1), or approval_request.tex or
      status.tsv uses one that shared/prerequisites.tex does not define;
-  6. the status column of data_release/index_extractions.tsv disagrees with report/status.tsv;
+  6. the status column of data_release/index_extractions.tsv disagrees with report/notes/status.tsv;
   7. an old term remains in prose (report/tools/terminology.py --check).
     python3 report/tools/check_documents.py
 """
 import os, re, sys, csv, subprocess
 
-HERE = os.path.dirname(os.path.abspath(__file__)); REP = os.path.dirname(HERE)
+HERE = os.path.dirname(os.path.abspath(__file__)); REP = os.path.dirname(HERE); NOTES = os.path.join(REP, 'notes')
 DOCS = ['analysis_note.tex', 'proton_tagged_note.tex', 'technical_supplement.tex']
 REQ = 'approval_request.tex'          # the decision, the prerequisites and the validation ladder (2026-09-28)
 SHARED = ['decision_box', 'prerequisites', 'validation_ladder']
@@ -39,7 +39,7 @@ def strip(t):
 
 def main():
     bad = []
-    txt = {d: strip(open(os.path.join(REP, d)).read()) for d in DOCS + [REQ]}
+    txt = {d: strip(open(os.path.join(NOTES, d)).read()) for d in DOCS + [REQ]}
     for d, t in txt.items():
         for rx in STALE:
             for m in re.finditer(rx, t):
@@ -57,7 +57,7 @@ def main():
                 ctx = prose[max(0, m.start() - 40):m.end() + 20].replace('\n', ' ')
                 bad.append(f'{d}: status wording outside the vocabulary: "...{ctx}..."')
     for f in SHARED:
-        body = strip(open(os.path.join(REP, 'shared', f + '.tex')).read())
+        body = strip(open(os.path.join(NOTES, 'shared', f + '.tex')).read())
         key = re.search(r'\\label\{([^}]*)\}', body)
         if f'\\input{{shared/{f}}}' not in txt[REQ]:
             bad.append(f'{REQ}: does not \\input shared/{f}.tex')
@@ -66,14 +66,14 @@ def main():
                 bad.append(f'{d}: \\inputs shared/{f}.tex, which belongs to {REQ}')
             if key and f'\\label{{{key.group(1)}}}' in txt[d]:
                 bad.append(f'{d}: carries its own copy of {key.group(1)}')
-    pre = open(os.path.join(REP, 'shared', 'prerequisites.tex')).read()
+    pre = open(os.path.join(NOTES, 'shared', 'prerequisites.tex')).read()
     defined = set(re.findall(r'^([UPVR]\d+) &', pre, flags=re.M))
     for d in DOCS:
         for m in re.finditer(IDRX, txt[d]):
             ctx = txt[d][max(0, m.start() - 40):m.end() + 20].replace('\n', ' ')
             bad.append(f'{d}: prerequisite identifier {m.group(1)} in an analysis document: "...{ctx}..."')
     used = set(re.findall(IDRX, txt[REQ]))
-    for l in open(os.path.join(REP, 'status.tsv')):
+    for l in open(os.path.join(NOTES, 'status.tsv')):
         if not l.startswith('#'):
             for rng in re.findall(r'([UPVR])(\d)--[UPVR]?(\d)', l):
                 used |= {f'{rng[0]}{i}' for i in range(int(rng[1]), int(rng[2]) + 1)}
@@ -82,7 +82,7 @@ def main():
         bad.append(f'prerequisite identifier {u} is used but not defined in shared/prerequisites.tex')
     lab = {'primary': 'Primary result', 'secondary': 'Secondary result',
            'validation': 'Validation-only product', 'notreported': 'Not reported'}
-    lines = [l for l in open(os.path.join(REP, 'status.tsv')) if l.strip() and not l.startswith('#')]
+    lines = [l for l in open(os.path.join(NOTES, 'status.tsv')) if l.strip() and not l.startswith('#')]
     st = {}
     for r in csv.DictReader(lines, delimiter='\t'):
         for k in r['observables'].split(','):
@@ -99,7 +99,7 @@ def main():
         want = lab[r['status']] if r[col] == 'Y' or r['status'] == 'notreported' else lab['notreported']
         if status != want:
             bad.append(f'index: {f[0]} status "{status}", status.tsv gives "{want}"')
-    t = subprocess.run([sys.executable, os.path.join(HERE, 'terminology.py'), '--check'] + [os.path.join(REP, d) for d in DOCS + [REQ]],
+    t = subprocess.run([sys.executable, os.path.join(HERE, 'terminology.py'), '--check'] + [os.path.join(NOTES, d) for d in DOCS + [REQ]],
                        capture_output=True, text=True)
     if t.returncode:
         bad += ['terminology: ' + x for x in t.stdout.split('\n') if x]

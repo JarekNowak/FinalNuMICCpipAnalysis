@@ -11,7 +11,7 @@ def load(f):
 def det(d): return d['detVar_total'] if 'detVar_total' in d else math.sqrt(sum(v*v for k,v in d.items() if k.startswith('detVar') and not k.endswith('_total')))
 CF={'FHC5':'fhc5','RHCFULL':'rhcfull','COMB':'comb'}
 hdr='family\tobservable\tconfig\tsigma_int\tPredTotal_pct\tdetVar_pct\tflux_pct\txsec_pct\tMCS_pct\tchi2_truth\tp_truth\n'
-out=open(R+'current_results.tsv','w'); out1=open(R+'current_results_1p_new.tsv','w'); out.write(hdr); out1.write(hdr)
+out=open(R+'results/current_results.tsv','w'); out1=open(R+'results/current_results_1p_new.tsv','w'); out.write(hdr); out1.write(hdr)
 # 2026-09-26: 0.50-criterion binnings (inclusive ppi3bin, theta_mu dropped; proton-tagged dphit3bin)
 for fam,obs,pref in [('incl',['pmu','ppi3bin','costhmu','costhpi','thmupi'],''),('1p',['Whad','Wpipr','costhmu','costhpi','dalphat2bin','dphit3bin','dpt2bin','pmu','pn2bin','pp','ppi2bin','thmupi'],'1p_')]:
     for cfg in ['FHC5','RHCFULL','COMB']:
