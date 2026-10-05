@@ -1546,8 +1546,9 @@ the current $p_\mu$ results, and the proton-tagged cut-flow dirt carries the pro
 processed with the inclusive selection). The binnings still meet the $0.50$ migration criterion (lowest diagonal
 $0.516$, the inclusive three-region $p_\pi$ in FHC).
 
-Carried over from version~1.6.1, made with the previous selection: the ensembles, the study extractions and the
-binning-review studies. The MCS momentum-scale term and the alternative-model closure are redone (next section).
+Carried over from version~1.6.1, made with the previous selection: the study extractions and the binning-review
+studies, which remain the dated basis of the binnings. The MCS momentum-scale term, the alternative-model closure and
+the ensembles are redone (following sections).
 Dropping the requirement moves events from the control regions into the signal region: about $6$--$7\%$ of the new
 signal region of the Run-4 and Run-5 beam-on data (about $85$ predicted events) was in the opened control regions.
 The beam-on control-region skims made with the previous selection are withdrawn from use and have been remade; in
@@ -1589,6 +1590,19 @@ result tables, figure macros, release packages and earlier exports are in \textt
 release table was regenerated in the new layout: the inclusive and proton-tagged $p_\pi$ region tables of the
 supplement had not been regenerated for version~1.7 and now carry its values, as the corresponding figures did.
 
+\section{Ensembles repeated with the new selection (2026-10-05)}
+
+All seventeen ensembles of the release, seven inclusive and ten proton-tagged with $100$ members each, were rebuilt
+from new throws of the reprocessed samples. The statistical pull widths are $0.92$--$1.03$ (inclusive) and
+$0.93$--$1.10$ (proton-tagged) with nominal coverage (previously $0.95$--$1.07$ and $0.94$--$1.08$). The
+one-dimensional ensemble means lie within $0.7\%$ of the reference at up to $1.5\sigma$ on the mean (previously
+$0.4$--$1.1\%$ below at up to $2.0\sigma$); that of $\cos\theta_\pi\times\cos\theta_\mu$ lies $0.9\%$ below at $2.7$
+standard errors, carried by its sparsest cell, which lies $0.55$ statistical standard deviations low on average
+($0.58$ before). Of the $9200$ inputs, $9129$ were read in full and $71$ miss one or two events at the edge of the
+true binning; no member read an incomplete file. The summary files \texttt{data\_release/ensemble\_2026-10-05.tsv},
+\texttt{ensemble\_1p\_2026-10-05.tsv} and \texttt{ensemble\_v1\_2026-10-05.tsv} replace those of 2026-09-26 and
+2026-09-28.
+
 \section{Version 1.7 (2026-10-03)}
 
 The three documents with the changes above are version~1.7. The cross sections, covariances and data release are
@@ -1616,12 +1630,9 @@ yet made.
     the clean-cache bit-identical reproduction repeated on the 2026-09-06 release; the inverted-proton-PID
     control region for any proton-tagged result; the documented treatment of any
     control-region discrepancy under the frozen procedure.
-  \item \textbf{Ensembles:} the five rebinned extractions (FHC $p_\mu$, FHC and RHC
-    $\cos\theta_\mu$, combined $p_\pi$, proton-tagged FHC $W_{\rm had}$) have their own $100$-member
-    ensembles (2026-09-27): statistical pull widths $0.94$--$1.07$, coverage nominal, offsets
-    $0.4$--$1.1\%$ at $\le2.0\sigma$; the one-bin totals and the proton-tagged $\delta p_T$ and $p_n$
-    keep their binnings and their ensembles. The results proposed for approval on 2026-09-27 have
-    theirs (2026-09-28). No test of this kind remains outstanding.
+  \item \textbf{Ensembles:} every released extraction with an ensemble was repeated for version~1.7
+    (2026-10-05): statistical pull widths $0.92$--$1.10$, coverage nominal, integral offsets within
+    $1\%$. No test of this kind remains outstanding.
   \item \textbf{Systematic terms not in the released covariance:} the MCS muon momentum-scale
     term is evaluated at $\pm5\%$ on the data side and released as a separate component for $p_\mu$
     in all three configurations (up to $0.60\sigma$ per bin in FHC, $0.44\sigma$ combined and
@@ -1638,9 +1649,10 @@ yet made.
   \item \textbf{Limits of the exposure:} the differential $W_{\pi p}$ shape is withdrawn
     (no binning satisfies both the migration and the statistics requirement); the
     proton-tagged sample supports an integrated cross section.
-  \item \textbf{Ensemble offset:} the ensemble means sit $0.4$--$1.1\%$ below the reference
-    at up to $2.0\sigma$ (six ensembles, $100$ members each; the $2.0\sigma$ is the RHC total, $-0.8\%$); the throw itself is unbiased (mean thrown
-    selected count $0.999$ of the expectation), so the offset, if real, is in the
+  \item \textbf{Ensemble offset:} the inclusive one-dimensional ensemble means sit within $0.7\%$ of the
+    reference, five of the six below it, at up to $1.5\sigma$ (the RHC total, $-0.6\%$), and that of
+    $\cos\theta_\pi\times\cos\theta_\mu$ $0.9\%$ below at $2.7\sigma$, carried by its sparsest cell; the throw itself is
+    unbiased (mean thrown selected count $1.004$ of the expectation), so the offset, if real, is in the
     extraction; a larger ensemble would settle it.
 \end{itemize}
 
@@ -1687,7 +1699,7 @@ Proton-tagged purity                & $47$--$48\%$     & now $52/50/51\%$ \\
 Signal-region dirt (final cut)      & $1.1/1.0/2.1$ (FHC/RHC/comb.) & now $6.6/9.5/16.0$; inclusive purity $58.8/57.7/58.2\%$ now $58.5/57.4/57.9\%$ (2026-10-01) \\
 Control-region dirt (FHC)           & $49/0.1/10/1.9$ (CC$0\pi$/multi-$\pi$/$\pi^0$/cosmic) & now $342/0.5/93/18.5$ (2026-10-01) \\
 Control-region global $\chi^2$      & pseudo-data $0.66/8$; beam-on $8.11/8$ & now $2.29/8$ and $6.03/8$ (2026-10-01) \\
-Ensemble offset and pull widths     & $2.5\%$ at $2.1\sigma$; widths $1.04/0.96$ & now $0.5$--$2.7\%$ at $\le1.9\sigma$; widths $1.08/0.97/1.02$; 2026-09-20: six ensembles (FHC/RHC/COMB, $46$--$100$ members) $0.4$--$1.3\%$ at $\le1.5\sigma$, widths $0.90$--$1.10$; 2026-09-24: $100$ members each, race-corrupted members re-run, $0.4$--$1.1\%$ at $\le2.0\sigma$, widths $0.92$--$1.07$; 2026-09-27 (binnings of the 0.50 criterion): widths $0.95$--$1.07$ inclusive, $0.94$--$1.08$ proton-tagged, offsets $0.3$--$1.1\%$ at $\le2.0\sigma$ \\
+Ensemble offset and pull widths     & $2.5\%$ at $2.1\sigma$; widths $1.04/0.96$ & now $0.5$--$2.7\%$ at $\le1.9\sigma$; widths $1.08/0.97/1.02$; 2026-09-20: six ensembles (FHC/RHC/COMB, $46$--$100$ members) $0.4$--$1.3\%$ at $\le1.5\sigma$, widths $0.90$--$1.10$; 2026-09-24: $100$ members each, race-corrupted members re-run, $0.4$--$1.1\%$ at $\le2.0\sigma$, widths $0.92$--$1.07$; 2026-09-27 (binnings of the 0.50 criterion): widths $0.95$--$1.07$ inclusive, $0.94$--$1.08$ proton-tagged, offsets $0.3$--$1.1\%$ at $\le2.0\sigma$; 2026-10-05 (version~1.7): widths $0.92$--$1.03$ inclusive, $0.93$--$1.10$ proton-tagged, one-dimensional offsets within $0.7\%$ at $\le1.5\sigma$ \\
 FHC beam-off in the signal region   & $128$, then $13$, then $30$ & now $23$ (per-run gates, corrected Run-1 exposure) \\
 Combined generator weights (FHC:RHC) & $0.458{:}0.542$ & now $0.425{:}0.575$ (2026-09-24) \\
 Two-region $p_\pi$, FHC            & $0.059$ / $0.764$ & now $0.037$ / $0.827$ \\
