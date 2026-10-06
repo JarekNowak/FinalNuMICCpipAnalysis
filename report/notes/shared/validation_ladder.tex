@@ -1,0 +1,48 @@
+% validation_ladder.tex -- the validation steps of the extraction, their status, criterion, largest deviation
+% observed and the stage before which each is required. Included by approval_request.tex only (2026-09-28: the
+% analysis documents describe the validation in prose). Prerequisite identifiers refer to Table~\ref{tab:prerequisites}.
+{\footnotesize\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}p{1.9cm}p{2.7cm}p{2.6cm}p{2.7cm}p{2.9cm}p{1.6cm}@{}}
+\caption{Validation steps of the extraction. A result can close under the nominal model while it is
+  determined largely by the modelled migrations or by the regularisation; the migration criterion and the
+  trace of $A_C$ test that separately (\inclref{Sec.}{sec:binning_rule}).}
+\label{tab:validation_ladder}\\
+\toprule
+Step & Test & Status & Criterion & Largest deviation & Required before \\
+\midrule
+\endfirsthead
+\toprule
+Step & Test & Status & Criterion & Largest deviation & Required before \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+1. Implementation closure & Does the chain return the truth of pseudo-data thrown from the model of the
+  response? & Done for every extraction &
+  Unfolded result consistent with the $A_C$-smeared truth; integral ratio within the statistical spread &
+  Inclusive: $\chi^2\le2.64/8$, integral ratios $0.956$--$1.042$. Proton-tagged: $\chi^2\le5.41/4$ (RHC
+  $\cos\theta_\pi$), ratios $0.93$--$1.20$; two-dimensional: cell ratios $0.75$--$1.32$ & Unblinding \\
+2. Statistical calibration & Are the quoted statistical uncertainties correctly sized? &
+  Done: seven inclusive and ten proton-tagged extractions, $100$ pseudo-experiments each, among them
+  $\theta_p$ and $\theta_{\pi p}$ in every configuration and the two two-dimensional results (V1) &
+  Pull width consistent with one within the ensemble precision ($\pm13\%$ at $100$ members); coverage
+  $68\%$ and $95\%$ &
+  Inclusive: widths $0.92$--$1.03$, $68\%$ coverage $64$--$72\%$; the sparsest two-dimensional cell
+  lies $0.55$ statistical standard deviations low on average. Proton-tagged: widths $0.93$--$1.10$,
+  $64$--$73\%$ & Unblinding \\
+3. Parametric robustness & Does the extraction follow a different model that reweighting can reach? &
+  Done: GENIE multisim universe 545 and $\Delta\to N\pi$ angular, inclusive FHC and RHC, proton-tagged FHC
+  including $\theta_p$ and $\theta_{\pi p}$, and the two-dimensional results in the combined
+  configuration (V1) &
+  Per-bin bias against the per-bin total uncertainty; a bias above $1\sigma$ is flagged and treated &
+  Inclusive: $1.10\sigma$ in one sparse bin (FHC $\cos\theta_\mu$). Proton-tagged: $-0.99\sigma$ and
+  $-0.97\sigma$ in the low $\delta p_T$ and $p_n$ bins (P3). $\theta_p$, $\theta_{\pi p}$ and the
+  two-dimensional results: at most $0.79\sigma$ & Unblinding \\
+4. Structural robustness & Does it close on pseudo-data from a generator that reweighting cannot reach? &
+  Outstanding (U3) & Criterion of U3 & n/a & Unblinding \\
+5. Background validation & Do control-region data support the background model? &
+  Outstanding (U2; P1 for the proton mis-assignment) &
+  Frozen procedure of the control regions & n/a & Unblinding \\
+6. Signal-region opening & Are the normalisation and covariance prerequisites complete? &
+  Outstanding & U1--U6 complete & n/a & n/a \\
+\end{longtable}}

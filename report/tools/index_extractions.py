@@ -1,6 +1,6 @@
 # index_extractions.py -- regenerate data_release/index_extractions.tsv from the current release. One row
 # per released differential extraction (every directory of data_release/cov/), with the status of
-# report/status.tsv in the four-label vocabulary (decision of 2026-09-27), so the file index cannot disagree
+# report/notes/status.tsv in the four-label vocabulary (decision of 2026-09-27), so the file index cannot disagree
 # with the notes. Uncertainties are those of the official covariance (framework + MCS term, official_cov.py).
 # The one-bin totals are indexed separately in total_xsec.tsv.
 import csv, os, glob, re, sys
@@ -16,7 +16,7 @@ CF = {'fhc5': 'FHC5', 'rhcfull': 'RHCFULL', 'comb': 'COMB'}
 
 
 def status_map():
-    lines = [l for l in open(R + 'status.tsv') if l.strip() and not l.startswith('#')]
+    lines = [l for l in open(R + 'notes/status.tsv') if l.strip() and not l.startswith('#')]
     m = {}
     for r in csv.DictReader(lines, delimiter='\t'):
         for key in r['observables'].split(','):
@@ -40,7 +40,7 @@ def main():
     sm = status_map()
     res = {}
     for fn in ('current_results.tsv', 'current_results_1p_new.tsv'):
-        for r in csv.DictReader(open(R + fn), delimiter='\t'):
+        for r in csv.DictReader(open(R + 'results/' + fn), delimiter='\t'):
             res[(r['family'], CF[r['config']], r['observable'])] = r
     rows = []
     for cdir in sorted(glob.glob(D + 'cov/*')):
@@ -69,7 +69,7 @@ def main():
                 '# One row per extraction; A_C / curves / cov files are present for each. total_pct is the\n'
                 '# prediction-total fractional uncertainty (bin-averaged, excluding data statistics) of the official\n'
                 '# covariance, framework + MCS term (cov_total_plusMCS.txt); chi2/p are the closure against the\n'
-                '# realised pseudo-data truth. status: report/status.tsv. The one-bin totals are in total_xsec.tsv.\n')
+                '# realised pseudo-data truth. status: report/notes/status.tsv. The one-bin totals are in total_xsec.tsv.\n')
         o.write('tag\tfamily\tconfig\tobservable\tbins\tsigma_int\ttotal_pct\tdetVar_pct\tchi2\tp\tA_C\tcurves\tcov_components\tstatus\n')
         for r in rows:
             o.write('\t'.join(r) + '\n')

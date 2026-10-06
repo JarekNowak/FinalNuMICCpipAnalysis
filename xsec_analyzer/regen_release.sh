@@ -27,7 +27,7 @@ root -l -b -q 'macros/total_xsec_counting.C' > ../logs/counting_review7.log 2>&1
 cp -p unfold_output/dsigma_ccpi1p_*.pdf unfold_output/dsigma_build_FHC5_*.pdf unfold_output/dsigma_build_1p_FHC5_*.pdf $FIG/ 2>/dev/null
 for m in fhc rhc comb; do
   root.exe -l -b -q "macros/cutflow_yields.C(\"$m\",\"$PROC/cf/\",true)" > $L/cutflow_incl_$m.log 2>&1; cp unfold_output/cutflow_yields_$m.pdf $FIG/
-  root.exe -l -b -q "macros/cutflow_yields_1p.C(\"$m\")" > $L/cutflow_1p_$m.log 2>&1
+  root.exe -l -b -q "macros/cutflow_yields_1p.C(\"$m\")" > $L/cutflow_1p_$m.log 2>&1; cp unfold_output/cutflow_yields_1p_$m.pdf $FIG/   # copy added 2026-10-05: the figures were never refreshed
 done
 python3 check_staleness.py | sed -n 1,12p
 echo "==== REGEN RELEASE DONE $(date) ===="

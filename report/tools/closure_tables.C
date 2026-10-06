@@ -2,7 +2,7 @@
 // for all 51 release extractions -> TSV (2026-09-26: 0.50-criterion binnings; theta_mu dropped)
 #include <fstream>
 #include <regex>
-void closure_tables(const char* out="closure_summary.tsv"){
+void closure_tables(const char* out="/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/report/results/closure_summary.tsv"){
   const char* PROC="/data/uboone/processed/"; const char* LOG="/home/t2k/nowak/MicroBooNE/working_xsec_analyzer/logs/fdfix/";
   const char* cfgs[3]={"FHC5","RHCFULL","COMB"}; const char* lcfg[3]={"fhc5","rhcfull","comb"};
   const char* incl[5]={"pmu","ppi3bin","costhmu","costhpi","thmupi"}; const char* lincl[5]={"pmu","ppi","costhmu","costhpi","thmupi"};

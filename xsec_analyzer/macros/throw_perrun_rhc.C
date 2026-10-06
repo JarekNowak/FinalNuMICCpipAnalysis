@@ -3,7 +3,9 @@
 // a/b/c) are chained and thrown at D_group/MC_group(sum), so each group's fake data
 // is one file at that run's data POT. Writes summed_pot=D_group. Ready for real data.
 void throw_group(std::vector<const char*> infiles, const char* outfile, double dpot, double mcpot, int seed){
-  const char* P="/data/uboone/processed/";
+  // directory read AND written; THROW_DIR overrides it so a staging tree can be thrown from its own
+  // reprocessed MC (same seeds -> identical events when the weights are unchanged)
+  const char* P = gSystem->Getenv("THROW_DIR") ? gSystem->Getenv("THROW_DIR") : "/data/uboone/processed/";
   double potscale = dpot/mcpot;
   gRandom->SetSeed(seed);
   TChain cin("stv_tree"); for(auto f:infiles) cin.Add(Form("%s%s",P,f));

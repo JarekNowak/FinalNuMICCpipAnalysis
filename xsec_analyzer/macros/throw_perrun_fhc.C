@@ -6,7 +6,9 @@
 // carrying summed_pot = D_i (matches the onBNB convention; framework reads onBNB POT
 // from file_properties, but the parameter must be present). Ready for real data.
 void throw_one(const char* infile, const char* outfile, double dpot, double mcpot, int seed){
-  const char* P="/data/uboone/processed/";
+  // directory read AND written; THROW_DIR overrides it so a staging tree can be thrown from its own
+  // reprocessed MC (same seeds -> identical events when the weights are unchanged)
+  const char* P = gSystem->Getenv("THROW_DIR") ? gSystem->Getenv("THROW_DIR") : "/data/uboone/processed/";
   double potscale = dpot/mcpot;
   gRandom->SetSeed(seed);
   TChain cin("stv_tree"); cin.Add(Form("%s%s",P,infile));

@@ -45,7 +45,7 @@ def replace(text,label,body):
 def T(cols,header,rows): return '\\begin{tabular}{%s}\n\\toprule\n%s \\\\\n\\midrule\n%s\n\\bottomrule\n\\end{tabular}'%(cols,header,'\n'.join(rows))
 # 2026-09-19: the tables live in three documents (note / supplement / proton-tagged note); each label
 # is located in whichever document carries it.
-DOCS={f:open(R+f).read() for f in ('analysis_note.tex','technical_supplement.tex','proton_tagged_note.tex')}
+DOCS={f:open(R+'notes/'+f).read() for f in ('analysis_note.tex','technical_supplement.tex','proton_tagged_note.tex')}
 def patch(label,body):
     hits=[f for f,t in DOCS.items() if '\\label{%s}'%label in t]
     assert len(hits)==1, (label,hits)
@@ -166,5 +166,5 @@ print("generator deviations (sigma - gen)/err:", {k:round(v,2) for k,v in dev.it
 # --- supplement W_pipr six-bin closure
 rows=[f"{n:<8} & ${DU[('1p',c,'Wpipr')]['sigma_int']:.3f}$ & ${float(CL[('1p',c,'Wpipr')]['unf_over_truth']):.2f}$ & ${float(CL[('1p',c,'Wpipr')]['chi2']):.2f}/6$ \\\\" for n,c in [('FHC','FHC5'),('RHC','RHCFULL'),('Combined','COMB')]]
 patch('tab:wpipr_sixbin_closure',T('lccc','Config & $\\sigma_\\mathrm{int}$ & unf./truth & $\\chi^2/\\mathrm{ndf}$',rows))
-for f,t in DOCS.items(): open(R+f,'w').write(t)
+for f,t in DOCS.items(): open(R+'notes/'+f,'w').write(t)
 sig=[DU[('incl',c,o)]['sigma_int'] for c in CFS for o in INCL]; print("rebuilt; incl sigma_int range %.3f-%.3f; cut-and-count:"%(min(sig),max(sig)), {k:round(v['sig'],3) for k,v in vals.items()})

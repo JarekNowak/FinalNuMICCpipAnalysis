@@ -1,6 +1,7 @@
-"""ensemble_tables.py -- evaluate the six configuration-aware fake-data ensembles (2026-09-26: FHC p_mu
-(six bins), FHC and RHC cos theta_mu (eight bins), COMB p_pi (three regions), and the FHC and RHC one-bin
-totals of 2026-09-20; 100 members each) with ensemble_stat_pulls.evaluate, write data_release/ensemble_2026-09-26.tsv and
+"""ensemble_tables.py -- evaluate the six configuration-aware fake-data ensembles of version 1.7 (2026-10-05,
+selection without the Bragg-pion requirement, xsec_analyzer/ens_braggfix.sh: FHC p_mu, FHC and RHC cos theta_mu, COMB p_pi
+(three regions), FHC and RHC one-bin totals; 100 members each) with ensemble_stat_pulls.evaluate, write
+data_release/ensemble_2026-10-05.tsv and
 patch the coverage tables of the analysis note (statistical reference) and the technical supplement
 (statistical + full). Run slurm/ens_statcov_all.sh first so every member has its DataStats table.
 
@@ -16,8 +17,8 @@ res={}
 for tag,lab in TAGS:
     try: res[tag]=evaluate(tag, 100, quiet=True)
     except Exception as e: print(tag,'failed:',e)
-with open(R+'data_release/ensemble_2026-09-26.tsv','w') as o:
-    o.write('# Fake-data ensembles on the 2026-09-26 release (binnings of the 0.50 criterion; the one-bin totals from 2026-09-20): Poisson throws of the central-value\n'
+with open(R+'data_release/ensemble_2026-10-05.tsv','w') as o:
+    o.write('# Fake-data ensembles of the version 1.7 release (2026-10-05; selection without the Bragg-pion requirement): Poisson throws of the central-value\n'
             '# prediction of each configuration (slurm_ensemble_cfg.sbatch), each carried through univmake + UnfolderNuMI; pulls against\n'
             '# the fixed central-value truth smeared by each member\'s own A_C. Statistical reference = DataStats covariance of the\n'
             '# member; full = total covariance. Offsets are of the ensemble-mean integral from the reference integral.\n')
@@ -26,7 +27,7 @@ with open(R+'data_release/ensemble_2026-09-26.tsv','w') as o:
         if tag not in res: continue
         r=res[tag]; s=r['statistical only']; f=r['full']
         o.write(f"{tag}\t{r['members']}\t{r['bins']}\t{s['mean']:.2f}\t{s['width']:.2f}\t{100*s['cov68']:.1f}\t{100*s['cov95']:.1f}\t{f['mean']:.2f}\t{f['width']:.2f}\t{100*f['cov68']:.1f}\t{100*f['cov95']:.1f}\t{r['mean_integral']:.4f}\t{r['reference_integral']:.4f}\t{r['offset_pct']:.2f}\t{r['offset_sigma']:.1f}\t{r['sd_pct']:.1f}\n")
-print('wrote data_release/ensemble_2026-09-26.tsv')
+print('wrote data_release/ensemble_2026-10-05.tsv')
 def row(tag,lab,key):
     r=res[tag][key]; return f"{lab:<40} & ${r['mean']:+.2f}$ & ${r['width']:.2f}$ & ${100*r['cov68']:.1f}\\%$ / ${100*r['cov95']:.1f}\\%$ \\\\"
 def patch(path, header_line, blocks):
@@ -34,7 +35,7 @@ def patch(path, header_line, blocks):
     body='\\begin{tabular}{lccc}\n\\toprule\n'+header_line+'\n\\midrule\n'+'\n'.join(blocks)+'\n\\midrule\nexpected                & $0$     & $1$    & $68\\%$ / $95\\%$ \\\\\n\\bottomrule\n\\end{tabular}'
     open(path,'w').write(t[:a]+body+t[b:]); print('patched',os.path.basename(path))
 stat=[row(t,l,'statistical only') for t,l in TAGS if t in res]; full=[row(t,l,'full') for t,l in TAGS if t in res]
-patch(R+'analysis_note.tex','Reference: statistical covariance & pull mean & pull width & 68\\% / 95\\% coverage \\\\', stat)
-patch(R+'technical_supplement.tex','Reference covariance & pull mean & pull width & 68\\% / 95\\% coverage \\\\', ['\\multicolumn{4}{l}{\\emph{statistical only}}\\\\']+stat+['\\midrule','\\multicolumn{4}{l}{\\emph{full}}\\\\']+full)
+patch(R+'notes/analysis_note.tex','Reference: statistical covariance & pull mean & pull width & 68\\% / 95\\% coverage \\\\', stat)
+patch(R+'notes/technical_supplement.tex','Reference covariance & pull mean & pull width & 68\\% / 95\\% coverage \\\\', ['\\multicolumn{4}{l}{\\emph{statistical only}}\\\\']+stat+['\\midrule','\\multicolumn{4}{l}{\\emph{full}}\\\\']+full)
 for tag,_ in TAGS:
     if tag in res: r=res[tag]; print(f"{tag:16s} n={r['members']:3d} stat width {r['statistical only']['width']:.2f} mean {r['statistical only']['mean']:+.2f} cov68 {100*r['statistical only']['cov68']:.1f}%  offset {r['offset_pct']:+.2f}% ({r['offset_sigma']:+.1f} sigma)")

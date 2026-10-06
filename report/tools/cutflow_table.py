@@ -25,8 +25,8 @@ for m,title in blocks.items():
     if m!='comb': rows.append('    \\midrule')
     s=st['Nonprotons']; derived[m]=dict(sig=s[0],bkg=s[1],ext=s[2],dirt=s[3],pred=s[4],eff=s[5],pur=s[6],ext_share=100*s[2]/s[4])
 body='\\begin{tabular}{lrrrrrrr}\n    \\toprule\n    Cut & Signal & Bkg MC & EXT & Dirt & Pred. & Eff. [\\%] & Pur. [\\%] \\\\\n    \\midrule\n'+'\n'.join(rows)+'\n    \\bottomrule\n  \\end{tabular}'
-t=open(R+'analysis_note.tex').read()
+t=open(R+'notes/analysis_note.tex').read()
 i=t.index('\\label{tab:cutflow}'); a=t.index('\\begin{tabular}',i); b=t.index('\\end{tabular}',a)+len('\\end{tabular}')
 assert '\\end{table}' in t[b:b+400]
-t=t[:a]+body+t[b:]; open(R+'analysis_note.tex','w').write(t)
+t=t[:a]+body+t[b:]; open(R+'notes/analysis_note.tex','w').write(t)
 for m,d in derived.items(): print(m, {k:round(v,1) for k,v in d.items()})

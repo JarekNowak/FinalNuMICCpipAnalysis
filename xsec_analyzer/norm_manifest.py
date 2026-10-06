@@ -18,7 +18,7 @@ from collections import defaultdict
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 CFG  = os.path.join(HERE, "configs")
-OUT  = os.path.abspath(os.path.join(HERE, "..", "report", "normalisation_manifest.tsv"))
+OUT  = os.path.abspath(os.path.join(HERE, "..", "report", "results", "normalisation_manifest.tsv"))
 
 # Argon nuclei in the fiducial volume, dead-wire slab excluded (analysis note Sec. 5).
 N_AR = 8.710e29

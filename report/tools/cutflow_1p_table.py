@@ -24,8 +24,8 @@ for m,title in blocks.items():
     s=st['IdentProton']; p=st['Nonprotons']
     derived[m]=dict(purity=s[6],eff=s[5],pur_nonp=p[6],bkg_rej=100*(1-s[1]/p[1]),sig_ret=100*s[0]/p[0],ext_ratio=p[2]/s[2] if s[2]>0 else float('nan'),nsel=s[4],sig=s[0])
 body='\\begin{tabular}{lrrrrrrr}\n    \\toprule\n    Cut & Signal & Bkg MC & EXT & Dirt & Pred. & Eff. [\\%] & Pur. [\\%] \\\\\n    \\midrule\n'+'\n'.join(rows)+'\n    \\bottomrule\n  \\end{tabular}'
-t=open(R+'technical_supplement.tex').read()
+t=open(R+'notes/technical_supplement.tex').read()
 i=t.index('\\label{tab:cutflow_1p}'); a=t.index('\\begin{tabular}',i); b=t.index('\\end{tabular}',a)+len('\\end{tabular}')
 assert '\\end{table}' in t[b:b+400]
-t=t[:a]+body+t[b:]; open(R+'technical_supplement.tex','w').write(t)
+t=t[:a]+body+t[b:]; open(R+'notes/technical_supplement.tex','w').write(t)
 for m,d in derived.items(): print(m, {k:round(v,1) for k,v in d.items()})

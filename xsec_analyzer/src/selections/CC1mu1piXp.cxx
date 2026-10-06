@@ -1369,7 +1369,8 @@ for (size_t i_pfp_2 = 0; i_pfp_2 < Event->track_length_->size(); i_pfp_2++) {
               }
 
 	// Proton rejection on the pion candidate (matches custom selection):
-	// require trk_bragg_pion >= 0.08. Fail-open (1.0) if the branch is absent.
+	// trk_bragg_pion >= 0.08, only if apply_bragg_pion_cut() (off; see CC1mu1piXp.hh).
+	// Fail-open (1.0) if the branch is absent.
 	double bragg_pi = 1.0;
 	if ( i_pfp_2 < Event->trk_bragg_pion_v->size() )
 	  bragg_pi = Event->trk_bragg_pion_v->at(i_pfp_2);
@@ -1377,8 +1378,8 @@ for (size_t i_pfp_2 = 0; i_pfp_2 < Event->track_length_->size(); i_pfp_2++) {
 
 	// Decompose the pion identification so the multi-pion efficiency loss can be
 	// attributed to containment vs the LLR PID. pion_number keeps its original
-	// meaning (track-end contained AND full PID: LLR>0.1 + TMVA + Bragg + length +
-	// vertex distance); the two extra counters drop the containment or the LLR.
+	// meaning (track-end contained AND full PID: LLR>0.1 + TMVA + length + vertex
+	// distance); the two extra counters drop the containment or the LLR.
 	bool ts05 = Event->pfp_track_score_->at(i_pfp_2) >= 0.5;  // nominal track-score cut
 	bool pi_contained = CandidatePionTrackEndContainment_1;
 	bool pi_pid_noLLR = (nu_to_track_dist_ib.Mag() <= 4) && ( Event->track_length_->at(i_pfp_2) > 20)
@@ -1389,7 +1390,7 @@ for (size_t i_pfp_2 = 0; i_pfp_2 < Event->track_length_->size(); i_pfp_2++) {
 	if ( pi_contained && pi_pid_full ) pion_number_looseTS_++;        // track_score >= 0.3 (loosened)
 
 	// ---- actual pion identification (virtual-tunable; see CC1mu1piXp.hh) ----------
-	// Strict single-pion cuts (length + TMVA + Bragg) reject protons in the 1-pion
+	// Strict single-pion cuts (length + TMVA) reject protons in the 1-pion
 	// topology; loose_pion_id() (multi-pion) drops them and only keeps LLR>0.1.
 	// use_pion_bdt() (multi-pion) replaces the LLR cut with the dedicated pion-ID BDT.
 	bool pi_pid_strict = ( Event->track_length_->at(i_pfp_2) > 20)

@@ -3,11 +3,13 @@
 // from the selection's EventCategory (0 signal, 2 OOFV, 3 other numu CC, 4 nue CC, 5 NC) with the
 // dominant class 3 split by true final state from the generator daughter list.
 //   root -l -b -q 'macros/sb_transfer.C("fhc")'
+// P: directory of the processed MC; since 2026-10-02 (release without the Bragg-pion cut) the live tree
+// /data/uboone/processed/ carries the sb_ flags and truth counters, so the separate sb/ tree is not needed.
 #include <vector>
 #include <string>
 struct Src { std::string file; double scale; };
-void sb_transfer(const char* mode="fhc"){
-  const char* P="/data/uboone/processed/sb/"; std::vector<Src> mc;
+void sb_transfer(const char* mode="fhc", const char* P="/data/uboone/processed/sb/"){
+  std::vector<Src> mc;
   if(std::string(mode)=="fhc"){ const char* rn[4]={"Run1_fhc_new_numi_flux_fhc_pandora_ntuple","Run2_fhc_new_numi_flux_fhc_pandora_ntuple","Run4_fhc_new_numi_flux_fhc_pandora_ntuple","reweightedPPFX_numi_nu_overlay_pion_ntuples_run5_fhc"}; double sc[4]={0.09415,0.05085,0.07323,0.11560};
     for(int i=0;i<4;i++) mc.push_back({std::string(P)+"xsec-ana-"+rn[i]+".root",sc[i]}); }
   else { const char* rn[5]={"Run1_rhc","Run2_rhc","Run4a_rhc","Run4b_rhc","Run4c_rhc"}; double sc[5]={0.06728,0.04478,0.08847,0.08847,0.08847};

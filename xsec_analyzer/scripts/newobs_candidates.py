@@ -9,7 +9,7 @@
 PI = 3.1416
 # theta_p edges: the RHC-derived maximin scheme adopted 2026-09-18. The FHC-derived edges it replaces
 # ([0, 0.597, 0.942, 1.287, PI]) condition three to four times worse in both usable configurations
-# (FHC 0.082 vs 0.383, COMB 0.125 vs 0.408); see report/newobs_note.tex, section 3.5.
+# (FHC 0.082 vs 0.383, COMB 0.125 vs 0.408); see report/other_notes/newobs_note.tex, section 3.5.
 P1 = 'proton-tagged'
 CANDS = [
     dict(name='thetap', pfx='ccpi1p', xvar='thetap', xedges=[0, 0.659, 1.068, 1.539, PI], xopen=False,
