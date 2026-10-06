@@ -1,6 +1,6 @@
 # Phase 1: particle classifier for the multi-pion selections
 
-2026-10-01. Phase 1 of `report/MULTIPION_BNB_ADAPTATION_PLAN.md`. Full tables: `phase1_classifier.md`
+2026-10-01. Phase 1 of `report/planning/MULTIPION_BNB_ADAPTATION_PLAN.md`. Full tables: `phase1_classifier.md`
 (training on tracks with backtracked purity > 0.5) and `phase1_classifier_unmatched.md` (tracks with
 purity <= 0.5 kept as "other"); all numbers in the matching `.json` files.
 

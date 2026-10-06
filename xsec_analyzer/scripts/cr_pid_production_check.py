@@ -12,7 +12,7 @@ Tracks: primary (generation 2), track score >= 0.5, in events of any of the four
 the muon candidate and the other tracks separately. For each variable and period: the data/prediction
 shape chi2 (normalisation removed) and the mean difference.
 
-    python3 scripts/cr_pid_production_check.py  ->  report/multipion/cr_pid_production_check.{json,md}
+    python3 scripts/cr_pid_production_check.py  ->  report/planning/multipion/cr_pid_production_check.{json,md}
 """
 import json, os, sys
 import numpy as np
@@ -24,7 +24,7 @@ sys.path.insert(0, os.path.join(HERE, '..'))
 from bkgfit import farsb as F
 from bkgfit.dirt import dirt_perrun
 
-OUTDIR = os.path.abspath(os.path.join(HERE, '..', '..', 'report', 'multipion'))
+OUTDIR = os.path.abspath(os.path.join(HERE, '..', '..', 'report', 'planning', 'multipion'))
 S = 'CC1mu1piXp'
 OLD = ('FHC_R1', 'RHC_R1', 'RHC_R3')          # periods whose beam-on ntuples are of the older production
 VARS = {   # name: (branch, bins)

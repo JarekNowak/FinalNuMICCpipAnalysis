@@ -1,5 +1,5 @@
 """mp_pid_eval.py -- event-level comparison of the released pion identification with the particle
-classifier (Phase 2 of report/MULTIPION_BNB_ADAPTATION_PLAN.md), for the single-pion selection and
+classifier (Phase 2 of report/planning/MULTIPION_BNB_ADAPTATION_PLAN.md), for the single-pion selection and
 the two multi-pion selections, on the run periods held out of the classifier training (FHC Run 5,
 RHC Run 3).
 
@@ -8,7 +8,7 @@ selection and its *NewPID variant. Normalisation as the framework (scripts/mp_ph
 MC and dirt by data POT over the distinct summed_pot, beam-off by 0.98 x triggers over gates, all
 from the release file list.
 
-    python3 scripts/mp_pid_eval.py [--no-ext] [--scan]   ->  report/multipion/phase2_eval[_scan][_noext].json, .md
+    python3 scripts/mp_pid_eval.py [--no-ext] [--scan]   ->  report/planning/multipion/phase2_eval[_scan][_noext].json, .md
 --no-ext leaves out the beam-off samples (a preliminary while their processing runs); --scan reads the
 threshold scan (/data/uboone/processed/mp_pid_scan, slurm/slurm_mp_pid_scan.sbatch) with every
 "<NewPID selection>_tNN" variant (P(pi) > NN/100) next to its parent

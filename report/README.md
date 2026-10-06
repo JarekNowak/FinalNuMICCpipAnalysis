@@ -10,7 +10,7 @@ Documents, figures, tables and the data release of the MicroBooNE NuMI CC1π± c
 | `papers/` | PRD (inclusive) and PRL (proton-tagged) drafts, with `paper_bib.tex` and `paper_macros.tex` |
 | `slides/` | `analysis_slides`, `review_panel_slides`, `collab_talk_imperial_2026` |
 | `other_notes/` | `sigma0_note`, `multipion_note`, `newobs_note`, `unfolding_note` |
-| `planning/` | Plans, reviews and the TODO list |
+| `planning/` | Plans, reviews and the TODO list; `MULTIPION_BNB_ADAPTATION_PLAN.md` with the phase summaries and study outputs of the multi-pion work in `planning/multipion/` |
 | `results/` | `current_results.tsv` and `current_results_1p_new.tsv` (written by `tools/make_results_tsv.py`, compared with the notes by `tools/check_tables.py`), `closure_summary.tsv` (`tools/closure_tables.C`), `normalisation_manifest.tsv` (`xsec_analyzer/norm_manifest.py`) and other result tables |
 | `figures/`, `tables/` | Figures and generated LaTeX tables, used by every document |
 | `data_release/` | Released cross sections, covariances, `A_C` matrices and model curves |

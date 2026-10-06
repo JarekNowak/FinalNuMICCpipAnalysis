@@ -16,7 +16,7 @@ list, normalised as the framework by scripts/mp_phase0_baseline.py) and evaluate
 
 The emulation is validated by reproducing CC1mu3pi_MC_Signal and CC1mu3pi_Selected exactly for N = 3.
 
-    python3 scripts/mp_highn_feasibility.py  ->  report/multipion/highn_feasibility.{json,md}
+    python3 scripts/mp_highn_feasibility.py  ->  report/planning/multipion/highn_feasibility.{json,md}
 """
 import json, os, sys
 import numpy as np
@@ -119,7 +119,7 @@ def main():
         diag[','.join(map(str, edges[:-1])) + f',>={edges[-1]}'] = dict(reco_given_true=(np.diag(R) / R.sum(axis=1)).tolist(),
                                                                        true_given_reco=(np.diag(R) / R.sum(axis=0)).tolist())
     out['migration_diagonals'] = diag
-    R = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'report', 'multipion'))
+    R = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'report', 'planning', 'multipion'))
     json.dump(out, open(os.path.join(R, 'highn_feasibility.json'), 'w'), indent=1, default=float)
     L = ['# Four and five charged pions: feasibility at the full exposure', '',
          f"Phase 0 trees (current pion identification of the three-pion selection). Emulation check on {check['events']} events: "

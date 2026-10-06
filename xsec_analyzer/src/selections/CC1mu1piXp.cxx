@@ -1631,6 +1631,51 @@ else if (nPrimaryShowers == 0)  shower_cut = true ;
  sel_MCVertexInFV = in_vertex_FV( this->true_FV(),
   Event->mc_nu_vx_, Event->mc_nu_vy_, Event->mc_nu_vz_ );
 
+  // event-level track dump (CC1mu2piEvt only; see CC1mu1piXp.hh)
+  if ( store_event_tracks() ) {
+    evt_presel_ = ( Event->nslice_ == 1 ) && sel_nuvertex_contained_;
+    evt_mu_cand_idx_ = CandidateMuonIndex;
+    for ( int p = 0; p < Event->num_pf_particles_; ++p ) {
+      if ( Event->pfp_generation_->at( p ) != 2u ) continue;
+      if ( Event->pfp_track_score_->at( p ) < 0.5 ) ++evt_nshower_;
+      else ++evt_ntrack_;
+    }
+    const TVector3 vtx( Event->nu_vx_, Event->nu_vy_, Event->nu_vz_ );
+    for ( size_t i = 0; evt_presel_ && mp_pid_ && i < Event->track_length_->size(); ++i ) {
+      const float len = Event->track_length_->at(i), llr = Event->track_llr_pid_score_->at(i);
+      const float bp = Event->trk_bragg_p_v->at(i), bmu = Event->trk_bragg_mu_v->at(i),
+        bmip = Event->trk_bragg_mip_v->at(i);
+      if ( Event->pfp_generation_->at(i) != 2u || Event->pfp_track_score_->at(i) < 0.5 ) continue;
+      if ( !( len > 0.f && len < 1e6f && llr > -1.f && llr < 2.f && bp > 0.f && bp < 500.f
+              && bmu > 0.f && bmu < 500.f && bmip > 0.f && bmip < 500.f ) ) continue;
+      const TVector3 st( Event->track_startx_->at(i), Event->track_starty_->at(i), Event->track_startz_->at(i) );
+      const double dist = ( st - vtx ).Mag();
+      const std::array<float, 4>& p = mp_pid_cached( Event, i, dist );
+      const bool start_in = point_inside_FV( this->containment_FV(), st.X(), st.Y(), st.Z() );
+      const bool end_in = point_inside_FV( this->containment_FV(), Event->track_endx_->at(i),
+        Event->track_endy_->at(i), Event->track_endz_->at(i) );
+      const TVector3 dir( Event->track_dirx_->at(i), Event->track_diry_->at(i), Event->track_dirz_->at(i) );
+      etrk_idx_->push_back( static_cast<int>( i ) );
+      etrk_contained_->push_back( ( start_in ? 1 : 0 ) | ( end_in ? 2 : 0 ) );
+      etrk_pid_mu_->push_back( p[0] ); etrk_pid_pi_->push_back( p[1] );
+      etrk_pid_p_->push_back( p[2] );  etrk_pid_other_->push_back( p[3] );
+      etrk_len_->push_back( len );
+      etrk_ts_->push_back( Event->pfp_track_score_->at(i) );
+      etrk_dist_->push_back( dist );
+      etrk_llr_->push_back( llr );
+      etrk_mom_range_mu_->push_back( Event->track_range_mom_mu_->at(i) );
+      etrk_mom_mcs_->push_back( Event->track_mcs_mom_mu_->at(i) );
+      const TVector3 u = ( dir.Mag() > 0. ) ? dir.Unit() : TVector3( 0., 0., 0. );
+      etrk_dirx_->push_back( u.X() ); etrk_diry_->push_back( u.Y() ); etrk_dirz_->push_back( u.Z() );
+      etrk_costh_->push_back( ( dir.Mag() > 0. ) ? u.Dot( reco_nu_dir(Event) ) : -2.f );
+      etrk_true_pdg_->push_back( ( i < Event->pfp_true_pdg_->size() ) ? Event->pfp_true_pdg_->at(i) : 0 );
+      float tmom = -1.f;
+      if ( i < Event->pfp_true_px_->size() ) tmom = TVector3( Event->pfp_true_px_->at(i),
+        Event->pfp_true_py_->at(i), Event->pfp_true_pz_->at(i) ).Mag();
+      etrk_true_mom_->push_back( tmom );
+    }
+  }
+
 // std::cout<<" Selection H "<< std::endl;
 
 
@@ -2640,7 +2685,20 @@ void CC1mu1piXp::define_output_branches() {
     set_branch( &mudiag_true_pdg_, "mudiag_true_pdg" );
   }
 
-
+  // event-level track dump (CC1mu2piEvt only; see CC1mu1piXp.hh)
+  if ( store_event_tracks() ) {
+    set_branch( etrk_idx_, "etrk_idx" );               set_branch( etrk_contained_, "etrk_contained" );
+    set_branch( etrk_pid_mu_, "etrk_pid_mu" );         set_branch( etrk_pid_pi_, "etrk_pid_pi" );
+    set_branch( etrk_pid_p_, "etrk_pid_p" );           set_branch( etrk_pid_other_, "etrk_pid_other" );
+    set_branch( etrk_len_, "etrk_len" );               set_branch( etrk_ts_, "etrk_ts" );
+    set_branch( etrk_dist_, "etrk_dist" );             set_branch( etrk_llr_, "etrk_llr" );
+    set_branch( etrk_mom_range_mu_, "etrk_mom_range_mu" ); set_branch( etrk_mom_mcs_, "etrk_mom_mcs" );
+    set_branch( etrk_dirx_, "etrk_dirx" );             set_branch( etrk_diry_, "etrk_diry" );
+    set_branch( etrk_dirz_, "etrk_dirz" );             set_branch( etrk_costh_, "etrk_costh" );
+    set_branch( etrk_true_pdg_, "etrk_true_pdg" );     set_branch( etrk_true_mom_, "etrk_true_mom" );
+    set_branch( &evt_presel_, "evt_presel" );          set_branch( &evt_ntrack_, "evt_ntrack" );
+    set_branch( &evt_nshower_, "evt_nshower" );        set_branch( &evt_mu_cand_idx_, "evt_mu_cand_idx" );
+  }
 
  // set_branch( &pion_number, "pion_number");
  
@@ -2741,6 +2799,12 @@ void CC1mu1piXp::reset() {
   mudiag_mip_bdt_ = mudiag_muon_bdt_ = -999.f;
   mudiag_pid_mu_ = mudiag_pid_pi_ = mudiag_pid_p_ = mudiag_pid_other_ = -1.f;
   mudiag_true_pdg_ = 0;
+  // event-level track dump
+  for ( auto* v : { &etrk_idx_, &etrk_contained_, &etrk_true_pdg_ } ) (*v)->clear();
+  for ( auto* v : { &etrk_pid_mu_, &etrk_pid_pi_, &etrk_pid_p_, &etrk_pid_other_, &etrk_len_, &etrk_ts_,
+                    &etrk_dist_, &etrk_llr_, &etrk_mom_range_mu_, &etrk_mom_mcs_, &etrk_dirx_, &etrk_diry_,
+                    &etrk_dirz_, &etrk_costh_, &etrk_true_mom_ } ) (*v)->clear();
+  evt_presel_ = false; evt_ntrack_ = 0; evt_nshower_ = 0; evt_mu_cand_idx_ = -1;
   cutflow_bits_ = 0;
   mu_leadpi_opening_angle_ = -1.;
  // sig_truevertex_fv = 0;

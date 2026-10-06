@@ -1,6 +1,6 @@
 #pragma once
 // Study selections with the multi-pion particle classifier as the pion identification
-// (report/multipion/PHASE1_SUMMARY.md). Each is its parent selection with use_new_pid() on; every
+// (report/planning/multipion/PHASE1_SUMMARY.md). Each is its parent selection with use_new_pid() on; every
 // other cut is inherited. The thresholds give the pion efficiency of the parent's pion
 // identification on the held-out runs 3 and 5 (scripts/mp_pid_train.py --unmatched --common, the
 // model on the 43 inputs every sample carries): for the single-pion
@@ -60,9 +60,10 @@ class CC1mu1piXpPIDDiag : public CC1mu1piXp {
   bool store_pid_diag() const override { return true; }
 };
 
-// The released single-pion selections without the Bragg-pion >= 0.08 cut, in every sample: the
-// treatment the older-production beam-on, beam-off and dirt ntuples receive today because they lack
-// the branch. For sizing the fail-open effect at event level (scripts/bragg_cut_eval.py).
+// The released single-pion selections without the Bragg-pion >= 0.08 cut, in every sample, written
+// to size the fail-open effect of the older-production ntuples at event level
+// (scripts/bragg_cut_eval.py). Since the cut was dropped from the released selections (2026-10-02)
+// they are identical to their parents.
 class CC1mu1piXpNoBragg : public CC1mu1piXp {
  public:
   CC1mu1piXpNoBragg() : CC1mu1piXp() { this->set_selection_name( "CC1mu1piXpNoBragg" ); }
@@ -75,4 +76,15 @@ class CC1mu1pi1pNoBragg : public CC1mu1pi1p {
   CC1mu1pi1pNoBragg() : CC1mu1pi1p() { this->set_selection_name( "CC1mu1pi1pNoBragg" ); }
  protected:
   bool apply_bragg_pion_cut() const override { return false; }
+};
+
+// The current two-pion selection with the event-level track dump switched on (etrk_*, evt_*): every
+// decision and output of CC1mu2pi, plus the class probabilities and kinematics of every track of the
+// particle classifier's domain, for the assignment and the event classifier of Phase 2
+// (scripts/mp_evt_*.py).
+class CC1mu2piEvt : public CC1mu2pi {
+ public:
+  CC1mu2piEvt() : CC1mu2pi() { this->set_selection_name( "CC1mu2piEvt" ); }
+ protected:
+  bool store_event_tracks() const override { return true; }
 };

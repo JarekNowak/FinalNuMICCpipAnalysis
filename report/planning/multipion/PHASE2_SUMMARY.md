@@ -1,6 +1,6 @@
 # Phase 2 (first part): the particle classifier in the selection
 
-2026-10-01. Phase 2 of `report/MULTIPION_BNB_ADAPTATION_PLAN.md`, item 1, and the question whether the
+2026-10-01. Phase 2 of `report/planning/MULTIPION_BNB_ADAPTATION_PLAN.md`, item 1, and the question whether the
 classifier would also serve the single-pion analysis.
 
 ## Integration
@@ -177,3 +177,100 @@ production). Per period the data would exceed the prediction by 4.3–7.3%. The 
 in the inclusive selection and 0.3 in the proton-tagged one, raises B/S by 0.03 and 0.01, and lowers
 the statistical uncertainty slightly. Decision of the user (2026-10-02): drop the cut in every sample of
 the released single-pion selections, with a new release before unblinding.
+
+## Track assignment and event classifier (2026-10-06)
+
+Phase 2, items 1–4, on the branch merged with `main` at version 1.7 (the merge sets the Bragg-pion
+default to off; on the 30k-event slice the outputs of `CC1mu1piXp` and `CC1mu1pi1p` are bitwise
+identical to version 1.7, 229 branches). Script `scripts/mp_evt.py` (steps `build`, `build_detvar`,
+`train`, `syst`, `detsyst`, `wp`); full tables in `phase2_event.md`, `phase2_wp.md` and their `_3pi`
+versions.
+
+### Event-level track dump
+
+`CC1mu2piEvt` (`NewPIDSelections.hh`) is `CC1mu2pi` plus, in events with one neutrino slice and the
+vertex in the fiducial volume, every track of the pion pool with track score >= 0.5, the muon candidate
+included (`etrk_*`: the four class probabilities, length, vertex distance, containment, range and MCS
+momentum, direction, backtracked truth). Tracks shorter than the 5 cm of the classifier's training
+sample are kept (1,262 of 12,932 on the slice). On the slice its 86 shared branches equal those of
+`CC1mu2pi`, and the probabilities equal those of the counted candidates (1,965 tracks, largest
+difference 0). Processed: the 28 release samples (SLURM 3520138, `slurm/slurm_mp_evt.sbatch`,
+`/data/uboone/processed/mp_evt`) and the 18 Run-4 detector-variation samples (SLURM 3532497,
+`slurm/mp_evt_detvar_manifest.list`). The normalisation reproduces the comparison above: `CC1mu2pi`
+203.4 signal and 565.8 background events on the held-out periods, `CC1mu2piNewPID` 177.7 and 322.6.
+
+### Assignment (item 1)
+
+For "one muon, N pions, the rest protons or other" the log-likelihood is
+L_N = Σ_rest log(1 − P_μ − P_π) + log P_μ(muon) + Σ_pions log P_π. Every choice of the muon and the N
+pions is enumerated (at most 8 tracks) and the best and the runner-up are kept for N = 1, 2, 3; a
+brute-force check on 200 events agrees exactly. On the slice, 41 of the 136 preselected two-pion signal
+events (30%) have a true muon and both true pions among the tracks, and in 67 only one pion is a track,
+so in most signal events no assignment can be fully right. Keeping the events whose most likely pion
+count is two gives 21.9% efficiency at 32.5% purity (COMB).
+
+### Event classifier (items 2 and 3)
+
+XGBoost on 33 features (PID set: probabilities of the assigned tracks, L_2 − L_1, L_2 − L_3, the margin
+over the runner-up, class sums and counts over all tracks, track and shower counts, topological score,
+CosmicIP) or 48 (full set: adding lengths, vertex distances, containment, track scores and opening angles
+of the assigned tracks). Domain: one slice, vertex in the fiducial volume, software trigger, at least three
+tracks, and θ(μ, longest assigned pion) < 2.6 rad (D6). Trained on run periods 1, 2 and 4 of both horn
+modes (206,152 events, 13,558 signal; the Run-3b dirt, shared with a test period, left out), tested on
+FHC Run 5 and RHC Run 3, which the particle classifier did not see either (104,814 events, 7,253 signal).
+ROC area on the test periods 0.887 (PID set) and 0.898 (full set). The largest gains: the sum of P(π) over
+the tracks, L_2, the number of tracks with P(π) > 0.5, the topological score, the number with P(μ) > 0.5.
+At the efficiency of `CC1mu2pi` the purity doubles (score > 0.90: 19.9% and 51%, against 18.2% and 26%).
+
+### Working point (item 4)
+
+Expected total uncertainty of the one-bin total, with the test-period yields projected to the full
+exposure: data statistics; flux 17% × (1 + B/S); POT and targets (2% and 1%) × (1 + B/S); cross section
+as `configs/ccpi_systcalc_numi.conf` (GENIE multisim, RPA and SCC multisims, eight GENIE unisims);
+reinteraction; detector (the eight Run-4 variations, FHC and RHC correlated); MC statistics. The current
+selections carry the same terms. COMB:
+
+| Selection | Efficiency | Purity | Stat. | Flux | POT, targets | Cross section | Reint. | Detector | MC stat. | Total |
+|---|---|---|---|---|---|---|---|---|---|---|
+| `CC1mu2pi` | 18.2% | 26% | 8% | 65% | 9% | 47% | 17% | 34% | 5% | 89% |
+| `CC1mu2piNewPID` | 15.8% | 35% | 8% | 48% | 6% | 27% | 13% | 21% | 4% | 61% |
+| Classifier, PID set, score > 0.92 | 17.1% | 56% | 6% | 31% | 4% | 12% | 5% | 33% | 3% | 47% |
+| Classifier, full set, score > 0.94 | 14.4% | 62% | 6% | 27% | 4% | 10% | 5% | 33% | 3% | 45% |
+| Classifier, PID set, score > 0.9725 | 3.9% | 76% | 11% | 22% | 3% | 6% | 4% | 78% | 6% | 83% |
+
+- Statistics and flux alone put the minimum at score > 0.9725 with 3.9% efficiency. The detector term
+  rises steeply above 0.95 (43% at 0.95, 78% at 0.9725), so the minimum with all terms is at 0.92 (PID
+  set), and the total is flat between 0.90 and 0.94 to within the statistics of the detector samples
+  (±3%).
+- At 0.92 the detector term comes from Recomb2 (22%), WMAngleYZ (18%), WMX (12%) and WMYZ (8%), the
+  variations that change the calorimetry behind the PID inputs; light yield and SCE stay below 5%.
+  `CC1mu2pi` shows the same pattern (Recomb2 23%, WMAngleYZ −19%).
+- The cross-section term is the background model (GENIE multisim 47% for `CC1mu2pi`, 12% at 0.92) and
+  falls with the purity; the model dependence of the efficiency stays below 6% even at 4% efficiency.
+- The full set gains 2% in total, within the noise of the detector term; the PID set does not use the
+  kinematics of the observables.
+
+At score > 0.92 (PID set): 499 signal and 398 background events at full exposure (FHC 200 and 157, RHC 298
+and 241). Background: CC with three or more charged pions 116, CC1π 96, CCπ0 73, CC2π outside the signal
+26, NC 25, CC other 22, outside the fiducial volume 22, dirt 7, CC0π 6, beam-off 4. In selected signal the
+assigned muon and pions are correct in 91–92% of events; in the neutrino background the assigned pions are
+protons in 12–14%. The efficiency against the true pion momenta follows that of `CC1mu2pi` except in the
+lowest leading-pion bin (0.10–0.175 GeV/c: 6.9% against 10.1%). 55% of the selected signal is shared with
+`CC1mu2pi`. Of all selected events, 14% lie in the blind single-pion signal region (D7) and 12% in the
+multi-π control region of the single-pion analysis, which has been opened (D3); for `CC1mu2pi` the
+fractions are 16% and 12%.
+
+### Three or more pions (D8)
+
+Events of the domain with at least four tracks in which three pions are more likely than two: 234 at full
+exposure (COMB), of which CC with three or more pions 88, CCπ0 41, two-pion signal 35, CC other 13,
+beam-off 13; 6% of them pass the working point. A three-pion classifier built the same way reaches a ROC
+area of 0.855 (PID set), but with all terms every three-pion selection has a total above 100% (`CC1mu3pi`
+245%, `CC1mu3piNewPID` 117%, the classifier at best 105%).
+
+### Open
+
+- Working point and feature set for Phase 3 (proposed: PID set, score > 0.92).
+- The detector term (33%) is the largest. The levers are a classifier less sensitive to the calorimetric
+  inputs, or a constraint from the control samples (Phase 4).
+- The 12% overlap with the opened multi-π region (D3).

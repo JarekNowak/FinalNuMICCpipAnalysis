@@ -1,5 +1,5 @@
 #!/bin/bash
-# SLURM array: PID diagnostic in the opened control regions (report/multipion/PHASE2_SUMMARY.md).
+# SLURM array: PID diagnostic in the opened control regions (report/planning/multipion/PHASE2_SUMMARY.md).
 # Processes ONE raw input (beam-on, overlay, beam-off or dirt) with the released single-pion
 # selection and its PID-diagnostic twin CC1mu1piXpPIDDiag, ALWAYS as the signal-region-stripped
 # control-region skim (XSEC_CR_SKIM=1), into /data/uboone/processed/pid_diag_skim. The guards of

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Phase 0 baseline of the NuMI multi-pion selections (report/MULTIPION_BNB_ADAPTATION_PLAN.md).
+"""Phase 0 baseline of the NuMI multi-pion selections (report/planning/MULTIPION_BNB_ADAPTATION_PLAN.md).
 
 Reads the single-pass reprocessing in /data/uboone/processed/mp_phase0, in which the
 inclusive (CC1mu1piXp), two-pion (CC1mu2pi) and three-pion (CC1mu3pi) selections were run
@@ -13,7 +13,7 @@ Exposures, triggers and gate counts are read from the release file-properties li
 (configs/file_properties_numi_comb_w.txt); nothing is hard-coded. Every reprocessed MC and
 dirt file is checked against the summed_pot of the release copy it replaces.
 
-Outputs (report/multipion/): phase0_baseline.json (all sums), phase0_cutflow.tsv.
+Outputs (report/planning/multipion/): phase0_baseline.json (all sums), phase0_cutflow.tsv.
 Usage: python3 scripts/mp_phase0_baseline.py
 """
 import json, os, sys
@@ -21,10 +21,10 @@ import numpy as np
 import uproot
 import awkward as ak
 
-REPO = '/home/t2k/nowak/MicroBooNE/working_xsec_analyzer'
+REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
 CONF = REPO + '/xsec_analyzer/configs/file_properties_numi_comb_w.txt'
 NEW = '/data/uboone/processed/mp_phase0/'
-OUTDIR = REPO + '/report/multipion/'
+OUTDIR = REPO + '/report/planning/multipion/'
 FHC_RUNS, RHC_RUNS = (1, 2, 4, 5), (11, 12, 13, 14)
 CONFIGS = {'FHC': FHC_RUNS, 'RHC': RHC_RUNS, 'COMB': FHC_RUNS + RHC_RUNS}
 SELS = {'CC1mu2pi': 2, 'CC1mu3pi': 3}

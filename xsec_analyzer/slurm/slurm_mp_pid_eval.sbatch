@@ -1,5 +1,5 @@
 #!/bin/bash
-# SLURM array: Phase 2 of report/MULTIPION_BNB_ADAPTATION_PLAN.md. Reprocess ONE raw input of the
+# SLURM array: Phase 2 of report/planning/MULTIPION_BNB_ADAPTATION_PLAN.md. Reprocess ONE raw input of the
 # held-out run periods of the particle classifier (FHC Run 5, RHC Run 3: overlays, beam-off, dirt)
 # with the released selections and their particle-classifier variants in one pass, into
 # /data/uboone/processed/mp_pid_eval, for an event-level comparison. No beam-on file is touched.

@@ -1,5 +1,5 @@
 // dump_pid_tracks.C -- training sample for the multi-pion particle classifier (Phase 1 of
-// report/MULTIPION_BNB_ADAPTATION_PLAN.md).
+// report/planning/MULTIPION_BNB_ADAPTATION_PLAN.md).
 //
 // Reads a raw NuMI PeLEE ntuple (nuselection/NeutrinoSelectionFilter) and writes one row per primary
 // track-like PFParticle of the CC1mu1piXp candidate pool, with the reconstructed PID features, the

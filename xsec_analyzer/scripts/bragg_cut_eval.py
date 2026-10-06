@@ -1,5 +1,5 @@
 """bragg_cut_eval.py -- event-level effect of the Bragg-pion >= 0.08 cut of the single-pion
-selections (report/multipion/PHASE2_SUMMARY.md).
+selections (report/planning/multipion/PHASE2_SUMMARY.md).
 
 The beam-on, beam-off and dirt ntuples of the older production (FHC Run 1, RHC Runs 1 and 3b) lack
 trk_bragg_pion_v, so there the cut passes every track, while every overlay applies it. At unblinding
@@ -16,7 +16,7 @@ period and per configuration:
     and the efficiency both come from the overlay with the cut);
   - dropping the cut in every sample: efficiency, purity and the one-bin statistical uncertainty.
 
-    python3 scripts/bragg_cut_eval.py  ->  report/multipion/bragg_cut_eval.{json,md}
+    python3 scripts/bragg_cut_eval.py  ->  report/planning/multipion/bragg_cut_eval.{json,md}
 """
 import json, os, sys
 import numpy as np

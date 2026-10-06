@@ -136,7 +136,7 @@ public:
   MyPointer< std::vector<float> > trk_bragg_pion_v;
 
   // Inputs of the multi-pion particle classifier that nothing else reads
-  // (report/multipion/PHASE2_SUMMARY.md), keyed by the ntuple branch name: per-plane
+  // (report/planning/multipion/PHASE2_SUMMARY.md), keyed by the ntuple branch name: per-plane
   // Bragg likelihoods, PIDA, chi2 under four hypotheses and calorimetric energy. Bound
   // only when the branch exists (Branches.hh); otherwise empty.
   std::map< std::string, MyPointer< std::vector<float> > > mp_pid_f_;

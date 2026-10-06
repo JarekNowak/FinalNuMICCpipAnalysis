@@ -1,9 +1,9 @@
 # Phase 0: baseline of the NuMI multi-pion selections
 
-2026-10-01. Phase 0 of `report/MULTIPION_BNB_ADAPTATION_PLAN.md`. The full tables are in
+2026-10-01. Phase 0 of `report/planning/MULTIPION_BNB_ADAPTATION_PLAN.md`. The full tables are in
 `phase0_tables.md` (made by `xsec_analyzer/scripts/mp_phase0_tables.py` from `phase0_baseline.json`);
 the cut-flow alone is in `phase0_cutflow.tsv`. These numbers replace the raw Run-1 counts of
-`report/multipion_note.tex`.
+`report/other_notes/multipion_note.tex`.
 
 ## What was done
 

@@ -1,6 +1,6 @@
 # Plan: adapting the BNB CC2π±Np note to the NuMI 2π and 3π measurements
 
-Written 2026-10-01. Source: `report/Internal_Note_v2.pdf`, N. Majeed (KSU), "Study of production
+Written 2026-10-01. Source: `report/internalDocs/Internal_Note_v2.pdf`, N. Majeed (KSU), "Study of production
 mechanisms of CC events with two charged pions and at least one proton in the final state",
 May 2026, 118 pp. (78 pp. analysis, the rest event displays). Every number below is quoted from
 that note, from our own documents, or was checked in the code and ntuples today.
@@ -39,7 +39,7 @@ Checked in the code on 2026-10-01.
   candidate is the hardest pion. For N > 1 the reco and true $p_\pi$, $\cos\theta_\pi$ and
   $\theta_{\mu\pi}$ refer to different particles. No second or third pion kinematics, no masses, and
   every $\nu_\mu$CC non-signal event is in one category (`kUnknown`).
-- `report/multipion_note.tex` (Draft 0.1, 08-13) uses the Run-1 FHC overlay only, without EXT or
+- `report/other_notes/multipion_note.tex` (Draft 0.1, 08-13) uses the Run-1 FHC overlay only, without EXT or
   dirt: 2π ε = 15.5%, P = 23.2% (579 signal); 3π ε = 6.1%, P = 11.6% (40 signal). The counts are raw
   overlay counts (weight spline × tune, MC exposure $2.33\times10^{21}$ POT), so the "670 (66) events
   at full exposure" of its abstract corresponds to about 190–225 (13–22) selected signal events at
@@ -63,8 +63,8 @@ Checked in the code on 2026-10-01.
 - The Bragg-pion requirement (≥ 0.08), dropped from the released single-pion selections on
   `fix/bragg-pion` (2026-10-02), does not act in `CC1mu2pi` and `CC1mu3pi`: with `use_pion_bdt()` their
   pion identification is the BDT alone (`require_bragg_with_bdt()` false). On this branch
-  `apply_bragg_pion_cut()` still defaults to true for the single-pion selection; the default of
-  `fix/bragg-pion` (false) is taken when the branches are merged.
+  `apply_bragg_pion_cut()` defaulted to true for the single-pion selection until `main` (version 1.7)
+  was merged into this branch on 2026-10-06; the default is now false here as well.
 
 ## 3. Assessment
 
@@ -110,7 +110,7 @@ Checked in the code on 2026-10-01.
 
 ### Phase 0: definitions and an honest baseline
 
-Status 2026-10-01: items 2–4 done, re-run with the reco opening-angle cut (D6); results and open choices in `report/multipion/PHASE0_SUMMARY.md`.
+Status 2026-10-01: items 2–4 done, re-run with the reco opening-angle cut (D6); results and open choices in `report/planning/multipion/PHASE0_SUMMARY.md`.
 
 1. Fix the signal family with D1 and D2 (section 5): inclusive Xp with a ≥ 1 p subsample, per-pion
    threshold 0.10 GeV/c; then the leading-pion convention and the exclusivity between 1π, 2π and 3π.
@@ -125,7 +125,7 @@ Status 2026-10-01: items 2–4 done, re-run with the reco opening-angle cut (D6)
 
 ### Phase 1: particle classifier
 
-Status 2026-10-01: items 2–3 done with XGBoost, deployed through ROOT's RBDT instead of a TMVA retraining; item 1 moves to Phase 2, where the selection evaluates the model. Results in `report/multipion/PHASE1_SUMMARY.md`.
+Status 2026-10-01: items 2–3 done with XGBoost, deployed through ROOT's RBDT instead of a TMVA retraining; item 1 moves to Phase 2, where the selection evaluates the model. Results in `report/planning/multipion/PHASE1_SUMMARY.md`.
 
 1. Pass through `ProcessNTuples` and bind in `AnalysisEvent`: `trk_bragg_{p,mu,pion,mip}_v` per
    plane, `trk_pida_v`, `trk_pid_chipr_v`, `trk_pid_chipi_v`, `trk_trunk_dEdx_{u,v,y}_v`,
@@ -139,7 +139,7 @@ Status 2026-10-01: items 2–3 done with XGBoost, deployed through ROOT's RBDT i
 
 ### Phase 2: assignment and event classifier
 
-Status 2026-10-01: the classifier is evaluated in the selection (Phase 1 item 1) on the 43 inputs every ntuple production carries, and replaces the pion identification in study selections of the single-, two- and three-pion selections; items 1–4 not started. Results in `report/multipion/PHASE2_SUMMARY.md`.
+Status 2026-10-01: the classifier is evaluated in the selection (Phase 1 item 1) on the 43 inputs every ntuple production carries, and replaces the pion identification in study selections of the single-, two- and three-pion selections; items 1–4 done on 2026-10-06 (track assignment, event classifier, working point on the expected total uncertainty with all terms: score > 0.92 proposed, total 47% against 89% for `CC1mu2pi`). Results in `report/planning/multipion/PHASE2_SUMMARY.md`.
 
 1. Enumerate the assignments of primary tracks to {μ, N × π, optional p, other}; keep the one with
    the largest summed log score and the runner-up.
@@ -200,7 +200,7 @@ Taken 2026-10-01:
 | D3 | The 2π signal region is treated as blind. Its overlap with the opened 1π multi-π control region is not known and is measured in simulation (Phase 4, item 2) |
 | D6 | The truth cut θ(μ, leading π) < 2.6 rad gets a reco counterpart: θ(μ, longest pion candidate) < 2.6 rad in CC1mu2pi and CC1mu3pi |
 | D7 | The overlap with the blind 1π signal region is kept (no exclusivity cut); those events are opened only after the 1π signal region |
-| D8 | (2026-10-02) The measurements stop at 2π; 3π stays exploratory. Events with three or more pion candidates are a control sample that constrains the 2π background, as the BNB note's 1μ3π sideband does. Four and five pions are not measurable at the full exposure (`report/multipion/highn_feasibility.md`, `scripts/mp_highn_feasibility.py`): combined, 3.1 selected four-pion signal events at 4.8% purity and 0.1 five-pion events; P(reco bin \| true bin) is 0.84, 0.48 and 0.33 for 1, 2 and ≥ 3 pions |
+| D8 | (2026-10-02) The measurements stop at 2π; 3π stays exploratory. Events with three or more pion candidates are a control sample that constrains the 2π background, as the BNB note's 1μ3π sideband does. Four and five pions are not measurable at the full exposure (`report/planning/multipion/highn_feasibility.md`, `scripts/mp_highn_feasibility.py`): combined, 3.1 selected four-pion signal events at 4.8% purity and 0.1 five-pion events; P(reco bin \| true bin) is 0.84, 0.48 and 0.33 for 1, 2 and ≥ 3 pions |
 
 Open:
 

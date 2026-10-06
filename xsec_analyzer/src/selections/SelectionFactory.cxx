@@ -68,6 +68,10 @@ else if ( selection_name == "CC1mu1piXp" ) {
   else if ( selection_name == "CC1mu1pi1pNoBragg" ) {
     sel = new CC1mu1pi1pNoBragg;
   }
+  // current two-pion selection with the event-level track dump (Phase 2 of the multi-pion plan)
+  else if ( selection_name == "CC1mu2piEvt" ) {
+    sel = new CC1mu2piEvt;
+  }
   // threshold variants "<NewPID selection>_tNN": P(pi) > NN/100
   else if ( selection_name.rfind( "NewPID_t" ) != std::string::npos ) {
     const size_t pos = selection_name.rfind( "_t" );

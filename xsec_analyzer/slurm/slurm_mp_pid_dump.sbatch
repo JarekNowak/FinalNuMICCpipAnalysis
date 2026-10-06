@@ -1,5 +1,5 @@
 #!/bin/bash
-# SLURM array: Phase 1 of report/MULTIPION_BNB_ADAPTATION_PLAN.md. Dump the primary track-like
+# SLURM array: Phase 1 of report/planning/MULTIPION_BNB_ADAPTATION_PLAN.md. Dump the primary track-like
 # PFParticles of ONE raw overlay into the particle-classifier training sample
 # (macros/mp_pid/dump_pid_tracks.C) under /data/uboone/processed/mp_pid. Overlays only.
 #   sbatch --array=0-13 --export=ALL,REPO=$PWD,MANIFEST=$PWD/slurm/mp_pid_manifest.list \

@@ -99,7 +99,7 @@ protected:
   virtual bool   apply_bragg_pion_cut()   const { return false; }
   virtual double bragg_pion_cut()         const { return 0.08; }
   virtual bool   require_mip_with_bdt()   const { return false; }
-  // Multi-pion particle classifier (report/multipion/PHASE1_SUMMARY.md): XGBoost, four classes
+  // Multi-pion particle classifier (report/planning/multipion/PHASE1_SUMMARY.md): XGBoost, four classes
   // (muon, pion, proton, other), evaluated per candidate through ROOT's RBDT from
   // booster_decision_tree/mp_pid/. eval_new_pid() computes the class probabilities (stored per
   // candidate for N > 1); use_new_pid() makes P(pi) > new_pid_cut() the pion identification, with
@@ -108,7 +108,8 @@ protected:
   virtual bool   use_new_pid() const { return false; }
   virtual double new_pid_cut() const { return 0.5; }
   virtual double new_pid_min_length() const { return 0.; }
-  virtual bool   eval_new_pid() const { return use_new_pid() || store_multipion_info() || store_pid_diag(); }
+  virtual bool   eval_new_pid() const { return use_new_pid() || store_multipion_info() || store_pid_diag()
+                                         || store_event_tracks(); }
   // the 43 inputs of track i in the order of scripts/mp_pid_train.py --common, missing values as -9999
   std::vector<float> mp_pid_features( const AnalysisEvent* ev, size_t i, double dist );
   // class probabilities of track i, evaluated once per event and track for all selections
@@ -122,7 +123,7 @@ protected:
   // reproduces the single-pion signal exactly.
   virtual double signal_pion_mom_threshold() const { return 0.175; }
 
-  // ---- Multi-pion bookkeeping (Phase 0 of report/MULTIPION_BNB_ADAPTATION_PLAN.md) ----
+  // ---- Multi-pion bookkeeping (Phase 0 of report/planning/MULTIPION_BNB_ADAPTATION_PLAN.md) ----
   // Written only by selections with N > 1 charged pions, so the output of the inclusive
   // CC1mu1piXp (and of CC1mu1pi1p, which inherits N = 1) is unchanged.
   virtual bool store_multipion_info() const { return required_charged_pions() > 1; }
@@ -170,7 +171,7 @@ protected:
   MyPointer< std::vector<float> > pic_pid_pi_;
   MyPointer< std::vector<float> > pic_pid_p_;
   MyPointer< std::vector<float> > pic_pid_other_;
-  // ---- PID diagnostic (report/multipion/PHASE2_SUMMARY.md) ----
+  // ---- PID diagnostic (report/planning/multipion/PHASE2_SUMMARY.md) ----
   // Every candidate of the pion pool (generation 2, track score >= 0.3, LLR and Bragg values in
   // range, not the muon candidate), before the pion identification, with the inputs and outputs
   // of the MIP and pion BDTs, the Bragg-pion likelihood (-1 where the branch is absent), the
@@ -186,6 +187,22 @@ protected:
     mudiag_bragg_pion_ = -1.f, mudiag_mip_bdt_ = -999.f, mudiag_muon_bdt_ = -999.f,
     mudiag_pid_mu_ = -1.f, mudiag_pid_pi_ = -1.f, mudiag_pid_p_ = -1.f, mudiag_pid_other_ = -1.f;
   int   mudiag_true_pdg_ = 0;
+  // ---- Event-level track dump (Phase 2, items 1-2, of report/planning/MULTIPION_BNB_ADAPTATION_PLAN.md) ----
+  // In events with one neutrino slice and the reco vertex in the fiducial volume, every track of the
+  // pion pool with track score >= 0.5 (generation 2, LLR and Bragg values in range, the muon
+  // candidate included) with its class probabilities and reco kinematics, for the track assignment
+  // and the event classifier (scripts/mp_evt_*.py). Tracks shorter than the 5 cm of the classifier's
+  // training sample are kept; the assignment decides on them. Written only by CC1mu2piEvt; the
+  // decisions of the selection do not depend on it.
+  virtual bool store_event_tracks() const { return false; }
+  MyPointer< std::vector<int> >   etrk_idx_, etrk_contained_, etrk_true_pdg_;
+  MyPointer< std::vector<float> > etrk_pid_mu_, etrk_pid_pi_, etrk_pid_p_, etrk_pid_other_, etrk_len_,
+    etrk_ts_, etrk_dist_, etrk_llr_, etrk_mom_range_mu_, etrk_mom_mcs_, etrk_dirx_, etrk_diry_,
+    etrk_dirz_, etrk_costh_, etrk_true_mom_;
+  bool evt_presel_ = false;       // one neutrino slice and the reco vertex in the fiducial volume
+  int  evt_ntrack_ = 0;           // generation-2 PFParticles with track score >= 0.5
+  int  evt_nshower_ = 0;          // generation-2 PFParticles with track score < 0.5
+  int  evt_mu_cand_idx_ = -1;     // the selection's muon candidate (highest muon-BDT score)
   // true primary charged pions, hardest first
   MyPointer< std::vector<float> > mc_pi_mom_;
   MyPointer< std::vector<float> > mc_pi_costh_;

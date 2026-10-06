@@ -1,4 +1,4 @@
-"""mp_pid_train.py -- Phase 1 of report/MULTIPION_BNB_ADAPTATION_PLAN.md: a multiclass particle
+"""mp_pid_train.py -- Phase 1 of report/planning/MULTIPION_BNB_ADAPTATION_PLAN.md: a multiclass particle
 classifier (muon / pion / proton / other) for the primary tracks of the multi-pion selections, trained
 with XGBoost on the dump of macros/mp_pid/dump_pid_tracks.C and compared, on the same tracks, with the
 pion identification the selections use today.
@@ -14,7 +14,7 @@ for the new P(pi) and for the current scores: the split mp_pion_bdt (soft below 
 CC1mu2pi applies it, the single mp_pion_bdt, the inclusive pion and MIP BDTs and the LLR score.
 
     python3 scripts/mp_pid_train.py [--max-train N]
-Outputs in report/multipion/: phase1_classifier.json (all numbers), phase1_classifier.md (tables);
+Outputs in report/planning/multipion/: phase1_classifier.json (all numbers), phase1_classifier.md (tables);
 the model in /data/uboone/processed/mp_pid/model_xgb.json.
 """
 import glob, json, os, sys, time
@@ -25,7 +25,7 @@ from sklearn.metrics import roc_auc_score, confusion_matrix
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, '..', '..'))
-OUTDIR = os.path.join(REPO, 'report', 'multipion')
+OUTDIR = os.path.join(REPO, 'report', 'planning', 'multipion')
 DUMP = '/data/uboone/processed/mp_pid/'
 CLASSES = ['muon', 'pion', 'proton', 'other']
 TRAIN_PERIODS, TEST_PERIODS = (1, 2, 4), (3, 5)

@@ -1,5 +1,5 @@
 #!/bin/bash
-# SLURM array: Phase 0 of report/MULTIPION_BNB_ADAPTATION_PLAN.md. Reprocess ONE raw input
+# SLURM array: Phase 0 of report/planning/MULTIPION_BNB_ADAPTATION_PLAN.md. Reprocess ONE raw input
 # with the inclusive, two-pion and three-pion selections in a single pass
 # (CC1mu1piXp,CC1mu2pi,CC1mu3pi), so per-event overlaps between the three are available,
 # into a SEPARATE tree /data/uboone/processed/mp_phase0. Monte Carlo, dirt and beam-off

@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Markdown tables of the Phase 0 multi-pion baseline from report/multipion/phase0_baseline.json
+"""Markdown tables of the Phase 0 multi-pion baseline from report/planning/multipion/phase0_baseline.json
 (written by scripts/mp_phase0_baseline.py). Prints to stdout.
-Usage: python3 scripts/mp_phase0_tables.py > ../report/multipion/phase0_tables.md
+Usage: python3 scripts/mp_phase0_tables.py > ../report/planning/multipion/phase0_tables.md
 """
-import json
+import json, os
 
-REPO = '/home/t2k/nowak/MicroBooNE/working_xsec_analyzer'
-J = json.load(open(REPO + '/report/multipion/phase0_baseline.json'))
+REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
+J = json.load(open(REPO + '/report/planning/multipion/phase0_baseline.json'))
 SELS = {'CC1mu2pi': 2, 'CC1mu3pi': 3}
 FINAL = 6  # index of the final selection stage
 STAGES = ['None', 'Vertex in FV', 'Topological', 'MuonCandidate', 'N pions', 'Opening angle', 'Final (selected)',

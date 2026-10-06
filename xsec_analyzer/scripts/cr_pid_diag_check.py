@@ -2,7 +2,7 @@
 the pion identification, beam-on data against the prediction in the opened control regions, per
 period. Step 2 of the check whether the periods of the older ntuple production (FHC Run 1, RHC Runs 1
 and 3b, whose beam-on, beam-off and dirt ntuples lack trk_bragg_pion_v) differ from the newer ones
-(report/multipion/PHASE2_SUMMARY.md); step 1 is scripts/cr_pid_production_check.py.
+(report/planning/multipion/PHASE2_SUMMARY.md); step 1 is scripts/cr_pid_production_check.py.
 
 Input: /data/uboone/processed/pid_diag_skim (slurm/slurm_pid_diag_skim.sbatch): every sample of the
 comparison processed as the control-region skim with CC1mu1piXp and its diagnostic twin
@@ -15,7 +15,7 @@ candidates the released pion identification can count (contained, vertex distanc
 removed) and the mean difference. Per cut and period: the pass fraction of the eligible candidates
 in data and prediction.
 
-    python3 scripts/cr_pid_diag_check.py  ->  report/multipion/cr_pid_diag_check.{json,md}
+    python3 scripts/cr_pid_diag_check.py  ->  report/planning/multipion/cr_pid_diag_check.{json,md}
 """
 import json, os, sys
 import numpy as np
@@ -28,7 +28,7 @@ from bkgfit import farsb as F
 from bkgfit.dirt import dirt_perrun
 
 NEW = '/data/uboone/processed/pid_diag_skim/'
-OUTDIR = os.path.abspath(os.path.join(HERE, '..', '..', 'report', 'multipion'))
+OUTDIR = os.path.abspath(os.path.join(HERE, '..', '..', 'report', 'planning', 'multipion'))
 S, D = 'CC1mu1piXp', 'CC1mu1piXpPIDDiag'
 OLD = ('FHC_R1', 'RHC_R1', 'RHC_R3')
 BR, BD, BP = np.linspace(0, 1.25, 26), np.linspace(-0.4, 0.45, 18), np.linspace(0, 1, 21)
