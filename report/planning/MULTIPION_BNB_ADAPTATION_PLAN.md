@@ -18,7 +18,7 @@ that note, from our own documents, or was checked in the code and ntuples today.
 | Performance | event BDT takes purity 1.1–1.2% → 41–46% and efficiency 86–90% → 9–11%; containment takes efficiency 6.8–8.1% → 3.9–5.6%; final purity 47–58% |
 | Observables | invariant masses $M_{p\pi_1}$, $M_{p\pi_2}$, $M_{\pi\pi}$, $M_{p\pi\pi}$, $M_{\mu p\pi\pi}$ and the $p_T$ of each system; μ, p, π1, π2 momentum and angles |
 | Sidebands | (1) event BDT < 0.4, per-run data/MC with χ² for single, two, three and four-particle quantities and the vertex; (2) CC1π±Np (N ≥ 2) selected with the particle BDTs |
-| Systematics | one bin only: total 26.6%, of which open-data statistics 20.6%, detVar 11.0% (Recomb2 7.1%, WMX 5.5%), flux 8.1%, cross section 6.9%, MC statistics 5.9% |
+| Systematics | one bin only, "very preliminary", as fractional uncertainties of the predicted selected event count (not of the extracted cross section): total 26.6%, of which open-data statistics 20.6% (about 24 Run-4b events), detVar 11.0% from seven Run-4d variations without the wire-angle ones (Recomb2 7.1%, WMX 5.5%, SCE 4.1%, LY attenuation 4.1%), flux 8.1%, cross section 6.9%, MC statistics 5.9% |
 | Fake data | GENIE closure; NuWro fake data with statistical and cross-section terms only: unfolded $0.45\pm0.12$ against NuWro truth 0.37 and tune 0.62 ($10^{-38}$ cm²/Ar) |
 | Background constraint | conditional covariance (`ConstrainedCalculator`) with 1μ1π2p (0.25 < BDT < 0.6, purity 35%), 1μ3π (21 events, purity 62%) and 1μ3p (1043 events, purity 74.5%) sidebands; each alone lowers the uncertainty (27.3% → 21.7 / 25.9 / 25.2%); all combined give 21.5% but move the NuWro result to $0.51\pm0.11$, away from its truth; the note does not apply the constraint |
 
@@ -159,6 +159,8 @@ Status 2026-10-01: the classifier is evaluated in the selection (Phase 1 item 1)
 3. Keep $M_{\pi\pi}$, $M_{p\pi}$ and $M_{p\pi\pi}$ as study products unless they pass.
 
 ### Phase 4: control regions and the constraint
+
+Status 2026-10-07: items 1, 2 and the first part of 4 done as a feasibility study in Python (`report/planning/multipion/PHASE4_SUMMARY.md`): with the four sidebands (three-pion-like, proton-like, two score bands; the blind single-pion signal region left out) the one-bin total falls from 47% to 21% with the deployed particle classifier and from 46% to 17% with the LLR-and-geometry one, and the extraction closes for the GENIE universe 545 and Δ→Nπ angular models. Item 3 (framework), the rest of item 4 and item 5 are open.
 
 1. Define the sidebands from the classifier outputs and quote the purity and efficiency of the
    targeted class and the overlaps:

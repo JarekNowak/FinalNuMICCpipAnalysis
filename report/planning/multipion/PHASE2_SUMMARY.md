@@ -325,3 +325,22 @@ the track and shower counts (detector 54%, total 70%), and the event classifier 
   the control samples (Phase 4) cannot remove; its background part is similar (15.2% against 17.8%).
 - Proposed for Phases 3 and 4: the LLR-and-geometry particle classifier with the PID event features at score > 0.92, and a
   constraint of the background from the control samples.
+
+### Comparison with the BNB note
+
+The BNB CC2π±Np note (`report/internalDocs/Internal_Note_v2.pdf`, section 13, Table 16) quotes a detector term of 11.0%
+(Recomb2 7.1%, WMX 5.5%, SCE 4.1%, LY attenuation 4.1%, LY down 2.0%, WMYZ 1.5%, LY Rayleigh 1.0%). It is the
+fractional uncertainty of the predicted selected event count in the signal region, from seven Run-4d variations without
+the wire-angle ones, in a preliminary study with the Run-4b open data. In the same convention (change of the predicted
+selected events, beam-off unchanged, COMB) the two-pion selections here have:
+
+| Selection | All eight variations | The note's variations |
+|---|---|---|
+| Deployed classifier, PID set, score > 0.92 | 17.0% | 14.0% |
+| LLR-and-geometry classifier, PID set, score > 0.92 | 10.6% | 8.4% |
+| `CC1mu2pi` | 8.8% | 6.6% |
+| `CC1mu2piNewPID` | 7.2% | 6.8% |
+
+The detector terms quoted above (21–34%) are those of the extracted total, in which the background subtraction and the
+efficiency correction amplify the change of the predicted events by a factor of two to four (most for `CC1mu2pi`, B/S
+2.8). Recomb2 leads in both analyses.

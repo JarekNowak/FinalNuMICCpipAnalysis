@@ -807,6 +807,218 @@ def detboot():
     print('\n'.join(L))
 
 
+# ---------------------------------------------------------------- Phase 4: sideband constraint (feasibility)
+REGIONS = ['SR', 'SB 3pi-like', 'SB p-like', 'SB score 0.5-T', 'SB score < 0.5']
+FLUXW = 'weight_ppfx_all'
+
+
+def constraint():
+    """Feasibility of the sideband constraint of Phase 4, in the formalism of the framework (ConstrainedCalculator):
+    every systematic is a change of the predicted signal + background in each region; for the cross-section and
+    reinteraction universes the signal changes through the efficiency (smearceptance x CV true rate), for the flux
+    universes through the selected signal rate (smearceptance numerator varied, denominator CV); the detector variations
+    as in detsyst. The covariance of the regions (all sources, data statistics of every region, MC statistics) is
+    conditioned on the sidebands, and the one-bin uncertainty is sqrt(C_SR,SR | sidebands) / S.
+    Regions (exclusive, inside the domain): SR = score > T; below it the three-pion-like events (four or more tracks,
+    three pions more likely than two), then the events with a proton-like assigned pion (P(p) > 0.5), then the score band
+    0.5-T, then the rest; the sidebands exclude the events of the blind single-pion signal region (--with-1pi-sr keeps
+    them). Test periods projected to the full exposure, as everywhere else.
+        python3 scripts/mp_evt.py constraint [--tag X] [--threshold T]"""
+    import xgboost as xgb
+    T_ = float(sys.argv[sys.argv.index('--threshold') + 1]) if '--threshold' in sys.argv else 0.92
+    D = dict(np.load(NEW + 'events.npz'))
+    sums = json.load(open(NEW + 'sums.json'))
+    pot = {int(r): v for r, v in sums['pot'].items()}
+    lab = D['sig2'].astype(bool); dom = D['n2_d6'].astype(bool)
+    sc = np.load(NEW + f'scores_n2{VTAG}_pid.npy')
+    reg = np.full(len(lab), -1)
+    sr = dom & (sc > T_)
+    # the sidebands leave out the events of the blind single-pion signal region, so that they can be opened now
+    ok1 = ~D['sel_1pi'].astype(bool) if '--with-1pi-sr' not in sys.argv else np.ones(len(lab), bool)
+    three = dom & ~sr & ok1 & (D['n2_n_dump'] >= 4) & (D['n2_dL_down'] < 0)
+    plike = dom & ~sr & ok1 & ~three & (np.fmax(D['n2_pi0_Pp'], D['n2_pi1_Pp']) > 0.5)
+    band = dom & ~sr & ok1 & ~three & ~plike & (sc > 0.5)
+    low = dom & ~sr & ok1 & ~three & ~plike & ~band
+    for g, m in enumerate((sr, three, plike, band, low)): reg[m] = g
+    G_ = len(REGIONS)
+    univ = dict(UNIV); univ[FLUXW] = ('flux', True, 'ppfx')
+    test_files = [(fid, f) for fid, f in enumerate(sums['files']) if f[0] in TEST_RUNS]
+    tt = uproot.open(next(f[2] for _, f in test_files if f[1] == 'mc'))['stv_tree']
+    nuniv = {wb: int(ak.max(ak.num(tt[wb].array(entry_stop=5000)))) for wb in univ if wb in tt.keys()}
+    nuniv = {k: v for k, v in nuniv.items() if v > 0}
+    z = lambda *sh: np.zeros(sh)
+    cv = {r: dict(S=z(G_), Bmc=z(G_), Bext=z(G_), W2=z(G_), G=0.) for r in TEST_RUNS}
+    acc = {(r, wb): dict(S=z(G_, n), B=z(G_, n), G=z(n)) for r in TEST_RUNS for wb, n in nuniv.items()}
+    for fid, (run, kind, path, scale) in test_files:
+        rows = np.flatnonzero((D['fid'] == fid) & (reg >= 0))
+        if kind == 'ext':
+            np.add.at(cv[run]['Bext'], reg[rows], D['w'][rows]); np.add.at(cv[run]['W2'], reg[rows], D['w'][rows] ** 2)
+            continue
+        ent = D['entry'][rows]
+        t = uproot.open(path)['stv_tree']; keys = set(t.keys())
+        br = W + [E + 'MC_Signal'] + [wb for wb in nuniv if wb in keys]
+        print(f'  run {run} {kind} {os.path.basename(path)}', flush=True)
+        for a, rep in t.iterate(br, step_size=100000, library='ak', report=True):
+            lo, hi = rep.tree_entry_start, rep.tree_entry_stop; ne = hi - lo
+            comp = {x: ak.to_numpy(a[x]).astype(float) for x in W}
+            wcv = safe(comp['spline_weight'] * comp['tuned_cv_weight'] * comp['ppfx_cv_weight'] * comp['normalisation_weight']) * scale
+            sig = ak.to_numpy(a[E + 'MC_Signal']).astype(bool) if kind == 'mc' else np.zeros(ne, bool)
+            inr = (ent >= lo) & (ent < hi); rr = rows[inr]; loc = ent[inr] - lo
+            g_ = reg[rr]; s_ = lab[rr]
+            cv[run]['G'] += wcv[sig].sum()
+            np.add.at(cv[run]['S'], g_[s_], wcv[loc[s_]]); np.add.at(cv[run]['Bmc'], g_[~s_], wcv[loc[~s_]])
+            np.add.at(cv[run]['W2'], g_, wcv[loc] ** 2)
+            need = np.zeros(ne, bool); need[sig] = True; need[loc] = True
+            idx = np.flatnonzero(need); pos = np.full(ne, -1); pos[idx] = np.arange(len(idx))
+            for wb, n in nuniv.items():
+                term, multi, conv = univ[wb]
+                U = np.ones((len(idx), n)); full = np.zeros(len(idx), bool)
+                if wb in a.fields:
+                    x = a[wb][idx]; full = ak.to_numpy(ak.num(x)) == n
+                    if full.any(): U[full] = ak.to_numpy(x[full]).astype(float)
+                if conv == 'genie': base = comp['ppfx_cv_weight'] * comp['normalisation_weight']
+                elif conv == 'ppfx': base = comp['tuned_cv_weight'] * comp['normalisation_weight']
+                else: base = comp['tuned_cv_weight'] * comp['ppfx_cv_weight'] * comp['normalisation_weight']
+                WU = safe(U * base[idx][:, None]) * scale
+                WU[~full] = wcv[idx][~full, None]
+                A = acc[(run, wb)]
+                A['G'] += WU[pos[sig]].sum(axis=0)
+                np.add.at(A['S'], g_[s_], WU[pos[loc[s_]]]); np.add.at(A['B'], g_[~s_], WU[pos[loc[~s_]]])
+    proj = {r: sum(pot[x] for x in (FHC_RUNS if r in FHC_RUNS else RHC_RUNS)) / pot[r] for r in TEST_RUNS}
+    P = lambda key: sum(cv[r][key] * proj[r] for r in TEST_RUNS)
+    S, Bmc, Bext = P('S'), P('Bmc'), P('Bext'); Gcv = sum(cv[r]['G'] * proj[r] for r in TEST_RUNS)
+    N = S + Bmc + Bext
+    # change of the predicted signal + background per universe and region (framework conventions)
+    covs, deltas, UNI = {}, {}, {}
+    for wb, n in nuniv.items():
+        term, multi, conv = univ[wb]
+        Su = sum(acc[(r, wb)]['S'] * proj[r] for r in TEST_RUNS); Bu = sum(acc[(r, wb)]['B'] * proj[r] for r in TEST_RUNS)
+        Gu = sum(acc[(r, wb)]['G'] * proj[r] for r in TEST_RUNS)
+        if conv == 'ppfx': dS = Su - S[:, None]
+        else: dS = S[:, None] * ((Su / Gu[None, :]) / (S / Gcv)[:, None] - 1.)
+        d = np.nan_to_num(dS) + (Bu - Bmc[:, None])
+        d = np.vstack([d, (Bu[0] - Bmc[0])[None, :]])          # row G_: background only, signal region
+        C = (d @ d.T) / n if multi else np.outer(d[:, 0], d[:, 0])
+        UNI[wb] = (Su, Bu, Gu)
+        covs[term] = covs.get(term, 0.) + C
+    # detector variations: ratios of the Run-4 variation samples, per horn, applied to the nominal yields of that horn
+    Vd = dict(np.load(NEW + 'detvar_events.npz')); vs = json.load(open(NEW + 'detvar_sums.json'))
+    import xgboost as xgb
+    names = feat_names(2, False); bst = xgb.Booster(); bst.load_model(NEW + f'evt_clf_n2{VTAG}_pid.json')
+    scd = bst.predict(xgb.DMatrix(np.stack([Vd[f'n2_{k}'] for k in names], 1), feature_names=names))
+    domd = Vd['n2_d6'].astype(bool); labd = Vd['sig2'].astype(bool)
+    srd = domd & (scd > T_)
+    ok1d = ~Vd['sel_1pi'].astype(bool) if '--with-1pi-sr' not in sys.argv else np.ones(len(labd), bool)
+    threed = domd & ~srd & ok1d & (Vd['n2_n_dump'] >= 4) & (Vd['n2_dL_down'] < 0)
+    plid = domd & ~srd & ok1d & ~threed & (np.fmax(Vd['n2_pi0_Pp'], Vd['n2_pi1_Pp']) > 0.5)
+    bandd = domd & ~srd & ok1d & ~threed & ~plid & (scd > 0.5)
+    lowd = domd & ~srd & ok1d & ~threed & ~plid & ~bandd
+    regd = np.full(len(labd), -1)
+    for g, m in enumerate((srd, threed, plid, bandd, lowd)): regd[m] = g
+    Y = {}
+    for fid, (run, var, path, scale) in enumerate(vs['files']):
+        h = 'FHC' if run == 4 else 'RHC'; m = (Vd['fid'] == fid) & (regd >= 0)
+        Sv = np.zeros(G_); Bv = np.zeros(G_)
+        np.add.at(Sv, regd[m & labd], Vd['w'][m & labd]); np.add.at(Bv, regd[m & ~labd], Vd['w'][m & ~labd])
+        Y[(h, var)] = (Sv, Bv)
+    per_h = {h: dict(S=cv[r]['S'] * proj[r], Bmc=cv[r]['Bmc'] * proj[r]) for h, r in (('FHC', 5), ('RHC', 13))}
+    Cdet = 0.
+    for var in DETVAR[1:]:
+        d = np.zeros(G_ + 1)
+        for h in ('FHC', 'RHC'):
+            with np.errstate(divide='ignore', invalid='ignore'):
+                e = np.nan_to_num(Y[(h, var)][0] / Y[(h, 'CV')][0], nan=1.); b = np.nan_to_num(Y[(h, var)][1] / Y[(h, 'CV')][1], nan=1.)
+            d[:G_] += per_h[h]['S'] * (e - 1.) + per_h[h]['Bmc'] * (b - 1.)
+            d[G_] += per_h[h]['Bmc'][0] * (b[0] - 1.)
+        Cdet = Cdet + np.outer(d, d)
+    covs['detector'] = Cdet
+    norm = np.hypot(0.02, 0.01); NB = np.append(N, Bmc[0]); covs['pot_targets'] = np.outer(norm * NB, norm * NB)
+    covs['data_stat'] = np.diag(np.append(N, 0.))
+    rel_mc = np.sqrt(sum(cv[r]['W2'] for r in TEST_RUNS)) / np.maximum(sum(cv[r]['S'] + cv[r]['Bmc'] + cv[r]['Bext'] for r in TEST_RUNS), 1e-12)
+    mcs = np.diag(np.append((rel_mc * N) ** 2, (rel_mc[0] * Bmc[0]) ** 2)); mcs[0, G_] = mcs[G_, 0] = (rel_mc[0] * Bmc[0]) ** 2
+    covs['mc_stat'] = mcs
+    Ctot = sum(covs.values())
+    groups = {'flux': ['flux'], 'cross section': [k for k in covs if k.startswith('xsec')], 'reinteraction': ['reint'],
+              'detector': ['detector'], 'POT, targets': ['pot_targets'], 'data statistics': ['data_stat'], 'MC statistics': ['mc_stat']}
+    def residual(Q):
+        """Per-group residual variance of SR after the constraint with the sideband set Q (K from the total covariance)."""
+        if not Q: K = np.zeros((1, 0))
+        else: K = Ctot[np.ix_([0], Q)] @ np.linalg.inv(Ctot[np.ix_(Q, Q)])
+        out = {}
+        for gname, ks in groups.items():
+            C = sum(covs[k] for k in ks)
+            v = C[0, 0]
+            if Q: v = v - 2 * (K @ C[np.ix_(Q, [0])])[0, 0] + (K @ C[np.ix_(Q, Q)] @ K.T)[0, 0]
+            out[gname] = float(np.sqrt(max(v, 0.)) / S[0])
+        tot = Ctot[0, 0] - (0. if not Q else (Ctot[np.ix_([0], Q)] @ np.linalg.inv(Ctot[np.ix_(Q, Q)]) @ Ctot[np.ix_(Q, [0])])[0, 0])
+        out['total'] = float(np.sqrt(tot) / S[0])
+        return out
+    sets = {'none': [], 'three-pion-like': [1], 'proton-like': [2], 'score 0.5-T': [3], 'score < 0.5': [4],
+            'all sidebands': [1, 2, 3, 4]}
+    res = {'threshold': T_, 'regions': REGIONS, 'signal': S.tolist(), 'background_mc': Bmc.tolist(), 'beam_off': Bext.tolist(),
+           'purity': (S / N).tolist(), 'constraint': {k: residual(v) for k, v in sets.items()}}
+    # correlation of each sideband with the SR background-driven prediction, per group
+    res['sr_sb_correlation_total'] = (Ctot[0] / np.sqrt(np.diag(Ctot) * Ctot[0, 0])).tolist()
+    # composition of each region by true class (test periods projected)
+    comp_ = {}
+    for g, name in enumerate(REGIONS):
+        m = reg == g
+        c = {}
+        for i, nm in enumerate(TOPO):
+            c[nm] = float(sum(D['w'][m & np.isin(D['run'], [r]) & (D['kind'] == 0) & (D['topology'] == i)].sum() * proj[r] for r in TEST_RUNS))
+        c['dirt'] = float(sum(D['w'][m & np.isin(D['run'], [r]) & (D['kind'] == 2)].sum() * proj[r] for r in TEST_RUNS))
+        c['beam-off'] = float(sum(D['w'][m & np.isin(D['run'], [r]) & (D['kind'] == 1)].sum() * proj[r] for r in TEST_RUNS))
+        comp_[name] = c
+    res['composition'] = comp_
+    # alternative-model closure: pseudo-data from a reweighted model in every region, extracted with the CV model,
+    # unconstrained and with each sideband set (background estimate B_CV + K_B (N_Q - N_Q,CV), K_B from the total
+    # covariance), against that model's true signal rate
+    def extract(Nm, Q):
+        if not Q: Bh = Bmc[0]
+        else: Bh = Bmc[0] + (Ctot[np.ix_([G_], Q)] @ np.linalg.inv(Ctot[np.ix_(Q, Q)]) @ (Nm[Q] - N[Q]))[0]
+        return (Nm[0] - Bh - Bext[0]) / S[0]
+    alt = {}
+    models = [('GENIE universe 545', 'weight_All_UBGenie', 545), ('Delta->N pi angular', 'weight_Theta_Delta2Npi_UBGenie', 0)]
+    for mname, wb, u in models:
+        if wb not in UNI: continue
+        Su, Bu, Gu = UNI[wb]
+        Nm = Su[:, u] + Bu[:, u] + Bext
+        truth = Gu[u] / Gcv
+        alt[mname] = {k: dict(ratio=float(extract(Nm, v) / truth), unc=res['constraint'][k]['total']) for k, v in sets.items()}
+    # coverage over the GENIE multisim universes: fraction with |bias| below the total uncertainty
+    if 'weight_All_UBGenie' in UNI:
+        Su, Bu, Gu = UNI['weight_All_UBGenie']
+        cov = {}
+        for k, v in sets.items():
+            b_ = np.array([extract(Su[:, u] + Bu[:, u] + Bext, v) / (Gu[u] / Gcv) - 1. for u in range(Su.shape[1])])
+            cov[k] = dict(rms_bias=float(np.sqrt(np.mean(b_ ** 2))), within_1sigma=float(np.mean(np.abs(b_) < res['constraint'][k]['total'])))
+        res['genie_multisim_coverage'] = cov
+    res['alternative_models'] = alt
+    json.dump(res, open(os.path.join(OUTDIR, f'phase4_constraint{VTAG}.json'), 'w'), indent=1)
+    L = [f'# Phase 4 feasibility: sideband constraint of the two-pion one-bin total ({("deployed" if not VTAG else VTAG[1:])} particle classifier, PID set, score > {T_})', '',
+         'Generated by `scripts/mp_evt.py constraint`. Formalism of the framework\'s ConstrainedCalculator: covariance of the predicted '
+         'signal + background in every region from all sources (flux from the PPFX universes, cross section and reinteraction from the '
+         'universe weights, detector from the eight Run-4 variations, POT and targets, data and MC statistics), conditioned on the '
+         'sidebands. Test periods projected to the full exposure (COMB).', '',
+         '| Region | Events | Signal | Purity | Largest classes |', '|---|---|---|---|---|']
+    for g, name in enumerate(REGIONS):
+        top = sorted(comp_[name].items(), key=lambda x: -x[1])[:3]
+        L.append(f'| {name} | {N[g]:.0f} | {S[g]:.0f} | {100 * S[g] / N[g]:.0f}% | ' + ', '.join(f'{k} {100 * v / N[g]:.0f}%' for k, v in top) + ' |')
+    L += ['', '| Constraint | Total | Flux | Cross section | Reinteraction | Detector | POT, targets | Data statistics | MC statistics |',
+          '|---|---|---|---|---|---|---|---|---|']
+    for k, r in res['constraint'].items():
+        L.append(f'| {k} | {100 * r["total"]:.1f}% | ' + ' | '.join(f'{100 * r[gn]:.1f}%' for gn in
+                 ('flux', 'cross section', 'reinteraction', 'detector', 'POT, targets', 'data statistics', 'MC statistics')) + ' |')
+    L += ['', '### Alternative-model closure (extracted over true signal rate; uncertainty = total of the row above)', '',
+          '| Constraint | ' + ' | '.join(alt) + ' | GENIE multisim: rms bias | within 1σ |', '|---|' + '---|' * (len(alt) + 2)]
+    for k in sets:
+        cg = res.get('genie_multisim_coverage', {}).get(k, {})
+        L.append(f'| {k} | ' + ' | '.join(f'{alt[m][k]["ratio"]:.3f} ({(alt[m][k]["ratio"] - 1) / alt[m][k]["unc"]:+.2f}σ)' for m in alt)
+                 + f' | {100 * cg.get("rms_bias", float("nan")):.1f}% | {100 * cg.get("within_1sigma", float("nan")):.0f}% |')
+    open(os.path.join(OUTDIR, f'phase4_constraint{VTAG}.md'), 'w').write('\n'.join(L) + '\n')
+    print('\n'.join(L))
+
+
 TERMS = ['stat', 'flux', 'pot_targets', 'xsec', 'reint', 'detector', 'mcstat']
 
 
@@ -939,4 +1151,4 @@ def write_md(res, tag):
 
 
 if __name__ == '__main__':
-    {'build': build, 'build_detvar': build_detvar, 'detvar_evt': detvar_evt, 'train': train, 'syst': syst, 'detsyst': detsyst, 'wp': wp, 'detboot': detboot}[sys.argv[1]]()
+    {'build': build, 'build_detvar': build_detvar, 'detvar_evt': detvar_evt, 'train': train, 'syst': syst, 'detsyst': detsyst, 'wp': wp, 'detboot': detboot, 'constraint': constraint}[sys.argv[1]]()
