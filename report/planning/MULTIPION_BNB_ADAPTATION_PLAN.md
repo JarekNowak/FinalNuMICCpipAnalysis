@@ -139,7 +139,7 @@ Status 2026-10-01: items 2–3 done with XGBoost, deployed through ROOT's RBDT i
 
 ### Phase 2: assignment and event classifier
 
-Status 2026-10-01: the classifier is evaluated in the selection (Phase 1 item 1) on the 43 inputs every ntuple production carries, and replaces the pion identification in study selections of the single-, two- and three-pion selections; items 1–4 done on 2026-10-06 (track assignment, event classifier, working point on the expected total uncertainty with all terms: score > 0.92 proposed, total 47% against 89% for `CC1mu2pi`). Results in `report/planning/multipion/PHASE2_SUMMARY.md`.
+Status 2026-10-01: the classifier is evaluated in the selection (Phase 1 item 1) on the 43 inputs every ntuple production carries, and replaces the pion identification in study selections of the single-, two- and three-pion selections; items 1–4 done on 2026-10-06 (track assignment, event classifier, working point on the expected total uncertainty with all terms: score > 0.92 proposed, total 47% against 89% for `CC1mu2pi`). Detector robustness studied on 2026-10-07: the detector term (33%) is real (7.7% of it from the statistics of the variation samples); a particle classifier on the LLR score and geometry only halves its efficiency part (14% to 8%) at 13% efficiency. Results in `report/planning/multipion/PHASE2_SUMMARY.md`.
 
 1. Enumerate the assignments of primary tracks to {μ, N × π, optional p, other}; keep the one with
    the largest summed log score and the runner-up.

@@ -274,3 +274,54 @@ area of 0.855 (PID set), but with all terms every three-pion selection has a tot
 - The detector term (33%) is the largest. The levers are a classifier less sensitive to the calorimetric
   inputs, or a constraint from the control samples (Phase 4).
 - The 12% overlap with the opened multi-π region (D3).
+
+## Detector robustness (2026-10-07)
+
+The detector term leads the two-pion working point. Inputs: the 27 Run-4 detector-variation files dumped track by track
+(SLURM 3533973, `/data/uboone/processed/mp_pid_detvar`), tracks matched across the samples by event and backtracked particle
+(`scripts/mp_pid_detsens.py`); particle-classifier variants (`scripts/mp_pid_train.py --tag --drop --aug`,
+`slurm/slurm_mp_pid_train.sbatch`); two of them deployed and the release and detector-variation samples reprocessed with each
+(SLURM 3538383–3538386, `/data/uboone/processed/mp_evt_{nochi,llronly}`, `CC1MU1PIXP_MP_PID_MODEL`), then the event chain of
+`scripts/mp_evt.py` on each (`MP_EVT_DIR`, `--tag`).
+
+### Statistics of the detector-variation samples
+
+Paired bootstrap (`mp_evt.py detboot`, 200 replicas, one Poisson weight per physical event shared by the CV and the eight
+variations; `phase2_detboot.md`): at score > 0.92 the statistics contribute 7.7% of the 32.7% (31.8% without them). Recomb2
++22.1 ± 3.6%, WMAngleYZ +17.9 ± 3.2%, WMX +12.2 ± 2.6%, WMYZ +8.4 ± 2.7%; WMAngleXZ, SCE and the light-yield variations are
+consistent with zero. `CC1mu2pi`: 33.7% (11.2% from statistics), `CC1mu2piNewPID`: 20.6% (9.9%).
+
+### Where the sensitivity sits
+
+- Inputs (`detsens_inputs.md`): χ², PIDA, the per-plane Bragg likelihoods and the calorimetric energy move by up to 0.5 of
+  their spread (protons, Recomb2 and WMAngleYZ; at most 0.16 for pions); the LLR score moves by at most 0.04 and the geometric
+  inputs not at all.
+- Deployed classifier at 80% pion efficiency: the pion efficiency moves by at most 2.4%; muons passing as pions by up to
+  +24% and protons by up to −27% (Recomb2).
+- Event level, score > 0.92: Recomb2 and WMAngleYZ lower the selected signal by about 8% and the background by 10–18%, and
+  both raise the extracted total. The detector term is an efficiency part (14.3%) and a background part (17.8%) that add in
+  each variation.
+
+### What was tried (COMB)
+
+| Particle classifier | Event features | Score > | Efficiency | Purity | Detector (efficiency part, background part) | Total |
+|---|---|---|---|---|---|---|
+| Deployed | PID set | 0.92 | 17.1% | 56% | 32.7% (14.3%, 17.8%) | 47% |
+| Deployed | full set | 0.94 | 14.4% | 62% | 33.0% (18.2%, 14.8%) | 45% |
+| Without χ², PIDA, calorimetric energy | PID set | 0.93 | 14.4% | 57% | 35.1% (14.9%, 19.0%) | 48% |
+| Without χ², PIDA, calorimetric energy | full set | 0.94 | 13.4% | 61% | 29.1% (14.3%, 15.2%) | 43% |
+| LLR and geometry only | PID set | 0.92 | 13.0% | 51% | 21.4% (7.8%, 15.2%) | 44% |
+| LLR and geometry only | full set | 0.93 | 12.0% | 55% | 20.3% (8.4%, 12.9%) | 42% |
+
+At track level the LLR-and-geometry classifier has a pion ROC area of 0.892 against 0.926, and lets 9.0% of protons pass at
+80% pion efficiency against 3.9%. Also tried, without gain: the event classifier without the topological score, CosmicIP and
+the track and shower counts (detector 54%, total 70%), and the event classifier trained with the detector-variation events
+(even event numbers; on the odd ones its best total is 44% against 47% for the nominal classifier, the PID set 51–54% against
+53%). The particle classifier trained with the detector-variation tracks changes nothing at track level.
+
+- No variant removes the detector term. The totals of all variants lie between 42% and 48% at their best thresholds, within
+  the 3% scatter of the scans.
+- The LLR-and-geometry classifier halves the efficiency part (14.3% to 7.8%), the part a constraint of the background from
+  the control samples (Phase 4) cannot remove; its background part is similar (15.2% against 17.8%).
+- Proposed for Phases 3 and 4: the LLR-and-geometry particle classifier with the PID event features at score > 0.92, and a
+  constraint of the background from the control samples.

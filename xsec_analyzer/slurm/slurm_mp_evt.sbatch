@@ -7,6 +7,8 @@
 # (scripts/mp_evt_*.py). No beam-on file is touched.
 #   sbatch --array=0-27 --export=ALL,REPO=$PWD,MANIFEST=$PWD/slurm/mp_phase0_manifest.list \
 #          slurm/slurm_mp_evt.sbatch
+# A particle-classifier variant: OUT=/data/uboone/processed/mp_evt_<tag> and CC1MU1PIXP_MP_PID_MODEL=<its RBDT file> in the
+# environment of sbatch --export=ALL (detector-robustness study).
 #SBATCH --job-name=mpevt
 #SBATCH --partition=main
 #SBATCH --cpus-per-task=2
@@ -15,7 +17,7 @@
 #SBATCH --output=%x_%A_%a.out
 #SBATCH --error=%x_%A_%a.out
 set -u
-REPO="${REPO:?}"; OUT=/data/uboone/processed/mp_evt; MANIFEST="${MANIFEST:?}"
+REPO="${REPO:?}"; OUT="${OUT:-/data/uboone/processed/mp_evt}"; MANIFEST="${MANIFEST:?}"
 SELS=CC1mu2piEvt,CC1mu2piNewPID,CC1mu3pi,CC1mu3piNewPID,CC1mu1piXp
 line=$(( SLURM_ARRAY_TASK_ID + 1 ))
 IFS='|' read -r RAW FT TAG <<< "$(sed -n "${line}p" "$MANIFEST")"

@@ -43,7 +43,8 @@ import awkward as ak
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import mp_phase0_baseline as B
 
-B.NEW = '/data/uboone/processed/mp_evt/'
+# MP_EVT_DIR selects the processing of a particle-classifier variant (detector-robustness study)
+B.NEW = os.environ.get('MP_EVT_DIR', '/data/uboone/processed/mp_evt').rstrip('/') + '/'
 NEW = B.NEW
 OUTDIR = B.OUTDIR
 NMAX = 8                                  # tracks entering the enumeration (largest max(P_mu, P_pi) first)
@@ -52,6 +53,10 @@ TRAIN_RUNS, TEST_RUNS = (1, 2, 4, 11, 12, 14), (5, 13)
 FHC_RUNS, RHC_RUNS = B.FHC_RUNS, B.RHC_RUNS
 TEST_DIRT_ONLY = ('neutrinoselection_filt_run3b_dirt_overlay',)   # dirt file shared with a test period
 COS_D6 = np.cos(2.6)
+VTAG = ('_' + sys.argv[sys.argv.index('--tag') + 1]) if '--tag' in sys.argv else ''     # variant of the event classifier
+DROP = set(sys.argv[sys.argv.index('--drop') + 1].split(',')) if '--drop' in sys.argv else set()
+EAUG = float(sys.argv[sys.argv.index('--aug') + 1]) if '--aug' in sys.argv else 0.   # detector-variation events in training
+ODD = '--odd' in sys.argv           # detector term on the odd event numbers only (the even ones may be in a training)
 PEDGES = [0.10, 0.175, 0.25, 0.35, 0.50, 0.75, 10.]    # true pion momentum bins of the efficiency check
 FLUX = 0.17
 KIND = {'mc': 0, 'ext': 1, 'dirt': 2}
@@ -295,6 +300,46 @@ def build_detvar():
     print(f'{len(out["w"])} detector-variation rows written')
 
 
+def detvar_evt():
+    """Event number of every detector-variation row (detvar_events.npz), so that a split by event number puts the same
+    event of the CV and of each variation on the same side -> detvar_evt.npy. Taken from the track dumps of the same raw
+    inputs (/data/uboone/processed/mp_pid_detvar, macros/mp_pid/dump_pid_tracks.C: run, subrun, event and raw entry of
+    every event with a pool track, which every row has); the processed FHC files were made from part 1 followed by part
+    2, so part-2 entries are offset by the entries of part 1 (read from the raw tree header only)."""
+    V = np.load(NEW + 'detvar_events.npz')
+    fid_col, ent_col = V['fid'], V['entry']
+    vs = json.load(open(NEW + 'detvar_sums.json'))
+    man = {}
+    for line in open(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'slurm', 'mp_evt_detvar_manifest.list')):
+        raw, ft, sel, out = line.strip().split('|')
+        man[os.path.basename(out)] = raw.split('+')
+    evt = np.full(len(fid_col), -1, dtype=np.int64)
+    ids = np.full((len(fid_col), 2), -1, dtype=np.int64)      # run and subrun, for the event identity of the bootstrap
+    for fid, (run, var, path, scale) in enumerate(vs['files']):
+        raws = man[os.path.basename(path)]
+        stem = os.path.basename(path)[len('xsec-ana-'):-len('.root')]
+        dumps = [f'/data/uboone/processed/mp_pid_detvar/pidtrk-{stem}' + (f'_part{k + 1}' if len(raws) > 1 else '') + '.root'
+                 for k in range(len(raws))]
+        ents, evts, rs, off = [], [], [], 0
+        for k, (r, dp) in enumerate(zip(raws, dumps)):
+            a = uproot.open(dp)['trk'].arrays(['entry', 'evt', 'run', 'sub'], library='np')
+            ents.append(a['entry'].astype(np.int64) + off); evts.append(a['evt'].astype(np.int64))
+            rs.append(np.stack([a['run'].astype(np.int64), a['sub'].astype(np.int64)], axis=1))
+            if k + 1 < len(raws):                 # entries of this part, from the tree header (ROOT reads it fast)
+                import ROOT
+                f_ = ROOT.TFile.Open(r); off += int(f_.Get('nuselection/NeutrinoSelectionFilter').GetEntries()); f_.Close()
+        ent_all, evt_all, rs_all = np.concatenate(ents), np.concatenate(evts), np.concatenate(rs)
+        ue, ui = np.unique(ent_all, return_index=True)
+        m = np.flatnonzero(fid_col == fid)
+        pos = np.searchsorted(ue, ent_col[m]); pos = np.clip(pos, 0, len(ue) - 1)
+        found = ue[pos] == ent_col[m]
+        evt[m] = np.where(found, evt_all[ui][pos], -1)
+        ids[m] = np.where(found[:, None], rs_all[ui][pos], -1)
+        print(f'  {stem}: {len(m)} rows, {int((evt[m] < 0).sum())} without an event number', flush=True)
+    np.save(NEW + 'detvar_evt.npy', evt)
+    np.save(NEW + 'detvar_runsub.npy', ids)
+
+
 # ---------------------------------------------------------------- train and evaluate
 FEAT_PID = ['dL_up', 'dL_down', 'dL_runnerup', 'L_best', 'mu_Pmu', 'mu_Ppi', 'mu_Pp', 'mu_Pother', 'mu_is_cand',
             'rest_n', 'rest_maxPp', 'rest_maxPpi', 'rest_nPp05', 'sum_Pmu', 'sum_Ppi', 'sum_Pp', 'sum_Pother',
@@ -307,7 +352,7 @@ def feat_names(npi, full):
     if full:
         f += [f'{t}_{x}' for t in ['mu'] + [f'pi{k}' for k in range(npi)] for x in ('len', 'dist', 'endcont', 'ts')]
         f += [f'cos_mu_pi{k}' for k in range(npi)] + [f'cos_pi{a}_pi{b}' for a, b in itertools.combinations(range(npi), 2)]
-    return f
+    return [x for x in f if x not in DROP]
 
 
 def wauc(y, s, w):
@@ -353,15 +398,27 @@ def train():
             ww = w[m].copy(); y = lab[m]; nr = 0.5 * len(ww)
             ww[y == 1] *= nr / ww[y == 1].sum(); ww[y == 0] *= nr / ww[y == 0].sum()
             return ww
-        dtr = xgb.DMatrix(X[tr], label=lab[tr], weight=bal(tr), feature_names=names)
+        Xtr, ytr, wtr = X[tr], lab[tr], bal(tr)
+        if EAUG > 0.:
+            # the Run-4 detector-variation events (CV and the eight variations) with an even event number, classes
+            # balanced within them, weighted to a fraction EAUG of the nominal training weight
+            Va = np.load(NEW + 'detvar_events.npz'); ev_a = np.load(NEW + 'detvar_evt.npy')
+            ma = Va[f'n{npi}_d6'].astype(bool) & (ev_a % 2 == 0)
+            Xa = np.stack([Va[f'n{npi}_{k}'][ma] for k in names], axis=1); ya = Va[f'sig{npi}'][ma].astype(int)
+            wa = Va['w'][ma].astype(float).copy()
+            wa[ya == 1] *= 0.5 / wa[ya == 1].sum(); wa[ya == 0] *= 0.5 / wa[ya == 0].sum()
+            wa *= EAUG * wtr.sum()
+            Xtr = np.concatenate([Xtr, Xa]); ytr = np.concatenate([ytr, ya]); wtr = np.concatenate([wtr, wa])
+            print(f'  {fs}: {int(ma.sum())} detector-variation events added (weight fraction {EAUG})', flush=True)
+        dtr = xgb.DMatrix(Xtr, label=ytr, weight=wtr, feature_names=names)
         dva = xgb.DMatrix(X[val], label=lab[val], weight=bal(val), feature_names=names)
         par = dict(objective='binary:logistic', eval_metric='auc', max_depth=5, eta=0.05, subsample=0.8,
                    colsample_bytree=0.8, min_child_weight=10., tree_method='hist', seed=1)
         bst = xgb.train(par, dtr, 3000, evals=[(dva, 'val')], early_stopping_rounds=100, verbose_eval=False)
-        bst.save_model(NEW + f'evt_clf_n{npi}_{fs}.json')
+        bst.save_model(NEW + f'evt_clf_n{npi}{VTAG}_{fs}.json')
         s = bst.predict(xgb.DMatrix(X, feature_names=names), iteration_range=(0, bst.best_iteration + 1))
         scores[fs] = s
-        np.save(NEW + f'scores_n{npi}_{fs}.npy', s.astype(np.float32))
+        np.save(NEW + f'scores_n{npi}{VTAG}_{fs}.npy', s.astype(np.float32))
         gain = bst.get_score(importance_type='gain')
         res[fs] = {'features': names, 'best_iteration': int(bst.best_iteration),
                    'auc_test': wauc(lab[te], s[te], w[te]), 'auc_val': wauc(lab[val], s[val], w[val]),
@@ -475,7 +532,7 @@ def train():
         res['three_pion_like_sample'] = dict(events_COMB=sum(cls.values()), by_class_COMB=cls,
                                              overlap_with_working_point=float(w[crt & sel].sum() / max(w[crt].sum(), 1e-12)))
     tag = '' if npi == 2 else '_3pi'
-    json.dump(res, open(os.path.join(OUTDIR, f'phase2_event{tag}.json'), 'w'), indent=1, default=float)
+    json.dump(res, open(os.path.join(OUTDIR, f'phase2_event{tag}{VTAG}.json'), 'w'), indent=1, default=float)
     write_md(res, tag)
     print(json.dumps(res['working_point'], indent=1, default=float)[:3000])
 
@@ -506,7 +563,7 @@ def syst():
     sigbr = E + 'MC_Signal' if npi == 2 else 'CC1mu3pi_MC_Signal'
     # the classifier (rows outside its domain never pass) and the current selections as score 1 / 0
     FS = ('pid', 'full') + tuple('cmp_' + c for c in CMP[npi])
-    scores = {fs: np.where(dom, np.load(NEW + f'scores_n{npi}_{fs}.npy'), -1.) for fs in ('pid', 'full')}
+    scores = {fs: np.where(dom, np.load(NEW + f'scores_n{npi}{VTAG}_{fs}.npy'), -1.) for fs in ('pid', 'full')}
     scores.update({'cmp_' + c: D['sel_' + c].astype(float) for c in CMP[npi]})
     T = len(SYST_THR)
     def tbin(x):                 # number of thresholds the score exceeds
@@ -597,8 +654,8 @@ def syst():
                                     mcstat=(np.sqrt(sum(above(cv[r]['W2'][fs]) for r in runs)) / raw).tolist(),
                                     xsec=xsec.tolist(), reint=terms.get('reint', np.zeros(T)).tolist(),
                                     terms={k: v.tolist() for k, v in terms.items()})
-    json.dump({'thresholds': SYST_THR.tolist(), 'nuniv': nuniv, 'curves': out}, open(NEW + f'syst_n{npi}.json', 'w'), indent=1)
-    print('universe terms written to', NEW + f'syst_n{npi}.json', flush=True)
+    json.dump({'thresholds': SYST_THR.tolist(), 'nuniv': nuniv, 'curves': out}, open(NEW + f'syst_n{npi}{VTAG}.json', 'w'), indent=1)
+    print('universe terms written to', NEW + f'syst_n{npi}{VTAG}.json', flush=True)
 
 
 def detsyst():
@@ -612,16 +669,19 @@ def detsyst():
     npi = 3 if '--npi' in sys.argv and sys.argv[sys.argv.index('--npi') + 1] == '3' else 2
     V = dict(np.load(NEW + 'detvar_events.npz'))
     vs = json.load(open(NEW + 'detvar_sums.json'))
-    SY = json.load(open(NEW + f'syst_n{npi}.json'))
+    SY = json.load(open(NEW + f'syst_n{npi}{VTAG}.json'))
     thr = np.array(SY['thresholds'])
     lab = V[f'sig{npi}'].astype(bool); dom = V[f'n{npi}_d6'].astype(bool)
+    if ODD:
+        dom &= np.load(NEW + 'detvar_evt.npy') % 2 == 1
     out = {}
     for fs in ('pid', 'full') + tuple('cmp_' + c for c in CMP[npi]):
         if fs.startswith('cmp_'):
             sc = V['sel_' + fs[4:]].astype(float)
+            if ODD: sc = np.where(np.load(NEW + 'detvar_evt.npy') % 2 == 1, sc, -1.)
         else:
             names = feat_names(npi, fs == 'full')
-            bst = xgb.Booster(); bst.load_model(NEW + f'evt_clf_n{npi}_{fs}.json')
+            bst = xgb.Booster(); bst.load_model(NEW + f'evt_clf_n{npi}{VTAG}_{fs}.json')
             X = np.stack([V[f'n{npi}_{k}'] for k in names], axis=1)
             sc = np.where(dom, bst.predict(xgb.DMatrix(X, feature_names=names)), -1.)
         # yields above each threshold per sample (file id -> horn, variation)
@@ -657,8 +717,94 @@ def detsyst():
             res[cfg] = dict(total=tot.tolist(), per_variation={k: v.tolist() for k, v in per_var.items()},
                             cv_selected_signal_raw={h: Y[(h, 'CV')]['nS'].tolist() for h in horns})
         out[fs] = res
-    json.dump({'thresholds': thr.tolist(), 'curves': out}, open(NEW + f'detsyst_n{npi}.json', 'w'), indent=1)
-    print('detector term written to', NEW + f'detsyst_n{npi}.json', flush=True)
+    otag = VTAG + ('_odd' if ODD else '')
+    json.dump({'thresholds': thr.tolist(), 'curves': out}, open(NEW + f'detsyst_n{npi}{otag}.json', 'w'), indent=1)
+    print('detector term written to', NEW + f'detsyst_n{npi}{otag}.json', flush=True)
+
+
+def detboot():
+    """Statistical part of the detector term. Bootstrap in which every physical event (run, subrun, event, per horn
+    mode) gets one Poisson(1) weight shared by the CV and the eight variation samples, so the correlation of the
+    samples through their common generated events is kept; for each replica the change of the extracted one-bin
+    total per variation is recomputed as in detsyst. The spread over replicas is the statistical uncertainty of each
+    variation's shift; sqrt(sum of the squared spreads) is what statistics alone add to the quadrature sum."""
+    import xgboost as xgb
+    npi = 3 if '--npi' in sys.argv and sys.argv[sys.argv.index('--npi') + 1] == '3' else 2
+    R = 200
+    V = dict(np.load(NEW + 'detvar_events.npz'))
+    ev = np.load(NEW + 'detvar_evt.npy'); rs = np.load(NEW + 'detvar_runsub.npy')
+    vs = json.load(open(NEW + 'detvar_sums.json'))
+    SY = json.load(open(NEW + f'syst_n{npi}{VTAG}.json'))
+    thr = np.array(SY['thresholds'])
+    lab = V[f'sig{npi}'].astype(bool); dom = V[f'n{npi}_d6'].astype(bool); w = V['w']
+    horn_of = {fid: ('FHC' if run == 4 else 'RHC') for fid, (run, var, path, scale) in enumerate(vs['files'])}
+    var_of = {fid: var for fid, (run, var, path, scale) in enumerate(vs['files'])}
+    hrow = np.array([horn_of[f] for f in V['fid']])
+    rng = np.random.default_rng(20261007)
+    inv = np.zeros(len(w), dtype=np.int64); PW = {}
+    for h in ('FHC', 'RHC'):
+        m = np.flatnonzero(hrow == h)
+        uk, iv = np.unique(np.stack([rs[m, 0], rs[m, 1], ev[m]], axis=1), axis=0, return_inverse=True)
+        inv[m] = iv.ravel(); PW[h] = rng.poisson(1., size=(len(uk), R)).astype(np.float64)
+    cases = [('pid', t) for t in (0.5, 0.8, 0.9, 0.92, 0.95)] + [('full', t) for t in (0.9, 0.93, 0.94)]
+    cases += [('cmp_' + c, 0.5) for c in CMP[npi]]
+    models = {}
+    out = {}
+    for fs, t in cases:
+        if fs.startswith('cmp_'):
+            sc = V['sel_' + fs[4:]].astype(float)
+        else:
+            if fs not in models:
+                names = feat_names(npi, fs == 'full')
+                bst = xgb.Booster(); bst.load_model(NEW + f'evt_clf_n{npi}{VTAG}_{fs}.json')
+                X = np.stack([V[f'n{npi}_{k}'] for k in names], axis=1)
+                models[fs] = np.where(dom, bst.predict(xgb.DMatrix(X, feature_names=names)), -1.)
+            sc = models[fs]
+        i = int(np.argmin(abs(thr - t)))
+        Y = {}
+        for fid in horn_of:
+            h = horn_of[fid]; m = (V['fid'] == fid) & (sc > t)
+            for part, mm in (('S', m & lab), ('B', m & ~lab)):
+                k = np.flatnonzero(mm)
+                Y[(h, var_of[fid], part)] = (w[k].sum(), (w[k][:, None] * PW[h][inv[k]]).sum(axis=0))
+        nom = SY['curves'][fs]
+        res = {}
+        for cfg, horns in (('FHC', ('FHC',)), ('RHC', ('RHC',)), ('COMB', ('FHC', 'RHC'))):
+            per = {}
+            for var in DETVAR[1:]:
+                num_c = den_c = 0.; num_r = den_r = 0.
+                for h in horns:
+                    S = nom[h]['signal'][i]; Bk = nom[h]['background'][i]; ext = nom[h]['beam_off'][i]; Bmc = Bk - ext
+                    for central in (True, False):
+                        j = 0 if central else 1
+                        e = Y[(h, var, 'S')][j] / Y[(h, 'CV', 'S')][j]; b = Y[(h, var, 'B')][j] / Y[(h, 'CV', 'B')][j]
+                        if central: num_c += S + Bk - Bmc * b - ext; den_c += S * e
+                        else: num_r = num_r + (S + Bk - Bmc * b - ext); den_r = den_r + S * e
+                shift = num_c / den_c - 1.; reps = num_r / den_r - 1.
+                per[var] = dict(shift=float(shift), stat=float(np.std(reps)))
+            tot = float(np.sqrt(sum(v['shift'] ** 2 for v in per.values())))
+            noise = float(np.sqrt(sum(v['stat'] ** 2 for v in per.values())))
+            res[cfg] = dict(per_variation=per, total=tot, stat_part=noise,
+                            stat_subtracted=float(np.sqrt(max(tot ** 2 - noise ** 2, 0.))))
+        out[f'{fs} > {t}' if not fs.startswith('cmp_') else fs[4:]] = res
+    json.dump(out, open(NEW + f'detboot_n{npi}{VTAG}.json', 'w'), indent=1)
+    L = [f'# Statistical part of the detector term ({npi}π, one-bin total)', '',
+         f'Generated by `scripts/mp_evt.py detboot`. Paired bootstrap ({R} replicas): one Poisson weight per physical event (run, subrun, '
+         'event) shared by the CV and the eight Run-4 variation samples. Shift = change of the extracted total per variation; '
+         'stat. = its bootstrap spread. Statistics alone add sqrt(sum of the squared spreads) to the quadrature sum.', '',
+         '| Selection (COMB) | Detector term | From statistics | Statistics subtracted | Recomb2 | WMAngleYZ | WMX | WMYZ | WMAngleXZ | SCE | LYdown | LYrayl |',
+         '|---|---|---|---|---|---|---|---|---|---|---|---|']
+    for name, res in out.items():
+        c = res['COMB']; pv = c['per_variation']
+        L.append(f'| {name} | {100 * c["total"]:.1f}% | {100 * c["stat_part"]:.1f}% | {100 * c["stat_subtracted"]:.1f}% | '
+                 + ' | '.join(f'{100 * pv[v]["shift"]:+.1f} ± {100 * pv[v]["stat"]:.1f}' for v in
+                              ('Recomb2', 'WMAngleYZ', 'WMX', 'WMYZ', 'WMAngleXZ', 'SCE', 'LYdown', 'LYrayl')) + ' |')
+    L += ['', '| Selection | FHC: term / from statistics | RHC: term / from statistics |', '|---|---|---|']
+    for name, res in out.items():
+        L.append(f'| {name} | {100 * res["FHC"]["total"]:.1f}% / {100 * res["FHC"]["stat_part"]:.1f}% | '
+                 f'{100 * res["RHC"]["total"]:.1f}% / {100 * res["RHC"]["stat_part"]:.1f}% |')
+    open(os.path.join(OUTDIR, f'phase2_detboot{"" if npi == 2 else "_3pi"}{VTAG}.md'), 'w').write('\n'.join(L) + '\n')
+    print('\n'.join(L))
 
 
 TERMS = ['stat', 'flux', 'pot_targets', 'xsec', 'reint', 'detector', 'mcstat']
@@ -669,8 +815,8 @@ def wp():
     working point at its minimum (COMB); the current selections with the same terms for comparison."""
     npi = 3 if '--npi' in sys.argv and sys.argv[sys.argv.index('--npi') + 1] == '3' else 2
     tag = '' if npi == 2 else '_3pi'
-    SY = json.load(open(NEW + f'syst_n{npi}.json'))
-    dpath = NEW + f'detsyst_n{npi}.json'
+    SY = json.load(open(NEW + f'syst_n{npi}{VTAG}.json'))
+    dpath = NEW + f'detsyst_n{npi}{VTAG}{"_odd" if ODD else ""}.json'
     DS = json.load(open(dpath)) if os.path.exists(dpath) else None
     thr = np.array(SY['thresholds'])
     out = {'thresholds': thr.tolist(), 'detector_included': DS is not None, 'sets': {}}
@@ -688,7 +834,7 @@ def wp():
         i = int(np.nanargmin(o['COMB']['total'])) if not fs.startswith('cmp_') else 0
         o['best_index'] = i
         out['sets'][fs] = o
-    json.dump(out, open(os.path.join(OUTDIR, f'phase2_wp{tag}.json'), 'w'), indent=1)
+    json.dump(out, open(os.path.join(OUTDIR, f'phase2_wp{tag}{VTAG}{"_odd" if ODD else ""}.json'), 'w'), indent=1)
     L = [f'# Phase 2, item 4: working point of the {npi}π event classifier on the expected total uncertainty', '',
          f'Generated by `scripts/mp_evt.py wp{" --npi 3" if npi == 3 else ""}` from the universe step (`syst`) and the detector step (`detsyst`). '
          'One-bin total, test periods (FHC Run 5, RHC Run 3) projected to the full exposure. Terms: data statistics; flux 17% × (1 + B/S); '
@@ -719,7 +865,7 @@ def wp():
             rw = '/'.join(str(raw[h][i]) for h in ('FHC', 'RHC') if h in raw) if raw else '–'
             L.append(f'| {t:.4g} | {100 * c["efficiency"][i]:.2f}% | {100 * c["purity"][i]:.1f}% | '
                      + ' | '.join(f'{100 * c[k][i]:.1f}%' for k in TERMS) + f' | {100 * c["total"][i]:.1f}% | {rw} |')
-    open(os.path.join(OUTDIR, f'phase2_wp{tag}.md'), 'w').write('\n'.join(L) + '\n')
+    open(os.path.join(OUTDIR, f'phase2_wp{tag}{VTAG}{"_odd" if ODD else ""}.md'), 'w').write('\n'.join(L) + '\n')
     print('\n'.join(L[:12]))
 
 
@@ -789,8 +935,8 @@ def write_md(res, tag):
     L += ['', '### Largest feature importances (gain)', '']
     for fs in ('pid', 'full'):
         L.append(f'- {fs}: ' + ', '.join(f'{k} ({v:.1f})' for k, v in list(res[fs]['importance_gain'].items())[:10]))
-    open(os.path.join(OUTDIR, f'phase2_event{tag}.md'), 'w').write('\n'.join(L) + '\n')
+    open(os.path.join(OUTDIR, f'phase2_event{tag}{VTAG}.md'), 'w').write('\n'.join(L) + '\n')
 
 
 if __name__ == '__main__':
-    {'build': build, 'build_detvar': build_detvar, 'train': train, 'syst': syst, 'detsyst': detsyst, 'wp': wp}[sys.argv[1]]()
+    {'build': build, 'build_detvar': build_detvar, 'detvar_evt': detvar_evt, 'train': train, 'syst': syst, 'detsyst': detsyst, 'wp': wp, 'detboot': detboot}[sys.argv[1]]()

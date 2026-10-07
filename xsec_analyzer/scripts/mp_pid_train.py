@@ -13,7 +13,11 @@ selection counts pions), track score >= 0.5. Pion-vs-rest, pion-vs-proton and pi
 for the new P(pi) and for the current scores: the split mp_pion_bdt (soft below 20 cm, hard above) as
 CC1mu2pi applies it, the single mp_pion_bdt, the inclusive pion and MIP BDTs and the LLR score.
 
-    python3 scripts/mp_pid_train.py [--max-train N]
+    python3 scripts/mp_pid_train.py [--max-train N] [--unmatched] [--common] [--tag NAME] [--drop f1,f2] [--aug F]
+--drop sets the listed inputs to the missing-value sentinel for every track, so the model cannot use them while keeping
+the input list of the selection; --aug F adds the tracks of the Run-4 detector-variation samples (CV and the eight
+variations, /data/uboone/processed/mp_pid_detvar) from events with an even event number to the training, weighted to a
+fraction F of the nominal training weight (the odd events are left for scripts/mp_pid_detsens.py).
 Outputs in report/planning/multipion/: phase1_classifier.json (all numbers), phase1_classifier.md (tables);
 the model in /data/uboone/processed/mp_pid/model_xgb.json.
 """
@@ -67,6 +71,19 @@ def load():
     return d, X
 
 
+def load_detvar(drop=()):
+    """Tracks of the Run-4 detector-variation dumps (CV and variations, FHC and RHC), as load()."""
+    cols = sorted(set(FEATURES + META + ['evt']))
+    parts = []
+    for f in sorted(glob.glob('/data/uboone/processed/mp_pid_detvar/pidtrk-detvar_*.root')):
+        parts.append(uproot.open(f)['trk'].arrays(cols, library='np'))
+    d = {c: np.concatenate([p[c] for p in parts]) for c in cols}
+    X = np.stack([d[c].astype(np.float32) for c in FEATURES], axis=1)
+    X[~np.isfinite(X) | (X <= -9998) | (np.abs(X) > 1e30)] = MISSING
+    for f_ in drop: X[:, FEATURES.index(f_)] = MISSING
+    return d, X
+
+
 def auc(y, s):
     return float(roc_auc_score(y, s)) if 0 < y.sum() < len(y) else float('nan')
 
@@ -77,8 +94,13 @@ def main():
     # candidate pool) are kept and labelled "other" instead of being dropped, in training and in testing
     unmatched = '--unmatched' in sys.argv
     tag = ('_unmatched' if unmatched else '') + ('_common' if '--common' in sys.argv else '')
+    if '--tag' in sys.argv: tag += '_' + sys.argv[sys.argv.index('--tag') + 1]
+    outdir = os.path.join(OUTDIR, 'detrobust') if '--tag' in sys.argv else OUTDIR   # variants of the robustness study
+    drop = [x for x in sys.argv[sys.argv.index('--drop') + 1].split(',')] if '--drop' in sys.argv else []
+    aug = float(sys.argv[sys.argv.index('--aug') + 1]) if '--aug' in sys.argv else 0.
     t0 = time.time()
     d, X = load()
+    for f_ in drop: X[:, FEATURES.index(f_)] = MISSING
     lab = d['label'].copy()
     if unmatched:
         lab[~(d['purity'] > 0.5)] = 3
@@ -94,10 +116,23 @@ def main():
     rng.shuffle(itr); nval = len(itr) // 10; iva, itr = itr[:nval], itr[nval:]
     cnt = np.bincount(lab[itr], minlength=4).astype(float)
     cw = cnt.sum() / (4 * np.maximum(cnt, 1.))                  # balanced classes
-    dtr = xgb.DMatrix(X[itr], label=lab[itr], weight=cw[lab[itr]], feature_names=FEATURES, missing=np.nan)
+    Xtr, ytr, wtr = X[itr], lab[itr], cw[lab[itr]]
+    if aug > 0.:
+        dv, Xdv = load_detvar(drop)
+        ldv = dv['label'].copy()
+        if unmatched:
+            ldv[~(dv['purity'] > 0.5)] = 3
+            mdv = (dv['ts'] >= 0.5) & (dv['len'] >= 5.)
+        else:
+            mdv = (dv['purity'] > 0.5) & (dv['ts'] >= 0.5) & (dv['len'] >= 5.)
+        mdv &= (dv['evt'].astype(np.int64) % 2 == 0)
+        wdv = cw[ldv[mdv]] * (aug * wtr.sum() / cw[ldv[mdv]].sum())
+        Xtr = np.concatenate([Xtr, Xdv[mdv]]); ytr = np.concatenate([ytr, ldv[mdv]]); wtr = np.concatenate([wtr, wdv])
+        print(f'  augmented with {int(mdv.sum())} detector-variation tracks (weight fraction {aug})', flush=True)
+    dtr = xgb.DMatrix(Xtr, label=ytr, weight=wtr, feature_names=FEATURES, missing=np.nan)
     dva = xgb.DMatrix(X[iva], label=lab[iva], weight=cw[lab[iva]], feature_names=FEATURES, missing=np.nan)
     params = dict(objective='multi:softprob', num_class=4, eval_metric='mlogloss', tree_method='hist',
-                  max_depth=6, eta=0.1, subsample=0.8, colsample_bytree=0.8, min_child_weight=5, nthread=8, seed=1)
+                  max_depth=6, eta=0.1, subsample=0.8, colsample_bytree=0.8, min_child_weight=5, nthread=int(os.environ.get("SLURM_CPUS_PER_TASK", 8)), seed=1)
     print(f'training on {len(itr)} tracks (validation {len(iva)}), class counts {cnt.astype(int).tolist()}', flush=True)
     bst = xgb.train(params, dtr, num_boost_round=2000, evals=[(dva, 'val')], early_stopping_rounds=50, verbose_eval=100)
     bst = bst[: bst.best_iteration + 1]          # keep the trees up to the best iteration only
@@ -165,13 +200,13 @@ def main():
                                                   proton_pass=float(pass_new[(yt == 2) & pool].mean()),
                                                   muon_pass=float(pass_new[(yt == 0) & pool].mean())))
     out['seconds'] = round(time.time() - t0)
-    os.makedirs(OUTDIR, exist_ok=True)
-    json.dump(out, open(os.path.join(OUTDIR, f'phase1_classifier{tag}.json'), 'w'), indent=1)
-    write_md(out, tag)
+    os.makedirs(outdir, exist_ok=True)
+    json.dump(out, open(os.path.join(outdir, f'phase1_classifier{tag}.json'), 'w'), indent=1)
+    write_md(out, tag, outdir)
     print(json.dumps({k: out[k] for k in ('n_train', 'n_test', 'best_iteration', 'auc_one_vs_rest_test', 'working_point')}, indent=1))
 
 
-def write_md(o, tag=''):
+def write_md(o, tag='', outdir=OUTDIR):
     L = ['# Phase 1: multiclass particle classifier (held-out runs)', '',
          f'Trained on run periods {o["train_periods"]} ({o["n_train"]} tracks, balanced classes, {o["best_iteration"] + 1} trees), '
          f'tested on periods {o["test_periods"]} ({o["n_test"]} tracks). Track selection: backtracked purity > 0.5, '
@@ -198,7 +233,7 @@ def write_md(o, tag=''):
           f'{100 * w["new_same_eff"]["proton_pass"]:.1f}%, muons passing {100 * w["new_same_eff"]["muon_pass"]:.1f}%.', '',
           '## Largest feature importances (gain share)', '']
     L += [f'- {k}: {v:.3f}' for k, v in o['importance_gain'][:15]]
-    open(os.path.join(OUTDIR, f'phase1_classifier{tag}.md'), 'w').write('\n'.join(L) + '\n')
+    open(os.path.join(outdir, f'phase1_classifier{tag}.md'), 'w').write('\n'.join(L) + '\n')
 
 
 if __name__ == '__main__':
