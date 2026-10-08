@@ -1496,6 +1496,29 @@ template < class UniversePointerContainer >
 
 }
 
+// Detector variation applied FRACTIONALLY (systematic type "DVfrac"): in every covariance-matrix bin the change of the
+// variation sample relative to the detector-variation CV sample, (alt / detVar CV - 1), times the nominal CV
+// prediction. The absolute treatment ("DV") takes alt - detVar CV directly, which carries the normalisation of the
+// detector-variation samples; the NuMI Run-4 ones have 1.27 (FHC) and 1.51 (RHC) times the nominal event rate per
+// POT, so "DV" inflates the detector covariance by those factors.
+void make_cov_mat_frac( const SystematicsCalculator& sc, CovMatrix& cov_mat, const Universe& nominal_cv,
+  const Universe& detvar_cv, const Universe& alt_univ )
+{
+  size_t num_cm_bins = sc.get_covariance_matrix_size();
+  std::vector< double > delta( num_cm_bins, 0. );
+  for ( size_t rb = 0u; rb < num_cm_bins; ++rb ) {
+    const double dv_cv = sc.evaluate_observable( detvar_cv, rb );
+    const double alt = sc.evaluate_observable( alt_univ, rb );
+    const double nom = sc.evaluate_observable( nominal_cv, rb );
+    if ( dv_cv != 0. ) delta.at( rb ) = nom * ( alt / dv_cv - 1. );
+  }
+  for ( size_t a = 0u; a < num_cm_bins; ++a ) {
+    for ( size_t b = 0u; b < num_cm_bins; ++b ) {
+      cov_mat.cov_matrix_->Fill( a, b, delta.at( a ) * delta.at( b ) );
+    }
+  }
+}
+
 // Overloaded version that takes a single alternate universe wrapped in a
 // std::unique_ptr
 void make_cov_mat( const SystematicsCalculator& sc, CovMatrix& cov_mat,
@@ -1655,7 +1678,7 @@ std::cout<<"This is the name "<<name<<"This is the type "<<type<<std::endl;
 
     } // MCFullCorrCategory type
 
-    else if ( type == "DV" ) {
+    else if ( type == "DV" || type == "DVfrac" ) {
       // Get the detector variation type represented by the current universe
       std::string ntuple_type_str;
       config_file >> ntuple_type_str;
@@ -1687,7 +1710,10 @@ std::cout<<"This is the name "<<name<<"This is the type "<<type<<std::endl;
         }
       }
 
-      make_cov_mat( *this, temp_cov_mat, *detVar_cv_u,
+      if ( type == "DVfrac" ) {
+        make_cov_mat_frac( *this, temp_cov_mat, this->cv_universe(), *detVar_cv_u, *detVar_alt_u );
+      }
+      else make_cov_mat( *this, temp_cov_mat, *detVar_cv_u,
         *detVar_alt_u, false, false );
 
 std::cout<<"Get covariances statement 7 works"<<std::endl;
@@ -2016,7 +2042,7 @@ void SystematicsCalculator::dump_universe_observables(
       config_file >> dummy;
       continue;
     }
-    else if ( type == "DV" ) {
+    else if ( type == "DV" || type == "DVfrac" ) {
       // Get the detector variation type represented by the current universe
       std::string ntuple_type_str;
       config_file >> ntuple_type_str;

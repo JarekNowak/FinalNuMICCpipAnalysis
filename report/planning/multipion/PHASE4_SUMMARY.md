@@ -95,11 +95,65 @@ information into the background estimate; it closes for these two models.
 
 With the constraint the combined total agrees with the Python study (17.9% against 16.8%). Without it the framework
 is higher (50.7% against 45.5%) through the detector term, which differs in RHC (28.4% against 17.1%; FHC 40.8%
-against 38.0%), to be understood.
+against 38.0%).
+
+## Detector variations: normalisation of the samples (2026-10-08)
+
+The difference comes from the detector-variation samples. Per 1e20 POT, the Run-4 detector-variation CV overlays
+predict 1.27 (FHC) and 1.51 (RHC) times the event rate of the nominal Run-4 overlays (RHC single-pion signal 781
+against 517, all numu 28585 against 19906); their summed_pot equals the raw SubRun POT sum, so the samples, not the
+processing, differ. The FHC and RHC variation samples have nearly the same rate and antineutrino fraction (0.20),
+unlike the nominal modes (0.16 and 0.21). The framework's `DV` covariance takes the absolute difference between a
+variation and the variation CV, scaled to the data POT, so it carries that rate ratio; the Python study takes the
+ratio of the variation to the variation CV and applies it to the nominal prediction.
+
+`DVfrac` in the systematics configuration (`SystematicsCalculator::make_cov_mat_frac`) does the latter: in every
+covariance bin the difference is nominal x (variation / variation CV - 1). `configs/ccpi_systcalc_numi_dvfrac.conf`
+is the release systematics configuration with the eight detector lines as `DVfrac`; the `*_dvfrac` two-pion
+configurations use it.
+
+| One-bin total, DVfrac | Detector | Total |
+|---|---|---|
+| FHC, no constraint | 29.8% | 51.3% |
+| FHC, constrained | 11.9% | 22.4% |
+| RHC, no constraint | 17.9% | 41.0% |
+| RHC, constrained | 7.6% | 16.3% |
+| COMB, no constraint | 23.0% | 44.5% |
+| COMB, constrained | 8.5% | 15.7% |
+
+The RHC detector term now agrees with the Python study (17.9% against 17.1%), and the combined constrained total
+with it (15.7% against 16.8%).
+
+### Impact on the released single-pion results (study only; version 1.7 unchanged)
+
+`scripts/dvfrac_impact.sh` runs every released single-pion extraction (65: inclusive and proton-tagged, the one-bin
+totals, the two two-dimensional results and W_πp) twice on copies of the release universe files, as released and with
+`DVfrac`; `scripts/dvfrac_compare.py` writes `dvfrac_impact.md` and `dvfrac_impact.tsv` (this folder). The run as
+released reproduces the released SYSTDUMP of all 65.
+
+| One-bin total | Detector, released | DVfrac | Total, released | DVfrac |
+|---|---|---|---|---|
+| Inclusive FHC | 19.2% | 14.2% | 38.1% | 35.9% |
+| Inclusive RHC | 22.1% | 14.3% | 38.1% | 34.1% |
+| Inclusive COMB | 20.4% | 14.0% | 37.7% | 34.6% |
+| Proton-tagged FHC | 11.7% | 8.6% | 41.4% | 40.6% |
+| Proton-tagged RHC | 26.7% | 16.8% | 47.6% | 42.9% |
+| Proton-tagged COMB | 16.2% | 10.9% | 42.3% | 40.5% |
+
+- Per bin the detector uncertainty falls by a median factor 0.78 (FHC), 0.70 (RHC) and 0.71 (COMB), close to the
+  inverse rate ratios of the variation samples (0.79 and 0.66). The total falls by a median factor 0.94; most where
+  the detector term dominated (proton-tagged FHC δφ_T 112% to 47%, δp_T 83% to 50% on the integrated cross section;
+  COMB p_n 97% to 67%).
+- The central values of the differential results move, because the Wiener filter is built from the covariance:
+  the integrated cross section of the 59 differential results changes by a median factor 1.026 (0.92 to 1.18; 16
+  beyond 5%, the largest proton-tagged RHC θ_p), the one-bin totals not at all (no filter). The trace of A_C rises in
+  most results (inclusive COMB cos θ_μ 3.81 to 4.23, θ_μπ 2.51 to 3.02). The largest bin change is the third
+  proton-tagged FHC δφ_T bin, 0.024 ± 0.061 to 0.051 ± 0.031.
+- The truth χ² of the pseudo-data rises slightly with the smaller covariance; the largest is 7.28/4 (proton-tagged
+  RHC cos θ_π, 5.41/4 as released).
 
 ## Open
 
-- The RHC detector term of the framework against the Python study.
 - Item 4, rest: CV pseudo-data and ensembles through the framework; NuWro if a NuMI sample can be validated.
 - Item 5: the same constraint for the single-pion analysis, on pseudo-data.
 - The choice of particle classifier (deployed or LLR and geometry), deferred to after this phase.
