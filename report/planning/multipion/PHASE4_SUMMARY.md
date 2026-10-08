@@ -69,11 +69,34 @@ covariance, so the test checks the procedure, not the model space; the independe
 The score-band sideband holds more signal than the SR (582 against 499 events), so its constraint carries signal-model
 information into the background estimate; it closes for these two models.
 
+## Framework implementation (item 3, 2026-10-08)
+
+- `CC1mu2piBDT` (`NewPIDSelections.hh`): the assignment, the 33 features, the event-classifier score (RBDT,
+  `booster_decision_tree/mp_pid/evt_clf_n2_llronly_pid_rbdt.root`) and the region in the selection, on the
+  LLR-and-geometry particle classifier; Selected is the signal region. On the 30k slice the features equal the Python
+  ones exactly, the scores to 6e-8, the regions in every event; `CC1mu1piXp` stays bitwise identical to version 1.7.
+- Production of the 28 release and 18 detector-variation samples (`slurm/slurm_mp2pi.sbatch`,
+  `/data/uboone/processed/mp2pi`); file lists, links and per-run pseudo-data with dirt (`scripts/mp2pi_setup.py`,
+  `macros/throw_mp2pi.C`; the framework adds the beam-off); bin configuration with the SR and the four sidebands
+  (`configs/mp2pi_total_bin_config.txt`, sideband bins of type 1 in block 0 so that their signal is predicted).
+- `Calculator Constrained` in the extraction configuration selects the `ConstrainedCalculator`. The extractor now
+  propagates the ordinary block of each covariance, and with the constraint what remains of it after the conditioning
+  on the sidebands, so the per-source terms add up to the constrained total; before, configurations with sideband
+  bins returned zero uncertainties.
+
+| One-bin total | Total | Detector | Flux | Cross section | Data statistics | Unfolded / pseudo-data truth |
+|---|---|---|---|---|---|---|
+| FHC, no constraint | 58.4% | 40.8% | 37.0% | 14.7% | 10.5% | 1.055 |
+| FHC, constrained | 24.9% | 15.4% | 6.1% | 9.2% | 13.9% | 1.013 |
+| RHC, no constraint | 46.6% | 28.4% | 31.5% | 15.5% | 8.7% | 1.035 |
+| RHC, constrained | 18.5% | 11.1% | 5.0% | 6.1% | 11.2% | 1.015 |
+
+FHC agrees with the Python study (56.8% without the constraint); in RHC the framework's detector term is larger
+(28.4% against 17.1%), to be understood. The combined configuration is still being built.
+
 ## Open
 
-- Item 3: the framework implementation. The assignment and the event classifier have to run in the selection (C++,
-  RBDT for the event classifier) so that bin configurations with the SR and sideband reco bins can go through univmake
-  and a `ConstrainedCalculator` switch in `UnfolderNuMI`.
+- Item 3: the combined configuration; the RHC detector term of the framework against the Python study.
 - Item 4, rest: CV pseudo-data and ensembles through the framework; NuWro if a NuMI sample can be validated.
 - Item 5: the same constraint for the single-pion analysis, on pseudo-data.
 - The choice of particle classifier (deployed or LLR and geometry), deferred to after this phase.

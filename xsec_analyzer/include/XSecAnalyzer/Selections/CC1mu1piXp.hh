@@ -109,7 +109,11 @@ protected:
   virtual double new_pid_cut() const { return 0.5; }
   virtual double new_pid_min_length() const { return 0.; }
   virtual bool   eval_new_pid() const { return use_new_pid() || store_multipion_info() || store_pid_diag()
-                                         || store_event_tracks(); }
+                                         || store_event_tracks() || use_event_classifier(); }
+  // particle-classifier model file in booster_decision_tree/mp_pid/ ($CC1MU1PIXP_MP_PID_MODEL overrides it, except for
+  // the event classifier, which needs the model it was trained on)
+  virtual std::string mp_pid_model_file() const { return "mp_pid_rbdt_unmatched_common.root"; }
+  std::string mp_pid_model_path_;
   // the 43 inputs of track i in the order of scripts/mp_pid_train.py --common, missing values as -9999
   std::vector<float> mp_pid_features( const AnalysisEvent* ev, size_t i, double dist );
   // class probabilities of track i, evaluated once per event and track for all selections
@@ -203,6 +207,25 @@ protected:
   int  evt_ntrack_ = 0;           // generation-2 PFParticles with track score >= 0.5
   int  evt_nshower_ = 0;          // generation-2 PFParticles with track score < 0.5
   int  evt_mu_cand_idx_ = -1;     // the selection's muon candidate (highest muon-BDT score)
+  // ---- Two-pion event classifier (Phases 2 and 4 of report/planning/MULTIPION_BNB_ADAPTATION_PLAN.md) ----
+  // In events with one neutrino slice, the vertex in the fiducial volume and the software trigger, the tracks of the
+  // event-level dump (up to 8, largest max(P_mu, P_pi) first) are assigned to muon, two pions and rest by the summed
+  // log class probability, and an XGBoost event classifier (RBDT) gives a score from 33 features. Domain: at least
+  // three tracks and theta(mu, longer pion) < 2.6 rad (D6). Region: 0 signal region (score > evt_clf_cut()), then the
+  // sidebands 1 three-pion-like (four or more tracks, three pions more likely than two), 2 an assigned pion with
+  // P(p) > 0.5, 3 score 0.5 to the cut, 4 the rest of the domain; -1 outside. Conventions of scripts/mp_evt.py, which
+  // trained the classifier. Used by CC1mu2piBDT, whose Selected is the signal region.
+  virtual bool use_event_classifier() const { return false; }
+  virtual std::string evt_clf_model_file() const { return ""; }
+  virtual double evt_clf_cut() const { return 0.92; }
+  void classify_event( AnalysisEvent* ev, bool swtrig_ok );
+  std::unique_ptr< TMVA::Experimental::RBDT > evt_clf_;
+  float evt_score_ = -1.f;
+  int   evt_region_ = -1;
+  bool  evt_d6_ = false;
+  int   evt_ndump_ = 0;
+  int   evt_mu_idx_ = -1, evt_pi0_idx_ = -1, evt_pi1_idx_ = -1;   // PFParticle indices of the assignment
+  MyPointer< std::vector<float> > evt_features_;                 // the 33 inputs of the event classifier
   // true primary charged pions, hardest first
   MyPointer< std::vector<float> > mc_pi_mom_;
   MyPointer< std::vector<float> > mc_pi_costh_;

@@ -15,6 +15,7 @@
 #include "FiducialVolume.hh"
 #include "MatrixUtils.hh"
 #include "MCC9SystematicsCalculator.hh"
+#include "ConstrainedCalculator.hh"
 #include "NormShapeCovMatrix.hh"
 #include "PGFPlotsDumpUtils.hh"
 #include "SliceBinning.hh"
@@ -221,6 +222,7 @@ CrossSectionExtractor::CrossSectionExtractor(
   // CrossSectionExtractor configuration file
   std::string syst_config_file_name;
   std::string univ_file_name;
+  std::string calculator_type;   // "Calculator" config line: empty or MCC9 (default), Constrained
   std::string file_properties_config;
 
   std::string unfolding_tech;
@@ -263,6 +265,11 @@ CrossSectionExtractor::CrossSectionExtractor(
       // Get the name of the ROOT file containing the pre-calculated
       // Universe histograms
       iss >> univ_file_name;
+    }
+    else if ( first_word == "Calculator" ) {
+      // "Calculator Constrained": the sideband constraint of ConstrainedCalculator (the reco bins of type 1 in the
+      // UniverseMaker configuration, after the ordinary ones) instead of the default MCC9SystematicsCalculator
+      iss >> calculator_type;
     }
     else if ( first_word == "Flux" ) {
       // Per-configuration integrated numu+numubar flux per POT (cm^-2). Lets
@@ -381,9 +388,14 @@ CrossSectionExtractor::CrossSectionExtractor(
   }
 
   // Initialize the owned SystematicsCalculator
-  auto* temp_syst = new MCC9SystematicsCalculator( univ_file_name,
-    syst_config_file_name );
-  syst_.reset( temp_syst );
+  if ( calculator_type == "Constrained" ) {
+    syst_.reset( new ConstrainedCalculator( univ_file_name, syst_config_file_name ) );
+  }
+  else if ( calculator_type.empty() || calculator_type == "MCC9" ) {
+    syst_.reset( new MCC9SystematicsCalculator( univ_file_name, syst_config_file_name ) );
+  }
+  else throw std::runtime_error( "Unknown \"Calculator\" " + calculator_type
+    + " in the CrossSectionExtractor configuration file" );
 
   // With the SystematicsCalculator in place (including its owned Universe
   // objects), we are ready to initialize the predictions
@@ -462,9 +474,46 @@ CrossSectionResult CrossSectionExtractor::get_unfolded_events() {
   const TMatrixD& err_prop = *xsec.result_.err_prop_matrix_;
   TMatrixD err_prop_tr( TMatrixD::kTransposed, err_prop );
 
+  // Covariances over more bins than the ordinary reco bins (configurations with sideband reco bins; with the
+  // ConstrainedCalculator also the background-only copies of the ordinary bins) enter through their ordinary block;
+  // with the constraint, through what remains of it after the conditioning on the sidebands, with the regression
+  // coefficients K = C_os C_ss^-1 of the total covariance, so that the per-source matrices add up to the
+  // constrained total (C_oo - K C_so - C_os K^T + K C_ss K^T)
+  const int n_ord = err_prop.GetNcols();
+  const bool constrained = ( dynamic_cast< ConstrainedCalculator* >( syst_.get() ) != nullptr );
+  TMatrixD K_reg;
+  if ( constrained ) {
+    const auto T_ptr = matrix_map->at( "total" ).get_matrix();   // a copy: keep it alive
+    const TMatrixD& T = *T_ptr;
+    const int n = T.GetNrows(), q0 = 2 * n_ord;
+    if ( n > q0 ) {
+      TMatrixD Tss = T.GetSub( q0, n - 1, q0, n - 1 );
+      Tss.Invert();
+      TMatrixD Tos = T.GetSub( 0, n_ord - 1, q0, n - 1 );
+      K_reg.ResizeTo( n_ord, n - q0 );
+      K_reg = TMatrixD( Tos, TMatrixD::kMult, Tss );
+    }
+  }
+  auto ordinary_block = [&]( const TMatrixD& C ) {
+    if ( C.GetNrows() == n_ord ) return TMatrixD( C );
+    TMatrixD Coo = C.GetSub( 0, n_ord - 1, 0, n_ord - 1 );
+    if ( !constrained || K_reg.GetNcols() == 0 ) return Coo;
+    const int n = C.GetNrows(), q0 = 2 * n_ord;
+    TMatrixD Cos = C.GetSub( 0, n_ord - 1, q0, n - 1 );
+    TMatrixD Css = C.GetSub( q0, n - 1, q0, n - 1 );
+    TMatrixD KT( TMatrixD::kTransposed, K_reg );
+    TMatrixD a1( K_reg, TMatrixD::kMultTranspose, Cos );        // K C_so (C_so = C_os^T)
+    TMatrixD a2( TMatrixD::kTransposed, a1 );                     // C_os K^T
+    TMatrixD a3( K_reg, TMatrixD::kMult, TMatrixD( Css, TMatrixD::kMult, KT ) );
+    Coo -= a1; Coo -= a2; Coo += a3;
+    return Coo;
+  };
+
   for ( const auto& matrix_pair : *matrix_map ) {
     const std::string& matrix_key = matrix_pair.first;
-    auto temp_cov_mat = matrix_pair.second.get_matrix();
+    const auto full_cov = matrix_pair.second.get_matrix();
+    const TMatrixD ord_cov = ordinary_block( *full_cov );
+    const TMatrixD* temp_cov_mat = &ord_cov;
 
     TMatrixD temp_mat( *temp_cov_mat, TMatrixD::EMatrixCreatorsOp2::kMult,
       err_prop_tr );

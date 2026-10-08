@@ -88,3 +88,16 @@ class CC1mu2piEvt : public CC1mu2pi {
  protected:
   bool store_event_tracks() const override { return true; }
 };
+
+// The two-pion selection of Phases 2 and 4 (report/planning/multipion/PHASE2_SUMMARY.md, PHASE4_SUMMARY.md): the event
+// classifier on the particle classifier with the LLR score and geometry only, signal region at score > 0.92, the four
+// sidebands in <name>_evt_region. Its selection is the classifier's, not the pion count of CC1mu2pi.
+class CC1mu2piBDT : public CC1mu2pi {
+ public:
+  CC1mu2piBDT() : CC1mu2pi() { this->set_selection_name( "CC1mu2piBDT" ); }
+  bool selection( AnalysisEvent* event ) override { return CC1mu1piXp::selection( event ); }
+ protected:
+  bool use_event_classifier() const override { return true; }
+  std::string mp_pid_model_file() const override { return "mp_pid_rbdt_unmatched_common_llronly.root"; }
+  std::string evt_clf_model_file() const override { return "evt_clf_n2_llronly_pid_rbdt.root"; }
+};

@@ -29,6 +29,15 @@ class ConstrainedCalculator : public SystematicsCalculator {
     virtual double evaluate_observable( const Universe& univ, int cm_bin,
       int flux_universe_index = -1 ) const override;
 
+    // Per-category observable of the MCFullCorrCategory systematic type. Not implemented for the constrained
+    // covariance (its bins mix ordinary, background-only and sideband entries); refuse rather than guess.
+    virtual double evaluate_observable( const Universe&, int, std::string event_category,
+      int = -1 ) const override
+    {
+      throw std::runtime_error( "ConstrainedCalculator: MCFullCorrCategory (category \"" + event_category
+        + "\") is not supported with the sideband constraint" );
+    }
+
     virtual double evaluate_mc_stat_covariance( const Universe& univ,
       int cm_bin_a, int cm_bin_b ) const override;
 

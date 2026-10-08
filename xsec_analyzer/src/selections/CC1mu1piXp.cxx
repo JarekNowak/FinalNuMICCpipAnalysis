@@ -16,6 +16,8 @@
 #include <cmath>
 #include <cstdlib>
 #include <fstream>
+#include <map>
+#include <limits>
 #include <iostream>
 #include <sys/stat.h>
 #include "TLine.h"
@@ -509,8 +511,8 @@ void CC1mu1piXp::define_constants() {
         // scripts/mp_pid_train.py --unmatched --common), only for the selections that evaluate it
         if ( eval_new_pid() ) {
           const char* env_model = std::getenv( "CC1MU1PIXP_MP_PID_MODEL" );
-          const std::string model = env_model ? std::string( env_model )
-            : bdt_dir + "/mp_pid/mp_pid_rbdt_unmatched_common.root";
+          const std::string model = ( env_model && !use_event_classifier() ) ? std::string( env_model )
+            : bdt_dir + "/mp_pid/" + mp_pid_model_file();
           std::ifstream test( model );
           if ( !test.good() ) throw std::runtime_error( "CC1mu1piXp: could not read the particle"
             " classifier \"" + model + "\" (set CC1MU1PIXP_MP_PID_MODEL)" );
@@ -518,6 +520,16 @@ void CC1mu1piXp::define_constants() {
           // which is the output file here, or every later Write() goes to gROOT and fails
           TDirectory::TContext keep_directory;
           mp_pid_ = std::make_unique< TMVA::Experimental::RBDT >( "mp_pid", model );
+          mp_pid_model_path_ = model;
+        }
+        // two-pion event classifier (RBDT copy of the XGBoost model of scripts/mp_evt.py train)
+        if ( use_event_classifier() ) {
+          const std::string model = bdt_dir + "/mp_pid/" + evt_clf_model_file();
+          std::ifstream test( model );
+          if ( !test.good() ) throw std::runtime_error( "CC1mu1piXp: could not read the event classifier \""
+            + model + "\"" );
+          TDirectory::TContext keep_directory;
+          evt_clf_ = std::make_unique< TMVA::Experimental::RBDT >( "evt_clf", model );
         }
 
 }
@@ -1676,6 +1688,9 @@ else if (nPrimaryShowers == 0)  shower_cut = true ;
     }
   }
 
+  // two-pion event classifier (CC1mu2piBDT only; see CC1mu1piXp.hh)
+  if ( use_event_classifier() ) this->classify_event( Event, Event->swtrig_ == 1 );
+
 // std::cout<<" Selection H "<< std::endl;
 
 
@@ -1723,6 +1738,8 @@ bool Passed =
     ( apply_shower_veto()        ? pass_shower  : true ) &&
     ( apply_opening_angle_cut()  ? pass_opening : true ) &&
     pass_final;
+  // the two-pion event classifier replaces the cut chain: Selected is its signal region
+  if ( use_event_classifier() ) Passed = ( evt_region_ == 0 );
 
   // multi-pion bookkeeping: per-stage pass bits (not cumulative), so a cut-flow in any
   // stage order can be rebuilt per event from one processing pass
@@ -2700,6 +2717,14 @@ void CC1mu1piXp::define_output_branches() {
     set_branch( &evt_nshower_, "evt_nshower" );        set_branch( &evt_mu_cand_idx_, "evt_mu_cand_idx" );
   }
 
+  // two-pion event classifier (CC1mu2piBDT only)
+  if ( use_event_classifier() ) {
+    set_branch( &evt_score_, "evt_score" );     set_branch( &evt_region_, "evt_region" );
+    set_branch( &evt_d6_, "evt_d6" );           set_branch( &evt_ndump_, "evt_ndump" );
+    set_branch( &evt_mu_idx_, "evt_mu_idx" );   set_branch( &evt_pi0_idx_, "evt_pi0_idx" );
+    set_branch( &evt_pi1_idx_, "evt_pi1_idx" ); set_branch( evt_features_, "evt_features" );
+  }
+
  // set_branch( &pion_number, "pion_number");
  
 
@@ -2805,6 +2830,8 @@ void CC1mu1piXp::reset() {
                     &etrk_dist_, &etrk_llr_, &etrk_mom_range_mu_, &etrk_mom_mcs_, &etrk_dirx_, &etrk_diry_,
                     &etrk_dirz_, &etrk_costh_, &etrk_true_mom_ } ) (*v)->clear();
   evt_presel_ = false; evt_ntrack_ = 0; evt_nshower_ = 0; evt_mu_cand_idx_ = -1;
+  evt_score_ = -1.f; evt_region_ = -1; evt_d6_ = false; evt_ndump_ = 0;
+  evt_mu_idx_ = evt_pi0_idx_ = evt_pi1_idx_ = -1; evt_features_->clear();
   cutflow_bits_ = 0;
   mu_leadpi_opening_angle_ = -1.;
  // sig_truevertex_fv = 0;
@@ -2855,9 +2882,12 @@ std::vector<float> CC1mu1piXp::mp_pid_features( const AnalysisEvent* ev, size_t 
 // two consecutive events agree in all of these only if one is a copy of the other, with the same
 // output. The inputs are the same in every selection (the vertex distance is computed identically).
 const std::array<float, 4>& CC1mu1piXp::mp_pid_cached( const AnalysisEvent* ev, size_t i, double dist ) {
-  static std::array<double, 5> key{ { -1e300, 0., 0., 0., 0. } };
-  static std::vector< std::array<float, 4> > out;
-  static std::vector<char> have;
+  // one cache per model file, so selections that evaluate different particle models can share a pass
+  struct Cache { std::array<double, 5> key{ { -1e300, 0., 0., 0., 0. } }; std::vector< std::array<float, 4> > out;
+    std::vector<char> have; };
+  static std::map< std::string, Cache > caches;
+  Cache& c = caches[ mp_pid_model_path_ ];
+  std::array<double, 5>& key = c.key; std::vector< std::array<float, 4> >& out = c.out; std::vector<char>& have = c.have;
   const std::array<double, 5> k{ { ev->nu_vx_, ev->nu_vy_, ev->nu_vz_, double( ev->num_pf_particles_ ),
     ev->topological_score_ } };
   if ( k != key ) { key = k; out.assign( ev->num_pf_particles_, {} ); have.assign( ev->num_pf_particles_, 0 ); }
@@ -2868,6 +2898,131 @@ const std::array<float, 4>& CC1mu1piXp::mp_pid_cached( const AnalysisEvent* ev, 
     have[i] = 1;
   }
   return out[i];
+}
+
+// Two-pion event classifier: the assignment and the 33 features of scripts/mp_evt.py (steps build and train), with
+// its order and arithmetic (sums over the eight track slots in numpy's pairwise order, probabilities and directions
+// rounded to float as in the dump the classifier was trained on), then the RBDT score and the region.
+void CC1mu1piXp::classify_event( AnalysisEvent* ev, bool swtrig_ok ) {
+  if ( !mp_pid_ || !evt_clf_ ) return;
+  if ( !( ev->nslice_ == 1 && sel_nuvertex_contained_ && swtrig_ok ) ) return;
+  struct Trk { int idx; double p[4]; double len; double d[3]; };
+  std::vector<Trk> trk;
+  int ntrack = 0, nshower = 0;
+  for ( int q = 0; q < ev->num_pf_particles_; ++q ) {
+    if ( ev->pfp_generation_->at( q ) != 2u ) continue;
+    if ( ev->pfp_track_score_->at( q ) < 0.5 ) ++nshower;
+    else ++ntrack;
+  }
+  const TVector3 vtx( ev->nu_vx_, ev->nu_vy_, ev->nu_vz_ );
+  for ( size_t i = 0; i < ev->track_length_->size(); ++i ) {
+    const float len = ev->track_length_->at(i), llr = ev->track_llr_pid_score_->at(i);
+    const float bp = ev->trk_bragg_p_v->at(i), bmu = ev->trk_bragg_mu_v->at(i), bmip = ev->trk_bragg_mip_v->at(i);
+    if ( ev->pfp_generation_->at(i) != 2u || ev->pfp_track_score_->at(i) < 0.5 ) continue;
+    if ( !( len > 0.f && len < 1e6f && llr > -1.f && llr < 2.f && bp > 0.f && bp < 500.f
+            && bmu > 0.f && bmu < 500.f && bmip > 0.f && bmip < 500.f ) ) continue;
+    const TVector3 st( ev->track_startx_->at(i), ev->track_starty_->at(i), ev->track_startz_->at(i) );
+    const std::array<float, 4>& pr = mp_pid_cached( ev, i, ( st - vtx ).Mag() );
+    const TVector3 dir( ev->track_dirx_->at(i), ev->track_diry_->at(i), ev->track_dirz_->at(i) );
+    const TVector3 u = ( dir.Mag() > 0. ) ? dir.Unit() : TVector3( 0., 0., 0. );
+    Trk t;
+    t.idx = int( i );
+    for ( int c = 0; c < 4; ++c ) t.p[c] = pr[c];
+    t.len = len;
+    t.d[0] = float( u.X() ); t.d[1] = float( u.Y() ); t.d[2] = float( u.Z() );
+    trk.push_back( t );
+  }
+  // largest max(P_mu, P_pi) first, at most eight
+  std::stable_sort( trk.begin(), trk.end(), []( const Trk& a, const Trk& b ) {
+    return std::max( a.p[0], a.p[1] ) > std::max( b.p[0], b.p[1] ); } );
+  if ( trk.size() > 8 ) trk.resize( 8 );
+  const int n = int( trk.size() );
+  evt_ndump_ = n;
+  if ( n < 3 ) return;
+
+  const double FLOOR = 1e-6, BIG = 50., NEG = -std::numeric_limits<double>::infinity();
+  auto clip = []( double x, double lo, double hi ) { return std::min( std::max( x, lo ), hi ); };
+  auto sum8 = []( const std::array<double, 8>& r ) {
+    return ( ( r[0] + r[1] ) + ( r[2] + r[3] ) ) + ( ( r[4] + r[5] ) + ( r[6] + r[7] ) ); };
+  std::array<double, 8> rest{}, gmu{}, gpi{};
+  for ( int k = 0; k < 8; ++k ) {
+    if ( k < n ) {
+      rest[k] = std::log( clip( 1. - trk[k].p[0] - trk[k].p[1], FLOOR, 1. ) );
+      gmu[k] = std::log( clip( trk[k].p[0], FLOOR, 1. ) ) - rest[k];
+      gpi[k] = std::log( clip( trk[k].p[1], FLOOR, 1. ) ) - rest[k];
+    }
+    else { rest[k] = 0.; gmu[k] = NEG; gpi[k] = NEG; }
+  }
+  const double base = sum8( rest );
+  // best and runner-up choice of the muon and npi pions, every choice enumerated in itertools order
+  struct Best { double best, second; int mu; int pi[3]; };
+  auto assign = [&]( int npi ) {
+    Best b{ NEG, NEG, -1, { -1, -1, -1 } };
+    auto consider = [&]( int m, int a, int c2, int c3 ) {
+      double sp = gpi[a];
+      if ( npi >= 2 ) sp = sp + gpi[c2];
+      if ( npi >= 3 ) sp = sp + gpi[c3];
+      double sc = gmu[m] + sp;
+      if ( !std::isfinite( sc ) ) sc = NEG;
+      if ( sc > b.best ) { b.second = b.best; b.best = sc; b.mu = m; b.pi[0] = a; b.pi[1] = c2; b.pi[2] = c3; }
+      else if ( sc > b.second ) b.second = sc;
+    };
+    for ( int m = 0; m < 8; ++m ) {
+      std::vector<int> o;
+      for ( int k = 0; k < 8; ++k ) if ( k != m ) o.push_back( k );
+      const int no = int( o.size() );
+      for ( int x = 0; x < no; ++x ) {
+        if ( npi == 1 ) { consider( m, o[x], -1, -1 ); continue; }
+        for ( int y = x + 1; y < no; ++y ) {
+          if ( npi == 2 ) { consider( m, o[x], o[y], -1 ); continue; }
+          for ( int zz = y + 1; zz < no; ++zz ) consider( m, o[x], o[y], o[zz] );
+        }
+      }
+    }
+    return b;
+  };
+  const Best b1 = assign( 1 ), b2 = assign( 2 ), b3 = assign( 3 );
+  const double L1 = base + b1.best, L2 = base + b2.best, L2s = base + b2.second, L3 = base + b3.best;
+  const double f_up = L2 - L1;
+  const double f_down = ( n >= 4 && std::isfinite( L3 ) ) ? L2 - L3 : BIG;
+  const double f_ru = std::isfinite( L2s ) ? L2 - L2s : BIG;
+  const int mu = b2.mu;
+  int pi0 = b2.pi[0], pi1 = b2.pi[1];
+  if ( trk[pi1].len > trk[pi0].len ) std::swap( pi0, pi1 );      // longer pion first (decision D6)
+  std::array<double, 8> fr{};
+  std::array<std::array<double, 8>, 4> pv{};
+  int rest_n = 0, rest_npp = 0, nshort = 0;
+  double rest_maxpp = -1., rest_maxppi = -1.;
+  std::array<int, 4> ncls{ { 0, 0, 0, 0 } };
+  for ( int k = 0; k < n; ++k ) {
+    for ( int c = 0; c < 4; ++c ) { pv[c][k] = trk[k].p[c]; if ( trk[k].p[c] > 0.5 ) ++ncls[c]; }
+    if ( trk[k].len < 5. ) ++nshort;
+    if ( k == mu || k == pi0 || k == pi1 ) continue;
+    ++rest_n;
+    rest_maxpp = std::max( rest_maxpp, trk[k].p[2] );
+    rest_maxppi = std::max( rest_maxppi, trk[k].p[1] );
+    if ( trk[k].p[2] > 0.5 ) ++rest_npp;
+  }
+  std::vector<double> f = { f_up, f_down, f_ru, L2,
+    trk[mu].p[0], trk[mu].p[1], trk[mu].p[2], trk[mu].p[3], ( trk[mu].idx == CandidateMuonIndex ) ? 1. : 0.,
+    double( rest_n ), rest_maxpp, rest_maxppi, double( rest_npp ),
+    sum8( pv[0] ), sum8( pv[1] ), sum8( pv[2] ), sum8( pv[3] ),
+    double( ncls[0] ), double( ncls[1] ), double( ncls[2] ), double( ncls[3] ),
+    double( n ), double( nshort ), double( ntrack ), double( nshower ),
+    double( ev->topological_score_ ), clip( double( ev->cosmic_impact_parameter_ ), -1., 1000. ),
+    trk[pi0].p[0], trk[pi0].p[1], trk[pi0].p[2], trk[pi1].p[0], trk[pi1].p[1], trk[pi1].p[2] };
+  std::vector<float> ff( f.begin(), f.end() );
+  evt_features_->assign( ff.begin(), ff.end() );
+  evt_score_ = evt_clf_->Compute( ff ).at( 0 );
+  evt_mu_idx_ = trk[mu].idx; evt_pi0_idx_ = trk[pi0].idx; evt_pi1_idx_ = trk[pi1].idx;
+  const double cos_mu_pi0 = ( trk[mu].d[0] * trk[pi0].d[0] + trk[mu].d[1] * trk[pi0].d[1] ) + trk[mu].d[2] * trk[pi0].d[2];
+  evt_d6_ = cos_mu_pi0 > std::cos( 2.6 );
+  if ( !evt_d6_ ) return;
+  if ( evt_score_ > evt_clf_cut() ) evt_region_ = 0;
+  else if ( n >= 4 && f_down < 0. ) evt_region_ = 1;
+  else if ( std::max( trk[pi0].p[2], trk[pi1].p[2] ) > 0.5 ) evt_region_ = 2;
+  else if ( evt_score_ > 0.5 ) evt_region_ = 3;
+  else evt_region_ = 4;
 }
 
 void CC1mu1piXp::define_category_map() {
