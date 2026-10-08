@@ -90,13 +90,16 @@ information into the background estimate; it closes for these two models.
 | FHC, constrained | 24.9% | 15.4% | 6.1% | 9.2% | 13.9% | 1.013 |
 | RHC, no constraint | 46.6% | 28.4% | 31.5% | 15.5% | 8.7% | 1.035 |
 | RHC, constrained | 18.5% | 11.1% | 5.0% | 6.1% | 11.2% | 1.015 |
+| COMB, no constraint | 50.7% | 33.4% | 33.7% | 15.0% | 6.7% | 1.044 |
+| COMB, constrained | 17.9% | 11.9% | 4.7% | 6.7% | 8.7% | 1.019 |
 
-FHC agrees with the Python study (56.8% without the constraint); in RHC the framework's detector term is larger
-(28.4% against 17.1%), to be understood. The combined configuration is still being built.
+With the constraint the combined total agrees with the Python study (17.9% against 16.8%). Without it the framework
+is higher (50.7% against 45.5%) through the detector term, which differs in RHC (28.4% against 17.1%; FHC 40.8%
+against 38.0%), to be understood.
 
 ## Open
 
-- Item 3: the combined configuration; the RHC detector term of the framework against the Python study.
+- The RHC detector term of the framework against the Python study.
 - Item 4, rest: CV pseudo-data and ensembles through the framework; NuWro if a NuMI sample can be validated.
 - Item 5: the same constraint for the single-pion analysis, on pseudo-data.
 - The choice of particle classifier (deployed or LLR and geometry), deferred to after this phase.
