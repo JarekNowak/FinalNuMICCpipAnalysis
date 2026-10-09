@@ -94,10 +94,25 @@ class CC1mu2piEvt : public CC1mu2pi {
 // sidebands in <name>_evt_region. Its selection is the classifier's, not the pion count of CC1mu2pi.
 class CC1mu2piBDT : public CC1mu2pi {
  public:
-  CC1mu2piBDT() : CC1mu2pi() { this->set_selection_name( "CC1mu2piBDT" ); }
+  explicit CC1mu2piBDT( const std::string& name = "CC1mu2piBDT" ) : CC1mu2pi() { this->set_selection_name( name ); }
   bool selection( AnalysisEvent* event ) override { return CC1mu1piXp::selection( event ); }
+  // Beam-on data are opened only in the control regions of the single-pion selection. The sideband
+  // flags this selection inherits come from its own cut chain, so in a control-region skim
+  // (XSEC_CR_SKIM) it must not add events of its own; its sidebands are the regions of evt_region.
+  bool is_event_in_control_region() const override { return false; }
  protected:
   bool use_event_classifier() const override { return true; }
   std::string mp_pid_model_file() const override { return "mp_pid_rbdt_unmatched_common_llronly.root"; }
   std::string evt_clf_model_file() const override { return "evt_clf_n2_llronly_pid_rbdt.root"; }
+};
+
+// CC1mu2piBDT with the event-level track dump (etrk_*: the class probabilities of its particle classifier, length,
+// vertex distance, containment, momenta, direction, LLR, backtracked truth), for the comparison of its inputs and
+// outputs with beam-on data in the opened control regions of the single-pion analysis (scripts/cr_mp2pi_check.py).
+// Every decision and output of CC1mu2piBDT is unchanged.
+class CC1mu2piBDTEvt : public CC1mu2piBDT {
+ public:
+  CC1mu2piBDTEvt() : CC1mu2piBDT( "CC1mu2piBDTEvt" ) {}
+ protected:
+  bool store_event_tracks() const override { return true; }
 };
