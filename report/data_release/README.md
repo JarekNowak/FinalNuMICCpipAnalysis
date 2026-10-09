@@ -50,7 +50,7 @@ have A_C = 1.
 | `cov/<tag>/cov_total_plusMCS.txt` | **The official covariance**: framework covariance plus the data-side MCS muon-momentum-scale term. Use this one. |
 | `cov/<tag>/cov_total.txt` | Framework covariance alone. |
 | `cov/<tag>/cov_MCSscale.txt` | The MCS term (identically zero for observables that do not use the muon momentum). |
-| `cov/<tag>/cov_<source>.txt` | Per-source terms (`cov_flux*`, `cov_detVar*`, `cov_xsec_*`, `cov_reint`, `cov_POT`, `cov_numTargets`, `cov_MCstats`, `cov_EXTstats`, `cov_DataStats`), blockwise norm/shape/mixed decompositions. |
+| `cov/<tag>/cov_<source>.txt` | Per-source terms (`cov_flux*`, `cov_detVar*` (each detector variation as its fractional change relative to the detector-variation CV sample, applied to the nominal prediction), `cov_xsec_*`, `cov_reint`, `cov_POT`, `cov_numTargets`, `cov_MCstats`, `cov_EXTstats`, `cov_DataStats`), blockwise norm/shape/mixed decompositions. |
 | `cov/<tag>/unfolded_signal.txt` | Unfolded result as bin integrals (the units of the covariances). |
 | `total_xsec.tsv` | The six one-bin totals (inclusive and proton-tagged x FHC/RHC/combined) with their uncertainty breakdown and realised pseudo-data truth. |
 | `index_extractions.tsv` | Every released differential extraction with its status, bins, integral, uncertainty and closure. |

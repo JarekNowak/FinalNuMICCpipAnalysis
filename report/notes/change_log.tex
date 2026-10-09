@@ -1624,6 +1624,43 @@ unchanged.
 The three documents with the changes above are version~1.7. The cross sections, covariances and data release are
 regenerated; the release notes list the changed numbers.
 
+\section{Detector variations taken fractionally (2026-10-08)}
+
+The Run-4 detector-variation samples were simulated with the earlier NuMI flux and the nominal overlays with
+the current one (Geant~v4.10.4). Per POT the variation CV samples predict $1.27$ (FHC) and $1.51$ (RHC) times
+the nominal event rate in the fiducial volume, the ratio rising from $1.1$ below $0.5$~GeV to $1.8$--$3$
+above $5$~GeV; weighted event by event with the ratio of the two fluxes in true energy and angle to the
+beamline, they predict $0.94$ times the nominal rate in both modes, flat in energy. The detector covariance
+was built from the absolute difference between each variation and the variation CV, scaled to the data POT,
+and so carried that rate ratio. It now applies the fractional change of each variation relative to the
+variation CV to the nominal prediction (covariance type \texttt{DVfrac}, commit \texttt{30275ee}). Weighting
+the variation samples to the current flux as well changes the fractional detector change of the selected
+count by at most $0.3\%$ absolute ($8.2\to8.4\%$ FHC, $8.8\to9.1\%$ RHC) and is not applied.
+
+Per bin the detector uncertainty falls by a median factor $0.78$ (FHC), $0.70$ (RHC) and $0.71$ (combined),
+and the total uncertainty by $0.94$. The one-bin totals keep their central values; their detector term is
+$14.0$--$14.3\%$ inclusive (was $19.2$--$22.1\%$) and $8.6$--$16.8\%$ proton-tagged (was $11.7$--$26.7\%$),
+their total uncertainty $34.1$--$35.9\%$ (was $37.7$--$38.2\%$) and $40.5$--$42.9\%$ (was $41.4$--$47.6\%$).
+The Wiener filter is built from the covariance, so the unfolded values and $A_C$ of the differential results
+change as well: their integrals move by a median factor $1.026$ ($0.92$--$1.18$), and $A_C$ retains more
+shape in most results (inclusive combined $\cos\theta_\mu$: trace $3.81\to4.23$). The control regions are
+unchanged; their detector model was already fractional.
+
+\section{Version 1.8 (2026-10-09)}
+
+The three documents with the change above are version~1.8. The cross sections, covariances, data release,
+MCS term and alternative-model closure are regenerated, and the members of the seventeen ensembles of
+version~1.7 are unfolded again on their existing universes; the release notes list the changed numbers.
+The fractional treatment is described where the covariance is defined (analysis note, systematic
+uncertainties and the RHC samples; supplement, covariance). Four supplement items that still carried values
+of earlier versions now carry those of version~1.8: the D'Agostini table, the mean $A_C$ row sums of the
+proton-tagged observables, the passages on the $p_\pi$ regions and the per-observable ratios of the combined
+truth to its inputs. Changed because they no longer hold: no released $A_C$ has a negative row (the top row of
+RHC $W_{\pi p}$ sums to $0.24$, was $-0.03$); the RHC $\cos\theta_\mu$ ensemble mean now lies below the
+reference like the others; FHC $\delta\phi_T$ is no longer among the proton-tagged results with the largest
+detector term; the identity check now has one non-$\cos\theta_\mu$ extraction above $4\times10^{-6}$, so the
+quoted threshold is $6\times10^{-6}$.
+
 \section{Open items}
 
 The following remain outstanding following the 2026-09-07 review. None is a correction awaiting application;
@@ -1647,12 +1684,12 @@ yet made.
     control region for any proton-tagged result; the documented treatment of any
     control-region discrepancy under the frozen procedure.
   \item \textbf{Ensembles:} every released extraction with an ensemble was repeated for version~1.7
-    (2026-10-05): statistical pull widths $0.92$--$1.10$, coverage nominal, integral offsets within
-    $1\%$. No test of this kind remains outstanding.
+    (2026-10-05) and unfolded again for version~1.8 (2026-10-09): statistical pull widths $0.92$--$1.09$,
+    coverage nominal, integral offsets within $1.1\%$. No test of this kind remains outstanding.
   \item \textbf{Systematic terms not in the released covariance:} the MCS muon momentum-scale
     term is evaluated at $\pm5\%$ on the data side and released as a separate component for $p_\mu$
-    in all three configurations (up to $0.60\sigma$ per bin in FHC, $0.44\sigma$ combined and
-    $0.32\sigma$ in RHC), is exactly zero for the other inclusive observables, and is not propagated
+    in all three configurations (up to $0.65\sigma$ per bin in FHC, $0.52\sigma$ combined and
+    $0.42\sigma$ in RHC), is exactly zero for the other inclusive observables, and is not propagated
     inside the framework; the beam-off gate-ratio and Run-2 stand-in terms ($\lesssim0.4\%$
     of the total); the beamline-geometry flux term ($\lesssim0.2\%$).
   \item \textbf{Muon-momentum shape in the control regions:} the two-dimensional comparison with
@@ -1665,9 +1702,9 @@ yet made.
   \item \textbf{Limits of the exposure:} the differential $W_{\pi p}$ shape is withdrawn
     (no binning satisfies both the migration and the statistics requirement); the
     proton-tagged sample supports an integrated cross section.
-  \item \textbf{Ensemble offset:} the inclusive one-dimensional ensemble means sit within $0.7\%$ of the
-    reference, five of the six below it, at up to $1.5\sigma$ (the RHC total, $-0.6\%$), and that of
-    $\cos\theta_\pi\times\cos\theta_\mu$ $0.9\%$ below at $2.7\sigma$, carried by its sparsest cell; the throw itself is
+  \item \textbf{Ensemble offset:} the inclusive one-dimensional ensemble means sit within $0.9\%$ of the
+    reference, all six below it, at up to $1.5\sigma$ (the RHC total, $-0.6\%$), and that of
+    $\cos\theta_\pi\times\cos\theta_\mu$ $0.8\%$ below at $2.4\sigma$, carried by its sparsest cell; the throw itself is
     unbiased (mean thrown selected count $1.004$ of the expectation), so the offset, if real, is in the
     extraction; a larger ensemble would settle it.
 \end{itemize}
@@ -1698,24 +1735,24 @@ band correctly; the systematic part remains untested by construction.
 \toprule
 Quantity & superseded value & status \\
 \midrule
-Mean inclusive closure ratio        & $1.106$, $1.001$, $1.016$, $1.018$, $1.010$, $0.996$ & now $1.003$ (version~1.7) \\
+Mean inclusive closure ratio        & $1.106$, $1.001$, $1.016$, $1.018$, $1.010$, $0.996$ & now $1.001$ (version~1.8; $1.003$ in version~1.7) \\
 Inclusive purity, final cut         & $58.5/57.4/57.9\%$ & $57.3/56.6/56.9\%$ without the Bragg-pion requirement (version~1.7) \\
 Inclusive selection efficiency      & $17.5$--$17.6\%$ & $18.3$--$18.4\%$ (version~1.7) \\
-Largest alternative-model bias      & $1.18\sigma$ (inclusive); $-1.14/-1.16\sigma$ (proton-tagged $\delta p_T$/$p_n$) & $1.10\sigma$; $-0.99/-0.97\sigma$ (version~1.7) \\
-MCS term, FHC $p_\mu$              & $8.2\%$ bin-averaged, $0.56\sigma$ in the open bin & $9.7\%$, $0.60\sigma$ (version~1.7) \\
+Largest alternative-model bias      & $1.18\sigma$ (inclusive); $-1.14/-1.16\sigma$ (proton-tagged $\delta p_T$/$p_n$) & $1.10\sigma$; $-0.99/-0.97\sigma$ (version~1.7); $1.21\sigma$; $-1.08/-1.04\sigma$ (version~1.8) \\
+MCS term, FHC $p_\mu$              & $8.2\%$ bin-averaged, $0.56\sigma$ in the open bin & $9.7\%$, $0.60\sigma$ (version~1.7); $10.1\%$, $0.65\sigma$ (version~1.8) \\
 RHC $W_{\pi p}$ cross section       & $-0.194$         & sign was a POT-convention artefact \\
-Combined detector systematic        & $42.3\%$         & $24.6\%$ at the fix; $21.4\%$ ($p_\mu$) in the current release \\
+Combined detector systematic        & $42.3\%$         & $24.6\%$ at the fix; $17.6\%$ ($p_\mu$) in version~1.8, with the fractional treatment \\
 Combined result / expected          & $0.910$          & $1.027$ at the fix (2026-08-28 pass) \\
 FHC $\theta_\mu$ $A_C$ conditioning & $0.015$          & now $0.51$ \\
 Mean $\delta p_T$                   & $0.742$~GeV/$c$  & now $0.264$~GeV/$c$ (beam frame) \\
-Proton-tagged \texttt{detVar}       & \texttt{n/a}, then $10.5$--$64.4\%$, then $10.5$--$108.5\%$ (2026-09-06) & now $9.9$--$74.5\%$ (median $30.9\%$, 2026-09-26 release) \\
+Proton-tagged \texttt{detVar}       & \texttt{n/a}, then $10.5$--$64.4\%$, then $10.5$--$108.5\%$ (2026-09-06) & $9.9$--$74.5\%$ (median $30.9\%$, 2026-09-26 release); now $6.8$--$47.5\%$ (median $19.2\%$, version~1.8) \\
 Proton-tagged $\sigma$, all obs.    & 2026-08-18 values & superseded 2026-08-31, and again by the re-thrown release of 2026-09-04 (current values in the note) \\
-Cut-and-count totals                & $1.06/0.98/1.02$; $1.03\pm0.43$ / $0.93\pm0.42$ / $0.98\pm0.40$ (borrowed systematic) & now the one-bin extraction $1.03\pm0.40$ / $0.93\pm0.35$ / $0.97\pm0.37$ \\
+Cut-and-count totals                & $1.06/0.98/1.02$; $1.03\pm0.43$ / $0.93\pm0.42$ / $0.98\pm0.40$ (borrowed systematic) & now the one-bin extraction $1.04\pm0.37$ / $0.92\pm0.32$ / $0.97\pm0.34$ (version~1.8) \\
 Proton-tagged purity                & $47$--$48\%$     & now $52/50/51\%$ \\
 Signal-region dirt (final cut)      & $1.1/1.0/2.1$ (FHC/RHC/comb.) & now $6.6/9.5/16.0$; inclusive purity $58.8/57.7/58.2\%$ now $58.5/57.4/57.9\%$ (2026-10-01) \\
 Control-region dirt (FHC)           & $49/0.1/10/1.9$ (CC$0\pi$/multi-$\pi$/$\pi^0$/cosmic) & now $342/0.5/93/18.5$ (2026-10-01) \\
 Control-region global $\chi^2$      & pseudo-data $0.66/8$; beam-on $8.11/8$ & now $2.29/8$ and $6.03/8$ (2026-10-01) \\
-Ensemble offset and pull widths     & $2.5\%$ at $2.1\sigma$; widths $1.04/0.96$ & now $0.5$--$2.7\%$ at $\le1.9\sigma$; widths $1.08/0.97/1.02$; 2026-09-20: six ensembles (FHC/RHC/COMB, $46$--$100$ members) $0.4$--$1.3\%$ at $\le1.5\sigma$, widths $0.90$--$1.10$; 2026-09-24: $100$ members each, race-corrupted members re-run, $0.4$--$1.1\%$ at $\le2.0\sigma$, widths $0.92$--$1.07$; 2026-09-27 (binnings of the 0.50 criterion): widths $0.95$--$1.07$ inclusive, $0.94$--$1.08$ proton-tagged, offsets $0.3$--$1.1\%$ at $\le2.0\sigma$; 2026-10-05 (version~1.7): widths $0.92$--$1.03$ inclusive, $0.93$--$1.10$ proton-tagged, one-dimensional offsets within $0.7\%$ at $\le1.5\sigma$ \\
+Ensemble offset and pull widths     & $2.5\%$ at $2.1\sigma$; widths $1.04/0.96$ & now $0.5$--$2.7\%$ at $\le1.9\sigma$; widths $1.08/0.97/1.02$; 2026-09-20: six ensembles (FHC/RHC/COMB, $46$--$100$ members) $0.4$--$1.3\%$ at $\le1.5\sigma$, widths $0.90$--$1.10$; 2026-09-24: $100$ members each, race-corrupted members re-run, $0.4$--$1.1\%$ at $\le2.0\sigma$, widths $0.92$--$1.07$; 2026-09-27 (binnings of the 0.50 criterion): widths $0.95$--$1.07$ inclusive, $0.94$--$1.08$ proton-tagged, offsets $0.3$--$1.1\%$ at $\le2.0\sigma$; 2026-10-05 (version~1.7): widths $0.92$--$1.03$ inclusive, $0.93$--$1.10$ proton-tagged, one-dimensional offsets within $0.7\%$ at $\le1.5\sigma$ ; 2026-10-09 (version~1.8, unfolded again): widths $0.92$--$1.04$ inclusive, $0.92$--$1.09$ proton-tagged, one-dimensional offsets within $0.9\%$ at $\le1.5\sigma$ \\
 FHC beam-off in the signal region   & $128$, then $13$, then $30$ & now $23$ (per-run gates, corrected Run-1 exposure) \\
 Combined generator weights (FHC:RHC) & $0.458{:}0.542$ & now $0.425{:}0.575$ (2026-09-24) \\
 Two-region $p_\pi$, FHC            & $0.059$ / $0.764$ & now $0.037$ / $0.827$ \\
@@ -1729,9 +1766,12 @@ Binning information measure         & $s_{\min}/s_1\gtrsim0.1$ & Wiener filter f
 Binnings (2026-09-26)               & $p_\mu$ 7, $\cos\theta_\mu$ 5, $p_\pi$ 2, $W_{\rm had}$ 6, $\delta\phi_T$ 2, $\theta_{\pi p}$ 3 bins & now 6, 8, 3 (inclusive), 2, 3, 4; $\theta_\mu$ dropped; $p_p$ added (3) \\
 $\theta_p$ bin edges                & $0,\,0.659,\,1.068,\,1.539,\,\pi$ (RHC-derived) & now the maximin $0,\,0.44,\,0.785,\,1.162,\,\pi$~rad \\
 Mean inclusive closure ratio        & $1.011$ (eighteen extractions) & $0.996$ (fifteen, 2026-09-26) \\
-Smallest inclusive $A_C$ row sum    & $0.05$ (RHC $\cos\theta_\mu$, five bins) & $0.26$ (RHC $\cos\theta_\mu$, eight bins); now $0.33$ (RHC and combined $p_\mu$, version~1.7) \\
-Identity $UR=A_C$                   & $4.4\times10^{-6}$ & $6.1\times10^{-5}$ (eight-bin $\cos\theta_\mu$, width ratio $56{:}1$) \\
+Smallest inclusive $A_C$ row sum    & $0.05$ (RHC $\cos\theta_\mu$, five bins) & $0.26$ (RHC $\cos\theta_\mu$, eight bins); $0.33$ (RHC and combined $p_\mu$, version~1.7); now $0.38$ (combined $p_\pi$, version~1.8) \\
+Identity $UR=A_C$                   & $4.4\times10^{-6}$ & $6.1\times10^{-5}$ (eight-bin $\cos\theta_\mu$, width ratio $56{:}1$); $5.7\times10^{-5}$ in version~1.8 \\
 Curve reproduction from $A_C$       & $1.2\times10^{-10}$ & relative $4\times10^{-8}$, the precision of the text files \\
+Detector term, one-bin totals       & $19.2$--$22.1\%$ inclusive, $11.7$--$26.7\%$ proton-tagged & now $14.0$--$14.3\%$ and $8.6$--$16.8\%$, detector variations taken fractionally (version~1.8) \\
+Negative $A_C$ row (RHC $W_{\pi p}$) & row sum $-0.03$ & now $0.24$; no released $A_C$ has a negative row (version~1.8) \\
+$\cos\theta_\pi\times\cos\theta_\mu$ conditioning & $0.491$ (version~1.7) & now $0.319$, with the $A_C$ trace $3.94\to4.11$ (version~1.8) \\
 \bottomrule
 \end{tabular}
 \end{center}

@@ -24,6 +24,8 @@ comparable to it is a limit on the result.
 
     python3 report/tools/altmodel_eval.py [FHC5|RHCFULL] [incl|1p]
     python3 report/tools/altmodel_eval.py V1      (proton angles FHC and the two combined 2D results)
+    python3 report/tools/altmodel_eval.py [FHC5|RHCFULL] [incl|1p] perbin   (per-bin ratio, bias and uncertainty;
+                                                  the truth-level changes are in logs/braggfix/altmodel_perbin.log)
     (1p = the proton-tagged family: W_had, the TKI variables, cos theta_pi and p_p, FHC only)
 """
 import os, sys
@@ -108,6 +110,23 @@ def main_v1():
         print('\nlargest |bias| over all bins and variations: %.2f sigma of the quoted uncertainty' % max(x[4] for x in rows))
 
 
+def main_perbin():
+    """Per bin, for the analysis-note text: unfolded / alternative truth, bias in units of the quoted
+    uncertainty, and that uncertainty in % of the unfolded value (format of logs/braggfix/altmodel_perbin.log)."""
+    for obs in OBS:
+        for tag, _ in TAGS:
+            d = load(f'{RB}/closure_hists_xsec_{PFX}_{CFG}_{obs}_{tag}.root')
+            if d is None: continue
+            ok = d['t'] > 0
+            r = np.where(ok, d['v'] / np.where(ok, d['t'], 1), np.nan)
+            b = np.where(ok, (d['v'] - d['t']) / d['e'], np.nan)
+            u = 100 * d['e'] / np.abs(d['v'])
+            print(f'{FAM} {CFG} {obs} {tag}: ratio ' + ' '.join(f'{x:.2f}' for x in r) + ' | bias '
+                  + ' '.join(f'{x:+.2f}' for x in b) + ' | unc% ' + ' '.join(f'{x:.0f}' for x in u))
+
+
+if __name__ == '__main__' and len(sys.argv) > 3 and sys.argv[3] == 'perbin':
+    main_perbin(); sys.exit(0)
 if __name__ == '__main__' and len(sys.argv) > 1 and sys.argv[1] == 'V1':
     main_v1(); sys.exit(0)
 if __name__ == '__main__':

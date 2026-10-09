@@ -207,7 +207,7 @@ SYSTCALC = {"fhc5":  "ccpi_systcalc_numi.conf",
 SYSTCALC_1P = "ccpi1p_systcalc_numi.conf"
 
 def declared_dv(conf):
-    """DV sources declared in a systcalc config: '<name> DV <file_type>'."""
+    """DV sources declared in a systcalc config: '<name> DV <file_type>' or '<name> DVfrac <file_type>'."""
     out = set()
     p = os.path.join(CFG, conf)
     if not os.path.exists(p):
@@ -217,7 +217,7 @@ def declared_dv(conf):
         if not line or line.startswith("#"):
             continue
         f = line.split()
-        if len(f) >= 3 and f[1] == "DV":
+        if len(f) >= 3 and f[1] in ("DV", "DVfrac"):
             out.add(f[2])
     return out
 
