@@ -64,6 +64,9 @@ const std::string PPFX_WEIGHT_NAME = "weight_ppfx_cv_UBPPFXCV";
 // Special weight name to store the unweighted event counts
 const std::string UNWEIGHTED_NAME = "unweighted";
 
+// Optional per-event weight of the reweighted detector-variation samples (new / old NuMI flux)
+const std::string FLUX_RW_WEIGHT_NAME = "numi_flux_rw_weight";
+
 constexpr double MIN_WEIGHT = 0.;
 constexpr double MAX_WEIGHT = 30.;
 

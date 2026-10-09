@@ -202,6 +202,17 @@ void UniverseMaker::build_universes(
     input_chain_.SetBranchAddress( "normalisation_weight", &normalisation_weight_numi );
   }
 
+  // Optional per-event weight, carried only by the reweighted copies of the Run-4 detector-variation samples
+  // (scripts/detvar_fluxw.py): the ratio of the new (g4.10.4) to the old NuMI flux those samples were simulated with.
+  // Applied in every universe, including the "unweighted" one through which the detector variations enter; files
+  // without the branch (every other sample) are unaffected.
+  float flux_rw_weight = 1.f;
+  input_chain_.LoadTree( 0 );
+  if ( input_chain_.GetBranch( FLUX_RW_WEIGHT_NAME.c_str() ) ) {
+    input_chain_.SetBranchAddress( FLUX_RW_WEIGHT_NAME.c_str(), &flux_rw_weight );
+    std::cout << "Applying the per-event weight " << FLUX_RW_WEIGHT_NAME << '\n';
+  }
+
   // Get the first TChain entry so that we can know the number of universes
   // used in each vector of weights
   input_chain_.GetEntry( 0 );
@@ -305,6 +316,7 @@ void UniverseMaker::build_universes(
 
         // Deal with NaNs, etc. to make a "safe weight" in all cases
         double safe_wgt = safe_weight( w );
+        safe_wgt *= flux_rw_weight;
 
         // Get the universe object that should be filled with the processed
         // event weight
@@ -347,32 +359,33 @@ void UniverseMaker::build_universes(
     // the universe event weights, but that any implicit weights from
     // the TTreeFormula evaluations will still be applied.
     auto& univ = universes_.at( UNWEIGHTED_NAME ).front();
+    const double uw = flux_rw_weight;
     for ( const auto& tb : matched_true_bins ) {
-      univ.hist_true_->Fill( tb.bin_index_, tb.weight_ );
+      univ.hist_true_->Fill( tb.bin_index_, tb.weight_ * uw );
       for ( const auto& rb : matched_reco_bins ) {
         univ.hist_2d_->Fill( tb.bin_index_, rb.bin_index_,
-          tb.weight_ * rb.weight_ );
+          tb.weight_ * rb.weight_ * uw );
       } // reco bins
 
       for ( const auto& other_tb : matched_true_bins ) {
         univ.hist_true2d_->Fill( tb.bin_index_, other_tb.bin_index_,
-          tb.weight_ * other_tb.weight_ );
+          tb.weight_ * other_tb.weight_ * uw );
       } // true bins
 
     } // true bins
 
     for ( const auto& rb : matched_reco_bins ) {
 
-      univ.hist_reco_->Fill( rb.bin_index_, rb.weight_ );
+      univ.hist_reco_->Fill( rb.bin_index_, rb.weight_ * uw );
 
       for ( const auto& c : matched_category_indices ) {
         univ.hist_categ_->Fill( c.bin_index_, rb.bin_index_,
-          c.weight_ * rb.weight_ );
+          c.weight_ * rb.weight_ * uw );
       }
 
       for ( const auto& other_rb : matched_reco_bins ) {
         univ.hist_reco2d_->Fill( rb.bin_index_, other_rb.bin_index_,
-          rb.weight_ * other_rb.weight_ );
+          rb.weight_ * other_rb.weight_ * uw );
       }
 
     } // reco bins
