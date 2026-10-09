@@ -107,7 +107,19 @@ unlike the nominal modes (0.16 and 0.21). The framework's `DV` covariance takes 
 variation and the variation CV, scaled to the data POT, so it carries that rate ratio; the Python study takes the
 ratio of the variation to the variation CV and applies it to the nominal prediction.
 
-`DVfrac` in the systematics configuration (`SystematicsCalculator::make_cov_mat_frac`) does the latter: in every
+The cause is the beam simulation: the detector-variation samples were made with the old NuMI flux, the nominal
+overlays (`*_new_numi_flux_*`) with the g4.10.4 one. Weighted event by event with the ratio of the two
+(`/data/uboone/NuMIFlux/NewFluxFiles/ratios_g4_10_4_cvonly_fornuwrofakedata.root`, "New Flux / Old (bugged) Flux" in
+true energy and angle to the beamline, the angle from the true neutrino direction of the unprocessed ntuples), the
+variation CV predicts 8336 events per 1e20 POT in the FV against 8901 nominal (FHC) and 7221 against 7676 (RHC), with
+a ratio flat in energy (0.89 to 1.05 per bin; 1.1 rising to 1.8 to 3 above 5 GeV without the weight). The same weight
+on every variation sample changes the fractional detector change of the selected count little for the single-pion
+selection (quadrature over the eight variations: FHC 8.2% to 8.4%, RHC 8.8% to 9.1%; signal 5.6% to 5.4%, 4.1% to
+4.2%), more for the two-pion signal region in FHC (17.6% to 20.6%; RHC 9.3% to 9.1%), whose events sit higher in
+energy.
+
+`DVfrac` in the systematics configuration (`SystematicsCalculator::make_cov_mat_frac`) takes the ratio, as the Python
+study does: in every
 covariance bin the difference is nominal x (variation / variation CV - 1). `configs/ccpi_systcalc_numi_dvfrac.conf`
 is the release systematics configuration with the eight detector lines as `DVfrac`; the `*_dvfrac` two-pion
 configurations use it.
@@ -123,6 +135,26 @@ configurations use it.
 
 The RHC detector term now agrees with the Python study (17.9% against 17.1%), and the combined constrained total
 with it (15.7% against 16.8%).
+
+With the variation samples also weighted to the new flux (`numi_flux_rw_weight`, written by
+`scripts/detvar_fluxw.py` / `slurm/slurm_detvar_fluxw.sbatch` into copies in `/data/uboone/processed/mp2pi/detvar_fluxw`
+and applied by `UniverseMaker` in every universe when the branch exists; universe files
+`mp2pi_<CFG>_total_fluxw_univmake.root` from `scripts/mp2pi_fluxw_univ.sh`, which runs univmake on the 18 reweighted
+samples alone and merges their per-file directories with `macros/merge_univ_dirs.C`; configurations
+`*_dvfrac_fluxw`):
+
+| One-bin total, DVfrac + flux weight | Detector | Total |
+|---|---|---|
+| FHC, no constraint | 34.2% (29.8%) | 54.0% (51.3%) |
+| FHC, constrained | 11.4% (11.9%) | 22.5% (22.4%) |
+| RHC, no constraint | 18.1% (18.0%) | 41.1% (41.0%) |
+| RHC, constrained | 7.3% (7.6%) | 16.3% (16.3%) |
+| COMB, no constraint | 25.9% (23.0%) | 46.0% (44.5%) |
+| COMB, constrained | 8.2% (8.5%) | 15.7% (15.7%) |
+
+(in brackets DVfrac without the weight). The weight raises the unconstrained FHC detector term, as the Python estimate
+did (17.6% to 20.6% on the selected count), and the sideband constraint removes the difference: the constrained totals
+are unchanged.
 
 ### Impact on the released single-pion results (study only; version 1.7 unchanged)
 

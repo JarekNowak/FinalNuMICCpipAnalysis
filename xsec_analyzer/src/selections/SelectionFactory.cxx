@@ -76,6 +76,9 @@ else if ( selection_name == "CC1mu1piXp" ) {
   else if ( selection_name == "CC1mu2piBDT" ) {
     sel = new CC1mu2piBDT;
   }
+  else if ( selection_name == "CC1mu2piBDTEvt" ) {
+    sel = new CC1mu2piBDTEvt;
+  }
   // threshold variants "<NewPID selection>_tNN": P(pi) > NN/100
   else if ( selection_name.rfind( "NewPID_t" ) != std::string::npos ) {
     const size_t pos = selection_name.rfind( "_t" );
