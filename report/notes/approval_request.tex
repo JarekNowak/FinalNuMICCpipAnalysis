@@ -74,8 +74,9 @@ confirmation (U1) concerns the three integrated fluxes of \noteref{Table}{tab:fl
 is asked to confirm in writing that they are the PPFX-corrected central values that correspond to the
 per-event PPFX weights of the simulation (\noteref{Sec.}{sec:flux_status}). The beam-on exposure check
 (U5) replaces the recorded exposures of \noteref{Table}{tab:pot} by values summed over the runs contained
-in each beam-on file. The size of the MCS momentum-scale variation, $\pm5\%$, is to be confirmed by a
-comparison of the MCS and range momenta of contained muons in data (U4; \noteref{Sec.}{sec:mcs}). The
+in each beam-on file. The MCS and range momenta of contained muons agree between data and simulation
+within $1.5\%$ up to $3$~GeV/$c$; the MCS momentum of exiting muons, lower in the data, is calibrated to the control
+regions from version~1.9 (U4, complete; \noteref{Sec.}{sec:mcs}). The
 clean-cache reproduction of \suppref{Sec.}{sec:pipeline} is to be repeated on the release to be unblinded
 (U6), and the three terms outside the official covariance (\noteref{Sec.}{sec:notincov}) are to be
 included before publication (U7).
@@ -206,12 +207,12 @@ Repository tag and release checksum recorded & analysis state, this section & \\
 \midrule
 Control-region results reviewed; any discrepancy treated under \suppref{Sec.}{sec:cr_protocol} & pending & conveners \\
 Model-distortion pseudo-data closure (reweighted GENIE, FHC) & done, \noteref{Sec.}{sec:validation} & \\
-Model-distortion pseudo-data closure, proton-tagged family (FHC) & done, \ptref{Sec.}{sec:pt_altmodel}; low-imbalance $\delta p_T$/$p_n$ bins biased $1.04$--$1.08\sigma$ under GENIE u545 & \\
-Statistical-coverage ensembles, proton-tagged family ($W_{\rm had}$, $\delta p_T$, $p_n$) & done, \ptref{Sec.}{sec:pt_ensemble}; pull widths $0.93$--$1.09$, integral offsets within $0.9\%$ & \\
-Ensembles and alternative-model closure of the results proposed since then, $\theta_p$, $\theta_{\pi p}$, $\theta_p\times\delta p_T$ and $\cos\theta_\pi\times\cos\theta_\mu$ (prerequisite V1) & done, \ptref{Sec.}{sec:pt_ensemble}, \ptref{Sec.}{sec:pt_altmodel}, \noteref{Sec.}{sec:incl_2d}; pull widths $0.92$--$1.04$, largest bias $0.88\sigma$ & \\
+Model-distortion pseudo-data closure, proton-tagged family (FHC) & done, \ptref{Sec.}{sec:pt_altmodel}; low-imbalance $\delta p_T$/$p_n$ bins biased $1.02$--$1.19\sigma$ under GENIE u545, the lower $W_{\rm had}$ region $+1.04\sigma$ under the angular variation & \\
+Statistical-coverage ensembles, proton-tagged family ($W_{\rm had}$, $\delta p_T$, $p_n$) & done, \ptref{Sec.}{sec:pt_ensemble}; pull widths $0.89$--$1.04$, integral offsets within $1.4\%$ & \\
+Ensembles and alternative-model closure of the results proposed since then, $\theta_p$, $\theta_{\pi p}$, $\theta_p\times\delta p_T$ and $\cos\theta_\pi\times\cos\theta_\mu$ (prerequisite V1) & done, \ptref{Sec.}{sec:pt_ensemble}, \ptref{Sec.}{sec:pt_altmodel}, \noteref{Sec.}{sec:incl_2d}; pull widths $0.92$--$1.04$, largest bias $0.91\sigma$ & \\
 Independent-generator pseudo-data closure (prerequisite U3): a NuWro overlay with the full detector simulation, validated against standalone NuWro on the same flux, unfolded with the nominal response & pending: the existing NuWro overlay failed validation against the standalone prediction and is not used, \noteref{Sec.}{sec:limitations} & \\
 Flux constants confirmed as PPFX-corrected central values & pending, \noteref{Sec.}{sec:flux_status} & flux contact \\
-MCS muon-momentum scale ($\pm5\%$, data side) evaluated on $p_\mu$ in FHC, RHC and combined and released as \texttt{cov\_MCSscale.txt} & done, \noteref{Sec.}{sec:mcs}; at most $0.65\sigma$ (FHC open top bin), $0.52\sigma$ (combined) and $0.42\sigma$ (RHC); exactly zero for the other inclusive observables, which carry no reco-$p_\mu$ cut; computed outside the framework and part of the official covariance (\texttt{cov\_total\_plusMCS.txt}) and of every summary table; size to be confirmed by prerequisite U4; proton-tagged observables evaluated (at most $0.69\sigma$, FHC $p_\mu$; \ptref{Sec.}{sec:pt_mcs}) & \\
+MCS calibration of exiting muons to the control regions, applied to every simulated sample, with its uncertainty released as \texttt{cov\_MCScal.txt} (replacing the $\pm5\%$ momentum-scale term) & done, \noteref{Sec.}{sec:mcs}; for $p_\mu$ at most $0.28\sigma$ (FHC), $0.21\sigma$ (RHC) and $0.43\sigma$ (combined, highest bin); exactly zero for the observables that do not use the muon momentum; computed outside the framework and part of the official covariance (\texttt{cov\_total\_plusMCS.txt}) and of every summary table; prerequisite U4 complete; proton-tagged observables at most $0.35\sigma$ (combined $p_\mu$; \ptref{Sec.}{sec:pt_mcs}) & \\
 Final empty-cache reproduction of the release to be unblinded & pending, \suppref{Sec.}{sec:pipeline} & \\
 Inverted pion-PID region for the CC$0\pi$ misidentification transfer & pending & \\
 Inverted-proton-PID region before any proton-tagged result & pending, \suppref{Sec.}{sec:cr_1p_scope} & \\

@@ -47,14 +47,14 @@ have A_C = 1.
 |---|---|
 | `curves_<tag>.tsv` | Per bin: `bin`, `low`, `high`, `width`, `unfolded_data`, `stat_err`, then `truth_smeared`, `tune_smeared` and the four generator columns, **already smeared by A_C**. Densities: multiply by width to integrate. Two-dimensional tags have `inner_low`, `inner_high`, `outer_low`, `outer_high`, `area` instead; analysis bins are ordered outer slice by outer slice, inner variable fastest. |
 | `A_C_<tag>.tsv` | Additional-smearing matrix; row = smeared bin i, column = true bin j. |
-| `cov/<tag>/cov_total_plusMCS.txt` | **The official covariance**: framework covariance plus the data-side MCS muon-momentum-scale term. Use this one. |
+| `cov/<tag>/cov_total_plusMCS.txt` | **The official covariance**: framework covariance plus the MCS calibration term. Use this one. |
 | `cov/<tag>/cov_total.txt` | Framework covariance alone. |
-| `cov/<tag>/cov_MCSscale.txt` | The MCS term (identically zero for observables that do not use the muon momentum). |
+| `cov/<tag>/cov_MCScal.txt` | The MCS term: the uncertainty of the calibration of the MCS momentum of exiting muons (identically zero for observables that do not use the muon momentum). |
 | `cov/<tag>/cov_<source>.txt` | Per-source terms (`cov_flux*`, `cov_detVar*` (each detector variation as its fractional change relative to the detector-variation CV sample, applied to the nominal prediction), `cov_xsec_*`, `cov_reint`, `cov_POT`, `cov_numTargets`, `cov_MCstats`, `cov_EXTstats`, `cov_DataStats`), blockwise norm/shape/mixed decompositions. |
 | `cov/<tag>/unfolded_signal.txt` | Unfolded result as bin integrals (the units of the covariances). |
 | `total_xsec.tsv` | The six one-bin totals (inclusive and proton-tagged x FHC/RHC/combined) with their uncertainty breakdown and realised pseudo-data truth. |
 | `index_extractions.tsv` | Every released differential extraction with its status, bins, integral, uncertainty and closure. |
-| `mcs_scale_*.tsv`, `ensemble_*.tsv`, `binreview_*.tsv`, `ext_gates.tsv`, `index_A_C.tsv`, `index_curves.tsv` | Supporting summaries. |
+| `mcs_cal.tsv`, `ensemble_*.tsv`, `binreview_*.tsv`, `ext_gates.tsv`, `index_A_C.tsv`, `index_curves.tsv` | Supporting summaries. |
 
 Tags are `<family>_<CFG>_<observable>` with family `incl` or `1p` and CFG in `FHC5`, `RHCFULL`,
 `COMB`; the two-dimensional tags are `1p_COMB_thetap_dpt2d` and `incl_COMB_costhpi_costhmu2d`.
@@ -85,7 +85,7 @@ stand-in term are bounded in the analysis note but not yet in the covariance (pr
     root -l -b -q 'macros/export_curves.C("../report/data_release")'
     root -l -b -q 'macros/export_matrices.C("../report/data_release")'
     python3 ../report/tools/export_2d.py
-    python3 ../report/tools/mcs_eval.py all incl; python3 ../report/tools/mcs_eval.py all 1p
+    python3 ../report/tools/mcs_cal_release.py
     python3 ../report/tools/index_extractions.py
 
 `export_matrices.C` refuses any matrix whose source predates the central-value weighting fix

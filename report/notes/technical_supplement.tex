@@ -118,7 +118,7 @@ Production on Argon in the NuMI Beam\par}
 \vspace{0.8cm}
 {\large Companion to the inclusive and proton-tagged analysis notes\par}
 \vspace{0.5cm}
-\today, {\large version 1.8}
+\today, {\large version 1.9}
 
 \vspace{1.5cm}
 {\large Ishanee Pophale and Jarek Nowak\par}
@@ -215,9 +215,10 @@ Each one-dimensional binning is selected by the following rule, established by t
   \item Check the closure and the per-bin uncertainties of the selected binning.
   \item Freeze the binning.
 \end{enumerate}
-Four adopted binnings differ from the one the rule selects, for the reasons given in
+Five adopted binnings differ from the one the rule selects, for the reasons given in
 \S\ref{sec:binreview}: $\cos\theta_\pi$ and $\theta_{\mu\pi}$ keep five bins, $\delta\alpha_T$ keeps its
-split at $120^\circ$, and the proton-tagged $p_\pi$ keeps two regions. The $0.68$ criterion of the BNB
+split at $120^\circ$, the proton-tagged $p_\pi$ keeps two regions, and $p_\mu$ merges the two highest of
+the six bins selected, which fail the criterion with the MCS-calibrated response. The $0.68$ criterion of the BNB
 CC$1\pi$ measurement is the precedent for the migration criterion and provides a stricter comparison
 point; \S\ref{sec:binreview} gives the consequences of both. Everything in Part~III, including the
 first binning optimisation, the five-bin $p_\pi$ response and the $\theta_\mu$ parameterisation, is
@@ -249,14 +250,15 @@ flux-averaged total relative to a threshold matched to the spectrum (\noteref{Se
 The target count is $N_\mathrm{Ar}=8.710\times10^{29}$ argon nuclei in the fiducial volume.
 
 \paragraph{Covariance.} The official covariance of every result, \texttt{cov\_total\_plusMCS.txt}, is
-the framework covariance, \texttt{cov\_total.txt}, plus the MCS muon-momentum-scale term. The framework
+the framework covariance, \texttt{cov\_total.txt}, plus the MCS-calibration term. The framework
 covariance sums the flux (PPFX universes), cross-section (GENIE multisim and unisims), hadron
 re-interaction, detector-variation, POT and target-count terms and the statistical terms of the
 simulation, the beam-off samples and the data, each propagated through the unfolding and released
 separately (\S\ref{sec:release_schema}). The detector-variation term applies the fractional change of each variation
-relative to the detector-variation CV sample to the nominal prediction (\noteref{Sec.}{sec:systematics}). The MCS term is the half-difference, taken as fully
-correlated, of the results obtained when the MCS-measured muon momenta of the pseudo-data are scaled
-by $\pm5\%$ on the data side and unfolded with the nominal response. It is computed outside the
+relative to the detector-variation CV sample to the nominal prediction (\noteref{Sec.}{sec:systematics}). The MCS term is the uncertainty of the calibration of
+the MCS momentum of exiting muons: seven alternative calibration maps are applied to the pseudo-data, each unfolded
+with the calibrated response, and their shifts form four fully correlated terms (parametric map, cell grid,
+production, beam mode). It is computed outside the
 framework, is zero for the results that do not use the reconstructed muon momentum, and is
 included in every quoted uncertainty and every summary table, among them the systematic breakdowns of
 Tables~\ref{tab:systbreak_fhc}--\ref{tab:systbreak_comb} (\noteref{Sec.}{sec:mcs}). The closure
@@ -270,23 +272,23 @@ sample for Run~2.
 
 The tests of the extraction go from the implementation to the model. The identity closure and the
 pseudo-data closure test the implementation (\S\ref{sec:identity}). Every extraction closes: the
-inclusive ones with $\chi^2\le3.12/8$ and integral ratios of $0.959$--$1.035$, the proton-tagged ones
+inclusive ones with $\chi^2\le3.12/8$ and integral ratios of $0.905$--$1.106$, the proton-tagged ones
 with $\chi^2\le7.28/4$ (RHC $\cos\theta_\pi$) and ratios of $0.91$--$1.21$, and the two two-dimensional
-results with cell ratios of $0.62$--$1.33$. A result can close while it is determined largely by the
+results with cell ratios of $0.38$--$1.48$. A result can close while it is determined largely by the
 modelled migrations or by the regularisation, so the migration criterion and the trace of $A_C$ are
 applied as separate criteria (\S\ref{sec:final_binning}).
 
 Ensembles of $100$ pseudo-experiments test the size of the statistical uncertainties
 (\S\ref{sec:supp_ensemble}). Seven inclusive and ten proton-tagged extractions were run, the proton
 angles in every configuration and the two two-dimensional results among them; the pull widths are
-$0.92$--$1.04$ and $0.92$--$1.09$, and the $68\%$ coverages $64$--$72\%$ and $64$--$73\%$.
+$0.92$--$1.04$ and $0.89$--$1.04$, and the $68\%$ coverages $64$--$72\%$ and $66$--$73\%$.
 
 Pseudo-data from two reweighted interaction models, GENIE multisim universe~545 and the
 $\Delta\to N\pi$ angular unisim, test the robustness to a model that reweighting can reach
 (\noteref{Sec.}{sec:altmodel}, \ptref{Sec.}{sec:pt_altmodel}). The largest bias is $1.21\sigma$, in one
 sparse inclusive bin (FHC $\cos\theta_\mu$); in the proton-tagged sample the low $\delta p_T$ and $p_n$
-bins move by $-1.08\sigma$ and $-1.04\sigma$. The proton angles and the two two-dimensional results stay
-within $0.88\sigma$.
+bins move by $-1.19\sigma$ and $-1.02\sigma$, and the lower $W_\mathrm{had}$ region by $+1.04\sigma$ under the angular
+variation. The proton angles and the two two-dimensional results stay within $0.91\sigma$.
 
 No closure test with an independent generator has been made; the NuWro overlay available so far
 disagrees with standalone NuWro and is not used (\noteref{Sec.}{sec:limitations}). The control regions,
@@ -326,11 +328,11 @@ two-dimensional results. Uncertainties and correlations are taken from the covar
       compared with the result as $\mathrm{smeared}_i=\sum_j A_C[i][j]\,p_j/\mathrm{width}_i$, with
       the area in place of the width for the two-dimensional results. \\
     \texttt{cov/<tag>/cov\_total\_plusMCS.txt} & The official covariance: the framework covariance plus
-      the MCS momentum-scale term. \\
+      the MCS-calibration term (\texttt{cov\_MCScal.txt}). \\
     \texttt{cov/<tag>/cov\_total.txt} & The framework covariance. \\
     \texttt{cov/<tag>/cov\_<source>.txt} & The components by source: flux, detector variations, cross
       section, re-interaction, POT, target count, simulation, beam-off and data statistics, MCS
-      momentum scale. \\
+      calibration. \\
     \texttt{cov/<tag>/unfolded\_signal.txt} & The unfolded bin integrals. \\
     \texttt{total\_xsec.tsv} & The one-bin total cross sections, with their uncertainty breakdown. \\
     \texttt{index\_extractions.tsv} & Every extraction, with its status. \\
@@ -944,7 +946,8 @@ closure and the ensembles, both repeated on the adopted binnings
 
 \paragraph{Adopted binnings.}
 The adopted binnings are those the rule selects under $0.50$ (Table~\ref{tab:binreview_edges}), with
-four exceptions. $\cos\theta_\pi$ keeps its five bins, which pass both criteria ($0.74/0.76$); the
+five exceptions. $p_\mu$ merges the two highest of its six bins, which fail the criterion with the
+MCS-calibrated response (below). $\cos\theta_\pi$ keeps its five bins, which pass both criteria ($0.74/0.76$); the
 seven bins the rule selects would add $0.44/0.46$ degrees of freedom. $\theta_{\mu\pi}$ keeps its
 five bins ($0.79/0.79$), which retain as much as the six selected in FHC and $0.2$ less in RHC.
 $\delta\alpha_T$ keeps its split at $120^\circ$: the rule's $122.5^\circ$ raises the worst diagonal
@@ -952,7 +955,7 @@ from $0.66$ to $0.67$ and changes the trace by less than $0.02$. The proton-tagg
 regions, because the three-region binning fails $0.50$ in the proton-tagged sample. $\theta_\mu$ is
 not reported: a partition has the same diagonals in $\theta_\mu$ as in $\cos\theta_\mu$, and the
 cosine retains up to one degree of freedom more, because the regularisation acts on the density per
-unit of the variable (\S\ref{sec:thetavar}). The binnings are therefore: $p_\mu$ six bins and
+unit of the variable (\S\ref{sec:thetavar}). The binnings are therefore: $p_\mu$ five bins and
 $\cos\theta_\mu$ eight in both families; $p_\pi$ three regions in the inclusive family and two in the
 proton-tagged one; $\cos\theta_\pi$ five and four; $\theta_{\mu\pi}$ five; $W_{\rm had}$ two regions
 split at $1.18$~GeV/$c^2$; $\delta\phi_T$ three bins; $\delta p_T$, $\delta\alpha_T$ and $p_n$ two;
@@ -998,7 +1001,9 @@ signal-to-noise above one from three to two. Under $0.50$ the rule selects six b
 trace $2.1/1.9$). Seven bins ($0.51/0.51$) add $0.1$ and fail $0.50$ in the proton-tagged sample,
 which uses the same edges ($0.46/0.49$), whereas the six-bin edges pass there ($0.53/0.55$). No
 admissible binning keeps the third well-measured component of the released one ($W=0.62/0.52$);
-the closest is $0.40/0.46$, at seven bins.
+the closest is $0.40/0.46$, at seven bins. With the MCS-calibrated response of version~1.9
+(\noteref{Sec.}{sec:mcs}) the two highest of the six bins fall to $0.45$ and $0.28$ in FHC and are merged into
+one bin above $0.825$~GeV/$c$ ($0.65$; $0.69$ in RHC).
 
 \emph{$p_\pi$.} The released edges ($0.175$ and $0.205$~GeV/$c$, open above) are the maximin
 two-bin partition, and no finer binning passes $0.68$: the reconstructed momentum saturates near
@@ -1569,11 +1574,11 @@ comparisons read off any panel are made on equal footing.
       \midrule
       $W_\mathrm{had}$   & $0.85$ \\
       $\delta\alpha_T$   & $0.77$ \\
+      $p_n$              & $0.77$ \\
       $\theta_p$$^{\dagger}$         & $0.76$ \\
-      $p_n$              & $0.75$ \\
       $W_{\pi p}$        & $0.75$ \\
       $p_p$              & $0.74$ \\
-      $\delta p_T$       & $0.67$ \\
+      $\delta p_T$       & $0.66$ \\
       $\theta_{\pi p}$$^{\dagger}$      & $0.65$ \\
       $\delta\phi_T$     & $0.50$ \\
       \midrule
@@ -1763,12 +1768,12 @@ additional-smearing matrix $A_C$, its unfolded total is free of the
 (non-norm-preserving) $A_C$ suppression and is stable against the iteration count.
 Table~\ref{tab:dagostini} compares the two integrated totals for all three
 configurations: the D'Agostini result sits above the Wiener-SVD total by
-$30\%$ (FHC), $30\%$ (RHC) and $27\%$ (Combined), equivalently $A_C$ suppresses the
-quoted Wiener-SVD integral by $23\%$, $23\%$ and $21\%$, and it varies by $\le0.3\%$
+$27\%$ (FHC), $30\%$ (RHC) and $25\%$ (Combined), equivalently $A_C$ suppresses the
+quoted Wiener-SVD integral by $21\%$, $23\%$ and $20\%$, and it varies by $\le0.3\%$
 across 1, 2 and 4 iterations. The D'Agostini integral is flat across the five observables
-to $0.6\%$ (FHC, $1.036$--$1.042$), $1.0\%$ (RHC, $0.925$--$0.934$) and $0.5\%$
-(Combined, $0.973$--$0.978$), and equal to the one-bin totals ($1.042$, $0.925$, $0.975$),
-whereas the Wiener-SVD integrals spread by $30\%$, $27\%$ and $23\%$.
+to $0.6\%$ (FHC, $1.036$--$1.042$), $1.0\%$ (RHC, $0.925$--$0.934$) and $0.4\%$
+(Combined, $0.974$--$0.978$), and equal to the one-bin totals ($1.042$, $0.925$, $0.975$),
+whereas the Wiener-SVD integrals spread by $39\%$, $27\%$ and $25\%$.
 The observable-to-observable spread in the Wiener-SVD integrated
 cross sections (\noteref{Table}{tab:sigint_all}) is therefore the $A_C$ smearing rather than a
 physical or acceptance effect.
@@ -1779,8 +1784,8 @@ physical or acceptance effect.
     cross section, averaged over the five inclusive observables ($p_\mu$, three-region $p_\pi$,
     $\cos\theta_\mu$, $\cos\theta_\pi$, $\theta_{\mu\pi}$; $10^{-38}$~cm$^2$/Ar), evaluated on the
     released pseudo-data (\texttt{xsec\_analyzer/dagostini\_050.sh}). D'Agostini carries no $A_C$ smearing, so
-    it recovers a $27$--$30\%$ higher total, and it is flat across observables (spread $1.0\%$ FHC,
-    $1.1\%$ RHC, $0.5\%$ combined) where the Wiener-SVD integrals spread by $23$--$30\%$,
+    it recovers a $25$--$30\%$ higher total, and it is flat across observables (spread $0.6\%$ FHC,
+    $1.0\%$ RHC, $0.4\%$ combined) where the Wiener-SVD integrals spread by $25$--$39\%$,
     so the observable-to-observable variation of $\sigma_\mathrm{int}$ in
     \noteref{Table}{tab:sigint_all} is the $A_C$ smearing rather than a physical or
     normalisation effect. The last column is the change of the D'Agostini integral between
@@ -1791,9 +1796,9 @@ physical or acceptance effect.
     Config & $\langle\sigma\rangle_\mathrm{WSVD}$ & $\langle\sigma\rangle_\mathrm{DAg}$
       & DAg/WSVD & DAg 1$\to$4~iter \\
     \midrule
-    FHC      & $0.798$ & $1.039$ & $1.30$ & $\le0.3\%$ \\
-    RHC      & $0.712$ & $0.927$ & $1.30$ & $\le0.3\%$ \\
-    Combined & $0.768$ & $0.975$ & $1.27$ & $\le0.1\%$ \\
+    FHC      & $0.817$ & $1.040$ & $1.27$ & $\le0.3\%$ \\
+    RHC      & $0.715$ & $0.927$ & $1.30$ & $\le0.3\%$ \\
+    Combined & $0.779$ & $0.975$ & $1.25$ & $\le0.1\%$ \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -1863,8 +1868,8 @@ $0.6$--$0.8\sigma$ low, while GiBUU, NEUT and NuWro lie within $0.7\sigma$.
   \caption{Total flux-averaged cross section from the one-bin extraction
     (\noteref{Sec.}{sec:total_xsec}; $10^{-38}$~cm$^2$/Ar), compared with the flux-averaged
     generator predictions. The measurement uncertainty is the official one-bin
-    covariance (flux, cross section, re-interaction, detector, POT, targets and statistics; the MCS
-    momentum-scale term is zero for the total, which uses no reconstructed muon momentum; the
+    covariance (flux, cross section, re-interaction, detector, POT, targets and statistics; the MCS-calibration
+    term is zero for the total, which uses no reconstructed muon momentum; the
     beamline-geometry, beam-off trigger-ratio and Run-2 stand-in terms lie outside it,
     \noteref{Sec.}{sec:notincov}). \texttt{data\_release/total\_xsec.tsv}. Values in
     parentheses give each generator's deviation from the measurement in units of the
@@ -1887,30 +1892,30 @@ space) is given for all three configurations in Tables~\ref{tab:systbreak_fhc}--
 \ref{tab:systbreak_comb}. The flux (PPFX) term dominates throughout, followed by the
 detector variations; the data-statistical term reflects the pseudo-data POT of each
 configuration. The largest detector entry is that of FHC $p_\pi$, $24.9\%$; elsewhere the detector
-term is $12.1$--$19.3\%$. The tables use the official covariance: the MCS momentum-scale row is the
+term is $12.1$--$20.5\%$. The tables use the official covariance: the MCS-calibration row is the
 data-side term, computed outside the framework and non-zero only for $p_\mu$ (\noteref{Sec.}{sec:mcs}).
 
 \begin{center}\scriptsize
 \captionof{table}{FHC (\{Run~1,2,4,5\}) systematic breakdown by source, bin-averaged
   fractional uncertainty (\%), from the released systematics dumps (\texttt{logs/systdump}); ``Prediction total'' excludes
-  the data statistics. The MCS momentum-scale row is the data-side term that the official covariance
+  the data statistics. The MCS-calibration row is the data-side term that the official covariance
   adds to the framework covariance.}
 \label{tab:systbreak_fhc}
 \begin{tabular}{lccccc}
 \toprule
 Source & $p_\mu$ & $p_\pi$ & $\cos\theta_\mu$ & $\cos\theta_\pi$ & $\theta_{\mu\pi}$ \\
 \midrule
-\textbf{Prediction total} & \textbf{37.0} & \textbf{49.4} & \textbf{36.7} & \textbf{35.8} & \textbf{33.5} \\
-Cross section (GENIE) & 11.0 & 15.8 & 11.2 & 11.3 & 10.1 \\
-Flux (PPFX) & 28.6 & 36.5 & 28.0 & 27.1 & 28.3 \\
-Detector & 16.1 & 24.9 & 18.8 & 17.6 & 13.5 \\
+\textbf{Prediction total} & \textbf{34.3} & \textbf{49.4} & \textbf{36.7} & \textbf{35.8} & \textbf{33.5} \\
+Cross section (GENIE) & 10.5 & 15.8 & 11.2 & 11.3 & 10.1 \\
+Flux (PPFX) & 27.4 & 36.5 & 28.0 & 27.1 & 28.3 \\
+Detector & 15.1 & 24.9 & 18.8 & 17.6 & 13.5 \\
 Reinteraction & 4.1 & 12.8 & 3.5 & 5.1 & 3.8 \\
-MCS momentum scale & 10.1 & 0.0 & 0.0 & 0.0 & 0.0 \\
-MC stat & 3.4 & 5.2 & 5.4 & 4.4 & 2.5 \\
-EXT stat & 0.7 & 1.8 & 1.6 & 1.2 & 0.8 \\
-Data stat & 10.9 & 16.4 & 17.0 & 14.1 & 7.9 \\
-POT $+$ targets & 3.6 & 4.7 & 3.6 & 3.4 & 3.5 \\
-\textbf{Total (incl.\ data stat)} & \textbf{38.6} & \textbf{52.1} & \textbf{40.7} & \textbf{38.6} & \textbf{34.5} \\
+MCS calibration & 6.5 & 0.0 & 0.0 & 0.0 & 0.0 \\
+MC stat & 2.8 & 5.2 & 5.4 & 4.4 & 2.5 \\
+EXT stat & 0.6 & 1.8 & 1.6 & 1.2 & 0.8 \\
+Data stat & 8.8 & 16.4 & 17.0 & 14.1 & 7.9 \\
+POT $+$ targets & 3.4 & 4.7 & 3.6 & 3.4 & 3.5 \\
+\textbf{Total (incl.\ data stat)} & \textbf{35.5} & \textbf{52.1} & \textbf{40.7} & \textbf{38.6} & \textbf{34.5} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -1923,17 +1928,17 @@ POT $+$ targets & 3.6 & 4.7 & 3.6 & 3.4 & 3.5 \\
 \toprule
 Source & $p_\mu$ & $p_\pi$ & $\cos\theta_\mu$ & $\cos\theta_\pi$ & $\theta_{\mu\pi}$ \\
 \midrule
-\textbf{Prediction total} & \textbf{38.8} & \textbf{37.5} & \textbf{34.0} & \textbf{33.7} & \textbf{31.8} \\
-Cross section (GENIE) & 11.3 & 13.9 & 9.6 & 10.5 & 11.0 \\
-Flux (PPFX) & 27.9 & 29.2 & 25.9 & 25.9 & 26.2 \\
-Detector & 19.3 & 14.4 & 17.4 & 16.9 & 12.5 \\
-Reinteraction & 4.0 & 10.5 & 4.0 & 5.0 & 3.7 \\
-MCS momentum scale & 13.4 & 0.0 & 0.0 & 0.0 & 0.0 \\
+\textbf{Prediction total} & \textbf{41.4} & \textbf{37.5} & \textbf{34.0} & \textbf{33.7} & \textbf{31.8} \\
+Cross section (GENIE) & 13.5 & 13.9 & 9.6 & 10.5 & 11.0 \\
+Flux (PPFX) & 31.3 & 29.2 & 25.9 & 25.9 & 26.2 \\
+Detector & 20.5 & 14.4 & 17.4 & 16.9 & 12.5 \\
+Reinteraction & 4.9 & 10.5 & 4.0 & 5.0 & 3.7 \\
+MCS calibration & 8.5 & 0.0 & 0.0 & 0.0 & 0.0 \\
 MC stat & 3.0 & 3.8 & 4.6 & 3.7 & 2.5 \\
-EXT stat & 1.0 & 1.1 & 1.0 & 1.0 & 0.7 \\
-Data stat & 10.3 & 13.0 & 15.9 & 12.7 & 8.6 \\
-POT $+$ targets & 3.8 & 4.1 & 3.6 & 3.6 & 3.6 \\
-\textbf{Total (incl.\ data stat)} & \textbf{40.3} & \textbf{39.8} & \textbf{37.7} & \textbf{36.2} & \textbf{33.0} \\
+EXT stat & 1.2 & 1.1 & 1.0 & 1.0 & 0.7 \\
+Data stat & 10.2 & 13.0 & 15.9 & 12.7 & 8.6 \\
+POT $+$ targets & 4.3 & 4.1 & 3.6 & 3.6 & 3.6 \\
+\textbf{Total (incl.\ data stat)} & \textbf{42.6} & \textbf{39.8} & \textbf{37.7} & \textbf{36.2} & \textbf{33.0} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -1946,17 +1951,17 @@ POT $+$ targets & 3.8 & 4.1 & 3.6 & 3.6 & 3.6 \\
 \toprule
 Source & $p_\mu$ & $p_\pi$ & $\cos\theta_\mu$ & $\cos\theta_\pi$ & $\theta_{\mu\pi}$ \\
 \midrule
-\textbf{Prediction total} & \textbf{35.6} & \textbf{41.5} & \textbf{32.1} & \textbf{31.1} & \textbf{31.7} \\
-Cross section (GENIE) & 10.7 & 14.8 & 9.5 & 10.4 & 10.7 \\
-Flux (PPFX) & 26.3 & 31.8 & 24.9 & 24.1 & 26.6 \\
-Detector & 17.6 & 17.4 & 16.1 & 13.9 & 12.1 \\
-Reinteraction & 3.9 & 12.3 & 3.9 & 4.8 & 3.6 \\
-MCS momentum scale & 9.9 & 0.0 & 0.0 & 0.0 & 0.0 \\
-MC stat & 2.7 & 3.5 & 3.5 & 3.3 & 2.1 \\
-EXT stat & 0.6 & 1.1 & 0.9 & 0.9 & 0.6 \\
-Data stat & 9.1 & 11.6 & 11.5 & 10.8 & 7.1 \\
-POT $+$ targets & 3.5 & 4.3 & 3.4 & 3.2 & 3.5 \\
-\textbf{Total (incl.\ data stat)} & \textbf{36.8} & \textbf{43.1} & \textbf{34.3} & \textbf{33.0} & \textbf{32.5} \\
+\textbf{Prediction total} & \textbf{36.6} & \textbf{41.5} & \textbf{32.1} & \textbf{31.1} & \textbf{31.7} \\
+Cross section (GENIE) & 10.8 & 14.8 & 9.5 & 10.4 & 10.7 \\
+Flux (PPFX) & 27.6 & 31.8 & 24.9 & 24.1 & 26.6 \\
+Detector & 18.5 & 17.4 & 16.1 & 13.9 & 12.1 \\
+Reinteraction & 4.1 & 12.3 & 3.9 & 4.8 & 3.6 \\
+MCS calibration & 7.2 & 0.0 & 0.0 & 0.0 & 0.0 \\
+MC stat & 1.9 & 3.5 & 3.5 & 3.3 & 2.1 \\
+EXT stat & 0.5 & 1.1 & 0.9 & 0.9 & 0.6 \\
+Data stat & 6.2 & 11.6 & 11.5 & 10.8 & 7.1 \\
+POT $+$ targets & 3.6 & 4.3 & 3.4 & 3.2 & 3.5 \\
+\textbf{Total (incl.\ data stat)} & \textbf{37.1} & \textbf{43.1} & \textbf{34.3} & \textbf{33.0} & \textbf{32.5} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -2064,8 +2069,8 @@ matrices of every inclusive and proton-tagged extraction. No matrix has a negati
 
 Three features bear on the interpretation of the results.
 
-The suppression is large: inclusive $p_\mu$ has a row sum as low as $0.39$ in
-RHC, and the proton-tagged $\delta\phi_T$ one of $0.26$, a strong suppression of that output mode
+The suppression is large: inclusive $p_\mu$ has a row sum as low as $0.35$ in
+the combined configuration, and the proton-tagged $\delta\phi_T$ one of $0.26$, a strong suppression of that output mode
 for a flat input.  It also differs strongly between observables, which is
 why the integrated cross section obtained by summing a differential result
 varies from observable to observable while the underlying physical total cannot.  The
@@ -2124,7 +2129,7 @@ show in the one-bin totals.
 Reference covariance & pull mean & pull width & 68\% / 95\% coverage \\
 \midrule
 \multicolumn{4}{l}{\emph{statistical only}}\\
-$d\sigma/dp_\mu$, FHC                    & $-0.10$ & $1.03$ & $67.3\%$ / $94.5\%$ \\
+$d\sigma/dp_\mu$, FHC                    & $-0.15$ & $1.00$ & $65.0\%$ / $96.2\%$ \\
 $d\sigma/d\cos\theta_\mu$, FHC           & $-0.05$ & $1.00$ & $69.8\%$ / $95.0\%$ \\
 $d\sigma/d\cos\theta_\mu$, RHC           & $-0.05$ & $1.04$ & $63.5\%$ / $93.5\%$ \\
 $d\sigma/dp_\pi$ (three regions), combined & $-0.08$ & $0.94$ & $72.3\%$ / $95.3\%$ \\
@@ -2132,7 +2137,7 @@ one-bin total, FHC                       & $-0.04$ & $0.92$ & $71.0\%$ / $96.0\%
 one-bin total, RHC                       & $-0.16$ & $1.01$ & $66.0\%$ / $95.0\%$ \\
 \midrule
 \multicolumn{4}{l}{\emph{full}}\\
-$d\sigma/dp_\mu$, FHC                    & $-0.02$ & $0.31$ & $99.7\%$ / $100.0\%$ \\
+$d\sigma/dp_\mu$, FHC                    & $-0.03$ & $0.25$ & $100.0\%$ / $100.0\%$ \\
 $d\sigma/d\cos\theta_\mu$, FHC           & $-0.02$ & $0.42$ & $97.6\%$ / $100.0\%$ \\
 $d\sigma/d\cos\theta_\mu$, RHC           & $-0.01$ & $0.44$ & $97.5\%$ / $100.0\%$ \\
 $d\sigma/dp_\pi$ (three regions), combined & $-0.02$ & $0.25$ & $100.0\%$ / $100.0\%$ \\
@@ -2164,8 +2169,8 @@ $p$-values clustered near unity, measured here directly.
 The ensemble means sit below the reference in all six cases, by $0.1$--$0.9\%$
 ($0.3$--$1.5\sigma$ on the mean; largest in significance for the RHC total, $-0.60\%$ at $1.5\sigma$,
 and in size for FHC $\cos\theta_\mu$, $-0.89\%$ at $1.1\sigma$), with
-pull means of $-0.04$ to $-0.10$ and $-0.16$ for the RHC total (Table above;
-\texttt{data\_release/ensemble\_2026-10-09.tsv}). The
+pull means of $-0.04$ to $-0.15$ and $-0.16$ for the RHC total (Table above;
+\texttt{data\_release/ensemble\_2026-10-10.tsv}). The
 extractions of one configuration share the same throws and are correlated, so this is a few
 measurements of a small negative offset, each consistent with zero at the present ensemble
 size. The throw itself is unbiased: the mean selected count over the $100$
@@ -2194,13 +2199,13 @@ The study covers the inclusive sample in all three configurations. The two-dimen
 the proton angles have their own $100$-member ensembles: the inclusive
 $\cos\theta_\pi\times\cos\theta_\mu$ (\noteref{Sec.}{sec:incl_2d}), and on the proton-tagged sample
 $\theta_p$ and $\theta_{\pi p}$ in each configuration and $\theta_p\times\delta p_T$, with statistical
-pull widths of $0.92$--$1.04$ (\texttt{data\_release/ensemble\_v1\_2026-10-09.tsv}). The pulls of a
+pull widths of $0.92$--$1.04$ (\texttt{data\_release/ensemble\_v1\_2026-10-10.tsv}). The pulls of a
 two-dimensional result are read from its all-slice closure file, which holds every analysis bin in the
 order of the covariance. The proton-tagged family, where the statistics are sparser, has in addition
 three ensembles of validation-only products ($W_{\rm had}$ in its two regions and the two-bin
-$\delta p_T$ in FHC, the two-bin $p_n$ combined): statistical pull widths $0.93$--$1.09$, $68\%$
-coverage $64$--$73\%$ and integral offsets within $0.9\%$ (\ptref{Sec.}{sec:pt_ensemble},
-\texttt{data\_release/ensemble\_1p\_2026-10-09.tsv}).
+$\delta p_T$ in FHC, the two-bin $p_n$ combined): statistical pull widths $0.89$--$1.04$, $68\%$
+coverage $66$--$72\%$ and integral offsets within $1.4\%$ (\ptref{Sec.}{sec:pt_ensemble},
+\texttt{data\_release/ensemble\_1p\_2026-10-10.tsv}).
 
 
 % =============================================================================
@@ -2266,15 +2271,15 @@ of its two inputs, equal to their average weighted by the fluence of each mode (
 $0.575$ RHC). The realised truths of the one-bin totals (\noteref{Table}{tab:cutcount}) give a
 ratio of the combined truth to that average of $1.000$ for the inclusive family and $1.001$ for the
 proton-tagged family. Observable by observable, the $A_C$-smeared truth integrals give
-$1.003$ ($0.986$--$1.019$) and $1.035$ ($0.989$--$1.229$), the spread being the configuration
+$0.999$ ($0.986$--$1.015$) and $1.036$ ($0.989$--$1.215$), the spread being the configuration
 dependence of $A_C$ rather than of the truth. The test is sensitive to the treatment of the
 detector variations: the two per-mode detector-variation sets of the combined configuration
 must be pooled as one sample scaled once to the data exposure, since scaling each set to the full
 exposure and summing would double the detector covariance, over-regularise the combined
 extraction and push its truth ratio to $0.91$ with a worst observable at $0.77$. With the
 pooled treatment the combined detector term lies between or close to those of its inputs
-(analysis note, Tables~\ref{N-tab:fhc}--\ref{N-tab:comb}: $17.6\%$ against $16.1\%$ in FHC and
-$19.3\%$ in RHC for $p_\mu$).
+(analysis note, Tables~\ref{N-tab:fhc}--\ref{N-tab:comb}: $18.5\%$ against $15.1\%$ in FHC and
+$20.5\%$ in RHC for $p_\mu$).
 
 \paragraph{The RHC deficit is in the input, not the extraction.}
 The one-bin totals give an RHC/FHC ratio of the injected tune of $0.901$

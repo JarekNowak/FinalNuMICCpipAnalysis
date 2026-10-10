@@ -1,9 +1,10 @@
 """official_cov.py -- the official covariance of every extraction and the numbers derived from it.
 
 Decision of 2026-09-27: the official total covariance of a result is the framework covariance plus the
-data-side MCS muon-momentum-scale term, i.e. data_release/cov/<family>_<CFG>_<obs>/cov_total_plusMCS.txt
-(cov_total.txt keeps the framework covariance alone; cov_MCSscale.txt is the term, written by
-report/tools/mcs_eval.py). Every summary table takes its uncertainties from here, so the tables and the
+MCS term, i.e. data_release/cov/<family>_<CFG>_<obs>/cov_total_plusMCS.txt (cov_total.txt keeps the framework
+covariance alone). From version 1.9 the MCS term is the calibration uncertainty of the MCS momentum of exiting muons,
+cov_MCScal.txt, written by report/tools/mcs_cal_release.py; it replaces the data-side MCS momentum-scale term
+(cov_MCSscale.txt of report/tools/mcs_eval.py). Every summary table takes its uncertainties from here, so the tables and the
 release cannot disagree about whether the term is included.
 
 The bin-averaged fractional uncertainties of the systematics dumps (logs/systdump/*.dump) are
@@ -75,7 +76,7 @@ def summary(fam, cfg, obs):
     'PredTotal_fw' and 'total_fw'."""
     d = dict(load_dump(fam, cfg, obs))
     d['PredTotal_fw'], d['total_fw'] = d['PredTotal'], d['total']
-    rd = reldir(fam, cfg, obs); m = os.path.join(rd, 'cov_MCSscale.txt')
+    rd = reldir(fam, cfg, obs); m = os.path.join(rd, 'cov_MCScal.txt')
     d['MCS'] = 0.0
     if os.path.exists(m):
         M = cov(m)

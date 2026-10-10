@@ -1,7 +1,8 @@
-"""ensemble_tables.py -- evaluate the six configuration-aware fake-data ensembles of version 1.8 (2026-10-09, re-unfolded members of version 1.7 (2026-10-05),
+"""ensemble_tables.py -- evaluate the six configuration-aware fake-data ensembles of version 1.9 (2026-10-10; FHC p_mu rebuilt on the MCS-calibrated
+simulation, xsec_analyzer/slurm/slurm_mcscal_ens.sbatch; the others the members of version 1.8, 2026-10-09, re-unfolded members of version 1.7 (2026-10-05),
 selection without the Bragg-pion requirement, xsec_analyzer/ens_braggfix.sh: FHC p_mu, FHC and RHC cos theta_mu, COMB p_pi
 (three regions), FHC and RHC one-bin totals; 100 members each) with ensemble_stat_pulls.evaluate, write
-data_release/ensemble_2026-10-09.tsv and
+data_release/ensemble_2026-10-10.tsv and
 patch the coverage tables of the analysis note (statistical reference) and the technical supplement
 (statistical + full). Run slurm/ens_statcov_all.sh first so every member has its DataStats table.
 
@@ -17,8 +18,8 @@ res={}
 for tag,lab in TAGS:
     try: res[tag]=evaluate(tag, 100, quiet=True)
     except Exception as e: print(tag,'failed:',e)
-with open(R+'data_release/ensemble_2026-10-09.tsv','w') as o:
-    o.write('# Fake-data ensembles of the version 1.8 release (2026-10-09; the version 1.7 members re-unfolded with the detector variations taken fractionally): Poisson throws of the central-value\n'
+with open(R+'data_release/ensemble_2026-10-10.tsv','w') as o:
+    o.write('# Fake-data ensembles of the version 1.9 release (2026-10-10; FHC p_mu rebuilt on the MCS-calibrated simulation, the others those of version 1.8): Poisson throws of the central-value\n'
             '# prediction of each configuration (slurm_ensemble_cfg.sbatch), each carried through univmake + UnfolderNuMI; pulls against\n'
             '# the fixed central-value truth smeared by each member\'s own A_C. Statistical reference = DataStats covariance of the\n'
             '# member; full = total covariance. Offsets are of the ensemble-mean integral from the reference integral.\n')
@@ -27,7 +28,7 @@ with open(R+'data_release/ensemble_2026-10-09.tsv','w') as o:
         if tag not in res: continue
         r=res[tag]; s=r['statistical only']; f=r['full']
         o.write(f"{tag}\t{r['members']}\t{r['bins']}\t{s['mean']:.2f}\t{s['width']:.2f}\t{100*s['cov68']:.1f}\t{100*s['cov95']:.1f}\t{f['mean']:.2f}\t{f['width']:.2f}\t{100*f['cov68']:.1f}\t{100*f['cov95']:.1f}\t{r['mean_integral']:.4f}\t{r['reference_integral']:.4f}\t{r['offset_pct']:.2f}\t{r['offset_sigma']:.1f}\t{r['sd_pct']:.1f}\n")
-print('wrote data_release/ensemble_2026-10-09.tsv')
+print('wrote data_release/ensemble_2026-10-10.tsv')
 def row(tag,lab,key):
     r=res[tag][key]; return f"{lab:<40} & ${r['mean']:+.2f}$ & ${r['width']:.2f}$ & ${100*r['cov68']:.1f}\\%$ / ${100*r['cov95']:.1f}\\%$ \\\\"
 def patch(path, header_line, blocks):

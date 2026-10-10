@@ -6,7 +6,7 @@
 #SBATCH --time=10:00:00
 #SBATCH --output=/data/uboone/processed/mcscal/logs/%x_%A_%a.out
 #SBATCH --error=/data/uboone/processed/mcscal/logs/%x_%A_%a.out
-# SLURM array task: one line "in|out|map" of slurm/mcscal_files.list (scripts/mcs_cal_setup.py): a copy of a processed
+# SLURM array task: one line "in|out|map" of slurm/mcscal_files.list (scripts/mcs_cal_setup.py) or of the list in LIST: a copy of a processed
 # file with the MCS momentum of the simulated exiting muon candidate calibrated (macros/mcs_cal_apply.C). The macro is
 # compiled once beforehand and loaded as a library, so concurrent tasks never recompile it:
 #   root -l -b -e 'gSystem->AddIncludePath("-I'$PWD'/include")' -q -e '.L macros/mcs_cal_apply.C+'
@@ -14,8 +14,9 @@
 #   sbatch --array=0-211%25 --export=ALL,REPO=$PWD slurm/slurm_mcscal_files.sbatch
 set -u
 REPO="${REPO:?}"
-line=$(( SLURM_ARRAY_TASK_ID + 1 ))
-IFS='|' read -r IN OUT MAP <<< "$(sed -n "${line}p" "$REPO/slurm/mcscal_files.list")"
+line=$(( SLURM_ARRAY_TASK_ID + 1 + ${OFFSET:-0} ))   # OFFSET: lists longer than the array limit (1001)
+LIST="${LIST:-$REPO/slurm/mcscal_files.list}"
+IFS='|' read -r IN OUT MAP <<< "$(sed -n "${line}p" "$LIST")"
 [ -n "${MAP:-}" ] || { echo "ERROR: no work on line $line" >&2; exit 1; }
 [ -s "$OUT" ] && { echo "SKIP existing $OUT"; exit 0; }
 cd "$REPO" || exit 1

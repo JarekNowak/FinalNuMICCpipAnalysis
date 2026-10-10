@@ -57,7 +57,7 @@ def main():
             sig, tot, det = float(r['sigma_int']), r['PredTotal_pct'], r['detVar_pct']
             chi2, p = float(r['chi2_truth']), float(r['p_truth'])
         else:
-            M = oc.cov(cdir + '/cov_MCSscale.txt') if os.path.exists(cdir + '/cov_MCSscale.txt') else 0
+            M = oc.cov(cdir + '/cov_MCScal.txt') if os.path.exists(cdir + '/cov_MCScal.txt') else 0
             P = oc.cov(cdir + '/cov_PredTotal.txt') + M
             sig = float(x.sum())
             tot = f'{oc._binavg(P, x):.1f}'; det = f"{oc._binavg(oc.cov(cdir + '/cov_detVar_total.txt'), x):.1f}"

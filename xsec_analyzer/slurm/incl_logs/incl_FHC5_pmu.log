@@ -7,21 +7,21 @@ Running Unfolder.C with options:
 
 
 Loading default file properties from /home/t2k/nowak/MicroBooNE/working_xsec_analyzer/xsec_analyzer/configs/file_properties.txt
-Loading file properties from configs/file_properties_numi_fhc5.txt
+Loading file properties from configs/mcscal/file_properties_numi_fhc5.txt
 CrossSectionExtracter initialised with options:
 	xsec_extract_tconfig_file_name: configs/ccpi_xsec_config_numi_pmu_fhc5.txt
 	syst_config_file_name: configs/ccpi_systcalc_numi.conf
-	file_properties_config: configs/file_properties_numi_fhc5.txt
+	file_properties_config: configs/mcscal/file_properties_numi_fhc5.txt
 	unfolding_tech: WienerSVD
 		Option: Second Derivative
-	univ_file_name: /data/uboone/processed/ccpi_FHC5_pmu_univmake.root
+	univ_file_name: /data/uboone/processed/mcscal/univ/incl_FHC5_pmu_univmake.root
 	Predictions - 
 		 0 - Prediction uBTune "MicroBooNE Tune" univ CV
 		 1 - Prediction FakeData "Fakedata" univ FakeData
-		 2 - Prediction GENIE "GENIE" file /home/t2k/nowak/MicroBooNE/working_xsec_analyzer/generator_predictions/gen2d/genie_ext_fhc_fte.root pmu6_fte
-		 3 - Prediction GiBUU "GiBUU" file /home/t2k/nowak/MicroBooNE/working_xsec_analyzer/generator_predictions/gen2d/gibuu_ext_fhc_fte.root pmu6_fte
-		 4 - Prediction NEUT "NEUT" file /home/t2k/nowak/MicroBooNE/working_xsec_analyzer/generator_predictions/gen2d/neut_ext_fhc_fte.root pmu6_fte
-		 5 - Prediction NuWro "NuWro" file /home/t2k/nowak/MicroBooNE/working_xsec_analyzer/generator_predictions/gen2d/nuwro_ext_fhc_fte.root pmu6_fte
+		 2 - Prediction GENIE "GENIE" file /home/t2k/nowak/MicroBooNE/working_xsec_analyzer/generator_predictions/gen2d/genie_ext_fhc_fte.root pmu5_fte
+		 3 - Prediction GiBUU "GiBUU" file /home/t2k/nowak/MicroBooNE/working_xsec_analyzer/generator_predictions/gen2d/gibuu_ext_fhc_fte.root pmu5_fte
+		 4 - Prediction NEUT "NEUT" file /home/t2k/nowak/MicroBooNE/working_xsec_analyzer/generator_predictions/gen2d/neut_ext_fhc_fte.root pmu5_fte
+		 5 - Prediction NuWro "NuWro" file /home/t2k/nowak/MicroBooNE/working_xsec_analyzer/generator_predictions/gen2d/nuwro_ext_fhc_fte.root pmu5_fte
 
 
 We do get in here but something goes wrong 
@@ -29,12 +29,12 @@ respmat_tdirectoryfile_name given to SystematicsCalculator is empty. Using defau
 
 Initialising SystematicsCalculator with options:
 	syst_config_file_name_: configs/ccpi_systcalc_numi.conf
-	universe_file_name: /data/uboone/processed/ccpi_FHC5_pmu_univmake.root
-	fpm_config_file: configs+file_properties_numi_fhc5.txt
+	universe_file_name: /data/uboone/processed/mcscal/univ/incl_FHC5_pmu_univmake.root
+	fpm_config_file: configs+mcscal+file_properties_numi_fhc5.txt
 	tdf_name: ccpi_CC1mu1piXp_pmu_1D
 
 
-Reusing cached universes "total_configs+file_properties_numi_fhc5.txt" (normalisation key v5-fakedata-truth-unweighted-51fe5554df3edefe).
+Reusing cached universes "total_configs+mcscal+file_properties_numi_fhc5.txt" (normalisation key v5-fakedata-truth-unweighted-1a30b3d6c7218f3e).
 ******* USING FAKE DATA *******
 using_fake_data = 1
 
@@ -47,38 +47,34 @@ Slice Specifications ----------------
 
 Slice Index: 0
 	Active variable: p_{#mu}
-	Number of bins: 6 - 
+	Number of bins: 5 - 
 		Bin 1: 0.15  (GeV/c) ≤ p_{#mu} < 0.3  (GeV/c)
 		Bin 2: 0.3  (GeV/c) ≤ p_{#mu} < 0.425  (GeV/c)
 		Bin 3: 0.425  (GeV/c) ≤ p_{#mu} < 0.575  (GeV/c)
 		Bin 4: 0.575  (GeV/c) ≤ p_{#mu} < 0.825  (GeV/c)
-		Bin 5: 0.825  (GeV/c) ≤ p_{#mu} < 1.25  (GeV/c)
-		Bin 6: 1.25  (GeV/c) ≤ p_{#mu} < 3  (GeV/c)
+		Bin 5: 0.825  (GeV/c) ≤ p_{#mu} < 3  (GeV/c)
 	Bin matching between slice TH1 and global TH1 - 
 		Global bin 0 is matched to 1 in this slice
 		Global bin 1 is matched to 2 in this slice
 		Global bin 2 is matched to 3 in this slice
 		Global bin 3 is matched to 4 in this slice
 		Global bin 4 is matched to 5 in this slice
-		Global bin 5 is matched to 6 in this slice
 
 Slice Index: 1
 	Active variable: bin number
-	Number of bins: 6 - 
+	Number of bins: 5 - 
 		Bin 1: 0  ≤ bin number < 1 
 		Bin 2: 1  ≤ bin number < 2 
 		Bin 3: 2  ≤ bin number < 3 
 		Bin 4: 3  ≤ bin number < 4 
 		Bin 5: 4  ≤ bin number < 5 
-		Bin 6: 5  ≤ bin number < 6 
 	Bin matching between slice TH1 and global TH1 - 
 		Global bin 0 is matched to 1 in this slice
 		Global bin 1 is matched to 2 in this slice
 		Global bin 2 is matched to 3 in this slice
 		Global bin 3 is matched to 4 in this slice
 		Global bin 4 is matched to 5 in this slice
-		Global bin 5 is matched to 6 in this slice
-[REGWIDTH] supplied 6 true-bin widths to the regularisation matrix
+[REGWIDTH] supplied 5 true-bin widths to the regularisation matrix
 Get covariances statement 1 works
 This is the name fluxThis is the type FluxRW
 Get covariances statement 8 works
@@ -230,104 +226,103 @@ Unfolding completed -----------------
 Post-processing covariance matrices..
 Creating Norm/Shape covariance matrices for 1 blocks(s)
 	- Creating Norm/shape decomposition for block: 0
-BNBstats: 0.000103079
-DataStats: 0.000103079
-EXTstats: 1.1303e-06
-MCstats: 1.01616e-05
-POT: 1.49906e-05
-PredTotal: 0.00167757
-SimulationStats: 1.12919e-05
-detVarLYdown: 7.70857e-08
-detVarLYrayl: 1.40863e-07
-detVarRecomb2: 0.000190029
-detVarSCE: 1.41032e-05
-detVarWMAngleXZ: 1.66388e-07
-detVarWMAngleYZ: 7.07524e-06
-detVarWMX: 3.56816e-05
-detVarWMYZ: 5.8154e-05
-detVar_total: 0.000305428
-flux: 0.00112398
-flux_total: 0.00112398
-numTargets: 3.74766e-06
-reint: 2.21624e-05
-total: 0.00178064
-total_blockwise_mixed: 0.000470317
-total_blockwise_norm: 0.00113012
-total_blockwise_shape: 0.000180209
-xsec_AxFFCCQEshape: 4.44261e-07
-xsec_DecayAngMEC: 3.91035e-07
-xsec_NormCCCOH: 1.35959e-06
-xsec_NormNCCOH: 6.92601e-07
-xsec_RPA_CCQE: 1.73604e-06
-xsec_ThetaDelta2NRad: 6.92601e-07
-xsec_Theta_Delta2Npi: 3.70433e-05
-xsec_VecFFCCQEshape: 4.24203e-07
-xsec_XSecShape_CCMEC: 3.06565e-05
-xsec_multi: 0.000118531
-xsec_total: 0.000195967
-xsec_unisim: 7.34402e-05
-xsec_xsr_scc_Fa3_SCC: 2.04745e-06
-xsec_xsr_scc_Fv3_SCC: 1.94828e-06
-[IDENTITY] bins 6  max|U*R - A_C| 6.277e-09  rms 2.048e-09  max|A_C| 7.554e-01  relative 8.309e-09
+BNBstats: 0.000115971
+DataStats: 0.000115971
+EXTstats: 5.24742e-07
+MCstats: 1.14272e-05
+POT: 1.60426e-05
+PredTotal: 0.00201201
+SimulationStats: 1.19519e-05
+detVarLYdown: 1.47849e-08
+detVarLYrayl: 4.3671e-11
+detVarRecomb2: 0.000267321
+detVarSCE: 0.000136751
+detVarWMAngleXZ: 3.81526e-07
+detVarWMAngleYZ: 1.82376e-06
+detVarWMX: 3.35776e-05
+detVarWMYZ: 3.46806e-05
+detVar_total: 0.00047455
+flux: 0.00127426
+flux_total: 0.00127426
+numTargets: 4.01065e-06
+reint: 2.79703e-05
+total: 0.00212799
+total_blockwise_mixed: 0.000483134
+total_blockwise_norm: 0.001461
+total_blockwise_shape: 0.000183847
+xsec_AxFFCCQEshape: 1.4357e-07
+xsec_DecayAngMEC: 2.31783e-07
+xsec_NormCCCOH: 1.38153e-07
+xsec_NormNCCOH: 2.76066e-07
+xsec_RPA_CCQE: 3.12317e-06
+xsec_ThetaDelta2NRad: 2.76066e-07
+xsec_Theta_Delta2Npi: 2.11545e-05
+xsec_VecFFCCQEshape: 8.58759e-07
+xsec_XSecShape_CCMEC: 3.0682e-05
+xsec_multi: 0.000141924
+xsec_total: 0.000203229
+xsec_unisim: 5.68841e-05
+xsec_xsr_scc_Fa3_SCC: 2.26579e-06
+xsec_xsr_scc_Fv3_SCC: 2.15506e-06
+[IDENTITY] bins 5  max|U*R - A_C| 9.308e-08  rms 2.506e-08  max|A_C| 8.106e-01  relative 1.148e-07
 Key: Fakedata
 Key: GENIE
 Key: GiBUU
 Key: MicroBooNETune
 Key: NEUT
 Key: NuWro
-[SYSTDUMP] sigma_int 8.738e-01
-[SYSTDUMP] BNBstats 1.093e+01
-[SYSTDUMP] DataStats 1.093e+01
-[SYSTDUMP] EXTstats 6.599e-01
-[SYSTDUMP] MCstats 3.443e+00
-[SYSTDUMP] POT 3.205e+00
-[SYSTDUMP] PredTotal 3.521e+01
-[SYSTDUMP] SimulationStats 3.527e+00
-[SYSTDUMP] detVarLYdown 1.148e+00
-[SYSTDUMP] detVarLYrayl 1.261e+00
-[SYSTDUMP] detVarRecomb2 8.650e+00
-[SYSTDUMP] detVarSCE 7.084e+00
-[SYSTDUMP] detVarWMAngleXZ 2.471e+00
-[SYSTDUMP] detVarWMAngleYZ 1.332e+00
-[SYSTDUMP] detVarWMX 6.712e+00
-[SYSTDUMP] detVarWMYZ 7.343e+00
-[SYSTDUMP] detVar_total 1.610e+01
-[SYSTDUMP] flux 2.855e+01
-[SYSTDUMP] flux_total 2.855e+01
-[SYSTDUMP] numTargets 1.603e+00
-[SYSTDUMP] reint 4.114e+00
-[SYSTDUMP] total 3.690e+01
-[SYSTDUMP] total_blockwise_mixed 1.390e+01
-[SYSTDUMP] total_blockwise_norm 3.283e+01
-[SYSTDUMP] total_blockwise_shape 1.273e+01
-[SYSTDUMP] xsec_AxFFCCQEshape 4.888e-01
-[SYSTDUMP] xsec_DecayAngMEC 5.367e-01
-[SYSTDUMP] xsec_NormCCCOH 8.328e-01
-[SYSTDUMP] xsec_NormNCCOH 5.990e-01
-[SYSTDUMP] xsec_RPA_CCQE 1.409e+00
-[SYSTDUMP] xsec_ThetaDelta2NRad 5.990e-01
-[SYSTDUMP] xsec_Theta_Delta2Npi 4.383e+00
-[SYSTDUMP] xsec_VecFFCCQEshape 6.211e-01
-[SYSTDUMP] xsec_XSecShape_CCMEC 4.252e+00
-[SYSTDUMP] xsec_multi 8.553e+00
-[SYSTDUMP] xsec_total 1.099e+01
-[SYSTDUMP] xsec_unisim 6.518e+00
-[SYSTDUMP] xsec_xsr_scc_Fa3_SCC 1.425e+00
-[SYSTDUMP] xsec_xsr_scc_Fv3_SCC 1.394e+00
+[SYSTDUMP] sigma_int 9.701e-01
+[SYSTDUMP] BNBstats 8.822e+00
+[SYSTDUMP] DataStats 8.822e+00
+[SYSTDUMP] EXTstats 5.863e-01
+[SYSTDUMP] MCstats 2.770e+00
+[SYSTDUMP] POT 3.039e+00
+[SYSTDUMP] PredTotal 3.366e+01
+[SYSTDUMP] SimulationStats 2.838e+00
+[SYSTDUMP] detVarLYdown 4.800e-01
+[SYSTDUMP] detVarLYrayl 9.354e-01
+[SYSTDUMP] detVarRecomb2 1.071e+01
+[SYSTDUMP] detVarSCE 7.589e+00
+[SYSTDUMP] detVarWMAngleXZ 5.233e-01
+[SYSTDUMP] detVarWMAngleYZ 8.559e-01
+[SYSTDUMP] detVarWMX 5.403e+00
+[SYSTDUMP] detVarWMYZ 3.666e+00
+[SYSTDUMP] detVar_total 1.512e+01
+[SYSTDUMP] flux 2.738e+01
+[SYSTDUMP] flux_total 2.738e+01
+[SYSTDUMP] numTargets 1.519e+00
+[SYSTDUMP] reint 4.149e+00
+[SYSTDUMP] total 3.481e+01
+[SYSTDUMP] total_blockwise_mixed 1.295e+01
+[SYSTDUMP] total_blockwise_norm 3.112e+01
+[SYSTDUMP] total_blockwise_shape 1.009e+01
+[SYSTDUMP] xsec_AxFFCCQEshape 2.429e-01
+[SYSTDUMP] xsec_DecayAngMEC 3.877e-01
+[SYSTDUMP] xsec_NormCCCOH 2.836e-01
+[SYSTDUMP] xsec_NormNCCOH 2.948e-01
+[SYSTDUMP] xsec_RPA_CCQE 1.428e+00
+[SYSTDUMP] xsec_ThetaDelta2NRad 2.948e-01
+[SYSTDUMP] xsec_Theta_Delta2Npi 3.477e+00
+[SYSTDUMP] xsec_VecFFCCQEshape 7.246e-01
+[SYSTDUMP] xsec_XSecShape_CCMEC 4.172e+00
+[SYSTDUMP] xsec_multi 8.610e+00
+[SYSTDUMP] xsec_total 1.054e+01
+[SYSTDUMP] xsec_unisim 5.739e+00
+[SYSTDUMP] xsec_xsr_scc_Fa3_SCC 1.323e+00
+[SYSTDUMP] xsec_xsr_scc_Fv3_SCC 1.293e+00
 [closure-dump] wrote /data/uboone/processed/closure_hists_xsec_FHC5_pmu.root
 
-GENIE: χ² = 3.883e+00/6 bins, p-value = 6.926e-01
-GiBUU: χ² = 2.232e+00/6 bins, p-value = 8.972e-01
-MicroBooNE Tune: χ² = 2.309e+00/6 bins, p-value = 8.892e-01
-NEUT: χ² = 3.597e+00/6 bins, p-value = 7.310e-01
-NuWro: χ² = 1.955e+00/6 bins, p-value = 9.238e-01
-truth: χ² = 1.201e+00/6 bins, p-value = 9.768e-01
-Bin: 1, Val = 6.826e-01, Unc = 2.813e-01
-Bin: 2, Val = 6.923e-01, Unc = 2.602e-01
-Bin: 3, Val = 6.709e-01, Unc = 2.422e-01
-Bin: 4, Val = 5.819e-01, Unc = 2.186e-01
-Bin: 5, Val = 4.462e-01, Unc = 1.796e-01
-Bin: 6, Val = 1.423e-01, Unc = 4.077e-02
+GENIE: χ² = 4.898e+00/5 bins, p-value = 4.285e-01
+GiBUU: χ² = 3.596e+00/5 bins, p-value = 6.088e-01
+MicroBooNE Tune: χ² = 3.535e+00/5 bins, p-value = 6.181e-01
+NEUT: χ² = 4.906e+00/5 bins, p-value = 4.274e-01
+NuWro: χ² = 3.081e+00/5 bins, p-value = 6.876e-01
+truth: χ² = 2.035e-01/5 bins, p-value = 9.991e-01
+Bin: 1, Val = 8.188e-01, Unc = 3.075e-01
+Bin: 2, Val = 8.018e-01, Unc = 2.900e-01
+Bin: 3, Val = 7.600e-01, Unc = 2.738e-01
+Bin: 4, Val = 6.879e-01, Unc = 2.488e-01
+Bin: 5, Val = 2.120e-01, Unc = 5.958e-02
 Info in <TCanvas::Print>: pdf file unfold_output/plot_pmu_0.pdf has been created
 Key: Fakedata
 Key: GENIE
@@ -336,18 +331,17 @@ Key: MicroBooNETune
 Key: NEUT
 Key: NuWro
 
-GENIE: χ² = 3.883e+00/6 bins, p-value = 6.926e-01
-GiBUU: χ² = 2.232e+00/6 bins, p-value = 8.972e-01
-MicroBooNE Tune: χ² = 2.309e+00/6 bins, p-value = 8.892e-01
-NEUT: χ² = 3.597e+00/6 bins, p-value = 7.310e-01
-NuWro: χ² = 1.955e+00/6 bins, p-value = 9.238e-01
-truth: χ² = 1.201e+00/6 bins, p-value = 9.768e-01
-Bin: 1, Val = 1.024e-01, Unc = 4.220e-02
-Bin: 2, Val = 8.654e-02, Unc = 3.252e-02
-Bin: 3, Val = 1.006e-01, Unc = 3.633e-02
-Bin: 4, Val = 1.455e-01, Unc = 5.466e-02
-Bin: 5, Val = 1.896e-01, Unc = 7.635e-02
-Bin: 6, Val = 2.491e-01, Unc = 7.136e-02
+GENIE: χ² = 4.898e+00/5 bins, p-value = 4.285e-01
+GiBUU: χ² = 3.596e+00/5 bins, p-value = 6.088e-01
+MicroBooNE Tune: χ² = 3.535e+00/5 bins, p-value = 6.181e-01
+NEUT: χ² = 4.906e+00/5 bins, p-value = 4.274e-01
+NuWro: χ² = 3.081e+00/5 bins, p-value = 6.876e-01
+truth: χ² = 2.035e-01/5 bins, p-value = 9.991e-01
+Bin: 1, Val = 1.228e-01, Unc = 4.613e-02
+Bin: 2, Val = 1.002e-01, Unc = 3.625e-02
+Bin: 3, Val = 1.140e-01, Unc = 4.107e-02
+Bin: 4, Val = 1.720e-01, Unc = 6.219e-02
+Bin: 5, Val = 4.611e-01, Unc = 1.296e-01
 Info in <TCanvas::Print>: pdf file unfold_output/plot_binnumber_1.pdf has been created
 Error in <TROOT::WriteTObject>: The current directory (RootApp) is not associated with a file. The object (h_A_C) has not been written.
 Info in <TCanvas::Print>: pdf file unfold_output/plot_regularization_matrix.pdf has been created
@@ -426,5 +420,5 @@ Get covariances statement 11 works
 Info in <TCanvas::Print>: pdf file unfold_output/plot_step1_reco_spectrum.pdf has been created
 Info in <TCanvas::Print>: pdf file unfold_output/plot_step2_bkgd_subtraction.pdf has been created
 Info in <TCanvas::Print>: pdf file unfold_output/plot_step3_smearing_matrix.pdf has been created
-[DIAGDUMP] column-normalised response diagonal: 0.746 0.641 0.583 0.591 0.580 0.569
+[DIAGDUMP] column-normalised response diagonal: 0.745 0.651 0.623 0.609 0.647
 Info in <TCanvas::Print>: pdf file unfold_output/plot_step4_efficiency.pdf has been created

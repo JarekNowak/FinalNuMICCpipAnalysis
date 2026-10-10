@@ -50,6 +50,8 @@ namespace ext {
     Pair b = { "thpipr_dpt",   { {0, 1.2, PI}, false, false }, { {0, 0.3, 2.5}, true, true } };      v.push_back( b );
     Pair c = { "thetap_Wpipr", { {0, 0.8, PI}, false, false }, { {1.08, 1.19, 2.9}, true, true } };  v.push_back( c );
     Pair d = { "thpipr_Wpipr", { {0, 1.2, PI}, false, false }, { {1.08, 1.19, 2.9}, true, true } };  v.push_back( d );
+    // version 1.9 (2026-10-10): theta_p edge 0.85 rad, the binning of the 0.50 criterion on the MCS-calibrated simulation
+    Pair e = { "thetap_dpt85", { {0, 0.85, PI}, false, false }, { {0, 0.3, 2.5}, true, true } };    v.push_back( e );
     return v;
   }
   // ---- proton-tagged 1D ------------------------------------------------------------------
@@ -60,6 +62,8 @@ namespace ext {
   // Match configs/adopt050/ (true bins: first edge closed, last bin open where topOpen). New names, so the
   // released histograms above and in the per-flavour files stay reproducible.
   inline Axis pmu6_axis()     { Axis a = { {0.15, 0.30, 0.425, 0.575, 0.825, 1.25, 3.0}, false, true }; return a; }
+  // version 1.9 (2026-10-10): the two highest p_mu bins merged (0.50 criterion on the MCS-calibrated simulation)
+  inline Axis pmu5_axis()     { Axis a = { {0.15, 0.30, 0.425, 0.575, 0.825, 3.0}, false, true }; return a; }
   inline Axis ppi3_axis()     { Axis a = { {0.175, 0.205, 0.26, 1.0}, false, true }; return a; }
   inline Axis costhmu8_axis() { Axis a = { {-1, 0.4, 0.625, 0.75, 0.825, 0.9, 0.95, 0.975, 1}, false, false }; return a; }
   inline Axis Whad2_axis()    { Axis a = { {0, 1.18, 2.74}, false, true }; return a; }
@@ -76,7 +80,7 @@ namespace ext {
     std::vector<TH1D*> all;
     std::vector<Pair> pairs; std::vector<TH1D*> h2;
     TH1D* hthetap = 0; TH1D* hthpipr = 0;
-    TH1D *hpmu6 = 0, *hppi3 = 0, *hcmu8 = 0, *hwhad2 = 0, *hdphit3 = 0, *hthetap4m = 0, *hthpipr4m = 0;
+    TH1D *hpmu6 = 0, *hpmu5 = 0, *hppi3 = 0, *hcmu8 = 0, *hwhad2 = 0, *hdphit3 = 0, *hthetap4m = 0, *hthpipr4m = 0;
     TH1D *hpp2 = 0, *hpp3 = 0, *hpp4 = 0, *hpp5 = 0;
     TH1D* book( const char* n, const Axis& a ) { TH1D* h = new TH1D( n, "", (int)a.e.size() - 1, a.e.data() ); all.push_back( h ); return h; }
     explicit Hists( bool proton_tagged ) {
@@ -93,7 +97,7 @@ namespace ext {
         hthetap4m = book( "thetap4m", thetap4m_axis() ); hthpipr4m = book( "thpipr4m", thpipr4m_axis() );
         hpp2 = book( "pp2", pp2_axis() ); hpp3 = book( "pp3", pp3_axis() ); hpp4 = book( "pp4", pp4_axis() ); hpp5 = book( "pp5", pp5_axis() );
       } else {
-        hpmu6 = book( "pmu6", pmu6_axis() ); hppi3 = book( "ppi3", ppi3_axis() ); hcmu8 = book( "costhmu8", costhmu8_axis() );
+        hpmu6 = book( "pmu6", pmu6_axis() ); hpmu5 = book( "pmu5", pmu5_axis() ); hppi3 = book( "ppi3", ppi3_axis() ); hcmu8 = book( "costhmu8", costhmu8_axis() );
       }
     }
     void fill1d( TH1D* h, const Axis& a, double v, double w ) { int b = bin( v, a ); if ( b >= 0 ) h->Fill( h->GetBinCenter( b + 1 ), w ); }
@@ -102,7 +106,7 @@ namespace ext {
     void fill_incl( const TVector3& mu, const TVector3& pi, double w = 1. ) {
       double cmu = mu.CosTheta(), cpi = pi.CosTheta(), th = mu.Angle( pi );
       fill2d( 0, cpi, cmu, w ); fill2d( 1, cmu, mu.Mag(), w ); fill2d( 2, cpi, th, w ); fill2d( 3, cpi, pi.Mag(), w );
-      fill1d( hpmu6, pmu6_axis(), mu.Mag(), w ); fill1d( hppi3, ppi3_axis(), pi.Mag(), w ); fill1d( hcmu8, costhmu8_axis(), cmu, w );
+      fill1d( hpmu6, pmu6_axis(), mu.Mag(), w ); fill1d( hpmu5, pmu5_axis(), mu.Mag(), w ); fill1d( hppi3, ppi3_axis(), pi.Mag(), w ); fill1d( hcmu8, costhmu8_axis(), cmu, w );
     }
     // proton-tagged signal event
     void fill_1p( const TVector3& mu, const TVector3& pi, const TVector3& pr, double w = 1. ) {
@@ -110,6 +114,7 @@ namespace ext {
       double thp = pr.Theta(), tpp = pi.Angle( pr );
       fill1d( hthetap, thetap_axis(), thp, w ); fill1d( hthpipr, thpipr_axis(), tpp, w );
       fill2d( 0, thp, o.dpt, w ); fill2d( 1, tpp, o.dpt, w ); fill2d( 2, thp, o.Wpipr, w ); fill2d( 3, tpp, o.Wpipr, w );
+      fill2d( 4, thp, o.dpt, w );
       fill1d( hwhad2, Whad2_axis(), o.Whad, w ); fill1d( hdphit3, dphit3_axis(), o.dphit, w );
       fill1d( hthetap4m, thetap4m_axis(), thp, w ); fill1d( hthpipr4m, thpipr4m_axis(), tpp, w );
       double ppm = pr.Mag();

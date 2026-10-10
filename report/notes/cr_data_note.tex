@@ -31,7 +31,7 @@ Production on Argon in the NuMI Beam\par}
 \vspace{0.8cm}
 {\large First results with real data; the signal region remains blind\par}
 \vspace{0.5cm}
-{\normalsize 2026-09-09, updated 2026-09-16 and 2026-10-01\par}
+{\normalsize 2026-09-09, updated 2026-09-16, 2026-10-01 and 2026-10-10\par}
 \vspace{1.5cm}
 {\large Ishanee Pophale, Jarek Nowak\par}
 \vspace{0.5cm}
@@ -39,6 +39,15 @@ Production on Argon in the NuMI Beam\par}
 \vspace{2cm}
 
 \begin{abstract}
+\noindent\fbox{\parbox{0.97\linewidth}{\textbf{Update 2026-10-10.} The $p_\mu$ shape failures come from the
+muon momentum of exiting tracks, which multiple Coulomb scattering (MCS) measures: above about $1.2\GeVc$ the data
+hold half the predicted share of exiting muon candidates, while the MCS and range momenta of stopping muons agree
+within $1.5\%$ up to $3\GeVc$. The difference is an angular noise of reconstructed tracks on the scale of the MCS
+segments that the simulation lacks. The simulated MCS momentum of exiting muons is calibrated to these control
+regions from version~1.9 of the analysis documents (\S\ref{sec:mcs_cr}); after the calibration the released
+$p_\mu$ bins agree with the data shape within $4\%$ (the highest bin was at $0.48$).}}
+\medskip
+
 \noindent\fbox{\parbox{0.97\linewidth}{\textbf{Update 2026-10-02.} The pion identification of the single-pion selection
 no longer requires a Bragg-pion score of at least $0.08$ (analysis documents, version~1.7): the beam-on, beam-off and
 dirt ntuples of FHC Run~1 and RHC Runs~1 and~3b do not carry that score. The control regions change with the selection,
@@ -1196,6 +1205,116 @@ free factor on any other period, and the other five periods sit $8$--$23\%$ abov
 $\pi^0$. The far sidebands do not move beyond their statistics (CC$0\pi$ $1.09$, $1.12$, $1.13$; $\pi^0$ $1.18$,
 $1.22$, $1.34$; cosmic $0.97$, $0.78$, $0.76$), and the most back-to-back cosmic version is still described by a dirt
 scale of $0.0\pm0.6$.
+
+\section{MCS momentum of exiting muons}
+\label{sec:mcs_cr}
+
+The muon momentum is the range momentum when the candidate track stops in the detector and the MCS momentum when it
+exits; $63\%$ of the selected muons exit. The comparisons below use the control-region skim of the beam-on data with
+the selection of version~1.7, all periods (FHC Runs 1, 4, 5; RHC Runs 1, 3, 4), and the prediction from the overlays,
+beam-off data and dirt. They use the skim of the two-pion study (\texttt{slurm\_mp2pi\_cr\_skim.sbatch}): the events of
+the single-pion control regions outside the signal regions of both the single-pion and the two-pion selection. The
+scripts are \texttt{cr\_mcs\_check.py}, \texttt{cr\_mcs\_cause.py} and \texttt{mcs\_cal\_derive.py}.
+
+\paragraph{Observation.} The MCS momentum spectrum of exiting candidates has $1.12$ times the predicted number of
+events, the overall normalisation of the regions; its shape falls below the prediction above $1.2\GeVc$
+(Table~\ref{tab:mcs_cr_obs}). The same shape is seen in FHC and RHC, in the old and the new production and in every
+period. The number of exiting candidates, their visible length and their direction agree with the prediction, and the
+deficit is present in every length bin. For stopping candidates the ratio of the MCS to the range momentum agrees
+between data and prediction within $1.5\%$ from $0.15$ to $3\GeVc$ ($233$ data events at $1.25$--$1.5\GeVc$, $91$ at
+$1.5$--$2\GeVc$), and the range spectrum agrees, including $1.08$ above $1.25\GeVc$: the data muons do not have lower
+momenta, their MCS estimate does. In the released $p_\mu$ bins the deficit appears as $0.48$ in the highest bin and an
+excess of up to $1.25$ below it.
+
+\begin{table}[H]
+  \centering\footnotesize\setlength{\tabcolsep}{3pt}
+  \begin{tabular}{lcccccccccc}
+    \toprule
+    MCS momentum [GeV/$c$] & 0--0.2 & 0.2--0.4 & 0.4--0.6 & 0.6--0.8 & 0.8--1.0 & 1.0--1.2 & 1.2--1.5 & 1.5--2 & 2--3 & $>3$ \\
+    data / prediction & 1.00 & 1.18 & 1.33 & 1.35 & 1.23 & 1.05 & 0.74 & 0.38 & 0.10 & 0.19 \\
+    data events & 157 & 1968 & 4432 & 5133 & 4638 & 3299 & 2479 & 1022 & 109 & 37 \\
+    \midrule
+    released $p_\mu$ bin [GeV/$c$] & \multicolumn{2}{c}{0.15--0.3} & 0.3--0.425 & 0.425--0.575 & \multicolumn{2}{c}{0.575--0.825} & \multicolumn{2}{c}{0.825--1.25} & \multicolumn{2}{c}{$>1.25$} \\
+    all candidates & \multicolumn{2}{c}{1.00} & 1.07 & 1.21 & \multicolumn{2}{c}{1.25} & \multicolumn{2}{c}{1.09} & \multicolumn{2}{c}{0.48} \\
+    stopping & \multicolumn{2}{c}{0.97} & 0.99 & 1.04 & \multicolumn{2}{c}{1.01} & \multicolumn{2}{c}{1.03} & \multicolumn{2}{c}{1.08} \\
+    exiting & \multicolumn{2}{c}{1.11} & 1.20 & 1.34 & \multicolumn{2}{c}{1.35} & \multicolumn{2}{c}{1.11} & \multicolumn{2}{c}{0.45} \\
+    \bottomrule
+  \end{tabular}
+  \caption{Exiting muon candidates, MCS momentum spectrum, and the reconstructed muon momentum in the released $p_\mu$
+    bins of version~1.8, beam-on data over the prediction with the normalisation removed, all control regions and
+    periods. Statistical uncertainties of the ratios: $0.01$--$0.03$ ($0.09$ in the first MCS bin).}
+  \label{tab:mcs_cr_obs}
+\end{table}
+
+\paragraph{Cause.} Tracks longer than $1\,$m are as straight in the data as in the prediction: the angle between
+the start direction and the chord from start to end is $2.3$--$3.4^\circ$ (median per direction bin), $0.07$--$0.10^\circ$
+smaller in the data, and the chord over the length agrees within $0.001$. A coherent bend of the tracks or a lower true
+momentum would raise that angle. The deficit depends strongly on the drift-direction component of the track and on its
+length, not on where the track starts or leaves (Table~\ref{tab:mcs_cr_cause}). Among the detector variations only the
+space-charge variation moves the MCS momentum of exiting muons: it lowers the fraction above $1.2\GeVc$ to $0.91$ of its
+central value in FHC and in RHC, against $0.49$ in the data; every other variation changes it by less than $1\%$. The
+data therefore carry an angular noise on the scale of the MCS segments ($14\,$cm) that the simulation lacks: it adds
+little to the large scattering of stopping and slow muons, whose fits are anchored by the stopping end, and dominates
+the small scattering of fast exiting ones. Read as an extra segment-angle spread added in quadrature, the calibration
+below corresponds to $5$--$11\,$mrad, falling slowly with momentum.
+
+\begin{table}[H]
+  \centering\small
+  \begin{tabular}{llcccccc}
+    \toprule
+    $|\hat{d}_x|$ (drift) & bins & 0--0.3 & 0.3--0.6 & 0.6--0.85 & 0.85--1 & & \\
+     & ratio & 0.69 & 0.51 & 0.28 & 0.43 & & \\
+    $\hat{d}_z$ & bins & $<0$ & 0--0.5 & 0.5--0.8 & 0.8--0.95 & $>0.95$ & \\
+     & ratio & 0.51 & 0.43 & 0.28 & 0.56 & 0.71 & \\
+    visible length [cm] & bins & 0--50 & 50--100 & 100--150 & 150--200 & 200--300 & $>300$ \\
+     & ratio & 0.43 & 0.38 & 0.37 & 0.39 & 0.41 & 0.72 \\
+    start $x$ [cm] & bins & 0--64 & 64--128 & 128--192 & 192--256 & & \\
+     & ratio & 0.58 & 0.46 & 0.42 & 0.48 & & \\
+    exit face & bins & anode & cathode & bottom & top & downstream & \\
+     & ratio & 0.47 & 0.48 & 0.46 & 0.55 & 0.49 & \\
+    \bottomrule
+  \end{tabular}
+  \caption{Fraction of exiting muon candidates with an MCS momentum above $1.2\GeVc$, data over prediction ($0.157$
+    over $0.318$ overall, ratio $0.49$), per bin of the track direction, visible length, start position and the face
+    through which the track leaves. Statistical uncertainties $0.01$--$0.03$ ($0.05$--$0.08$ in the sparse bins).}
+  \label{tab:mcs_cr_cause}
+\end{table}
+
+\paragraph{Calibration.} In twelve cells of $|\hat{d}_x|$ (edges $0$, $0.3$, $0.6$, $0.85$, $1$) and visible length
+(edges $0$, $100$, $200\,$cm, open), a quantile map takes the MCS momentum of the simulated exiting candidates to the
+data. Only candidates matched to a simulated particle are mapped; beam-off events and the cosmic tracks overlaid on
+the simulation are data already, and the target of the simulated part is the data distribution with their share
+($9\%$ of the exiting prediction) removed. The map multiplies the MCS momentum by $0.88$--$1.09$ at $0.5\GeVc$ and by
+$0.68$--$0.87$ at $1.5\GeVc$, the strongest change for short tracks with a large drift component. Table~\ref{tab:mcs_cr_cal} gives the closure in the control
+regions. A parametric map, an extra segment-angle variance and a scale fitted per cell, describes the data less well
+($\chi^2=169/24$): it cannot keep the high-momentum tail that the data retain, which a noise varying from track to
+track produces. Together with a coarser and a finer cell grid and maps derived from the old- and new-production data
+and from FHC and RHC data alone, it provides the uncertainty of the calibration. How the calibration enters the
+measurement is described in \noteref{Sec.}{sec:mcs}.
+
+\begin{table}[H]
+  \centering\footnotesize\setlength{\tabcolsep}{3pt}
+  \begin{tabular}{lcccc}
+    \toprule
+    Calibration & released $p_\mu$ bins & $|\hat{d}_x|$ bins & length bins & $\chi^2$ (MCS) \\
+    \midrule
+    none           & 1.00 1.07 1.21 1.25 1.09 0.48 & 0.69 0.51 0.28 0.43 & 0.43 0.38 0.37 0.39 0.41 0.72 & 7937/24 \\
+    nominal        & 1.00 1.02 1.04 1.01 0.98 0.97 & 1.01 1.00 0.99 1.10 & 0.93 0.98 0.91 1.03 0.80 1.09 & 27/24 \\
+    parametric     & 0.97 0.99 1.07 1.05 0.97 0.94 & 1.00 0.93 1.16 1.53 & 1.06 1.12 0.93 1.04 0.72 1.01 & 169/24 \\
+    coarse grid    & 0.99 1.01 1.03 1.00 0.99 0.98 & 1.13 0.94 1.10 1.26 & 0.91 0.97 1.01 0.94 1.02 0.99 & 13/24 \\
+    fine grid      & 1.00 1.02 1.04 1.00 0.98 0.98 & 1.01 1.01 1.00 1.06 & 0.98 0.97 0.97 0.97 0.99 0.99 & 24/24 \\
+    old production & 1.00 1.00 1.04 1.00 0.97 1.00 & 1.08 1.04 1.03 1.28 & 0.94 1.00 0.98 1.12 0.84 1.12 & 36/24 \\
+    new production & 1.00 1.03 1.03 1.02 0.98 0.93 & 0.96 0.96 0.94 1.05 & 0.93 0.96 0.84 0.94 0.76 1.04 & 65/24 \\
+    FHC            & 1.00 1.03 1.03 1.01 0.99 0.91 & 0.96 0.94 0.90 1.10 & 0.93 1.01 0.83 0.93 0.73 1.02 & 85/24 \\
+    RHC            & 1.00 1.00 1.04 1.01 0.97 1.02 & 1.06 1.06 1.07 1.07 & 0.94 0.97 0.99 1.13 0.86 1.14 & 33/24 \\
+    \bottomrule
+  \end{tabular}
+  \caption{Closure of the calibration in the control regions, all periods: the released $p_\mu$ bins of version~1.8
+    (data over prediction, shape), the fraction of exiting candidates above $1.2\GeVc$ per $|\hat{d}_x|$ and length bin
+    as in Table~\ref{tab:mcs_cr_cause}, and the $\chi^2$ of the MCS spectrum of exiting candidates (shape). Per period
+    the high-momentum fraction is $0.89$--$1.06$ of the prediction with the nominal map.}
+  \label{tab:mcs_cr_cal}
+\end{table}
 
 \section{What this establishes, and what it does not}
 \label{sec:conclusions}

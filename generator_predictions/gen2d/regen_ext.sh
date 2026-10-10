@@ -25,8 +25,8 @@ echo "NuWro done $(date)"
 apptainer exec -B /cvmfs -B /home -B /data "$IMG" bash $G/reana_neut_ext.sh 2>&1 | tail -8
 echo "NEUT done $(date)"
 
-INC=pmu,ppi,costhmu,costhpi,thmupi,costhpi_costhmu,costhmu_pmu,costhpi_thmupi,costhpi_ppi,pmu6,ppi3,costhmu8
-ONEP=Wpipr,Whad,dpt,dalphat,dphit,pn,thetap,thpipr,thetap_dpt,thpipr_dpt,thetap_Wpipr,thpipr_Wpipr,Whad2,dphit3,thetap4m,thpipr4m,pp2,pp3,pp4,pp5
+INC=pmu,ppi,costhmu,costhpi,thmupi,costhpi_costhmu,costhmu_pmu,costhpi_thmupi,costhpi_ppi,pmu6,ppi3,costhmu8,pmu5
+ONEP=Wpipr,Whad,dpt,dalphat,dphit,pn,thetap,thpipr,thetap_dpt,thpipr_dpt,thetap_Wpipr,thpipr_Wpipr,Whad2,dphit3,thetap4m,thpipr4m,pp2,pp3,pp4,pp5,thetap_dpt85
 root.exe -l -b -q -e '.L gen2d/combine_ext.C+' >/dev/null 2>&1
 for g in genie gibuu nuwro neut; do
   for s in ext:$INC 1p_ext:$ONEP; do
@@ -47,8 +47,8 @@ done
 echo "---- 0.50 binnings (2026-09-26): each new histogram integrates to its released counterpart ----"
 python3 - <<'PYEOF'
 import uproot
-G='gen2d'; pairs={'ext':[('pmu6','pmu'),('ppi3','ppi'),('costhmu8','costhmu')],
-                  '1p_ext':[('Whad2','Whad'),('dphit3','dphit'),('thetap4m','thetap'),('thpipr4m','thpipr'),('pp3','pp2'),('pp4','pp2'),('pp5','pp2')]}
+G='gen2d'; pairs={'ext':[('pmu6','pmu'),('ppi3','ppi'),('costhmu8','costhmu'),('pmu5','pmu')],
+                  '1p_ext':[('Whad2','Whad'),('dphit3','dphit'),('thetap4m','thetap'),('thpipr4m','thpipr'),('pp3','pp2'),('pp4','pp2'),('pp5','pp2'),('thetap_dpt85','thetap_dpt')]}
 worst=0.
 for g in ('genie','gibuu','nuwro','neut'):
   for t,pp in pairs.items():
