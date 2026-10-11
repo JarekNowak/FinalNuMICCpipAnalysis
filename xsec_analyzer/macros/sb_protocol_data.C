@@ -46,6 +46,10 @@ struct Var { int reg; std::string name, br; std::vector<double> edges; bool over
 //                sample's POT (e.g. WMX 0.913 in FHC); unscaled ratios carried that as a spurious -8% "shift".
 void sb_protocol_data(bool current_mc=true, bool potnorm_dv=true){
   const char* P= current_mc ? "/data/uboone/processed/sb_pi0/" : "/data/uboone/processed/sb/"; const char* DV= current_mc ? "/data/uboone/processed/sb_pi0/" : "/data/uboone/processed/";
+  // SB_MC_DIR (2026-10-11): one directory for the simulation, the detector variations and the dirt, e.g. the
+  // MCS-calibrated copies of version 1.9 (/data/uboone/processed/sb_mcscal/); beam-off and beam-on are unchanged
+  const char* DD="/data/uboone/processed/";
+  if(const char* e=gSystem->Getenv("SB_MC_DIR")){ P=e; DV=e; DD=e; printf("SB_MC_DIR: simulation, detector variations and dirt from %s\n",e); }
   printf("sb_protocol_data: MC from %s, detector variations %s\n", P, potnorm_dv ? "POT-normalised" : "unscaled");
   const char* B="/data/uboone/processed/beamon_skim/";
   const int NM=2, NR=4; const char* modes[NM]={"fhc","rhc"}; const char* dvtag[NM]={"run4fhc","run4rhc"};
@@ -105,7 +109,7 @@ void sb_protocol_data(bool current_mc=true, bool potnorm_dv=true){
     for(auto& x:mc) loop(x.file.c_str(),x.scale,true,true,m,cvT,w2T,cvH[m],w2H[m]);
     for(auto& x:ext) loop(x.file.c_str(),x.scale,false,false,m,extT,ext2T,extH[m],ext2H[m]);
     // dirt: each run's sample(s), data POT / dirt POT; the CV weight carries the 0.65 once
-    for(auto& d : dirt_perrun(modes[m],"/data/uboone/processed/",{2,12})) loop(d.file.c_str(),d.scale,true,false,m,dirtT,dirt2T,dirtH[m],dirt2H[m]);
+    for(auto& d : dirt_perrun(modes[m],DD,{2,12})) loop(d.file.c_str(),d.scale,true,false,m,dirtT,dirt2T,dirtH[m],dirt2H[m]);
     double dummy2[NK]={0}; std::vector<double> dh2(NB,0); for(auto& d:data){ sb_guard_data(d); loop(d.c_str(),1.0,false,false,m,dataT,dummy2,dataH[m],dh2); }
     // detector variations: CV + 8 knobs (unscaled; only ratios are used)
     double kT[NK]={0}, k2[NK]={0}; std::vector<double> kH(NB,0), kH2(NB,0);
