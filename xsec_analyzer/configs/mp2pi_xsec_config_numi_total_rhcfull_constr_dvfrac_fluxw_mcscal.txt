@@ -1,0 +1,12 @@
+# MCS-calibrated classifier inputs (CC1MU1PIXP_MP_MCS_MAP, v1.9 nominal map): mp2pi_xsec_config_numi_total_rhcfull_constr_dvfrac_fluxw.txt on the production in /data/uboone/processed/mp2pi_mcscal
+# Two-pion one-bin total (RHCFULL), CC1mu2piBDT signal region (Phase 4, item 3, of report/planning/MULTIPION_BNB_ADAPTATION_PLAN.md).
+# With the sideband constraint (ConstrainedCalculator; sideband reco bins of configs/mp2pi_total_bin_config.txt).
+# Detector variations applied fractionally (DVfrac in configs/ccpi_systcalc_numi_dvfrac.conf).
+UnivFile /data/uboone/processed/mp2pi_RHCFULL_total_mcscal_fluxw_univmake.root
+SystFile configs/ccpi_systcalc_numi_dvfrac.conf
+FPFile configs/file_properties_numi_rhcfull_mp2pi_mcscal_fluxw.txt
+Unfold WienerSVD 0
+Flux 6.44646e-10
+Calculator Constrained
+Prediction uBTune "MicroBooNE Tune" univ CV
+Prediction FakeData "Fakedata" univ FakeData

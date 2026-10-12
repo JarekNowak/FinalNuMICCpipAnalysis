@@ -13,6 +13,8 @@ report/planning/MULTIPION_BNB_ADAPTATION_PLAN.md), from the production in /data/
    the framework adds the beam-off to fake data itself.
 
     python3 scripts/mp2pi_setup.py
+    MP2PI_DIR=/data/uboone/processed/mp2pi_mcscal/ MP2PI_SUFFIX=_mcscal python3 scripts/mp2pi_setup.py   (another
+    production directory; the file lists get the suffix)
 """
 import os, sys
 import uproot
@@ -21,7 +23,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import mp_phase0_baseline as B
 
 REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
-OUT = '/data/uboone/processed/mp2pi/'
+OUT = os.path.join(os.environ.get('MP2PI_DIR', '/data/uboone/processed/mp2pi'), '')
+SUFFIX = os.environ.get('MP2PI_SUFFIX', '')
 CFGS = {'fhc5': 'file_properties_numi_fhc5_w.txt', 'rhcfull': 'file_properties_numi_rhcfull_w.txt',
         'comb': 'file_properties_numi_comb_w.txt'}
 
@@ -61,8 +64,8 @@ def main():
                 sys.exit(f'missing production output {OUT + tgt} for {path}')
             lines_out.append(' '.join([new] + f[1:]))
             per_run.setdefault(run, {}).setdefault(ftype, []).append((new, f))
-        open(os.path.join(REPO, 'configs', f'file_properties_numi_{cfg}_mp2pi.txt'), 'w').write(
-            f'# two-pion one-bin total ({cfg}): {name} with the files of /data/uboone/processed/mp2pi (scripts/mp2pi_setup.py)\n'
+        open(os.path.join(REPO, 'configs', f'file_properties_numi_{cfg}_mp2pi{SUFFIX}.txt'), 'w').write(
+            f'# two-pion one-bin total ({cfg}): {name} with the files of {OUT.rstrip("/")} (scripts/mp2pi_setup.py)\n'
             + '\n'.join(lines_out) + '\n')
         for run, d in per_run.items():
             for new, f in d.get('onBNB', []):

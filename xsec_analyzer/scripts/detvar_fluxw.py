@@ -18,8 +18,9 @@ import numpy as np
 import uproot
 
 REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
-MAN = os.path.join(REPO, 'slurm', 'mp2pi_detvar_manifest.list')
-OUT = '/data/uboone/processed/mp2pi/detvar_fluxw/'
+# another production: MP2PI_DETVAR_MANIFEST (e.g. slurm/mp2pi_mcscal_detvar_manifest.list) and MP2PI_DIR
+MAN = os.environ.get('MP2PI_DETVAR_MANIFEST', os.path.join(REPO, 'slurm', 'mp2pi_detvar_manifest.list'))
+OUT = os.path.join(os.environ.get('MP2PI_DIR', '/data/uboone/processed/mp2pi'), 'detvar_fluxw', '')
 RATIO = '/data/uboone/NuMIFlux/NewFluxFiles/ratios_g4_10_4_cvonly_fornuwrofakedata.root'
 # detector -> beam rotation; TRotation::RotateAxes takes the three vectors as the columns
 ROT = np.column_stack([[0.92103853804025681562, 0.022713504803924120662, 0.38880857519374290021],

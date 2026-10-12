@@ -22,6 +22,7 @@ case "$FT" in onBNB) echo "REFUSED: beam-on input $RAW (blind analysis)"; exit 2
 cd "$REPO" || exit 1
 export LD_LIBRARY_PATH="/usr/lib64/flexiblas:$(root-config --libdir):$REPO/lib:${LD_LIBRARY_PATH:-}"
 export XSEC_ANALYZER_DIR="$REPO"; set +u; source ./setup_xsec_analyzer.sh >/dev/null 2>&1; set -u
+echo "MCS map for the classifier inputs: ${CC1MU1PIXP_MP_MCS_MAP:-none}"
 unset XSEC_CR_SKIM CC1MU1PIXP_USE_PION_BDT
 OUT=$(dirname "$OUTF"); TAG=$(basename "$OUTF" .root); mkdir -p "$OUT"
 NENT(){ root.exe -l -b -q -e "Long64_t n=0;for(auto p:{$1}){auto f=TFile::Open(p);auto t=f?(TTree*)f->Get(\"nuselection/NeutrinoSelectionFilter\"):nullptr;if(t)n+=t->GetEntries();}printf(\"%lld\n\",n);" 2>/dev/null | tail -1; }

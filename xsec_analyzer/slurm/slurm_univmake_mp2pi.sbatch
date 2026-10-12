@@ -4,6 +4,8 @@
 # /data/uboone/processed/mp2pi (scripts/mp2pi_setup.py writes the file lists). univmake is multi-threaded and uses
 # ~13 of 16 cores, so each task takes a whole node.
 #   sbatch --array=0-2 --export=ALL,REPO=$PWD slurm/slurm_univmake_mp2pi.sbatch
+# Other file lists: MP2PI_SUFFIX (e.g. _mcscal_fluxw) reads configs/file_properties_numi_<cfg>_mp2pi<suffix>.txt and
+# writes /data/uboone/processed/mp2pi_<CFG>_total<suffix>_univmake.root.
 #SBATCH --job-name=univmp2pi
 #SBATCH --partition=main
 #SBATCH --cpus-per-task=16
@@ -18,8 +20,9 @@ CFG=${CFGS[$SLURM_ARRAY_TASK_ID]}
 cd "$REPO" || exit 1
 export LD_LIBRARY_PATH="$REPO/lib:/usr/lib64/flexiblas:$(root-config --libdir):${LD_LIBRARY_PATH:-}"
 export XSEC_ANALYZER_DIR="$REPO"
-OUT="/data/uboone/processed/mp2pi_${TAG[$CFG]}_total_univmake.root"
-FPM="configs/file_properties_numi_${CFG}_mp2pi.txt"; BIN="configs/mp2pi_total_bin_config.txt"
+SUFFIX="${MP2PI_SUFFIX:-}"
+OUT="/data/uboone/processed/mp2pi_${TAG[$CFG]}_total${SUFFIX}_univmake.root"
+FPM="configs/file_properties_numi_${CFG}_mp2pi${SUFFIX}.txt"; BIN="configs/mp2pi_total_bin_config.txt"
 for f in "$FPM" "$BIN"; do [ -f "$f" ] || { echo "ERROR: missing $f" >&2; exit 1; }; done
 echo "host=$(hostname) cfg=$CFG FPM=$FPM OUT=$OUT"
 TMP="${OUT}.partial.$$"; t0=$(date +%s)

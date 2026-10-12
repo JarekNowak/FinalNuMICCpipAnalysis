@@ -21,6 +21,7 @@ IFS='|' read -r RAW FT TAG <<< "$(sed -n "${line}p" "$MANIFEST")"
 cd "$REPO" || exit 1
 export LD_LIBRARY_PATH="$REPO/lib:/usr/lib64/flexiblas:$(root-config --libdir):${LD_LIBRARY_PATH:-}"
 export XSEC_ANALYZER_DIR="$REPO"; set +u; source ./setup_xsec_analyzer.sh >/dev/null 2>&1; set -u
+echo "MCS map for the classifier inputs: ${CC1MU1PIXP_MP_MCS_MAP:-none}"
 unset CC1MU1PIXP_MP_PID_MODEL XSEC_CR_SKIM CC1MU1PIXP_USE_PION_BDT
 mkdir -p "$OUT"
 case "$FT" in onBNB) echo "REFUSED: beam-on input $RAW (blind analysis)"; exit 2;; esac

@@ -17,6 +17,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <map>
+#include <sstream>
 #include <limits>
 #include <iostream>
 #include <sys/stat.h>
@@ -521,6 +522,22 @@ void CC1mu1piXp::define_constants() {
           TDirectory::TContext keep_directory;
           mp_pid_ = std::make_unique< TMVA::Experimental::RBDT >( "mp_pid", model );
           mp_pid_model_path_ = model;
+          if ( const char* env_map = std::getenv( "CC1MU1PIXP_MP_MCS_MAP" ) ) {
+            std::ifstream in( env_map ); std::string l;
+            while ( std::getline( in, l ) ) {
+              if ( l.empty() || l[0] == '#' ) continue;
+              std::istringstream ss( l ); McsCell c; ss >> c.x0 >> c.x1 >> c.l0 >> c.l1; double v;
+              while ( ss >> v ) c.g.push_back( v );
+              if ( c.g.size() < 2 ) throw std::runtime_error( std::string( "CC1mu1piXp: bad cell in the MCS map " )
+                + env_map );
+              mp_mcs_cells_.push_back( c );
+            }
+            if ( mp_mcs_cells_.empty() ) throw std::runtime_error( std::string( "CC1mu1piXp: could not read the MCS"
+              " map \"" ) + env_map + "\" (CC1MU1PIXP_MP_MCS_MAP)" );
+            mp_mcs_map_path_ = env_map;
+            std::cout << "CC1mu1piXp: MCS map " << mp_mcs_map_path_ << " (" << mp_mcs_cells_.size()
+                      << " cells) applied to the classifier inputs of simulated exiting tracks\n";
+          }
         }
         // two-pion event classifier (RBDT copy of the XGBoost model of scripts/mp_evt.py train)
         if ( use_event_classifier() ) {
@@ -1676,7 +1693,7 @@ else if (nPrimaryShowers == 0)  shower_cut = true ;
       etrk_dist_->push_back( dist );
       etrk_llr_->push_back( llr );
       etrk_mom_range_mu_->push_back( Event->track_range_mom_mu_->at(i) );
-      etrk_mom_mcs_->push_back( Event->track_mcs_mom_mu_->at(i) );
+      etrk_mom_mcs_->push_back( mp_mcs_cells_.empty() ? Event->track_mcs_mom_mu_->at(i) : mp_mcs_mom( Event, i ) );
       const TVector3 u = ( dir.Mag() > 0. ) ? dir.Unit() : TVector3( 0., 0., 0. );
       etrk_dirx_->push_back( u.X() ); etrk_diry_->push_back( u.Y() ); etrk_dirz_->push_back( u.Z() );
       etrk_costh_->push_back( ( dir.Mag() > 0. ) ? u.Dot( reco_nu_dir(Event) ) : -2.f );
@@ -2841,6 +2858,28 @@ void CC1mu1piXp::reset() {
 
 }
 
+// MCS momentum of PFParticle i for the classifier inputs, calibrated (map of $CC1MU1PIXP_MP_MCS_MAP) when the track is
+// matched to a simulated particle and its end leaves the containment volume, the condition under which the muon
+// candidate is measured by MCS; overlaid cosmic tracks and beam-off and beam-on events are data and stay as they are.
+// The interpolation is that of macros/mcs_cal_apply.C (linear in steps of 0.01 GeV/c, constant g(p)/p beyond the grid).
+float CC1mu1piXp::mp_mcs_mom( const AnalysisEvent* ev, size_t i ) {
+  const float mcs = ( ev->track_mcs_mom_mu_ && i < ev->track_mcs_mom_mu_->size() ) ? ev->track_mcs_mom_mu_->at( i )
+    : -9999.f;
+  if ( mp_mcs_cells_.empty() || !std::isfinite( mcs ) || !( mcs > 0.f ) ) return mcs;
+  if ( !ev->pfp_true_pdg_ || i >= ev->pfp_true_pdg_->size() || ev->pfp_true_pdg_->at( i ) == 0 ) return mcs;
+  if ( point_inside_FV( this->containment_FV(), ev->track_endx_->at( i ), ev->track_endy_->at( i ),
+                        ev->track_endz_->at( i ) ) ) return mcs;
+  const double adx = std::fabs( ev->track_dirx_->at( i ) ), len = ev->track_length_->at( i ), GSTEP = 0.01;
+  for ( const McsCell& c : mp_mcs_cells_ ) {
+    if ( !( adx >= c.x0 && adx < c.x1 && len >= c.l0 && len < c.l1 ) ) continue;
+    const double pmax = GSTEP * ( c.g.size() - 1 );
+    if ( mcs >= pmax ) return static_cast<float>( mcs * c.g.back() / pmax );
+    const double u = mcs / GSTEP; const size_t k = static_cast<size_t>( u ); const double t = u - k;
+    return static_cast<float>( c.g[k] + t * ( c.g[k + 1] - c.g[k] ) );
+  }
+  return mcs;
+}
+
 // Inputs of the particle classifier for PFParticle i, in the order of FEATURES in
 // scripts/mp_pid_train.py --common: the 43 inputs whose branches every sample carries (the older
 // beam-on, beam-off and dirt ntuples lack the Bragg-pion, truncated dE/dx, deflection, end-spacepoint,
@@ -2853,7 +2892,8 @@ std::vector<float> CC1mu1piXp::mp_pid_features( const AnalysisEvent* ev, size_t 
     const auto it = ev->mp_pid_f_.find( name ); return it == ev->mp_pid_f_.end() ? -9999.f : vf( it->second, i ); };
   const float ex = vf( ev->track_endx_, i ), ey = vf( ev->track_endy_, i ), ez = vf( ev->track_endz_, i );
   const float sx = vf( ev->track_startx_, i ), sy = vf( ev->track_starty_, i ), sz = vf( ev->track_startz_, i );
-  const float mcs = vf( ev->track_mcs_mom_mu_, i ), rng = vf( ev->track_range_mom_mu_, i );
+  const float mcs = mp_mcs_cells_.empty() ? vf( ev->track_mcs_mom_mu_, i ) : mp_mcs_mom( ev, i ),
+    rng = vf( ev->track_range_mom_mu_, i );
   std::vector<float> f = {
     vf( ev->track_length_, i ), vf( ev->pfp_track_score_, i ), static_cast<float>( dist ),
     float( point_inside_FV( this->containment_FV(), ex, ey, ez ) ),
@@ -2886,7 +2926,7 @@ const std::array<float, 4>& CC1mu1piXp::mp_pid_cached( const AnalysisEvent* ev, 
   struct Cache { std::array<double, 5> key{ { -1e300, 0., 0., 0., 0. } }; std::vector< std::array<float, 4> > out;
     std::vector<char> have; };
   static std::map< std::string, Cache > caches;
-  Cache& c = caches[ mp_pid_model_path_ ];
+  Cache& c = caches[ mp_pid_model_path_ + '|' + mp_mcs_map_path_ ];
   std::array<double, 5>& key = c.key; std::vector< std::array<float, 4> >& out = c.out; std::vector<char>& have = c.have;
   const std::array<double, 5> k{ { ev->nu_vx_, ev->nu_vy_, ev->nu_vz_, double( ev->num_pf_particles_ ),
     ev->topological_score_ } };

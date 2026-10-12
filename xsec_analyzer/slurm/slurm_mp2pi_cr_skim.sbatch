@@ -18,8 +18,13 @@
 #   mkdir -p /data/uboone/processed/mp2pi_cr_skim/logs
 #   sbatch --array=0-33 --export=ALL,REPO=$PWD,MANIFEST=$PWD/slurm/pid_diag_skim_manifest.list \
 #          slurm/slurm_mp2pi_cr_skim.sbatch
+# MCS calibration of the classifier inputs (CC1MU1PIXP_MP_MCS_MAP, simulated samples only; beam-on and beam-off
+# outputs are linked from the uncalibrated skim):
+#   sbatch --array=8-19,27-33 --output=/data/uboone/processed/mp2pi_cr_skim_mcscal/logs/%x_%A_%a.out \
+#          --export=ALL,REPO=$PWD,MANIFEST=$PWD/slurm/pid_diag_skim_manifest.list,OUT=/data/uboone/processed/mp2pi_cr_skim_mcscal,\
+#          CC1MU1PIXP_MP_MCS_MAP=/data/uboone/processed/mcscal/maps/nominal.txt slurm/slurm_mp2pi_cr_skim.sbatch
 set -u
-REPO="${REPO:?}"; OUT=/data/uboone/processed/mp2pi_cr_skim; MANIFEST="${MANIFEST:?}"
+REPO="${REPO:?}"; OUT="${OUT:-/data/uboone/processed/mp2pi_cr_skim}"; MANIFEST="${MANIFEST:?}"
 SELS=CC1mu1piXp,CC1mu2piBDTEvt
 line=$(( SLURM_ARRAY_TASK_ID + 1 ))
 IFS='|' read -r RAW FT TAG <<< "$(sed -n "${line}p" "$MANIFEST")"
@@ -29,6 +34,7 @@ export LD_LIBRARY_PATH="/usr/lib64/flexiblas:$(root-config --libdir):$REPO/lib:$
 export XSEC_ANALYZER_DIR="$REPO"; set +u; source ./setup_xsec_analyzer.sh >/dev/null 2>&1; set -u
 mkdir -p "$OUT"; F="$OUT/xsec-ana-$TAG.root"
 export XSEC_CR_SKIM=1                      # never unset: beam-on files are among the inputs
+echo "MCS map for the classifier inputs: ${CC1MU1PIXP_MP_MCS_MAP:-none}"
 ProcessNTuples "$RAW" "$FT" "$SELS" "$F" > "$OUT/$TAG.log" 2>&1; RC=$?
 CHK=$(root.exe -l -b -q -e '
   auto f=TFile::Open("'"$F"'");

@@ -119,6 +119,14 @@ protected:
   // class probabilities of track i, evaluated once per event and track for all selections
   const std::array<float, 4>& mp_pid_cached( const AnalysisEvent* ev, size_t i, double dist );
   std::unique_ptr< TMVA::Experimental::RBDT > mp_pid_;
+  // MCS calibration of the classifier inputs: with $CC1MU1PIXP_MP_MCS_MAP set to a map of scripts/mcs_cal_derive.py
+  // (cells of |dir x| and visible length, g(p) in steps of 0.01 GeV/c), the MCS momentum of every track matched to a
+  // simulated particle whose end leaves the containment volume is mapped as in macros/mcs_cal_apply.C before the
+  // particle classifier and the track dump see it; unset, nothing changes
+  struct McsCell { double x0, x1, l0, l1; std::vector<double> g; };
+  std::vector<McsCell> mp_mcs_cells_;
+  std::string mp_mcs_map_path_;
+  float mp_mcs_mom( const AnalysisEvent* ev, size_t i );
   float mp_pid_out_[4] = { -1.f, -1.f, -1.f, -1.f };   // P(mu), P(pi), P(p), P(other) of the current candidate
   // Per-pion true-momentum threshold applied to ALL N signal pions (via the softest
   // one). The single-pion measured phase space uses 0.175 GeV/c; the multi-pion
