@@ -64,7 +64,7 @@
   {\large Technical Note: the Two-Charged-Pion Final State
   (\texttt{CC1mu2piBDT})\par}
   \vspace{0.5cm}
-  {\normalsize Draft 0.2, 2026-10-09\par}
+  {\normalsize Draft 0.3, 2026-10-12\par}
   \vspace{1.5cm}
   % NOTE: author list to be confirmed. Contributors to the multi-pion effort:
   {\large Tusharadri Mahmud, Linhui Gu, Ishanee Pophale, Jarek Nowak\par}
@@ -84,8 +84,11 @@
     dominated by the flux, amplified by the subtraction of a background as large as the signal, and by
     the detector variations. Four control samples defined from the classifier outputs constrain the
     background through the conditional covariance of the extraction framework: in the combined
-    configuration the one-bin total carries $15.7\%$ with the constraint and $46\%$ without, closes on
-    pseudo-data and follows two reweighted interaction models. The detector-variation samples of the
+    configuration the one-bin total carries $15.2\%$ with the constraint and $45\%$ without, closes on
+    pseudo-data and follows two reweighted interaction models. In the opened control regions of the
+    single-pion analysis the classifier inputs follow the beam-on data once the MCS momentum of exiting
+    tracks is calibrated as in the single-pion analysis, and the LLR of long protons follows the
+    recombination variation of the detector term. The detector-variation samples of the
     NuMI production were simulated with an earlier flux; the detector term is therefore taken
     fractionally. Three or more pions are not measurable at this exposure and serve as a control
     sample. The signal region is blind, and every result is extracted from pseudo-data.
@@ -615,6 +618,85 @@ The sideband constraint removes the difference between the fractional treatments
 are the same with and without the flux weight.
 
 % =============================================================================
+\section{Beam-on data in the control regions}
+\label{sec:crdata}
+
+The inputs and the output of the two-pion selection were compared with beam-on data in the four control
+regions of the single-pion analysis, which are open. The skim keeps only events in those regions and
+outside the signal regions of both selections, so the two-pion signal region is absent from data and
+prediction alike. The prediction is the sum of the overlays, beam-off data and dirt; the shape tests
+remove the normalisation and are made per run period and summed. In the two-pion domain the data exceed
+the prediction by $10$--$24\%$ (three-pion-like $1.18$, proton-like $1.10$, score $0.5$--$0.92$ $1.20$,
+score below $0.5$ $1.24$), as outside it ($1.12$); the largest excess is in the $\pi^0$ control region.
+
+\paragraph{MCS momentum.} The MCS momentum of the pool tracks is the most mis-modelled input: data over
+prediction rises to $1.14$ at $0.7$--$0.9\GeVc$ and falls to $0.39$ at $1.8$--$1.9\GeVc$ (shape
+$\chi^2=2234/19$). This is the effect found for exiting muons in the single-pion analysis~\cite{note1}, an
+angular noise of reconstructed tracks on the scale of the MCS segments that the simulation lacks,
+calibrated there from version~1.9 by a quantile map of the MCS momentum in cells of the drift-direction
+component and the length of the track. The same map is applied here to the classifier inputs of every
+simulated track whose end leaves the containment volume (\texttt{CC1MU1PIXP\_MP\_MCS\_MAP}; without it
+every output is unchanged, bit for bit). With it the shape $\chi^2$ of the MCS momentum falls to
+$71.5/19$ (data over prediction $0.87$--$1.04$), that of $P(\mu)$ from $1100$ to $293$, of $P(\pi)$ from
+$256$ to $56$ (19 degrees of freedom) and of the summed $P(\pi)$ of the event from $92$ to $52$ (15),
+in every period.
+
+\paragraph{LLR of long protons.} Among pool tracks longer than $40\cm$, those with an LLR score below
+$-0.9$ (an LLR sum below $-630$) are $11$ times more frequent in the data than predicted ($592$ against
+$52$); between $-0.9$ and $-0.8$ the data hold $1.33$ times the prediction and between $-0.8$ and $-0.5$
+$0.84$. They are long contained protons: both ends contained ($97\%$), starting at the vertex, $40$ to
+$100\cm$ long, true protons in $72\%$ of the predicted ones, in every period and both productions and on
+all three planes. With the same number of hits they are more proton-like per hit in the data: for
+contained tracks longer than $40\cm$ with an LLR score below $-0.5$ the median LLR sum is $-436$ to $-486$
+in the Run-4 data and $-339$ in the simulation. Of the detector variations the recombination variation
+reproduces it (median $-445$; share beyond $-0.9$ of $0.15$, against $0.16$--$0.23$ in the data and
+$0.015$ in the simulation), and the wire-response variations move it the other way. The effect is
+therefore inside the detector term, of which the recombination variation is the largest part
+(Section~\ref{sec:detrobust}).
+
+\paragraph{Event score.} With the calibrated simulation the shape $\chi^2$ of the event score is
+$140/22$ ($160/22$ before). The bin below the cut holds $0.83$ of the predicted share, and the
+recombination variation gives $0.86$ in both modes. The lowest bin ($0.78$) holds control-region CC$0\pi$
+events ($97.5\%$); against the normalisation of that region alone it is at $0.85$, the rest coming from the
+larger excess of the $\pi^0$ region in the common normalisation, and the recombination variation gives
+$0.93$--$0.94$.
+
+\paragraph{Extraction with the calibrated simulation.} The overlays, the dirt and the detector-variation
+samples were processed again with the calibrated classifier inputs, and the pseudo-data thrown with the
+same seeds, so that they hold the same events. Table~\ref{tab:mcscal} gives the totals. The calibration
+changes the expected content of the signal region by less than $1\%$ (signal $-0.9\%$ in FHC and $-0.5\%$
+in RHC, all events $-0.7\%$ and $0.0\%$) and the constrained combined total from $15.7\%$ to $15.2\%$. The
+classification moves about $5\%$ of the signal-region events in or out, and their pseudo-data counts are
+Poisson draws made without regard to it; this moves the closure to $1.05$--$1.09$, by $+0.9$ (FHC) and
+$+2.3$ (RHC) times the Poisson spread of the migrating events. The calibration uncertainty is evaluated
+as in the single-pion analysis: pseudo-data with the classifier inputs calibrated by each of the seven
+alternative maps, extracted against the response calibrated with the nominal map, in four fully
+correlated terms: $2.2\%$ of the constrained combined total, $2.3$--$5.5\%$ in the other extractions and at
+most $0.24$ of their total uncertainty. Each alternative map moves only $4$ to $19$ of the pseudo-data
+events in or out of the signal region, and every shift lies within $1.7$ times the Poisson noise of
+those events, so the term is an upper estimate. The calibrated selection is used from here on.
+
+\begin{table}[H]
+  \centering
+  \caption{One-bin two-pion total with the MCS-calibrated classifier inputs, as Table~\ref{tab:framework}.
+    The calibration term is not part of the total.}
+  \label{tab:mcscal}
+  \footnotesize\setlength{\tabcolsep}{4pt}
+  \begin{tabular}{lcccccccc}
+    \toprule
+    & Total & Detector & Flux & Cross sect. & Reint. & Data stat. & Calibration & Unfolded/truth \\
+    \midrule
+    FHC, no constraint       & $51.3\%$ & $30.9\%$ & $36.2\%$ & $14.6\%$ & $5.1\%$ & $10.4\%$ & $5.5\%$ & $1.082$ \\
+    FHC, constrained         & $21.3\%$ & $10.6\%$ & $6.2\%$  & $7.8\%$  & $5.4\%$ & $13.5\%$ & $5.1\%$ & $1.050$ \\
+    RHC, no constraint       & $40.3\%$ & $19.3\%$ & $30.1\%$ & $15.0\%$ & $5.1\%$ & $8.5\%$  & $2.5\%$ & $1.090$ \\
+    RHC, constrained         & $15.4\%$ & $6.6\%$  & $4.2\%$  & $5.6\%$  & $4.2\%$ & $10.7\%$ & $2.3\%$ & $1.070$ \\
+    Combined, no constraint  & $44.9\%$ & $25.6\%$ & $32.5\%$ & $14.7\%$ & $5.0\%$ & $6.6\%$  & $3.1\%$ & $1.087$ \\
+    Combined, constrained    & $15.2\%$ & $8.0\%$  & $4.6\%$  & $6.3\%$  & $4.7\%$ & $8.7\%$  & $2.2\%$ & $1.056$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+% =============================================================================
 \section{Three or more pions}
 \label{sec:threepi}
 
@@ -634,12 +716,11 @@ three-pion-like events are therefore the control sample of Section~\ref{sec:cons
 
 \begin{itemize}[nosep]
   \item The two-pion one-bin total is extracted through the framework in FHC, RHC and combined, with
-        and without the sideband constraint (Table~\ref{tab:framework}).
-  \item The LLR score is mis-modelled in the opened control regions of the single-pion analysis (shape
-        $\chi^2$ of $160$--$250$ for 19 degrees of freedom, mean shifts of $-0.007$ to $-0.031$), and
-        the particle classifier relies on it. The inputs of the LLR-and-geometry classifier and the event
-        score are to be compared with beam-on data in the opened control regions, and the effect on the
-        sidebands quantified, before the sidebands are opened.
+        and without the sideband constraint, with the MCS-calibrated classifier inputs
+        (Table~\ref{tab:mcscal}).
+  \item The inputs of the LLR-and-geometry classifier and the event score are compared with beam-on data
+        in the opened control regions (Section~\ref{sec:crdata}): the MCS momentum is calibrated, and the
+        LLR of long protons follows the recombination variation of the detector term.
   \item Validation through the framework: ensembles of pseudo-experiments, the alternative-model
         closure with the constraint, and an independent-generator closure if a NuMI NuWro overlay can
         be validated.
@@ -662,7 +743,7 @@ three-pion-like events are therefore the control sample of Section~\ref{sec:cons
   and at least one proton in the final state}, \uboone{} internal note, version~2 (May 2026).
 \bibitem{note1} I.\ Pophale and J.\ Nowak, \textit{Measurement of
   $\nu_\mu+\bar\nu_\mu$ charged-current single-pion production differential cross sections
-  on argon with \uboone{} in the NuMI beam}, \uboone{} analysis note, version~1.8 (companion document).
+  on argon with \uboone{} in the NuMI beam}, \uboone{} analysis note, version~1.9 (companion document).
 \end{thebibliography}
 
 \end{document}
