@@ -64,7 +64,7 @@
   {\large Technical Note: the Two-Charged-Pion Final State
   (\texttt{CC1mu2piBDT})\par}
   \vspace{0.5cm}
-  {\normalsize Draft 0.4, 2026-10-16\par}
+  {\normalsize Draft 0.5, 2026-10-16\par}
   \vspace{1.5cm}
   % NOTE: author list to be confirmed. Contributors to the multi-pion effort:
   {\large Tusharadri Mahmud, Linhui Gu, Ishanee Pophale, Jarek Nowak\par}
@@ -80,17 +80,18 @@
     log-probability, and an event classifier on the assigned probabilities. On the full NuMI exposure
     ($7.766\times10^{20}$~POT in forward and $1.1082\times10^{21}$~POT in reverse horn current) it
     selects $13\%$ of the signal at $51\%$ purity in the combined configuration, against $18\%$ at
-    $26\%$ for the selection of the first draft of this note. The uncertainty of the one-bin total is
-    dominated by the flux, amplified by the subtraction of a background as large as the signal, and by
-    the detector variations. Four control samples defined from the classifier outputs constrain the
-    background through the conditional covariance of the extraction framework: in the combined
-    configuration the one-bin total carries $15.2\%$ with the constraint and $45\%$ without, closes on
-    pseudo-data and follows two reweighted interaction models. In the opened control regions of the
-    single-pion analysis the classifier inputs follow the beam-on data once the MCS momentum of exiting
-    tracks is calibrated as in the single-pion analysis, and the LLR of long protons follows the
-    recombination variation of the detector term. The detector-variation samples of the
-    NuMI production were simulated with an earlier flux; the detector term is therefore taken
-    fractionally. Three or more pions are not measurable at this exposure and serve as a control
+    $26\%$ for the selection of the first draft of this note. Without a constraint the uncertainty of the
+    one-bin total is dominated by the flux, amplified by the subtraction of a background as large as the
+    signal, and by the detector variations. Four control samples defined from the classifier outputs
+    condition the covariance of the extraction framework, partly through the signal they contain: in the
+    combined configuration the one-bin
+    total carries $15.2\%$ with the constraint ($15.4\%$ with the MCS-calibration term) and $45\%$
+    without, with data statistics then the largest term; one pseudo-data realisation returns its truth
+    within the uncertainty, and the constraint follows two reweighted interaction models. In the opened
+    control regions of the single-pion analysis, calibrating the MCS momentum of exiting tracks as in the
+    single-pion analysis brings the classifier inputs much closer to the beam-on data; differences remain
+    in the class probabilities and the event score, and the LLR of long protons follows the recombination
+    variation of the detector term. Three or more pions are not measurable at this exposure and serve as a control
     sample. The signal region is blind, and every result is extracted from pseudo-data.
   \end{abstract}
 \end{titlepage}
@@ -125,9 +126,10 @@ an event classifier (Section~\ref{sec:event}), a study of the detector term
 (Section~\ref{sec:framework}), and the comparison of its inputs with beam-on data in the opened control
 regions, with the calibration of the MCS momentum and the selection variants (Section~\ref{sec:crdata}). The
 samples, normalisation, systematic universes and Wiener-SVD
-unfolding are those of the single-pion analysis.
+unfolding~\cite{wsvd} are those of the single-pion analysis.
 
-The decisions that fix the scope are:
+The decisions that fix the scope are (D4 and D5, on NuGraph inputs and a NuMI NuWro sample, are recorded in the
+plan):
 \begin{itemize}[nosep]
   \item D1: the signal is inclusive in nucleons, CC$2\pi^\pm Xp$, with a subsample with at least one
         proton for comparison with the BNB analysis.
@@ -149,10 +151,10 @@ The decisions that fix the scope are:
 
 The signal is a $\nu_\mu$ or $\bar\nu_\mu$ charged-current interaction with its vertex in the
 fiducial volume of the single-pion analysis, one muon with $p_\mu>0.15\GeVc$ and exactly two charged
-pions ($\pi^+$ or $\pi^-$; the pion charge is not measured), each with $p_\pi>0.10\GeVc$, no neutral
-pion, kaon or heavier meson, and any number of nucleons. The opening angle between the muon and the
-leading (hardest) pion is below $2.6$~rad, as in the single-pion definition. Pions are counted at any
-momentum, so an event with a third charged pion below the threshold is not signal. The subsample with
+pions leaving the nucleus ($\pi^+$ or $\pi^-$; the pion charge is not measured), counted at any momentum
+and both with $p_\pi>0.10\GeVc$, so that an event with a third charged pion below the threshold is not
+signal; no neutral pion, kaon or heavier meson, and any number of nucleons. The opening angle between the
+muon and the leading (hardest) pion is below $2.6$~rad, as in the single-pion definition. The subsample with
 at least one proton above $0.3\GeVc$ is $81\%$ of the signal.
 
 \paragraph{Pion-momentum threshold.} In a two- or three-pion event the sub-leading pions are softer
@@ -254,7 +256,7 @@ two-pion event with a third counted candidate.
 \section{Particle classifier}
 \label{sec:pid}
 
-A four-class classifier (muon, pion, proton, other) is trained with XGBoost on the tracks of the
+A four-class classifier (muon, pion, proton, other) is trained with XGBoost~\cite{xgboost} on the tracks of the
 pion-candidate pool of the selection (generation 2, track score $\geq0.3$), dumped from all fourteen
 overlays ($3.1$~million tracks). Tracks are labelled by their backtracked particle; tracks without a
 truth match, mostly cosmic rays of the overlay, are the class ``other''. Training uses run periods 1,
@@ -262,7 +264,7 @@ truth match, mostly cosmic rays of the overlay, are the class ``other''. Trainin
 dirt ntuples of the older production (Runs 1--3) lack twenty of the track branches every overlay
 carries (the Bragg-pion likelihoods, truncated $dE/dx$, deflection, end spacepoints, hit and
 descendant counts), so the deployed models use the 43 inputs every sample carries. The model is
-evaluated in the selection through ROOT's \texttt{RBDT}, which reproduces XGBoost exactly.
+evaluated in the selection through ROOT's \texttt{RBDT}~\cite{tmva}, which reproduces XGBoost exactly.
 
 \begin{table}[H]
   \centering
@@ -316,9 +318,11 @@ log-likelihood is
 \begin{equation}
   L_N = \log P_\mu(\mu) + \sum_{\text{pions}}\log P_\pi + \sum_{\text{rest}}\log\left(1-P_\mu-P_\pi\right),
 \end{equation}
-and every choice of the muon and the $N$ pions among at most eight tracks is enumerated; the best and
-the runner-up are kept for $N=1,2,3$. In the selected signal the assigned muon and pions are correct
-in $91$--$92\%$ of events. In the preselected signal, however, only $30\%$ of the events have the muon
+where $1-P_\mu-P_\pi=P_p+P_\mathrm{other}$ and every probability is floored at $10^{-6}$ before the
+logarithm; every choice of the muon and the $N$ pions among at most eight tracks is enumerated, and the
+best and the runner-up are kept for $N=1,2,3$. In the selected signal of the held-out periods the
+assigned muon is a true muon in $89\%$ of events and each assigned pion a true charged pion in $88\%$;
+all three are in $76\%$. In the preselected signal, however, only $30\%$ of the events have the muon
 and both pions as tracks, so in most signal events no assignment can be fully right.
 
 \paragraph{Event classifier.} An XGBoost classifier separates the two-pion signal from everything else
@@ -328,8 +332,9 @@ topological score and CosmicIP. Its domain is one slice, the vertex in the fiduc
 trigger, at least three tracks and $\theta(\mu,\text{longest assigned pion})<2.6$~rad (D6). It is trained
 on run periods 1, 2 and 4 of both horn modes ($206\,152$ events, $13\,558$ signal) with the nominal
 mixture of overlay, dirt and beam-off and the central-value weights, and tested on FHC Run~5 and RHC
-Run~3 ($104\,814$ events, $7\,253$ signal), which the particle classifier did not see either. The ROC
-area on the test periods is $0.887$; adding the lengths, vertex distances, containment and opening
+Run~3 ($104\,814$ events, $7\,253$ signal), which the particle classifier did not see either. These periods also
+choose the working point below, so they are validation periods rather than an untouched test sample. The
+ROC area on them is $0.887$; adding the lengths, vertex distances, containment and opening
 angles of the assigned tracks raises it to $0.898$, a gain that disappears in the total uncertainty, so
 these kinematic features are not used. The largest gains come from the summed pion probability, $L_2$,
 the number of tracks with $P_\pi>0.5$, the topological score and the number with $P_\mu>0.5$.
@@ -348,8 +353,9 @@ statistics of the detector-variation samples.
     selection, the same with the particle classifier as pion identification
     (\texttt{CC1mu2piNewPID}), and the event classifier with the deployed and with the
     LLR-and-geometry particle classifier at score $>0.92$. The last row is the evaluation of
-    Section~\ref{sec:constraint}, with the flux from the PPFX universes instead of
-    $17\%\times(1+B/S)$.}
+    Section~\ref{sec:constraint}, with the flux from the PPFX universes~\cite{ppfx} instead of
+    $17\%\times(1+B/S)$. The totals also contain the POT, target and simulation-statistics terms, which are not
+    listed.}
   \label{tab:wp}
   \footnotesize\setlength{\tabcolsep}{4pt}
   \begin{tabular}{lcccccccc}
@@ -366,7 +372,7 @@ statistics of the detector-variation samples.
 
 The cross-section term is the model dependence of the background and falls with the purity; the model
 dependence of the efficiency stays below $6\%$. In the combined configuration the signal region of the
-LLR-and-geometry selection holds $738$ events, $378$ of them signal; the largest backgrounds are
+LLR-and-geometry selection holds $738$ predicted events at full exposure, $378$ of them signal; the largest backgrounds are
 single-pion events ($15\%$ of the sample) and three or more charged pions ($13\%$). Of the selected
 events $14\%$ lie in the blind single-pion signal region (D7) and $12\%$ in the opened multi-$\pi$
 control region of the single-pion analysis (D3).
@@ -479,8 +485,8 @@ without it (Table~\ref{tab:regions}).
 
 \begin{table}[H]
   \centering
-  \caption{Signal region and sidebands of the LLR-and-geometry selection, combined configuration, full
-    exposure.}
+  \caption{Signal region and sidebands of the LLR-and-geometry selection, combined configuration, predicted
+    events at full exposure.}
   \label{tab:regions}
   \small
   \begin{tabular}{lrrcl}
@@ -499,7 +505,9 @@ without it (Table~\ref{tab:regions}).
 A first evaluation outside the framework, with the formalism of \texttt{ConstrainedCalculator},
 gives the uncertainties of Table~\ref{tab:constraint}. The flux term falls from $35\%$ to $5.5\%$, since
 the flux scales the background and the sidebands alike, and the detector term from $21\%$ to $9\%$,
-close to its efficiency part. The three-pion-like sample alone, $282$ events, halves the total.
+close to its efficiency part. The three-pion-like sample alone, $282$ events, halves the total. The
+data-statistics term grows with a constraint, because the counts of the sidebands enter the background
+estimate.
 
 \begin{table}[H]
   \centering
@@ -523,13 +531,20 @@ close to its efficiency part. The three-pion-like sample alone, $282$ events, ha
 
 \paragraph{Closure under alternative models.} Pseudo-data from a reweighted interaction model in every
 region, extracted with the nominal model, return the alternative truth: with all sidebands $0.952$
-($-0.29\sigma$) under GENIE multisim universe~545 and $0.994$ ($-0.03\sigma$) under the
+($-0.29\sigma$) under GENIE~\cite{genie,genie3} multisim universe~545 and $0.994$ ($-0.03\sigma$) under the
 $\Delta\to N\pi$ angular variation, against $0.979$ and $1.012$ without the constraint; over the GENIE
 multisim universes the bias has an rms of $4.5\%$ with the constraint, within $1\sigma$ in every universe,
 and $17.4\%$ without ($98\%$ of the universes within $1\sigma$). These models lie inside the variations that build the covariance, so the test checks
-the procedure, not the model space. The score band holds more signal than the signal region ($669$
-against $378$ events), so its constraint carries signal-model information into the background
-estimate; it closes for both models.
+the procedure, not the model space.
+
+\paragraph{Signal in the sidebands.} The score band holds more predicted signal than the signal region
+($669$ against $378$ events), and the variations that move the signal move it in every region together, so
+the conditioning also carries the nominal signal model from the sidebands into the signal region. Treated
+as an independent source, uncorrelated with the signal region and the backgrounds, so that the sidebands
+constrain the background only, the signal variations of the sidebands raise the constrained total from
+$16.8\%$ to $19.3\%$ (flux $5.5\%$ to $9.6\%$, cross section $7.0\%$ to $8.6\%$); leaving the score band out
+of the constraint gives $19.0\%$, and both together $21.4\%$. The score band moves the extraction under
+universe~545 from $1.012$ to $0.952$; every variant closes within $0.3\sigma$ for both models.
 
 % =============================================================================
 \section{Extraction through the framework}
@@ -551,7 +566,8 @@ to the constrained total.
   \centering
   \caption{One-bin two-pion total through the framework, on pseudo-data, without and with the sideband
     constraint; detector variations taken fractionally and weighted to the current flux
-    (Section~\ref{sec:detvar}). The last column is the extracted value over the truth of the pseudo-data.}
+    (Section~\ref{sec:detvar}). The last column is the extracted value over the truth of the pseudo-data. The
+    total also contains the POT and target and the simulation-statistics terms, which are not listed.}
   \label{tab:framework}
   \footnotesize\setlength{\tabcolsep}{4pt}
   \begin{tabular}{lccccccc}
@@ -569,8 +585,8 @@ to the constrained total.
 \end{table}
 
 The constrained combined total, $15.7\%$, agrees with the evaluation outside the framework
-($16.8\%$). With the constraint the data statistics become the largest term, and the three
-configurations close at $1.020$--$1.021$.
+($16.8\%$). With the constraint the data statistics become the largest term, and in the three
+configurations the pseudo-data realisation returns $1.020$--$1.021$ times its truth.
 
 \subsection{Detector-variation samples}
 \label{sec:detvar}
@@ -681,7 +697,8 @@ those events, so the term is an upper estimate. The calibrated selection is used
 \begin{table}[H]
   \centering
   \caption{One-bin two-pion total with the MCS-calibrated classifier inputs, as Table~\ref{tab:framework}.
-    The calibration term is not part of the total.}
+    The calibration term is not part of the total; added in quadrature it gives $15.4\%$ for the constrained
+    combined total.}
   \label{tab:mcscal}
   \footnotesize\setlength{\tabcolsep}{4pt}
   \begin{tabular}{lcccccccc}
@@ -716,7 +733,8 @@ points between neighbouring thresholds, which is more than these differences. Th
 \label{sec:threepi}
 
 In the two-pion domain, events with at least four tracks in which three pions are more likely than two
-number $234$ at full exposure (combined, deployed particle classifier), of which $88$ have three or more charged pions, $41$ a neutral
+number $234$ at full exposure (combined, with the deployed particle classifier of the Phase-2 study; the
+three-pion-like sideband of the adopted selection holds $282$, Table~\ref{tab:regions}), of which $88$ have three or more charged pions, $41$ a neutral
 pion and $35$ are two-pion signal. A three-pion event classifier built the same way reaches a ROC area of
 $0.855$, but with all terms every three-pion selection carries a total uncertainty above $100\%$
 (\texttt{CC1mu3pi} $245\%$, with the particle classifier $117\%$, the event classifier at best
@@ -752,7 +770,7 @@ three-pion-like events are therefore the control sample of Section~\ref{sec:cons
 \end{itemize}
 
 % =============================================================================
-\begin{thebibliography}{9}
+\begin{thebibliography}{99}
 \bibitem{mahmud} T.\ Mahmud, \textit{Study of $\nu_\mu$ charged-current three-charged-pion
   production in \uboone{}} (\texttt{CC3}$\pi^+$ selection), MSc by Research thesis,
   Lancaster University.
@@ -763,6 +781,14 @@ three-pion-like events are therefore the control sample of Section~\ref{sec:cons
 \bibitem{note1} I.\ Pophale and J.\ Nowak, \textit{Measurement of
   $\nu_\mu+\bar\nu_\mu$ charged-current single-pion production differential cross sections
   on argon with \uboone{} in the NuMI beam}, \uboone{} analysis note, version~1.9 (companion document).
+\bibitem{xgboost} T.\ Chen and C.\ Guestrin, \textit{XGBoost: a scalable tree boosting system}, Proc.\ 22nd ACM
+  SIGKDD Int.\ Conf.\ on Knowledge Discovery and Data Mining, 785 (2016).
+\bibitem{tmva} A.\ Hoecker \textit{et al.}, \textit{TMVA: toolkit for multivariate data analysis}, PoS ACAT 040 (2007),
+  arXiv:physics/0703039.
+\bibitem{genie} C.\ Andreopoulos \textit{et al.}, Nucl.\ Instrum.\ Meth.\ A \textbf{614}, 87 (2010).
+\bibitem{genie3} L.\ Alvarez-Ruso \textit{et al.}, Eur.\ Phys.\ J.\ Spec.\ Top.\ \textbf{230}, 4449 (2021).
+\bibitem{ppfx} L.\ Aliaga \textit{et al.} (MINERvA), Phys.\ Rev.\ D \textbf{94}, 092005 (2016).
+\bibitem{wsvd} W.\ Tang, X.\ Li, X.\ Qian, H.\ Wei and C.\ Zhang, JINST \textbf{12}, P10002 (2017).
 \end{thebibliography}
 
 \end{document}
