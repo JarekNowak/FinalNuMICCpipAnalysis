@@ -1669,6 +1669,23 @@ else if (nPrimaryShowers == 0)  shower_cut = true ;
       if ( Event->pfp_track_score_->at( p ) < 0.5 ) ++evt_nshower_;
       else ++evt_ntrack_;
     }
+    if ( evt_presel_ ) {
+      auto vf = []( const auto& v, int j, float def ) -> float {
+        return ( v && j < (int)v->size() && std::isfinite( float( v->at( j ) ) ) ) ? float( v->at( j ) ) : def; };
+      for ( int p = 0; p < Event->num_pf_particles_; ++p ) {
+        if ( Event->pfp_generation_->at( p ) != 2u || Event->pfp_track_score_->at( p ) >= 0.5 ) continue;
+        const TVector3 d( vf( Event->shower_px_, p, 0.f ), vf( Event->shower_py_, p, 0.f ), vf( Event->shower_pz_, p, 0.f ) );
+        const TVector3 u = ( d.Mag() > 0. ) ? d.Unit() : TVector3( 0., 0., 0. );
+        eshr_idx_->push_back( p );
+        eshr_energy_->push_back( vf( Event->shower_energy_y_, p, -1.f ) );
+        eshr_dist_->push_back( vf( Event->shower_start_distance_, p, -1.f ) );
+        eshr_ts_->push_back( Event->pfp_track_score_->at( p ) );
+        eshr_dirx_->push_back( u.X() ); eshr_diry_->push_back( u.Y() ); eshr_dirz_->push_back( u.Z() );
+        eshr_dedx_->push_back( vf( Event->shower_tkfit_dedx_y_, p, -1.f ) );
+        eshr_nhits_->push_back( ( Event->pfp_hits_ && p < (int)Event->pfp_hits_->size() ) ? Event->pfp_hits_->at( p ) : -1 );
+      }
+      evt_pi0_mass_ = ( Event->pi0_mass_Y_ != BOGUS && std::isfinite( Event->pi0_mass_Y_ ) ) ? Event->pi0_mass_Y_ : -1.f;
+    }
     const TVector3 vtx( Event->nu_vx_, Event->nu_vy_, Event->nu_vz_ );
     for ( size_t i = 0; evt_presel_ && mp_pid_ && i < Event->track_length_->size(); ++i ) {
       const float len = Event->track_length_->at(i), llr = Event->track_llr_pid_score_->at(i);
@@ -2732,6 +2749,11 @@ void CC1mu1piXp::define_output_branches() {
     set_branch( etrk_true_pdg_, "etrk_true_pdg" );     set_branch( etrk_true_mom_, "etrk_true_mom" );
     set_branch( &evt_presel_, "evt_presel" );          set_branch( &evt_ntrack_, "evt_ntrack" );
     set_branch( &evt_nshower_, "evt_nshower" );        set_branch( &evt_mu_cand_idx_, "evt_mu_cand_idx" );
+    set_branch( eshr_idx_, "eshr_idx" );               set_branch( eshr_nhits_, "eshr_nhits" );
+    set_branch( eshr_energy_, "eshr_energy" );         set_branch( eshr_dist_, "eshr_dist" );
+    set_branch( eshr_ts_, "eshr_ts" );                 set_branch( eshr_dedx_, "eshr_dedx" );
+    set_branch( eshr_dirx_, "eshr_dirx" );             set_branch( eshr_diry_, "eshr_diry" );
+    set_branch( eshr_dirz_, "eshr_dirz" );             set_branch( &evt_pi0_mass_, "evt_pi0_mass" );
   }
 
   // two-pion event classifier (CC1mu2piBDT only)
@@ -2847,6 +2869,9 @@ void CC1mu1piXp::reset() {
                     &etrk_dist_, &etrk_llr_, &etrk_mom_range_mu_, &etrk_mom_mcs_, &etrk_dirx_, &etrk_diry_,
                     &etrk_dirz_, &etrk_costh_, &etrk_true_mom_ } ) (*v)->clear();
   evt_presel_ = false; evt_ntrack_ = 0; evt_nshower_ = 0; evt_mu_cand_idx_ = -1;
+  for ( auto* v : { &eshr_idx_, &eshr_nhits_ } ) (*v)->clear();
+  for ( auto* v : { &eshr_energy_, &eshr_dist_, &eshr_ts_, &eshr_dirx_, &eshr_diry_, &eshr_dirz_, &eshr_dedx_ } ) (*v)->clear();
+  evt_pi0_mass_ = -1.f;
   evt_score_ = -1.f; evt_region_ = -1; evt_d6_ = false; evt_ndump_ = 0;
   evt_mu_idx_ = evt_pi0_idx_ = evt_pi1_idx_ = -1; evt_features_->clear();
   cutflow_bits_ = 0;

@@ -215,6 +215,13 @@ protected:
   int  evt_ntrack_ = 0;           // generation-2 PFParticles with track score >= 0.5
   int  evt_nshower_ = 0;          // generation-2 PFParticles with track score < 0.5
   int  evt_mu_cand_idx_ = -1;     // the selection's muon candidate (highest muon-BDT score)
+  // shower-like generation-2 PFParticles (track score < 0.5) of the dump events, for shower features of the event
+  // classifier: index, energy (collection plane, MeV), start distance from the vertex (cm), track score, unit
+  // direction, track-fit dE/dx (collection plane, MeV/cm), hits; and the pi0 mass of the ntuple's two-shower
+  // reconstruction (collection plane, MeV; -1 when the ntuple does not carry it)
+  MyPointer< std::vector<int> >   eshr_idx_, eshr_nhits_;
+  MyPointer< std::vector<float> > eshr_energy_, eshr_dist_, eshr_ts_, eshr_dirx_, eshr_diry_, eshr_dirz_, eshr_dedx_;
+  float evt_pi0_mass_ = -1.f;
   // ---- Two-pion event classifier (Phases 2 and 4 of report/planning/MULTIPION_BNB_ADAPTATION_PLAN.md) ----
   // In events with one neutrino slice, the vertex in the fiducial volume and the software trigger, the tracks of the
   // event-level dump (up to 8, largest max(P_mu, P_pi) first) are assigned to muon, two pions and rest by the summed

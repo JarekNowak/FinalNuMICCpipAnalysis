@@ -99,6 +99,15 @@ public:
   MyPointer< std::vector<float> > shower_starty_;
   MyPointer< std::vector<float> > shower_startz_;
   MyPointer< std::vector<float> > shower_start_distance_;
+  // Per-PFParticle shower quantities for the multi-pion event features (energy on the collection plane in MeV,
+  // direction, track-fit dE/dx on the collection plane), and the pi0 mass of the ntuple's two-shower
+  // reconstruction (collection plane, MeV). Bound only when the branches exist (Branches.hh).
+  MyPointer< std::vector<float> > shower_energy_y_;
+  MyPointer< std::vector<float> > shower_px_;
+  MyPointer< std::vector<float> > shower_py_;
+  MyPointer< std::vector<float> > shower_pz_;
+  MyPointer< std::vector<float> > shower_tkfit_dedx_y_;
+  float pi0_mass_Y_ = BOGUS;
 
   // Primary shower
   int shr_id_ = BOGUS_INT;

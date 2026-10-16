@@ -116,7 +116,14 @@ inline void set_event_branch_addresses(TTree& etree, AnalysisEvent& ev)
     // convenience)
     set_object_input_branch_address( etree, "shr_dist_v",
       ev.shower_start_distance_ );
+    // per-PFParticle shower quantities of the multi-pion event features, when present
+    for ( const auto& p : { std::make_pair( "shr_energy_y_v", &ev.shower_energy_y_ ),
+                            std::make_pair( "shr_px_v", &ev.shower_px_ ), std::make_pair( "shr_py_v", &ev.shower_py_ ),
+                            std::make_pair( "shr_pz_v", &ev.shower_pz_ ),
+                            std::make_pair( "shr_tkfit_dedx_y_v", &ev.shower_tkfit_dedx_y_ ) } )
+      if ( etree.GetBranch( p.first ) ) set_object_input_branch_address( etree, p.first, *p.second );
   }
+  if ( etree.GetBranch( "pi0_mass_Y" ) ) SetBranchAddress( etree, "pi0_mass_Y", &ev.pi0_mass_Y_ );
   else {
     // When the shower information is not available, delete the owned vectors
     // to signal that the associated branches should not be written to the

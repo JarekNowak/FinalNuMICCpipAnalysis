@@ -58,6 +58,14 @@ DROP = set(sys.argv[sys.argv.index('--drop') + 1].split(',')) if '--drop' in sys
 EAUG = float(sys.argv[sys.argv.index('--aug') + 1]) if '--aug' in sys.argv else 0.   # detector-variation events in training
 ODD = '--odd' in sys.argv           # detector term on the odd event numbers only (the even ones may be in a training)
 PEDGES = [0.10, 0.175, 0.25, 0.35, 0.50, 0.75, 10.]    # true pion momentum bins of the efficiency check
+# feature sets of the event classifier: pid (the 33 of Phase 2), full (pid and the kinematics of the assigned tracks),
+# shr (pid and the shower features; needs a dump with the eshr_* branches), shr1 (pid and the leading-shower features);
+# --sets selects the ones to train and
+# evaluate, --set the one of the constraint step (default pid)
+FSETS = tuple(sys.argv[sys.argv.index('--sets') + 1].split(',')) if '--sets' in sys.argv else ('pid', 'full')
+CSET = sys.argv[sys.argv.index('--set') + 1] if '--set' in sys.argv else 'pid'
+NSHR = 4                                  # showers kept per event (largest energy first)
+SHR = ['energy', 'dist', 'ts', 'dirx', 'diry', 'dirz', 'dedx']
 FLUX = 0.17
 KIND = {'mc': 0, 'ext': 1, 'dirt': 2}
 TOPO = ['CC2pi signal', 'CC0pi', 'CC1pi', 'CC2pi', 'CC3pi+', 'CCpi0', 'CCother', 'NC', 'nueCC', 'OOFV']
@@ -165,6 +173,8 @@ def _features(P, T, ev, npi):
     f['evt_nshower'] = ev['evt_nshower'].astype(float)
     f['topo'] = ev['topological_score'].astype(float)
     f['cosmicip'] = np.clip(ev['CosmicIP'].astype(float), -1., 1000.)
+    if 'shr_valid' in ev:
+        f.update(shower_features(ev, T, rows, [mu] + [pis[:, k] for k in range(npi)]))
     # kinematic features ("full" set)
     kin = {}
     def trk(name, j): return T[name][rows, j]
@@ -199,6 +209,42 @@ def padded(a):
     return P, T
 
 
+def padded_showers(a, pre=E):
+    """Shower arrays of the dump padded to NSHR, largest energy first (showers without collection-plane energy last),
+    with a validity mask, and the pi0 mass of the ntuple's two-shower reconstruction."""
+    en = a[pre + 'eshr_energy']
+    order = ak.argsort(en, axis=1, ascending=False)
+    out = {'shr_valid': ak.to_numpy(ak.fill_none(ak.pad_none(ak.ones_like(en[order], dtype=bool), NSHR, clip=True), False))}
+    for x in SHR:
+        out['shr_' + x] = ak.to_numpy(ak.fill_none(ak.pad_none(a[pre + 'eshr_' + x][order], NSHR, clip=True), -1.)).astype(float)
+    out['evt_pi0_mass'] = ak.to_numpy(a[pre + 'evt_pi0_mass']).astype(float)
+    return out
+
+
+def shower_features(ev, T, rows, assigned):
+    """Shower features of the event (set shr): energies of the two leading showers and their sum, showers above 30 MeV,
+    vertex distances, track score and track-fit dE/dx of the leading shower, the largest cosine between the leading
+    shower and an assigned track, the two-shower mass, and the ntuple's pi0 mass. Missing showers give fixed values."""
+    v, en = ev['shr_valid'], ev['shr_energy']
+    v1, v2 = v[:, 0], v[:, 1]
+    pos = lambda x: np.where(x > 0., x, 0.)
+    f = {}
+    f['shr_E1'] = np.where(v1, pos(en[:, 0]), 0.); f['shr_E2'] = np.where(v2, pos(en[:, 1]), 0.)
+    f['shr_Etot'] = np.where(v, pos(en), 0.).sum(axis=1)
+    f['shr_n30'] = (v & (en > 30.)).sum(axis=1).astype(float)
+    f['shr_d1'] = np.where(v1, ev['shr_dist'][:, 0], -1.); f['shr_d2'] = np.where(v2, ev['shr_dist'][:, 1], -1.)
+    f['shr_ts1'] = np.where(v1, ev['shr_ts'][:, 0], -1.); f['shr_dedx1'] = np.where(v1, ev['shr_dedx'][:, 0], -1.)
+    cos = [ev['shr_dirx'][:, 0] * T['dirx'][rows, j] + ev['shr_diry'][:, 0] * T['diry'][rows, j]
+           + ev['shr_dirz'][:, 0] * T['dirz'][rows, j] for j in assigned]
+    f['shr_cos1'] = np.where(v1, np.max(cos, axis=0), -2.)
+    c12 = ev['shr_dirx'][:, 0] * ev['shr_dirx'][:, 1] + ev['shr_diry'][:, 0] * ev['shr_diry'][:, 1] \
+        + ev['shr_dirz'][:, 0] * ev['shr_dirz'][:, 1]
+    ok = v1 & v2 & (en[:, 0] > 0.) & (en[:, 1] > 0.)
+    f['shr_mgg'] = np.where(ok, np.sqrt(np.clip(2. * en[:, 0] * en[:, 1] * (1. - c12), 0., None)), -1.)
+    f['shr_pi0mass'] = np.where(ev['evt_pi0_mass'] > 0., ev['evt_pi0_mass'], -1.)
+    return f
+
+
 # ---------------------------------------------------------------- build
 def scan_file(path, kind, run, scale, key, file_id, add, sums):
     """Rows of one processed file (preselected, software trigger, at least three dump tracks) with their
@@ -206,6 +252,7 @@ def scan_file(path, kind, run, scale, key, file_id, add, sums):
     tag = os.path.basename(path)[len('xsec-ana-'):-len('.root')]
     t = uproot.open(path)['stv_tree']
     br = [E + 'etrk_' + x for x in TRK] + [E + x for x in EVT] + OTHER + ['topological_score', 'CosmicIP', 'nslice']
+    br += [E + 'eshr_' + x for x in SHR] + [E + 'evt_pi0_mass']          # shower dump (kept when the file has it)
     if kind != 'ext': br += W
     br = [b for b in br if b in t.keys()]
     print(f'  run {run:2d} {kind:4s} {tag} scale {scale:.5g} entries {t.num_entries}', flush=True)
@@ -237,6 +284,8 @@ def scan_file(path, kind, run, scale, key, file_id, add, sums):
         P, T = padded(b)
         ev = {x: ak.to_numpy(b[E + x]) for x in ('evt_ntrack', 'evt_nshower', 'evt_mu_cand_idx')}
         ev['topological_score'] = ak.to_numpy(b['topological_score']); ev['CosmicIP'] = ak.to_numpy(b['CosmicIP'])
+        if E + 'eshr_energy' in b.fields:
+            ev.update(padded_showers(b))
         for npi in (2, 3):
             ok = P['valid'].sum(axis=1) >= npi + 1
             f, kin, truth, d6 = features(P, T, ev, npi)
@@ -347,9 +396,22 @@ FEAT_PID = ['dL_up', 'dL_down', 'dL_runnerup', 'L_best', 'mu_Pmu', 'mu_Ppi', 'mu
             'topo', 'cosmicip']
 
 
-def feat_names(npi, full):
+FEAT_SHR = ['shr_E1', 'shr_E2', 'shr_Etot', 'shr_n30', 'shr_d1', 'shr_d2', 'shr_ts1', 'shr_dedx1', 'shr_cos1', 'shr_mgg',
+            'shr_pi0mass']
+# leading-shower features only: those that follow the beam-on data in the pi0 control region against its own
+# normalisation (report/planning/multipion/cr_mp2pi_shr_check.md); the multi-shower ones do not
+FEAT_SHR1 = ['shr_E1', 'shr_d1', 'shr_ts1', 'shr_cos1']
+
+
+def feat_names(npi, fs):
+    """Names of a feature set (pid, full, shr, shr1; a boolean means full or pid)."""
+    fs = {True: 'full', False: 'pid'}.get(fs, fs)
     f = FEAT_PID + [f'pi{k}_P{c}' for k in range(npi) for c in ('mu', 'pi', 'p')]
-    if full:
+    if fs == 'shr':
+        f += FEAT_SHR
+    if fs == 'shr1':
+        f += FEAT_SHR1
+    if fs == 'full':
         f += [f'{t}_{x}' for t in ['mu'] + [f'pi{k}' for k in range(npi)] for x in ('len', 'dist', 'endcont', 'ts')]
         f += [f'cos_mu_pi{k}' for k in range(npi)] + [f'cos_pi{a}_pi{b}' for a, b in itertools.combinations(range(npi), 2)]
     return [x for x in f if x not in DROP]
@@ -390,8 +452,8 @@ def train():
     def horn_runs(r): return FHC_RUNS if r in FHC_RUNS else RHC_RUNS
     proj = {r: sum(pot[x] for x in horn_runs(r)) / sum(pot[x] for x in TEST_RUNS if x in horn_runs(r)) for r in TEST_RUNS}
     scores = {}
-    for fs in ('pid', 'full'):
-        names = feat_names(npi, fs == 'full')
+    for fs in FSETS:
+        names = feat_names(npi, fs)
         X = np.stack([D[f'n{npi}_{k}'] for k in names], axis=1)
         def bal(m):
             # classes balanced, total weight = number of rows (so min_child_weight counts rows)
@@ -456,7 +518,7 @@ def train():
     # the test periods (which measure the performance)
     thresholds = np.round(np.concatenate([np.arange(0.0, 0.9, 0.01), np.arange(0.9, 0.999, 0.002)]), 3)
     scan = {}
-    for fs in ('pid', 'full'):
+    for fs in FSETS:
         rows_v, rows_t = [], []
         for thr in thresholds:
             m = dom & (scores[fs] > thr)
@@ -469,7 +531,7 @@ def train():
     res['validation_fraction'] = float(f_val)
     # the working point: the feature set with the smaller total at its validation-chosen threshold, or the one
     # given with --set and --threshold (the diagnostics below are then quoted there)
-    fs = 'full' if scan['full']['chosen']['COMB']['total'] <= scan['pid']['chosen']['COMB']['total'] else 'pid'
+    fs = min(reversed(FSETS), key=lambda k: scan[k]['chosen']['COMB']['total'])     # (pid, full): full on a tie, as before
     thr = scan[fs]['chosen']['threshold']
     if '--threshold' in sys.argv:
         fs = sys.argv[sys.argv.index('--set') + 1] if '--set' in sys.argv else 'pid'
@@ -562,8 +624,8 @@ def syst():
     lab = D[f'sig{npi}'].astype(bool); dom = D[f'n{npi}_d6'].astype(bool)
     sigbr = E + 'MC_Signal' if npi == 2 else 'CC1mu3pi_MC_Signal'
     # the classifier (rows outside its domain never pass) and the current selections as score 1 / 0
-    FS = ('pid', 'full') + tuple('cmp_' + c for c in CMP[npi])
-    scores = {fs: np.where(dom, np.load(NEW + f'scores_n{npi}{VTAG}_{fs}.npy'), -1.) for fs in ('pid', 'full')}
+    FS = FSETS + tuple('cmp_' + c for c in CMP[npi])
+    scores = {fs: np.where(dom, np.load(NEW + f'scores_n{npi}{VTAG}_{fs}.npy'), -1.) for fs in FSETS}
     scores.update({'cmp_' + c: D['sel_' + c].astype(float) for c in CMP[npi]})
     T = len(SYST_THR)
     def tbin(x):                 # number of thresholds the score exceeds
@@ -675,12 +737,12 @@ def detsyst():
     if ODD:
         dom &= np.load(NEW + 'detvar_evt.npy') % 2 == 1
     out = {}
-    for fs in ('pid', 'full') + tuple('cmp_' + c for c in CMP[npi]):
+    for fs in FSETS + tuple('cmp_' + c for c in CMP[npi]):
         if fs.startswith('cmp_'):
             sc = V['sel_' + fs[4:]].astype(float)
             if ODD: sc = np.where(np.load(NEW + 'detvar_evt.npy') % 2 == 1, sc, -1.)
         else:
-            names = feat_names(npi, fs == 'full')
+            names = feat_names(npi, fs)
             bst = xgb.Booster(); bst.load_model(NEW + f'evt_clf_n{npi}{VTAG}_{fs}.json')
             X = np.stack([V[f'n{npi}_{k}'] for k in names], axis=1)
             sc = np.where(dom, bst.predict(xgb.DMatrix(X, feature_names=names)), -1.)
@@ -755,7 +817,7 @@ def detboot():
             sc = V['sel_' + fs[4:]].astype(float)
         else:
             if fs not in models:
-                names = feat_names(npi, fs == 'full')
+                names = feat_names(npi, fs)
                 bst = xgb.Booster(); bst.load_model(NEW + f'evt_clf_n{npi}{VTAG}_{fs}.json')
                 X = np.stack([V[f'n{npi}_{k}'] for k in names], axis=1)
                 models[fs] = np.where(dom, bst.predict(xgb.DMatrix(X, feature_names=names)), -1.)
@@ -830,7 +892,7 @@ def constraint():
     sums = json.load(open(NEW + 'sums.json'))
     pot = {int(r): v for r, v in sums['pot'].items()}
     lab = D['sig2'].astype(bool); dom = D['n2_d6'].astype(bool)
-    sc = np.load(NEW + f'scores_n2{VTAG}_pid.npy')
+    sc = np.load(NEW + f'scores_n2{VTAG}_{CSET}.npy')
     reg = np.full(len(lab), -1)
     sr = dom & (sc > T_)
     # the sidebands leave out the events of the blind single-pion signal region, so that they can be opened now
@@ -904,7 +966,7 @@ def constraint():
     # detector variations: ratios of the Run-4 variation samples, per horn, applied to the nominal yields of that horn
     Vd = dict(np.load(NEW + 'detvar_events.npz')); vs = json.load(open(NEW + 'detvar_sums.json'))
     import xgboost as xgb
-    names = feat_names(2, False); bst = xgb.Booster(); bst.load_model(NEW + f'evt_clf_n2{VTAG}_pid.json')
+    names = feat_names(2, CSET); bst = xgb.Booster(); bst.load_model(NEW + f'evt_clf_n2{VTAG}_{CSET}.json')
     scd = bst.predict(xgb.DMatrix(np.stack([Vd[f'n2_{k}'] for k in names], 1), feature_names=names))
     domd = Vd['n2_d6'].astype(bool); labd = Vd['sig2'].astype(bool)
     srd = domd & (scd > T_)
@@ -994,7 +1056,8 @@ def constraint():
             cov[k] = dict(rms_bias=float(np.sqrt(np.mean(b_ ** 2))), within_1sigma=float(np.mean(np.abs(b_) < res['constraint'][k]['total'])))
         res['genie_multisim_coverage'] = cov
     res['alternative_models'] = alt
-    json.dump(res, open(os.path.join(OUTDIR, f'phase4_constraint{VTAG}.json'), 'w'), indent=1)
+    OSUF = VTAG + (f'_{CSET}' if CSET != 'pid' else '') + (f'_t{T_:g}' if '--threshold' in sys.argv else '')     # a threshold scan does not overwrite the adopted table
+    json.dump(res, open(os.path.join(OUTDIR, f'phase4_constraint{OSUF}.json'), 'w'), indent=1)
     L = [f'# Phase 4 feasibility: sideband constraint of the two-pion one-bin total ({("deployed" if not VTAG else VTAG[1:])} particle classifier, PID set, score > {T_})', '',
          'Generated by `scripts/mp_evt.py constraint`. Formalism of the framework\'s ConstrainedCalculator: covariance of the predicted '
          'signal + background in every region from all sources (flux from the PPFX universes, cross section and reinteraction from the '
@@ -1015,7 +1078,7 @@ def constraint():
         cg = res.get('genie_multisim_coverage', {}).get(k, {})
         L.append(f'| {k} | ' + ' | '.join(f'{alt[m][k]["ratio"]:.3f} ({(alt[m][k]["ratio"] - 1) / alt[m][k]["unc"]:+.2f}σ)' for m in alt)
                  + f' | {100 * cg.get("rms_bias", float("nan")):.1f}% | {100 * cg.get("within_1sigma", float("nan")):.0f}% |')
-    open(os.path.join(OUTDIR, f'phase4_constraint{VTAG}.md'), 'w').write('\n'.join(L) + '\n')
+    open(os.path.join(OUTDIR, f'phase4_constraint{OSUF}.md'), 'w').write('\n'.join(L) + '\n')
     print('\n'.join(L))
 
 
@@ -1063,7 +1126,7 @@ def wp():
     for fs, o in out['sets'].items():
         if fs.startswith('cmp_'):
             L.append(row(fs[4:], o, 0))
-    for fs in ('pid', 'full'):
+    for fs in FSETS:
         o = out['sets'][fs]
         L.append(row(f'classifier, {fs} set, minimum', o, o['best_index']))
     for fs in ('pid',):
@@ -1091,7 +1154,7 @@ def write_md(res, tag):
          f'Rows in the domain {res["rows"]["domain"]}; training {res["rows"]["train"]} ({res["raw_signal"]["train"]} signal), '
          f'test {res["rows"]["test"]} ({res["raw_signal"]["test"]} signal).', '',
          '| Feature set | Trees | AUC (validation) | AUC (test runs) |', '|---|---|---|---|']
-    for fs in ('pid', 'full'):
+    for fs in FSETS:
         r = res[fs]
         L.append(f'| {fs} ({len(r["features"])} features) | {r["best_iteration"] + 1} | {r["auc_val"]:.4f} | {r["auc_test"]:.4f} |')
     L += ['', '## Working point against the current selections (COMB, full exposure)', '',
@@ -1102,7 +1165,7 @@ def write_md(res, tag):
     for name, c in res['compare'].items():
         L.append(row(name, c['COMB']))
     L.append(row(f'assignment only (most likely pion count {npi})', res['assignment_only']['COMB']))
-    for fs in ('pid', 'full'):
+    for fs in FSETS:
         b = res['scan'][fs]['chosen']
         L.append(row(f'event classifier, {fs} set, score > {b["threshold"]:.3f}', b['COMB']))
         b = res['scan'][fs]['best_on_test']
@@ -1139,13 +1202,13 @@ def write_md(res, tag):
         for k, v in sorted(t3['by_class_COMB'].items(), key=lambda x: -x[1]):
             L.append(f'| {k} | {v:.1f} |')
     L += ['', '### Threshold scan (COMB, full exposure)', '', '| Set | Score > | Efficiency | Purity | B/S | Stat. | Flux term | Total |', '|---|---|---|---|---|---|---|---|']
-    for fs in ('pid', 'full'):
+    for fs in FSETS:
         for r in res['scan'][fs]['test'][::5]:
             c = r['COMB']
             L.append(f'| {fs} | {r["threshold"]:.2f} | {100 * c["efficiency"]:.2f}% | {100 * c["purity"]:.1f}% | {c["b_over_s"]:.2f} | '
                      f'{100 * c["stat"]:.1f}% | {100 * c["flux"]:.1f}% | {100 * c["total"]:.1f}% |')
     L += ['', '### Largest feature importances (gain)', '']
-    for fs in ('pid', 'full'):
+    for fs in FSETS:
         L.append(f'- {fs}: ' + ', '.join(f'{k} ({v:.1f})' for k, v in list(res[fs]['importance_gain'].items())[:10]))
     open(os.path.join(OUTDIR, f'phase2_event{tag}{VTAG}.md'), 'w').write('\n'.join(L) + '\n')
 
