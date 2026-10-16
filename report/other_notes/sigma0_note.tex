@@ -24,7 +24,11 @@ gradient BDT. This note records the current state, the planned port into the
 \texttt{xsec\_analyzer} framework, and the three pieces of work that follow:
 a Poisson-thrown fake-data sample, extension from RHC-only to the combined
 FHC$+$RHC exposure, and the selection work needed to lift a purity that currently
-sits near $0.1\%$.
+sits near $0.4\%$. Revised 2026-10-15: the signal sample has been replaced by a
+locally produced run3b-EXT NuWro overlay, it now carries the old$\to$current NuMI
+flux weight, the BDT has been retrained on $3.4\times$ the signal statistics, and
+the disagreement between the available signal samples on the absolute \Szero\ rate
+is traced to hyperon final-state interactions (Sec.~\ref{sec:signalsample}).
 \end{abstract}
 
 \tableofcontents
@@ -42,27 +46,50 @@ in $\numubar$ charged-current interactions. The signature is
 so the reconstructed final state is a muon, a proton, a pion and a photon.
 
 The existing selection (\texttt{Sigma/pelee/SigmaSelection.C}) runs on standard
-PeLEE ntuples and reaches, at the operating point $\mathrm{BDTG}>-0.90$ scaled to
-the full RHC data exposure of $1.1526\times10^{21}$~POT:
+PeLEE ntuples. Table~\ref{tab:perf} gives its performance scaled to the full RHC
+data exposure of $1.1526\times10^{21}$~POT, before and after the 2026-10-15 change
+of signal sample. Efficiency is quoted against true \Szero\ in the fiducial volume.
 
 \begin{table}[h]\centering
-\caption{Current selection performance, RHC only.}
-\begin{tabular}{lrrrr}
+\caption{Selection performance, RHC only. Both rows use the same code and the same
+background; only the signal sample and the BDT training differ.}
+\label{tab:perf}
+\begin{tabular}{lrrrrrr}
 \toprule
-Stage & Raw signal & Efficiency [\%] & Purity [\%] & $S/\sqrt{S+B}$ \\
+Stage & Raw signal & Eff.\ [\%] & $S$ & $B$ & Purity [\%] & $S/\sqrt{S+B}$ \\
 \midrule
-Preselection (NTracksCut) & 650 & 15.7 & 0.040 & 0.038 \\
-Cut-based                 & 497 & 12.0 & 0.077 & 0.045 \\
-BDTG (current final)      & 502 & 12.1 & 0.108 & 0.054 \\
+\multicolumn{7}{l}{\emph{Retired Run 1-EXT sample, previous BDT ($\mathrm{BDTG}>0.562$)}}\\
+Preselection (NTracksCut) &  3226 & 50.1 & 10.883 & 20618 & 0.053 & 0.0758 \\
+BDTG                      &  1245 & 19.3 &  4.200 &   778 & 0.537 & 0.1502 \\
+\midrule
+\multicolumn{7}{l}{\emph{run3b sample, flux-weighted, retrained BDT ($\mathrm{BDTG}>0.616$)}}\\
+Preselection (NTracksCut) & 10931 & 50.8 &  6.370 & 20614 & 0.031 & 0.0444 \\
+BDTG                      &  4904 & 22.8 &  2.850 &   750 & 0.379 & 0.1039 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\noindent Efficiency is respectable; purity is not. A purity of $0.108\%$ means
-roughly one signal event per thousand selected, and $\sim\!2640$ background events
-under $\sim\!2.9$ signal events at full RHC POT. \textbf{Improving the selection is
-therefore the priority}, ahead of any normalisation or extraction work: at this
-purity no downstream treatment can rescue the measurement.
+\paragraph{Reading the table.} Two changes separate these rows from the
+$650/502$-event numbers quoted in earlier versions of this note. The proton and
+pion \emph{requirements} were made optional and are off by default -- measured on
+this chain they remove more signal than background ($-31.6\%/-18.3\%$ and
+$-52.9\%/-43.5\%$) and halve the figure of merit ($0.0730 \to 0.0346$) -- which
+roughly tripled the preselection efficiency. And the signal sample was replaced
+(Sec.~\ref{sec:signalsample}).
+
+$S$ falls by $1.7\times$ between the two halves of the table while $B$ is unchanged,
+and that is normalisation alone: $\times0.677$ for the NuMI flux weight and
+$\times0.864$ for the lower \Szero\ rate of the new production. The selection did
+not get worse -- efficiency is unchanged at preselection and better at the operating
+point. Purity therefore falls for the same reason, and the honest statement is that
+the \emph{previous} purity was inflated by a signal normalisation now known to be
+too high.
+
+\noindent Efficiency is respectable; purity is not. At $0.379\%$ there are
+$\sim\!750$ background events under $\sim\!2.9$ signal events at full RHC POT.
+\textbf{Improving the selection is therefore the priority}, ahead of any
+normalisation or extraction work: at this purity no downstream treatment can rescue
+the measurement.
 
 \paragraph{What this analysis produces.} Not a differential cross section. At
 $0.1\%$ purity and $12\%$ efficiency the deliverable is a cross-section
@@ -88,6 +115,13 @@ true observables, and the systematic universes at a \emph{single} analysis bin.
 \paragraph{What is not.} Limit setting, which stays in \texttt{CrossSection.C}
 reading the framework covariance. An unfolded \Szero\ spectrum would be
 meaningless at this purity, so no multi-bin scheme is planned.
+
+\paragraph{Status, 2026-10-15: not started.} No \texttt{Sigma0} class exists in
+\texttt{src/selections}, there is no registration branch in
+\texttt{SelectionFactory.cxx}, and no weights have been copied into
+\texttt{booster\_decision\_tree/}. Of the nine branches below only
+\texttt{trk\_pid\_chipi\_v} has since been bound, and that was for the
+CC$1\mu1\pi$ NewPID work rather than for this.
 
 \paragraph{Framework gaps.} Three, all small. Nine branches the selection uses are
 present in the ntuples but unbound in \texttt{Branches.hh}
@@ -145,11 +179,52 @@ and impact parameters; \Lam\ decay distance; and a $\pi^0$ di-photon mass built
 from the framework $\pi^0$ reconstruction for background rejection.
 
 \subsection{BDT}
-Gradient BDT over 49 inputs, evaluated with two-fold cross-validation: folds are
+\label{sec:bdt}
+Gradient BDT over 57 inputs, evaluated with two-fold cross-validation: folds are
 trained on even and odd event numbers and each is applied only to the events it did
-not train on. Per-fold ROC $\simeq0.81$. The cross-validation is not optional --
-applying a fold to its own training events would inflate the ROC and the apparent
-significance.
+not train on. The cross-validation is not optional -- applying a fold to its own
+training events would inflate the ROC and the apparent significance.
+
+The input list grew from 49 with the Second-Shower-Veto block of
+Sec.~\ref{sec:glee} (unassociated-hit count and fraction, recomputed per event
+rather than taken from \texttt{slnunhits}, plus \texttt{slclustfrac},
+\texttt{secondshower\_Y\_nhit}, \texttt{secondshower\_Y\_dot} and the
+sub-cluster counts) and the shower Moli\`ere angle.
+
+\paragraph{Retrained 2026-10-15.} On the run3b sample the training tree grows from
+3226 to 10931 signal events and the discriminant improves measurably. Scores are
+cross-validated throughout, so these are out-of-sample:
+
+\begin{center}
+\begin{tabular}{lrrrr}
+\toprule
+ & AUC & \multicolumn{3}{c}{$B/B_0$ at fixed signal efficiency} \\
+ &     & $50\%$ & $40\%$ & $20\%$ \\
+\midrule
+retired sample, previous weights & 0.8429 & 0.0681 & 0.0414 & 0.0125 \\
+run3b sample, previous weights   & 0.8333 & 0.0688 & 0.0432 & 0.0132 \\
+run3b sample, retrained          & \textbf{0.8656} & \textbf{0.0467} & \textbf{0.0293} & \textbf{0.0084} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent At matched signal efficiency the retrained BDT rejects $\sim\!32\%$ more
+background. The operating point moves from $\mathrm{BDTG}>0.562$ to $>0.616$, where
+it keeps \emph{more} signal ($44.7\%$ of preselection against $41.4\%$) with
+\emph{less} background ($750$ against $967$). The gain folds together $3.4\times$
+the training signal and training on cosmics from the matching run period; separating
+the two would need a third training on a 3226-event subsample, which has not been
+run.
+
+\paragraph{This lever is now close to exhausted.} A learning curve on fold A, with
+the test sample held fixed, gives ROC $0.857$, $0.872$, $0.881$ for $676$, $1352$
+and $2704$ training signal events. Returns halve per doubling and the curve heads
+for $\simeq0.89$, so doubling the production again would buy $\sim\!0.005$ in AUC,
+which by the scaling above is a few percent of background. Against MC statistical
+errors of $1.5\%$ on $S$ and $1.6\%$ on $B$ at the operating point, and a $2\%$
+background systematic worth $\pm15$ events on $2.9$ signal, \textbf{the analysis is
+now systematics-limited rather than signal-statistics-limited}. That is a change
+from every earlier version of this note.
 
 % =============================================================================
 \section{Why the purity is low, and what to do about it}
@@ -160,7 +235,10 @@ This is the priority. Two diagnostics point at the same place.
 
 \paragraph{The surviving background is $\pi^0$ events.}
 \begin{table}[h]\centering
-\caption{Surviving background by interaction mode at the final selection.}
+\caption{Surviving background by interaction mode. Measured at the looser operating
+point in use when this was written, so the absolute yields are not those of
+Table~\ref{tab:perf}; the fractions are what carry over, and the background itself
+is unchanged by the 2026-10-15 signal replacement.}
 \begin{tabular}{lrr}
 \toprule
 Mode & Scaled yield & \% of background \\
@@ -201,8 +279,10 @@ Photon & 29 & a proton (18\%) \\
 and photon candidates are wrong roughly $70\%$ of the time}. Since both the \Lam\
 and \Szero\ masses are built from them, the two most powerful BDT inputs are being
 computed from misidentified objects in most background events -- and, importantly,
-we do not know how often in signal events, because the NoCR signal sample's
-non-muon truth matching is unreliable.
+we did not know how often in signal events, because the PeLEE ntuples carry no
+truth for the decay products at all. That gap is what Sec.~\ref{sec:recostudy}
+closes on the hypana ntuples; the signal sample is in any case now overlaid on real
+EXT data rather than cosmic-free.
 
 \subsection{The photon candidate: what the data says}
 \label{sec:photonstudy}
@@ -333,7 +413,7 @@ variables with a far better physics motivation.
 \paragraph{2. One BDT per background class, not one BDT for everything.} gLEE runs
 \emph{five} BDTs for its $1\gamma1p$ channel -- Cosmic, $\nu_e$, BNB-Other, NC$\pi^0$
 and SSV -- each trained against one background, with a separate cut on each score.
-We use a single BDT over 49 inputs trained against all backgrounds at once. Given
+We use a single BDT over 57 inputs trained against all backgrounds at once. Given
 that our background decomposes cleanly (RES $52\%$, DIS $24\%$, QE $14\%$, MEC
 $7\%$, cosmic $3\%$), a dedicated $\pi^0$-rejection BDT and a separate cosmic BDT
 would let each learn its own discriminating structure instead of averaging over
@@ -370,7 +450,7 @@ threshold would have to be re-derived.
 \subsection{Plan: dedicated BDTs in place of one large BDT}
 \label{sec:bdtsplit}
 
-\paragraph{Why the single BDT is the wrong shape.} One BDT over 49 inputs is trained
+\paragraph{Why the single BDT is the wrong shape.} One BDT over 57 inputs is trained
 against a background that is really four unrelated physics processes -- $\pi^0$-producing
 RES ($52\%$) and DIS ($24\%$), quasi-elastic ($14\%$) and MEC ($7\%$) events with no
 $\pi^0$ at all, and cosmics ($3\%$). A single discriminant must find one surface
@@ -420,16 +500,27 @@ measurement rather than taste:
 Given our signal statistics, independent cuts are the safer starting point.
 
 \paragraph{The statistics problem this creates, and the answer to it.} Splitting the
-background does not reduce the signal available for training: all $650$ signal events
-are used in every BDT. It does reduce the \emph{background} per training, but from
-$69557$ preselected events, so even the cosmic class retains thousands. The real
-constraint remains the $650$ signal events, which is why the incoming cosmic-overlay
-signal samples matter more than any of this.
+background does not reduce the signal available for training: every signal event is
+used in every BDT. It does reduce the \emph{background} per training, but from
+$\sim\!70{,}000$ preselected events, so even the cosmic class retains thousands.
+When this was written the real constraint was the $650$ signal events, which is why
+it ended by pointing at the incoming cosmic-overlay signal samples. Those have since
+arrived: the training tree now holds $10931$ signal events
+(Sec.~\ref{sec:signalsample}), so the statistics objection to splitting has gone.
 
 \paragraph{Order of work.} Build the $\pi^0$-rejection BDT first and evaluate it
 against the current single BDT at matched signal efficiency. If it alone does not
-improve the figure of merit, the split is not the answer and the effort should move
-to signal statistics instead. Only if it does should the other two follow.
+improve the figure of merit, the split is not the answer.
+
+\emph{Status.} The split was implemented --- \texttt{TrainBDTSplit.C} trains the
+three class BDTs by fold, \texttt{apply\_split.C} scores the tree into
+\texttt{SplitScores.root} and \texttt{eval\_split.C} compares --- and run once on
+an earlier and much smaller training tree (1004 signal events). No evaluation
+against the single BDT survives in a retained log, and the single BDT has since been
+retrained and improved substantially (AUC $0.8656$), so the comparison has to be
+remade on the current sample before the split can be called a gain or a dead end.
+Redirecting the effort ``to signal statistics instead'' is no longer the fallback it
+was: that work is done.
 
 \paragraph{Interaction with the SSV variables.} The SSV block belongs naturally in
 the $\pi^0$-rejection BDT, where its targets are. Adding it to the single BDT first
@@ -467,10 +558,21 @@ direct evidence for the split.
         principle and is the most distinctive feature of the signal.
 \end{enumerate}
 
-\noindent The analysis is also \textbf{signal-statistics limited}: 650 raw signal
-events at preselection, with a BDT ROC that plateaus regardless of background size
-or added variables. More signal MC is the largest single lever, and no amount of
-selection work substitutes for it.
+\noindent Earlier versions of this note closed here by calling the analysis
+\textbf{signal-statistics limited} -- 650 raw signal events at preselection, with a
+BDT ROC that plateaued regardless of background size or added variables -- and
+naming more signal MC as the largest single lever. \textbf{That lever has now been
+pulled.} The run3b production (Sec.~\ref{sec:signalsample}) gives $10931$ raw
+signal events at preselection, and the retrained BDT rejects $32\%$ more background
+at matched signal efficiency (AUC $0.8333 \to 0.8656$). The plateau was therefore a
+property of the training sample, not of the variables.
+
+It is also close to exhausted: the learning curve of Sec.~\ref{sec:bdt} is
+flattening, doubling the sample again is worth a few percent of background, and the
+MC statistical errors at the operating point ($1.5\%$ on $S$, $1.6\%$ on $B$) sit
+far below a $2\%$ background systematic. The binding constraint has moved to
+systematics and to the candidate assignment, which is where the remaining items on
+this list point.
 
 % =============================================================================
 \section{Reconstruction study on HyperonProduction ntuples}
@@ -501,13 +603,20 @@ every \texttt{trk\_*}/\texttt{shr\_*}/\texttt{pfp\_*} vector per PFP with equal
 lengths, so the port is a branch remap with a double$\rightarrow$float copy
 rather than a structural rewrite.
 
-Two caveats apply throughout. The hyperon samples are generated with an
-\emph{enhanced} hyperon-production cross section, so they are valid for
-efficiencies and ratios but not for absolute yields. And a full hypana-only
-analysis is not yet possible: hypana output exists only for hyperon samples,
-there is none for the generic RHC overlay or dirt, and the overlay's parent
-reco2 files are not on local disk. Anything requiring realistic background
-therefore still runs on PeLEE.
+Two caveats applied when this study was made, and one of them has since gone.
+The hyperon samples are generated on a single channel with a dedicated
+normalisation, so they are valid for efficiencies and ratios; their absolute
+yields are the subject of Sec.~\ref{sec:signalsample}. The second caveat --- that
+hypana output existed only for the hyperon samples, with none for the generic RHC
+overlay, and that the overlay's parent reco2 files were not on local disk --- no
+longer holds. The RHC overlay has since been processed through reco2 and
+HyperonProduction: \texttt{lists/bkg\_overlay.list} now holds 14{,}024 hypana
+files at $6.9701\times10^{21}$~POT, $70\%$ of the full RHC exposure, so a
+hypana-only analysis with realistic background is possible. Dirt in hypana format
+is still missing. The numbers below were measured on the retired NuWro sample and
+have not been remade on the run3b one; the measurements are efficiencies and
+ratios, which the swap does not move, but the statistics behind them are now
+$3.4\times$ larger if any of them is worth sharpening.
 
 \subsection{Signal definition used in this section}
 
@@ -801,9 +910,136 @@ reproducible.
 \emph{statistical} closure test, not a model test. It cannot reveal generator
 mismodelling, because the ``data'' and the prediction come from the same generator.
 A genuine model test needs a hyperon sample from a different generator -- GENIE
-against the current NuWro -- which does not exist locally. Until it does, the
-throw validates the statistical and normalisation chain only, and that limitation
-should be stated wherever the closure is quoted.
+against the current NuWro. One now exists in \emph{hypana} format
+(\texttt{lists/sig\_genie.list}, 4851 files, $5.9770\times10^{22}$~POT) but not in
+PeLEE format, which is what the fake-data machinery consumes; a GENIE overlay
+production is running locally and would close the gap. Until it does, the throw
+validates the statistical and normalisation chain only, and that limitation should
+be stated wherever the closure is quoted. Sec.~\ref{sec:signalsample} shows the
+two generators differ by roughly a factor of four on the \Szero\ rate, so this is
+not a small test to be skipped.
+
+% =============================================================================
+\section{The signal sample and its normalisation}
+\label{sec:signalsample}
+% =============================================================================
+
+\subsection{The run3b production}
+
+The Run~1-EXT sample \texttt{prod\_hyperon\_sigmazero\_reco1\_prodnuwro\_mcc9} was
+retired on 2026-10-15. Its replacement is produced locally
+(\texttt{\~{}/MicroBooNE/production/nuwro\_prod/}): 2500 jobs of 100 NuWro \Szero\
+events overlaid on swizzled NuMI \textbf{run3b ext\_unbiased} data, through the full
+gen$\to$reco2 chain, then both hypana and PeLEE ntuples.
+
+\begin{center}
+\begin{tabular}{lrr}
+\toprule
+ & retired (Run 1 EXT) & run3b \\
+\midrule
+files / events            & 2981 / 64716 & 2500 / 249832 \\
+generated POT             & $3.4141\times10^{23}$ & $1.3394\times10^{24}$ \\
+true \Szero\ CC $\numubar$ & 17714 ($27.4\%$) & 58545 ($23.5\%$) \\
+raw signal at preselection & 3226 & 10931 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent The hypana \texttt{ana/MetaTree} sum and the merged PeLEE \texttt{SubRun}
+sum agree on the POT to four digits, and \texttt{check\_ext\_unique.py} confirms
+250{,}000 distinct EXT events with none used twice. The cosmics now come from the
+same run period as the overlay background, which the retired sample did not: it was
+Run~1 EXT under a Run~1$+$2$+$4 background. Selection efficiency is unchanged by the
+swap ($50.1\% \to 50.8\%$ at preselection), so the gain is purely statistical.
+
+\subsection{The NuMI flux weight}
+
+NuWro's flux files were converted from the \emph{old} NuMI gsimple flux (g4numi~v6,
+bugged beamline geometry) while the overlay, the dirt and the data are on the
+current \texttt{g4\_10\_4} flux. Every NuWro event therefore carries the official
+\uboone\ ``New/Old'' ratio weight, binned in $(E_\nu, \theta_{\mathrm{beam}})$.
+Measured over the finished production the mean weight is $0.6774$, and
+\textbf{$0.6770$ for the \Szero\ CC subset} -- flat to $0.1\%$ even though those
+events sit $0.13$~GeV higher in energy than the rest. There is no hyperon-specific
+correction to make, only a wider spread (rms $0.297$ against $0.226$) costing a
+little effective statistics, $49.9$k of $58.5$k. \texttt{SigmaSelection.C} computes
+the weight on the fly from \texttt{nu\_e} and \texttt{true\_nu\_p*};
+\texttt{HypCutFlow.C} reads a per-event table.
+
+\subsection{Why the samples disagree on the absolute \Szero\ rate}
+
+On one truth definition and one fiducial volume, \Szero\ CC $\numubar$ events per
+$1.1526\times10^{21}$~POT with the true vertex in the FV:
+
+\begin{center}
+\begin{tabular}{lrr}
+\toprule
+sample & in-FV \Szero\ & vs the plain overlay \\
+\midrule
+plain RHC overlay (unfiltered GENIE)      &  83.3 & 1.00 \\
+GENIE hyperon sample \texttt{sig\_genie}  & 110.1 & 1.32 \\
+NuWro run3b, POT scale only               &  18.9 & 0.23 \\
+NuWro run3b, with the flux weight         &  12.8 & \textbf{0.15} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent The fiducial fractions are $37$--$38\%$ in all three, so this is not a
+generation-volume artefact.
+
+\paragraph{It is hyperon FSI.} The NuWro configuration
+(\texttt{ultrapure-sigma0-numi-rhc.txt}) sets \texttt{dyn\_hyp\_cc=1} with every
+other channel off and, within it, \texttt{hyp\_lambda=0},
+\texttt{hyp\_sigma\_zero=1}, \texttt{hyp\_sigma\_minus=0}: NuWro generated the
+\Szero\ channel \emph{and nothing else}, so its quoted POT per event is the exposure
+per \Szero\ \emph{produced} -- exactly the normalisation a \Szero\ signal sample
+wants. Everything else in the sample is final-state interaction: of the $\numubar$
+CC events only $25.3\%$ still carry a \Szero, $27.9\%$ carry a \Lam\ ($\Szero N \to
+\Lam N$ in the cascade), $10\%$ a $\Sigma^{\pm}$, and $37.3\%$ no strange particle
+at all. The \uboone\ \Lam\ paper (arXiv:2212.07888) states the other half outright:
+``the NuWro predictions include the effect of final state interactions, while GENIE
+does not take them into account''. For GENIE, produced $=$ surviving, so the
+comparison that means anything is \Szero\ \emph{produced}:
+
+\begin{center}
+\begin{tabular}{lr}
+\toprule
+ & in-FV \Szero\ produced per full-RHC POT \\
+\midrule
+GENIE overlay (no hyperon FSI)      & 83.3 \\
+NuWro, POT scale only               & 79.1 \\
+NuWro, with the flux weight         & 53.6 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent The $6.5\times$ gap decomposes exactly as $4.19\times$ (FSI) $\times\,
+1.48\times$ (flux weight) $\times\, 1.05\times$ (production rate), product
+$6.51\times$ against the measured $6.51\times$. The sign flip between channels is
+the same effect: in Fig.~2 of the \Lam\ paper NuWro sits \emph{above} GENIE
+($\simeq2.1$ against $\simeq1.5 \times 10^{-40}$~cm$^2$/Ar) because FSI \emph{adds}
+\Lam, and far below for \Szero\ because it \emph{removes} \Szero.
+
+\paragraph{A control run verifies the normalisation.} The same flux, target and
+configuration with \texttt{dyn\_hyp\_cc=0 dyn\_qel\_cc=1} -- ordinary CC
+quasi-elastic instead of the hyperon channel -- gives $7.539\times10^{15}$~POT per
+event over NuWro's box. The overlay's own CC QEL rate ($20{,}277$ in-FV events in
+$7.1479\times10^{20}$~POT) converts to $8.835\times10^{15}$ on the same footing,
+using the $37.0\%$ box-mass fiducial fraction and the $0.677$ flux factor. NuWro's
+generic event rate is therefore within $17\%$ of GENIE's, which is the ordinary CCQE
+model difference, and its flux $\times$ target normalisation is sound. Referenced to
+each generator's own CCQE rate, NuWro's \Szero\ \emph{production} is $0.81\times$
+GENIE's.
+
+\paragraph{What this means for the limit.} A \Szero\ yield taken from the NuWro
+sample is a yield \emph{with} hyperon FSI; one taken from the GENIE samples is a
+yield \emph{without} it. The difference is roughly a factor of four and it is a
+model choice, not a bug to be fixed. The measured \Lam\ cross section,
+$2.0^{+2.2}_{-1.7}\times10^{-40}$~cm$^2$/Ar, brackets both generators and cannot
+currently distinguish them. This has to be carried as a signal-model systematic on
+any limit, and it is larger than anything in the detector or flux budget. The
+residual $1.3$--$1.6\times$ among the GENIE samples themselves -- the same factor
+the \Lam\ cross-check reports as $1.61\times$ -- is unexplained and separate.
 
 % =============================================================================
 \section{Exposure: RHC now, combined later}
@@ -818,16 +1054,19 @@ $\mathrm{POT}_{\mathrm{data}} = 1.1526\times10^{21}$:
 \toprule
 Sample & Source & Generated POT \\
 \midrule
-\Szero\ signal / hyperons & NuWro hyperon-enhanced & $2.1764\times10^{23}$ \\
+\Szero\ signal / hyperons & NuWro run3b, $\times0.677$ flux weight & $1.3394\times10^{24}$ \\
 Background   & RHC overlay, Runs 1$+$2$+$4a$+$4b$+$4c & $9.94482\times10^{21}$ \\
 Dirt         & Run~1 RHC only & $4.21274\times10^{20}$ \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-\noindent Two known imperfections: the dirt sample is Run-1 RHC only, scaled up to
-the full RHC exposure, and the signal sample is generated with no cosmic overlay
-(NoCR), which is why its non-muon truth matching cannot be trusted.
+\noindent One known imperfection remains: the dirt sample is Run-1 RHC only,
+scaled up to the full RHC exposure. The second -- a signal sample generated with no
+cosmic overlay, whose non-muon truth matching could not be trusted -- is gone: the
+run3b sample is overlaid on real run3b EXT data, the same period as the background.
+The signal POT above is the generated POT; the $0.677$ flux weight is applied
+per event, not folded into it (Sec.~\ref{sec:signalsample}).
 
 \paragraph{Later: combined FHC$+$RHC.} The signal is $\numubar$ charged-current,
 so RHC is the sensitive mode -- but FHC carries a substantial wrong-sign
@@ -864,14 +1103,20 @@ interaction level), FHC dirt, and a combined-mode flux normalisation following
         Sec.~\ref{sec:recostudy}.}
   \item \textbf{Framework port.} Branch bindings, \texttt{Sigma0} selection class,
         factory registration, cut-flow validation against the standalone code
-        before any config work. Sec.~\ref{sec:port}.
-  \item \textbf{Background through HyperonProduction.} A hypana-only analysis is
-        blocked: hypana output exists for the hyperon samples only, and the RHC
-        overlay's parent reco2 files are not on local disk. Until they are
-        retrieved and processed, anything needing realistic background runs on
-        PeLEE. Sec.~\ref{sec:recostudy}.
+        before any config work. \emph{Not started as of 2026-10-15.}
+        Sec.~\ref{sec:port}.
+  \item \textbf{Background through HyperonProduction.} \emph{Unblocked.} The RHC
+        overlay has been transferred, run through reco2 and processed with
+        HyperonProduction: 14{,}024 hypana files at $6.9701\times10^{21}$~POT,
+        $70\%$ of the full RHC exposure. A hypana-only analysis with realistic
+        background is now possible; dirt in hypana format is still missing.
+        Sec.~\ref{sec:recostudy}.
   \item \textbf{Fake data.} \texttt{throw\_sigma0.C}, all samples, RHC POT.
         Sec.~\ref{sec:fakedata}.
+  \item \textbf{Signal-model systematic.} The hyperon-FSI difference between NuWro
+        and GENIE is a factor $\sim\!4$ on the \Szero\ yield
+        (Sec.~\ref{sec:signalsample}) and dominates every other uncertainty. It has
+        to be evaluated and carried before a limit means anything.
   \item \textbf{Systematics.} Single-bin \texttt{univmake} for the background
         covariance.
   \item \textbf{Combined exposure.} FHC$+$RHC once the selection justifies it.
