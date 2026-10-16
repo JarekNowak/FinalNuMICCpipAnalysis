@@ -1711,6 +1711,15 @@ pseudo-data of the calibrated simulation). The region totals, pulls, global test
 depend on the muon momentum and are unchanged. The map was derived from the same events, so the comparison is a
 closure per region and beam mode. The control-sample note records it; the results are unchanged.
 
+\section{Hold-out test of the MCS calibration (2026-10-16)}
+
+The nominal maps were derived on part of the control-region candidates and tested on the rest
+(\texttt{scripts/mcs\_cal\_holdout.py}). With random halves the $p_\mu$ bins of the test half agree with the data
+shape within $6\%$ ($\chi^2=21.1$ and $5.9$ for $5$ degrees of freedom, against $7.5\pm4.0$ from statistics alone).
+Maps from FHC tested on RHC and the other way round, and from the old production tested on the new and the other way
+round, move the highest bin by $3$--$7\%$, as much as the maps from period groups that make the beam and production
+terms of the calibration uncertainty. The results are unchanged.
+
 \section{Open items}
 
 The following remain outstanding following the 2026-09-07 review. None is a correction awaiting application;
@@ -1747,8 +1756,9 @@ yet made.
     $0.35$--$0.75$~GeV/$c$) in both modes and in regions of different composition. It is the MCS
     momentum of exiting muons, calibrated from version~1.9; with the calibrated simulation the released
     $p_\mu$ bins of the control-region events agree with the data shape within $4\%$, and every shape test of
-    the frozen protocol passes. The map was derived from the same events; it has not been tested on events not
-    used to derive it.
+    the frozen protocol passes. Maps derived on half of the events describe the other half within $6\%$, close to
+    the statistical expectation, and maps derived on one beam mode or production describe the other within the
+    spread of the maps from period groups alone (control-sample note).
   \item \textbf{FHC Run~1 residual:} the $13\pm2\%$ offset of FHC Run~1 relative to the other five
     periods in the control regions, which survives the exposure correction and is not covered by any
     correlated term; its cause (bookkeeping POT, completeness of the Run-1 beam-on sample against its
