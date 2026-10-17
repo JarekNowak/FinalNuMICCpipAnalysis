@@ -21,8 +21,8 @@ cd "$REPO" || exit 1
 export LD_LIBRARY_PATH="$REPO/lib:/usr/lib64/flexiblas:$(root-config --libdir):${LD_LIBRARY_PATH:-}"
 export XSEC_ANALYZER_DIR="$REPO"
 SUFFIX="${MP2PI_SUFFIX:-}"
-OUT="/data/uboone/processed/mp2pi_${TAG[$CFG]}_total${SUFFIX}_univmake.root"
-FPM="configs/file_properties_numi_${CFG}_mp2pi${SUFFIX}.txt"; BIN="configs/mp2pi_total_bin_config.txt"
+OUT="/data/uboone/processed/mp2pi_${TAG[$CFG]}_total${SUFFIX}${MP2PI_OUTTAG:-}_univmake.root"   # MP2PI_OUTTAG, MP2PI_BIN: other bins
+FPM="configs/file_properties_numi_${CFG}_mp2pi${SUFFIX}.txt"; BIN="${MP2PI_BIN:-configs/mp2pi_total_bin_config.txt}"
 for f in "$FPM" "$BIN"; do [ -f "$f" ] || { echo "ERROR: missing $f" >&2; exit 1; }; done
 echo "host=$(hostname) cfg=$CFG FPM=$FPM OUT=$OUT"
 TMP="${OUT}.partial.$$"; t0=$(date +%s)
