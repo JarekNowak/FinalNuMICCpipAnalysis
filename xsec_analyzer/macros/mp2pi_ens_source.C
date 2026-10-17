@@ -45,7 +45,10 @@ static void source_one( const std::string& outfile, double dpot, const std::vect
     if ( !std::isfinite( cv ) || cv < 0 || cv > 30 ) cv = 1.;
     mu = cv * scale.at( cin.GetTreeNumber() ); sum_all += mu;
     if ( region < 0 && !sig ) continue;
-    cw.GetEntry( i ); w545 = ratio( vg, 545, tcv ); wdelta = ratio( vd, 0, tcv );
+    // a file without the branch (the Delta unisim is absent from most dirt samples) keeps no stale value: weight 1
+    cw.GetEntry( i ); TTree* ct = cw.GetTree();
+    w545 = ( ct && ct->GetBranch( "weight_All_UBGenie" ) ) ? ratio( vg, 545, tcv ) : 1.f;
+    wdelta = ( ct && ct->GetBranch( "weight_Theta_Delta2Npi_UBGenie" ) ) ? ratio( vd, 0, tcv ) : 1.f;
     sum_kept += mu; ot->Fill(); ++kept;
   }
   ot->Write( "", TObject::kOverwrite );

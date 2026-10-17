@@ -13,7 +13,7 @@
 # extraction: <ENS>/m<NNN>/<cfg><mode>.log (SYSTDUMP) and the closure sidecar; the thrown files are deleted.
 #   sbatch --array=0-99 --export=ALL,REPO=$PWD,ENS=nominal slurm/slurm_mp2pi_ens.sbatch
 set -u
-REPO="${REPO:?}"; ENS="${ENS:?}"; N=/data/uboone/processed/mp2pi_mcscal; E=$N/ens
+REPO="${REPO:?}"; ENS="${ENS:?}"; N=/data/uboone/processed/mp2pi_mcscal; E=$N/ens; SRC="${SRC:-$E/source}"   # SRC: other sources
 declare -A ALTW=( [nominal]="" [alt545]=ens_w545 [altdelta]=ens_wdelta )
 declare -A SEED=( [nominal]=20261016 [alt545]=20261116 [altdelta]=20261216 )
 declare -A TAG=( [fhc5]=FHC5 [rhcfull]=RHCFULL [comb]=COMB )
@@ -24,7 +24,7 @@ export LD_LIBRARY_PATH="$REPO/lib:/usr/lib64/flexiblas:$(root-config --libdir):$
 echo "host=$(hostname) ensemble=$ENS member=$M"
 command rm -rf -- "$WK"; mkdir -p "$D" "$WK/unfold_output"; ln -s "$REPO/configs" "$WK/configs"
 # 1. throw
-root -l -b -q "macros/mp2pi_ens_throw.C(\"$E/source\",\"$WK/fd\",$M,${SEED[$ENS]},\"${ALTW[$ENS]}\")" > "$D/throw.log" 2>&1
+root -l -b -q "macros/mp2pi_ens_throw.C(\"$SRC\",\"$WK/fd\",$M,${SEED[$ENS]},\"${ALTW[$ENS]}\")" > "$D/throw.log" 2>&1
 NF=$(ls "$WK"/fd/xsec-ana-fakedata_*.root 2>/dev/null | wc -l); [ "$NF" = 8 ] || { echo "FAIL throw: $NF files"; exit 1; }
 # 2. univmake on the member's pseudo-data (the COMB list carries all eight)
 FPC=configs/file_properties_numi_comb_mp2pi_mcscal_fluxw.txt

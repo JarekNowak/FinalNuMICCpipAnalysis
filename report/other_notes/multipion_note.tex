@@ -64,7 +64,7 @@
   {\large Technical Note: the Two-Charged-Pion Final State
   (\texttt{CC1mu2piBDT})\par}
   \vspace{0.5cm}
-  {\normalsize Draft 0.5, 2026-10-16\par}
+  {\normalsize Draft 0.6, 2026-10-17\par}
   \vspace{1.5cm}
   % NOTE: author list to be confirmed. Contributors to the multi-pion effort:
   {\large Tusharadri Mahmud, Linhui Gu, Ishanee Pophale, Jarek Nowak\par}
@@ -86,11 +86,13 @@
     condition the covariance of the extraction framework, partly through the signal they contain: in the
     combined configuration the one-bin
     total carries $15.2\%$ with the constraint ($15.4\%$ with the MCS-calibration term) and $45\%$
-    without, with data statistics then the largest term; one pseudo-data realisation returns its truth
-    within the uncertainty, and the constraint follows two reweighted interaction models. In the opened
+    without, with data statistics then the largest term; ensembles of pseudo-experiments return the expected
+    truth within $1.5\%$, with a conservative statistical term, and two reweighted interaction models within
+    $0.2\sigma$. In the opened
     control regions of the single-pion analysis, calibrating the MCS momentum of exiting tracks as in the
-    single-pion analysis brings the classifier inputs much closer to the beam-on data; differences remain
-    in the class probabilities and the event score, and the LLR of long protons follows the recombination
+    single-pion analysis brings the classifier inputs much closer to the beam-on data; with the systematic
+    covariance of the prediction the class probabilities, the MCS momentum and the event score agree with
+    the data, while the LLR score of long protons stays outside ($p=0.014$) and follows the recombination
     variation of the detector term. Three or more pions are not measurable at this exposure and serve as a control
     sample. The signal region is blind, and every result is extracted from pseudo-data.
   \end{abstract}
@@ -633,7 +635,11 @@ term by at most $0.3\%$ absolute. Table~\ref{tab:detvar} shows the three treatme
 \end{table}
 
 The sideband constraint removes the difference between the fractional treatments: the constrained totals
-are the same with and without the flux weight.
+are the same with and without the flux weight. The ratio of a variation to the variation CV, which the
+fractional treatment transfers to the nominal prediction, changes by at most $0.027$ (median $0.003$) with the
+flux weight, for signal and background in the signal region and the score band; above $1$~GeV it follows the
+integral within the statistics of the variation samples ($5$--$6\%$), the largest trend being the recombination
+variation of the FHC background ($0.76$ at $1$--$2$~GeV, $1.01$ above $5$~GeV).
 
 % =============================================================================
 \section{Beam-on data in the control regions}
@@ -679,6 +685,14 @@ events ($97.5\%$); against the normalisation of that region alone it is at $0.85
 larger excess of the $\pi^0$ region in the common normalisation, and the recombination variation gives
 $0.93$--$0.94$.
 
+\paragraph{With the systematic covariance.} The shape tests above carry the data and simulation statistics only.
+With the covariance of the prediction (flux, cross-section and reinteraction universes, the eight detector
+variations taken fractionally per horn mode with the statistics of the variation samples, simulation statistics;
+normalisation removed) the event score gives $\chi^2=6.5/11$, the summed $P(\pi)$ $2.0/7$, the track $P(\mu)$ and
+$P(\pi)$ $4.2/9$ each and the MCS momentum $6.2/8$, against $98.5$, $23.6$, $48.1$, $40.4$ and $65.2$ with statistics
+alone in the same, coarser bins. The LLR score stays outside, $20.8/9$ ($p=0.014$); the detector term alone brings it
+from $398$ to $36$.
+
 \paragraph{Extraction with the calibrated simulation.} The overlays, the dirt and the detector-variation
 samples were processed again with the calibrated classifier inputs, and the pseudo-data thrown with the
 same seeds, so that they hold the same events. Table~\ref{tab:mcscal} gives the totals. The calibration
@@ -715,9 +729,22 @@ those events, so the term is an upper estimate. The calibrated selection is used
   \end{tabular}
 \end{table}
 
+\paragraph{Ensembles.} One hundred pseudo-experiments thrown independently from the nominal calibrated
+simulation (the eight per-run pseudo-data files each) and extracted through the framework return the expected
+truth within $+0.9$ to $+1.5\%$ ($\pm0.6$ to $1.0\%$) in FHC, RHC and combined, with and without the constraint.
+Their spread is $0.85$ times the quoted data-statistics term without the constraint and $0.74$--$0.76$ with it, so
+the statistical intervals cover more than nominal ($75$--$83\%$ for $68\%$, $96$--$99\%$ for $95\%$). Part of the
+difference with the constraint is the beam-off, which the framework adds to the pseudo-data without fluctuation
+while the quoted term counts it ($45\%$ of the sideband below a score of $0.5$); without the constraint, where the
+beam-off is $0.4\%$ of the signal region, the difference is not understood yet. Fifty pseudo-experiments each from
+GENIE multisim universe~545 and from the $\Delta\to N\pi$ angular variation, extracted with the nominal response,
+return their own truth within $0.07\sigma$ and $0.17\sigma$ of the total uncertainty (the largest: FHC with the
+constraint, $0.962\pm0.014$ under the $\Delta\to N\pi$ variation).
+
 \paragraph{Selection variants.} The working point was scanned again on the constrained combined total (score
 above $0.85$ to $0.96$): $0.92$ remains the minimum ($16.8\%$), and tighter thresholds reach $58$--$70\%$
-purity at a total of $22$--$32\%$. Event-classifier features from the reconstructed showers (energy, vertex
+purity at a total of $22$--$32\%$. Per horn mode the minimum lies at $0.90$ in FHC ($25.9\%$; $27.3\%$ at $0.92$,
+within $2.7$ points from $0.85$ to $0.95$) and at $0.92$ in RHC ($19.3\%$). Event-classifier features from the reconstructed showers (energy, vertex
 distance, track score and direction of the leading shower; with its dE/dx, the second shower and the two-shower
 mass in a larger set) raise the area under the ROC curve on the test periods from $0.874$ to $0.884$--$0.887$
 and the purity at a fixed threshold by about two points. In the $\pi^0$ control region, against its own
@@ -758,9 +785,10 @@ three-pion-like events are therefore the control sample of Section~\ref{sec:cons
         the calorimetric particle classifier on the constrained total (Section~\ref{sec:crdata}); no
         variant improves it beyond the statistics of the detector-variation samples, and the selection is
         kept.
-  \item Validation through the framework: ensembles of pseudo-experiments, the alternative-model
-        closure with the constraint, and an independent-generator closure if a NuMI NuWro overlay can
-        be validated.
+  \item Validation through the framework: the ensembles of pseudo-experiments and the alternative-model
+        ensembles are done (Section~\ref{sec:crdata}); open are the origin of the conservative statistical
+        term without the constraint and an independent-generator closure, if a NuMI NuWro overlay can be
+        validated.
   \item Generator predictions with the two-pion signal definition.
   \item Response and binning of the differential candidates ($p_\mu$, $\cos\theta_\mu$, pion angles
         with a convention symmetric in the pions, the opening angle between the pions, the proton
