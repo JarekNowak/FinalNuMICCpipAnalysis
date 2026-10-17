@@ -45,6 +45,14 @@ namespace {
     return NuMIBeam::nu_dir_from_vertex( ev->nu_vx_, ev->nu_vy_, ev->nu_vz_ );
   }
 
+  // Range momentum of a pion from the muon-hypothesis range momentum: equal range at equal T/m.
+  double pi_range_mom( double pmu ) {
+    if ( !( pmu > 0. ) || !std::isfinite( pmu ) ) return -999.;
+    const double MMU = 0.105658, MPI = 0.139570;
+    const double t = ( std::sqrt( pmu * pmu + MMU * MMU ) - MMU ) * MPI / MMU;
+    return std::sqrt( ( t + MPI ) * ( t + MPI ) - MPI * MPI );
+  }
+
   // z dead region excluded from the neutrino-vertex fiducial volume, matching
   // the custom selection (FV_new.h deadzmin/deadzmax). Applies to the neutrino
   // VERTEX FV only — not to track containment.
@@ -995,12 +1003,15 @@ void CC1mu1piXp::fill_multipion_truth( AnalysisEvent* Event, bool is_signal ) {
   mc_lead_proton_mom_ = -1.f;
   const TVector3 nu_dir = true_nu_dir( Event );
   const size_t n = Event->mc_nu_daughter_pdg_ ? Event->mc_nu_daughter_pdg_->size() : 0u;
+  TVector3 vmu; std::vector< TVector3 > vpi;
   for ( size_t p = 0u; p < n; ++p ) {
     const int pdg = Event->mc_nu_daughter_pdg_->at( p );
     const TVector3 mom( Event->mc_nu_daughter_px_->at(p),
       Event->mc_nu_daughter_py_->at(p), Event->mc_nu_daughter_pz_->at(p) );
     const double pm = mom.Mag();
+    if ( std::abs(pdg) == MUON && pm > vmu.Mag() ) vmu = mom;
     if ( std::abs(pdg) == PI_PLUS && pm > 0. ) {
+      vpi.push_back( mom );
       ++n_pipm;
       if ( pm > 0.10 )  ++mc_n_pipm_thr010_;
       if ( pm > 0.175 ) ++mc_n_pipm_thr0175_;
@@ -1024,6 +1035,7 @@ void CC1mu1piXp::fill_multipion_truth( AnalysisEvent* Event, bool is_signal ) {
   }
   mc_n_kaons_out_ = n_kaon;
   mc_signal_1p_ = is_signal && ( mc_n_proton_sub_ >= 1 );
+  if ( is_signal ) fill_mp_true_kinematics( vmu, vpi, nu_dir );
 
   // Topology class (exclusive, in the order of the enum).
   const int abs_pdg = std::abs( Event->mc_nu_pdg_ );
@@ -2762,6 +2774,15 @@ void CC1mu1piXp::define_output_branches() {
     set_branch( &evt_d6_, "evt_d6" );           set_branch( &evt_ndump_, "evt_ndump" );
     set_branch( &evt_mu_idx_, "evt_mu_idx" );   set_branch( &evt_pi0_idx_, "evt_pi0_idx" );
     set_branch( &evt_pi1_idx_, "evt_pi1_idx" ); set_branch( evt_features_, "evt_features" );
+    set_branch( &kin_pmu_, "kin_pmu" );               set_branch( &kin_cmu_, "kin_cmu" );
+    set_branch( &kin_cpi_fwd_, "kin_cpi_fwd" );       set_branch( &kin_cpi_bwd_, "kin_cpi_bwd" );
+    set_branch( &kin_cpipi_, "kin_cpipi" );           set_branch( &kin_cmupi_, "kin_cmupi" );
+    set_branch( &kin_ppi_lo_, "kin_ppi_lo" );         set_branch( &kin_ppi_hi_, "kin_ppi_hi" );
+    set_branch( &kin_np_, "kin_np" );
+    set_branch( &kin_true_pmu_, "kin_true_pmu" );     set_branch( &kin_true_cmu_, "kin_true_cmu" );
+    set_branch( &kin_true_cpi_fwd_, "kin_true_cpi_fwd" ); set_branch( &kin_true_cpi_bwd_, "kin_true_cpi_bwd" );
+    set_branch( &kin_true_cpipi_, "kin_true_cpipi" ); set_branch( &kin_true_cmupi_, "kin_true_cmupi" );
+    set_branch( &kin_true_ppi_lo_, "kin_true_ppi_lo" ); set_branch( &kin_true_ppi_hi_, "kin_true_ppi_hi" );
   }
 
  // set_branch( &pion_number, "pion_number");
@@ -2874,6 +2895,10 @@ void CC1mu1piXp::reset() {
   evt_pi0_mass_ = -1.f;
   evt_score_ = -1.f; evt_region_ = -1; evt_d6_ = false; evt_ndump_ = 0;
   evt_mu_idx_ = evt_pi0_idx_ = evt_pi1_idx_ = -1; evt_features_->clear();
+  kin_pmu_ = kin_cmu_ = kin_cpi_fwd_ = kin_cpi_bwd_ = kin_cpipi_ = kin_cmupi_ = kin_ppi_lo_ = kin_ppi_hi_ = -999.f;
+  kin_np_ = -1;
+  kin_true_pmu_ = kin_true_cmu_ = kin_true_cpi_fwd_ = kin_true_cpi_bwd_ = kin_true_cpipi_ = kin_true_cmupi_ = -999.f;
+  kin_true_ppi_lo_ = kin_true_ppi_hi_ = -999.f;
   cutflow_bits_ = 0;
   mu_leadpi_opening_angle_ = -1.;
  // sig_truevertex_fv = 0;
@@ -2968,6 +2993,43 @@ const std::array<float, 4>& CC1mu1piXp::mp_pid_cached( const AnalysisEvent* ev, 
 // Two-pion event classifier: the assignment and the 33 features of scripts/mp_evt.py (steps build and train), with
 // its order and arithmetic (sums over the eight track slots in numpy's pairwise order, probabilities and directions
 // rounded to float as in the dump the classifier was trained on), then the RBDT score and the region.
+// Reco variables of the two-pion differential measurement from the assigned tracks (see the header).
+void CC1mu1piXp::fill_mp_kinematics( const AnalysisEvent* ev, int n_rest_proton ) {
+  const int m = evt_mu_idx_, a = evt_pi0_idx_, b = evt_pi1_idx_;
+  auto vf = []( const auto& v, int j ) -> double {
+    return ( v && j >= 0 && size_t( j ) < v->size() ) ? double( v->at( j ) ) : -9999.; };
+  if ( m < 0 || a < 0 || b < 0 ) return;
+  auto dir = [&]( int j ) {
+    return TVector3( vf( ev->track_dirx_, j ), vf( ev->track_diry_, j ), vf( ev->track_dirz_, j ) ).Unit(); };
+  auto contained = [&]( int j ) {
+    return point_inside_FV( this->containment_FV(), vf( ev->track_endx_, j ), vf( ev->track_endy_, j ),
+                            vf( ev->track_endz_, j ) ); };
+  const TVector3 nud = reco_nu_dir( ev ), dm = dir( m ), da = dir( a ), db = dir( b );
+  kin_pmu_ = contained( m ) ? vf( ev->track_range_mom_mu_, m ) : mp_mcs_mom( ev, size_t( m ) );
+  kin_cmu_ = dm.Dot( nud );
+  const double ca = da.Dot( nud ), cb = db.Dot( nud );
+  kin_cpi_fwd_ = std::max( ca, cb ); kin_cpi_bwd_ = std::min( ca, cb );
+  kin_cpipi_ = da.Dot( db );
+  kin_cmupi_ = std::max( dm.Dot( da ), dm.Dot( db ) );
+  if ( contained( a ) && contained( b ) ) {
+    const double qa = pi_range_mom( vf( ev->track_range_mom_mu_, a ) ), qb = pi_range_mom( vf( ev->track_range_mom_mu_, b ) );
+    if ( qa > 0. && qb > 0. ) { kin_ppi_lo_ = std::min( qa, qb ); kin_ppi_hi_ = std::max( qa, qb ); }
+  }
+  kin_np_ = n_rest_proton;
+}
+
+// Truth variables of the two-pion differential measurement (signal events: one muon, exactly two charged pions).
+void CC1mu1piXp::fill_mp_true_kinematics( const TVector3& vmu, std::vector< TVector3 > vpi, const TVector3& nu_dir ) {
+  if ( vpi.size() < 2 || !( vmu.Mag() > 0. ) ) return;
+  std::sort( vpi.begin(), vpi.end(), []( const TVector3& x, const TVector3& y ){ return x.Mag() > y.Mag(); } );
+  const TVector3 um = vmu.Unit(), u0 = vpi[0].Unit(), u1 = vpi[1].Unit();
+  kin_true_pmu_ = vmu.Mag(); kin_true_cmu_ = um.Dot( nu_dir );
+  const double c0 = u0.Dot( nu_dir ), c1 = u1.Dot( nu_dir );
+  kin_true_cpi_fwd_ = std::max( c0, c1 ); kin_true_cpi_bwd_ = std::min( c0, c1 );
+  kin_true_cpipi_ = u0.Dot( u1 ); kin_true_cmupi_ = std::max( um.Dot( u0 ), um.Dot( u1 ) );
+  kin_true_ppi_hi_ = vpi[0].Mag(); kin_true_ppi_lo_ = vpi[1].Mag();
+}
+
 void CC1mu1piXp::classify_event( AnalysisEvent* ev, bool swtrig_ok ) {
   if ( !mp_pid_ || !evt_clf_ ) return;
   if ( !( ev->nslice_ == 1 && sel_nuvertex_contained_ && swtrig_ok ) ) return;
@@ -3080,6 +3142,7 @@ void CC1mu1piXp::classify_event( AnalysisEvent* ev, bool swtrig_ok ) {
   evt_features_->assign( ff.begin(), ff.end() );
   evt_score_ = evt_clf_->Compute( ff ).at( 0 );
   evt_mu_idx_ = trk[mu].idx; evt_pi0_idx_ = trk[pi0].idx; evt_pi1_idx_ = trk[pi1].idx;
+  fill_mp_kinematics( ev, rest_npp );
   const double cos_mu_pi0 = ( trk[mu].d[0] * trk[pi0].d[0] + trk[mu].d[1] * trk[pi0].d[1] ) + trk[mu].d[2] * trk[pi0].d[2];
   evt_d6_ = cos_mu_pi0 > std::cos( 2.6 );
   if ( !evt_d6_ ) return;

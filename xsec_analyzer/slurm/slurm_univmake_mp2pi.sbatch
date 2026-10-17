@@ -1,16 +1,16 @@
 #!/bin/bash
 # SLURM array task: univmake of the two-pion one-bin total with its sideband reco bins (Phase 4, item 3, of
 # report/planning/MULTIPION_BNB_ADAPTATION_PLAN.md) for ONE configuration (fhc5, rhcfull, comb), from the production in
-# /data/uboone/processed/mp2pi (scripts/mp2pi_setup.py writes the file lists). univmake is multi-threaded and uses
-# ~13 of 16 cores, so each task takes a whole node.
+# /data/uboone/processed/mp2pi (scripts/mp2pi_setup.py writes the file lists). univmake runs with UNIV_THREADS = the
+# allocated CPUs (4: about 6 h for comb; the peak memory of the one-bin total was 1.2-2.1 GB).
 #   sbatch --array=0-2 --export=ALL,REPO=$PWD slurm/slurm_univmake_mp2pi.sbatch
 # Other file lists: MP2PI_SUFFIX (e.g. _mcscal_fluxw) reads configs/file_properties_numi_<cfg>_mp2pi<suffix>.txt and
 # writes /data/uboone/processed/mp2pi_<CFG>_total<suffix>_univmake.root.
 #SBATCH --job-name=univmp2pi
 #SBATCH --partition=main
-#SBATCH --cpus-per-task=16
-#SBATCH --mem=32G
-#SBATCH --time=8:00:00
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=4G
+#SBATCH --time=12:00:00
 #SBATCH --output=%x_%A_%a.out
 #SBATCH --error=%x_%A_%a.out
 set -u
@@ -19,10 +19,10 @@ CFGS=(fhc5 rhcfull comb); declare -A TAG=( [fhc5]=FHC5 [rhcfull]=RHCFULL [comb]=
 CFG=${CFGS[$SLURM_ARRAY_TASK_ID]}
 cd "$REPO" || exit 1
 export LD_LIBRARY_PATH="$REPO/lib:/usr/lib64/flexiblas:$(root-config --libdir):${LD_LIBRARY_PATH:-}"
-export XSEC_ANALYZER_DIR="$REPO"
+export XSEC_ANALYZER_DIR="$REPO"; export UNIV_THREADS="${SLURM_CPUS_PER_TASK:-4}"
 SUFFIX="${MP2PI_SUFFIX:-}"
-OUT="/data/uboone/processed/mp2pi_${TAG[$CFG]}_total${SUFFIX}_univmake.root"
-FPM="configs/file_properties_numi_${CFG}_mp2pi${SUFFIX}.txt"; BIN="configs/mp2pi_total_bin_config.txt"
+OUT="/data/uboone/processed/mp2pi_${TAG[$CFG]}_total${SUFFIX}${MP2PI_OUTTAG:-}_univmake.root"   # MP2PI_OUTTAG, MP2PI_BIN: other bins
+FPM="configs/file_properties_numi_${CFG}_mp2pi${SUFFIX}.txt"; BIN="${MP2PI_BIN:-configs/mp2pi_total_bin_config.txt}"
 for f in "$FPM" "$BIN"; do [ -f "$f" ] || { echo "ERROR: missing $f" >&2; exit 1; }; done
 echo "host=$(hostname) cfg=$CFG FPM=$FPM OUT=$OUT"
 TMP="${OUT}.partial.$$"; t0=$(date +%s)

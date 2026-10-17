@@ -241,6 +241,19 @@ protected:
   int   evt_ndump_ = 0;
   int   evt_mu_idx_ = -1, evt_pi0_idx_ = -1, evt_pi1_idx_ = -1;   // PFParticle indices of the assignment
   MyPointer< std::vector<float> > evt_features_;                 // the 33 inputs of the event classifier
+  // Variables of the two-pion differential measurement (scripts/mp2pi_kinematics.py). Reco: from the assigned tracks,
+  // angles about the target-to-vertex direction, muon momentum by range (contained end) or MCS (calibrated for
+  // simulated tracks when $CC1MU1PIXP_MP_MCS_MAP is set), the two pions ordered by the variable itself (forward /
+  // backward, higher / lower momentum), pion momenta by range for contained ends only; kin_np: unassigned tracks with
+  // P_p > 0.5. Truth (signal only): the same about the true neutrino direction; protons are mc_n_proton_sub.
+  // -999 (-1 for kin_np) when not defined.
+  void fill_mp_kinematics( const AnalysisEvent* ev, int n_rest_proton );
+  void fill_mp_true_kinematics( const TVector3& vmu, std::vector< TVector3 > vpi, const TVector3& nu_dir );
+  float kin_pmu_ = -999.f, kin_cmu_ = -999.f, kin_cpi_fwd_ = -999.f, kin_cpi_bwd_ = -999.f, kin_cpipi_ = -999.f,
+        kin_cmupi_ = -999.f, kin_ppi_lo_ = -999.f, kin_ppi_hi_ = -999.f;
+  int   kin_np_ = -1;
+  float kin_true_pmu_ = -999.f, kin_true_cmu_ = -999.f, kin_true_cpi_fwd_ = -999.f, kin_true_cpi_bwd_ = -999.f,
+        kin_true_cpipi_ = -999.f, kin_true_cmupi_ = -999.f, kin_true_ppi_lo_ = -999.f, kin_true_ppi_hi_ = -999.f;
   // true primary charged pions, hardest first
   MyPointer< std::vector<float> > mc_pi_mom_;
   MyPointer< std::vector<float> > mc_pi_costh_;
