@@ -7,12 +7,13 @@
 # directory; the entry counts must equal those of the nominal pseudo-data. Then the processed samples of the variant
 # are deleted (only the pseudo-data are used).
 #   sbatch --dependency=afterok:<variant production> --wrap="bash scripts/mp2pi_mcscal_var_throw.sh <variant>"
+# MP2PI_DIR: another nominal production (e.g. /data/uboone/processed/mp2pi_2f, scripts/mp2pi_2f_mcsvar_submit.sh)
 set -euo pipefail
 V="${1:?variant}"
 R="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"; cd "$R"
 set +u; source setup_xsec_analyzer.sh >/dev/null 2>&1; set -u
 export LD_LIBRARY_PATH="$R/lib:/usr/lib64/flexiblas:$(root-config --libdir):${LD_LIBRARY_PATH:-}"; export XSEC_ANALYZER_DIR="$R"
-N=/data/uboone/processed/mp2pi_mcscal; D=$N/var/$V
+N="${MP2PI_DIR:-/data/uboone/processed/mp2pi_mcscal}"; D=$N/var/$V
 echo "==== variant $V: plan $(date)"
 awk -v n="$N/" -v d="$D/" '$1=="IN"{ sub(n, d, $2) } { print }' $N/throw_plan.txt > $D/throw_plan.txt
 for f in $(awk '$1=="IN"{print $2}' $D/throw_plan.txt); do [ -s "$f" ] || { echo "missing $f"; exit 1; }; done

@@ -7,13 +7,16 @@ The term is their quadrature sum, as a fraction of the nominal result and agains
 pseudo-data are the nominal thrown events: a variant moves a few of them in or out of the signal region, and the
 second table shows that the shifts lie within the Poisson noise of those events, so the term is an upper estimate.
 
-    python3 scripts/mp2pi_mcscal_var_compare.py  ->  report/planning/multipion/mp2pi_mcscal_var.md
+    python3 scripts/mp2pi_mcscal_var_compare.py [--prod 2f]  ->  report/planning/multipion/mp2pi_mcscal_var[_2f].md
+        (--prod 2f: the two-fold production, nominal extractions /data/uboone/processed/mp2pi_2f/unfold/total/)
 """
-import math, os, re
+import math, os, re, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.abspath(os.path.join(HERE, '..', '..', 'report', 'planning', 'multipion', 'mp2pi_mcscal_var.md'))
-N = '/data/uboone/processed/mp2pi_mcscal/'
+PROD = sys.argv[sys.argv.index('--prod') + 1] if '--prod' in sys.argv else ''
+OUT = os.path.abspath(os.path.join(HERE, '..', '..', 'report', 'planning', 'multipion', f'mp2pi_mcscal_var{"_" + PROD if PROD else ""}.md'))
+N = f'/data/uboone/processed/mp2pi_{PROD or "mcscal"}/'
+NOMLOG = (lambda cfg, mode: f'{N}unfold/total/{cfg}{mode}.log') if PROD else (lambda cfg, mode: f'{N}unfold/{cfg}{mode}_dvfrac_fluxw_mcscal.log')
 VARIANTS = ['shrink', 'coarse', 'fine', 'old_production', 'new_production', 'FHC', 'RHC']
 NAMES = {'fhc5': 'FHC', 'rhcfull': 'RHC', 'comb': 'COMB'}
 
@@ -32,7 +35,7 @@ def main():
          'term | term / total uncertainty |', '|---|---|---|' + '---|' * (len(VARIANTS) + 6)]
     for cfg, name in NAMES.items():
         for mode, ml in (('', 'none'), ('_constr', 'sidebands')):
-            nom = systdump(f'{N}unfold/{cfg}{mode}_dvfrac_fluxw_mcscal.log')
+            nom = systdump(NOMLOG(cfg, mode))
             s0, tot = nom['sigma_int'], nom['total'] / 100.
             v = {}
             for V in VARIANTS:
@@ -63,7 +66,7 @@ def main():
                 v = uproot.open(f'{N}var/{V}/xsec-ana-fakedata_{f}.root')['stv_tree'][R].array(library='np')
                 ni += int(((nom[f] != 0) & (v == 0)).sum()); no += int(((nom[f] == 0) & (v != 0)).sum())
             nz = math.sqrt(ni + no)
-            sh = systdump(f'{N}var/{V}/unfold/{cfg}.log')['sigma_int'] / systdump(f'{N}unfold/{cfg}_dvfrac_fluxw_mcscal.log')['sigma_int'] - 1
+            sh = systdump(f'{N}var/{V}/unfold/{cfg}.log')['sigma_int'] / systdump(NOMLOG(cfg, ''))['sigma_int'] - 1
             L.append(f'| {V} | {m} | {ni} | {no} | {ni - no:+d} | {nz:.1f} | {(ni - no) / nz if nz else 0:+.1f} | {sh:+.2%} |')
     open(OUT, 'w').write('\n'.join(L) + '\n')
     print('\n'.join(L))

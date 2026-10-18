@@ -12,8 +12,11 @@
 # constraint) run with the pseudo-data of the variant against the response calibrated with the nominal map.
 # Output: /data/uboone/processed/mp2pi_mcscal/var/<variant>/unfold/<cfg><mode>.log (SYSTDUMP).
 #   sbatch --array=0-20 --dependency=afterok:<throws> --export=ALL,REPO=$PWD slurm/slurm_mp2pi_mcscal_var.sbatch
+# PROD=2f: the two-fold production (/data/uboone/processed/mp2pi_2f, universes *_total_2f_fluxw_total, configs
+# mp2pi_xsec_config_numi_kin2f_total_*), as scripts/mp2pi_2f_mcsvar_submit.sh
 set -u
-REPO="${REPO:?}"; N=/data/uboone/processed/mp2pi_mcscal
+REPO="${REPO:?}"; PROD="${PROD:-}"
+if [ "$PROD" = 2f ]; then N=/data/uboone/processed/mp2pi_2f; else N=/data/uboone/processed/mp2pi_mcscal; fi
 VARIANTS=(${MP2PI_VARIANTS:-shrink coarse fine old_production new_production FHC RHC}); CFGS=(fhc5 rhcfull comb)   # MP2PI_VARIANTS: test
 declare -A TAG=( [fhc5]=FHC5 [rhcfull]=RHCFULL [comb]=COMB )
 CFG=${CFGS[$(( SLURM_ARRAY_TASK_ID / ${#VARIANTS[@]} ))]}; V=${VARIANTS[$(( SLURM_ARRAY_TASK_ID % ${#VARIANTS[@]} ))]}
@@ -23,6 +26,10 @@ export LD_LIBRARY_PATH="$REPO/lib:/usr/lib64/flexiblas:$(root-config --libdir):$
 echo "host=$(hostname) cfg=$CFG variant=$V"
 U=/data/uboone/processed/mp2pi_${TAG[$CFG]}_total_mcscal_fluxw_univmake.root
 FP=configs/file_properties_numi_${CFG}_mp2pi_mcscal_fluxw.txt; BIN=configs/mp2pi_total_bin_config.txt
+if [ "$PROD" = 2f ]; then
+  U=/data/uboone/processed/mp2pi_${TAG[$CFG]}_total_2f_fluxw_total_univmake.root
+  FP=configs/file_properties_numi_${CFG}_mp2pi_2f_fluxw.txt; BIN=configs/mp2pi_kin_total_bin_config.txt
+fi
 D="$N/var/$V/unfold"; WK="$N/var/work"; mkdir -p "$D" "$WK"
 UV="$WK/${CFG}_${V}_univmake.root"
 cp -p "$U" "$UV.tmp" && mv "$UV.tmp" "$UV" || { echo "FAIL copy" >&2; exit 1; }
@@ -39,6 +46,7 @@ W="$WK/${CFG}_${V}_unfold"; command rm -rf -- "$W"; mkdir -p "$W/unfold_output";
 ok=1
 for mode in "" _constr; do
   XC=configs/mp2pi_xsec_config_numi_total_${CFG}${mode}_dvfrac_fluxw_mcscal.txt; XV="$WK/${CFG}${mode}_${V}_xsec.txt"
+  [ "$PROD" = 2f ] && XC=configs/mp2pi_xsec_config_numi_kin2f_total_${CFG}${mode}.txt
   sed -e "s|^UnivFile .*|UnivFile $UV|" -e "s|^FPFile .*|FPFile $FPV|" "$XC" > "$XV"
   ( cd "$W" && "$REPO/bin/UnfolderNuMI" "$XV" configs/mp2pi_total_slice_config.txt "$D/xsec_mp2pi_${CFG}${mode}_${V}_total.root" ) \
     > "$D/${CFG}${mode}.log" 2>&1
