@@ -21,6 +21,7 @@ region).
     python3 scripts/mp2pi_kinematics.py build    ->  /data/uboone/processed/mp2pi_mcscal/kin/events.npz
         (or per sample: build1 <k> for k = 0..N-1, in parallel, then merge)
     python3 scripts/mp2pi_kinematics.py report   ->  report/planning/multipion/mp2pi_kinematics.{json,md},
+        (--prod 2f: the two-fold production, read from its kin_* branches; --edges <json>: the bins of a previous report)
                                                      report/figures/multipion/kin_<variable>.pdf
 """
 import json, os, re, sys
@@ -32,8 +33,11 @@ sys.path.insert(0, os.path.join(HERE, '..'))
 from bkgfit import farsb as F
 from bkgfit.dirt import dirt_perrun
 
-D = '/data/uboone/processed/mp2pi_mcscal/'
+# --prod 2f: the two-fold production, which carries the variables as branches (kin_*, kin_true_*): read directly
+PROD = sys.argv[sys.argv.index('--prod') + 1] if '--prod' in sys.argv else ''
+D = f'/data/uboone/processed/mp2pi_{PROD or "mcscal"}/'
 CACHE = D + 'kin/events.npz'
+SUF = f'_{PROD}' if PROD else ''
 MAP = '/data/uboone/processed/mcscal/maps/nominal.txt'
 OUTDIR = os.path.abspath(os.path.join(HERE, '..', '..', 'report', 'planning', 'multipion'))
 FIGDIR = os.path.abspath(os.path.join(HERE, '..', '..', 'report', 'figures', 'multipion'))
@@ -193,6 +197,31 @@ def read(path, scale, kind, cells, out):
         start += n
 
 
+KB = {'pmu': ('kin_pmu', 'kin_true_pmu'), 'cmu': ('kin_cmu', 'kin_true_cmu'), 'cfwd': ('kin_cpi_fwd', 'kin_true_cpi_fwd'),
+      'cbwd': ('kin_cpi_bwd', 'kin_true_cpi_bwd'), 'cpipi': ('kin_cpipi', 'kin_true_cpipi'),
+      'cmupi': ('kin_cmupi', 'kin_true_cmupi'), 'ppi_lo': ('kin_ppi_lo', 'kin_true_ppi_lo'),
+      'ppi_hi': ('kin_ppi_hi', 'kin_true_ppi_hi'), 'np': ('kin_np', 'mc_n_proton_sub')}
+
+
+def read_kin(path, scale, kind, out):
+    """the same rows as read() from the branches of the selection (production with kin_* branches)"""
+    is_mc = kind in ('mc', 'dirt')
+    t = uproot.open(path)['stv_tree']
+    br = [E + x for x in ('evt_region', 'MC_Signal', 'mc_topology')] + [E + b for pair in KB.values() for b in pair] + \
+         (W if is_mc else [])
+    for a in t.iterate(br, step_size=500000, library='np'):
+        reg = a[E + 'evt_region']; sig = a[E + 'MC_Signal'].astype(bool) if kind == 'mc' else np.zeros(len(reg), bool)
+        keep = (reg == 0) | sig
+        if not keep.any(): continue
+        w = (safe(a['tuned_cv_weight'] * a['ppfx_cv_weight'] * a['normalisation_weight']) if is_mc else np.ones(len(reg)))[keep] * scale
+        rows = dict(w=w, kind=np.full(keep.sum(), {'mc': 0, 'ext': 1, 'dirt': 2}[kind]), region=reg[keep], sig=sig[keep],
+                    topo=a[E + 'mc_topology'][keep] if kind == 'mc' else np.full(keep.sum(), 10 if kind == 'ext' else 11))
+        for v, (rb, tb) in KB.items():
+            r = a[E + rb][keep].astype(float); rows['r_' + v] = np.where((r > -998) & (reg[keep] == 0), r, np.nan)
+            tt = a[E + tb][keep].astype(float); rows['t_' + v] = np.where(sig[keep] & (tt > -998), tt, np.nan)
+        for k, x in rows.items(): out.setdefault(k, []).append(x)
+
+
 def samples():
     mc, ext, _ = F.samples()
     re_ = lambda q: D + os.path.basename(q)
@@ -249,6 +278,10 @@ def binning(t, r, w, fine_edges, nmin=NMIN, crit=0.50):
     return np.array(edges)
 
 
+# --edges <json>: bins fixed to those of a previous report (the adopted binnings), instead of choosing them
+FIXED = json.load(open(sys.argv[sys.argv.index('--edges') + 1])) if '--edges' in sys.argv else None
+
+
 def report():
     import matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt
     plt.rcParams.update({'font.size': 11})
@@ -260,7 +293,7 @@ def report():
                   f'{NMIN:.0f} predicted signal events in the signal region and P(reco bin i | true bin i) >= 0.50. '
                   'Stat.: sqrt(N)/S of the bin (the data statistics of a background-subtracted count, before unfolding).', '',
                   f'Signal region: {w[sr].sum():.1f} events, {w[sr & sig].sum():.1f} signal; signal generated {w[sig & (ev["kind"] == 0)].sum():.1f}.', '']
-    L += ['| variable | reco available in SR signal | bins | edges | diagonal | efficiency | signal per bin | stat. per bin |',
+    L += ['| variable | reco available in SR signal | bins | edges | diagonal P(r|t) / P(t|r) | efficiency | signal per bin | stat. per bin |',
           '|---|---|---|---|---|---|---|---|']
     gen = sig & (ev['kind'] == 0)
     for v, c in VARS.items():
@@ -273,11 +306,12 @@ def report():
         tt, rr = t.copy(), r.copy()
         if c.get('over'): tt = np.minimum(tt, 49.9); rr = np.minimum(rr, 49.9)
         avail = w[sel].sum() / w[sr & sig].sum()
-        edges = fine if v == 'np' else binning(tt[sel], rr[sel], w[sel], fine)
+        edges = np.array(FIXED[v]['edges']) if FIXED else (fine if v == 'np' else binning(tt[sel], rr[sel], w[sel], fine))
         nb = len(edges) - 1
         M = np.histogram2d(tt[sel], rr[sel], [edges, edges], weights=w[sel])[0]
         rown = M.sum(1)
         diag = np.diag(M) / np.where(rown > 0, rown, 1)
+        coln = M.sum(0); pur_r = np.diag(M) / np.where(coln > 0, coln, 1)       # P(true bin i | reco bin i), signal
         # efficiency per true bin: selected (any reco value) over generated
         gsel = gen & np.isfinite(t); tg = np.minimum(t, 49.9) if c.get('over') else t
         G = np.histogram(tg[gsel], edges, weights=w[gsel])[0]
@@ -288,8 +322,8 @@ def report():
         stat = np.sqrt(N) / np.where(S > 0, S, 1)
         fmt = lambda a: ', '.join(f'{x:g}' for x in a)
         res[v] = dict(edges=edges.tolist(), diag=diag.tolist(), eff=eff.tolist(), signal=S.tolist(), events=N.tolist(),
-                      stat=stat.tolist(), reco_available=avail)
-        L.append(f"| {v} | {100 * avail:.0f}% | {nb} | {fmt(edges)} | {fmt(np.round(diag, 2))} | {fmt(np.round(100 * eff, 1))}% | "
+                      stat=stat.tolist(), reco_available=avail, bin_purity=pur_r.tolist(), purity=(S / np.where(N > 0, N, 1)).tolist())
+        L.append(f"| {v} | {100 * avail:.0f}% | {nb} | {fmt(edges)} | {fmt(np.round(diag, 2))} / {fmt(np.round(pur_r, 2))} | {fmt(np.round(100 * eff, 1))}% | "
                  f"{fmt(np.round(S))} | {fmt(np.round(100 * stat))}% |")
         # figure: predicted events per measurement bin by true class, response of the signal, efficiency and sqrt(N)/S
         fig, ax = plt.subplots(1, 3, figsize=(13.5, 4.3), gridspec_kw=dict(width_ratios=[1.15, 1, 0.9]))
@@ -322,22 +356,52 @@ def report():
         ax[2].set_ylim(0, max(30, 1.3 * max(100 * stat.max(), 100 * eff.max()))); ax[2].legend(fontsize=8.5, loc='upper left')
         ax[2].grid(alpha=0.3); ax[2].set_xlabel('true bin (efficiency), reco bin ($\\sqrt{N}/S$)', fontsize=9)
         fig.text(0.005, 0.995, 'MicroBooNE simulation, internal; combined FHC+RHC, full exposure', fontsize=8, color='0.45', va='top')
-        fig.tight_layout(rect=(0, 0, 1, 0.97)); fig.savefig(f'{FIGDIR}/kin_{v}.pdf'); plt.close(fig)
+        fig.tight_layout(rect=(0, 0, 1, 0.97)); fig.savefig(f'{FIGDIR}/kin{PROD}_{v}.pdf'); plt.close(fig)
     L += ['', 'Reco available: share of the signal-region signal for which the reco variable exists (pion momenta: both '
           'assigned pions contained).']
-    json.dump(res, open(os.path.join(OUTDIR, 'mp2pi_kinematics.json'), 'w'), indent=1)
-    open(os.path.join(OUTDIR, 'mp2pi_kinematics.md'), 'w').write('\n'.join(L) + '\n')
+    json.dump(res, open(os.path.join(OUTDIR, f'mp2pi_kinematics{SUF}.json'), 'w'), indent=1)
+    open(os.path.join(OUTDIR, f'mp2pi_kinematics{SUF}.md'), 'w').write('\n'.join(L) + '\n')
     print('\n'.join(L))
 
 
 def build1(k):
     """one sample (index k of samples()) into kin/part_<k>.npz, for parallel builds; merge with 'merge'"""
-    cells = load_map(); out = {}; p, s, kind = samples()[int(k)]
-    read(p, s, kind, cells, out)
+    out = {}; p, s, kind = samples()[int(k)]
+    if PROD: read_kin(p, s, kind, out)
+    else: read(p, s, kind, load_map(), out)
     os.makedirs(os.path.dirname(CACHE), exist_ok=True)
     np.savez_compressed(os.path.join(os.path.dirname(CACHE), f'part_{int(k):02d}.npz'),
                         **{a: np.concatenate(v) for a, v in out.items()})
     print('done', k, os.path.basename(p), flush=True)
+
+
+def regions1(k):
+    """predicted events by region (evt_region 0-4) and true class of one sample, at full exposure"""
+    p, s, kind = samples()[int(k)]; is_mc = kind in ('mc', 'dirt'); out = np.zeros((5, len(TOPO) + 1))
+    br = [E + 'evt_region', E + 'MC_Signal', E + 'mc_topology'] + (W if is_mc else [])
+    for a in uproot.open(p)['stv_tree'].iterate(br, step_size=500000, library='np'):
+        reg = a[E + 'evt_region']; ok = reg >= 0
+        w = (safe(a['tuned_cv_weight'] * a['ppfx_cv_weight'] * a['normalisation_weight']) if is_mc else np.ones(len(reg))) * s
+        if kind == 'mc':
+            sig = a[E + 'MC_Signal'].astype(bool); col = np.where(sig, 0, np.clip(a[E + 'mc_topology'], 1, 9))
+        else: col = np.full(len(reg), 10 if kind == 'ext' else 11)
+        col = np.where(ok, col, len(TOPO))
+        np.add.at(out, (np.clip(reg, 0, 4), col), np.where(ok, w, 0.))
+    return out[:, :len(TOPO)]
+
+
+def regions():
+    """region table of the production (all periods: with the two-fold classifier no event is scored by a model that saw it)"""
+    from multiprocessing import Pool
+    with Pool(8) as pool: tab = sum(pool.map(regions1, range(len(samples()))))
+    names = ['signal region', 'three-pion-like', 'proton-like', 'score band', 'low score']
+    res = {nm: dict(events=float(tab[i].sum()), signal=float(tab[i, 0]),
+                    classes={TOPO[j]: float(tab[i, j]) for j in range(1, len(TOPO))}) for i, nm in enumerate(names)}
+    json.dump(res, open(os.path.join(OUTDIR, f'mp2pi_regions{SUF}.json'), 'w'), indent=1)
+    for nm, r in res.items():
+        top = sorted(r['classes'].items(), key=lambda x: -x[1])[:3]
+        print(f"{nm:16s} {r['events']:9.0f} {r['signal']:6.0f} {100 * r['signal'] / r['events']:5.1f}%  "
+              + ', '.join(f'{c} {100 * v / r["events"]:.0f}%' for c, v in top))
 
 
 def merge():
@@ -351,4 +415,4 @@ def merge():
 
 if __name__ == '__main__':
     if sys.argv[1] == 'build1': build1(sys.argv[2])
-    else: {'build': build, 'report': report, 'merge': merge}[sys.argv[1]]()
+    else: {'build': build, 'report': report, 'merge': merge, 'regions': regions}[sys.argv[1]]()

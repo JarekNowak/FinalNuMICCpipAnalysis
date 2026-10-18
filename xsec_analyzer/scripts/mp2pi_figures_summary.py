@@ -50,7 +50,7 @@ def breakdown():
             ax.plot([i - 3.2 * w, i + 3.2 * w], [d['total']] * 2, color='k', lw=2)
             ax.text(i, d['total'] + 1.2, f"total {d['total']:.1f}%", ha='center', fontsize=11)
         ax.set_xticks(x); ax.set_xticklabels([n for _, n in CFGS]); ax.set_title(title)
-        ax.set_ylim(0, 60); ax.grid(axis='y', alpha=0.3)
+        ax.set_ylim(0, 75); ax.grid(axis='y', alpha=0.3)
         label(ax, 'MicroBooNE simulation, internal')
     axs[0].set_ylabel('Uncertainty of the one-bin total [%]')
     h, l = axs[0].get_legend_handles_labels()

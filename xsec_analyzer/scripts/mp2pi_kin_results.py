@@ -2,8 +2,9 @@
 slurm/slurm_mp2pi_kin_extract.sbatch, outputs /data/uboone/processed/mp2pi_kin/unfold/<variable>/), summarised per
 variable, configuration and constraint mode: the unfolded pseudo-data per bin with its total uncertainty (log lines
 "Bin: i, Val, Unc" of the physical slice), the closure chi2 against the A_C-smeared truth of the pseudo-data and against
-the tune (the framework's chi2 with the total covariance), and the uncertainty of the integral (SYSTDUMP total, data
-statistics). Figure: the combined configuration with the constraint, every variable, against the truth and the tune.
+the tune (the framework's chi2 with the total covariance), the bin-averaged uncertainty (SYSTDUMP: mean of the fractional
+bin uncertainties, total and data statistics) and, with the constraint, the uncertainty of the integral over the bins
+from the full covariance (unfold_output of the configuration, written by the constrained run, the last of the two). Figure: the combined configuration with the constraint, every variable, against the truth and the tune.
 
     python3 scripts/mp2pi_kin_results.py [--prod 2f]  ->  report/planning/multipion/mp2pi_kin_results.{md,json},
                                               report/figures/multipion/kin_results_comb.pdf
@@ -28,6 +29,20 @@ CFGS = {'fhc5': 'FHC', 'rhcfull': 'RHC', 'comb': 'combined'}
 MODES = {'': 'none', '_constr': 'sidebands'}
 
 
+def read_tab(path):
+    rows = [l.split() for l in open(path) if l.strip() and l.split()[0][0].isdigit()]
+    if len(rows[0]) == 2: return np.array([float(r[1]) for r in rows])
+    n = int(max(int(r[0]) for r in rows)) + 1; m = np.zeros((n, n))
+    for r in rows: m[int(r[0]), int(r[1])] = float(r[2])
+    return m
+
+
+def integral(v, cfg):
+    d = f'{U}{v}/{cfg}/unfold_output/'
+    x = read_tab(d + 'vec_table_unfolded_signal.txt').sum()
+    return [100 * np.sqrt(read_tab(d + f'mat_table_cov_{c}.txt').sum()) / x for c in ('total', 'DataStats')]
+
+
 def parse(v, cfg, mode):
     log = f'{U}{v}/{cfg}{mode}.log'
     if not os.path.exists(log): return None
@@ -42,7 +57,8 @@ def parse(v, cfg, mode):
     return dict(val=[b[0] for b in bins], unc=[b[1] for b in bins], truth=f['h_fakedata_truth'].values().tolist(),
                 tune=f['h_genie_tune'].values().tolist(), edges=f['h_unfolded_nuwro'].axis().edges().tolist(),
                 chi2_truth=float(chi_t.group(1)), ndf=int(chi_t.group(2)), chi2_tune=float(chi_c.group(1)),
-                int_total=sd['total'], int_stat=sd['DataStats'])
+                avg_total=sd['total'], avg_stat=sd['DataStats'],
+                **(dict(zip(('int_total', 'int_stat'), integral(v, cfg))) if mode == '_constr' else {}))
 
 
 def main():
@@ -58,14 +74,16 @@ def main():
          'Wiener-SVD (filter on, second derivative), detector variations fractional and flux-weighted, MCS-calibrated '
          'classifier inputs; bins of `mp2pi_kinematics.md`. Per-bin uncertainty: total, relative to the unfolded value. '
          'Closure: chi2 of the unfolded pseudo-data against their A_C-smeared truth with the total covariance; ratio = '
-         'unfolded / truth per bin. Integral: uncertainty of the sum over the bins.', '',
-         '| variable | configuration | constraint | bins | per-bin uncertainty | integral uncertainty (data stat.) | closure chi2 | unfolded / truth | chi2 vs tune |',
-         '|---|---|---|---|---|---|---|---|---|']
+         'unfolded / truth per bin. Bin average: mean of the fractional bin uncertainties (data statistics). Integral: '
+         'uncertainty of the sum over the bins from the full covariance (data statistics), with the constraint.', '',
+         '| variable | configuration | constraint | bins | per-bin uncertainty | bin average (data stat.) | integral (data stat.) | closure chi2 | unfolded / truth | chi2 vs tune |',
+         '|---|---|---|---|---|---|---|---|---|---|']
     for k, r in res.items():
         v, cfg, mode = k.split()
         rel = 100 * np.array(r['unc']) / np.abs(np.array(r['val'])); ratio = np.array(r['val']) / np.array(r['truth'])
-        L.append(f"| {v} | {CFGS[cfg]} | {mode} | {r['ndf']} | {rel.min():.0f}-{rel.max():.0f}% | {r['int_total']:.1f}% "
-                 f"({r['int_stat']:.1f}%) | {r['chi2_truth']:.2f}/{r['ndf']} | {ratio.min():.2f}-{ratio.max():.2f} | "
+        L.append(f"| {v} | {CFGS[cfg]} | {mode} | {r['ndf']} | {rel.min():.0f}-{rel.max():.0f}% | {r['avg_total']:.1f}% "
+                 f"({r['avg_stat']:.1f}%) | " + (f"{r['int_total']:.1f}% ({r['int_stat']:.1f}%)" if 'int_total' in r else '') +
+                 f" | {r['chi2_truth']:.2f}/{r['ndf']} | {ratio.min():.2f}-{ratio.max():.2f} | "
                  f"{r['chi2_tune']:.2f}/{r['ndf']} |")
     open(os.path.join(PLAN, f'mp2pi_kin{PROD}_results.md'), 'w').write('\n'.join(L) + '\n')
     print('\n'.join(L))
@@ -80,7 +98,7 @@ def main():
         ax.stairs(r['tune'], e, color='#c8553d', lw=1.3, ls='--', label='MicroBooNE tune ($A_C$)')
         ax.errorbar(c, r['val'], yerr=r['unc'], xerr=w / 2, fmt='o', color='k', ms=3.5, lw=1, label='unfolded pseudo-data')
         ax.set_xlabel(VARS[v]); ax.set_ylim(0, 1.45 * max(max(r['val']) + max(r['unc']), max(r['tune'])))
-        ax.text(0.03, 0.95, f"$\\chi^2$ truth {r['chi2_truth']:.1f}/{r['ndf']}\nint. unc. {r['int_total']:.0f}%",
+        ax.text(0.03, 0.95, f"$\\chi^2$ truth {r['chi2_truth']:.1f}/{r['ndf']}\nintegral {r['int_total']:.0f}%",
                 transform=ax.transAxes, fontsize=8.5, va='top')
         if v == 'np': ax.set_xticks([0, 1]); ax.set_xticklabels(['0', r'$\geq1$'])
     axs[0, 0].set_ylabel(r'$d\sigma/dx$ [$10^{-38}$ cm$^2$/Ar per unit $x$]')

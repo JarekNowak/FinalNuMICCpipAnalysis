@@ -197,7 +197,7 @@ def fig_evt_score(E):
     ax.text(THR - 0.01, 0.95, 'signal region $\\rightarrow$', transform=ax.get_xaxis_transform(), ha='right', va='top',
             fontsize=11, color=INK2)
     ax.set_xlabel('Event score'); ax.set_ylabel('Events / 0.04')
-    ax.set_title('Two-pion domain, combined (test periods projected to the full exposure)', loc='left', fontsize=11,
+    ax.set_title('Two-pion domain, combined (validation periods projected to the full exposure)', loc='left', fontsize=11,
                  color=INK2)
     hd, lb = ax.get_legend_handles_labels(); hd, lb = hd[::-1], lb[::-1]; o = [0, 4, 1, 5, 2, 6, 3, 7]
     ax.legend([hd[i] for i in o], [lb[i] for i in o], ncol=4, loc='upper center', bbox_to_anchor=(0.45, -0.27),

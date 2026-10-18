@@ -1136,6 +1136,21 @@ def constraint():
             cov[k] = dict(rms_bias=float(np.sqrt(np.mean(b_ ** 2))), within_1sigma=float(np.mean(np.abs(b_) < res['constraint'][k]['total'])))
         res['genie_multisim_coverage'] = cov
     res['alternative_models'] = alt
+    # data statistics of the constrained estimator: the quoted term propagates the data covariance with the gain K of the
+    # conditioning of the whole signal-region prediction (signal and background, as the attribution by source); the
+    # estimator subtracts B + K_B (N_Q - n_Q) with K_B the gain of the background alone, so its sampling variance is
+    # N_SR + K_B diag(N_Q) K_B^T. Their ratio is the expected width of the ensemble pulls in units of the quoted term.
+    sc_ = {}
+    for k, Q in sets.items():
+        if not Q: continue
+        Kt = Ctot[np.ix_([0], Q)] @ np.linalg.inv(Ctot[np.ix_(Q, Q)])
+        Kb = Ctot[np.ix_([G_], Q)] @ np.linalg.inv(Ctot[np.ix_(Q, Q)])
+        DQ = np.diag(N[Q] - (Bext[Q] if NOEXT else 0.))
+        n0 = N[0] - (Bext[0] if NOEXT else 0.)
+        vq = n0 + (Kt @ DQ @ Kt.T)[0, 0]; vb = n0 + (Kb @ DQ @ Kb.T)[0, 0]
+        sc_[k] = dict(quoted=float(np.sqrt(vq) / S[0]), estimator=float(np.sqrt(vb) / S[0]), ratio=float(np.sqrt(vb / vq)))
+    res['stat_check'] = sc_
+    print('data statistics, quoted against the estimator: ' + '; '.join(f"{k}: {100 * v['quoted']:.1f}% / {100 * v['estimator']:.1f}% (ratio {v['ratio']:.2f})" for k, v in sc_.items()), flush=True)
     OSUF = VTAG + (f'_{CSET}' if CSET != 'pid' else '') + (f'_{HORN.lower()}' if HORN else '') + (f'_t{T_:g}' if '--threshold' in sys.argv else '') + ('_sigdec' if SIGDEC else '') + ('_noext' if NOEXT else '')     # a threshold scan does not overwrite the adopted table
     if '--dump-cov' in sys.argv:      # the covariances by source of the region counts (row G_: SR background), for the figures
         np.savez(NEW + f'constraint_cov{OSUF}.npz', regions=np.array(REGIONS), N=N, S=S, Bmc=Bmc, Bext=Bext,

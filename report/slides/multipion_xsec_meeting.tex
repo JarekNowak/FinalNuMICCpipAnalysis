@@ -176,9 +176,9 @@
           classifiers; ``other'' = tracks without a truth match (cosmics). No NuGraph inputs (not in
           the NuMI ntuples). Deployed on LLR score and geometry only, for robustness against the
           detector variations.
-    \item \textbf{Training}: no signal-enhanced NuMI samples; all 14 overlays, whole run periods held
-          out. The event classifier sees the nominal mixture (overlay, dirt, beam-off, CV weights);
-          the BNB meta-BDT saw enhanced samples only.
+    \item \textbf{Training}: no signal-enhanced NuMI samples; all 14 overlays. Particle classifier:
+          whole run periods held out. Event classifier: two-fold by event parity, on the nominal mixture
+          (overlay, dirt, beam-off, CV weights); the BNB meta-BDT saw enhanced samples only.
     \item \textbf{Signal}: $\nu_\mu+\bar\nu_\mu$, $p_\mu>0.15$, every $p_\pi>0.10\GeVc$, $\pi^0$/kaon veto,
           any number of protons (BNB: $\nu_\mu$, KE $>10$ MeV, $\geq1p$). The $\geq1p$ subsample ($81\%$)
           is kept for comparison.
@@ -534,17 +534,17 @@
   \end{itemize}
   \column{.48\textwidth}
   \centering\fig{region_composition}{0.88\textwidth}\\
-  {\scriptsize Predicted composition, combined, full exposure.}\\[1mm]
+  {\scriptsize Predicted composition (single classifier), combined, full exposure; table: two-fold, all periods.}\\[1mm]
   \scriptsize\setlength{\tabcolsep}{3pt}
   \begin{tabular}{lrrc}
     \toprule
     Region & Events & Signal & Purity \\
     \midrule
-    Signal region & $922$ & $439$ & $48\%$ \\
-    Three-pion-like & $270$ & $35$ & $13\%$ \\
-    Proton-like & $15\,156$ & $430$ & $3\%$ \\
-    Score $0.5$--$0.90$ & $4\,081$ & $605$ & $15\%$ \\
-    Score $<0.5$ & $10\,333$ & $157$ & $2\%$ \\
+    Signal region & $920$ & $444$ & $48\%$ \\
+    Three-pion-like & $294$ & $36$ & $12\%$ \\
+    Proton-like & $16\,640$ & $458$ & $3\%$ \\
+    Score $0.5$--$0.90$ & $4\,534$ & $655$ & $14\%$ \\
+    Score $<0.5$ & $13\,162$ & $166$ & $1\%$ \\
     \bottomrule
   \end{tabular}
 
@@ -561,7 +561,7 @@
           (\texttt{ConstrainedCalculator}, the tool of the BNB note).
     \item The flux scales the background and the sidebands alike: flux $38\%\to5.0\%$. Detector
           $23.5\%\to9.3\%$, close to its efficiency part.
-    \item Three-pion-like alone ($270$ events) halves the total. Data statistics grow, since the sideband
+    \item Three-pion-like alone ($294$ events) halves the total. Data statistics grow, since the sideband
           counts enter the background estimate.
   \end{itemize}
   \vspace{1mm}
@@ -602,7 +602,7 @@
   \column{.48\textwidth}
   \textbf{\color{ubred}Signal in the sidebands}
   \begin{itemize}\footnotesize\setlength\itemsep{2pt}
-    \item The score band holds more predicted signal than the signal region ($605$ vs $439$). Signal
+    \item The score band holds more predicted signal than the signal region ($655$ vs $444$). Signal
           variations move every region together, so the conditioning also carries the signal model from the
           sidebands into the signal region.
     \item Nominal (framework): the signal covariance between regions is kept, since the same flux and interaction
@@ -686,7 +686,7 @@
             other parity. C++ $=$ Python to $6\times10^{-8}$.
       \item Working point rescanned (study, constrained comb.): $17.4/20.4/16.5/19.5/25.5\%$ at
             $0.85/0.88/0.90/0.92/0.94$ $\Rightarrow$ $0.90$.
-      \item Signal region $922$ events, $439$ signal, purity $48\%$, efficiency $15\%$.
+      \item Signal region $920$ events, $444$ signal, purity $48\%$, efficiency $15\%$.
       \item All 46 samples reprocessed; total, variables and ensembles re-extracted (next slides).
     \end{itemize}
   \end{block}
@@ -694,7 +694,7 @@
 \end{frame}
 
 \begin{frame}{One-bin total: uncertainties (two-fold classifier, working point 0.90)}
-  \begin{center}\fig{unc_breakdown}{0.80\textwidth}\end{center}
+  \begin{center}\fig{unc_breakdown}{0.72\textwidth}\end{center}
   \vspace{-2mm}
   \begin{columns}[T]
   \column{.52\textwidth}
@@ -712,8 +712,10 @@
   \column{.46\textwidth}
   \begin{itemize}\scriptsize\setlength\itemsep{1pt}
     \item With the constraint, data statistics are the largest term.
-    \item Single model: $15.2\%$ (combined); MCS-calibration term ($2.2\%$) gives $16.6\%$.
+    \item Single model: $15.2\%$ (combined).
+    \item MCS-calibration term, two-fold: $5.9/5.9/4.7\%$ (FHC/RHC/comb.), $0.29$ of the total.
     \item Unfolded/truth: one realisation; ensemble means within $1\%$.
+    \item With it and the soft-pion term (next slides): $23.8/22.4/19.0\%$ constrained.
   \end{itemize}
   \end{columns}
 \end{frame}
@@ -753,6 +755,8 @@
           $0.015$ CV); the wire-response variations move it the other way.
     \item The classifier still calls them protons: $P_p>0.5$ for $86$--$92\%$ in every LLR band, data and
           simulation within $1$--$2\%$.
+    \item Recomb2 strength fitted with all other terms: $1.44\pm0.50$; results move by $\leq0.40\sigma$,
+          $\leq0.12\sigma$ beyond the Recomb2 term.
   \end{itemize}
   \column{.52\textwidth}
   \centering\fig{cr_llr}{\textwidth}
@@ -820,7 +824,8 @@
     \item Calibration uncertainty as in the single-pion analysis: pseudo-data calibrated with each of the seven
           alternative maps, extracted with the nominal response, four fully correlated terms.
     \begin{itemize}\small
-      \item $2.2\%$ of the constrained combined total, $2.3$--$5.5\%$ elsewhere, at most $0.24$ of the total.
+      \item $2.2\%$ of the constrained combined total, $2.3$--$5.5\%$ elsewhere, at most $0.24$ of the total
+            (two-fold classifier: $4.7\%$, $0.29$; shifts within $3.1\times$ their noise).
       \item Each map moves $4$--$19$ events; every shift within $1.7\times$ their Poisson noise: an upper estimate.
     \end{itemize}
     \item The calibrated selection is used from here on.
@@ -838,11 +843,11 @@
           and without the constraint; seed of each file a hash of (ensemble, member, file).
     \item Two-fold classifier, 200 members: offset $+0.0$ to $+1.0\%$ ($\pm0.5$--$0.8\%$), FHC, RHC, combined.
     \item Without the constraint: pull width $0.96$--$1.01$, $70$--$72\%$ inside the $68\%$ interval, as expected.
-    \item With the constraint: width $0.81$--$0.85$ ($76$--$78\%$ inside): the quoted constrained data-statistics
-          term is conservative (as for the single model, 300 members: $0.83$--$0.87$). The beam-off, not thrown in the members, explains little of it (study: $8.8\%\to8.6\%$).
+    \item With the constraint: width $0.81$--$0.85$ ($76$--$78\%$ inside): the quoted term propagates the data with the
+          gain of the whole prediction (signal included), the estimator with the background gain: $8.6\%$ vs $7.6\%$
+          (ratio $0.88$); with the fixed beam-off ($0.98$) the measured width.
     \item The first ensemble (100 members, consecutive seeds) had width $0.85$ also without the constraint: an
-          artefact of the seeding, gone with hashed seeds. The extraction is linear in the signal-region count and
-          its quoted term is the Poisson error of that count.
+          artefact of the seeding, gone with hashed seeds.
   \end{itemize}
   \column{.48\textwidth}
   \centering\fig{ens_pulls_2f}{0.94\textwidth}\\
@@ -878,6 +883,20 @@
   \centering\fig{ens_altmodels_2f}{\textwidth}\\
   {\scriptsize Two-fold classifier: reweighted and stress models.}
   \end{columns}
+\end{frame}
+
+\begin{frame}{Soft pions: covariance against generators}
+  \begin{itemize}\footnotesize\setlength\itemsep{2pt}
+    \item Efficiency $4\%$ at $p_\pi^{\rm soft}=0.10$--$0.125\GeVc$, $14\%$ at $0.15$--$0.175$, flat $17$--$21\%$ above.
+    \item 600 GENIE universes: $30$--$40\%$ of the signal below $0.175\GeVc$ (CV $35\%$); efficiency through the
+          spectrum $\pm1.2\%$. Stress model: $46\%$, $-7.4\%$ ($3.8\sigma$ of the universes).
+    \item Standalone generators, reweighted against GENIE: NuWro $35\%$ / $+1.8\%$, NEUT $44\%$ / $-4.4\%$, GiBUU
+          $52\%$ / $-8.3\%$. The stress model is inside the generator range, outside the covariance.
+    \item A $0.175\GeVc$ cut does not help (the softer events stay as background); migration across $0.10\GeVc$ $<1\%$.
+    \item Added: soft-pion efficiency term = generator envelope, $8.5/8.1/8.3\%$ (FHC/RHC/comb.), $4$--$12\%$ per
+          differential bin.
+  \end{itemize}
+  \centering\fig{softpion}{0.95\textwidth}
 \end{frame}
 
 \begin{frame}{Selection variants}
@@ -928,8 +947,7 @@
   \begin{itemize}\footnotesize\setlength\itemsep{3pt}
     \item Binning: contiguous bins with $P(\text{reco bin }i\,|\,\text{true bin }i)\geq0.50$ (the criterion of the
           single-pion release) and at least 40 predicted signal events per bin.
-    \item Combined, full exposure, signal region: $740$ events, $395$ signal (all periods; the $378$ elsewhere is the
-          projection from the validation periods).
+    \item Combined, full exposure, two-fold classifier: signal region $920$ events, $444$ signal (all periods).
     \item $\sqrt{N}/S$: data statistics of the background-subtracted bin, before unfolding and constraint.
     \item Selection branches for these variables (equal to this study to $10^{-7}$, all other branches unchanged);
           46 samples reprocessed; univmake and the Wiener-SVD extraction per variable, with and without the
@@ -941,12 +959,12 @@
 \begin{frame}{Muon momentum and angle}
   \begin{columns}[T]
   \column{.78\textwidth}
-  \centering\fig{kin_pmu}{\textwidth}\\[-1mm]
-  \fig{kin_cmu}{\textwidth}
+  \centering\fig{kin2f_pmu}{\textwidth}\\[-1mm]
+  \fig{kin2f_cmu}{\textwidth}
   \column{.21\textwidth}
   \begin{itemize}\scriptsize\setlength\itemsep{2pt}
-    \item $p_\mu$: 5 bins, diagonal $0.51$--$0.69$, $\sqrt{N}/S$ $12$--$20\%$; MCS sets the resolution above $0.65\GeVc$.
-    \item $\cos\theta_\mu$: 6 bins, diagonal $0.72$--$0.91$, $13$--$22\%$; forward-peaked, the last bin $0.95$--$1$.
+    \item $p_\mu$: 5 bins, $P(r|t)$ $0.50$--$0.68$, $P(t|r)$ $0.30$--$0.95$, $\sqrt{N}/S$ $12$--$20\%$; MCS sets the resolution above $0.65\GeVc$.
+    \item $\cos\theta_\mu$: 6 bins, $P(r|t)$ $0.73$--$0.91$, $13$--$23\%$; forward-peaked, the last bin $0.95$--$1$.
     \item Efficiency rises with $p_\mu$ and forward angle ($10.5\%\to15\%$).
   \end{itemize}
   \end{columns}
@@ -955,12 +973,12 @@
 \begin{frame}{Pion angles}
   \begin{columns}[T]
   \column{.78\textwidth}
-  \centering\fig{kin_cfwd}{\textwidth}\\[-1mm]
-  \fig{kin_cbwd}{\textwidth}
+  \centering\fig{kin2f_cfwd}{\textwidth}\\[-1mm]
+  \fig{kin2f_cbwd}{\textwidth}
   \column{.21\textwidth}
   \begin{itemize}\scriptsize\setlength\itemsep{2pt}
-    \item Forward pion: 6 bins, diagonal $0.61$--$0.78$.
-    \item Backward pion: 8 bins over the full range, diagonal $0.65$--$0.83$.
+    \item Forward pion: 6 bins, $P(r|t)$ $0.61$--$0.78$.
+    \item Backward pion: 8 bins over the full range, $P(r|t)$ $0.64$--$0.83$.
     \item $\sqrt{N}/S$ $13$--$22\%$; efficiency flat ($11$--$15\%$).
     \item Angles are the best-measured pion quantities: the direction does not depend on the pion stopping.
   \end{itemize}
@@ -970,12 +988,12 @@
 \begin{frame}{Opening angles}
   \begin{columns}[T]
   \column{.78\textwidth}
-  \centering\fig{kin_cpipi}{\textwidth}\\[-1mm]
-  \fig{kin_cmupi}{\textwidth}
+  \centering\fig{kin2f_cpipi}{\textwidth}\\[-1mm]
+  \fig{kin2f_cmupi}{\textwidth}
   \column{.21\textwidth}
   \begin{itemize}\scriptsize\setlength\itemsep{2pt}
-    \item $\cos\theta_{\pi\pi}$: 8 bins, diagonal $0.53$--$0.73$; sensitive to the resonance decay and to FSI.
-    \item $\cos\theta_{\mu\pi}$ (closer pion): 7 bins, diagonal $0.51$--$0.80$.
+    \item $\cos\theta_{\pi\pi}$: 8 bins, $P(r|t)$ $0.53$--$0.71$; sensitive to the resonance decay and to FSI.
+    \item $\cos\theta_{\mu\pi}$ (closer pion): 7 bins, $P(r|t)$ $0.53$--$0.79$.
     \item $\sqrt{N}/S$ $14$--$22\%$ per bin.
   \end{itemize}
   \end{columns}
@@ -984,11 +1002,11 @@
 \begin{frame}{Pion momenta}
   \begin{columns}[T]
   \column{.78\textwidth}
-  \centering\fig{kin_ppi_lo}{\textwidth}\\[-1mm]
-  \fig{kin_ppi_hi}{\textwidth}
+  \centering\fig{kin2f_ppi_lo}{\textwidth}\\[-1mm]
+  \fig{kin2f_ppi_hi}{\textwidth}
   \column{.21\textwidth}
   \begin{itemize}\scriptsize\setlength\itemsep{2pt}
-    \item Both assigned pions contained in $98\%$ of the selected signal, but the range momentum saturates
+    \item Both assigned pions contained in $79\%$ of the selected signal, but the range momentum saturates
           (pions interact before stopping): only 3 ($p_\pi^{\rm low}$) and 2 ($p_\pi^{\rm high}$) bins pass.
     \item D2 allows pion-momentum bins only above $0.175\GeVc$: $p_\pi^{\rm low}$ would keep 2 bins.
     \item Low information; candidates for a coarse result only.
@@ -999,29 +1017,29 @@
 \begin{frame}{Proton multiplicity and summary}
   \begin{columns}[T]
   \column{.52\textwidth}
-  \centering\fig{kin_np}{\textwidth}\\
-  {\scriptsize $N_p$: 0 and $\geq1$ protons above $0.3\GeVc$; diagonal $0.93$ and $0.73$; $\sqrt{N}/S$ $12\%$ and $8\%$.
+  \centering\fig{kin2f_np}{\textwidth}\\
+  {\scriptsize $N_p$: 0 and $\geq1$ protons above $0.3\GeVc$; $P(r|t)$ $0.92$ and $0.73$, $P(t|r)$ $0.36$ and $0.98$;
+  $\sqrt{N}/S$ $12\%$ and $8\%$.
   The $\geq1p$ bin is the comparison with the BNB CC$2\pi^\pm Np$ result.}
   \column{.46\textwidth}
   \scriptsize\setlength{\tabcolsep}{3pt}
-  \begin{tabular}{lccc}
+  \begin{tabular}{lcccc}
     \toprule
-    Variable & Bins & Diagonal & $\sqrt{N}/S$ \\
+    Variable & Bins & $P(r|t)$ & $P(t|r)$ & $\sqrt{N}/S$ \\
     \midrule
-    $p_\mu$ & 5 & $0.51$--$0.69$ & $12$--$20\%$ \\
-    $\cos\theta_\mu$ & 6 & $0.72$--$0.91$ & $13$--$22\%$ \\
-    $\cos\theta_\pi^{\rm fwd}$ & 6 & $0.61$--$0.78$ & $13$--$21\%$ \\
-    $\cos\theta_\pi^{\rm bwd}$ & 8 & $0.65$--$0.83$ & $16$--$22\%$ \\
-    $\cos\theta_{\pi\pi}$ & 8 & $0.53$--$0.73$ & $16$--$22\%$ \\
-    $\cos\theta_{\mu\pi}$ & 7 & $0.51$--$0.80$ & $14$--$21\%$ \\
-    $p_\pi^{\rm low}$ & 3 & $0.56$--$0.61$ & $11$--$14\%$ \\
-    $p_\pi^{\rm high}$ & 2 & $0.68$--$0.76$ & $9$--$12\%$ \\
-    $N_p$ & 2 & $0.73$--$0.93$ & $8$--$12\%$ \\
+    $p_\mu$ & 5 & $0.50$--$0.68$ & $0.30$--$0.95$ & $12$--$20\%$ \\
+    $\cos\theta_\mu$ & 6 & $0.73$--$0.91$ & $0.72$--$0.82$ & $13$--$23\%$ \\
+    $\cos\theta_\pi^{\rm fwd}$ & 6 & $0.61$--$0.78$ & $0.56$--$0.82$ & $13$--$20\%$ \\
+    $\cos\theta_\pi^{\rm bwd}$ & 8 & $0.64$--$0.83$ & $0.62$--$0.83$ & $16$--$22\%$ \\
+    $\cos\theta_{\pi\pi}$ & 8 & $0.53$--$0.71$ & $0.53$--$0.82$ & $16$--$22\%$ \\
+    $\cos\theta_{\mu\pi}$ & 7 & $0.53$--$0.79$ & $0.49$--$0.77$ & $14$--$21\%$ \\
+    $p_\pi^{\rm low}$ & 3 & $0.56$--$0.63$ & $0.35$--$0.84$ & $13$--$15\%$ \\
+    $p_\pi^{\rm high}$ & 2 & $0.74$--$0.75$ & $0.30$--$0.95$ & $9$--$14\%$ \\
+    $N_p$ & 2 & $0.73$--$0.92$ & $0.36$--$0.98$ & $8$--$12\%$ \\
     \bottomrule
   \end{tabular}\\[1mm]
-  {\scriptsize With the normalisation uncertainty of the constrained total ($\approx15\%$) the expected per-bin
-  uncertainty is $20$--$30\%$. The muon and the angular variables are the first candidates for the framework
-  extraction.}
+  {\scriptsize Two-fold classifier. $P(t|r)$: reconstructed-bin purity of the signal; lowest where neighbouring true
+  bins feed in, corrected by the unfolding.}
   \end{columns}
 \end{frame}
 
@@ -1047,9 +1065,9 @@
     \bottomrule
   \end{tabular}
   \begin{itemize}\scriptsize\setlength\itemsep{1pt}
-    \item Wiener-SVD (filter on), FHC, RHC, combined; all 42 extractions close.
+    \item Wiener-SVD (filter on), FHC, RHC, combined; all 42 compatible with their truth in the nominal realisation.
     \item The constraint is essential: it halves the per-bin uncertainty or better.
-    \item Integrals $21$--$39\%$: the one-bin total stays the normalisation result.
+    \item Integrals (full covariance) $15$--$18\%$, as the one-bin total; bin averages $21$--$39\%$.
   \end{itemize}
   \end{columns}
 \end{frame}
@@ -1084,19 +1102,15 @@
   \column{.50\textwidth}
   \textbf{\color{ubred}Before unblinding the one-bin total}
   \begin{itemize}\footnotesize\setlength\itemsep{2pt}
-    \item Origin of the conservative constrained statistical term (pull width $0.81$--$0.85$); without the
-          constraint the coverage is nominal.
     \item Decide between the nominal constraint ($16.5\%$) and the reduced-transfer one without the score band
           (framework: $20.4\%$, half the signal-model transfer).
-    \item LLR of long protons ($p=0.014$ with the covariance): decide whether the detector term covers it.
-    \item Soft-pion spectrum: the softest-pion stress biases the efficiency by $8\%$; decide on a dedicated term.
     \item Two-pion signal region opened only after the single-pion one (D7).
   \end{itemize}
   \column{.48\textwidth}
   \textbf{\color{ubred}Towards the cross sections}
   \begin{itemize}\footnotesize\setlength\itemsep{2pt}
     \item Generator predictions with the two-pion signal definition (GENIE tunes, NuWro, NEUT, GiBUU).
-    \item Differential variables: extracted and closing on pseudo-data; next ensembles and alternative models per
+    \item Differential variables: extracted, compatible with their truth in the nominal pseudo-data; next ensembles and alternative models per
           variable, generator predictions. Invariant masses stay study products unless they pass the $0.50$ criterion.
     \item The $\geq1p$ subsample for the comparison with the BNB result.
     \item Independent-generator closure if a NuMI NuWro overlay can be validated (D5); NuGraph inputs if
@@ -1111,23 +1125,22 @@
     \item A $\nu_\mu+\bar\nu_\mu$ CC$2\pi^\pm Xp$ selection on the full NuMI exposure
           ($1.88\times10^{21}\pot$), built on the two-stage strategy of the BNB CC$2\pi^\pm Np$ analysis and
           adapted to NuMI: four-class particle classifier on LLR and geometry, best assignment, event
-          classifier in two folds by event number (no overtraining). Combined: $15\%$ efficiency, $48\%$ purity, $922$ predicted events ($439$ signal).
+          classifier in two folds by event number (no overtraining). Combined: $15\%$ efficiency, $48\%$ purity, $920$ predicted events ($444$ signal).
     \item Without a constraint the one-bin total carries $50\%$, dominated by the flux amplified by the
           background subtraction and by the detector variations. Four classifier-defined sidebands bring it
           to $16.5\%$ combined ($21.5\%$ FHC, $20.0\%$ RHC) through the framework; data statistics are then
-          the largest term.
-    \item Found on the way and fixed for both analyses: the detector-variation samples carry the earlier
-          NuMI flux (DVfrac, flux weight).
+          the largest term. With the MCS-calibration ($4.7\%$) and soft-pion ($8.3\%$) terms: $19.0\%$.
+    \item Fixed for both analyses on the way: the detector-variation samples carry the earlier NuMI flux.
     \item Validation on pseudo-data: ensembles return the expected truth within $1\%$, with nominal coverage
           without the constraint and a conservative statistical term with it; alternative models close within
           $0.2\sigma$; a score-band signal stress moves the constrained total by $-0.54\sigma$.
     \item Differential variables: $p_\mu$, $\cos\theta_\mu$, the two pion angles, the opening angles and the proton
           multiplicity pass the $0.50$ criterion with 2 to 8 bins at $12$--$22\%$ data statistics per bin; the
-          pion momenta give only 2 or 3 bins. Through the framework with the constraint all seven close on
-          pseudo-data with $15$--$58\%$ per bin (combined).
+          pion momenta give only 2 or 3 bins. Through the framework all seven are compatible with their truth in the
+          nominal pseudo-data, $15$--$58\%$ per bin (combined, constrained).
     \item Beam-on control regions: with the single-pion MCS calibration, the classifier inputs and the event score
-          are statistically compatible with the data under the full prediction covariance; the long-proton LLR
-          distribution remains incompatible ($p=0.014$) and follows the recombination variation.
+          are compatible with the data under the full prediction covariance; the long-proton LLR follows the
+          recombination variation at $1.4$ times its size ($\leq0.12\sigma$ beyond the detector term).
     \item Three or more pions are not measurable at this exposure and serve as a control sample.
   \end{itemize}
   \label{mainend}
