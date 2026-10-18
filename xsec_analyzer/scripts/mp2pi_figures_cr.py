@@ -34,8 +34,11 @@ FIG = os.path.abspath(os.path.join(HERE, '..', '..', 'report', 'figures', 'multi
 SKIM = '/data/uboone/processed/mp2pi_cr_skim_mcscal/'
 DVT = '/data/uboone/processed/mp_evt_llronly_mcscal/detvar/'
 LLR_CACHE = SKIM + 'fig_llr_hist.pkl'
-SYST_CACHE = '/data/uboone/processed/mp2pi_cr_skim_shr/syst_check_hist.pkl'
-ENS = '/data/uboone/processed/mp2pi_mcscal/ens/'
+SYST_CACHE = ('/data/uboone/processed/mp2pi_cr_skim_2f/' if '--prod' in sys.argv and sys.argv[sys.argv.index('--prod') + 1] == '2f'
+              else '/data/uboone/processed/mp2pi_cr_skim_shr/') + 'syst_check_hist.pkl'
+PROD = sys.argv[sys.argv.index('--prod') + 1] if '--prod' in sys.argv else ''   # 2f: ensembles of the two-fold production
+ENS = f'/data/uboone/processed/mp2pi_{PROD or "mcscal"}/ens/'
+FSUF = f'_{PROD}' if PROD else ''
 LABEL = 'MicroBooNE NuMI data, control regions, internal'
 ENS_NAME = {'nominal': 'consecutive seeds', 'nominal2': 'hashed seeds', 'alt545': 'GENIE universe 545',
             'altdelta': r'$\Delta\to N\pi$ angular', 'stress_band': 'stress: score-band signal +20%',
@@ -286,7 +289,7 @@ def fig_pulls(names):
         ax.set_xlim(-4, 4); ax.set_xticks([-3, -2, -1, 0, 1, 2, 3])
     axs[0].set_ylabel('pseudo-experiments')
     fig.supxlabel('(extracted $-$ expected) / quoted data statistics', fontsize=12, y=0.02)
-    save(fig, 'ens_pulls.pdf')
+    save(fig, f'ens_pulls{FSUF}.pdf')
     return out
 
 
@@ -316,23 +319,26 @@ def fig_coverage(ens='nominal2'):
         ax.grid(alpha=0.3)
     axs[0].set_ylabel('members inside the interval [%]')
     fig.supxlabel('confidence level of the quoted data-statistics interval [%]', fontsize=11, y=0.02)
-    save(fig, 'ens_coverage.pdf')
+    save(fig, f'ens_coverage{FSUF}.pdf')
     return out
 
 
 def fig_altmodels():
-    models = [m for m in ('alt545', 'altdelta', 'stress_band', 'stress_mult') if len(glob.glob(f'{ENS}{m}/m[0-9][0-9][0-9]')) >= 5]
+    models = [m for m in ('alt545', 'altdelta', 'stress_band', 'stress_mult', 'stress_plead', 'stress_psoft')
+              if len(glob.glob(f'{ENS}{m}/m[0-9][0-9][0-9]')) >= 5]
     lab = {'alt545': 'GENIE multisim universe 545', 'altdelta': '$\\Delta\\to N\\pi$ angular variation',
-           'stress_band': 'stress: score-band signal +20%', 'stress_mult': 'stress: $\\geq3\\pi$ +30%, 1$\\pi$ $-$20%'}
+           'stress_band': 'stress: score-band signal +20%', 'stress_mult': 'stress: $\\geq3\\pi$ +30%, 1$\\pi$ $-$20%',
+           'stress_plead': 'stress: signal $\\times(1+0.5\\sin p_\\pi^{\\rm lead})$',
+           'stress_psoft': 'stress: signal $\\times(1+0.5\\cos\\pi p_\\pi^{\\rm soft}/0.5)$'}
     cats = [(c, m) for c in ('fhc5', 'rhcfull', 'comb') for m in ('', '_constr')]
     names = {'fhc5': 'FHC', 'rhcfull': 'RHC', 'comb': 'comb.'}
-    fig, (ax, bx) = plt.subplots(2, 1, figsize=(6.4, 4.4), sharex=True, gridspec_kw=dict(height_ratios=[1, 1], hspace=0.08))
-    fig.subplots_adjust(left=0.14, right=0.97, top=0.87, bottom=0.13)
-    fig.text(0.14, 0.955, 'MicroBooNE NuMI simulation, pseudo-experiments, internal', color='0.45', fontsize=9.5)
-    cols = ['#1f5fa8', '#c8553d', '#2a9d58', '#7b5ea7']; out = {}
+    fig, (ax, bx) = plt.subplots(2, 1, figsize=(6.4, 5.0), sharex=True, gridspec_kw=dict(height_ratios=[1, 1], hspace=0.08))
+    fig.subplots_adjust(left=0.14, right=0.97, top=0.80, bottom=0.12)
+    fig.text(0.14, 0.965, 'MicroBooNE NuMI simulation, pseudo-experiments, internal', color='0.45', fontsize=9.5)
+    cols = ['#1f5fa8', '#c8553d', '#2a9d58', '#7b5ea7', '#e9a23b', '#6b6b6b']; out = {}
     bx.axhspan(-1, 1, color='0.88', lw=0, label='$\\pm1$ total uncertainty')
     for i, mdl in enumerate(models):
-        off = (i - 0.5 * (len(models) - 1)) * 0.14
+        off = (i - 0.5 * (len(models) - 1)) * 0.11
         for j, (c, m) in enumerate(cats):
             M = ens_members(mdl, c, m)
             if len(M) < 5: continue
@@ -348,9 +354,9 @@ def fig_altmodels():
     ax.set_ylabel('extracted / truth'); ax.set_ylim(0.86, 1.12)
     bx.set_ylabel('bias / total unc.'); bx.set_ylim(-1.3, 1.3)
     bx.set_xticks(range(len(cats))); bx.set_xticklabels([f"{names[c]}\n{'constr.' if m else 'none'}" for c, m in cats], fontsize=10.5)
-    ax.legend(loc='upper center', bbox_to_anchor=(0.5, 1.28), ncol=2, frameon=False, fontsize=9)
+    ax.legend(loc='upper center', bbox_to_anchor=(0.5, 1.42), ncol=2, frameon=False, fontsize=8.5)
     bx.legend(loc='lower right', frameon=False, fontsize=9)
-    save(fig, 'ens_altmodels.pdf')
+    save(fig, f'ens_altmodels{FSUF}.pdf')
     return out
 
 
@@ -364,7 +370,7 @@ def main():
     res = {}
     if run('cr_mcs'): fig_mcs()
     if run('cr_llr'): res['cr_llr'] = fig_llr()
-    if run('cr_score'): res['cr_score'] = fig_event('event score', 'cr_score.pdf', 'event score', 'events / 0.077')
+    if run('cr_score'): res['cr_score'] = fig_event('event score', f'cr_score{FSUF}.pdf', 'event score', 'events / 0.077')
     if run('cr_ppi'): res['cr_ppi'] = fig_event('summed P(pi)', 'cr_ppi.pdf', 'summed $P(\\pi)$ of the event', 'events / 0.5', xmax=4.)
     if run('ens_pulls'): res['ens_pulls'] = fig_pulls(ens)
     if run('ens_coverage'): res['ens_coverage'] = fig_coverage()

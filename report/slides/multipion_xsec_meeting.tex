@@ -200,10 +200,10 @@
     \toprule
     & BNB & NuMI (comb.) \\
     \midrule
-    Efficiency & $4$--$6\%$ & $13\%$ \\
-    Purity & $47$--$58\%$ & $51\%$ \\
+    Efficiency & $4$--$6\%$ & $15\%$ \\
+    Purity & $47$--$58\%$ & $48\%$ \\
     Detector, predicted count$^*$ & $11.0\%$ & $8.4\%$ \\
-    Total, constrained & $21.5\%^\dagger$ & $15.2\%$ \\
+    Total, constrained & $21.5\%^\dagger$ & $16.5\%$ \\
     \bottomrule
   \end{tabular}\\[0.5mm]
   {\tiny $^*$the seven BNB variations; $^\dagger$evaluated, not applied in the BNB note}
@@ -462,7 +462,7 @@
     7 & Pool size & at least three tracks \\
     8 & Assignment & muon and two pions maximising $L_2$ \\
     9 & Opening angle & $\theta(\mu,\text{longer assigned }\pi)<2.6$ rad \\
-    10 & Event score & $>0.92$: signal region \\
+    10 & Event score & $>0.90$ (two-fold classifier): signal region \\
     \bottomrule
   \end{tabular}
   \column{.42\textwidth}
@@ -473,7 +473,7 @@
     \item The single-pion cuts after its preselection (topological score $>0.67$, muon, containment,
           wire-gap, shower and multiplicity cuts) are not applied; topological score, CosmicIP, track and
           shower counts enter only as features.
-    \item Sidebands: cuts 1--9 and score $\leq0.92$ (next section).
+    \item Sidebands: cuts 1--9 and score $\leq0.90$ (next section).
   \end{itemize}
   \end{columns}
 \end{frame}
@@ -520,11 +520,11 @@
   \column{.50\textwidth}
   \begin{itemize}\footnotesize\setlength\itemsep{2pt}
     \item Four sidebands from the classifier outputs, exclusive, assigned in this order inside the
-          two-pion domain (cuts 1--9, score $\leq0.92$):
+          two-pion domain (cuts 1--9, score $\leq0.90$):
     \begin{itemize}\footnotesize
       \item three-pion-like: $\geq4$ tracks and $L_3>L_2$ (the $\geq3\pi$ control sample, D8; BNB 1$\mu$3$\pi$)
       \item proton-like: an assigned pion with $P_p>0.5$ (BNB 1$\mu$3p)
-      \item score band $0.5$--$0.92$
+      \item score band $0.5$--$0.90$
       \item low score $<0.5$
     \end{itemize}
     \item The sidebands leave out the events of the blind single-pion signal region, so they can be
@@ -540,11 +540,11 @@
     \toprule
     Region & Events & Signal & Purity \\
     \midrule
-    Signal region & $738$ & $378$ & $51\%$ \\
-    Three-pion-like & $282$ & $39$ & $14\%$ \\
-    Proton-like & $15\,160$ & $431$ & $3\%$ \\
-    Score $0.5$--$0.92$ & $4\,397$ & $669$ & $15\%$ \\
-    Score $<0.5$ & $10\,166$ & $143$ & $1\%$ \\
+    Signal region & $922$ & $439$ & $48\%$ \\
+    Three-pion-like & $270$ & $35$ & $13\%$ \\
+    Proton-like & $15\,156$ & $430$ & $3\%$ \\
+    Score $0.5$--$0.90$ & $4\,081$ & $605$ & $15\%$ \\
+    Score $<0.5$ & $10\,333$ & $157$ & $2\%$ \\
     \bottomrule
   \end{tabular}
 
@@ -559,9 +559,9 @@
           from every source, conditioned on the sideband data $d_c$:
     \[ \hat n_s=n_s+V_{sc}V_{cc}^{-1}(d_c-n_c),\qquad V'_{ss}=V_{ss}-V_{sc}V_{cc}^{-1}V_{cs} \]
           (\texttt{ConstrainedCalculator}, the tool of the BNB note).
-    \item The flux scales the background and the sidebands alike: flux $35\%\to5.5\%$. Detector
-          $21\%\to9\%$, close to its efficiency part.
-    \item Three-pion-like alone ($282$ events) halves the total. Data statistics grow, since the sideband
+    \item The flux scales the background and the sidebands alike: flux $38\%\to5.0\%$. Detector
+          $23.5\%\to9.3\%$, close to its efficiency part.
+    \item Three-pion-like alone ($270$ events) halves the total. Data statistics grow, since the sideband
           counts enter the background estimate.
   \end{itemize}
   \vspace{1mm}
@@ -570,12 +570,12 @@
     \toprule
     Constraint & Total & Flux & Xsec & Det. & Data st. \\
     \midrule
-    None & $45.5\%$ & $35.4\%$ & $16.7\%$ & $20.6\%$ & $7.2\%$ \\
-    Three-pion-like & $24.2\%$ & $13.6\%$ & $8.3\%$ & $11.7\%$ & $11.4\%$ \\
-    Proton-like & $31.9\%$ & $13.0\%$ & $15.2\%$ & $22.9\%$ & $7.3\%$ \\
-    Score $0.5$--$0.92$ & $22.5\%$ & $6.2\%$ & $8.4\%$ & $17.2\%$ & $7.7\%$ \\
-    Score $<0.5$ & $33.0\%$ & $13.6\%$ & $10.6\%$ & $26.2\%$ & $7.7\%$ \\
-    All sidebands & $16.8\%$ & $5.5\%$ & $7.0\%$ & $8.8\%$ & $8.8\%$ \\
+    None & $50.1\%$ & $38.2\%$ & $19.4\%$ & $23.5\%$ & $6.9\%$ \\
+    Three-pion-like & $27.8\%$ & $15.3\%$ & $9.5\%$ & $15.5\%$ & $11.9\%$ \\
+    Proton-like & $34.9\%$ & $13.3\%$ & $15.9\%$ & $26.3\%$ & $7.1\%$ \\
+    Score $0.5$--$0.90$ & $22.1\%$ & $5.1\%$ & $8.2\%$ & $17.3\%$ & $7.6\%$ \\
+    Score $<0.5$ & $35.5\%$ & $13.4\%$ & $10.9\%$ & $29.2\%$ & $7.5\%$ \\
+    All sidebands & $16.5\%$ & $5.0\%$ & $6.7\%$ & $9.3\%$ & $8.6\%$ \\
     \bottomrule
   \end{tabular}
   \column{.46\textwidth}
@@ -592,17 +592,17 @@
   \begin{itemize}\footnotesize\setlength\itemsep{2pt}
     \item Pseudo-data from a reweighted model in every region, extracted with the nominal model:
     \begin{itemize}\footnotesize
-      \item GENIE multisim universe 545: $0.952$ ($-0.29\sigma$) constrained, $0.979$ without
-      \item $\Delta\to N\pi$ angular: $0.994$ ($-0.03\sigma$), $1.012$ without
+      \item GENIE multisim universe 545: $0.965$ ($-0.21\sigma$) constrained, $0.988$ without
+      \item $\Delta\to N\pi$ angular: $0.995$ ($-0.03\sigma$), $1.014$ without
     \end{itemize}
-    \item Over all GENIE multisim universes: bias rms $4.5\%$ with the constraint, every universe within
-          $1\sigma$; $17.4\%$ without.
+    \item Over all GENIE multisim universes: bias rms $4.0\%$ with the constraint, every universe within
+          $1\sigma$; $20.3\%$ without.
     \item These models lie inside the covariance: the test checks the procedure, not the model space.
   \end{itemize}
   \column{.48\textwidth}
   \textbf{\color{ubred}Signal in the sidebands}
   \begin{itemize}\footnotesize\setlength\itemsep{2pt}
-    \item The score band holds more predicted signal than the signal region ($669$ vs $378$). Signal
+    \item The score band holds more predicted signal than the signal region ($605$ vs $439$). Signal
           variations move every region together, so the conditioning also carries the signal model from the
           sidebands into the signal region.
     \item Nominal (framework): the signal covariance between regions is kept, since the same flux and interaction
@@ -614,13 +614,13 @@
     \toprule
     Variant (study) & Constrained total \\
     \midrule
-    Nominal & $16.8\%$ \\
-    Sideband signal decoupled & $19.3\%$ \\
-    Without the score band & $19.0\%$ \\
-    Both & $21.4\%$ \\
+    Nominal & $16.5\%$ \\
+    Sideband signal decoupled & $19.6\%$ \\
+    Without the score band & $21.2\%$ \\
+    Both & $23.9\%$ \\
     \bottomrule
   \end{tabular}\\[1mm]
-  {\scriptsize Every variant closes within $0.3\sigma$ for both models. Score-band/SR signal ratio: $1.684$
+  {\scriptsize Every variant closes within $0.25\sigma$ for both models. Score-band/SR signal ratio (single model): $1.684$
   nominal, $1.660$ (u545), $1.681$ ($\Delta\to N\pi$): these models do not probe the transfer; the stress model
   of the ensembles slides does.}
   \end{columns}
@@ -657,7 +657,43 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}{One-bin total: uncertainties (MCS-calibrated inputs)}
+\begin{frame}{Overtraining found: the two-fold event classifier}
+  \begin{columns}[T]
+  \column{.52\textwidth}
+  \begin{itemize}\footnotesize\setlength\itemsep{2pt}
+    \item Efficiency in the classifier training periods $14.04\pm0.21\%$, validation periods $13.16\pm0.31\%$ ($2.4\sigma$).
+    \item Cause: the event classifier was trained on a random $80\%$ of the training-period events. At score $>0.92$,
+          within the domain:
+  \end{itemize}
+  \scriptsize\setlength{\tabcolsep}{3pt}
+  \begin{tabular}{lcc}
+    \toprule
+    Events & Efficiency & Purity \\
+    \midrule
+    its training events (80\%) & $23.61\pm0.36\%$ & $55.4\%$ \\
+    held-out 20\%, same periods & $21.35\pm0.71\%$ & $51.0\%$ \\
+    validation periods & $21.18\pm0.48\%$ & $51.4\%$ \\
+    \bottomrule
+  \end{tabular}
+  \begin{itemize}\footnotesize\setlength\itemsep{2pt}
+    \item On data: efficiency $\approx+6\%$, background $\approx-4\%$, about $-2\%$ on the total; invisible to closure and
+          ensembles (their pseudo-data are the same events).
+  \end{itemize}
+  \column{.46\textwidth}
+  \begin{block}{\small Fix: two folds by event number}\footnotesize
+    \begin{itemize}\setlength\itemsep{2pt}
+      \item Models trained on even and on odd event numbers; every event, data included, scored by the model of the
+            other parity. C++ $=$ Python to $6\times10^{-8}$.
+      \item Working point rescanned (study, constrained comb.): $17.4/20.4/16.5/19.5/25.5\%$ at
+            $0.85/0.88/0.90/0.92/0.94$ $\Rightarrow$ $0.90$.
+      \item Signal region $922$ events, $439$ signal, purity $48\%$, efficiency $15\%$.
+      \item All 46 samples reprocessed; total, variables and ensembles re-extracted (next slides).
+    \end{itemize}
+  \end{block}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{One-bin total: uncertainties (two-fold classifier, working point 0.90)}
   \begin{center}\fig{unc_breakdown}{0.80\textwidth}\end{center}
   \vspace{-2mm}
   \begin{columns}[T]
@@ -665,19 +701,19 @@
   \scriptsize\setlength{\tabcolsep}{2.5pt}
   \begin{tabular}{lcccc}
     \toprule
-    & Total & Data stat. & MCS cal. & Unf./truth \\
+    & Total & Data stat. & Detector & Unf./truth \\
     \midrule
-    FHC, constrained & $21.3\%$ & $13.5\%$ & $5.1\%$ & $1.050$ \\
-    RHC, constrained & $15.4\%$ & $10.7\%$ & $2.3\%$ & $1.070$ \\
-    Comb., none      & $44.9\%$ & $6.6\%$  & $3.1\%$ & $1.087$ \\
-    Comb., constrained & $15.2\%$ & $8.7\%$ & $2.2\%$ & $1.056$ \\
+    FHC, constrained & $21.5\%$ & $13.9\%$ & $10.9\%$ & $1.068$ \\
+    RHC, constrained & $20.0\%$ & $11.0\%$ & $14.4\%$ & $1.059$ \\
+    Comb., none      & $49.9\%$ & $6.5\%$  & $29.3\%$ & $1.093$ \\
+    Comb., constrained & $16.5\%$ & $8.9\%$ & $10.2\%$ & $1.059$ \\
     \bottomrule
   \end{tabular}
   \column{.46\textwidth}
   \begin{itemize}\scriptsize\setlength\itemsep{1pt}
     \item With the constraint, data statistics are the largest term.
-    \item MCS-calibration term not in the total (combined: $15.4\%$ with it).
-    \item Unfolded/truth: one pseudo-data realisation; ensembles below.
+    \item Single model: $15.2\%$ (combined); MCS-calibration term ($2.2\%$) gives $16.6\%$.
+    \item Unfolded/truth: one realisation; ensemble means within $1\%$.
   \end{itemize}
   \end{columns}
 \end{frame}
@@ -726,7 +762,7 @@
 \begin{frame}{Control regions: event score and summed $P(\pi)$}
   \begin{columns}[T]
   \column{.49\textwidth}
-  \centering\fig{cr_score}{\textwidth}
+  \centering\fig{cr_score_2f}{\textwidth}
   \column{.49\textwidth}
   \centering\fig{cr_ppi}{\textwidth}
   \end{columns}
@@ -760,6 +796,7 @@
     Quantity & Stat.\ only & Full covariance & $p$ \\
     \midrule
     Event score & $98.5/11$ & $6.5/11$ & $0.84$ \\
+    Event score, two-fold & $80.8/11$ & $7.4/11$ & $0.76$ \\
     Summed $P(\pi)$ & $23.6/7$ & $2.0/7$ & $0.96$ \\
     Track $P(\mu)$ & $48.1/9$ & $4.2/9$ & $0.90$ \\
     Track $P(\pi)$ & $40.4/9$ & $4.2/9$ & $0.90$ \\
@@ -797,42 +834,49 @@
   \begin{columns}[T]
   \column{.50\textwidth}
   \begin{itemize}\footnotesize\setlength\itemsep{2pt}
-    \item Members thrown from the calibrated simulation (eight per-run files each), each extracted through the
-          framework with and without the constraint; 300 members with the seed of each file a hash of
-          (ensemble, member, file).
-    \item Mean offset from the expected truth: $+0.7$ to $+1.3\%$ ($\pm0.4$--$0.7\%$), FHC, RHC, combined.
-    \item Without the constraint: pull width $1.01$--$1.02$, $67$--$72\%$ inside the $68\%$ interval, as expected.
-    \item With the constraint: width $0.83$--$0.87$ ($75$--$79\%$ inside): the quoted constrained data-statistics
-          term is conservative. The beam-off, not thrown in the members, explains little of it (study: $8.8\%\to8.6\%$).
+    \item Members thrown from the simulation (eight per-run files each), each extracted through the framework with
+          and without the constraint; seed of each file a hash of (ensemble, member, file).
+    \item Two-fold classifier, 200 members: offset $+0.0$ to $+1.0\%$ ($\pm0.5$--$0.8\%$), FHC, RHC, combined.
+    \item Without the constraint: pull width $0.96$--$1.01$, $70$--$72\%$ inside the $68\%$ interval, as expected.
+    \item With the constraint: width $0.81$--$0.85$ ($76$--$78\%$ inside): the quoted constrained data-statistics
+          term is conservative (as for the single model, 300 members: $0.83$--$0.87$). The beam-off, not thrown in the members, explains little of it (study: $8.8\%\to8.6\%$).
     \item The first ensemble (100 members, consecutive seeds) had width $0.85$ also without the constraint: an
           artefact of the seeding, gone with hashed seeds. The extraction is linear in the signal-region count and
           its quoted term is the Poisson error of that count.
   \end{itemize}
   \column{.48\textwidth}
-  \centering\fig{ens_pulls}{0.94\textwidth}\\
-  {\scriptsize Pulls, combined configuration, without and with the constraint.}
+  \centering\fig{ens_pulls_2f}{0.94\textwidth}\\
+  {\scriptsize Pulls of the two-fold ensemble, combined configuration, without and with the constraint.}
   \end{columns}
 \end{frame}
 
 \begin{frame}{Ensembles under alternative and stress models}
   \begin{columns}[T]
-  \column{.40\textwidth}
+  \column{.42\textwidth}
   \begin{itemize}\scriptsize\setlength\itemsep{2pt}
-    \item 50 members each, in every region, extracted with the nominal response.
-    \item Inside the covariance: GENIE multisim universe 545 and the $\Delta\to N\pi$ angular variation; ensemble
-          means within $0.17\sigma$ of their own truth (largest: FHC constrained, $0.962\pm0.014$).
-    \item Outside the covariance:
-    \begin{itemize}\scriptsize
-      \item score-band signal $+20\%$ against the signal region: combined $0.910\pm0.010$ constrained
-            ($-0.54\sigma$), $0.932\pm0.009$ without ($-0.14\sigma$);
-      \item $\geq3\pi$ background $+30\%$, $1\pi$ $-20\%$: $1.006\pm0.011$ constrained, $1.021\pm0.010$ without
-            (within $0.18\sigma$ everywhere).
-    \end{itemize}
-    \item The signal carried by the sidebands moves the constrained result by about half its total uncertainty
-          for a change of the score-band signal; background changes are absorbed.
+    \item 50 members each, nominal response; combined, constrained (single model $\to$ two-fold):
   \end{itemize}
-  \column{.58\textwidth}
-  \centering\fig{ens_altmodels}{\textwidth}
+  \scriptsize\setlength{\tabcolsep}{2pt}
+  \begin{tabular}{lcc}
+    \toprule
+    Model & single & two-fold \\
+    \midrule
+    GENIE u545, $\Delta\to N\pi$ & $\leq0.17\sigma$ & $\leq0.11\sigma$ \\
+    score-band signal $+20\%$ & $-0.54\sigma$ & $-0.47\sigma$ \\
+    $\geq3\pi$ $+30\%$, $1\pi$ $-20\%$ & $+0.04\sigma$ & \\
+    signal $\times(1+0.5\sin p_\pi^{\rm lead})$ & $-0.24\sigma$ & \\
+    signal $\times(1+0.5\cos\pi p_\pi^{\rm soft}/0.5)$ & $-0.44\sigma$ & $-0.32\sigma$ \\
+    \bottomrule
+  \end{tabular}
+  \begin{itemize}\scriptsize\setlength\itemsep{2pt}
+    \item Signal changes carried by the sidebands pull the constrained result towards the model; the soft-pion
+          change is an efficiency effect (same bias without the constraint).
+    \item Without the score band (framework, same members): total $20.4\%$ (vs $15.9\%$), score-band stress
+          $-0.30\sigma$, softest-pion unchanged.
+  \end{itemize}
+  \column{.56\textwidth}
+  \centering\fig{ens_altmodels_2f}{\textwidth}\\
+  {\scriptsize Two-fold classifier: reweighted and stress models.}
   \end{columns}
 \end{frame}
 
@@ -887,9 +931,9 @@
     \item Combined, full exposure, signal region: $740$ events, $395$ signal (all periods; the $378$ elsewhere is the
           projection from the validation periods).
     \item $\sqrt{N}/S$: data statistics of the background-subtracted bin, before unfolding and constraint.
-    \item Framework chain started: selection branches for these variables (validated against this study to
-          $10^{-7}$, all other branches unchanged), reprocessing of the 46 samples, then univmake and the constrained
-          Wiener-SVD extraction per variable.
+    \item Selection branches for these variables (equal to this study to $10^{-7}$, all other branches unchanged);
+          46 samples reprocessed; univmake and the Wiener-SVD extraction per variable, with and without the
+          constraint (results after the feasibility slides).
   \end{itemize}
   \end{columns}
 \end{frame}
@@ -981,6 +1025,35 @@
   \end{columns}
 \end{frame}
 
+\begin{frame}{Differential extraction through the framework}
+  \begin{columns}[T]
+  \column{.62\textwidth}
+  \centering\fig{kin2f_results_comb}{\textwidth}\\
+  {\scriptsize Two-fold classifier, combined, sideband constraint: unfolded pseudo-data, $A_C$-smeared truth and tune.}
+  \column{.36\textwidth}
+  \scriptsize\setlength{\tabcolsep}{2pt}
+  \begin{tabular}{lccc}
+    \toprule
+    & \multicolumn{2}{c}{Per bin} & $\chi^2$ \\
+    Variable & none & constr. & truth \\
+    \midrule
+    $p_\mu$ & $45$--$60\%$ & $17$--$32\%$ & $0.2/5$ \\
+    $\cos\theta_\mu$ & $40$--$123\%$ & $17$--$54\%$ & $0.8/6$ \\
+    $\cos\theta_\pi^{\rm fwd}$ & $51$--$113\%$ & $22$--$52\%$ & $1.9/6$ \\
+    $\cos\theta_\pi^{\rm bwd}$ & $45$--$99\%$ & $15$--$42\%$ & $0.6/8$ \\
+    $\cos\theta_{\pi\pi}$ & $43$--$66\%$ & $17$--$32\%$ & $1.0/8$ \\
+    $\cos\theta_{\mu\pi}$ & $40$--$185\%$ & $18$--$45\%$ & $4.1/7$ \\
+    $N_p$ & $44$--$130\%$ & $20$--$58\%$ & $0.1/2$ \\
+    \bottomrule
+  \end{tabular}
+  \begin{itemize}\scriptsize\setlength\itemsep{1pt}
+    \item Wiener-SVD (filter on), FHC, RHC, combined; all 42 extractions close.
+    \item The constraint is essential: it halves the per-bin uncertainty or better.
+    \item Integrals $21$--$39\%$: the one-bin total stays the normalisation result.
+  \end{itemize}
+  \end{columns}
+\end{frame}
+
 \begin{frame}{Three or more pions}
   \begin{columns}[T]
   \column{.55\textwidth}
@@ -1011,22 +1084,20 @@
   \column{.50\textwidth}
   \textbf{\color{ubred}Before unblinding the one-bin total}
   \begin{itemize}\footnotesize\setlength\itemsep{2pt}
-    \item Origin of the conservative constrained statistical term (pull width $0.83$--$0.87$); without the
+    \item Origin of the conservative constrained statistical term (pull width $0.81$--$0.85$); without the
           constraint the coverage is nominal.
-    \item Signal efficiency $14.0\pm0.2\%$ in the classifier training periods against $13.2\pm0.3\%$ in the
-          validation periods: test for overtraining (two-fold training by event parity).
-    \item The variant without the score band through the framework (queued), quoted next to $15.2\%$; the
-          score-band stress model moves the constrained total by $-0.54\sigma$.
+    \item Decide between the nominal constraint ($16.5\%$) and the reduced-transfer one without the score band
+          (framework: $20.4\%$, half the signal-model transfer).
     \item LLR of long protons ($p=0.014$ with the covariance): decide whether the detector term covers it.
+    \item Soft-pion spectrum: the softest-pion stress biases the efficiency by $8\%$; decide on a dedicated term.
     \item Two-pion signal region opened only after the single-pion one (D7).
   \end{itemize}
   \column{.48\textwidth}
   \textbf{\color{ubred}Towards the cross sections}
   \begin{itemize}\footnotesize\setlength\itemsep{2pt}
     \item Generator predictions with the two-pion signal definition (GENIE tunes, NuWro, NEUT, GiBUU).
-    \item Differential extraction (running): reprocessing with the variable branches, univmake per variable,
-          constrained Wiener-SVD on pseudo-data with closure, first for $p_\mu$, $\cos\theta_\mu$ and the pion
-          and opening angles. Invariant masses stay study products unless they pass the $0.50$ criterion.
+    \item Differential variables: extracted and closing on pseudo-data; next ensembles and alternative models per
+          variable, generator predictions. Invariant masses stay study products unless they pass the $0.50$ criterion.
     \item The $\geq1p$ subsample for the comparison with the BNB result.
     \item Independent-generator closure if a NuMI NuWro overlay can be validated (D5); NuGraph inputs if
           NuMI samples appear (D4).
@@ -1040,19 +1111,20 @@
     \item A $\nu_\mu+\bar\nu_\mu$ CC$2\pi^\pm Xp$ selection on the full NuMI exposure
           ($1.88\times10^{21}\pot$), built on the two-stage strategy of the BNB CC$2\pi^\pm Np$ analysis and
           adapted to NuMI: four-class particle classifier on LLR and geometry, best assignment, event
-          classifier. Combined: $13\%$ efficiency, $51\%$ purity, $738$ predicted events ($378$ signal).
-    \item Without a constraint the one-bin total carries $45\%$, dominated by the flux amplified by the
+          classifier in two folds by event number (no overtraining). Combined: $15\%$ efficiency, $48\%$ purity, $922$ predicted events ($439$ signal).
+    \item Without a constraint the one-bin total carries $50\%$, dominated by the flux amplified by the
           background subtraction and by the detector variations. Four classifier-defined sidebands bring it
-          to $15.2\%$ combined ($21.3\%$ FHC, $15.4\%$ RHC) through the framework; data statistics are then
+          to $16.5\%$ combined ($21.5\%$ FHC, $20.0\%$ RHC) through the framework; data statistics are then
           the largest term.
     \item Found on the way and fixed for both analyses: the detector-variation samples carry the earlier
           NuMI flux (DVfrac, flux weight).
-    \item Validation on pseudo-data: ensembles return the expected truth within $1.3\%$, with nominal coverage
+    \item Validation on pseudo-data: ensembles return the expected truth within $1\%$, with nominal coverage
           without the constraint and a conservative statistical term with it; alternative models close within
           $0.2\sigma$; a score-band signal stress moves the constrained total by $-0.54\sigma$.
     \item Differential variables: $p_\mu$, $\cos\theta_\mu$, the two pion angles, the opening angles and the proton
           multiplicity pass the $0.50$ criterion with 2 to 8 bins at $12$--$22\%$ data statistics per bin; the
-          pion momenta give only 2 or 3 bins. The framework extraction is under way.
+          pion momenta give only 2 or 3 bins. Through the framework with the constraint all seven close on
+          pseudo-data with $15$--$58\%$ per bin (combined).
     \item Beam-on control regions: with the single-pion MCS calibration, the classifier inputs and the event score
           are statistically compatible with the data under the full prediction covariance; the long-proton LLR
           distribution remains incompatible ($p=0.014$) and follows the recombination variation.

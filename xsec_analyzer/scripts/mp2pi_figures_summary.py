@@ -1,7 +1,8 @@
 """mp2pi_figures_summary.py -- summary figures of the two-pion one-bin total for the slides and the note.
 
-unc_breakdown.pdf: the uncertainty terms of the framework extraction with the MCS-calibrated classifier inputs
-(SYSTDUMP of /data/uboone/processed/mp2pi_mcscal/unfold/<cfg>[_constr]_dvfrac_fluxw_mcscal.log), FHC, RHC and
+unc_breakdown.pdf: the uncertainty terms of the framework extraction with the two-fold event classifier (SYSTDUMP of
+/data/uboone/processed/mp2pi_2f/unfold/total/<cfg>[_constr].log; the single-model files of mp2pi_mcscal/unfold when
+absent), FHC, RHC and
 combined, without and with the sideband constraint.
 
 unc_evolution.pdf: the expected total of the combined one-bin total along the analysis (Tables wp, constraint,
@@ -25,8 +26,12 @@ COL = ['#4c72b0', '#dd8452', '#55a868', '#8172b3', '#c44e52', '#937860']
 plt.rcParams.update({'font.size': 12, 'axes.titlesize': 13})
 
 
+U2F = '/data/uboone/processed/mp2pi_2f/unfold/total/'   # the two-fold event classifier (the adopted selection)
+
+
 def dump(cfg, mode):
-    t = open(f'{U}{cfg}{mode}_dvfrac_fluxw_mcscal.log').read()
+    f = f'{U2F}{cfg}{mode}.log'
+    t = open(f if os.path.exists(f) else f'{U}{cfg}{mode}_dvfrac_fluxw_mcscal.log').read()
     return {k: float(x) for k, x in re.findall(r'^\[SYSTDUMP\] (\S+) ([-\d.e+]+)$', t, re.M)}
 
 
@@ -56,17 +61,17 @@ def breakdown():
 def evolution():
     steps = [('Cut-based\nfirst draft', 89), ('+ particle\nclassifier', 61), ('+ event\nclassifier', 47),
              ('LLR-and-\ngeometry PID', 46), ('+ sideband\nconstraint', 16.8), ('framework', 15.7),
-             ('MCS-calibrated\ninputs', 15.2)]
-    fig, ax = plt.subplots(figsize=(9.5, 3.9))
+             ('MCS-calibrated\ninputs', 15.2), ('two-fold\nclassifier', 16.5)]
+    fig, ax = plt.subplots(figsize=(10.2, 3.9))
     x = np.arange(len(steps)); v = [s[1] for s in steps]
-    c = ['#9e9e9e'] * 4 + ['#c44e52'] * 3
+    c = ['#9e9e9e'] * 4 + ['#c44e52'] * 4
     ax.bar(x, v, 0.62, color=c)
     for i, y in enumerate(v): ax.text(i, y + 1.5, f'{y:g}%', ha='center', fontsize=12)
     ax.set_xticks(x); ax.set_xticklabels([s[0] for s in steps], fontsize=10.5)
     ax.set_ylabel('Total uncertainty [%]'); ax.set_ylim(0, 105); ax.grid(axis='y', alpha=0.3)
     ax.axvline(3.5, color='k', ls=':', lw=1)
     ax.text(1.5, 86, 'study, no constraint', ha='center', fontsize=10.5, color='0.3')
-    ax.text(5.0, 86, 'with the sideband constraint', ha='center', fontsize=10.5, color='#c44e52')
+    ax.text(5.5, 86, 'with the sideband constraint', ha='center', fontsize=10.5, color='#c44e52')
     label(ax, 'MicroBooNE simulation, internal; combined FHC+RHC, one-bin total')
     fig.tight_layout(); fig.savefig(f'{OUT}/unc_evolution.pdf'); plt.close(fig)
 

@@ -72,6 +72,23 @@ HORN = sys.argv[sys.argv.index('--horn') + 1].upper() if '--horn' in sys.argv el
 # constraint step: data statistics without the beam-off counts (the spread of pseudo-experiments whose beam-off is not thrown)
 NOEXT = '--no-ext-stat' in sys.argv
 if HORN: TEST_RUNS = {'FHC': (5,), 'RHC': (13,)}[HORN]
+# two-fold event classifier (--twofold in train; a tag ending in '2f' elsewhere): one model trained on the even, one on
+# the odd event numbers; every event is scored by the model that did not see it (even -> the odd model), data included
+TWOFOLD = '--twofold' in sys.argv or VTAG.endswith('2f')
+
+
+def evt_predict(npi, fs, X, names, evtnum):
+    """event-classifier score of the rows X: the single model of the tag, or in two-fold mode the model of the other
+    parity (the fold models are saved sliced at their best iteration, so every tree is used)"""
+    import xgboost as xgb
+    if not TWOFOLD:
+        bst = xgb.Booster(); bst.load_model(NEW + f'evt_clf_n{npi}{VTAG}_{fs}.json')
+        return bst.predict(xgb.DMatrix(X, feature_names=names))
+    out = np.full(len(X), np.nan)
+    for fold, rows in (('odd', evtnum % 2 == 0), ('even', evtnum % 2 == 1)):
+        bst = xgb.Booster(); bst.load_model(NEW + f'evt_clf_n{npi}{VTAG}_{fold}_{fs}.json')
+        if rows.any(): out[rows] = bst.predict(xgb.DMatrix(X[rows], feature_names=names))
+    return out
 NSHR = 4                                  # showers kept per event (largest energy first)
 SHR = ['energy', 'dist', 'ts', 'dirx', 'diry', 'dirz', 'dedx']
 FLUX = 0.17
@@ -335,6 +352,25 @@ def build():
     print(f'{len(out["w"])} rows written to {NEW}events.npz')
 
 
+def evtnum():
+    """Event number of every row of events.npz (the raw-ntuple branch evt at the row's entry; processed and raw entries
+    coincide) -> events_evt.npy, the key of the two-fold event classifier."""
+    import re
+    D = np.load(NEW + 'events.npz'); sums = json.load(open(NEW + 'sums.json'))
+    fid, ent = D['fid'], D['entry']; out = np.full(len(fid), -1, dtype=np.int64)
+    for k, (run, kind, path, scale) in enumerate(sums['files']):
+        rows = np.nonzero(fid == k)[0]
+        if not len(rows): continue
+        log = os.path.join(os.path.dirname(path), os.path.basename(path)[len('xsec-ana-'):-len('.root')] + '.log')
+        raw = re.search(r'input_filename: (\S+)', open(log).read()).group(1)
+        t = uproot.open(raw)['nuselection/NeutrinoSelectionFilter']
+        e = t['evt'].array(library='np'); assert t.num_entries > ent[rows].max(), path
+        out[rows] = e[ent[rows]]
+        print(f'  {os.path.basename(path)}: {len(rows)} rows', flush=True)
+    assert (out >= 0).all()
+    np.save(NEW + 'events_evt.npy', out); print('written', NEW + 'events_evt.npy', 'even share', np.mean(out % 2 == 0))
+
+
 DETVAR = ['CV', 'LYdown', 'LYrayl', 'Recomb2', 'SCE', 'WMAngleXZ', 'WMAngleYZ', 'WMX', 'WMYZ']
 
 
@@ -468,6 +504,39 @@ def train():
             ww = w[m].copy(); y = lab[m]; nr = 0.5 * len(ww)
             ww[y == 1] *= nr / ww[y == 1].sum(); ww[y == 0] *= nr / ww[y == 0].sum()
             return ww
+        if TWOFOLD:
+            # two folds by event number over every run period; each fold model stops early on 20% of its own rows and
+            # scores the rows of the other parity; the in-fold efficiency at 0.92 against the out-of-fold one is the
+            # overtraining check
+            ev = np.load(NEW + 'events_evt.npy'); s = np.full(len(w), np.nan); info = {}
+            par_ = dict(objective='binary:logistic', eval_metric='auc', max_depth=5, eta=0.05, subsample=0.8,
+                        colsample_bytree=0.8, min_child_weight=10., tree_method='hist', seed=1)
+            for fold, pty in (('even', 0), ('odd', 1)):
+                inf = dom & ~D['test_dirt_only'] & (ev % 2 == pty)
+                vf = inf & (np.random.default_rng(20261018 + pty).random(len(w)) < 0.2); tf = inf & ~vf
+                b_ = xgb.train(par_, xgb.DMatrix(X[tf], label=lab[tf], weight=bal(tf), feature_names=names), 3000,
+                               evals=[(xgb.DMatrix(X[vf], label=lab[vf], weight=bal(vf), feature_names=names), 'val')],
+                               early_stopping_rounds=100, verbose_eval=False)
+                b_ = b_[: b_.best_iteration + 1]
+                b_.save_model(NEW + f'evt_clf_n{npi}{VTAG}_{fold}_{fs}.json')
+                oth = ev % 2 == 1 - pty
+                s[oth] = b_.predict(xgb.DMatrix(X[oth], feature_names=names))
+                s_in = b_.predict(xgb.DMatrix(X[tf], feature_names=names))
+                def eff_at(sc, m, sel):
+                    sg = m & (lab == 1); return float(w[sg & sel].sum() / w[sg].sum())
+                full_in = np.zeros(len(w), bool); full_in[tf] = s_in > 0.92
+                info[fold] = dict(trees=int(b_.num_boosted_rounds()), rows_train=int(tf.sum()),
+                                  eff_in_fold=eff_at(None, tf, full_in), auc_out_of_fold=wauc(lab[oth & dom], s[oth & dom], w[oth & dom]))
+            for fold, pty in (('even', 0), ('odd', 1)):
+                m = dom & (ev % 2 == 1 - pty)
+                info[fold]['eff_out_of_fold'] = float(w[m & (lab == 1) & (s > 0.92)].sum() / w[m & (lab == 1)].sum())
+            scores[fs] = s
+            np.save(NEW + f'scores_n{npi}{VTAG}_{fs}.npy', s.astype(np.float32))
+            res[fs] = {'features': names, 'twofold': info, 'auc_test': wauc(lab[te], s[te], w[te]),
+                       'auc_val': wauc(lab[val], s[val], w[val]), 'importance_gain': {}}
+            print(f'  {fs}: ' + '; '.join(f"{k}: {v['trees']} trees, eff in fold {100 * v['eff_in_fold']:.2f}%, "
+                                         f"out of fold {100 * v['eff_out_of_fold']:.2f}%" for k, v in info.items()), flush=True)
+            continue
         Xtr, ytr, wtr = X[tr], lab[tr], bal(tr)
         if EAUG > 0.:
             # the Run-4 detector-variation events (CV and the eight variations) with an even event number, classes
@@ -751,9 +820,8 @@ def detsyst():
             if ODD: sc = np.where(np.load(NEW + 'detvar_evt.npy') % 2 == 1, sc, -1.)
         else:
             names = feat_names(npi, fs)
-            bst = xgb.Booster(); bst.load_model(NEW + f'evt_clf_n{npi}{VTAG}_{fs}.json')
             X = np.stack([V[f'n{npi}_{k}'] for k in names], axis=1)
-            sc = np.where(dom, bst.predict(xgb.DMatrix(X, feature_names=names)), -1.)
+            sc = np.where(dom, evt_predict(npi, fs, X, names, np.load(NEW + 'detvar_evt.npy')), -1.)
         # yields above each threshold per sample (file id -> horn, variation)
         Y = {}
         for fid, (run, var, path, scale) in enumerate(vs['files']):
@@ -826,9 +894,8 @@ def detboot():
         else:
             if fs not in models:
                 names = feat_names(npi, fs)
-                bst = xgb.Booster(); bst.load_model(NEW + f'evt_clf_n{npi}{VTAG}_{fs}.json')
                 X = np.stack([V[f'n{npi}_{k}'] for k in names], axis=1)
-                models[fs] = np.where(dom, bst.predict(xgb.DMatrix(X, feature_names=names)), -1.)
+                models[fs] = np.where(dom, evt_predict(npi, fs, X, names, np.load(NEW + 'detvar_evt.npy')), -1.)
             sc = models[fs]
         i = int(np.argmin(abs(thr - t)))
         Y = {}
@@ -977,8 +1044,8 @@ def constraint():
     # detector variations: ratios of the Run-4 variation samples, per horn, applied to the nominal yields of that horn
     Vd = dict(np.load(NEW + 'detvar_events.npz')); vs = json.load(open(NEW + 'detvar_sums.json'))
     import xgboost as xgb
-    names = feat_names(2, CSET); bst = xgb.Booster(); bst.load_model(NEW + f'evt_clf_n2{VTAG}_{CSET}.json')
-    scd = bst.predict(xgb.DMatrix(np.stack([Vd[f'n2_{k}'] for k in names], 1), feature_names=names))
+    names = feat_names(2, CSET)
+    scd = evt_predict(2, CSET, np.stack([Vd[f'n2_{k}'] for k in names], 1), names, np.load(NEW + 'detvar_evt.npy'))
     domd = Vd['n2_d6'].astype(bool); labd = Vd['sig2'].astype(bool)
     srd = domd & (scd > T_)
     ok1d = ~Vd['sel_1pi'].astype(bool) if '--with-1pi-sr' not in sys.argv else np.ones(len(labd), bool)
@@ -1174,7 +1241,8 @@ def write_md(res, tag):
          '| Feature set | Trees | AUC (validation) | AUC (test runs) |', '|---|---|---|---|']
     for fs in FSETS:
         r = res[fs]
-        L.append(f'| {fs} ({len(r["features"])} features) | {r["best_iteration"] + 1} | {r["auc_val"]:.4f} | {r["auc_test"]:.4f} |')
+        trees = r['best_iteration'] + 1 if 'best_iteration' in r else '/'.join(str(v['trees']) for v in r['twofold'].values())
+        L.append(f'| {fs} ({len(r["features"])} features) | {trees} | {r["auc_val"]:.4f} | {r["auc_test"]:.4f} |')
     L += ['', '## Working point against the current selections (COMB, full exposure)', '',
           '| Selection | Signal | Background | Efficiency | Purity | B/S | Stat. | Flux term | Total |', '|---|---|---|---|---|---|---|---|---|']
     def row(name, c):
@@ -1232,4 +1300,4 @@ def write_md(res, tag):
 
 
 if __name__ == '__main__':
-    {'build': build, 'build_detvar': build_detvar, 'detvar_evt': detvar_evt, 'train': train, 'syst': syst, 'detsyst': detsyst, 'wp': wp, 'detboot': detboot, 'constraint': constraint}[sys.argv[1]]()
+    {'build': build, 'build_detvar': build_detvar, 'detvar_evt': detvar_evt, 'evtnum': evtnum, 'train': train, 'syst': syst, 'detsyst': detsyst, 'wp': wp, 'detboot': detboot, 'constraint': constraint}[sys.argv[1]]()

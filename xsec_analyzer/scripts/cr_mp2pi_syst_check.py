@@ -27,8 +27,11 @@ sys.path.insert(0, os.path.join(HERE, '..'))
 from bkgfit import farsb as F
 from bkgfit.dirt import dirt_perrun
 
-SK = '/data/uboone/processed/mp2pi_cr_skim_shr/'
-DVE = '/data/uboone/processed/mp2pi_mcscal/detvar_fluxw/'
+# --prod 2f: the two-fold event classifier (skim mp2pi_cr_skim_2f, event-level detector ratios from mp2pi_2f; the track
+# quantities do not depend on the event classifier); outputs cr_mp2pi_syst_check_2f.*
+PROD = sys.argv[sys.argv.index('--prod') + 1] if '--prod' in sys.argv else ''
+SK = '/data/uboone/processed/mp2pi_cr_skim_2f/' if PROD == '2f' else '/data/uboone/processed/mp2pi_cr_skim_shr/'
+DVE = f'/data/uboone/processed/mp2pi_{PROD or "mcscal"}/detvar_fluxw/'
 DVT = '/data/uboone/processed/mp_evt_llronly_mcscal/detvar/'
 OUTDIR = os.path.abspath(os.path.join(HERE, '..', '..', 'report', 'planning', 'multipion'))
 S, B, BE = 'CC1mu1piXp', 'CC1mu2piBDTEvt_', 'CC1mu2piEvt_'
@@ -151,7 +154,7 @@ def test(d, p, C):
 
 def main():
     import pickle
-    cache = '/data/uboone/processed/mp2pi_cr_skim_shr/syst_check_hist.pkl'
+    cache = SK + 'syst_check_hist.pkl'
     if os.path.exists(cache):
         HP, R = pickle.load(open(cache, 'rb'))
     else:
@@ -207,8 +210,8 @@ def report(HP, R):
         L.append(f'| {q} | {f(stat)} | {f(full)} | ' + ' | '.join(f'{one[t]:.1f}' for t in ('flux', 'cross section', 'reinteraction', 'detector'))
                  + f' | {d.sum() / p.sum():.3f} |')
     L += ['', 'Columns flux to detector: chi2 with the statistics and that term alone.']
-    json.dump(res, open(os.path.join(OUTDIR, 'cr_mp2pi_syst_check.json'), 'w'), indent=1, default=float)
-    open(os.path.join(OUTDIR, 'cr_mp2pi_syst_check.md'), 'w').write('\n'.join(L) + '\n')
+    json.dump(res, open(os.path.join(OUTDIR, f'cr_mp2pi_syst_check{"_" + PROD if PROD else ""}.json'), 'w'), indent=1, default=float)
+    open(os.path.join(OUTDIR, f'cr_mp2pi_syst_check{"_" + PROD if PROD else ""}.md'), 'w').write('\n'.join(L) + '\n')
     print('\n'.join(L))
 
 

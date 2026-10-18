@@ -17,7 +17,10 @@ import uproot
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUTDIR = os.path.abspath(os.path.join(HERE, '..', '..', 'report', 'planning', 'multipion'))
-E = '/data/uboone/processed/mp2pi_mcscal/ens/'
+import sys
+PROD = sys.argv[sys.argv.index('--prod') + 1] if '--prod' in sys.argv else ''   # 2f: the two-fold production
+E = f'/data/uboone/processed/mp2pi_{PROD or "mcscal"}/ens/'
+SUF = f'_{PROD}' if PROD else ''
 CFGS = {'fhc5': 'FHC', 'rhcfull': 'RHC', 'comb': 'COMB'}
 MODES = {'': 'none', '_constr': 'sidebands'}
 
@@ -75,8 +78,8 @@ def main():
                              f"{100 * r['spread']:.1f}% |")
                 res[key] = r
         L.append('')
-    json.dump(res, open(os.path.join(OUTDIR, 'mp2pi_ensembles.json'), 'w'), indent=1)
-    open(os.path.join(OUTDIR, 'mp2pi_ensembles.md'), 'w').write('\n'.join(L) + '\n')
+    json.dump(res, open(os.path.join(OUTDIR, f'mp2pi_ensembles{SUF}.json'), 'w'), indent=1)
+    open(os.path.join(OUTDIR, f'mp2pi_ensembles{SUF}.md'), 'w').write('\n'.join(L) + '\n')
     print('\n'.join(L))
 
 
