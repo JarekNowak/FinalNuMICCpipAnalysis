@@ -90,15 +90,15 @@
     without, with data statistics then the largest term; treatments that reduce the transfer of the signal model
     from the sidebands give $20$ to $24\%$. Ensembles of pseudo-experiments return the expected truth within
     $1\%$, with nominal statistical coverage without the constraint and a conservative statistical term with it,
-    and ensemble means for two reweighted interaction models lie within $0.2\sigma$ of their own truth. In the opened
+    and ensemble means for two reweighted interaction models lie within $0.11\sigma$ of their own truth. In the opened
     control regions of the single-pion analysis, calibrating the MCS momentum of exiting tracks as in the
     single-pion analysis brings the classifier inputs much closer to the beam-on data; with the systematic
     covariance of the prediction the class probabilities, the MCS momentum and the event score are
-    statistically compatible with the data, while the LLR distribution of long protons remains incompatible
-    ($p=0.014$) and follows the recombination variation of the detector term at $1.4$ times its size, which moves no
+    statistically compatible with the data, while the LLR score remains incompatible at its proton end, where the long
+    protons sit ($p=0.016$), and follows the recombination variation of the detector term at $1.4$ times its size, which moves no
     result by more than $0.12$ of its uncertainty beyond that term. For differential measurements, the
     muon momentum and angle, the angles of the two pions, their opening angles and the proton multiplicity pass the
-    $0.50$ migration criterion with 2 to 8 bins and $12$ to $22\%$ data statistics per bin; the pion momenta,
+    $0.50$ migration criterion with 2 to 8 bins and $8$ to $23\%$ data statistics per bin; the pion momenta,
     limited by the saturation of the range momentum, give 2 or 3 bins. Extracted through the framework with the
     sideband constraint, the seven variables are compatible with their regularisation-smeared truths in the nominal
     pseudo-data realisation, with $15$ to $58\%$ uncertainty per bin and $15$ to $18\%$ on their integrals in the
@@ -368,14 +368,14 @@ ROC area on them is $0.887$; adding the lengths, vertex distances, containment a
 angles of the assigned tracks raises it to $0.898$, a gain that disappears in the total uncertainty, so
 these kinematic features are not used. The largest gains come from the summed pion probability, $L_2$,
 the number of tracks with $P_\pi>0.5$, the topological score and the number with $P_\mu>0.5$.
-Figure~\ref{fig:evt} shows the score of the adopted selection by true class.
+Figure~\ref{fig:evt} shows the score of the LLR-and-geometry selection by true class.
 
 \begin{figure}[tbp]
   \centering
   \includegraphics[width=0.52\textwidth]{multipion/evt_score}
 \hfill
   \includegraphics[width=0.44\textwidth]{multipion/evt_effpur}
-  \caption{Event score of the adopted selection (LLR-and-geometry classifier, MCS-calibrated inputs) in the two-pion domain, validation periods projected to the full exposure, combined configuration (left), and the purity and efficiency of the signal region against the threshold (right).}
+  \caption{Event score of the single event classifier (LLR-and-geometry particle classifier, MCS-calibrated inputs) in the two-pion domain, validation periods projected to the full exposure, combined configuration (left), and the purity and efficiency of the signal region against the threshold (right).}
   \label{fig:evt}
 \end{figure}
 
@@ -420,7 +420,7 @@ statistics of the detector-variation samples (Figure~\ref{fig:wp}).
 \end{table}
 
 The cross-section term is the model dependence of the background and falls with the purity; the model
-dependence of the efficiency stays below $6\%$. In the combined configuration the signal region of the
+dependence of the efficiency within the GENIE universes stays below $6\%$. In the combined configuration the signal region of the
 LLR-and-geometry selection holds $738$ predicted events at full exposure, $378$ of them signal; the largest backgrounds are
 single-pion events ($15\%$ of the sample) and three or more charged pions ($13\%$). Of the selected
 events $14\%$ lie in the blind single-pion signal region (D7) and $12\%$ in the opened multi-$\pi$
@@ -782,9 +782,10 @@ simulation statistics), built from the ingredients of the extraction, the predic
 which removes one degree of freedom: empty bins are removed, the last remaining bin is dropped and $\chi^2$ is
 solved by least squares over the others. The event score gives $\chi^2=6.5/11$, the summed $P(\pi)$ $2.0/7$, the track $P(\mu)$ and
 $P(\pi)$ $4.2/9$ each and the MCS momentum $6.2/8$, against $98.5$, $23.6$, $48.1$, $40.4$ and $65.2$ with statistics
-alone in the same, coarser bins (Figure~\ref{fig:crscore}). The LLR distribution of long protons remains incompatible
-with the data, $20.8/9$ ($p=0.014$); the detector term alone brings it from $398$ to $36$. All tested observables are
-thus compatible with the prediction within the systematic covariance except the LLR distribution of long protons.
+alone in the same, coarser bins (Figure~\ref{fig:crscore}). The LLR score of the pool tracks remains incompatible
+with the data, $20.8/9$ ($p=0.014$), at its proton end, where the long protons sit; the detector term alone brings it
+from $398$ to $36$. All tested observables are thus compatible with the prediction within the systematic covariance
+except the LLR score.
 
 \begin{figure}[tbp]
   \centering
@@ -889,8 +890,8 @@ efficiency effect as it is.
 \end{figure}
 
 \paragraph{Selection variants.} The working point was scanned again on the constrained combined total (score
-above $0.85$ to $0.96$) with the evaluation of Section~\ref{sec:constraint}, outside the framework, which gives
-$15.2\%$ at the same threshold: $0.92$ remains the minimum ($16.8\%$; Figure~\ref{fig:wp}, right), the total changes
+above $0.85$ to $0.96$) with the evaluation of Section~\ref{sec:constraint} outside the framework (the framework gives
+$15.2\%$ at the same threshold): $0.92$ remains the minimum ($16.8\%$; Figure~\ref{fig:wp}, right), the total changes
 little between $0.90$ and $0.94$, and tighter thresholds reach $58$--$70\%$
 purity at a total of $22$--$32\%$. Per horn mode the minimum lies at $0.90$ in FHC ($25.9\%$; $27.3\%$ at $0.92$,
 within $2.7$ points from $0.85$ to $0.95$) and at $0.92$ in RHC ($19.3\%$). Event-classifier features from the reconstructed showers (energy, vertex
@@ -977,7 +978,7 @@ angular variation return their own truth within $0.11\sigma$; the score-band str
 combined configuration with the constraint ($-0.47\sigma$; $0.946$ without) and the softest-pion stress model
 $0.943\pm0.012$ ($-0.32\sigma$; $0.934$ without), as for the single model. In the opened control regions, with the
 skim processed again, the event score of the two-fold classifier gives $\chi^2=7.4/11$ with the systematic covariance
-($80.8/11$ with statistics alone), the summed $P(\pi)$ $2.0/7$, and the LLR distribution of long protons
+($80.8/11$ with statistics alone), the summed $P(\pi)$ $2.0/7$, and the LLR score of the pool tracks
 $20.3/9$ ($p=0.016$), as in Section~\ref{sec:crdata}. With the recombination shape as a free strength and every other
 term in the covariance, the data call for $1.44\pm0.50$ times the simulated variation ($\chi^2$ $26.8$ without it,
 $18.7$ fitted, 8 degrees of freedom); at that size it moves the constrained combined total by $0.27$ of its total
@@ -987,10 +988,10 @@ selection of the analysis; the tables of Sections~\ref{sec:event} to~\ref{sec:cr
 replaces.
 
 \paragraph{Soft pions.} The signal efficiency rises from $4\%$ for a softest pion at $0.10$ to $0.125\GeVc$ to $14\%$
-at $0.15$ to $0.175\GeVc$ and is flat at $17$ to $21\%$ above (Figure~\ref{fig:softpion}). The 600 GENIE universes put
+at $0.15$ to $0.175\GeVc$, is $17$ to $21\%$ from there to $0.6\GeVc$ and $15\%$ above (Figure~\ref{fig:softpion}). The 600 GENIE universes put
 $30$ to $40\%$ of the signal below $0.175\GeVc$ (CV $35\%$) and move the efficiency through the spectrum by $1.2\%$
 (standard deviation; $2.0\%$ in all, $3.1\%$ for the reinteraction universes), while the softest-pion stress model
-($46\%$ below $0.175\GeVc$) moves it by $-7.4\%$, $3.8$ standard deviations. In the standalone generators $35\%$
+($46\%$ below $0.175\GeVc$) moves it by $-7.4\%$, $3.8$ times the standard deviation of all universes. In the standalone generators $35\%$
 (NuWro), $37\%$ (GENIE), $44\%$ (NEUT) and $52\%$ (GiBUU) of the signal lie below $0.175\GeVc$; reweighting the signal
 by the spectrum of each over that of GENIE shifts the efficiency by $+1.8$, $-4.4$ and $-8.3\%$. The stress model lies
 inside the range of the generators and outside the covariance. Restricting the signal to pions above $0.175\GeVc$ does
@@ -1130,10 +1131,10 @@ single-pion differential results) on the pseudo-data of the one-bin total (Table
 Figure~\ref{fig:varres}); the bins are those of Table~\ref{tab:varbins}. In the nominal pseudo-data realisation every
 extraction is compatible with its truth smeared by $A_C$, the regularisation matrix of the unfolding, applied to every
 prediction compared with an unfolded result: the $\chi^2$ with the total covariance is at most $4.1$ for 7 bins
-(combined) and $4.6/7$ in a single horn mode; closure in ensembles per variable is not yet tested. The constraint is essential for the differential results: without it the per-bin uncertainty is
+(combined) and $4.6/7$ in a single horn mode; closure in ensembles per variable is not yet tested. The constraint sets the precision of the differential results: without it the per-bin uncertainty is
 $40$ to $185\%$ in the combined configuration, with it $15$ to $58\%$, the edge bins with the lowest efficiency or the
 largest migration being the least precise. The bin-averaged uncertainty is $21$ to $39\%$; the integral over the
-bins, with the full covariance, carries $15.1$ to $17.8\%$ (data statistics $8.9$ to $9.9\%$), as the one-bin total
+bins, with the full covariance, carries $15.1$ to $17.8\%$ (data statistics $9.0$ to $9.9\%$), as the one-bin total
 ($16.5\%$, $8.9\%$), and lies $2$ to $12\%$ below it, the effect of the $A_C$ smearing of the regularised unfolding on
 the integral; the one-bin total remains the normalisation result. The soft-pion efficiency term
 (Section~\ref{sec:twofold}, $4$ to $12\%$ per bin, $8.3\%$ on the integral) is not included in Table~\ref{tab:varres}. For $N_p$ a plain inversion (Wiener filter off) gives
@@ -1235,9 +1236,9 @@ three-pion-like events are therefore the control sample of Section~\ref{sec:cons
         variant improves it beyond the statistics of the detector-variation samples, and the selection is
         kept.
   \item Validation through the framework: ensembles of pseudo-experiments, alternative-model and stress-model
-        ensembles (Section~\ref{sec:crdata}).
+        ensembles (Sections~\ref{sec:crdata} and~\ref{sec:twofold}).
   \item The constrained data-statistics term is the framework's, conservative against the ensembles; the LLR
-        distribution of long protons calls for the recombination variation at $1.4$ times its size, which moves no
+        score of the pool tracks calls for the recombination variation at $1.4$ times its size, which moves no
         result by more than $0.12$ of its uncertainty beyond the detector term (Section~\ref{sec:twofold}).
   \item The softest-pion spectrum is not covered by the interaction-model covariance: a soft-pion efficiency term,
         the envelope of the standalone generators ($8.3\%$ combined), is added; the migration across the $0.10\GeVc$
