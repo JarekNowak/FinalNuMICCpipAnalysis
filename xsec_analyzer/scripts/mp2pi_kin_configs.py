@@ -14,7 +14,10 @@ Per variable v:
                                           universes of slurm/slurm_univmake_mp2pi.sbatch with MP2PI_SUFFIX=_kin_fluxw
                                           and MP2PI_OUTTAG=_<v>
 
-    python3 scripts/mp2pi_kin_configs.py <mp2pi_kinematics.json> [variables]
+    python3 scripts/mp2pi_kin_configs.py <mp2pi_kinematics.json> [variables] [--prod 2f]
+        (--prod P: extraction configs mp2pi_xsec_config_numi_kinP_<v>_<cfg>[_constr].txt on the production of
+        /data/uboone/processed/mp2pi_P, universes mp2pi_<CFG>_total_P_fluxw_<v>_univmake.root; v = total uses the bin
+        and slice configs of the one-bin total, copied to mp2pi_kin_total_{bin,slice}_config.txt, with Wiener-SVD off)
 """
 import json, os, sys
 
@@ -45,6 +48,26 @@ def cut(br, lo, hi, first, last, reco):
     return ' && '.join(c)
 
 
+PROD = sys.argv[sys.argv.index('--prod') + 1] if '--prod' in sys.argv else ''
+
+
+def xsec_configs(v, n):
+    pk = PROD or 'kin'
+    for cfg in TAG:
+        for mode in ('', '_constr'):
+            lines = [f'# Two-pion {"one-bin total" if v == "total" else "differential measurement, variable " + v} ({cfg}), '
+                     f'{n} bins; production {pk} (MCS-calibrated classifier inputs' + (', two-fold event classifier' if PROD == '2f' else '')
+                     + '), detector variations fractional and weighted to the current flux' + ('; with the sideband constraint' if mode else '') + '.',
+                     f'UnivFile /data/uboone/processed/mp2pi_{TAG[cfg]}_total_{pk}_fluxw_{v}_univmake.root',
+                     'SystFile configs/ccpi_systcalc_numi_dvfrac.conf',
+                     f'FPFile configs/file_properties_numi_{cfg}_mp2pi_{pk}_fluxw.txt',
+                     'Unfold WienerSVD 0' if v == 'total' else 'Unfold WienerSVD 1 second-deriv', f'Flux {FLUX[cfg]}'] + \
+                    (['Calculator Constrained'] if mode else []) + \
+                    ['Prediction uBTune "MicroBooNE Tune" univ CV', 'Prediction FakeData "Fakedata" univ FakeData']
+            name = f'mp2pi_xsec_config_numi_kin{PROD}_{v}_{cfg}{mode}.txt'
+            with open(f'{REPO}/configs/{name}', 'w') as f: f.write('\n'.join(lines) + '\n')
+
+
 def write(v, edges):
     rb, tb, title, unit, top = VAR[v]
     n = len(edges) - 1
@@ -63,22 +86,14 @@ def write(v, edges):
          ['"events"', '1', f'1 {n + 1} ' + ' '.join(str(i) for i in range(n + 1)), '0', str(n)] + \
          [f'{i} 1 {i + 1}' for i in range(n)]
     with open(f'{REPO}/configs/mp2pi_kin_{v}_slice_config.txt', 'w') as f: f.write('\n'.join(sl) + '\n')
-    for cfg in TAG:
-        for mode in ('', '_constr'):
-            lines = [f'# Two-pion differential measurement, variable {v} ({cfg}), {n} bins of scripts/mp2pi_kinematics.py; '
-                     'production with the kin_* branches (MCS-calibrated classifier inputs), detector variations fractional '
-                     'and weighted to the current flux' + ('; with the sideband constraint' if mode else '') + '.',
-                     f'UnivFile /data/uboone/processed/mp2pi_{TAG[cfg]}_total_kin_fluxw_{v}_univmake.root',
-                     'SystFile configs/ccpi_systcalc_numi_dvfrac.conf',
-                     f'FPFile configs/file_properties_numi_{cfg}_mp2pi_kin_fluxw.txt',
-                     'Unfold WienerSVD 1 second-deriv', f'Flux {FLUX[cfg]}'] + (['Calculator Constrained'] if mode else []) + \
-                    ['Prediction uBTune "MicroBooNE Tune" univ CV', 'Prediction FakeData "Fakedata" univ FakeData']
-            with open(f'{REPO}/configs/mp2pi_xsec_config_numi_kin_{v}_{cfg}{mode}.txt', 'w') as f:
-                f.write('\n'.join(lines) + '\n')
+    xsec_configs(v, n)
     print(f'{v}: {n} bins, edges {edges}')
 
 
 if __name__ == '__main__':
     res = json.load(open(sys.argv[1]))
-    for v in (sys.argv[2].split(',') if len(sys.argv) > 2 else res):
+    args = [a for a in sys.argv[2:] if not a.startswith('--') and a != PROD]
+    for v in (args[0].split(',') if args else res):
+        if v == 'total': xsec_configs('total', 1); print('total: one bin'); continue
+        if PROD: xsec_configs(v, len(res[v]['edges']) - 1); print(f'{v}: extraction configs for production {PROD}'); continue
         write(v, res[v]['edges'])

@@ -45,6 +45,7 @@ public:
   // files lacking the branch are not removed (fail-open, matching the custom
   // selection ccpi_selection.C).
   int swtrig_ = 1;
+  int event_number_ = BOGUS_INDEX;   // raw-ntuple branch evt: the key of the two-fold event classifier
 
   // Reco neutrino vertex coordinates (cm). Space charge corrections have
   // been applied for these.

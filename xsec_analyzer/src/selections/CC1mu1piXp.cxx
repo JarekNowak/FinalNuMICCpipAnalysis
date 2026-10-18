@@ -555,6 +555,15 @@ void CC1mu1piXp::define_constants() {
             + model + "\"" );
           TDirectory::TContext keep_directory;
           evt_clf_ = std::make_unique< TMVA::Experimental::RBDT >( "evt_clf", model );
+          if ( !evt_clf_model_file_odd().empty() ) {
+            const std::string model_odd = bdt_dir + "/mp_pid/" + evt_clf_model_file_odd();
+            std::ifstream test_odd( model_odd );
+            if ( !test_odd.good() ) throw std::runtime_error( "CC1mu1piXp: could not read the event classifier \""
+              + model_odd + "\"" );
+            evt_clf_odd_ = std::make_unique< TMVA::Experimental::RBDT >( "evt_clf", model_odd );
+            std::cout << "CC1mu1piXp: two-fold event classifier " << evt_clf_model_file() << " (odd events), "
+                      << evt_clf_model_file_odd() << " (even events)\n";
+          }
         }
 
 }
@@ -2774,6 +2783,7 @@ void CC1mu1piXp::define_output_branches() {
     set_branch( &evt_d6_, "evt_d6" );           set_branch( &evt_ndump_, "evt_ndump" );
     set_branch( &evt_mu_idx_, "evt_mu_idx" );   set_branch( &evt_pi0_idx_, "evt_pi0_idx" );
     set_branch( &evt_pi1_idx_, "evt_pi1_idx" ); set_branch( evt_features_, "evt_features" );
+    set_branch( &evt_number_, "evt_number" );
     set_branch( &kin_pmu_, "kin_pmu" );               set_branch( &kin_cmu_, "kin_cmu" );
     set_branch( &kin_cpi_fwd_, "kin_cpi_fwd" );       set_branch( &kin_cpi_bwd_, "kin_cpi_bwd" );
     set_branch( &kin_cpipi_, "kin_cpipi" );           set_branch( &kin_cmupi_, "kin_cmupi" );
@@ -2894,7 +2904,7 @@ void CC1mu1piXp::reset() {
   for ( auto* v : { &eshr_energy_, &eshr_dist_, &eshr_ts_, &eshr_dirx_, &eshr_diry_, &eshr_dirz_, &eshr_dedx_ } ) (*v)->clear();
   evt_pi0_mass_ = -1.f;
   evt_score_ = -1.f; evt_region_ = -1; evt_d6_ = false; evt_ndump_ = 0;
-  evt_mu_idx_ = evt_pi0_idx_ = evt_pi1_idx_ = -1; evt_features_->clear();
+  evt_mu_idx_ = evt_pi0_idx_ = evt_pi1_idx_ = -1; evt_features_->clear(); evt_number_ = -1;
   kin_pmu_ = kin_cmu_ = kin_cpi_fwd_ = kin_cpi_bwd_ = kin_cpipi_ = kin_cmupi_ = kin_ppi_lo_ = kin_ppi_hi_ = -999.f;
   kin_np_ = -1;
   kin_true_pmu_ = kin_true_cmu_ = kin_true_cpi_fwd_ = kin_true_cpi_bwd_ = kin_true_cpipi_ = kin_true_cmupi_ = -999.f;
@@ -3031,6 +3041,7 @@ void CC1mu1piXp::fill_mp_true_kinematics( const TVector3& vmu, std::vector< TVec
 }
 
 void CC1mu1piXp::classify_event( AnalysisEvent* ev, bool swtrig_ok ) {
+  evt_number_ = ev->event_number_;
   if ( !mp_pid_ || !evt_clf_ ) return;
   if ( !( ev->nslice_ == 1 && sel_nuvertex_contained_ && swtrig_ok ) ) return;
   struct Trk { int idx; double p[4]; double len; double d[3]; };
@@ -3140,7 +3151,10 @@ void CC1mu1piXp::classify_event( AnalysisEvent* ev, bool swtrig_ok ) {
     trk[pi0].p[0], trk[pi0].p[1], trk[pi0].p[2], trk[pi1].p[0], trk[pi1].p[1], trk[pi1].p[2] };
   std::vector<float> ff( f.begin(), f.end() );
   evt_features_->assign( ff.begin(), ff.end() );
-  evt_score_ = evt_clf_->Compute( ff ).at( 0 );
+  if ( evt_clf_odd_ && ev->event_number_ < 0 ) throw std::runtime_error( "CC1mu1piXp: two-fold event classifier without an "
+    "event number (branch evt)" );
+  const bool even = evt_clf_odd_ && ev->event_number_ % 2 == 0;
+  evt_score_ = ( even ? evt_clf_odd_ : evt_clf_ )->Compute( ff ).at( 0 );
   evt_mu_idx_ = trk[mu].idx; evt_pi0_idx_ = trk[pi0].idx; evt_pi1_idx_ = trk[pi1].idx;
   fill_mp_kinematics( ev, rest_npp );
   const double cos_mu_pi0 = ( trk[mu].d[0] * trk[pi0].d[0] + trk[mu].d[1] * trk[pi0].d[1] ) + trk[mu].d[2] * trk[pi0].d[2];

@@ -43,6 +43,9 @@ inline void set_event_branch_addresses(TTree& etree, AnalysisEvent& ev)
     SetBranchAddress(etree, "swtrig", &ev.swtrig_ );
   }
 
+  // Event number (every PeLEE production carries it): parity key of the two-fold two-pion event classifier
+  if ( etree.GetBranch("evt") ) SetBranchAddress(etree, "evt", &ev.event_number_ );
+
   // Topological score
   SetBranchAddress(etree, "topological_score", &ev.topological_score_ );
   SetBranchAddress(etree, "CosmicIP", &ev.cosmic_impact_parameter_ );

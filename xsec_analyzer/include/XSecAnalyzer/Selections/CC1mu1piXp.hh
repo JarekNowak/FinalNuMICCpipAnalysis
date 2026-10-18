@@ -232,6 +232,12 @@ protected:
   // trained the classifier. Used by CC1mu2piBDT, whose Selected is the signal region.
   virtual bool use_event_classifier() const { return false; }
   virtual std::string evt_clf_model_file() const { return ""; }
+  // Two-fold event classifier: when set, evt_clf_model_file() is the model trained on the even event numbers, which
+  // scores the odd ones, and evt_clf_model_file_odd() the model trained on the odd numbers, which scores the even ones
+  // (every sample, data included, so that no simulated event is scored by a model that saw it).
+  virtual std::string evt_clf_model_file_odd() const { return ""; }
+  std::unique_ptr< TMVA::Experimental::RBDT > evt_clf_odd_;
+  int evt_number_ = -1;
   virtual double evt_clf_cut() const { return 0.92; }
   void classify_event( AnalysisEvent* ev, bool swtrig_ok );
   std::unique_ptr< TMVA::Experimental::RBDT > evt_clf_;

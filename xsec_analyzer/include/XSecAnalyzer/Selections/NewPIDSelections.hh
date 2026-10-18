@@ -103,7 +103,11 @@ class CC1mu2piBDT : public CC1mu2pi {
  protected:
   bool use_event_classifier() const override { return true; }
   std::string mp_pid_model_file() const override { return "mp_pid_rbdt_unmatched_common_llronly.root"; }
-  std::string evt_clf_model_file() const override { return "evt_clf_n2_llronly_pid_rbdt.root"; }
+  // two-fold event classifier (scripts/mp_evt.py train --twofold --tag llronly2f): trained on the even / odd event numbers
+  std::string evt_clf_model_file() const override { return "evt_clf_n2_llronly2f_even_pid_rbdt.root"; }
+  std::string evt_clf_model_file_odd() const override { return "evt_clf_n2_llronly2f_odd_pid_rbdt.root"; }
+  // working point of the two-fold classifier: minimum of the expected constrained total (phase4_constraint_llronly2f_t*)
+  double evt_clf_cut() const override { return 0.90; }
 };
 
 // CC1mu2piBDT with the event-level track dump (etrk_*: the class probabilities of its particle classifier, length,

@@ -13,10 +13,10 @@ set -euo pipefail
 R="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"; cd "$R"
 set +u; source setup_xsec_analyzer.sh >/dev/null 2>&1; set -u
 export LD_LIBRARY_PATH="$R/lib:/usr/lib64/flexiblas:$(root-config --libdir):${LD_LIBRARY_PATH:-}"; export XSEC_ANALYZER_DIR="$R"
-D=/data/uboone/processed/mp2pi_kin; U=/data/uboone/processed/mp2pi_mcscal
+D="${MP2PI_DIR:-/data/uboone/processed/mp2pi_kin}"; U=/data/uboone/processed/mp2pi_mcscal; SUF="${MP2PI_SUFFIX:-_kin}"   # MP2PI_DIR, MP2PI_SUFFIX: another production (e.g. mp2pi_2f, _2f)
 
 echo "==== 1. file lists and plan $(date)"
-MP2PI_DIR=$D MP2PI_SUFFIX=_kin python3 scripts/mp2pi_setup.py
+MP2PI_DIR=$D MP2PI_SUFFIX=$SUF python3 scripts/mp2pi_setup.py
 
 echo "==== 2. plan against the calibrated one $(date)"
 diff <(sed "s#$D/#DIR/#g" $D/throw_plan.txt) <(sed "s#$U/#DIR/#g" $U/throw_plan.txt) && echo "plan identical apart from the directory"
@@ -36,8 +36,8 @@ PYEOF
 
 echo "==== 4. lists with the flux-weighted detector variations $(date)"
 for cfg in fhc5 rhcfull comb; do
-  src=configs/file_properties_numi_${cfg}_mp2pi_kin.txt; dst=configs/file_properties_numi_${cfg}_mp2pi_kin_fluxw.txt
-  { echo "# two-pion differential measurement ($cfg), production with the kin_* branches, with the detector-variation samples weighted to the new NuMI flux (scripts/detvar_fluxw.py): $(basename $src) with the detVar paths in detvar_fluxw/"
+  src=configs/file_properties_numi_${cfg}_mp2pi${SUF}.txt; dst=configs/file_properties_numi_${cfg}_mp2pi${SUF}_fluxw.txt
+  { echo "# two-pion measurement ($cfg), production $D, with the detector-variation samples weighted to the new NuMI flux (scripts/detvar_fluxw.py): $(basename $src) with the detVar paths in detvar_fluxw/"
     tail -n +2 $src | sed "s#$D/xsec-ana-detvar_#$D/detvar_fluxw/xsec-ana-detvar_#"; } > $dst
   echo "  $dst: $(grep -c "$D/detvar_fluxw/" $dst) flux-weighted detector-variation entries"
 done
