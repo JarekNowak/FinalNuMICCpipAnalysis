@@ -102,7 +102,8 @@
     limited by the saturation of the range momentum, give 2 or 3 bins. Extracted through the framework with the
     sideband constraint, the seven variables are compatible with their regularisation-smeared truths in the nominal
     pseudo-data realisation, with $15$ to $58\%$ uncertainty per bin and $15$ to $18\%$ on their integrals in the
-    combined configuration. Three or more pions are not measurable at this exposure and serve as a control
+    combined configuration; ensembles of pseudo-experiments show nominal statistical coverage per bin and close
+    within $0.43$ of the total uncertainty under two reweighted models. Three or more pions are not measurable at this exposure and serve as a control
     sample. The signal region is blind, and every result is extracted from pseudo-data.
   \end{abstract}
 \end{titlepage}
@@ -1131,7 +1132,7 @@ single-pion differential results) on the pseudo-data of the one-bin total (Table
 Figure~\ref{fig:varres}); the bins are those of Table~\ref{tab:varbins}. In the nominal pseudo-data realisation every
 extraction is compatible with its truth smeared by $A_C$, the regularisation matrix of the unfolding, applied to every
 prediction compared with an unfolded result: the $\chi^2$ with the total covariance is at most $4.1$ for 7 bins
-(combined) and $4.6/7$ in a single horn mode; closure in ensembles per variable is not yet tested. The constraint sets the precision of the differential results: without it the per-bin uncertainty is
+(combined) and $4.6/7$ in a single horn mode. The constraint sets the precision of the differential results: without it the per-bin uncertainty is
 $40$ to $185\%$ in the combined configuration, with it $15$ to $58\%$, the edge bins with the lowest efficiency or the
 largest migration being the least precise. The bin-averaged uncertainty is $21$ to $39\%$; the integral over the
 bins, with the full covariance, carries $15.1$ to $17.8\%$ (data statistics $9.0$ to $9.9\%$), as the one-bin total
@@ -1140,27 +1141,51 @@ the integral; the one-bin total remains the normalisation result. The soft-pion 
 (Section~\ref{sec:twofold}, $4$ to $12\%$ per bin, $8.3\%$ on the integral) is not included in Table~\ref{tab:varres}. For $N_p$ a plain inversion (Wiener filter off) gives
 the same integral uncertainty ($17.9\%$) and a larger one in the 0-proton bin ($86\%$ against $58\%$).
 
+\paragraph{Ensembles.} The 200 members of the one-bin ensemble (Section~\ref{sec:twofold}) were extracted for every
+variable in the combined configuration (Figure~\ref{fig:enskin}). They return their own $A_C$-smeared truth within
+$0.11$ of the total uncertainty in every bin and their integrals within $-1.1$ to $+2.4\%$. Against the expected truth,
+with the data-statistics covariance, the pulls per bin have widths $0.89$ to $1.04$ without the constraint and $0.83$ to
+$1.06$ with it, and the mean $\chi^2$ is $0.95$ to $1.00$ times the number of bins without the constraint and $0.81$ to
+$0.96$ times with it, as for the one-bin total. The closure $\chi^2$ of the framework adds the Poisson variance of the
+true count to the unfolded covariance, which already holds the data statistics, so its values are small; against its
+distribution over the members the nominal realisation has $p=0.42$ to $0.89$ for six variables and $0.03$ (without the
+constraint) and $0.05$ (with it) for $\cos\theta_{\mu\pi}$. Fifty members each from GENIE multisim universe~545 and
+from the $\Delta\to N\pi$ angular variation return their truth within $0.43$ and $0.20$ of the total uncertainty per
+bin (integrals within $9.2$ and $2.9\%$, the largest for the backward pion without the constraint). The softest-pion
+stress model moves single bins by up to $16\%$, $0.53$ of the total uncertainty and up to $2.1$ times the soft-pion
+term of the bin, and the integrals by $4$ to $13\%$ without and $4.5$ to $6.2\%$ with the constraint.
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\textwidth]{multipion/ens_kin_nominal2}
+  \caption{Ensembles of the differential extractions, combined configuration, 200 members: width of the pulls
+    against the expected truth with the data-statistics covariance per bin (top) and the closure $\chi^2$ of the
+    framework over the members, with the nominal realisation dashed (bottom), without and with the sideband
+    constraint.}
+  \label{fig:enskin}
+\end{figure}
+
 \begin{table}[H]
   \centering
   \caption{Differential extractions through the framework with the two-fold event classifier, combined configuration,
     nominal pseudo-data realisation: total uncertainty per bin (range over the bins) without and with the sideband
     constraint, the bin average (mean of the fractional bin uncertainties) and the uncertainty of the integral over the bins with its data statistics,
     from the full covariance (constrained), and the $\chi^2$ of the unfolded pseudo-data against their $A_C$-smeared truth
-    and against the tune with the total covariance (constrained), for the number of bins with its $p$-value; the Wiener
-    filter lowers the effective rank, so these $p$-values are upper bounds.}
+    and against the tune with the total covariance (constrained), for the number of bins; $p$ is the share of the 200
+    pseudo-experiments with a closure $\chi^2$ at or above the nominal one.}
   \label{tab:varres}
   \scriptsize\setlength{\tabcolsep}{2.5pt}
   \begin{tabular}{lccccccc}
     \toprule
     Variable & Bins & Per bin, none & Per bin, constr. & Bin average & Integral (data stat.) & $\chi^2$ truth ($p$) & $\chi^2$ tune \\
     \midrule
-    $p_\mu$ & 5 & $45$--$60\%$ & $17$--$32\%$ & $26.8\%$ & $15.9\%$ ($9.2\%$) & $0.21/5$ ($0.999$) & $0.57/5$ \\
-    $\cos\theta_\mu$ & 6 & $40$--$123\%$ & $17$--$54\%$ & $33.3\%$ & $15.7\%$ ($9.1\%$) & $0.79/6$ ($0.992$) & $1.43/6$ \\
-    $\cos\theta_\pi^{\rm fwd}$ & 6 & $51$--$113\%$ & $22$--$52\%$ & $34.6\%$ & $15.2\%$ ($9.0\%$) & $1.85/6$ ($0.933$) & $1.68/6$ \\
-    $\cos\theta_\pi^{\rm bwd}$ & 8 & $45$--$99\%$ & $15$--$42\%$ & $21.2\%$ & $16.3\%$ ($9.9\%$) & $0.59/8$ ($1.000$) & $1.79/8$ \\
-    $\cos\theta_{\pi\pi}$ & 8 & $43$--$66\%$ & $17$--$32\%$ & $23.5\%$ & $15.1\%$ ($9.9\%$) & $0.96/8$ ($0.998$) & $1.83/8$ \\
-    $\cos\theta_{\mu\pi}$ & 7 & $40$--$185\%$ & $18$--$45\%$ & $24.6\%$ & $16.5\%$ ($9.1\%$) & $4.08/7$ ($0.770$) & $5.30/7$ \\
-    $N_p$ & 2 & $44$--$130\%$ & $20$--$58\%$ & $39.2\%$ & $17.8\%$ ($9.9\%$) & $0.13/2$ ($0.937$) & $0.08/2$ \\
+    $p_\mu$ & 5 & $45$--$60\%$ & $17$--$32\%$ & $26.8\%$ & $15.9\%$ ($9.2\%$) & $0.21/5$ ($0.84$) & $0.57/5$ \\
+    $\cos\theta_\mu$ & 6 & $40$--$123\%$ & $17$--$54\%$ & $33.3\%$ & $15.7\%$ ($9.1\%$) & $0.79/6$ ($0.81$) & $1.43/6$ \\
+    $\cos\theta_\pi^{\rm fwd}$ & 6 & $51$--$113\%$ & $22$--$52\%$ & $34.6\%$ & $15.2\%$ ($9.0\%$) & $1.85/6$ ($0.51$) & $1.68/6$ \\
+    $\cos\theta_\pi^{\rm bwd}$ & 8 & $45$--$99\%$ & $15$--$42\%$ & $21.2\%$ & $16.3\%$ ($9.9\%$) & $0.59/8$ ($0.69$) & $1.79/8$ \\
+    $\cos\theta_{\pi\pi}$ & 8 & $43$--$66\%$ & $17$--$32\%$ & $23.5\%$ & $15.1\%$ ($9.9\%$) & $0.96/8$ ($0.82$) & $1.83/8$ \\
+    $\cos\theta_{\mu\pi}$ & 7 & $40$--$185\%$ & $18$--$45\%$ & $24.6\%$ & $16.5\%$ ($9.1\%$) & $4.08/7$ ($0.05$) & $5.30/7$ \\
+    $N_p$ & 2 & $44$--$130\%$ & $20$--$58\%$ & $39.2\%$ & $17.8\%$ ($9.9\%$) & $0.13/2$ ($0.67$) & $0.08/2$ \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -1247,10 +1272,10 @@ three-pion-like events are therefore the control sample of Section~\ref{sec:cons
   \item The overtraining of the single event classifier (about $6\%$ on the signal efficiency) is removed by training it
         in two folds by event-number parity, with the working point at $0.90$ (Section~\ref{sec:twofold}).
   \item The differential variables of Section~\ref{sec:variables} are extracted through the framework with the
-        sideband constraint and are compatible with their truth in the nominal pseudo-data realisation. Open for
-        them: ensembles and alternative-model closure per
-        variable, generator predictions, and the pion momenta; the invariant masses remain study products unless
-        they pass the $0.50$ criterion.
+        sideband constraint, are compatible with their truth in the nominal pseudo-data realisation and close in
+        nominal and alternative-model ensembles. Open for them: generator predictions, the soft-pion term per bin in
+        the covariance, and the pion momenta; the invariant masses remain study products unless they pass the $0.50$
+        criterion.
   \item Perform an independent-generator closure if a NuMI NuWro overlay can be validated (D5).
   \item Apply and validate the same sideband-constraint method in the single-pion analysis using pseudo-data.
 \end{itemize}
