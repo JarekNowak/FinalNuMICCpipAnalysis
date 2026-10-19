@@ -12,6 +12,10 @@
 # the extractions without and with the sideband constraint run with the member as pseudo-data. Output per member and
 # extraction: <ENS>/m<NNN>/<cfg><mode>.log (SYSTDUMP) and the closure sidecar; the thrown files are deleted.
 #   sbatch --array=0-99 --export=ALL,REPO=$PWD,ENS=nominal slurm/slurm_mp2pi_ens.sbatch
+# KINVARS="pmu cmu ..." (PROD=2f): the differential variables instead of the one-bin total, from the same thrown members:
+# per variable univmake with configs/mp2pi_kin_<v>_bin_config.txt, merged into a copy of mp2pi_<CFG>_total_2f_fluxw_<v>,
+# extractions mp2pi_xsec_config_numi_kin2f_<v>_<cfg>[_constr] for the configurations KINCFGS (default comb); output
+# <ENS>_kin/m<NNN>/<v>/: logs, closure sidecars and the unfolded vector with its total and data-statistics covariance.
 set -u
 REPO="${REPO:?}"; ENS="${ENS:?}"; PROD="${PROD:-mcscal}"; N=/data/uboone/processed/mp2pi_$PROD; E=$N/ens; SRC="${SRC:-$E/source}"   # SRC: other sources
 # PROD: the production (mcscal, the single-model classifier; 2f, the two-fold classifier, whose one-bin total runs through
@@ -38,7 +42,9 @@ declare -A MODE=( [nominal]=1 [alt545]=1 [altdelta]=1 [nominal2]=0 [stress_band]
 # (configs/mp2pi_total_bin_config_noband.txt, universes *_noband, xsec configs *_noband); output <ENS>_noband/.
 declare -A TAG=( [fhc5]=FHC5 [rhcfull]=RHCFULL [comb]=COMB )
 BINV="${BINV:-}"; BTAG="${BINV:+_$BINV}"; BINC="configs/mp2pi_total_bin_config${BTAG}.txt"; [ "$PROD" = 2f ] && BINC=configs/mp2pi_kin_total_bin_config.txt
-M=$SLURM_ARRAY_TASK_ID; MM=$(printf "m%03d" $M); D=$E/$ENS$BTAG/$MM; WK=$E/work/${ENS}${BTAG}_$MM
+KINVARS="${KINVARS:-}"; KTAG="${KINVARS:+_kin}"
+[ -z "$KINVARS" ] || [ "$PROD" = 2f ] || { echo "KINVARS needs PROD=2f"; exit 1; }
+M=$SLURM_ARRAY_TASK_ID; MM=$(printf "m%03d" $M); D=$E/$ENS$BTAG$KTAG/$MM; WK=$E/work/${ENS}${BTAG}${KTAG}_$MM
 cd "$REPO" || exit 1
 set +u; source ./setup_xsec_analyzer.sh >/dev/null 2>&1; set -u
 export LD_LIBRARY_PATH="$REPO/lib:/usr/lib64/flexiblas:$(root-config --libdir):${LD_LIBRARY_PATH:-}"; export XSEC_ANALYZER_DIR="$REPO"
@@ -52,10 +58,40 @@ FPC=configs/file_properties_numi_comb_mp2pi${FPTAG}.txt
 FPM="$WK/comb_fp.txt"; sed "s|^$N/xsec-ana-fakedata_|$WK/fd/xsec-ana-fakedata_|" "$FPC" > "$FPM"
 awk '$1!~/^#/ && $3=="onBNB"{print $1}' "$FPM" > "$WK/fakedata.list"
 [ "$(grep -c "^$WK/fd/" "$WK/fakedata.list")" = 8 ] || { echo "FAIL file list"; exit 1; }
-UNIV_THREADS=$SLURM_CPUS_PER_TASK bin/univmake "$WK/fakedata.list" "$BINC" "$WK/small_univmake.root" "$FPM" \
-  > "$WK/univmake.log" 2>&1
 ok=1
-for cfg in fhc5 rhcfull comb; do
+if [ -n "$KINVARS" ]; then
+  for v in $KINVARS; do
+    mkdir -p "$D/$v"
+    UNIV_THREADS=$SLURM_CPUS_PER_TASK bin/univmake "$WK/fakedata.list" configs/mp2pi_kin_${v}_bin_config.txt \
+      "$WK/small_$v.root" "$FPM" > "$WK/univmake_$v.log" 2>&1
+    for cfg in ${KINCFGS:-comb}; do
+      FP=configs/file_properties_numi_${cfg}_mp2pi${FPTAG}.txt; FPV="$WK/${cfg}_fp.txt"
+      sed "s|^$N/xsec-ana-fakedata_|$WK/fd/xsec-ana-fakedata_|" "$FP" > "$FPV"
+      UV="$WK/${cfg}_${v}_univmake.root"; cp -p /data/uboone/processed/mp2pi_${TAG[$cfg]}_total${FPTAG}_${v}_univmake.root "$UV"
+      root -l -b -q "macros/merge_univ_dirs.C(\"$WK/small_$v.root\",\"$UV\")" > "$WK/${cfg}_${v}_merge.log" 2>&1
+      grep -q "^8 per-file directories copied under 1 root" "$WK/${cfg}_${v}_merge.log" || { echo "FAIL merge $cfg $v"; ok=0; continue; }
+      for mode in "" _constr; do
+        XV="$WK/${cfg}${mode}_${v}_xsec.txt"
+        sed -e "s|^UnivFile .*|UnivFile $UV|" -e "s|^FPFile .*|FPFile $FPV|" configs/mp2pi_xsec_config_numi_kin2f_${v}_${cfg}${mode}.txt > "$XV"
+        command rm -f -- "$WK"/unfold_output/*
+        ( cd "$WK" && "$REPO/bin/UnfolderNuMI" "$XV" configs/mp2pi_kin_${v}_slice_config.txt "$D/$v/xsec_${cfg}${mode}.root" ) \
+          > "$D/$v/${cfg}${mode}.log" 2>&1
+        rc=$?
+        for t in vec_table_unfolded_signal mat_table_cov_total mat_table_cov_DataStats; do
+          cp -p "$WK/unfold_output/$t.txt" "$D/$v/${cfg}${mode}_$t.txt" 2>/dev/null || rc=9
+        done
+        command rm -f -- "$D/$v/xsec_${cfg}${mode}.root"
+        c=$(grep -m1 '^truth: χ²' "$D/$v/${cfg}${mode}.log")
+        [ "$rc" = 0 ] && [ -n "$c" ] || ok=0
+        echo "$v $cfg$mode rc=$rc $c"
+      done
+      command rm -f -- "$UV"
+    done
+  done
+fi
+[ -z "$KINVARS" ] && UNIV_THREADS=$SLURM_CPUS_PER_TASK bin/univmake "$WK/fakedata.list" "$BINC" "$WK/small_univmake.root" "$FPM" \
+  > "$WK/univmake.log" 2>&1
+for cfg in $([ -z "$KINVARS" ] && echo fhc5 rhcfull comb); do
   FP=configs/file_properties_numi_${cfg}_mp2pi${FPTAG}.txt; FPV="$WK/${cfg}_fp.txt"
   sed "s|^$N/xsec-ana-fakedata_|$WK/fd/xsec-ana-fakedata_|" "$FP" > "$FPV"
   NON=$(awk '$1!~/^#/ && $3=="onBNB"' "$FPV" | grep -c "^$WK/fd/")
