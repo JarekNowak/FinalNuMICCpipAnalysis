@@ -2,12 +2,15 @@
 \usepackage[margin=2.4cm]{geometry}
 \usepackage{amsmath,amssymb,booktabs,graphicx,hyperref,xcolor}
 \usepackage[T1]{fontenc}
+\graphicspath{{../figures/sigma0/}}
 \hypersetup{colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,
             urlcolor=blue!50!black}
 \newcommand{\Szero}{\ensuremath{\Sigma^{0}}}
 \newcommand{\Lam}{\ensuremath{\Lambda}}
 \newcommand{\uboone}{MicroBooNE}
 \newcommand{\numubar}{\ensuremath{\bar{\nu}_\mu}}
+\newcommand{\muUL}{\ensuremath{\mu_{\mathrm{UL}}}}
+\emergencystretch=3em
 
 \title{\Szero\ Production in the NuMI Beam at \uboone:\\ Analysis Note}
 \author{J.~Nowak, N.~Patel}
@@ -17,914 +20,138 @@
 \maketitle
 
 \begin{abstract}
-Working note for the \uboone\ \Szero\ production analysis in the NuMI beam. The
-selection reconstructs the $\Szero \to \Lam\gamma$, $\Lam \to p\pi^-$ chain in
-$\numubar$ charged-current interactions and is finished with a cross-validated
-gradient BDT. This note records the current state, the planned port into the
-\texttt{xsec\_analyzer} framework, and the three pieces of work that follow:
-a Poisson-thrown fake-data sample, extension from RHC-only to the combined
-FHC$+$RHC exposure, and the selection work needed to lift a purity that currently
-sits near $0.4\%$. Revised 2026-10-15: the signal sample has been replaced by a
-locally produced run3b-EXT NuWro overlay, it now carries the old$\to$current NuMI
-flux weight, the BDT has been retrained on $3.4\times$ the signal statistics, and
-the disagreement between the available signal samples on the absolute \Szero\ rate
-is traced to hyperon final-state interactions (Sec.~\ref{sec:signalsample}).
+Working note for the \uboone\ search for \Szero\ production in $\numubar$
+charged-current interactions in the NuMI beam, $\Szero\to\Lam\gamma$,
+$\Lam\to p\pi^-$, with the full reverse-horn-current (RHC) exposure of
+$1.15\times10^{21}$~POT. Two selections are maintained. The main one runs on
+standard PeLEE ntuples, which carry data, beam-off (EXT) and dirt samples, and ends
+in a cross-validated gradient BDT: $S=2.11$ NuWro signal events on $B=382$
+($0.55\%$ purity). The second follows the \uboone\ \Lam\ CCQE analysis on
+HyperonProduction ntuples, fitting the \Lam\ decay vertex and testing the
+connectedness of the raw wire activity: $S=1.33$ GENIE signal events on $B=4.4$
+($23\%$ purity), with no data or dirt in that format yet. An expected-sensitivity
+calculation puts both under one signal model. Neither can observe \Szero\ at the
+predicted rate, so the result will be an upper limit. The best median expected
+90\%~CL limit is about $3\times$ the GENIE rate and $18\times$ the NuWro rate; the two
+generators differ by a factor of six, because NuWro includes hyperon final-state
+interactions. The PeLEE chain gives the better limit below a background
+systematic of about $20\%$, and the two are within $10\%$ of each other up to $30\%$.
+The background systematic of the PeLEE chain is therefore the next piece of work.
+Revised 2026-10-19: the PeLEE background samples are complete (RHC dirt, the Run~3
+overlay, EXT), the BDT is retrained with EXT, the \Lam-style chain and its EXT
+estimate are documented, and the expected sensitivity is new
+(Secs.~\ref{sec:samples}--\ref{sec:sensitivity}).
 \end{abstract}
 
 \tableofcontents
 
 % =============================================================================
-\section{Status and scope}
+\section{Status and summary}
+\label{sec:status}
 % =============================================================================
 
-The analysis measures, or more realistically sets a limit on, \Szero\ production
-in $\numubar$ charged-current interactions. The signature is
+The analysis sets a limit on \Szero\ production in $\numubar$ charged-current
+interactions. The signature is
 \begin{equation}
   \numubar + \mathrm{Ar} \to \mu^{+} + \Szero + X, \qquad
   \Szero \to \Lam\gamma, \qquad \Lam \to p\,\pi^{-},
 \end{equation}
-so the reconstructed final state is a muon, a proton, a pion and a photon.
+so the reconstructed final state is a muon, a proton, a pion and a photon of about
+$75$~MeV. All yields in this note are scaled to the full RHC data exposure,
+$1.1526\times10^{21}$~POT.
 
-The existing selection (\texttt{Sigma/pelee/SigmaSelection.C}) runs on standard
-PeLEE ntuples. Table~\ref{tab:perf} gives its performance scaled to the full RHC
-data exposure of $1.1526\times10^{21}$~POT, before and after the 2026-10-15 change
-of signal sample. Efficiency is quoted against true \Szero\ in the fiducial volume.
+Two selections exist, on two ntuple formats, and they are fully independent
+(Table~\ref{tab:chains}). The PeLEE chain (\texttt{Sigma/pelee/SigmaSelection.C},
+Sec.~\ref{sec:pelee}) is the analysis: it is the only one that can see data, EXT and
+dirt. The \Lam-style chain (\texttt{SigmaLambdaSel.C}, Sec.~\ref{sec:lambdastyle})
+needs the raw wire activity, which only the HyperonProduction (``hypana'') format
+stores, and that format exists for MC and EXT but not for data or dirt.
 
 \begin{table}[h]\centering
-\caption{Selection performance, RHC only. Both rows use the same code and the same
-background; only the signal sample and the BDT training differ.}
-\label{tab:perf}
-\begin{tabular}{lrrrrrr}
+\caption{The two selections at their operating points. GENIE yields use the
+plain-overlay normalisation for both chains (Sec.~\ref{sec:rate}). Efficiencies are
+quoted against each chain's own truth definition and are not comparable across
+columns; the signal yields under one model are. $\muUL$ is the median expected 90\%~CL
+limit on the rate in units of the model (Sec.~\ref{sec:sensitivity}).}
+\label{tab:chains}
+\small
+\begin{tabular}{lll}
 \toprule
-Stage & Raw signal & Eff.\ [\%] & $S$ & $B$ & Purity [\%] & $S/\sqrt{S+B}$ \\
+ & PeLEE BDT & \Lam-style \\
 \midrule
-\multicolumn{7}{l}{\emph{Retired Run 1-EXT sample, previous BDT ($\mathrm{BDTG}>0.562$)}}\\
-Preselection (NTracksCut) &  3226 & 50.1 & 10.883 & 20618 & 0.053 & 0.0758 \\
-BDTG                      &  1245 & 19.3 &  4.200 &   778 & 0.537 & 0.1502 \\
-\midrule
-\multicolumn{7}{l}{\emph{run3b sample, flux-weighted, retrained BDT ($\mathrm{BDTG}>0.616$)}}\\
-Preselection (NTracksCut) & 10931 & 50.8 &  6.370 & 20614 & 0.031 & 0.0444 \\
-BDTG                      &  4904 & 22.8 &  2.850 &   750 & 0.379 & 0.1039 \\
+ntuple format & PeLEE & HyperonProduction \\
+data, EXT, dirt & all three & EXT only (factorised) \\
+final discriminant & BDTG $>0.759$ & island test on $\geq2$ planes \\
+$S$, NuWro (with hyperon FSI) & $2.11$ & $0.142$ \\
+$S$, GENIE (no hyperon FSI) & $13.1$ & $1.01$ \\
+$B$ & $382$ & $4.40$ \\
+purity, NuWro / GENIE & $0.55\%$ / $3.3\%$ & $3.1\%$ / $19\%$ \\
+$\muUL$ at $f=15\%$, NuWro / GENIE & $48$ / $7.9$ (re-optimised $31$ / $5.0$) & $38$ / $5.4$ \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\paragraph{Reading the table.} Two changes separate these rows from the
-$650/502$-event numbers quoted in earlier versions of this note. The proton and
-pion \emph{requirements} were made optional and are off by default -- measured on
-this chain they remove more signal than background ($-31.6\%/-18.3\%$ and
-$-52.9\%/-43.5\%$) and halve the figure of merit ($0.0730 \to 0.0346$) -- which
-roughly tripled the preselection efficiency. And the signal sample was replaced
-(Sec.~\ref{sec:signalsample}).
-
-$S$ falls by $1.7\times$ between the two halves of the table while $B$ is unchanged,
-and that is normalisation alone: $\times0.677$ for the NuMI flux weight and
-$\times0.864$ for the lower \Szero\ rate of the new production. The selection did
-not get worse -- efficiency is unchanged at preselection and better at the operating
-point. Purity therefore falls for the same reason, and the honest statement is that
-the \emph{previous} purity was inflated by a signal normalisation now known to be
-too high.
-
-\noindent Efficiency is respectable; purity is not. At $0.379\%$ there are
-$\sim\!750$ background events under $\sim\!2.9$ signal events at full RHC POT.
-\textbf{Improving the selection is therefore the priority}, ahead of any
-normalisation or extraction work: at this purity no downstream treatment can rescue
-the measurement.
-
-\paragraph{What this analysis produces.} Not a differential cross section. At
-$0.1\%$ purity and $12\%$ efficiency the deliverable is a cross-section
-\emph{upper limit}. This matters for the framework port (Sec.~\ref{sec:port}),
-because \texttt{xsec\_analyzer} is built end-to-end for differential extraction and
-contains no limit machinery.
-
-% =============================================================================
-\section{Framework port}
-\label{sec:port}
-% =============================================================================
-
-The selection is being ported into \texttt{xsec\_analyzer} as a
-\texttt{SelectionBase} subclass, alongside the CC$1\mu1\pi$ selections. The port
-buys the framework's systematic machinery -- flux (PPFX multisims),
-cross-section (GENIE multisims and unisims), detector variations, hadron
-reinteraction -- which is exactly the covariance a limit needs for its background
-prediction, and which would otherwise have to be built from scratch.
-
-\paragraph{What is ported.} Selection, cut flow, truth categorisation, reco and
-true observables, and the systematic universes at a \emph{single} analysis bin.
-
-\paragraph{What is not.} Limit setting, which stays in \texttt{CrossSection.C}
-reading the framework covariance. An unfolded \Szero\ spectrum would be
-meaningless at this purity, so no multi-bin scheme is planned.
-
-\paragraph{Status, 2026-10-15: not started.} No \texttt{Sigma0} class exists in
-\texttt{src/selections}, there is no registration branch in
-\texttt{SelectionFactory.cxx}, and no weights have been copied into
-\texttt{booster\_decision\_tree/}. Of the nine branches below only
-\texttt{trk\_pid\_chipi\_v} has since been bound, and that was for the
-CC$1\mu1\pi$ NewPID work rather than for this.
-
-\paragraph{Framework gaps.} Three, all small. Nine branches the selection uses are
-present in the ntuples but unbound in \texttt{Branches.hh}
-(\texttt{trk\_pid\_chipi\_v}, \texttt{shr\_energy\_y\_v},
-\texttt{shr\_p\{x,y,z\}\_v}, \texttt{pi0\_energy\{1,2\}\_Y},
-\texttt{pi0\_gammadot}, \texttt{shr\_moliere\_avg\_v}); the fiducial volume is
-looser than the CC$\pi$ one and must be set per selection rather than inherited;
-and the factory needs a registration branch. Details in
-\texttt{SIGMA0\_FRAMEWORK\_PLAN.md}.
-
-% =============================================================================
-\section{Selection}
-% =============================================================================
-
-\subsection{Signal definition}
-$\texttt{nu\_pdg} = -14$, $\texttt{ccnc} = 0$, a \Szero\ (PDG 3212) in the
-final-state list \texttt{mc\_pdg}, and the true vertex inside the fiducial volume.
-Photons are not stored in \texttt{mc\_pdg}, so the decay is tagged by the \Szero\
-itself rather than by its daughters.
-
-\subsection{Fiducial volume}
-$3.00 < x < 253.35$, $-112.53 < y < 114.47$, $3.1 < z < 1033.0$~cm, excluding the
-dead region $675.1 < z < 775.1$~cm. This is deliberately looser than the
-CC$1\mu1\pi$ box ($10$--$246$, $\pm101$, $10$--$986$): the signal is rare enough
-that acceptance is worth more than vertex quality.
-
-\subsection{Candidate reconstruction}
+\paragraph{What changed since the previous version (2026-10-15).}
 \begin{itemize}
-  \item \textbf{Muon}: longest track with $\texttt{trk\_score}>0.8$, start within
-        $20$~cm of the vertex, length $>10$~cm, and LLR PID $>0.7$.
-  \item \textbf{Proton and pion}: assigned jointly by the combined discriminant
-        \begin{equation}
-          D = \frac{\mathrm{LLR}}{0.591}
-              + \frac{\chi^2_p - \chi^2_\pi}{124.5},
-          \label{eq:Ddisc}
-        \end{equation}
-        with proton $=\arg\min D$ and pion $=\arg\max D$. This separates true
-        protons from true pions with AUC $0.873$, against $0.838$ for $\chi^2_p$
-        alone and $0.852$ for LLR alone. The $\chi^2$ term is dropped per track
-        when undefined ($\sim\!30\%$ of tracks).
-  \item \textbf{Photon}: the two non-track PFPs closest to the vertex; the closest
-        is taken as the \Szero\ decay photon.
+  \item \textbf{PeLEE background samples completed} (Sec.~\ref{sec:samplechanges}).
+        The dirt sample was FHC and is replaced by RHC dirt; the Run~3 overlay, $55\%$
+        of the overlay statistics, was missing; the run3b beam-off (EXT) sample is
+        added; and GENIE signal events inside the inclusive overlay are no longer
+        counted as background.
+  \item \textbf{BDT retrained} with EXT in the background tree and on $95\%$ of each
+        cross-validation fold rather than the $50\%$ TMVA uses by default
+        (Sec.~\ref{sec:bdt}). The figure of merit rises by $9.7\%$ and the background
+        at the operating point halves.
+  \item \textbf{Detector variations} measured on the PeLEE chain: $\lesssim7\%$ on
+        the background, unresolved on the signal (Sec.~\ref{sec:detvar}).
+  \item \textbf{The \Lam-style chain} is documented here for the first time
+        (Sec.~\ref{sec:lambdastyle}). Its background now rests on $7.0\times10^{21}$~POT
+        of hypana overlay, and the photon conversion gap is part of its operating point.
+  \item \textbf{EXT for the \Lam-style chain}: a hypana EXT production and a
+        factorised estimate, $0.62\pm0.27$ events (Sec.~\ref{sec:ext}).
+  \item \textbf{Expected sensitivity} for both chains under one signal model
+        (Sec.~\ref{sec:sensitivity}). This reverses the earlier conclusion, drawn
+        from purity and from $S/\sqrt{S+B}$, that the \Lam-style chain is the
+        stronger one.
 \end{itemize}
 
-\subsection{Cut chain}
-Nine cumulative stages: \texttt{AllEvents}, \texttt{FiducialV},
-\texttt{CosmicVeto} ($\texttt{topological\_score}>0.20$), \texttt{NShowers}
-($0<n_{\mathrm{shr}}<4$), \texttt{MuonCandidate}, \texttt{ProtonCandidate},
-\texttt{PionCandidate}, \texttt{NTracksCut} ($n_{\mathrm{trk}}<5$), \texttt{BDTG}.
-
-\subsection{Derived observables}
-\Lam\ mass from $(p,\pi)$; \Szero\ mass from $(\Lam,\gamma)$ using the per-PFP
-shower energy \texttt{shr\_energy\_y\_v}; \Lam\ and photon vertex-pointing angles
-and impact parameters; \Lam\ decay distance; and a $\pi^0$ di-photon mass built
-from the framework $\pi^0$ reconstruction for background rejection.
-
-\subsection{BDT}
-\label{sec:bdt}
-Gradient BDT over 57 inputs, evaluated with two-fold cross-validation: folds are
-trained on even and odd event numbers and each is applied only to the events it did
-not train on. The cross-validation is not optional -- applying a fold to its own
-training events would inflate the ROC and the apparent significance.
-
-The input list grew from 49 with the Second-Shower-Veto block of
-Sec.~\ref{sec:glee} (unassociated-hit count and fraction, recomputed per event
-rather than taken from \texttt{slnunhits}, plus \texttt{slclustfrac},
-\texttt{secondshower\_Y\_nhit}, \texttt{secondshower\_Y\_dot} and the
-sub-cluster counts) and the shower Moli\`ere angle.
-
-\paragraph{Retrained 2026-10-15.} On the run3b sample the training tree grows from
-3226 to 10931 signal events and the discriminant improves measurably. Scores are
-cross-validated throughout, so these are out-of-sample:
-
-\begin{center}
-\begin{tabular}{lrrrr}
-\toprule
- & AUC & \multicolumn{3}{c}{$B/B_0$ at fixed signal efficiency} \\
- &     & $50\%$ & $40\%$ & $20\%$ \\
-\midrule
-retired sample, previous weights & 0.8429 & 0.0681 & 0.0414 & 0.0125 \\
-run3b sample, previous weights   & 0.8333 & 0.0688 & 0.0432 & 0.0132 \\
-run3b sample, retrained          & \textbf{0.8656} & \textbf{0.0467} & \textbf{0.0293} & \textbf{0.0084} \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\noindent At matched signal efficiency the retrained BDT rejects $\sim\!32\%$ more
-background. The operating point moves from $\mathrm{BDTG}>0.562$ to $>0.616$, where
-it keeps \emph{more} signal ($44.7\%$ of preselection against $41.4\%$) with
-\emph{less} background ($750$ against $967$). The gain folds together $3.4\times$
-the training signal and training on cosmics from the matching run period; separating
-the two would need a third training on a 3226-event subsample, which has not been
-run.
-
-\paragraph{This lever is now close to exhausted.} A learning curve on fold A, with
-the test sample held fixed, gives ROC $0.857$, $0.872$, $0.881$ for $676$, $1352$
-and $2704$ training signal events. Returns halve per doubling and the curve heads
-for $\simeq0.89$, so doubling the production again would buy $\sim\!0.005$ in AUC,
-which by the scaling above is a few percent of background. Against MC statistical
-errors of $1.5\%$ on $S$ and $1.6\%$ on $B$ at the operating point, and a $2\%$
-background systematic worth $\pm15$ events on $2.9$ signal, \textbf{the analysis is
-now systematics-limited rather than signal-statistics-limited}. That is a change
-from every earlier version of this note.
+\paragraph{What this analysis produces.} Not a differential cross section and not
+an observation. The best median discovery significance at the predicted rate is
+$0.6\sigma$ (GENIE) and $0.1\sigma$ (NuWro), so the deliverable is a cross-section
+\emph{upper limit}. The PeLEE ntuples carry the multisim weights the background
+covariance needs (\texttt{weightsGenie}, \texttt{weightsPPFX},
+\texttt{weightsReint}), so this no longer depends on the framework port
+(Sec.~\ref{sec:port}).
 
 % =============================================================================
-\section{Why the purity is low, and what to do about it}
-\label{sec:purity}
+\section{Samples and normalisation}
+\label{sec:samples}
 % =============================================================================
-
-This is the priority. Two diagnostics point at the same place.
-
-\paragraph{The surviving background is $\pi^0$ events.}
-\begin{table}[h]\centering
-\caption{Surviving background by interaction mode. Measured at the looser operating
-point in use when this was written, so the absolute yields are not those of
-Table~\ref{tab:perf}; the fractions are what carry over, and the background itself
-is unchanged by the 2026-10-15 signal replacement.}
-\begin{tabular}{lrr}
-\toprule
-Mode & Scaled yield & \% of background \\
-\midrule
-Resonant (RES)       & 1381.8 & 52.3 \\
-Deep inelastic (DIS) &  635.3 & 24.0 \\
-Quasi-elastic (QE)   &  363.8 & 13.8 \\
-Meson exchange (MEC) &  177.1 &  6.7 \\
-Cosmic               &   74.6 &  2.8 \\
-Coherent (COH)       &    8.9 &  0.3 \\
-\midrule
-Total                & 2643.1 & 100 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\noindent RES and DIS together are $76\%$. Both produce $\pi^0 \to \gamma\gamma$,
-which supplies a fake \Szero\ photon, plus charged hadrons that fake the proton and
-pion tracks. The background is not diffuse: it is one physics process.
-
-\paragraph{The candidate assignment is the weak link.} Truth-matched purities of
-the individual candidates in background events:
-
-\begin{center}
-\begin{tabular}{lrl}
-\toprule
-Candidate & Correct [\%] & Dominant impostor \\
-\midrule
-Muon   & 81 & --- \\
-Proton & 58 & --- \\
-Pion   & 31 & another proton (28\%) \\
-Photon & 29 & a proton (18\%) \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\noindent The muon is reliable and the proton is acceptable, but \textbf{the pion
-and photon candidates are wrong roughly $70\%$ of the time}. Since both the \Lam\
-and \Szero\ masses are built from them, the two most powerful BDT inputs are being
-computed from misidentified objects in most background events -- and, importantly,
-we did not know how often in signal events, because the PeLEE ntuples carry no
-truth for the decay products at all. That gap is what Sec.~\ref{sec:recostudy}
-closes on the hypana ntuples; the signal sample is in any case now overlaid on real
-EXT data rather than cosmic-free.
-
-\subsection{The photon candidate: what the data says}
-\label{sec:photonstudy}
-
-This was investigated first, and the result contradicts the obvious expectation, so
-it is recorded in full.
-
-\paragraph{Composition.} Truth-matching the photon candidate in background events
-(69557 preselected events) gives:
-
-\begin{center}
-\begin{tabular}{lr}
-\toprule
-Truth match & Fraction [\%] \\
-\midrule
-photon              & 30.0 \\
-unmatched (PDG 0)   & 26.7 \\
-proton              & 15.2 \\
-charged pion        & 16.3 \\
-muon                &  9.8 \\
-electron            &  1.4 \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\noindent Charged tracks reconstructed as showers -- proton, pion, muon together --
-account for $41\%$, and a further $27\%$ has no truth match at all.
-
-\paragraph{The signal photon is soft, which inverts the strategy.} The
-$\Szero$--$\Lam$ mass splitting is only $77$~MeV, so
-\begin{equation}
-  E_\gamma = \frac{m_{\Szero}^2 - m_{\Lam}^2}{2 m_{\Szero}} = 74.5~\mathrm{MeV}
-\end{equation}
-in the \Szero\ rest frame. The measured mean energy of the photon candidate in
-signal events is $70$~MeV, which matches that prediction and is good evidence that
-the selection is finding the right object. The background photon candidate averages
-$140$~MeV, because the $\pi^0$ photons that dominate it are far harder.
-
-\textbf{Requiring shower-like quality would therefore remove signal
-preferentially}, which is the opposite of what an earlier draft of this note
-proposed. A $74$~MeV photon is near the reconstruction threshold: it makes few
-hits and deposits little energy. Measured against true photons in background
-events -- which are $\pi^0$ photons and much harder -- the signal photon looks
-\emph{less} shower-like, not more.
-
-\paragraph{Cutting in the correct direction helps, but only before the BDT.}
-Scanning cuts in the soft direction at preselection:
-
-\begin{center}
-\begin{tabular}{lrrr}
-\toprule
-Cut & $\epsilon_S$ [\%] & Background rejected [\%] & FoM gain \\
-\midrule
-$E_\gamma < 120$~MeV          & 94.5 & 25.4 & $\times1.092$ \\
-$N_{\mathrm{hits}}^{Y} < 102$ & 95.7 & 21.5 & $\times1.079$ \\
-$E_\gamma \in [5,100]$~MeV    & 70.6 & 55.2 & $\times1.052$ \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\noindent But \texttt{Shower1Energy} is already one of the 49 BDT inputs, so the
-question is whether the cut adds anything the BDT has not already taken. Applied on
-top of the BDT operating point it does not:
-
-\begin{center}
-\begin{tabular}{lrrr}
-\toprule
-Selection & $S$ & $B$ & FoM \\
-\midrule
-BDT only                            & 502 & 20762 & 3.443 \\
-BDT $+$ $E_\gamma<120$~MeV          & 482 & 18663 & 3.484 \quad($\times1.012$) \\
-BDT $+$ $E_\gamma<100$~MeV          & 456 & 17706 & 3.384 \quad($\times0.983$) \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\paragraph{Conclusion.} The photon candidate cannot be improved by cutting on
-variables the BDT already has -- it is using them close to optimally. An explicit
-$\pi^0$ mass veto is likewise ineffective, rejecting only $9\%$ of background,
-because it requires \emph{two} reconstructed showers and most background events
-supply only one. Improvement must come from information the BDT does not yet have.
-
-\paragraph{The one genuinely unused handle.} \texttt{shr\_moliere\_avg\_v}, the
-shower Moli\`ere angle, is in the ntuples and in the plotting variable list but is
-\emph{not} among the 49 BDT inputs. It measures lateral spread, which is
-orthogonal to energy and hit count and is the classic discriminant between an
-electromagnetic shower and a track stub. Adding it requires re-running the
-selection to dump it into the training tree, then retraining both folds. That is
-the concrete next step for the photon candidate, and it should be judged by the
-FoM gain on top of the BDT, not at preselection.
-
-\subsection{Methods worth adopting from the single-photon analyses}
-\label{sec:glee}
-
-The gLEE single-photon search and the NC$\pi^0$ technote solve a problem very close
-to ours: isolate a single photon against a background of $\pi^0$ events in which one
-decay photon was missed. Four of their methods transfer directly.
-
-\paragraph{1. Second-Shower Veto -- look for the photon that was \emph{not}
-reconstructed.} This is the most important one. Our $\pi^0$ veto requires
-\emph{both} decay photons to be reconstructed, which is why it fires so rarely and
-rejects only $9\%$ of background (Sec.~\ref{sec:photonstudy}). gLEE instead trains a
-dedicated Second-Shower Veto (SSV) BDT on evidence that a second photon exists even
-when Pandora never built a shower from it. Their SSV inputs include:
-\begin{itemize}
-  \item the \textbf{fraction of unassociated hits in the slice} -- hits in the
-        neutrino slice belonging to no reconstructed object, which is exactly what a
-        missed low-energy photon leaves behind;
-  \item the \textbf{number of unassociated hits} (used logarithmically);
-  \item a \textbf{minimum conversion parameter}, and the implied invariant mass of
-        the candidate photon paired with any second-shower candidate.
-\end{itemize}
-Applied to \Szero, this attacks the dominant background where it actually lives: our
-RES and DIS background is $76\%$ of the total and is $\pi^0$-driven, and the failure
-mode is precisely a missed second photon. This should be tried before any further
-work on the existing $\pi^0$ mass variable.
-
-The ingredients are already in our ntuples, checked directly on the signal file:
-\texttt{slnhits} and \texttt{slnunhits} (total and unassociated hits in the slice,
-whose ratio is gLEE's fraction variable), \texttt{slclustfrac},
-\texttt{secondshower\_Y\_nhit} and \texttt{secondshower\_Y\_dot} from the PeLEE
-second-shower tagger, and \texttt{shrsubclusters0/1/2} (sub-cluster counts, which the
-CC$1\mu1\pi$ BDT already uses). None of these is currently read by
-\texttt{SigmaSelection.C}. Adding them is the same mechanical exercise as the
-Moli\`ere angle -- bind the branch, add to both variable lists, retrain -- but on
-variables with a far better physics motivation.
-
-\paragraph{2. One BDT per background class, not one BDT for everything.} gLEE runs
-\emph{five} BDTs for its $1\gamma1p$ channel -- Cosmic, $\nu_e$, BNB-Other, NC$\pi^0$
-and SSV -- each trained against one background, with a separate cut on each score.
-We use a single BDT over 57 inputs trained against all backgrounds at once. Given
-that our background decomposes cleanly (RES $52\%$, DIS $24\%$, QE $14\%$, MEC
-$7\%$, cosmic $3\%$), a dedicated $\pi^0$-rejection BDT and a separate cosmic BDT
-would let each learn its own discriminating structure instead of averaging over
-processes that look nothing alike. This is an architectural change and the single
-largest departure from the current design.
-
-\paragraph{3. Conversion distance as a first-class variable.} gLEE uses the shower
-conversion distance throughout, in both linear and logarithmic form, as one of its
-most-shown discriminants. We have \texttt{Shower1VtxDist}, which is the distance
-from the vertex to the shower start and is closely related, but it is one input among
-49 rather than a variable the selection is built around. A real photon converts a few
-centimetres from the vertex; a proton track begins at it. Worth examining separately
-and in log form, since gLEE's plots show the discrimination lives at small distances
-where a linear axis compresses it.
-
-\paragraph{4. Constrain the $\pi^0$ rate from data.} The NC$\pi^0$ technote fits the
-$\pi^0$ normalisation to data and finds GENIE over-predicts non-coherent NC$\pi^0$ by
-$25\%$: the flat fit gives $N_{\mathrm{non-coh}} = 0.75$ ($\chi^2/\mathrm{ndf} =
-1.96/4$), and gLEE separately uses a flat $0.69$ or a momentum-dependent
-$0.92 - 0.80\,|\vec{p}_{\mathrm{true}}|$ scaling. Since our background prediction is
-dominated by the same physics, an unconstrained $\pi^0$ normalisation is both a bias
-and a large systematic. A sideband constraint would reduce both. Note that gLEE
-deliberately does \emph{not} apply the scaling in its final fit, relying on the
-covariance matrix instead -- that is the more defensible route for us too, and it
-argues for making sure the $\pi^0$ normalisation uncertainty is properly represented
-in the covariance rather than for rescaling the central value.
-
-\paragraph{What does not transfer.} gLEE's signal is a single photon with no muon,
-so its $\nu_e$ and BNB-Other BDTs target backgrounds we do not have; our muon
-candidate is already $81\%$ pure and is not where we are losing. Their analysis is
-also BNB, so the flux and interaction mix differ, and any borrowed \emph{numerical}
-threshold would have to be re-derived.
-
-\subsection{Plan: dedicated BDTs in place of one large BDT}
-\label{sec:bdtsplit}
-
-\paragraph{Why the single BDT is the wrong shape.} One BDT over 57 inputs is trained
-against a background that is really four unrelated physics processes -- $\pi^0$-producing
-RES ($52\%$) and DIS ($24\%$), quasi-elastic ($14\%$) and MEC ($7\%$) events with no
-$\pi^0$ at all, and cosmics ($3\%$). A single discriminant must find one surface
-separating signal from \emph{all} of them at once, so it learns whatever those
-backgrounds have in common and averages away the structure specific to each. gLEE
-runs five, and their signal is rarer than ours.
-
-The evidence that this is the binding constraint rather than variable quality is that
-adding variables barely moves the answer: the Moli\`ere angle changed the figure of
-merit by $\times1.013$, and the ROC plateaus regardless of background size or added
-inputs. A better-shaped discriminant is a different lever from a better variable.
-
-\paragraph{Proposed structure.} Three BDTs, cut independently, replacing the single
-BDTG:
-
-\begin{center}
-\begin{tabular}{llll}
-\toprule
-BDT & Trained against & Fraction of bkg & Discriminating on \\
-\midrule
-$\pi^0$-rejection & RES $+$ DIS with a true $\pi^0$ & $\sim\!76\%$ &
-  SSV block, $\pi^0$ mass, shower shape \\
-Non-$\pi^0$ $\nu$ & QE $+$ MEC $+$ COH, no $\pi^0$ & $\sim\!21\%$ &
-  track multiplicity, PID, $\Lam$ mass \\
-Cosmic & cosmic-tagged events & $\sim\!3\%$ &
-  topological score, containment, $\Lam$ pointing \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\noindent Each is trained signal-versus-one-class, keeping the same two-fold
-cross-validation by event-number parity. The truth labels needed to define the
-classes already exist in the training dump: \texttt{Interaction},
-\texttt{HasPi0}, \texttt{CosmicMu} and \texttt{Ccnc} are written to
-\texttt{BDTInput.root} as diagnostic branches, so the split costs no new
-reconstruction, only a change to how \texttt{TrainBDT.C} builds its background tree.
-
-\paragraph{How to combine them.} Two options, and the choice should be made on
-measurement rather than taste:
-\begin{itemize}
-  \item \textbf{Independent cuts}, as gLEE does -- one threshold per score, tuned
-        jointly. Transparent, and each cut can be validated in its own sideband.
-  \item \textbf{A second-stage combination} -- feed the three scores into a small
-        final discriminant. Usually stronger, but harder to validate and easy to
-        overtrain on 650 signal events.
-\end{itemize}
-Given our signal statistics, independent cuts are the safer starting point.
-
-\paragraph{The statistics problem this creates, and the answer to it.} Splitting the
-background does not reduce the signal available for training: every signal event is
-used in every BDT. It does reduce the \emph{background} per training, but from
-$\sim\!70{,}000$ preselected events, so even the cosmic class retains thousands.
-When this was written the real constraint was the $650$ signal events, which is why
-it ended by pointing at the incoming cosmic-overlay signal samples. Those have since
-arrived: the training tree now holds $10931$ signal events
-(Sec.~\ref{sec:signalsample}), so the statistics objection to splitting has gone.
-
-\paragraph{Order of work.} Build the $\pi^0$-rejection BDT first and evaluate it
-against the current single BDT at matched signal efficiency. If it alone does not
-improve the figure of merit, the split is not the answer.
-
-\emph{Status.} The split was implemented --- \texttt{TrainBDTSplit.C} trains the
-three class BDTs by fold, \texttt{apply\_split.C} scores the tree into
-\texttt{SplitScores.root} and \texttt{eval\_split.C} compares --- and run once on
-an earlier and much smaller training tree (1004 signal events). No evaluation
-against the single BDT survives in a retained log, and the single BDT has since been
-retrained and improved substantially (AUC $0.8656$), so the comparison has to be
-remade on the current sample before the split can be called a gain or a dead end.
-Redirecting the effort ``to signal statistics instead'' is no longer the fallback it
-was: that work is done.
-
-\paragraph{Interaction with the SSV variables.} The SSV block belongs naturally in
-the $\pi^0$-rejection BDT, where its targets are. Adding it to the single BDT first
--- as has now been done -- is worth doing anyway, because it measures how much of the
-gain comes from the variables and how much from the restructuring: if the SSV
-variables give little in the single BDT but a lot in a dedicated $\pi^0$ BDT, that is
-direct evidence for the split.
-
-\subsection{Proposed selection work, in order}
-
-\begin{enumerate}
-  \item \textbf{Second-Shower Veto variables} (Sec.~\ref{sec:glee}): unassociated-hit
-        fraction and count in the slice. This targets $76\%$ of the background at its
-        actual failure mode and is expected to dominate everything else on this list.
-  \item \textbf{Split the BDT by background class} (Sec.~\ref{sec:glee}), starting
-        with a dedicated $\pi^0$-rejection BDT.
-  \item \textbf{Add \texttt{shr\_moliere\_avg\_v} to the BDT.} \emph{Done, and it
-        does almost nothing}, as its separation predicted: $503$ signal against $502$,
-        purity $0.111\%$ against $0.108\%$, figure of merit $0.0544$ against $0.0537$,
-        a gain of $\times1.013$. Recorded because it closes off the last unused
-        photon-shape variable and supports the argument of
-        Sec.~\ref{sec:bdtsplit} that variable quality is no longer the binding
-        constraint.
-  \item \textbf{Improve the pion candidate ($31\%$ correct).} The joint
-        discriminant of Eq.~\ref{eq:Ddisc} is already a real improvement over
-        $\chi^2_p$ alone, but the failure mode is specific: a second proton is
-        taken as the pion $28\%$ of the time. Adding the sign-sensitive
-        information -- track length against the proton range curve, or the
-        $\Lam$-mass constraint itself as part of the assignment rather than as a
-        consequence of it -- would target that directly.
-  \item \textbf{Reconsider the \Lam\ decay topology.} \Lam\ has $c\tau = 7.89$~cm,
-        so a genuine $\Lam \to p\pi^-$ has a displaced vertex. The selection
-        computes \texttt{LambdaDecayDist} and the pointing angle but does not cut
-        on them. A displaced-vertex requirement is close to background-free in
-        principle and is the most distinctive feature of the signal.
-\end{enumerate}
-
-\noindent Earlier versions of this note closed here by calling the analysis
-\textbf{signal-statistics limited} -- 650 raw signal events at preselection, with a
-BDT ROC that plateaued regardless of background size or added variables -- and
-naming more signal MC as the largest single lever. \textbf{That lever has now been
-pulled.} The run3b production (Sec.~\ref{sec:signalsample}) gives $10931$ raw
-signal events at preselection, and the retrained BDT rejects $32\%$ more background
-at matched signal efficiency (AUC $0.8333 \to 0.8656$). The plateau was therefore a
-property of the training sample, not of the variables.
-
-It is also close to exhausted: the learning curve of Sec.~\ref{sec:bdt} is
-flattening, doubling the sample again is worth a few percent of background, and the
-MC statistical errors at the operating point ($1.5\%$ on $S$, $1.6\%$ on $B$) sit
-far below a $2\%$ background systematic. The binding constraint has moved to
-systematics and to the candidate assignment, which is where the remaining items on
-this list point.
-
-% =============================================================================
-\section{Reconstruction study on HyperonProduction ntuples}
-\label{sec:recostudy}
-% =============================================================================
-
-\subsection{Why the PeLEE ntuples cannot answer these questions}
-
-Every question about \emph{which particle a candidate actually is} was
-unanswerable on the PeLEE ntuples. Their truth record stops at the primary
-vertex: \texttt{mc\_pdg} lists the \Szero\ and the muon, but never the
-$\Szero \to \Lam\gamma \to p\pi^-\gamma$ chain. Measured on the signal sample,
-\texttt{nproton} averages $0.06$ and is zero in $94.4\%$ of events,
-\texttt{npion} is zero in $100\%$, PDG~22 never appears, and
-\emph{zero of 17721 events} contain a backtracked $\pi^-$ PFP. The
-per-candidate truth columns are correspondingly meaningless: the pion candidate
-matches a true $\pi^-$ in $0.0\%$ of events, $60\%$ carry no truth match at all
-and $36.5\%$ leak the muon's truth. This is a property of the ntuple, not a bug
-in the selection.
-
-The HyperonProduction (``hypana'') analyser writes the full decay chain
-(\texttt{mc\_sigmazero\_lambda\_end\_*} is the true \Lam\ decay vertex,
-\texttt{mc\_decay\_*} the daughters) together with per-PFP truth matching
-(\texttt{pfp\_true\_pdg}, \texttt{pfp\_purity}, \texttt{pfp\_completeness}).
-The studies below are all performed there. \texttt{HypInput.h} adapts the hypana
-branches to the PeLEE names the selection already uses; the two formats index
-every \texttt{trk\_*}/\texttt{shr\_*}/\texttt{pfp\_*} vector per PFP with equal
-lengths, so the port is a branch remap with a double$\rightarrow$float copy
-rather than a structural rewrite.
-
-Two caveats applied when this study was made, and one of them has since gone.
-The hyperon samples are generated on a single channel with a dedicated
-normalisation, so they are valid for efficiencies and ratios; their absolute
-yields are the subject of Sec.~\ref{sec:signalsample}. The second caveat --- that
-hypana output existed only for the hyperon samples, with none for the generic RHC
-overlay, and that the overlay's parent reco2 files were not on local disk --- no
-longer holds. The RHC overlay has since been processed through reco2 and
-HyperonProduction: \texttt{lists/bkg\_overlay.list} now holds 14{,}024 hypana
-files at $6.9701\times10^{21}$~POT, $70\%$ of the full RHC exposure, so a
-hypana-only analysis with realistic background is possible. Dirt in hypana format
-is still missing. The numbers below were measured on the retired NuWro sample and
-have not been remade on the run3b one; the measurements are efficiencies and
-ratios, which the swap does not move, but the statistics behind them are now
-$3.4\times$ larger if any of them is worth sharpening.
-
-\subsection{Signal definition used in this section}
-
-\Szero, $\numubar$ charged current, $\Lam \to p\pi^-$ in truth, muon momentum
-above $0.15$~GeV/c, and \textbf{both} the reconstructed and the true neutrino
-vertex inside the fiducial volume. The branching ratio matters: only
-$\sim 60\%$ of \Szero\ events have $\Lam \to p\pi^-$ at all (PDG $63.9\%$), so
-the remaining $40\%$ contain no proton or pion to reconstruct and must not be
-counted as reconstruction failures.
-
-\paragraph{A fiducial-volume trap.} Requiring only the \emph{reconstructed}
-vertex in the FV gives badly wrong answers, because events whose reco vertex is
-in the FV but whose true vertex is not are mis-reconstructed --- the reco vertex
-belongs to a different interaction --- and they dominate the sample. With reco
-FV only the muon appears to be reconstructed $53.7\%$ of the time and all four
-particles $10.2\%$; requiring both fiducial cuts gives $91.5\%$ and $18.1\%$.
-The internal check that catches this: a ceiling \emph{below} the selection's own
-preselection efficiency ($15.6\%$) is impossible.
-
-\subsection{Per-particle reconstruction}
-
-Table~\ref{tab:recoeff} gives, for each of the four final-state particles, how
-often a truth-matched PFP exists and where Pandora places it in its hierarchy.
-Statistics: 3704 signal events, full NuWro sample.
 
 \begin{table}[h]\centering
-\begin{tabular}{lrrrr}
+\caption{Samples, scaled to $1.1526\times10^{21}$~POT. The NuWro and dirt samples are
+on the old NuMI flux and carry a per-event flux weight (mean $0.677$ for NuWro).}
+\label{tab:samples}
+\small
+\begin{tabular}{llp{0.47\textwidth}r}
 \toprule
-particle & primary (gen 2) & secondary (gen $\geq3$) & not reconstructed & total \\
+format & sample & content & scale \\
 \midrule
-$\mu^+$   & $91.5\%$ & $0.3\%$ & $8.2\%$  & $91.8\%$ \\
-$p$       & $58.1\%$ & $2.8\%$ & $39.1\%$ & $60.9\%$ \\
-$\pi^-$   & $45.7\%$ & $1.6\%$ & $52.8\%$ & $\mathbf{47.3\%}$ \\
-$\gamma$  & $59.8\%$ & $2.6\%$ & $37.6\%$ & $62.4\%$ \\
+PeLEE & \Szero\ signal, other hyperons & NuWro run3b overlay, 249\,832 events, $1.3394\times10^{24}$~POT & $8.61\times10^{-4}$ \\
+      & $\nu$ background & RHC overlay Runs 1, 2, 3, 4a, 4b, 4c, $1.5463\times10^{22}$~POT & $0.0745$ \\
+      & dirt & RHC Runs 1, 2b, 3b, 4a, 4b, $1.7409\times10^{21}$~POT & $0.662$ \\
+      & beam-off (EXT) & run3b, $3.265\times10^{7}$ gates & $0.750$ \\
+\midrule
+hypana & \Szero\ signal (GENIE) & \texttt{sig\_genie.list}, 4851 files, $5.9770\times10^{22}$~POT & $1.93\times10^{-2}$ \\
+       & \Szero\ signal (NuWro) & the run3b production above & $8.61\times10^{-4}$ \\
+       & $\nu$ background & \texttt{bkg\_overlay.list}, 14\,164 files, $7.0488\times10^{21}$~POT & $0.1635$ \\
+       & beam-off (EXT) & 16\,570 events from 3\,349 run3b files, 162\,912 gates & $150.25$ \\
+       & dirt, data & none & \\
 \bottomrule
 \end{tabular}
-\caption{Reconstruction of the four \Szero\ final-state particles.
-The $\pi^-$ is the weak link.}
-\label{tab:recoeff}
 \end{table}
 
-Found together: $0$ of $4$ in $4.5\%$ of events, $1$ in $7.5\%$, $2$ in
-$27.2\%$, $3$ in $42.6\%$, and \textbf{all four in $18.1\%$}. Since the
-selection requires a muon, proton, pion and shower candidate, $18.1\%$ is its
-hard ceiling; it reports $15.6\%$ at the \texttt{NTracksCut} preselection only
-because it fills those slots with whatever PFP is available.
-
-\paragraph{Secondaries do not explain the loss.} The analyser originally
-discarded every PFP with generation $\neq 2$. The natural hypothesis was that
-the \Lam\ daughters, produced at a displaced vertex, were being reconstructed as
-generation-3 secondaries and thrown away. The module was changed to keep them
-(labelled by a new \texttt{pfp\_generation} branch, so
-\texttt{pfp\_generation}~$==2$ recovers the old behaviour exactly) and the
-measurement repeated: secondaries are $6.6\%$ of PFPs but recover only $2.8\%$
-for the proton and $1.6\%$ for the pion, and nothing at all for the muon and
-photon. The losses are genuine reconstruction failures.
-
-\subsection{Track/shower misclassification}
-
-In events with at least four PFPs (622 events), each truth-matched particle was
-compared against the track/shower split the selection uses
-(\texttt{pfp\_trk\_shr\_score} $> 0.5$):
-
-\begin{table}[h]\centering
-\begin{tabular}{lrrrr}
-\toprule
-particle & expected & as track & as shower & not found \\
-\midrule
-$\mu^+$  & track  & $95.7\%$          & $1.6\%$           & $2.7\%$ \\
-$p$      & track  & $70.3\%$          & $8.2\%$           & $21.5\%$ \\
-$\pi^-$  & track  & $54.2\%$          & $\mathbf{11.6\%}$ & $34.2\%$ \\
-$\gamma$ & shower & $\mathbf{15.0\%}$ & $69.5\%$          & $15.6\%$ \\
-\bottomrule
-\end{tabular}
-\caption{Classification of truth-matched particles. Bold entries are
-misclassifications that directly corrupt candidate assignment.}
-\label{tab:misclass}
-\end{table}
-
-All four particles are \emph{found} in $41.2\%$ of these events but all four are
-\emph{correctly classified} in only $26.7\%$: the hard split at $0.5$ costs
-$14.5$ percentage points, a third of otherwise-perfect events. Two consequences
-matter. Photons pass as tracks $15\%$ of the time and then compete for the pion
-slot --- which is the origin of the $25\%$ photon contamination measured
-independently among pion candidates. And $\pi^-$ are called showers $11.6\%$ of
-the time, which removes them from the track pool entirely so they can never be
-selected.
-
-\subsection{The pion candidate, and why ranking cannot fix it}
-
-On signal events reaching the pion stage the candidate is a true $\pi^-$ only
-$34.2\%$ of the time (muon $89.5\%$, photon $77.6\%$, proton $64.5\%$), with
-contaminants $\gamma$ $25.0\%$, $p$ $16.2\%$, $\mu^+$ $10.5\%$. Two hard
-constraints make this not a ranking problem:
-
-\begin{itemize}
-  \item A true $\pi^-$ PFP exists in only $56.6\%$ of these events (track-like
-        in $52.6\%$). That is the ceiling: $43\%$ of the time there is no pion
-        to find and the selection assigns one regardless.
-  \item $76.3\%$ of events have exactly \emph{one} track-like PFP left after the
-        muon and proton are taken, so there is no choice to make. Adding
-        wiggliness and $dE/dx$ terms to the ranking changed the outcome by
-        exactly zero events across seven weightings.
-\end{itemize}
-
-Raising the pion track-score threshold lifts purity from $34.2\%$ to $41.6\%$
-but the figure of merit falls monotonically (ratio $1.000 \to 0.442$ over
-$0.50 \to 0.95$), so it is not worth doing.
-
-\subsection{The \Lam\ displaced vertex is not usable}
-
-The \Lam\ displaced-vertex handle fails on physics grounds, not implementation.
-Measured with truth-matched $p$ and $\pi^-$ tracks ($n=266$):
-
-\begin{itemize}
-  \item True \Lam\ flight distance: median $1.85$~cm, mean $3.23$~cm. Not
-        $7.89$~cm --- $c\tau$ is the rest-frame value and the \Lam\ from a \Szero\
-        decay is slow ($\beta\gamma \approx 0.4$), so $\beta\gamma c\tau \approx
-        3$~cm.
-  \item Reconstructed primary-vertex resolution: median $5.54$~cm.
-  \item Correlation between reconstructed and true flight distance:
-        $r = -0.014$.
-\end{itemize}
-
-The ruler is three times longer than the quantity being measured. Three
-estimators were compared against the true decay vertex --- the midpoint of the
-two track starts (what the code used), the distance of closest approach of the
-two track lines, and the best of the four endpoint pairings --- and all three
-gave a residual of $\sim 5.5$~cm, because all are limited by the same vertex
-resolution. The tracks themselves converge well (DCA median $0.33$~cm); it is
-the baseline that is poor. This closes the earlier null result
-(\texttt{LambdaDecayDist} signal $10.19$~cm against background $11.02$~cm) and
-the requirement is withdrawn from the work plan. It would still work for
-directly produced, faster \Lam, so the negative result should not be
-generalised.
-
-% =============================================================================
-\section{A global hypothesis fit}
-\label{sec:hypfit}
-% =============================================================================
-
-\subsection{Motivation}
-
-The selection currently identifies the muon, then the proton, then the pion,
-each conditioned only on what has already been taken, and never uses the fact
-that $p\pi^-$ must form a \Lam\ and $\Lam\gamma$ a \Szero. The particles are not
-independent and are being treated as if they were. The per-role PID templates in
-Sec.~\ref{sec:phase0} show why this fails specifically on the pion: the muon,
-proton and photon each have a strong, distinctive signature, while
-\textbf{the $\pi^-$ has none} --- it lies between the other three on every
-variable measured. It can only be identified by exclusion once the others are
-pinned, together with the \Lam\ mass constraint, which is precisely what a
-sequential cut chain cannot do.
-
-The proposed replacement is:
-\begin{enumerate}
-  \item \textbf{Relaxed candidate pool.} Drop \texttt{trk\_score} $>0.5$ as an
-        eligibility gate; every PFP is eligible for every role and the score
-        becomes a likelihood term. This recovers the $11.6\%$ of $\pi^-$ called
-        showers and stops photons monopolising the pion slot.
-  \item \textbf{Enumerate assignments} of four roles to $N$ PFPs, $P(N,4)$.
-        Computationally free: $N=4 \to 24$, $N=6 \to 360$, $N=8 \to 1680$.
-  \item \textbf{Score each hypothesis} with a combined $-2\ln L$ built from the
-        two mass constraints, per-role PID templates, muon-at-vertex, the
-        $p$--$\pi$ DCA, a length-ordering prior and a soft-photon prior.
-  \item \textbf{Partial hypotheses} for the $29.1\%$ of signal with three PFPs,
-        where the dominant topology is $2$ tracks $+$ $1$ shower ($51.9\%$),
-        i.e.\ one hadron missing with the photon still present.
-\end{enumerate}
-
-The headroom is specific: all four particles are found in $41.2\%$ of
-$N\geq4$ events but correctly classified in $26.7\%$, so perfect assignment
-given what is found is worth a factor $1.54$, before any gain from the enlarged
-pool or from partial hypotheses.
-
-\subsection{Phase 0: measured ingredients}
-\label{sec:phase0}
-
-Everything the fit is parameterised by has been measured on truth-matched PFPs
-and recorded in \texttt{HypFitParams.h} (700 files, 1323 signal events).
-
-\begin{table}[h]\centering
-\begin{tabular}{lrrr}
-\toprule
-constraint & $n$ & Gaussian centre & $\sigma$ \\
-\midrule
-$m(p,\pi)$ vs \Lam\ ($1.11568$)      & 397 & $1.1234$ & $27.2$~MeV \\
-$m(\Lam,\gamma)$ vs \Szero\ ($1.19264$) & 243 & $1.1812$ & $45.4$~MeV \\
-\bottomrule
-\end{tabular}
-\caption{Mass constraints from correctly assigned candidates. The \Szero\ term
-is $\sim1.7\times$ wider, as expected from the soft photon.}
-\label{tab:massres}
-\end{table}
-
-The reconstruction is biased by $+7.7$~MeV on the \Lam\ and $-11.4$~MeV on the
-\Szero, which is $28\%$ and $25\%$ of the respective widths. \textbf{The $\chi^2$
-must therefore be centred on the measured means, not the PDG masses}, or every
-hypothesis carries a built-in offset. Both biases have identifiable causes: the
-pion momentum is taken from range under the \emph{muon} hypothesis, and the
-photon energy is under-measured (reco $0.0792$ vs true $0.0861$~GeV).
-
-Remaining ingredients:
-\begin{itemize}
-  \item $p$--$\pi$ distance of closest approach: median $0.35$~cm, $16$--$84\%$
-        range $0.08$--$1.36$~cm. Strongly peaked and one of the most powerful
-        terms available --- and note that it works precisely where the \Lam\
-        decay \emph{distance} fails.
-  \item The muon is the longest of the three tracks $92.1\%$ of the time: a soft
-        prior worth $\ln(0.921/0.079) = 2.46$ in log-likelihood, not a cut.
-  \item $98.9\%$ of PFPs carry \emph{both} a track fit and a shower fit, so the
-        relaxed pool requires no re-reconstruction --- only a change of
-        eligibility rule.
-\end{itemize}
-
-\begin{table}[h]\centering\small
-\begin{tabular}{lrrrr}
-\toprule
-variable & $\mu^+$ & $p$ & $\pi^-$ & $\gamma$ \\
-\midrule
-\texttt{trk\_shr\_score}    & $1.00$  & $0.90$  & $0.80$  & $\mathbf{0.11}$ \\
-\texttt{trk\_llrpid}        & $\mathbf{0.96}$ & $-0.29$ & $0.14$ & $0.56$ \\
-\texttt{trk\_pid\_chipr}    & $180$   & $\mathbf{16.4}$ & $96$ & $192$ \\
-\texttt{three\_plane\_dedx} & $2.47$  & $\mathbf{10.3}$ & $7.52$ & $3.30$ \\
-\texttt{rms\_deflection}    & $0.01$  & $0.01$  & $0.01$  & $\mathbf{0.08}$ \\
-\texttt{moliere\_avg}       & $1.78$  & $6.18$  & $8.95$  & $\mathbf{13.3}$ \\
-\texttt{trk\_length}        & $\mathbf{139}$ & $12.8$ & $10.8$ & $14.2$ \\
-\bottomrule
-\end{tabular}
-\caption{Per-role PID templates, medians on truth-matched PFPs
-($n = 1213/808/650/814$). The muon, proton and photon each have a distinctive
-signature; the $\pi^-$ has none.}
-\label{tab:templates}
-\end{table}
-
-\subsection{The mass-sculpting risk}
-
-Selecting the combination that best fits $m_\Lam$ will sculpt a \Lam-like peak
-out of pure combinatorics in background events, manufacturing the signal being
-searched for. This is the standard failure mode of combinatoric selection and it
-is the main risk in the whole scheme.
-
-\textbf{Decision: the \Lam\ and \Szero\ invariant masses are used for assignment
-only and are kept out of the BDT input list.} The best-hypothesis score and the
-margin to the second-best hypothesis are permitted as inputs. Before the fit is
-adopted, the full machinery must be run on a background-only sample and the
-resulting mass distributions inspected for an induced peak. A secondary check is
-to assign using one constraint and test with the other.
-
-A second, smaller risk: the enlarged candidate pool raises background acceptance
-as well as signal efficiency, so the figure of merit must be re-measured end to
-end rather than judged on efficiency alone.
-
-% =============================================================================
-\section{Fake data by Poisson throw}
-\label{sec:fakedata}
-% =============================================================================
-
-\paragraph{The problem.} The current ``data'' sample is the signal file itself
-(\texttt{SigmaSelection.C} maps the same NuWro hyperon ntuple to both sample~0 and
-sample~4), scaled by POT. That is not a closure test: it contains no background, no
-statistical fluctuation, and is perfectly correlated with the signal prediction it
-would be compared against.
-
-\paragraph{The fix.} Adopt the same Poisson-throw scheme the CC$1\mu1\pi$ analysis
-uses (\texttt{macros/throw\_perrun\_*.C}). For each MC event with central-value
-weight $w_{\mathrm{cv}}$ and POT scale $\alpha = \mathrm{POT}_{\mathrm{data}} /
-\mathrm{POT}_{\mathrm{MC}}$, draw
-\begin{equation}
-  n \sim \mathrm{Poisson}\!\left( w_{\mathrm{cv}}\,\alpha \right)
-\end{equation}
-and write the event $n$ times into the fake-data tree with all weights reset to
-unity. Applied across \emph{all} samples -- signal, other hyperons, background,
-dirt -- this produces a fake dataset that
-\begin{itemize}
-  \item contains the correct background admixture, which matters enormously here
-        because background outnumbers signal by $\sim\!900{:}1$;
-  \item carries the right statistical fluctuations, so uncertainties can be
-        validated rather than assumed;
-  \item is statistically independent of the prediction, making a genuine closure
-        test possible.
-\end{itemize}
-
-\paragraph{Implementation.} A \texttt{throw\_sigma0.C} modelled on
-\texttt{throw\_perrun\_w.C}: chain the processed MC, drop the multisim weight
-branches, \texttt{CloneTree(0)} to preserve the \Szero\ observables, throw, and
-stamp \texttt{summed\_pot} with the target POT. One seed per sample so the throw is
-reproducible.
-
-\paragraph{Caveat to keep in view.} A Poisson throw from the same MC is a
-\emph{statistical} closure test, not a model test. It cannot reveal generator
-mismodelling, because the ``data'' and the prediction come from the same generator.
-A genuine model test needs a hyperon sample from a different generator -- GENIE
-against the current NuWro. One now exists in \emph{hypana} format
-(\texttt{lists/sig\_genie.list}, 4851 files, $5.9770\times10^{22}$~POT) but not in
-PeLEE format, which is what the fake-data machinery consumes; a GENIE overlay
-production is running locally and would close the gap. Until it does, the throw
-validates the statistical and normalisation chain only, and that limitation should
-be stated wherever the closure is quoted. Sec.~\ref{sec:signalsample} shows the
-two generators differ by roughly a factor of four on the \Szero\ rate, so this is
-not a small test to be skipped.
-
-% =============================================================================
-\section{The signal sample and its normalisation}
-\label{sec:signalsample}
-% =============================================================================
-
-\subsection{The run3b production}
+\subsection{The run3b NuWro signal production}
 
 The Run~1-EXT sample \texttt{prod\_hyperon\_sigmazero\_reco1\_prodnuwro\_mcc9} was
 retired on 2026-10-15. Its replacement is produced locally
@@ -947,26 +174,55 @@ raw signal at preselection & 3226 & 10931 \\
 
 \noindent The hypana \texttt{ana/MetaTree} sum and the merged PeLEE \texttt{SubRun}
 sum agree on the POT to four digits, and \texttt{check\_ext\_unique.py} confirms
-250{,}000 distinct EXT events with none used twice. The cosmics now come from the
-same run period as the overlay background, which the retired sample did not: it was
-Run~1 EXT under a Run~1$+$2$+$4 background. Selection efficiency is unchanged by the
-swap ($50.1\% \to 50.8\%$ at preselection), so the gain is purely statistical.
+250{,}000 distinct EXT events with none used twice. The cosmics come from run3b, a
+period the background overlay covers. Selection efficiency was unchanged by the swap
+($50.1\% \to 50.8\%$ at preselection).
 
 \subsection{The NuMI flux weight}
 
 NuWro's flux files were converted from the \emph{old} NuMI gsimple flux (g4numi~v6,
-bugged beamline geometry) while the overlay, the dirt and the data are on the
-current \texttt{g4\_10\_4} flux. Every NuWro event therefore carries the official
-\uboone\ ``New/Old'' ratio weight, binned in $(E_\nu, \theta_{\mathrm{beam}})$.
-Measured over the finished production the mean weight is $0.6774$, and
-\textbf{$0.6770$ for the \Szero\ CC subset} -- flat to $0.1\%$ even though those
-events sit $0.13$~GeV higher in energy than the rest. There is no hyperon-specific
-correction to make, only a wider spread (rms $0.297$ against $0.226$) costing a
-little effective statistics, $49.9$k of $58.5$k. \texttt{SigmaSelection.C} computes
-the weight on the fly from \texttt{nu\_e} and \texttt{true\_nu\_p*};
-\texttt{HypCutFlow.C} reads a per-event table.
+bugged beamline geometry), while the overlay and the data are on the current
+\texttt{g4\_10\_4} flux. Every NuWro event therefore carries the official
+\uboone\ ``New/Old'' ratio weight, binned in $(E_\nu, \theta_{\mathrm{beam}})$. The
+mean weight is $0.6774$, and $0.6770$ for the \Szero\ CC subset, flat to $0.1\%$ even
+though those events sit $0.13$~GeV higher in energy. The only cost is a wider spread
+(rms $0.297$ against $0.226$): $49.9$k effective events of $58.5$k.
+\texttt{SigmaSelection.C} computes the weight from \texttt{nu\_e} and
+\texttt{true\_nu\_p*}; the hypana macros read a per-event table. The RHC dirt turned
+out to be on the old flux too (Sec.~\ref{sec:samplechanges}) and takes the same map.
+
+\subsection{Changes to the PeLEE background samples (2026-10-17)}
+\label{sec:samplechanges}
+
+\begin{itemize}
+  \item \textbf{The dirt was FHC.} The file used as ``Run~1 dirt''
+        ($4.21\times10^{20}$~POT) has the true-$E_\nu$ spectra of the FHC dirt
+        samples ($\chi^2/\mathrm{ndf}\approx1$) and not of the RHC ones
+        ($\chi^2/\mathrm{ndf}$ 90--660): $\langle E\rangle$ for $\nu_\mu$ is $1.60$~GeV
+        against $2.15$ for RHC, and for $\numubar$ $2.28$ against $1.72$. It is replaced
+        by the RHC dirt of Runs 1, 2b, 3b, 4a and 4b ($1.7409\times10^{21}$~POT).
+  \item \textbf{The RHC dirt is on the old NuMI flux.} Its \texttt{ppfx\_cv} profile in
+        true $E_\nu$ matches the old-flux overlay in every bin ($\numubar$
+        $0.886$--$0.910$ from 0 to 5~GeV) and not the current-flux overlay
+        ($0.904$--$1.012$), so it takes the NuWro flux map.
+  \item \textbf{The Run~3 overlay was missing}: five files, $5.5185\times10^{21}$~POT,
+        $+55\%$ background statistics.
+  \item \textbf{EXT added.} Run3b beam-off, $3.265\times10^{7}$ gates, scaled by
+        $2.4477\times10^{7}$ beam-on triggers (the trigger table's $23\,534\,937$ per
+        $1.10823\times10^{21}$~POT, taken at $1.1526\times10^{21}$): $0.7497$. Data
+        files have \emph{empty} \texttt{backtracked\_*} vectors whenever there are
+        PFPs, and the guard against ragged vectors had been dropping every
+        neutrino-slice EXT event; it no longer requires them for data. The $1\,655$
+        repeated (run, subrun, event) in the file are dropped.
+  \item \textbf{Overlay signal removed from the background.} The inclusive overlay
+        contains $1\,038$ raw GENIE \Szero\ signal events in the true fiducial volume,
+        and they had been counted in $B$ while the NuWro sample models the signal. They
+        are now kept out of $B$ and counted separately as the GENIE signal prediction
+        (Sec.~\ref{sec:geniesig}).
+\end{itemize}
 
 \subsection{Why the samples disagree on the absolute \Szero\ rate}
+\label{sec:rate}
 
 On one truth definition and one fiducial volume, \Szero\ CC $\numubar$ events per
 $1.1526\times10^{21}$~POT with the true vertex in the FV:
@@ -992,14 +248,14 @@ generation-volume artefact.
 other channel off and, within it, \texttt{hyp\_lambda=0},
 \texttt{hyp\_sigma\_zero=1}, \texttt{hyp\_sigma\_minus=0}: NuWro generated the
 \Szero\ channel \emph{and nothing else}, so its quoted POT per event is the exposure
-per \Szero\ \emph{produced} -- exactly the normalisation a \Szero\ signal sample
-wants. Everything else in the sample is final-state interaction: of the $\numubar$
-CC events only $25.3\%$ still carry a \Szero, $27.9\%$ carry a \Lam\ ($\Szero N \to
-\Lam N$ in the cascade), $10\%$ a $\Sigma^{\pm}$, and $37.3\%$ no strange particle
-at all. The \uboone\ \Lam\ paper (arXiv:2212.07888) states the other half outright:
-``the NuWro predictions include the effect of final state interactions, while GENIE
-does not take them into account''. For GENIE, produced $=$ surviving, so the
-comparison that means anything is \Szero\ \emph{produced}:
+per \Szero\ \emph{produced}. Everything else in the sample is final-state
+interaction: of the $\numubar$ CC events only $25.3\%$ still carry a \Szero, $27.9\%$
+carry a \Lam\ ($\Szero N \to \Lam N$ in the cascade), $10\%$ a $\Sigma^{\pm}$, and
+$37.3\%$ no strange particle at all. The \uboone\ \Lam\ paper (arXiv:2212.07888)
+states the other half outright: ``the NuWro predictions include the effect of final
+state interactions, while GENIE does not take them into account''. For GENIE,
+produced $=$ surviving, so the comparison that means anything is \Szero\
+\emph{produced}:
 
 \begin{center}
 \begin{tabular}{lr}
@@ -1026,102 +282,851 @@ quasi-elastic instead of the hyperon channel -- gives $7.539\times10^{15}$~POT p
 event over NuWro's box. The overlay's own CC QEL rate ($20{,}277$ in-FV events in
 $7.1479\times10^{20}$~POT) converts to $8.835\times10^{15}$ on the same footing,
 using the $37.0\%$ box-mass fiducial fraction and the $0.677$ flux factor. NuWro's
-generic event rate is therefore within $17\%$ of GENIE's, which is the ordinary CCQE
-model difference, and its flux $\times$ target normalisation is sound. Referenced to
-each generator's own CCQE rate, NuWro's \Szero\ \emph{production} is $0.81\times$
-GENIE's.
+generic event rate is therefore within $17\%$ of GENIE's, the ordinary CCQE model
+difference, and its flux $\times$ target normalisation is sound. Referenced to each
+generator's own CCQE rate, NuWro's \Szero\ \emph{production} is $0.81\times$ GENIE's.
 
 \paragraph{What this means for the limit.} A \Szero\ yield taken from the NuWro
 sample is a yield \emph{with} hyperon FSI; one taken from the GENIE samples is a
-yield \emph{without} it. The difference is roughly a factor of four and it is a
-model choice, not a bug to be fixed. The measured \Lam\ cross section,
+yield \emph{without} it. The difference is roughly a factor of four and it is a model
+choice, not a bug. The measured \Lam\ cross section,
 $2.0^{+2.2}_{-1.7}\times10^{-40}$~cm$^2$/Ar, brackets both generators and cannot
-currently distinguish them. This has to be carried as a signal-model systematic on
-any limit, and it is larger than anything in the detector or flux budget. The
-residual $1.3$--$1.6\times$ among the GENIE samples themselves -- the same factor
-the \Lam\ cross-check reports as $1.61\times$ -- is unexplained and separate.
+distinguish them. Every result in this note is therefore quoted under both models.
+The residual $1.3$--$1.6\times$ among the GENIE samples themselves -- the hyperon
+sample's $1.32\times$ above, and the $1.61\times$ the \Lam\ cross-check of
+Sec.~\ref{sec:lambdastyle} finds against the published GENIE prediction -- is
+unexplained and separate. Where the two chains are compared under GENIE, both use
+the plain-overlay normalisation.
 
 % =============================================================================
-\section{Exposure: RHC now, combined later}
-\label{sec:exposure}
+\section{The PeLEE selection}
+\label{sec:pelee}
 % =============================================================================
 
-\paragraph{Now: RHC only.} Everything is scaled to the full RHC data exposure,
-$\mathrm{POT}_{\mathrm{data}} = 1.1526\times10^{21}$:
+\subsection{Signal definition and fiducial volume}
+$\texttt{nu\_pdg} = -14$, $\texttt{ccnc} = 0$, a \Szero\ (PDG 3212) in the
+final-state list \texttt{mc\_pdg}, a true muon momentum above $0.15$~GeV/$c$, no
+other meson at the primary vertex, and the true vertex inside the fiducial volume.
+The PeLEE truth record stops at the primary vertex, so the decay is tagged by the
+\Szero\ itself, and no proton, pion or photon threshold can be imposed. The NuWro
+PeLEE file has no \texttt{mc\_px}, so the muon threshold is \emph{not applied} to
+the NuWro signal; it removes $4.2\%$ of signal muons where it can be applied. The
+meson veto removes nothing from the NuWro sample.
+
+Fiducial volume: $3.00 < x < 253.35$, $-112.53 < y < 114.47$, $3.1 < z < 1033.0$~cm,
+excluding $675.1 < z < 775.1$~cm. This is looser than the CC$1\mu1\pi$ box: the
+signal is rare enough that acceptance is worth more than vertex quality.
+
+\subsection{Candidates and cut chain}
+\begin{itemize}
+  \item \textbf{Muon}: longest track with $\texttt{trk\_score}>0.8$, start within
+        $20$~cm of the vertex, length $>10$~cm, LLR PID $>0.7$.
+  \item \textbf{Proton and pion}: each non-muon track is scored for both roles with a
+        quadratic logistic model and the best ordered pair is taken
+        (\texttt{PidAssign.h}). Against HyperonProduction truth this raises the
+        pion-candidate purity from $33.5\%$ (ranking on a single discriminant) to
+        $42.5\%$; the ceiling is $51.4\%$, the fraction of selected signal that
+        contains a reconstructed true $\pi^-$ at all. The candidates are formed when
+        the tracks exist but are \emph{not required}: demanding them removed more signal
+        than background ($-31.6\%/-18.3\%$ and $-52.9\%/-43.5\%$) and halved the figure
+        of merit. Events without a pair carry sentinels and the BDT input
+        \texttt{HasPair}.
+  \item \textbf{Photon}: the non-track PFPs closest to the vertex; the closest is the
+        \Szero\ decay photon. Its energy, from the per-PFP \texttt{shr\_energy\_y\_v},
+        averages $70$~MeV in signal against the expected $74.5$~MeV.
+\end{itemize}
+Nine cumulative stages: \texttt{AllEvents}, \texttt{FiducialV},
+\texttt{CosmicVeto} ($\texttt{topological\_score}>0.20$), \texttt{NShowers}
+($0<n_{\mathrm{shr}}<4$), \texttt{MuonCandidate}, \texttt{ProtonCandidate} and
+\texttt{PionCandidate} (pass-through, see above), \texttt{NTracksCut}
+($n_{\mathrm{trk}}<5$), \texttt{BDTG}. Derived observables: \Lam\ and \Szero\
+masses, \Lam\ and photon vertex-pointing angles and impact parameters, \Lam\ decay
+distance, a $\pi^0$ di-photon mass, and the second-shower block of
+Sec.~\ref{sec:glee}.
+
+\subsection{BDT}
+\label{sec:bdt}
+Gradient BDT over 57 inputs, evaluated with two-fold cross-validation: folds are
+trained on even and odd event numbers and each is applied only to the events it did
+not train on. Every BDT number in this note is out of sample.
+
+\paragraph{Retrained 2026-10-18.} Two changes, measured separately on the same
+events with EXT in $B$:
+\begin{enumerate}
+  \item \textbf{EXT in the background tree.} The run3b beam-off events (8\,977 raw,
+        $25\%$ of the training background weight) were not in the previous training.
+  \item \textbf{Train on $95\%$ of each fold.} TMVA's default splits each fold into
+        train and test halves; the test half feeds only TMVA's overtraining printout,
+        so each fold trained on $25\%$ of all events.
+\end{enumerate}
 
 \begin{center}
-\begin{tabular}{llr}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccc}
 \toprule
-Sample & Source & Generated POT \\
+training & AUC & \multicolumn{3}{c}{$B/B_0$ at signal efficiency} & \multicolumn{2}{c}{peak $S/\sqrt{S+B}$} \\
+ & & $50\%$ & $40\%$ & $20\%$ & value & cut \\
 \midrule
-\Szero\ signal / hyperons & NuWro run3b, $\times0.677$ flux weight & $1.3394\times10^{24}$ \\
-Background   & RHC overlay, Runs 1$+$2$+$4a$+$4b$+$4c & $9.94482\times10^{21}$ \\
-Dirt         & Run~1 RHC only & $4.21274\times10^{20}$ \\
+2026-10-15 (no EXT, half fold)       & 0.8894 & 0.0412 & 0.0253 & 0.0067 & 0.0993 & 0.690 \\
+EXT, half fold (3 seeds)             & 0.8956--0.8966 & 0.0378--0.0385 & 0.0228--0.0236 & 0.0059--0.0062 & 0.1037--0.1049 & \\
+\textbf{EXT, 95\% of fold (adopted)} & \textbf{0.9000} & \textbf{0.0358} & \textbf{0.0215} & \textbf{0.0061} & \textbf{0.1077} & \textbf{0.759} \\
+EXT, 95\% of fold (2 other seeds)    & 0.9002--0.9017 & 0.0352--0.0354 & 0.0209--0.0213 & 0.0059--0.0060 & 0.1084--0.1092 & \\
+\bottomrule
+\end{tabular}}
+\end{center}
+
+\noindent EXT in the training gives $+5\%$ in the figure of merit, almost all of it
+EXT rejection: at $50\%$ signal efficiency $0.9\%$ of the EXT survives against $2.2\%$,
+with the overlay rate unchanged. Training on the full fold gives another $+4\%$, and
+every full-fold seed beats every half-fold seed; reseeding moves the figure of merit
+by only $\pm0.5\%$. That the BDT still improves when it sees more signal is the
+signal-statistics limit again. The default seed is adopted, not the best one.
+
+\subsection{Results}
+\label{sec:peleeresults}
+
+\begin{table}[h]\centering
+\caption{PeLEE chain at the operating point $\mathrm{BDTG}>0.759$. Efficiency is raw
+signal against true \Szero\ in the FV. $B$ = other hyperons $+$ overlay $+$ dirt $+$
+EXT.}
+\label{tab:perf}
+\begin{tabular}{lrrrrrr}
+\toprule
+stage & raw signal & eff.\ [\%] & $S$ & $B$ & purity [\%] & $S/\sqrt{S+B}$ \\
+\midrule
+MuonCandidate & 11107 & 51.61 & 6.469 & 28978 & 0.022 & 0.0380 \\
+NTracksCut    & 10931 & 50.79 & 6.370 & 26549 & 0.024 & 0.0391 \\
+\textbf{BDTG} & \textbf{3644} & \textbf{16.93} & \textbf{2.110} & \textbf{382.4} & \textbf{0.549} & \textbf{0.1076} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{center}
+\begin{tabular}{lrrr}
+\toprule
+$B$ at the BDTG point & previous BDT, cut 0.616 & current BDT, cut 0.759 & raw events \\
+\midrule
+other hyperons (NuWro) & 1.74 & 1.06 & 1841 \\
+overlay                & 715.7 & 367.9 & 5178 \\
+dirt                   & 13.8 & 2.26 & 7 \\
+EXT                    & 109.5 & 11.25 & 15 \\
+\midrule
+total                  & 840.7 & 382.4 & \\
+$S$                    & 2.850 & 2.110 & 3644 \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-\noindent One known imperfection remains: the dirt sample is Run-1 RHC only,
-scaled up to the full RHC exposure. The second -- a signal sample generated with no
-cosmic overlay, whose non-muon truth matching could not be trusted -- is gone: the
-run3b sample is overlaid on real run3b EXT data, the same period as the background.
-The signal POT above is the generated POT; the $0.677$ flux weight is applied
-per event, not folded into it (Sec.~\ref{sec:signalsample}).
+\noindent The previous column is the previous BDT with the completed samples, EXT
+included. At MuonCandidate EXT is $6\,844$ events against $20\,348$ from the overlay;
+after the BDT it is $3\%$ of the background. Figure~\ref{fig:bdt} shows the score.
 
-\paragraph{Later: combined FHC$+$RHC.} The signal is $\numubar$ charged-current,
-so RHC is the sensitive mode -- but FHC carries a substantial wrong-sign
-$\numubar$ component ($34.0\%$ of the FHC flux, against $53.3\%$ for RHC), and the
-FHC exposure is $8.857\times10^{20}$~POT. Folding FHC in therefore adds real signal
-rather than only background, and the CC$1\mu1\pi$ analysis already has the
-machinery: per-run POT scaling, a combined \texttt{file\_properties}, and combined
-flux normalisation.
+\begin{figure}[h]\centering
+\includegraphics[width=0.7\textwidth]{bdt_score.pdf}
+\caption{Cross-validated BDTG score at \texttt{NTracksCut}, background stacked by
+sample and the NuWro signal scaled by 100. The dashed line is the operating point.}
+\label{fig:bdt}
+\end{figure}
 
-Deferred deliberately. The combination is a normalisation exercise, and at $0.1\%$
-purity it would add background faster than signal in absolute terms. The selection
-work of Sec.~\ref{sec:purity} comes first; the exposure extension is worth doing
-once the selection is worth extending. When it happens it needs: FHC overlay
-samples processed through the same selection, an FHC hyperon signal sample (or a
-justified reuse of the RHC one, given the signal is beam-mode independent at the
-interaction level), FHC dirt, and a combined-mode flux normalisation following
-\texttt{Flux} in the CC$\pi$ xsec configs.
+\paragraph{The operating point should follow the systematic budget.} $0.759$ is the
+peak of $S/\sqrt{S+B}$. There a $2\%$ background systematic is $\pm7.6$ events against
+$2.1$ signal, and the figure of merit cannot see it. Section~\ref{sec:sensitivity}
+chooses the cut by the expected limit instead: $0.750$ at $f=0$, $0.875$ at $10\%$,
+$0.890$ at $15\%$.
+
+\subsection{GENIE signal through the same selection}
+\label{sec:geniesig}
+The overlay's own GENIE \Szero\ events (Sec.~\ref{sec:samplechanges}) are run through
+the full selection and BDT and counted apart from every sample, so the PeLEE chain
+has a GENIE signal yield under the same definition. The BDT never trains on them.
+
+\begin{center}
+\begin{tabular}{lrrrr}
+\toprule
+stage & raw & $S_{\mathrm{GENIE}}$ & efficiency [\%] & GENIE/NuWro \\
+\midrule
+AllEvents (true FV)  & 1038 & 72.56 & 100   & 5.78 \\
+MuonCandidate        &  553 & 38.67 & 53.3  & 5.98 \\
+NTracksCut           &  544 & 38.08 & 52.5  & 5.98 \\
+BDTG                 &  187 & $13.09\pm1.01$ & 18.0 & 6.20 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent The efficiencies agree: $18.0\%$ for GENIE against $16.8\%$ for NuWro
+(weighted), a ratio of $1.07\pm0.08$. The limit on the number of signal events is
+therefore model-independent to a few percent; what depends on the model is the rate
+it is compared with.
+
+\subsection{Detector variations}
+\label{sec:detvar}
+The Run~3 RHC detector-variation set re-simulates the same generated events under
+nine variations. \texttt{run\_detvar.sh} runs the selection on each file and
+\texttt{DetVar.C} compares each variation with the CV on the events they share, with
+the CV weight on both sides. The samples are on the old flux, so only the ratios are
+used.
+
+\begin{center}
+\begin{tabular}{lrr}
+\toprule
+variation & $S$ var/CV & $B$ var/CV \\
+\midrule
+LY attenuation   & $1.000\pm0.000$ & $0.997\pm0.005$ \\
+LY down          & $0.975\pm0.025$ & $0.985\pm0.006$ \\
+LY Rayleigh      & $0.980\pm0.039$ & $0.987\pm0.008$ \\
+recombination    & $1.062\pm0.088$ & $0.973\pm0.030$ \\
+SCE              & $0.921\pm0.090$ & $0.998\pm0.034$ \\
+WireMod $\theta_{XZ}$ & $0.907\pm0.076$ & $1.002\pm0.023$ \\
+WireMod $\theta_{YZ}$ & $0.840\pm0.078$ & $1.026\pm0.026$ \\
+WireMod $X$      & $0.975\pm0.075$ & $1.027\pm0.026$ \\
+WireMod $YZ$     & $0.964\pm0.095$ & $0.986\pm0.023$ \\
+\midrule
+quadrature (MC noise alone) & $21.7\%$ ($21.1\%$) & $5.2\%$ ($6.8\%$) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent No variation is resolved on either side: both quadrature sums equal their MC
+noise. The CV keeps 51 raw signal and 1\,260 raw background events at this cut, so the
+detector systematic is bounded at $\lesssim7\%$ on the background ($\pm27$ events) and is
+not measured on the signal. WireMod $\theta_{YZ}$ ($2.0\sigma$) and $\theta_{XZ}$
+($1.2\sigma$) pull the signal down, as they did at the previous operating point.
+
+% =============================================================================
+\section{What limits the PeLEE purity}
+\label{sec:purity}
+% =============================================================================
+
+The studies in this section were made on earlier versions of the chain (before the
+joint assignment, the 2026-10-18 retraining and the completed samples). The
+fractions carry over; the absolute yields do not.
+
+\paragraph{The surviving background is $\pi^0$ events.}
+\begin{table}[h]\centering
+\caption{Surviving background by interaction mode, at a looser earlier operating
+point.}
+\begin{tabular}{lrr}
+\toprule
+Mode & Scaled yield & \% of background \\
+\midrule
+Resonant (RES)       & 1381.8 & 52.3 \\
+Deep inelastic (DIS) &  635.3 & 24.0 \\
+Quasi-elastic (QE)   &  363.8 & 13.8 \\
+Meson exchange (MEC) &  177.1 &  6.7 \\
+Cosmic               &   74.6 &  2.8 \\
+Coherent (COH)       &    8.9 &  0.3 \\
+\midrule
+Total                & 2643.1 & 100 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent RES and DIS together are $76\%$. Both produce $\pi^0 \to \gamma\gamma$,
+which supplies a fake \Szero\ photon, plus charged hadrons that fake the proton and
+pion tracks. The background is not diffuse: it is one physics process.
+
+\paragraph{The candidate assignment is the weak link.} Truth-matched purities of the
+candidates in background events, before the joint assignment: muon $81\%$, proton
+$58\%$, pion $31\%$ (another proton $28\%$), photon $29\%$ (a proton $18\%$). The pion
+and photon candidates are wrong roughly $70\%$ of the time, so both masses are built
+from misidentified objects in most background events. Section~\ref{sec:recostudy}
+measures the same on signal, on the hypana ntuples.
+
+\subsection{The photon candidate}
+\label{sec:photonstudy}
+
+Truth-matching the photon candidate in background (69\,557 preselected events):
+photon $30.0\%$, unmatched $26.7\%$, charged pion $16.3\%$, proton $15.2\%$, muon
+$9.8\%$, electron $1.4\%$. Charged tracks reconstructed as showers are $41\%$.
+
+\paragraph{The signal photon is soft, which inverts the strategy.} The
+$\Szero$--$\Lam$ mass splitting is only $77$~MeV, so
+\begin{equation}
+  E_\gamma = \frac{m_{\Szero}^2 - m_{\Lam}^2}{2 m_{\Szero}} = 74.5~\mathrm{MeV}
+\end{equation}
+in the \Szero\ rest frame. The photon candidate averages $70$~MeV in signal and
+$140$~MeV in background, where $\pi^0$ photons dominate. Requiring shower-like quality
+would remove signal preferentially. Cuts in the soft direction help at preselection
+($E_\gamma<120$~MeV: $94.5\%$ of signal, $25.4\%$ of background removed, figure of
+merit $\times1.09$) but not on top of the BDT ($\times1.012$), which already uses the
+photon energy. An explicit $\pi^0$ mass veto rejects only $9\%$ of background, because
+it needs \emph{two} reconstructed showers. The shower Moli\`ere angle, the one unused
+shape variable, was added to the BDT and changed the figure of merit by $\times1.013$.
+
+\subsection{Methods taken from the single-photon analyses}
+\label{sec:glee}
+
+The gLEE single-photon search and the NC$\pi^0$ technote isolate a single photon
+against $\pi^0$ events in which one decay photon was missed, which is our problem.
+\begin{enumerate}
+  \item \textbf{Second-Shower Veto variables} -- evidence of a photon that was not
+        reconstructed: the unassociated-hit count and fraction in the slice
+        (recomputed per event), \texttt{slclustfrac}, \texttt{secondshower\_Y\_nhit},
+        \texttt{secondshower\_Y\_dot} and the sub-cluster counts. \emph{In the BDT}:
+        they are among the 57 inputs.
+  \item \textbf{One BDT per background class} ($\pi^0$, non-$\pi^0$ neutrino, cosmic)
+        instead of one BDT for everything. \texttt{TrainBDTSplit.C},
+        \texttt{apply\_split.C} and \texttt{eval\_split.C} implement it; it was run
+        once on a 1\,004-signal-event tree and has not been compared with the
+        current single BDT. A split of the training by \texttt{HasPair} was measured
+        and does not help.
+  \item \textbf{Conversion distance} as a first-class variable: realised in the
+        \Lam-style chain as the photon gap (Sec.~\ref{sec:lambdastyle}).
+  \item \textbf{Constrain the $\pi^0$ rate from data.} The NC$\pi^0$ technote finds
+        GENIE over-predicts non-coherent NC$\pi^0$ by $25\%$. Our background is the
+        same physics, so its normalisation belongs in the covariance and, with data,
+        in a sideband constraint (Sec.~\ref{sec:plan}).
+\end{enumerate}
+
+% =============================================================================
+\section{Reconstruction study on HyperonProduction ntuples}
+\label{sec:recostudy}
+% =============================================================================
+
+\subsection{Why the PeLEE ntuples cannot answer these questions}
+
+Every question about \emph{which particle a candidate actually is} is unanswerable
+on the PeLEE ntuples: \texttt{mc\_pdg} lists the \Szero\ and the muon, but never the
+$\Szero \to \Lam\gamma \to p\pi^-\gamma$ chain, and \emph{zero of 17721 signal events}
+contain a backtracked $\pi^-$ PFP. The HyperonProduction analyser writes the full
+decay chain together with per-PFP truth matching (\texttt{pfp\_true\_pdg},
+\texttt{pfp\_purity}, \texttt{pfp\_completeness}). \texttt{HypInput.h} adapts the
+hypana branches to the PeLEE names the selection uses.
+
+Three things to know about the format. It has no implicit neutrino-slice
+requirement: PeLEE events without a neutrino slice die at the fiducial cut, but
+hypana attaches a vertex to them anyway, which inflated the background $2.4\times$
+until the explicit \texttt{flash\_match\_nu\_slice\_ID}~$\geq0$ stage was added; the
+two chains then agree to $6$--$8\%$ throughout. Its \texttt{trk\_energy\_proton} is
+the proton \emph{momentum}, not the kinetic energy that the PeLEE branch of the same
+name holds; with the conversion the \Lam\ mass width falls from $23.5$ to $7.8$~MeV
+(half inter-quartile range), and the PeLEE chain was never affected. And its
+\texttt{pfp\_true\_origin} is the analyser's own enum (2 is a \Lam\ daughter), not
+\texttt{simb::Origin}. The measurements below were made on the retired NuWro
+sample; they are efficiencies and ratios, which the swap does not move.
+
+\subsection{Signal definition used in this section}
+
+\Szero, $\numubar$ charged current, $\Lam \to p\pi^-$ in truth, muon momentum above
+$0.15$~GeV/$c$, and \textbf{both} the reconstructed and the true vertex inside the
+FV. Only $\sim 60\%$ of \Szero\ events have $\Lam \to p\pi^-$ at all (PDG $63.9\%$).
+Requiring only the \emph{reconstructed} vertex in the FV gives badly wrong answers:
+events whose reco vertex is in the FV but whose true vertex is not are
+mis-reconstructed, and they dominate. With reco FV only, the muon appears to be
+reconstructed $53.7\%$ of the time and all four particles $10.2\%$; with both, $91.5\%$
+and $18.1\%$.
+
+\subsection{Per-particle reconstruction}
+
+\begin{table}[h]\centering
+\begin{tabular}{lrrrr}
+\toprule
+particle & primary (gen 2) & secondary (gen $\geq3$) & not reconstructed & total \\
+\midrule
+$\mu^+$   & $91.5\%$ & $0.3\%$ & $8.2\%$  & $91.8\%$ \\
+$p$       & $58.1\%$ & $2.8\%$ & $39.1\%$ & $60.9\%$ \\
+$\pi^-$   & $45.7\%$ & $1.6\%$ & $52.8\%$ & $\mathbf{47.3\%}$ \\
+$\gamma$  & $59.8\%$ & $2.6\%$ & $37.6\%$ & $62.4\%$ \\
+\bottomrule
+\end{tabular}
+\caption{Reconstruction of the four \Szero\ final-state particles (3704 signal
+events). The $\pi^-$ is the weak link.}
+\label{tab:recoeff}
+\end{table}
+
+All four are found together in $18.1\%$ of events, the hard ceiling for any selection
+that requires all four. Secondaries do not explain the loss: keeping generation-3
+PFPs (new \texttt{pfp\_generation} branch) recovers only $2.8\%$ for the proton and
+$1.6\%$ for the pion.
+
+\subsection{Track/shower misclassification}
+
+In events with at least four PFPs, with the selection's split
+(\texttt{pfp\_trk\_shr\_score}~$>0.5$): the muon is a track $95.7\%$ of the time,
+the proton $70.3\%$, the pion $54.2\%$ (a shower $11.6\%$), and the photon is a
+\emph{track} $15.0\%$ of the time. All four are found in $41.2\%$ of these events but
+correctly classified in only $26.7\%$. Photons passing as tracks compete for the pion
+slot, which is the origin of the $25\%$ photon contamination among pion candidates.
+
+\subsection{The pion candidate}
+
+On signal reaching the pion stage, a true $\pi^-$ PFP exists in only $56.6\%$ of
+events, and $76.3\%$ have exactly one track-like PFP left after the muon and proton
+are taken. The joint assignment of \texttt{PidAssign.h} (Sec.~\ref{sec:pelee}) is the
+improvement that was available; raising the pion track-score threshold lifts purity
+but lowers the figure of merit monotonically.
+
+\subsection{The \Lam\ flight distance from the primary vertex is not measurable}
+
+Measured with truth-matched $p$ and $\pi^-$ tracks ($n=266$): the true \Lam\ flight
+has median $1.85$~cm and mean $3.23$~cm ($\beta\gamma \approx 0.4$, so
+$\beta\gamma c\tau \approx 3$~cm), the reconstructed primary-vertex resolution is
+$5.54$~cm, and the reconstructed and true flight distances are uncorrelated
+($r=-0.014$). Three decay-vertex estimators give the same $\sim5.5$~cm residual, all
+limited by the primary vertex; the tracks themselves converge well (DCA median
+$0.33$~cm).
+
+\paragraph{What this does not rule out.} The measurement kills a cut on the distance
+between the Pandora vertex and the decay point. It does not kill the displaced
+topology: the \Lam-style chain (Sec.~\ref{sec:lambdastyle}) fits the decay vertex
+from the two tracks, requires the pair momentum to point back at the event vertex,
+and tests at wire level whether the pair is separated from the muon. That test passes
+$80\%$ of signal with $2$--$3$~cm flight and $98.6\%$ of the signal it keeps has
+flown more than $2$~cm.
+
+% =============================================================================
+\section{The \Lam-style selection}
+\label{sec:lambdastyle}
+% =============================================================================
+
+\subsection{Motivation}
+
+The \uboone\ \Lam\ CCQE analysis (Thorpe \& Nowak, Hyperon Technote v2) selects
+$\numubar$ CC \Lam\ with $91\%$ purity. At the same $6.7\%$ efficiency the earlier
+hypana BDT chain for \Szero\ had $2.8\%$. Three causes were identified: our
+preselection rejected long-flight \Lam\ (the pion score penalised tracks displaced
+from the primary vertex), there were no pair-level requirements, and the photon is
+an extra object. Reimplemented on our files (\texttt{LambdaSel.C}), their chain
+reproduces their efficiency to $0.79\times$ (our pair selector is provisional and
+their decay BDT is replaced by cuts), but the GENIE signal normalisation comes out
+$1.61\times$ theirs, which is unexplained and affects every \Szero\ yield.
+\texttt{SigmaLambdaSel.C} follows their chain.
+
+\subsection{What it does differently}
+\begin{itemize}
+  \item \textbf{Every ordered track pair is scored}, not each track separately. The
+        pair selector's only topological input is the separation of the two track
+        starts, which does not penalise a \Lam\ that flew.
+  \item \textbf{Pair precuts are a preference, not a veto}: as a veto they cost
+        $\sim20\%$ of signal at the same figure of merit.
+  \item \textbf{The decay vertex is fitted} (a V fit, which recovers $3.78$~cm for a
+        true $4.00$~cm flight), giving a decay length and the pointing angle $\alpha$
+        between the pair momentum and the vertex-to-decay direction.
+  \item \textbf{The island test is a cut}, applied last.
+\end{itemize}
+
+\subsection{The island test}
+
+A wire $\times$ time grid of the stored activity is built on each plane, clusters
+are seeded at the muon, proton and pion track starts, and the test requires the
+proton and pion clusters to merge while the muon stays separate
+(Fig.~\ref{fig:island}). The coordinate transforms were derived and validated for
+this ($\mathrm{wire} = (Ay+Bz+C)/0.3$ reproduces $98.7\%$ of the stored vertex wires
+within two wires; $\mathrm{tick} = 18.1509\,x + 818.1$). The test reads raw wire
+windows, which exist only in the hypana format.
+
+\begin{figure}[h]\centering
+\includegraphics[width=\textwidth]{island_display.pdf}
+\caption{The island test on the collection plane. Left: a GENIE signal event with
+$4.3$~cm true \Lam\ flight; the proton and pion seeds share a cluster (orange) and
+the muon has its own (blue). Right: a background event at the same stage, whose
+proton, pion and muon seeds land in one cluster.}
+\label{fig:island}
+\end{figure}
+
+\paragraph{Connectivity is tuned.} The original $3$ wires $\times$ $40$ ticks bridged
+the decay V to the muon whenever the \Lam\ flew less than $\sim3$~cm, because 40
+ticks is $2.2$~cm of drift. $2\times20$ lifts the signal pass rate:
+
+\begin{center}
+\begin{tabular}{lrrrr}
+\toprule
+true flight & 1--2 cm & 2--3 cm & 3--5 cm & 5--10 cm \\
+\midrule
+$3\times40$ (old) & $19\%$ & $45\%$ & $70\%$ & $86\%$ \\
+$2\times20$ (now) & $43\%$ & $80\%$ & $85\%$ & $91\%$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent On one plane the figure of merit is flat in the connectivity; the gain is
+from requiring two planes ($6.8\times$ background rejection against $3.7\times$).
+The tuning used the Run~3 overlay list; re-scanned with the choice made on Run~3 and
+the score taken on the independent extension, the extension's figure of merit is a
+plateau ($0.425$--$0.438$) and $2\times20$ is $0.004$ from its top. The two-plane pass
+rate is the same for both generators: $50.5\%$ of NuWro, $50\%$ of GENIE.
+
+\subsection{Operating point}
+
+\Lam\ mass within $\pm20$~MeV, decay length $>0.5$~cm, $\cos\alpha>0.95$, photon start
+$>2$~cm from the vertex, island test passed on $\geq2$ planes. GENIE signal from the
+hyperon sample, background from the full hypana overlay:
+
+\begin{table}[h]\centering
+\caption{\Lam-style cut flow. Errors are MC statistics.}
+\label{tab:lscutflow}
+\begin{tabular}{lrrrr}
+\toprule
+stage & raw signal & raw background & $S$ (GENIE) & $B$ \\
+\midrule
+AllEvents                 & 15043 & 1840942 & 290.1 & 301031 \\
+SliceID                   &  7801 &  776242 & 150.4 & 126931 \\
+MuonCandidate             &  3043 &  123000 &  58.7 &  20113 \\
+PairCandidate             &   921 &   51238 &  17.8 &   8378 \\
+\Lam\ mass $\pm20$~MeV    &   504 &   16391 &  9.72 &   2680 \\
+pointing ($\cos\alpha$, decay length) & 144 & 706 & 2.78 & 115.4 \\
+photon gap $>2$~cm        &   139 &     549 &  2.68 &   89.8 \\
+\textbf{island, $\geq2$ planes} & \textbf{69} & \textbf{23} & $\mathbf{1.33\pm0.16}$ & $\mathbf{3.76\pm0.78}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent Absolute efficiency $0.46\%$ (GENIE) and $0.42\%$ (NuWro), purity $26\%$
+before EXT. $98.6\%$ of the surviving signal has true \Lam\ flight $>2$~cm, against
+$43\%$ in the BDT chain. With the NuWro signal the same point gives
+$S = 0.142\pm0.009$ (245 raw). NuWro's own non-signal events, \Szero\ that FSI turned
+into something else (mostly \Lam), add $0.021\pm0.003$ background events (37 raw).
+With EXT (Sec.~\ref{sec:ext}) $B = 4.40$ and the purity is $23\%$ (GENIE hyperon
+sample) or $19\%$ (plain-overlay normalisation).
+
+\begin{figure}[h]\centering
+\includegraphics[width=0.62\textwidth]{lambda_mass.pdf}
+\caption{$p\pi^-$ mass after the pointing cut and the photon gap, before the mass
+window (dashed) and the island test. The signal peak sits slightly low because the
+pion momentum is taken from range under the muon hypothesis, which is $20\%$ low for
+a pion but gives a narrower peak than any correction. The background is largely
+genuine $p\pi$ from $\Delta$ decay, whose mass sits just above threshold.}
+\label{fig:lmass}
+\end{figure}
+
+\paragraph{Out-of-sample checks.} Without the gap, the original Run~3 list gives
+$B = 4.15\pm1.31$ (10 raw) and the independent extension $7.6\pm1.4$ (28 raw); every
+stage up to the pointing cut agrees per POT between the two to $1$--$4\%$, so the
+low Run~3 value is a fluctuation of the sample the island test was tuned on. The
+photon gap was fixed in September on the Run~3 list; on the extension it halves the
+background ($7.56\to4.05$) at $96\%$ signal efficiency. Odd/even cross-validation
+chooses the same configuration in both folds.
+
+\paragraph{The photon and Michel handles.} $18.7\%$ of background ``photons'' start
+within $2$~cm of the vertex against $3.5\%$ of signal; at two planes 11 of the 15
+events the gap removes are hadrons reconstructed as a shower at the vertex. The
+threshold sits on a plateau from 1 to 8~cm. A Michel tag (a contained muon with
+another PFP within $5$~cm of its end) exploits that the background muon is a
+wrong-sign $\mu^-$ $78\%$ of the time and is captured $75\%$ of the time in argon. It
+removes $87\%$ true $\mu^-$, but costs $22\%$ of signal and lowers the figure of merit
+on top of the gap, so it is off.
+
+\paragraph{Sidebands} (one-plane point, for statistics):
+
+\begin{center}
+\begin{tabular}{lrrrr}
+\toprule
+region & $S$ & $B$ & raw $B$ & $S/B$ \\
+\midrule
+signal region (blind)                    & 1.89 & 14.9 &  91 & $12.7\%$ \\
+mass sideband, $+40$ to $+200$~MeV        & 0.02 & 10.5 &  64 & $0.2\%$ \\
+$\alpha$ sideband, $0<\cos\alpha<0.8$    & 0.50 & 58.2 & 356 & $0.9\%$ \\
+island-fail region                       & 0.79 & 74.9 & 458 & $1.1\%$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent All three are RES/DIS-dominated, like the signal region. The mass sideband
+exists only above the peak, because $m(p\pi)$ has a kinematic floor at $1.078$~GeV.
+
+% =============================================================================
+\section{Beam-off background in the \Lam-style chain}
+\label{sec:ext}
+% =============================================================================
+
+The run3b \texttt{ext\_unbiased} files were taken through reco2 and
+HyperonProduction locally: all 3\,349 swizzled files, $16\,570$ NuMI-EXT-triggered
+events, every one of which reached the hypana ntuple. An unbiased event is one sampled
+gate, so the sample holds $162\,912$ gates and each event stands for $150.25$ data
+events; it has $0.67\%$ of the data's cosmic statistics.
+
+That is too little to follow EXT to the operating point: none of the 76
+MuonCandidate events reaches the pointing cut, and zero means $<346$ events at
+$90\%$~CL. \texttt{ExtFactor.C} therefore factorises: EXT at MuonCandidate from the
+hypana EXT, times the pass fraction to the operating point of the overlay's own
+cosmic-dominated candidates (more than half of the selected slice's hits unmatched to
+MC, i.e.\ overlaid cosmic data: 4\,220 of the 123\,000 cached events).
+
+\begin{center}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrr}
+\toprule
+step (cumulative) & EXT raw & EXT $P$ & MC cosmic raw & MC cosmic $P$ & MC all-bkg $P$ \\
+\midrule
+MuonCandidate & 76 ($11\,419\pm1\,310$) & -- & 4\,220 & -- & -- \\
+pair & 8 & $0.105\pm0.035$ & 571 & $0.135\pm0.005$ & 0.42 \\
+\Lam\ mass $\pm20$~MeV & 3 & $0.38\pm0.17$ & 165 & $0.289\pm0.019$ & 0.32 \\
+pointing & 0 & 0 of 3 & 7 & $0.042\pm0.016$ & 0.043 \\
+island $+$ gap & 0 & -- & 0 of 7 & -- & 0.0326 \\
+\bottomrule
+\end{tabular}}
+\end{center}
+
+\noindent \textbf{EXT at the operating point is $0.62\pm0.27$ events.} The cosmic MC
+is used as far as the pointing cut, the last step with at least five cosmic events.
+For the island and gap steps the estimate takes the neutrino-background rate
+($3.3\%$); the cosmic MC alone gives 0 of 7 there, and without that assumption the
+bound is EXT~$<6.2$ at $90\%$~CL. This is the open part of the estimate, and its
+direction is not known.
+
+The real cosmic data test the factorisation wherever they still have events. 8 of 76
+EXT candidates have a pair, which agrees with the cosmic MC ($0.135$, $P(\leq8)=0.29$)
+and excludes the neutrino-background rate ($0.42$ would predict 32,
+$P=1.8\times10^{-9}$). Taking EXT's own counts instead of the cosmic MC fractions up to
+the pair step gives $0.48$, and up to the mass window $0.62$.
+
+Hypana EXT at MuonCandidate is $1.7\times$ the PeLEE beam-off at the PeLEE
+MuonCandidate, while the two chains' overlay agrees there ($20\,113$ against
+$20\,348$). The excess is cosmic-specific and expected: hypana's
+\texttt{topological\_score} is the highest NuScore of any slice, not the
+flash-matched slice's, which raises a cosmic-only event's score far more than a
+neutrino event's. The MC cosmics use the same definition, so the selection is
+consistent within hypana.
+
+% =============================================================================
+\section{Expected sensitivity}
+\label{sec:sensitivity}
+% =============================================================================
+
+\subsection{Method}
+\texttt{Sensitivity.C} gives the expected 90\%~CL upper limit on $\mu$, the \Szero\ rate
+in units of a generator's prediction ($\mu=1$ is the model), for both chains under
+both generators. Each chain is a single-bin counting experiment,
+$n\sim\mathrm{Pois}(\mu S e + b)$:
+\begin{itemize}
+  \item $b$ is lognormal with mean $B$ and fractional width
+        $\sqrt{r_{\mathrm{MC}}^2+f^2}$, where $r_{\mathrm{MC}}$ is the MC statistics of
+        $B$ (EXT and dirt included; a component with no raw events left is given one
+        event of its own weight) and $f$ is the background systematic, which is scanned;
+  \item $e$ is lognormal with mean 1 and fractional width $\sqrt{g^2+r_S^2}$, where
+        $g=20\%$ is a placeholder for flux, efficiency and POT and $r_S$ the signal MC
+        statistics;
+  \item the limit is Bayesian, with a flat prior in $\mu\geq0$ and $b$, $e$
+        marginalised. Hybrid CL$_s$ is $4\%$ tighter throughout, and both reproduce the
+        PDG table exactly for a known background;
+  \item the expected limit is the limit at the median $n$ of $\mathrm{Pois}(B)$, with
+        the band from the $16\%$ and $84\%$ quantiles;
+  \item $Z_A$ is the median discovery significance with an uncertain background
+        (Cowan et al., arXiv:1007.1727).
+\end{itemize}
+$\muUL = n_{\mathrm{UL}}(B,\sigma_b)/S$, so the generator only rescales the limit and the
+cut that minimises it does not depend on the signal normalisation.
+
+\subsection{Results}
+
+\begin{table}[h]\centering
+\caption{Median expected 90\%~CL limit on $\mu$, $g=20\%$. ``Re-optimised'' scans the
+BDT cut from 0.50 to 0.95 for each $f$ (cut in brackets); its GENIE value is the
+NuWro value divided by the GENIE/NuWro ratio measured at 0.759.}
+\label{tab:limits}
+\small
+\begin{tabular}{rlrlrlr}
+\toprule
+$f$ & \multicolumn{2}{c}{PeLEE, BDTG $>0.759$} & \multicolumn{2}{c}{PeLEE, re-optimised} & \multicolumn{2}{c}{\Lam-style} \\
+ & NuWro [16--84\%] & GENIE & NuWro (cut) & GENIE & NuWro [16--84\%] & GENIE \\
+\midrule
+ 0\% & 18.1 [12.8, 26.2] & 2.95 & 18.1 (0.750) & 2.91 & 36.9 [25.6, 51.9] & 5.33 \\
+ 5\% & 24.1 & 3.93 & 22.6 (0.850) & 3.65 & 37.0 & 5.34 \\
+10\% & 35.7 & 5.84 & 27.1 (0.875) & 4.37 & 37.2 & 5.37 \\
+15\% & 48.2 [41.4, 56.2] & 7.88 & 31.0 (0.890) & 5.00 & 37.6 [25.9, 52.7] & 5.43 \\
+20\% & 60.3 & 9.85 & 34.0 (0.905) & 5.48 & 38.1 & 5.50 \\
+30\% & 82.3 [74.4, 90.9] & 13.45 & 38.2 (0.925) & 6.16 & 39.3 [26.9, 54.8] & 5.68 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[h]\centering
+\includegraphics[width=\textwidth]{limit_vs_f.pdf}
+\caption{Median expected 90\%~CL limit on $\mu$ against the background systematic,
+under NuWro (left) and GENIE (right). Bands are the 16--84\% range; the dotted line on
+the right is the GENIE prediction itself.}
+\label{fig:limit}
+\end{figure}
+
+\begin{enumerate}
+  \item \textbf{The result will be a limit.} The best median significance at the model
+        rate is $0.63\sigma$ (GENIE, PeLEE, $f=0$) and $0.10\sigma$ under NuWro. The best
+        expected limit, about $3\times$ GENIE and $18\times$ NuWro, is about 220 in-FV
+        \Szero\ events in $1.15\times10^{21}$~POT, against 73 predicted by GENIE and 13
+        by NuWro. In events the two models agree to $6\%$ (227 and 214 at $f=0$),
+        because the efficiencies do (Sec.~\ref{sec:geniesig}).
+  \item \textbf{The PeLEE chain gives the better limit below $f\approx20\%$.} With its
+        cut set for the systematic it is $2.0\times$ better than the \Lam-style chain
+        at $f=0$, $1.4\times$ at $10\%$ and $1.2\times$ at $15\%$ (NuWro; GENIE
+        $1.8\times$, $1.2\times$, $1.1\times$). From 20 to 30\% the two are within
+        $10\%$ and the model decides: NuWro keeps the PeLEE chain ahead (38.2 against
+        39.3 at $30\%$), GENIE puts the \Lam-style chain ahead (5.7 against 6.2), because
+        the two chains' GENIE/NuWro ratios differ (6.2 and 7.1). The \Lam-style chain's
+        purity is real, but its signal yield is $15\times$ lower, and at $B\approx4.4$ its
+        limit is set by Poisson counting: removing all background uncertainty moves it
+        by $3\%$. This reverses the conclusion of the earlier comparison by
+        $S/\sqrt{S+B+(fB)^2}$, which set the \Lam-style chain against the older hypana
+        BDT, used the GENIE hyperon-sample normalisation, and kept each cut where it had
+        been chosen at $f=0$.
+  \item \textbf{The background systematic drives the PeLEE result.} From $f=0$ to
+        $15\%$ its limit grows $1.7\times$ with the cut re-optimised and $2.7\times$ at
+        0.759. At $f=10\%$ moving the cut from 0.759 to 0.875 improves the limit by
+        $25\%$. The counting figure of merit agrees with the limit up to $f=10\%$; beyond
+        it, it picks cuts whose $B$ rests on a few raw events (0.940, $B=6.3$) and is
+        $1.7\times$ worse.
+  \item \textbf{Nothing missing from the \Lam-style chain changes its limit by much.}
+        At $f=15\%$ (NuWro, Poisson median): without the EXT estimate $39.8$ against
+        $37.6$; with dirt at its bound ($+0.33\pm0.33$, the PeLEE dirt/overlay ratio at
+        MuonCandidate) $43.5$; with $g=0$ $34.4$; with $B$ known exactly $36.5$. The
+        median $n$ is an integer, so a small change in $B$ moves the median limit in
+        steps, either way. Hypana data and dirt would give the \Lam-style chain an
+        independent result with different systematics, not a better limit.
+\end{enumerate}
+
+% =============================================================================
+\section{A global hypothesis fit}
+\label{sec:hypfit}
+% =============================================================================
+
+\emph{Status: not built.} Its central idea, assigning the proton and pion jointly
+instead of one after the other, is realised by the pair scoring of \texttt{PidAssign.h}
+and of the \Lam-style chain. The full four-role fit below remains a possible
+improvement; the reasoning and the measured ingredients are kept.
+
+\subsection{Motivation}
+
+The sequential selection identifies the muon, then the proton, then the pion, each
+conditioned only on what has already been taken, and never uses the fact that
+$p\pi^-$ must form a \Lam\ and $\Lam\gamma$ a \Szero. The per-role PID templates show
+why this fails specifically on the pion: the muon, proton and photon each have a
+distinctive signature, while the $\pi^-$ lies between the other three on every variable
+measured. The proposed fit relaxes the candidate pool (every PFP eligible for every
+role, recovering the $11.6\%$ of $\pi^-$ called showers), enumerates the $P(N,4)$
+assignments, scores each with a combined $-2\ln L$ from the two mass constraints, the
+per-role PID templates, muon-at-vertex, the $p$--$\pi$ DCA, a length-ordering prior and
+a soft-photon prior, and admits partial hypotheses for the $29.1\%$ of signal with three
+PFPs. Perfect assignment given what is found is worth a factor $1.54$ on $N\geq4$
+events.
+
+\subsection{Measured ingredients}
+
+Recorded in \texttt{HypFitParams.h} (1323 signal events): \Lam\ mass constraint
+centred at $1.1234$~GeV with $\sigma=27.2$~MeV and \Szero\ at $1.1812$~GeV with
+$45.4$~MeV, from correctly assigned candidates. The \Lam\ width predates the
+proton-momentum fix of Sec.~\ref{sec:recostudy}, which narrows it to $7.8$~MeV; it
+must be remeasured before use. The $\chi^2$ must be centred on the measured means,
+not the PDG masses. The $p$--$\pi$ DCA has median $0.35$~cm ($16$--$84\%$:
+$0.08$--$1.36$~cm); the muon is the longest track $92.1\%$ of the time; and $98.9\%$
+of PFPs carry both a track and a shower fit, so the relaxed pool needs no
+re-reconstruction.
+
+\begin{table}[h]\centering\small
+\begin{tabular}{lrrrr}
+\toprule
+variable & $\mu^+$ & $p$ & $\pi^-$ & $\gamma$ \\
+\midrule
+\texttt{trk\_shr\_score}    & $1.00$  & $0.90$  & $0.80$  & $\mathbf{0.11}$ \\
+\texttt{trk\_llrpid}        & $\mathbf{0.96}$ & $-0.29$ & $0.14$ & $0.56$ \\
+\texttt{trk\_pid\_chipr}    & $180$   & $\mathbf{16.4}$ & $96$ & $192$ \\
+\texttt{three\_plane\_dedx} & $2.47$  & $\mathbf{10.3}$ & $7.52$ & $3.30$ \\
+\texttt{rms\_deflection}    & $0.01$  & $0.01$  & $0.01$  & $\mathbf{0.08}$ \\
+\texttt{moliere\_avg}       & $1.78$  & $6.18$  & $8.95$  & $\mathbf{13.3}$ \\
+\texttt{trk\_length}        & $\mathbf{139}$ & $12.8$ & $10.8$ & $14.2$ \\
+\bottomrule
+\end{tabular}
+\caption{Per-role PID templates, medians on truth-matched PFPs. The $\pi^-$ has no
+distinctive signature.}
+\label{tab:templates}
+\end{table}
+
+\paragraph{The mass-sculpting risk.} Choosing the combination that best fits $m_\Lam$
+sculpts a \Lam-like peak out of combinatorics in background. If the fit is built, the
+masses are used for assignment only and kept out of the BDT, and the machinery is run on
+background alone to check for an induced peak.
+
+% =============================================================================
+\section{Fake data by Poisson throw}
+\label{sec:fakedata}
+% =============================================================================
+
+The current ``data'' sample of the PeLEE chain is the NuWro signal file itself, scaled
+by POT. That is not a closure test: it contains no background and no fluctuation.
+
+The fix is the Poisson-throw scheme of the CC$1\mu1\pi$ analysis
+(\texttt{macros/throw\_perrun\_*.C}): for each MC event with central-value weight
+$w_{\mathrm{cv}}$ and POT scale $\alpha$, draw $n \sim \mathrm{Poisson}(w_{\mathrm{cv}}
+\alpha)$ and write the event $n$ times with unit weight, across all samples. EXT, a data
+sample, enters at its scale directly. A \texttt{throw\_sigma0.C} modelled on
+\texttt{throw\_perrun\_w.C}, one seed per sample, would provide it.
+
+A throw from the same MC is a \emph{statistical} closure test, not a model test. A
+model test needs a signal from a different generator in PeLEE format, and one now
+exists: the overlay's own GENIE \Szero\ events, which the selection counts separately
+(Sec.~\ref{sec:geniesig}). They are 187 raw events at the operating point, enough to
+inject a GENIE signal into a throw of the NuWro-based prediction.
+
+% =============================================================================
+\section{Framework port}
+\label{sec:port}
+% =============================================================================
+
+The selection was to be ported into \texttt{xsec\_analyzer} as a
+\texttt{SelectionBase} subclass to inherit its systematic machinery (flux multisims,
+GENIE multisims and unisims, detector variations, reinteraction), at a single analysis
+bin. \textbf{Status, 2026-10-19: not started.} No \texttt{Sigma0} class exists, there
+is no factory registration, and nine branches the selection uses are unbound in
+\texttt{Branches.hh} (details in \texttt{SIGMA0\_FRAMEWORK\_PLAN.md}).
+
+The port is no longer on the critical path. The PeLEE ntuples carry the multisim
+weights themselves (\texttt{weightsGenie}, \texttt{weightsPPFX}, \texttt{weightsFlux},
+\texttt{weightsReint}), the detector variations already run through the standalone
+selection (Sec.~\ref{sec:detvar}), and \texttt{Sensitivity.C} provides the limit
+machinery the framework lacks. A single-bin background covariance can be built in
+\texttt{SigmaSelection.C} directly.
+
+% =============================================================================
+\section{Exposure: combined FHC$+$RHC later}
+\label{sec:exposure}
+% =============================================================================
+
+The signal is $\numubar$ charged-current, so RHC is the sensitive mode. FHC carries a
+substantial wrong-sign $\numubar$ component ($34.0\%$ of the FHC flux, against $53.3\%$
+in RHC) and an exposure of $8.857\times10^{20}$~POT, so folding it in adds real signal.
+The CC$1\mu1\pi$ analysis has the machinery: per-run POT scaling, a combined
+\texttt{file\_properties} and combined flux normalisation. It needs FHC overlay
+through the same selection, an FHC signal sample (or a justified reuse of the RHC
+one), FHC dirt and FHC EXT. At the purity of the PeLEE chain the background grows with
+the signal, so this is worth doing only once the systematics of Sec.~\ref{sec:plan}
+are in hand.
 
 % =============================================================================
 \section{Work plan}
+\label{sec:plan}
 % =============================================================================
 
 \begin{enumerate}
-  \item \textbf{Selection (priority): global hypothesis fit.} Relaxed candidate
-        pool, combinatoric role assignment scored against the \Lam\ and \Szero\
-        mass constraints and the per-role PID templates, then partial hypotheses
-        for three-PFP events. Sec.~\ref{sec:hypfit}. Phase~0 (resolutions,
-        templates, priors) is complete and recorded in
-        \texttt{HypFitParams.h}; Sec.~\ref{sec:phase0}.
-        \emph{The \Lam\ displaced-vertex requirement listed in earlier versions
-        of this plan is withdrawn: the true flight distance (median $1.85$~cm) is
-        three times smaller than the vertex resolution ($5.54$~cm) and the
-        reconstructed quantity is uncorrelated with truth, $r=-0.014$.
-        Sec.~\ref{sec:recostudy}.}
-  \item \textbf{Framework port.} Branch bindings, \texttt{Sigma0} selection class,
-        factory registration, cut-flow validation against the standalone code
-        before any config work. \emph{Not started as of 2026-10-15.}
-        Sec.~\ref{sec:port}.
-  \item \textbf{Background through HyperonProduction.} \emph{Unblocked.} The RHC
-        overlay has been transferred, run through reco2 and processed with
-        HyperonProduction: 14{,}024 hypana files at $6.9701\times10^{21}$~POT,
-        $70\%$ of the full RHC exposure. A hypana-only analysis with realistic
-        background is now possible; dirt in hypana format is still missing.
-        Sec.~\ref{sec:recostudy}.
-  \item \textbf{Fake data.} \texttt{throw\_sigma0.C}, all samples, RHC POT.
-        Sec.~\ref{sec:fakedata}.
-  \item \textbf{Signal-model systematic.} The hyperon-FSI difference between NuWro
-        and GENIE is a factor $\sim\!4$ on the \Szero\ yield
-        (Sec.~\ref{sec:signalsample}) and dominates every other uncertainty. It has
-        to be evaluated and carried before a limit means anything.
-  \item \textbf{Systematics.} Single-bin \texttt{univmake} for the background
-        covariance.
-  \item \textbf{Combined exposure.} FHC$+$RHC once the selection justifies it.
-        Sec.~\ref{sec:exposure}.
-  \item \textbf{Limit.} Outside the framework, reading its covariance.
+  \item \textbf{Background systematics for the PeLEE chain (priority).} The expected
+        limit grows $1.7\times$ from $f=0$ to $15\%$, so this sets the result. Flux
+        (\texttt{weightsPPFX}), cross section (\texttt{weightsGenie}) and reinteraction
+        (\texttt{weightsReint}) multisims at the single bin, with the detector variations
+        ($\lesssim7\%$, Sec.~\ref{sec:detvar}). Then a constraint from data: a fit of the
+        BDT-score region where the signal is negligible, extrapolated to the signal
+        region, which leaves only the shape uncertainty in $f$. The $\pi^0$
+        normalisation is the obvious target (Sec.~\ref{sec:glee}).
+  \item \textbf{Choose the BDT cut from that budget} with the \texttt{Sensitivity.C}
+        scan (0.875 at $f=10\%$, 0.890 at $15\%$), and re-measure the detector
+        variations there: the CV keeps fewer raw events at tighter cuts.
+  \item \textbf{Signal-model systematic.} Hyperon FSI is a factor $\sim4$ between the
+        generators, and the GENIE samples disagree among themselves by
+        $1.3$--$1.6\times$. The limit is quoted under both models; the residual GENIE
+        normalisation has to be understood before either number is final.
+  \item \textbf{Closure and fake data.} \texttt{throw\_sigma0.C}, all samples, with the
+        GENIE overlay signal as an injected alternative model (Sec.~\ref{sec:fakedata}).
+  \item \textbf{Unblinding and the observed limit.} RHC beam-on data exist in PeLEE
+        format (\texttt{custom\_pelee\_ntuples}). \texttt{Sensitivity.C} gives the
+        observed limit once $n$ is known; the absolute cross-section limit needs the
+        integrated $\numubar$ flux and the argon target count in the FV.
+  \item \textbf{\Lam-style chain as a cross-check.} Data and dirt through reco2 and
+        HyperonProduction, as was done for EXT, would make it an independent
+        measurement with different systematics. It does not improve the limit
+        (Sec.~\ref{sec:sensitivity}), so it comes after the items above. The EXT
+        factorisation of its island step is the open part of its background.
+  \item \textbf{Housekeeping.} \texttt{AblateBDT.C} and \texttt{TrainAllPFP.C}, the
+        hypana BDTs, still train on $25\%$ of the events (TMVA's default split). The
+        \texttt{Shower1MoliereAvg} histogram range is in radians while the variable is
+        in degrees, so that control plot is empty at the BDT stage.
+  \item \textbf{Combined exposure}, FHC$+$RHC (Sec.~\ref{sec:exposure}), and the
+        framework port (Sec.~\ref{sec:port}) if it is still wanted.
 \end{enumerate}
 
 \end{document}
