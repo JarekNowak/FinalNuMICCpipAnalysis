@@ -1,0 +1,186 @@
+PeLEE ntuples of the NuMI pion analyses: ours against /data/uboone/temp/custom_pelee_ntuples
+=========================================================================================
+2026-10-23
+
+Compared: the inputs of our chain (slurm/mp2pi_2f_manifest.list, slurm/beamon_skim_manifest.list on multipion/kin;
+the same files feed the single-pion releases) and the custom PeLEE ntuples in
+  /data/uboone/temp/custom_pelee_ntuples             (prod_v08_00_00_73 numi_pion_pelee_ntuple_nu_overlay_ppfxfixes,
+                                                      prod_v08_00_00_67 numi_pion_pelee_ntuple_dirt_overlay, ...)
+  /data/uboone/temp/reweighted_custom_pelee_ntuples  (the nu and nue overlays reweighted to the new NuMI flux)
+Tools: report/tools/pelee_compare.py (30 pairs; --reweighted for the 8 overlay pairs against the reweighted files),
+report/tools/pelee_compare_rates.py (true CC rates per POT). Output: report/planning/pelee_compare.json,
+pelee_compare_reweighted.json, pelee_compare_rates.json.
+Per pair: entries, subruns and summed POT, branch sets, weight vector lengths, the overlap of (run, subrun) and
+(run, subrun, event), duplicates, and for the common events the agreement of nslice, topological_score,
+reco_nu_vtx_x/z, n_tracks, n_showers, CosmicIP, ppfx_cv, weightSplineTimesTune, nu_e and nu_pdg.
+Beam-on POT and triggers are not stored in the files, so the data exposures are not compared here.
+
+
+1. Summary
+----------
+a) Overlays, Runs 1-4: different productions. Ours are the new-flux generations (/data/uboone/new_numi_flux), the
+   custom ones are the old-flux ppfxfixes production. Events that share (run, subrun, event) are different neutrinos
+   (nu_e identical for 0.004%). The raw custom overlays are on the old flux: per POT they carry 19% (FHC nu_mu) to
+   44% (RHC nu_mu) more true CC than ours. The reweighted custom overlays agree with ours in rate to about 1%.
+b) The reweighted custom overlays are an accept/reject resampling of the raw ones: same POT, 27% fewer events
+   (run1_fhc: 872525 -> 635056; the dropped events have mean E_nu 1.77 GeV against 1.49 kept), ppfx_cv replaced.
+   Our Run-5 FHC overlay is this reweighted file (identical event by event, all variables).
+c) Wrong-sign and RHC spectra: equal rates, different mean energies between the new-flux generations (ours, Runs 1-4)
+   and the reweighted samples (custom, and our own Run 5): FHC nu_mu-bar 1.91-1.93 against 2.04-2.06 GeV, RHC
+   nu_mu-bar 1.62 against 1.73-1.75 GeV, RHC nu_mu 1.77 against 1.80-1.81 GeV. Our FHC configuration mixes the two
+   kinds (Run 5 reweighted, Runs 1, 2, 4 generated). FHC nu_mu agrees (1.48-1.49 GeV).
+d) Data (beam-on, beam-off) and dirt: the same events. Every compared variable is identical for every common event
+   (dirt Run 4b: 99.9%). The differences are in the event lists (good-run selections, extra subruns) and branches.
+e) Run 4c: the custom production splits Run 4c at run 21410 and labels runs 21286-21410 RHC (beam_on/splitFile_run4c.cxx,
+   numi_beam_on_pion_ntuples_run4c_{fhc,rhc}.root). Our Run-4c beam-on file contains these runs (11.7% of its events,
+   11% of its subruns) and is used as FHC (beamon_fhc_run4c in the skim manifest; the FHC Run-4 POT 2.075e20). Our
+   Run-4c dirt starts at run 21411, and we use a Run4c_rhc overlay in the RHC configuration, both consistent with the
+   custom split. Our beam-off Run 4c also contains runs 21286-21410 (EXT is mode independent, so no issue there).
+   To check before unblinding: the horn polarity of runs 21286-21410 and whether the FHC Run-4 POT includes them.
+f) Branches: the custom Run 1 and Run 3b data and dirt carry 41 (data) / 52 (dirt) branches our old productions lack,
+   among them trk_bragg_pion_v (+ _u_v, _v_v), trk_trunk_dEdx_{u,v,y}_v, trk_nhits_{u,v,y}_v, trk_end_spacepoints_v,
+   shr_energy_second/third, interaction_time_abs/modulo, the cosmic_*_v and nu_center* blocks. These are the branches
+   whose absence makes the released Bragg cut fail open in Run 1-3 data (old-production-missing-branches). In
+   Runs 4-5 the reverse holds: ours carry 33 branches the custom files lack, among them trk_avg_deflection_*_v (the
+   wiggliness used for the golden pions), trk_bragg_{mu,p,pion}_{fwd_preferred,alt_dir}_*, trk_trunk_rr_dEdx_*_v,
+   pfp_vtx_*_v, slice_topo_score_v, slice_id.
+g) Weight vectors: same lengths everywhere (weightsPPFX 600, weightsGenie 600, weightsReint 1000) except the custom
+   Run-1 FHC dirt slim file, which has no weightsReint (length 0) and no weightsFlux, and our Run-1 FHC dirt, which
+   has weightsFlux 1000.
+
+
+2. Sample inventory
+-------------------
+Only in the custom area:
+  - beam-on and beam-off Run 2 (run2_fhc, run2_rhc, run2a, run2b). We have no Run-2 data and use Run-1 EXT for Run 2.
+  - dirt Run 1 RHC, Run 2a FHC, Run 2b RHC (we use the Run-1 FHC dirt for FHC Run 2 and the Run-3b dirt for RHC Runs
+    1-3).
+  - detector variations for Run 1, Run 2 FHC and Run 3 (CV, LYDown, LYRayleigh, LYAttenuation, Recombination, SCE,
+    WireMod; _slim variants) and nue detector variations for Runs 1-5. Ours are Run 4 only.
+  - nue overlays (raw and reweighted), CCNC pi0 overlays, NuWro overlays, open-trigger data.
+  - Run 4c beam-on/off split into fhc and rhc (see 1e); Run 4d beam-on in _all and _goodruns versions
+    (beam_on/selectGoodRuns.cc).
+  - "_extra" overlays for Run 3b RHC, Run 4 FHC, Run 4 RHC and Run 5 FHC; "_slim" versions of most overlays
+    (nu_overlay_withppfxfixes/removeEventweights.cxx).
+Only in ours: the separate Run4a/4b/4c RHC new-flux overlays and the five-part Run 3 RHC overlay (aa-ae).
+
+
+3. Overlays
+-----------
+Entries, summed SubRun POT, POT per entry:
+                     ours                          custom (raw)                  custom (reweighted)
+  FHC Run 1     705700  2.328e21  3.30e15     872525  2.228e21  2.55e15     635056  2.228e21  3.51e15
+  RHC Run 1     235578  0.900e21  3.82e15     410224  1.090e21  2.66e15     268184  1.090e21  4.06e15
+  FHC Run 2     756281  2.493e21  3.30e15     764118  1.946e21  2.55e15     555703  1.946e21  3.50e15
+  RHC Run 2    1512900  5.787e21  3.83e15     543195  1.445e21  2.66e15     356051  1.445e21  4.06e15
+  RHC Run 3    1443124  5.518e21  3.82e15    1664726  4.422e21  2.66e15    1089797  4.422e21  4.06e15
+  FHC Run 4     859368  2.834e21  3.30e15    1825767  4.662e21  2.55e15    1328557  4.662e21  3.51e15
+  RHC Run 4     853995  3.259e21  3.82e15    1471213  3.892e21  2.65e15     963578  3.892e21  4.04e15
+  FHC Run 5     551478  1.930e21  3.50e15    1332676  3.388e21  2.54e15     970294  3.388e21  3.49e15
+(custom Run 3 = run3_rhc + run3b_rhc_extra; Run 4 FHC/RHC and Run 5 = main + _extra; our Run 4 RHC = 4a + 4b + 4c.)
+Custom/ours POT: FHC Run 1 0.96, RHC Run 1 1.21, FHC Run 2 0.78, RHC Run 2 0.25, RHC Run 3 0.80, FHC Run 4 1.64,
+RHC Run 4 1.19, FHC Run 5 1.76.
+
+True CC with the vertex in the fiducial volume, per 1e20 POT, weighted by weightSplineTimesTune x ppfx_cv
+(unweighted counts in report/planning/pelee_compare_rates.json), and the mean true energy in GeV:
+                       nu_mu: ours  raw   rw      <E> ours raw  rw       nu_mu-bar: ours raw  rw    <E> ours raw  rw
+  FHC Run 1               6470  7692  6454        1.48 1.53 1.49         1052  1679  1057        1.91 2.20 2.06
+  FHC Run 2               6440  7692  6446        1.48 1.53 1.49         1067  1658  1047        1.92 2.20 2.04
+  FHC Run 4               6425  7680  6446        1.48 1.53 1.49         1047  1677  1061        1.93 2.21 2.05
+  FHC Run 5 (ours = rw)   6479  7727  6480        1.49 1.53 1.49         1062  1669  1058        2.06 2.22 2.06
+  RHC Run 1               5225  7449  5165        1.77 1.96 1.80         1171  1585  1160        1.62 1.79 1.73
+  RHC Run 2               5210  7472  5208        1.77 1.97 1.81         1149  1583  1169        1.63 1.79 1.75
+  RHC Run 3               5229  7463  5207        1.77 1.98 1.81         1151  1586  1159        1.63 1.79 1.74
+  RHC Run 4               5207  7516  5251        1.77 1.97 1.81         1160  1604  1172        1.62 1.79 1.74
+Rates: ours and reweighted custom agree within 1.2% (nu_mu) and 2% (nu_mu-bar), run by run. The raw custom files
+need the reweighting before use.
+
+Event overlap: (run, subrun, event) coincide for 0-90% of our events (Run 1 RHC: no common subrun at all), but the
+coinciding events differ in nu_e and in the reconstruction (topological_score identical for 33-36%), so they are
+unrelated simulations with overlapping numbering. Run 5 is the exception (1b).
+Duplicated (run, subrun, event): ours 100 (Run 1 FHC), 84 (Run 3 RHC); custom 615 (Run 3), 2700 (Run 4 FHC),
+91 (Run 4 RHC).
+Branches: the flash-matching block is renamed. Ours: flash_{pe,time,timewidth,y,ywidth,z,zwidth}_flash_matching,
+flash_pe_flash_matching_v, slice_pe_flash_matching_v. Custom: flash_{pe,time,timewidth,y,ywidth,z,zwidth}, flash_pe_v,
+slice_pe_v. Otherwise the branch sets agree (812 branches).
+
+
+4. Beam-on data
+---------------
+                 ours: events subruns     custom: events subruns     common events  only ours  only custom  branches only ours/custom
+  Run 1 FHC        610496   82200           666445   88694             610496          0       55949        7 / 41
+  Run 1 RHC        167923   23094           166477   22903             166299       1624         178       14 / 40
+  Run 3b           1104349  286792          1102052  370385            1100149      3558        1261        7 / 41
+  Run 4a            43027   18112            42242   17450              42242        785           0       33 / 2
+  Run 4b           835573  211167           792031  199764             792031      43429           0       33 / 2
+  Run 4c           392148  113515           388699  113205             387952       4190         741       33 / 2
+  Run 4d           228821  308817           224640  175082             224640       4181           0        0 / 0
+  Run 5            748669  254197           709673  240000             709673      38996           0       33 / 2
+(custom Run 4c = run4c.root, before the split; Run 4d = run4d_fhc_goodruns.)
+All compared variables identical for every common event.
+- Run 1 FHC: ours is a strict subset; the custom file has 55949 more events in 6494 more subruns. Our Run-1 file is
+  the good-run, non-open-trigger subset (fhc-run1-open-trigger); whether the extra custom subruns are the open-trigger
+  runs 3490-4950 was not checked.
+- Runs 4a, 4b, 5: the custom files are strict subsets of ours (785, 43429, 38996 fewer events; 662, 11376, 14197
+  fewer subruns), consistent with a good-run selection applied in the custom production. Run 4d: the custom file
+  is the good-run version; ours has 133735 more subruns but only 4181 more events. Our POT values must correspond to
+  our file contents; any good-run list applied downstream should be checked against these differences.
+- Run 3b: the same events, but the custom SubRun tree has 84222 more subruns (empty subruns); a POT sum over the
+  custom SubRun tree is not comparable to ours.
+- Duplicated events: Run 3b 642 in both, Run 4b 113 ours, Run 4c 6 in both.
+- Branches only in ours (Run 1, 3b): swtrig_pre/post(_ext), true_nu_p{x,y,z}; Run 1 RHC also baseline and par_decay_*.
+
+5. Beam-off data
+----------------
+                 ours: events subruns     custom: events subruns     common events  only ours  only custom
+  Run 1            904362  158607          1314643  212014             903774        588      410869
+  Run 3b          3211097  366514          3182099  367606            3066021     143421      114306
+  Run 4a           740126   80023           587489   60481             577556     162570        9933
+  Run 4b          1510184  153342          1432738  145454            1425975      84155        6763
+  Run 4c          1085103  108565           968308   96573             950427     126292        9819
+  Run 4d          3613316  279943          2032352  162705            2001835    1602443       25146
+  Run 5           2490913  239214          2399208  230953            2344601     146301       54596
+(custom Run 1 = run1_fhc + run1_rhc.)
+All compared variables identical for every common event. Unlike beam-on, both sides have events the other lacks in
+every run, so the two beam-off sets are different selections of the same runs, not one a subset of the other.
+- Run 1: the custom set has 45% more events; our file is (almost) a subset of it.
+- Run 4d: ours has 1.78x the custom events (1602443 only in ours, 118944 subruns only in ours).
+- Run 3b: 143421 events only in ours and 114306 only in custom.
+- Duplicates: Run 3b 1655/1772, Run 4c 8384/8062, Run 4d 9038/5371, Run 4b 54/0, Run 5 11/11 (ours/custom).
+Our EXT normalisation uses per-run gate counts (configs: Run 1 4582248.27, 3b 32649128.65, 4a and 4b 4669389.11
+each, 4c 8060024.70, 4d 17432345.70, 5 19256341.48). Those counts must belong to our files; the event-count ratios
+above (e.g. Run 4d 1.78) show that gate counts from the custom production cannot be carried over.
+Branches: Run 1 and 3b as for beam-on (7 / 41); Run 4a ours has 33 more, custom has interaction_time_abs/modulo.
+
+
+6. Dirt
+-------
+                 ours: events  POT          custom: events  POT         common    only ours  only custom
+  Run 1 FHC        569506  1.674e21          573013  1.684e21          569295      211       2685
+  Run 3b           389264  1.032e21          393027  1.042e21          388952      312       2336
+  Run 4a            30171  0.792e20           29621  0.778e20           29621      550          0
+  Run 4b            98877  2.593e20          100942  2.649e20           98841       36       2101
+  Run 4c            53150  1.548e20           53024  1.544e20           52675      239        146
+  Run 4d            81906  2.388e20           83759  2.443e20           81692      172       2067
+  Run 5            120327  3.501e20          124118  3.611e20          120198      129       2013
+(custom: the _slim files.) POT per entry identical to 0.1%; the POT differences follow the event lists (0.6-3%).
+All compared variables identical (Run 4b 99.9%), including ppfx_cv and weightSplineTimesTune.
+Duplicates: custom Run 1 1033, Run 3b 1739, Run 5 1907; ours Run 4c 236 (custom 203), Run 4d 42.
+Branches: custom Run 1/3b have 52 more (as in 1f, plus RootinoFix, baseline, knobxsr_scc_F{a3,v3}{up,dn},
+par_decay_*); ours has knobRPA_CCQE_Reduced{up,dn}. Run-1 weight vectors: see 1g.
+
+
+7. Points that bear on our analyses
+-----------------------------------
+- Run 4c polarity (1e): the one difference that could change a result at unblinding. If runs 21286-21410 are RHC,
+  11.7% of the Run-4c beam-on events (about 1% of the FHC beam-on) sit in the FHC sample with no FHC simulation
+  behind them, and the FHC Run-4 POT has to be checked for the same runs.
+- Mixed flux treatments within a configuration (1c): FHC Run 5 is reweighted while FHC Runs 1, 2, 4 are new-flux
+  generations; rates agree, wrong-sign mean energies differ by 7%. The same holds for the RHC samples if a
+  reweighted file is ever added.
+- Missing Bragg branches in Run 1-3 data (1f): the custom Run 1 and 3b beam-on, beam-off and dirt files carry
+  trk_bragg_pion_v and the trunk dE/dx and per-plane hit branches. They are a candidate replacement for our old
+  productions (same events, identical reconstruction otherwise), which would remove the fail-open of the Bragg cut;
+  they lack the Run 4-5 deflection and fwd/alt Bragg branches, which our Run 1-3 files also lack.
+- The custom area holds Run 1-3 detector variations and Run 2 data that we do not have.
+- Raw custom overlays must not be used without the flux reweighting (19-44% rate excess).
