@@ -12,7 +12,8 @@ A_C-smeared tune from which the nominal members are thrown (closure sidecar, per
     interval; chi2_stat = (x - e)^T C_stat^-1 (x - e), whose mean is the number of bins for a correct C_stat;
   - the framework's closure chi2 against the truth (parsed from the member's log, the statistic of Table 16 of the
     note; it adds the Poisson variance of the true count to the unfolded covariance) and the empirical p-value of
-    the nominal realisation (report/planning/multipion/mp2pi_kin2f_results.json);
+    the nominal realisation (report/planning/multipion/mp2pi_kin2f_results.json); for the softest-pion stress, the offsets against the
+    soft-pion term of the covariance (mp2pi_softpion_cov.json);
   - the integral over the bins: offset x/t and pull against e with the summed data-statistics covariance.
 
     python3 scripts/mp2pi_ens_kin_summary.py [ENS ...]   (default nominal2)
@@ -100,17 +101,21 @@ def summarise(ens):
                      + (f"{r['chi2_nominal']:.2f}, {r['p_empirical']:.2f} |" if r['chi2_nominal'] is not None else '|'))
         else:
             L.append(head + f"{np.abs(b).max():.2f} | {100 * r['int_offset']:+.1f} +- {100 * r['int_offset_se']:.1f}% |")
-    tf = os.path.join(PLAN, 'mp2pi_softpion_term.json')
+    tf = os.path.join(PLAN, 'mp2pi_softpion_cov.json')
     if ens == 'stress_psoft' and os.path.exists(tf):
-        term = json.load(open(tf))['differential']
-        L += ['', '## Softest-pion stress against the soft-pion efficiency term (generator envelope, per true bin)', '',
-              '| variable | stress offset, none | stress offset, sidebands | soft-pion term | largest |offset| / term |', '|---|---|---|---|---|']
+        term = json.load(open(tf))
+        L += ['', '## Softest-pion stress against the soft-pion term of the covariance (generator envelope through the '
+              'unfolding, % of the A_C-smeared tune)', '',
+              '| variable | constraint | stress offset | soft-pion term | largest |offset| / term |', '|---|---|---|---|---|']
+        worst = 0.
         for v in VARS:
-            if f'{v} none' not in res or v not in term: continue
-            o0, o1 = np.array(res[f'{v} none']['offset']), np.array(res[f'{v} sidebands']['offset'])
-            tm = np.array(term[v]['per_bin'])
-            L.append(f'| {v} | ' + ', '.join(f'{100 * x:+.1f}' for x in o0) + ' | ' + ', '.join(f'{100 * x:+.1f}' for x in o1)
-                     + ' | ' + ', '.join(f'{100 * x:.1f}' for x in tm) + f' | {(np.maximum(np.abs(o0), np.abs(o1)) / tm).max():.2f} |')
+            for ml in ('none', 'sidebands'):
+                if f'{v} {ml}' not in res or f'{v} {ml}' not in term: continue
+                o = np.array(res[f'{v} {ml}']['offset']); tm = np.abs(np.array(term[f'{v} {ml}']['envelope_pct'])) / 100
+                q = (np.abs(o) / tm).max(); worst = max(worst, q)
+                L.append(f'| {v} | {ml} | ' + ', '.join(f'{100 * x:+.1f}' for x in o) + ' | '
+                         + ', '.join(f'{100 * x:.1f}' for x in tm) + f' | {q:.2f} |')
+        L += ['', f'Largest ratio: {worst:.2f}.']
     open(os.path.join(PLAN, f'mp2pi_ens_kin_{ens}.md'), 'w').write('\n'.join(L) + '\n')
     print('\n'.join(L))
     if nominal_ens: figure(ens, res)

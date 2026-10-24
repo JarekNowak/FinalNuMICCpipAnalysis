@@ -893,7 +893,7 @@
     \item Standalone generators, reweighted against GENIE: NuWro $35\%$ / $+1.8\%$, NEUT $44\%$ / $-4.4\%$, GiBUU
           $52\%$ / $-8.3\%$. The stress model is inside the generator range, outside the covariance.
     \item A $0.175\GeVc$ cut does not help (the softer events stay as background); migration across $0.10\GeVc$ $<1\%$.
-    \item Added: soft-pion efficiency term = generator envelope, $8.5/8.1/8.3\%$ (FHC/RHC/comb.), $4$--$12\%$ per
+    \item Added: soft-pion efficiency term = generator envelope, $8.5/8.1/8.3\%$ (FHC/RHC/comb.), $6$--$12\%$ per
           differential bin.
   \end{itemize}
   \centering\fig{softpion}{0.95\textwidth}
@@ -1046,7 +1046,7 @@
 \begin{frame}{Differential extraction through the framework}
   \begin{columns}[T]
   \column{.62\textwidth}
-  \centering\fig{kin2f_results_comb}{\textwidth}\\
+  \centering\fig{kin2f_results_comb}{0.95\textwidth}\\
   {\scriptsize Two-fold classifier, combined, sideband constraint: unfolded pseudo-data, $A_C$-smeared truth and tune.}
   \column{.36\textwidth}
   \scriptsize\setlength{\tabcolsep}{2pt}
@@ -1055,20 +1055,22 @@
     & \multicolumn{2}{c}{Per bin} & $\chi^2$ & \\
     Variable & none & constr. & truth & $p$ \\
     \midrule
-    $p_\mu$ & $45$--$60\%$ & $17$--$32\%$ & $0.2/5$ & $0.84$ \\
-    $\cos\theta_\mu$ & $40$--$123\%$ & $17$--$54\%$ & $0.8/6$ & $0.81$ \\
-    $\cos\theta_\pi^{\rm fwd}$ & $51$--$113\%$ & $22$--$52\%$ & $1.9/6$ & $0.51$ \\
-    $\cos\theta_\pi^{\rm bwd}$ & $45$--$99\%$ & $15$--$42\%$ & $0.6/8$ & $0.69$ \\
-    $\cos\theta_{\pi\pi}$ & $43$--$66\%$ & $17$--$32\%$ & $1.0/8$ & $0.82$ \\
-    $\cos\theta_{\mu\pi}$ & $40$--$185\%$ & $18$--$45\%$ & $4.1/7$ & $0.05$ \\
-    $N_p$ & $44$--$130\%$ & $20$--$58\%$ & $0.1/2$ & $0.67$ \\
+    $p_\mu$ & $45$--$61\%$ & $19$--$34\%$ & $0.2/5$ & $0.84$ \\
+    $\cos\theta_\mu$ & $41$--$124\%$ & $18$--$54\%$ & $0.8/6$ & $0.81$ \\
+    $\cos\theta_\pi^{\rm fwd}$ & $51$--$114\%$ & $23$--$53\%$ & $1.9/6$ & $0.51$ \\
+    $\cos\theta_\pi^{\rm bwd}$ & $46$--$100\%$ & $17$--$43\%$ & $0.6/8$ & $0.69$ \\
+    $\cos\theta_{\pi\pi}$ & $43$--$67\%$ & $19$--$32\%$ & $1.0/8$ & $0.82$ \\
+    $\cos\theta_{\mu\pi}$ & $40$--$187\%$ & $19$--$47\%$ & $4.1/7$ & $0.05$ \\
+    $N_p$ & $44$--$130\%$ & $22$--$59\%$ & $0.1/2$ & $0.67$ \\
     \bottomrule
   \end{tabular}
   \begin{itemize}\scriptsize\setlength\itemsep{1pt}
-    \item Wiener-SVD (filter on), FHC, RHC, combined; all 42 compatible with their truth in the nominal realisation.
-    \item The constraint halves the per-bin uncertainty or better. $p$: share of 200 ensemble members with a larger
-          closure $\chi^2$ (constrained).
-    \item Integrals (full covariance) $15$--$18\%$, as the one-bin total; bin averages $21$--$39\%$.
+    \item Wiener-SVD, FHC, RHC, combined; all 42 compatible with their truth in the nominal realisation.
+    \item The constraint halves the per-bin uncertainty. $p$: share of 200 ensemble members with larger closure $\chi^2$.
+    \item With the soft-pion term ($6$--$12\%$ per bin, through the unfolding): integrals $17$--$20\%$, as the one-bin
+          total ($18.4\%$); bin averages $23$--$40\%$.
+    \item Generators (GENIE, GiBUU, NEUT, NuWro; RHC weighted to the RHC flux shape): $0.61$--$0.86$ of the
+          pseudo-data (the tune), $\chi^2$ $1$--$9$ per variable.
   \end{itemize}
   \end{columns}
 \end{frame}
@@ -1082,7 +1084,7 @@
     \item The framework's closure $\chi^2$ adds the truth's Poisson variance to the covariance, so its values are small;
           empirical $p$ of the nominal realisation $0.42$--$0.89$, $\cos\theta_{\mu\pi}$ $0.03$/$0.05$.
     \item 50 members each: GENIE u545 $\leq0.43\sigma$, $\Delta\to N\pi$ $\leq0.20\sigma$ per bin. Softest-pion stress:
-          bins up to $16\%$ ($0.53\sigma$, up to $2.1\times$ the soft-pion term of the bin), integrals $-4$ to $-13\%$.
+          bins up to $16\%$ ($0.53\sigma$, up to $1.9\times$ the soft-pion term of the bin), integrals $-4$ to $-13\%$.
   \end{itemize}
   \centering\fig{ens_kin_nominal2}{0.86\textwidth}
 \end{frame}
@@ -1124,9 +1126,8 @@
   \column{.48\textwidth}
   \textbf{\color{ubred}Towards the cross sections}
   \begin{itemize}\footnotesize\setlength\itemsep{2pt}
-    \item Generator predictions with the two-pion signal definition (GENIE tunes, NuWro, NEUT, GiBUU).
-    \item Differential variables: extracted, compatible with their truth in the nominal pseudo-data, closing in ensembles; next the soft-pion term per bin,
-          variable, generator predictions. Invariant masses stay study products unless they pass the $0.50$ criterion.
+    \item Differential variables: extracted, compatible with their truth in the nominal pseudo-data, closing in ensembles, soft-pion term in the covariance, generator predictions
+          in. Invariant masses stay study products unless they pass the $0.50$ criterion.
     \item The $\geq1p$ subsample for the comparison with the BNB result.
     \item Independent-generator closure if a NuMI NuWro overlay can be validated (D5); NuGraph inputs if
           NuMI samples appear (D4).
@@ -1152,7 +1153,7 @@
     \item Differential variables: $p_\mu$, $\cos\theta_\mu$, the two pion angles, the opening angles and the proton
           multiplicity pass the $0.50$ criterion with 2 to 8 bins at $8$--$23\%$ data statistics per bin; the
           pion momenta give only 2 or 3 bins. Through the framework all seven are compatible with their truth in the
-          nominal pseudo-data, $15$--$58\%$ per bin (combined, constrained).
+          nominal pseudo-data, $17$--$59\%$ per bin (combined, constrained, soft-pion term included).
     \item Beam-on control regions: with the single-pion MCS calibration, the classifier inputs and the event score
           are compatible with the data under the full prediction covariance; the LLR score at its proton end (long protons) follows the
           recombination variation at $1.4$ times its size ($\leq0.12\sigma$ beyond the detector term).
