@@ -17,7 +17,9 @@ Per variable v:
     python3 scripts/mp2pi_kin_configs.py <mp2pi_kinematics.json> [variables] [--prod 2f]
         (--prod P: extraction configs mp2pi_xsec_config_numi_kinP_<v>_<cfg>[_constr].txt on the production of
         /data/uboone/processed/mp2pi_P, universes mp2pi_<CFG>_total_P_fluxw_<v>_univmake.root; v = total uses the bin
-        and slice configs of the one-bin total, copied to mp2pi_kin_total_{bin,slice}_config.txt, with Wiener-SVD off)
+        and slice configs of the one-bin total, copied to mp2pi_kin_total_{bin,slice}_config.txt, with Wiener-SVD off;
+        with --prod 2f the generator predictions of scripts/mp2pi_gen/mp2pi_gen.py on branch multipion/phase1,
+        /data/uboone/processed/mp2pi_2f/gen/<generator>_2pi_<fhc|rhc|comb>_fte.root, are added)
 """
 import json, os, sys
 
@@ -37,6 +39,8 @@ VAR = {
 }
 SIDEBANDS = [f'1 0 "{E}evt_region == {r} && !CC1mu1piXp_Selected"' for r in (1, 2, 3, 4)]
 TAG = {'fhc5': 'FHC5', 'rhcfull': 'RHCFULL', 'comb': 'COMB'}
+GENMODE = {'fhc5': 'fhc', 'rhcfull': 'rhc', 'comb': 'comb'}
+GENS = {'GENIE': 'genie', 'GiBUU': 'gibuu', 'NEUT': 'neut', 'NuWro': 'nuwro'}
 FLUX = {'fhc5': '6.81159e-10', 'rhcfull': '6.44646e-10', 'comb': '6.596906e-10'}
 
 
@@ -63,7 +67,9 @@ def xsec_configs(v, n):
                      f'FPFile configs/file_properties_numi_{cfg}_mp2pi_{pk}_fluxw.txt',
                      'Unfold WienerSVD 0' if v == 'total' else 'Unfold WienerSVD 1 second-deriv', f'Flux {FLUX[cfg]}'] + \
                     (['Calculator Constrained'] if mode else []) + \
-                    ['Prediction uBTune "MicroBooNE Tune" univ CV', 'Prediction FakeData "Fakedata" univ FakeData']
+                    ['Prediction uBTune "MicroBooNE Tune" univ CV', 'Prediction FakeData "Fakedata" univ FakeData'] + \
+                    ([f'Prediction {k} "{k}" file /data/uboone/processed/mp2pi_2f/gen/{g}_2pi_{GENMODE[cfg]}_fte.root {v}_fte'
+                      for k, g in GENS.items()] if PROD == '2f' else [])
             name = f'mp2pi_xsec_config_numi_kin{PROD}_{v}_{cfg}{mode}.txt'
             with open(f'{REPO}/configs/{name}', 'w') as f: f.write('\n'.join(lines) + '\n')
 
