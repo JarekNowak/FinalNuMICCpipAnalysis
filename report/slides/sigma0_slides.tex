@@ -60,9 +60,9 @@
     \item Two independent selections:
       \begin{itemize}
         \item \textbf{PeLEE BDT}: standard PeLEE ntuples, cross-validated gradient BDT.
-              Has data, EXT and dirt. $S=2.11$ / $13.1$ (NuWro / GENIE), $B=382$.
+              Has data, EXT and dirt. $S=2.11$ / $13.3$ (NuWro / GENIE), $B=382$.
         \item \textbf{\Lam-style}: HyperonProduction ntuples, fitted \Lam\ decay vertex and a
-              wire-level ``island'' test. $S=0.142$ / $1.01$, $B=4.4$: $6\times$ the
+              wire-level ``island'' test. $S=0.142$ / $0.84$, $B=4.4$: $6\times$ the
               purity, $1/15$ of the signal. No data or dirt in that format.
       \end{itemize}
     \item \textbf{The result will be an upper limit.} Median discovery significance at the
@@ -70,9 +70,12 @@
     \item Best median expected 90\%~CL limit: \alert{$\sim3\times$ the GENIE rate,
           $\sim18\times$ the NuWro rate}. The generators differ by $6\times$: NuWro has
           hyperon FSI, GENIE does not.
-    \item Under one signal model the \textbf{PeLEE chain gives the better limit below a
-          $\sim20\%$ background systematic}, and the two are within $10\%$ up to $30\%$.
+    \item Under one signal model the \textbf{PeLEE chain, its cut set for the background
+          systematic, gives the better limit} under both generators up to $30\%$.
           Purity alone pointed the other way.
+    \item \textbf{New GENIE \Szero\ QE sample} (250k events): agrees with the overlay's
+          \Szero\ to $2\%$; the old GENIE hyperon sample held only 754 distinct
+          interactions.
     \item Next: the \alert{background systematics of the PeLEE chain}, which set the limit.
   \end{itemize}
 \end{frame}
@@ -101,7 +104,8 @@
   \begin{tabular}{lr}
     \toprule
     GENIE overlay (no hyperon FSI) & 83.3 \\
-    GENIE hyperon sample & 110.1 \\
+    GENIE \Szero\ QE sample (new) & 81.9 \\
+    GENIE hyperon sample (old) & 110.1 \\
     NuWro run3b, flux-weighted & 12.8 \\
     \bottomrule
   \end{tabular}\\[4pt]
@@ -114,7 +118,7 @@
 
 \begin{frame}{Samples}
   \footnotesize
-  \begin{tabular}{llp{0.55\textwidth}r}
+  \begin{tabular}{llp{0.52\textwidth}r}
     \toprule
     format & sample & content & scale \\
     \midrule
@@ -122,8 +126,9 @@
           & $\nu$ background & RHC overlay Runs 1, 2, 3, 4a, 4b, 4c, $1.55\times10^{22}$~POT & $0.075$ \\
           & dirt & RHC Runs 1, 2b, 3b, 4a, 4b, $1.74\times10^{21}$~POT, old flux & $0.66$ \\
           & EXT & run3b beam-off, $3.27\times10^{7}$ gates & $0.75$ \\
+          & GENIE \Szero, fake data & GENIE \Szero\ QE overlay (local), 251k events & $9.4\times10^{-4}$ \\
     \midrule
-    hypana & \Szero\ signal & GENIE hyperon sample; NuWro run3b & \\
+    hypana & \Szero\ signal & the same GENIE QE and NuWro run3b productions & \\
            & $\nu$ background & 14\,164 files, $7.05\times10^{21}$~POT & $0.16$ \\
            & EXT & 16\,570 events (local reco2 $+$ HyperonProduction) & $150$ \\
            & dirt, data & --- & \\
@@ -134,6 +139,25 @@
     \item the dirt was FHC ($\langle E_\nu\rangle$ and spectra), now RHC; it is on the old NuMI flux and takes the NuWro flux map;
     \item the Run~3 overlay was missing ($+55\%$ background statistics);
     \item EXT added; GENIE \Szero\ inside the overlay no longer counted as background.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{New GENIE \Szero\ QE sample (2026-10-30)}
+  \footnotesize
+  GENIE \texttt{LambdaCCQE}, primary \Szero\ selected, official dk2nu RHC flux, our overlay
+  chain on run3b EXT: 2506 jobs, 250\,555 events, $1.23\times10^{24}$~POT.\\[4pt]
+  \centering\includegraphics[width=0.92\textwidth]{genie_samples}\\[2pt]
+  \raggedright
+  \begin{itemize}
+    \item In-FV \Szero\ per $1.15\times10^{21}$~POT: \textbf{81.9} (QE sample), $83.4\pm3.7$
+          (overlay), 110.1 (old hyperon sample). Shapes match the overlay.
+    \item With the overlay's PPFX CV weight (mapped in $E_\nu$): agrees with the overlay's
+          own \Szero\ to $2\%$ at every PeLEE cut, after the BDT too.
+    \item \alert{The old GENIE hyperon sample holds only 754 distinct interactions},
+          each overlaid $\sim20\times$: spiky spectra, $1.32\times$ the rate, a harder
+          $p_\mu$. Everything that used it is redone.
+    \item Overlay non-QE \Szero\ come with a kaon (vetoed): the QE sample is the full GENIE
+          prediction.
   \end{itemize}
 \end{frame}
 
@@ -192,10 +216,10 @@
   \column{0.42\textwidth}
   \small
   \textbf{GENIE signal through the same chain}\\
-  The overlay's own \Szero\ (never trained on):\\
-  $S_{\mathrm{GENIE}}=13.1\pm1.0$ (187 raw), efficiency $18.0\%$ against NuWro's
-  $16.8\%$.\\[2pt]
-  $\Rightarrow$ the limit on the number of events is model-independent to a few \%.\\[8pt]
+  GENIE \Szero\ QE sample (never trained on):\\
+  $S_{\mathrm{GENIE}}=13.32\pm0.11$ (15\,142 raw); the overlay's own \Szero: $13.1\pm1.0$
+  (187 raw). Efficiency $18.1\%$ against NuWro's $16.8\%$.\\[2pt]
+  $\Rightarrow$ the limit on the number of events is model-independent to $7\%$.\\[8pt]
   \textbf{Detector variations} (Run~3 set, 9 variations)\\
   None resolved: quadrature $5.2\%$ on $B$ (MC noise $6.8\%$), $21.7\%$ on $S$ (noise
   $21.1\%$).\\
@@ -242,8 +266,9 @@
     \textbf{island, $\geq2$ planes} & \textbf{69} & \textbf{23} & $\mathbf{1.33}$ & $\mathbf{3.76}$ \\
     \bottomrule
   \end{tabular}\\[4pt]
-  $+$ EXT $0.62\pm0.27$ $+$ NuWro FSI $0.02$ $\Rightarrow$ $B=4.40$, purity $23\%$.\\
-  NuWro: $S=0.142$ (245 raw), efficiency $0.42\%$ vs $0.46\%$.\\[4pt]
+  $+$ EXT $0.62\pm0.27$ $+$ NuWro FSI $0.02$ $\Rightarrow$ $B=4.40$.\\
+  $S$ column: old GENIE hyperon sample. \alert{GENIE QE sample: $S=0.896\pm0.029$
+  (956 raw), purity $17\%$.} NuWro: $S=0.142$ (245 raw).\\[4pt]
   \textbf{Island pass rate vs true flight}\\
   \begin{tabular}{lrrrr}
     \toprule
@@ -314,8 +339,8 @@
   \end{itemize}
   \vspace{4pt}
   \begin{block}{Both chains under one model}
-  NuWro: PeLEE $S=2.11$, \Lam-style $S=0.142$. \quad GENIE (overlay normalisation): PeLEE
-  $13.1$, \Lam-style $1.01$.\\
+  NuWro: PeLEE $S=2.11$, \Lam-style $S=0.142$. \quad GENIE (QE sample, PPFX-weighted): PeLEE
+  $13.3$, \Lam-style $0.84$.\\
   Under the same model, purity favours the \Lam-style chain $\sim6\times$ ($3.1\%$ vs $0.55\%$, NuWro)
   and signal yield favours the PeLEE chain $15\times$.
   \end{block}
@@ -328,9 +353,9 @@
     \toprule
     median $\muUL$, NuWro / GENIE & $f=0$ & $f=15\%$ & $f=30\%$ \\
     \midrule
-    PeLEE, cut 0.759        & 18.1 / 2.95 & 48.2 / 7.88 & 82.3 / 13.5 \\
-    PeLEE, cut re-chosen    & 18.1 / 2.91 \;(0.750) & 31.0 / 5.00 \;(0.890) & 38.2 / 6.16 \;(0.925) \\
-    \Lam-style              & 36.9 / 5.33 & 37.6 / 5.43 & 39.3 / 5.68 \\
+    PeLEE, cut 0.759        & 18.1 / 2.86 & 48.2 / 7.63 & 82.3 / 13.0 \\
+    PeLEE, cut re-chosen    & 18.1 / 2.86 \;(0.750) & 31.0 / 4.91 \;(0.890) & 38.2 / 6.05 \;(0.925) \\
+    \Lam-style              & 36.9 / 6.22 & 37.6 / 6.34 & 39.3 / 6.63 \\
     \bottomrule
   \end{tabular}
 \end{frame}
@@ -339,9 +364,9 @@
   \begin{enumerate}
     \item \textbf{A limit, not an observation.} Best median $Z = 0.63\sigma$ (GENIE).
           The best limit is $\sim220$ in-FV \Szero\ events; GENIE predicts 73, NuWro 13.
-    \item \textbf{The PeLEE chain is better below $f\approx20\%$}: $2.0\times$ at $f=0$,
-          $1.4\times$ at $10\%$, $1.2\times$ at $15\%$ (NuWro). From 20 to 30\% the two are
-          within $10\%$, and the model decides which is ahead.
+    \item \textbf{The PeLEE chain is better under both generators up to $f=30\%$}:
+          $2.0\times$ at $f=0$, $1.4\times$ at $10\%$, $1.2\times$ at $15\%$ (NuWro; GENIE
+          $2.2\times$, $1.5\times$, $1.3\times$). At $30\%$: 38.2 vs 39.3 and 6.05 vs 6.63.
     \item \textbf{The \Lam-style limit is set by Poisson counting} at $B\approx4.4$:
           perfect knowledge of $B$ moves it by $3\%$, dirt at its bound by at most $16\%$.
           Hypana data and dirt would give a cross-check with different systematics, not a
@@ -367,9 +392,9 @@
           signal is negligible, and extrapolate; the $\pi^0$ normalisation is the target.
     \item \textbf{Set the BDT cut} from the resulting $f$; redo the detector variations
           there.
-    \item \textbf{Signal model}: quote under NuWro and GENIE; understand the
-          $1.3$--$1.6\times$ spread among the GENIE samples.
-    \item \textbf{Closure}: Poisson-thrown fake data, with the overlay's GENIE \Szero\ as
+    \item \textbf{Signal model}: quote under NuWro and GENIE. Redo the \Lam\ cross-check
+          and the island tuning on the GENIE QE sample; try BDT training with GENIE signal.
+    \item \textbf{Closure}: Poisson-thrown fake data, with the GENIE \Szero\ QE sample as
           an injected alternative signal.
     \item \textbf{Unblind} the RHC beam-on PeLEE data and set the observed limit.
     \item Later: \Lam-style data and dirt as a cross-check; FHC$+$RHC.
@@ -399,6 +424,8 @@
     EXT, half fold (3 seeds)    & 0.896 & 0.038 & 0.023 & 0.006 & 0.104--0.105 & \\
     \textbf{EXT, 95\% of fold}  & \textbf{0.9000} & \textbf{0.0358} & \textbf{0.0215} & \textbf{0.0061} & \textbf{0.1077} & \textbf{0.759} \\
     EXT, 95\% (2 other seeds)   & 0.900--0.902 & 0.035 & 0.021 & 0.006 & 0.108--0.109 & \\
+    \midrule
+    inputs clamped (2 seeds)    & 0.904 & 0.034 & 0.021 & 0.006 & 0.110 & \\
     \bottomrule
   \end{tabular}
   \end{center}
@@ -409,6 +436,9 @@
     \item Full fold: every full-fold seed beats every half-fold seed; reseeding moves the
           figure of merit by $\pm0.5\%$. The BDT still gains from more signal.
     \item Default seed adopted, not the best one; \texttt{TrainBDT.C} reproduces it exactly.
+    \item Not adopted yet: some inputs carry $\pm$FLT\_MAX or garbage, which defeats TMVA's
+          even cut grid. Clamping them gives $-4\%$ background at $50\%$ efficiency, $+1.6\%$
+          FoM; it goes in at the next retraining.
   \end{itemize}
 \end{frame}
 
@@ -493,8 +523,8 @@
     \item The median $n$ is an integer: a lower $B$ at the same $n$ gives a \emph{higher}
           limit, which is why dropping EXT makes it worse. The Asimov limit ($n=B$) moves
           smoothly: 40.4, 38.2, 41.6, 36.9, 39.2.
-    \item Under GENIE at the hyperon-sample normalisation instead of the overlay's: $4.11$
-          instead of $5.43$.
+    \item Under GENIE from the old hyperon sample instead of the QE sample: $5.27$ instead
+          of $6.34$.
   \end{itemize}
 \end{frame}
 
