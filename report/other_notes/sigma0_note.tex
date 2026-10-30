@@ -44,6 +44,12 @@ estimate are documented, and the expected sensitivity is new
 Revised 2026-10-30: a dedicated GENIE \Szero\ QE sample replaces the GENIE hyperon
 sample, which turned out to hold only 754 distinct interactions
 (Sec.~\ref{sec:genieqe}).
+Later on 2026-10-30: GENIE's $\numubar$ hyperon cross section is wrong in its
+hyperon-mass terms, \Szero\ $1.85\times$ too high and \Lam\ $0.80\times$ too low,
+while NuWro agrees with an independent calculation (Sec.~\ref{sec:pais}). The GENIE
+yields and limits quoted in the tables predate the correcting weights, and the GENIE
+limits are correspondingly optimistic; the FHC GENIE sample will be weighted the same
+way (Sec.~\ref{sec:fhcplan}).
 \end{abstract}
 
 \tableofcontents
@@ -379,6 +385,152 @@ with the overlay (Sec.~\ref{sec:genieqe}). The $1.61\times$ that the \Lam\ cross
 of Sec.~\ref{sec:lambdastyle} finds against the published GENIE prediction was
 measured on the hyperon sample and has to be redone. Both chains now take GENIE from
 the QE sample.
+
+\paragraph{Superseded in part (2026-10-30).} The ``production'' comparison above
+compares NuWro with GENIE as if GENIE's \Szero\ cross section were right. It is not:
+GENIE's \Szero\ is $1.85\times$ too high, and once that is corrected the two generators
+agree on \Szero\ production to $12\%$ (Sec.~\ref{sec:pais}). The FSI factor stands.
+
+\subsection{GENIE's hyperon cross section (2026-10-30)}
+\label{sec:pais}
+
+\paragraph{Generators with the hyperon cascade off.} NuWro was rerun with no cascade
+and no jailing (\texttt{kaskada\_on=0}, \texttt{hyp\_Eb=0}), one hyperon channel at a
+time, on the configuration of the signal production and with the flux weight; GENIE is
+taken from the generator files of the QE sample (\Szero) and of the same production
+with \Lam\ kept (\texttt{genie\_to\_hepmc.C}, \texttt{keep\_pdg}). In-FV
+$\numubar$ CC events with a primary hyperon per $1.1526\times10^{21}$~POT
+(\texttt{GenRate.C}):
+\begin{center}
+\small
+\begin{tabular}{lrrr}
+\toprule
+ & NuWro & GENIE & NuWro/GENIE \\
+\midrule
+\Lam\         & $223.7\pm2.9$ & $209.5\pm1.4$ & $1.07$ \\
+\Szero\       & $47.9\pm0.6$  & $81.7\pm0.6$  & $0.59$ \\
+$\Sigma^-$    & $115\pm2$     & $\approx197$  & $0.58$ \\
+\midrule
+\Szero/\Lam\  & $0.214$ & $0.390$ & \\
+\bottomrule
+\end{tabular}
+\end{center}
+NuWro's $\Sigma^-/\Szero=2.40$ is the isospin factor 2 times argon's $N/Z$ (2.44), and
+GENIE's is too. Against $E_\nu$ the NuWro/GENIE ratio rises the same way for \Lam\
+and \Szero\ (Fig.~\ref{fig:pais}, centre); only the normalisation differs, by
+$0.55$ at every energy. So the flux weight is not the cause, and the difference is in
+the $\Sigma$ couplings or the formula, not in the flux or the nucleus.
+
+\paragraph{Same couplings.} Both generators use the Cabibbo SU(3) form factors with the
+same coefficients ($f_1^{\Lam}=-\sqrt{3/2}\,F_1^p$, $g_1^{\Lam}=-(1+2x)g_A/\sqrt6$,
+$f_1^{\Szero}=-(F_1^p+2F_1^n)/\sqrt2$, $g_1^{\Szero}=(1-2x)g_A/\sqrt2$, and $\Sigma^-$
+$\sqrt2\times$ \Szero), $x=F/(F+D)=0.365$ and $M_A=0.99$--$1.0$~GeV
+(GENIE \texttt{LwlynSmithFF::Strange*}, NuWro \texttt{ff.cc}). NuWro contracts the full
+hadronic and leptonic tensors (\texttt{Singh\_Model}); GENIE uses a closed form,
+\texttt{PaisQELLambdaPXSec}.
+
+\paragraph{An independent calculation.} \texttt{HypXsecWeights.py} evaluates
+$L_{\mu\nu}H^{\mu\nu}$ for $\numubar p\to\mu^+Y$ from explicit Dirac traces with the
+same form factors. On ordinary CCQE it gives $1.06$ ($\nu$) and $0.41$
+($\numubar$)$\times10^{-38}$~cm$^2$ at 1~GeV, the Llewellyn Smith values. For hyperons,
+free proton, $10^{-40}$~cm$^2$:
+\begin{center}
+\small
+\begin{tabular}{lrrrrrr}
+\toprule
+ & \multicolumn{3}{c}{trace} & \multicolumn{3}{c}{GENIE spline} \\
+$E_\nu$ & \Lam & \Szero & \Szero/\Lam & \Lam & \Szero & \Szero/\Lam \\
+\midrule
+1~GeV & 1.33 & 0.25 & 0.19 & 1.02 & 0.46 & 0.45 \\
+2~GeV & 2.15 & 0.41 & 0.19 & 1.71 & 0.76 & 0.44 \\
+\bottomrule
+\end{tabular}
+\end{center}
+NuWro's $0.21$ on argon agrees with the trace; GENIE's $0.45$ is $2.4\times$ higher.
+
+\paragraph{Where GENIE goes wrong.} A transcription of \texttt{PaisQELLambdaPXSec::XSec}
+(v3\_00\_06) reproduces GENIE's \Lam\ spline (1.05 against 1.02 at 1~GeV; its \Szero\ is
+$15\%$ under GENIE's, which has $G_E^n\neq0$). With the final-state mass set to the
+nucleon's, it agrees with the trace to $0.5\%$ and gives Llewellyn Smith CCQE. As the
+final-state mass is raised to the hyperon's, the two separate: the trace cross section
+falls, as phase space requires, while the Pais \Szero\ cross section \emph{rises}
+($0.49\to0.60$ at 2~GeV, against $0.50\to0.41$). The error is therefore in the terms
+that depend on $M_Y-M_N$; relative to the trace, GENIE's \Lam\ is $\times0.80$ and its
+\Szero\ and $\Sigma^-$ $\times1.5$--$1.85$ (Fig.~\ref{fig:pais}, left). Nothing in this
+analysis tests NuWro's formula beyond its agreement with the trace.
+
+\begin{figure}[h]\centering
+\includegraphics[width=\textwidth]{hyperon_xsec.pdf}
+\caption{Left: $\numubar p\to\mu^+Y$ on a free proton, GENIE's Pais splines (dashed)
+and the full trace with the same form factors (solid). Centre: NuWro/GENIE in-FV rate
+with the cascade off, flux-weighted, against true $E_\nu$; open squares are GENIE
+\Szero\ with the cross-section weight. Right: \Szero\ polarisation in its rest frame
+against $E_\nu$ at three values of $u=(Q^2-Q^2_{\min})/(Q^2_{\max}-Q^2_{\min})$.}
+\label{fig:pais}
+\end{figure}
+
+\paragraph{Correcting the GENIE samples.} A weight $w(E,u)=\left[d\sigma/dQ^2\right]_
+{\mathrm{trace}}/\left[d\sigma/dQ^2\right]_{\mathrm{Pais}}$ for a free nucleon, with
+$E$ the $\numubar$ energy in the struck-nucleon frame and
+$u=(Q^2-Q^2_{\min})/(Q^2_{\max}-Q^2_{\min})$ (\texttt{hyp\_xsec\_weights.root},
+\texttt{HypXsecWeight.h}). For a two-body reaction on a given nucleon $E$ and $Q^2$ fix
+the final state up to a flat azimuth, so the weight corrects the production kinematics
+as well as the rate, provided GENIE populates the phase space: its Pais expression
+turns negative and is clipped to zero only near $u\to1$, which holds $\le0.3\%$ of the
+corrected cross section, and the weight is capped at 5 there. \Szero\ weights run from
+$0.63$ to $1.4$, \Lam\ from $1.05$ to $1.35$ below the cap. On the generator files:
+\begin{center}
+\small
+\begin{tabular}{lrrrr}
+\toprule
+in-FV per data POT & GENIE & GENIE weighted & NuWro & NuWro/GENIE weighted \\
+\midrule
+\Lam\   & 209.5 & 263.0 & 223.7 & 0.85 \\
+\Szero\ & 81.7  & 54.4  & 47.9  & 0.88 \\
+\Szero/\Lam & 0.390 & 0.207 & 0.214 & \\
+\bottomrule
+\end{tabular}
+\end{center}
+The relative statistical error of the \Szero\ rate is $0.75\%$ with the weight and
+$0.76\%$ without, so it costs no statistics. Taking the struck nucleon at rest instead
+of from the event, as the PeLEE ntuples require, changes the rates by $1\%$. The common
+$0.85$ is a nuclear (binding, hyperon potential, Pauli) and flux difference; the
+weighted shapes ($Q^2$, $p_\mu$, $p_\Sigma$) move by at most $5\%$ in their means.
+\texttt{SigmaSelection.C} applies the weight to every hyperon-QE event of every GENIE
+sample (overlay, dirt, detector variations, the QE sample), not to NuWro.
+
+\paragraph{\Szero\ polarisation.} The same traces with the spin projector
+$(1+\gamma_5\,s\!\!\!/)/2$ give the \Szero\ polarisation: $P_L$ and $P_T$ (in the
+production plane, towards the $\numubar$) are each about $-0.4$ to $-0.5$, and $P_N=0$
+without T-odd form factors (Fig.~\ref{fig:pais}, right). The sign conventions are
+checked against explicit helicity spinors and on a point-like $V-A$ current, which
+gives $|\vec P|=1$ at every angle. Neither generator chain polarises: GENIE and NuWro
+hand Geant4 an unpolarised \Szero, which decays isotropically. The M1 decay passes the
+polarisation on as $\vec P_\Lam=-(\vec P_\Sigma\cdot\hat n)\hat n$, $\hat n$ the \Lam\
+direction in the \Szero\ frame, and $\Lam\to N\pi$ distributes the nucleon as
+$1+\alpha\vec P_\Lam\cdot\hat q$ ($\alpha=0.747$ for $p\pi^-$). \texttt{PolWeights.C}
+weights each event by $w=1-\alpha(\vec P_\Sigma\cdot\hat n)(\hat n\cdot\hat q)$, taking
+the production kinematics from the PeLEE ntuple and the \Lam\ and nucleon directions
+from the hypana ntuple of the same production (start and end points). The rebuilt
+directions give $75.4\pm10$~MeV/$c$ for the \Lam\ in the \Szero\ frame (two-body value
+74.5) and $108\pm26$~MeV/$c$ for the nucleon in the \Lam\ frame (100.6): the proton's
+start-to-end direction is approximate but usable. $\langle w\rangle=0.997$ and its rms
+is $0.15$ per event. Its effect on the selected yields and on the limits is being measured with the reweighted selection; Table~\ref{tab:limits} does not yet include either weight.
+
+\paragraph{What the weights cannot correct.} The hyperon's nuclear potential and the
+nucleon binding near threshold shift the hyperon kinetic energy rather than reweight
+it; GENIE has neither. Hyperon FSI changes the event topology: a weight can drop
+events with a survival probability but cannot produce the \Lam\ from $\Szero N\to\Lam
+N$. For NuWro the polarisation weight uses the post-cascade \Szero\ kinematics, which
+for the $24\%$ that survive is the production kinematics only for those that did not
+scatter.
+
+\paragraph{NuWro's cascade on \Lam.} For comparison with the \Szero\ numbers of
+Sec.~\ref{sec:rate}: of the primary \Lam, $64\%$ leave the nucleus as \Lam, $32\%$ are
+jailed and $4\%$ convert to $\Sigma$; the in-FV \Lam\ rate falls to $0.72$. Of the
+primary \Szero\ only $24\%$ survive. The factor of about two in \Szero\ reduction quoted
+for NuWro in the second-class-current study is not reproduced by this build
+(\texttt{nuwro\_old}, \texttt{hyp\_Eb}=30~MeV); that is open.
 
 % =============================================================================
 \section{The PeLEE selection}
@@ -1230,6 +1382,40 @@ through the same selection, an FHC signal sample (or a justified reuse of the RH
 one), FHC dirt and FHC EXT. At the purity of the PeLEE chain the background grows with
 the signal, so this is worth doing only once the systematics of Sec.~\ref{sec:plan}
 are in hand.
+
+\subsection{The FHC GENIE signal sample: weights, not a fixed GENIE}
+\label{sec:fhcplan}
+The FHC twin of the GENIE QE sample (\texttt{genie\_uboone\_NuMI\_FHC\_sigmazero\_run1\_2026},
+\texttt{LambdaCCQE}, a primary \Szero\ selected) is being generated: 448 of 1200 chunks
+of 500 events on 2026-10-30. In FHC the \Szero\ comes only from the wrong-sign
+$\numubar$, since quasi-elastic hyperon production is $\numubar$-only, so it carries
+exactly the GENIE error of Sec.~\ref{sec:pais}. Three ways to deal with it:
+\begin{enumerate}
+  \item \textbf{Weights (adopted).} \texttt{HypXsecWeight.h} and \texttt{PolWeights.C}
+        as for RHC. The weight depends only on $E_\nu$ and $Q^2$, not on the flux, so
+        the table applies unchanged; it extends to 20~GeV and is clamped beyond. It
+        costs no statistics (Sec.~\ref{sec:pais}) and needs nothing regenerated. The
+        polarisation weight needs the FHC hypana ntuples, which the overlay chain makes
+        anyway.
+  \item \textbf{Rejection before the detector simulation.} Accepting each HepMC event
+        with probability $w/w_{\max}$ gives an unweighted sample with the right
+        distribution, but keeps only $\langle w\rangle/w_{\max}\approx0.67/1.4\approx48\%$
+        of the \Szero\ the generation has already paid for. It gains nothing over
+        weighting and is not worth it.
+  \item \textbf{Fix GENIE.} Replace \texttt{PaisQELLambdaPXSec::XSec} by the full
+        contraction (or port NuWro's \texttt{Singh\_Model}), regenerate the three
+        $\numubar$ hyperon-QE splines on argon (cheap), and regenerate the sample. It is
+        correct by construction, but it needs a private GENIE build inside the
+        generation environment, a validation against the trace, and the full
+        generation again. The polarisation weight is still needed, because Geant4
+        decays the \Szero\ and \Lam\ isotropically whatever GENIE does.
+\end{enumerate}
+The current FHC generation therefore continues unchanged and is weighted like RHC. The
+GENIE problem matters beyond this analysis: it moves GENIE's \Lam\ prediction by
+$\times1.26$, which is the model the \uboone\ \Lam\ measurement compared with, so it
+should be reported to the GENIE authors with the calculation of Sec.~\ref{sec:pais}.
+A fixed GENIE is worth building if the collaboration wants unweighted official
+samples; it would replace the cross-section weight, not the polarisation weight.
 
 % =============================================================================
 \section{Work plan}
