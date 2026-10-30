@@ -60,7 +60,7 @@
     \item Two independent selections:
       \begin{itemize}
         \item \textbf{PeLEE BDT}: standard PeLEE ntuples, cross-validated gradient BDT.
-              Has data, EXT and dirt. $S=2.11$ / $13.3$ (NuWro / GENIE), $B=382$.
+              Has data, EXT and dirt. $S=2.12$ / $13.5$ (NuWro / GENIE), $B=342$.
         \item \textbf{\Lam-style}: HyperonProduction ntuples, fitted \Lam\ decay vertex and a
               wire-level ``island'' test. $S=0.142$ / $0.84$, $B=4.4$: $6\times$ the
               purity, $1/15$ of the signal. No data or dirt in that format.
@@ -177,9 +177,8 @@
     \item 57 BDT inputs: PID, distances, angles, \Lam\ and \Szero\ masses, pointing,
           $\pi^0$ and second-shower variables, \texttt{HasPair}.
     \item Two-fold cross-validation by event parity: every score is out of sample.
-    \item \textbf{Retrained 18 Oct}: EXT in the background tree ($+5\%$), and training
-          on $95\%$ of each fold, not TMVA's default $50\%$ ($+4\%$). AUC
-          $0.889\to0.900$.
+    \item \textbf{Retrained} 18 Oct (EXT, full fold) and 30 Oct (clamped inputs, GENIE
+          signal in training): AUC $0.889\to0.900\to\mathbf{0.909}$.
   \end{itemize}
   \column{0.52\textwidth}
   \centering\includegraphics[width=\textwidth]{bdt_score}\\
@@ -187,7 +186,7 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}{PeLEE chain: results at BDTG $>0.759$}
+\begin{frame}{PeLEE chain: results at BDTG $>0.779$}
   \begin{columns}[T]
   \column{0.55\textwidth}
   \footnotesize
@@ -197,33 +196,33 @@
     \midrule
     MuonCandidate & 11107 & $51.6\%$ & 6.47 & 28978 \\
     NTracksCut    & 10931 & $50.8\%$ & 6.37 & 26549 \\
-    \textbf{BDTG} & \textbf{3644} & $\mathbf{16.9\%}$ & \textbf{2.11} & \textbf{382} \\
+    \textbf{BDTG} & \textbf{3686} & $\mathbf{17.1\%}$ & \textbf{2.12} & \textbf{342} \\
     \bottomrule
   \end{tabular}\\[6pt]
   \begin{tabular}{lrrr}
     \toprule
-    $B$ at BDTG & old BDT (0.616) & new (0.759) & raw \\
+    $B$ at BDTG, cut & 0.616 & 0.759 & \textbf{0.779} \\
     \midrule
-    overlay & 715.7 & 367.9 & 5178 \\
-    EXT     & 109.5 & 11.3  & 15 \\
-    dirt    & 13.8  & 2.3   & 7 \\
-    other hyperons & 1.7 & 1.1 & 1841 \\
+    overlay & 715.7 & 367.9 & 328.5 \\
+    EXT     & 109.5 & 11.3  & 10.5 \\
+    dirt    & 13.8  & 2.3   & 1.9 \\
+    other hyperons & 1.7 & 1.1 & 1.1 \\
     \midrule
-    total   & 840.7 & \textbf{382.4} & \\
+    total   & 840.7 & 382.4 & \textbf{342.0} \\
     \bottomrule
   \end{tabular}\\[4pt]
-  purity $0.34\%\to\mathbf{0.55\%}$, \;$S/\sqrt{S+B}$ $0.098\to\mathbf{0.108}$
+  BDTs of 15, 18 and 30 Oct.\\
+  purity $0.34\%\to0.55\%\to\mathbf{0.62\%}$\\
+  $S/\sqrt{S+B}$ $0.098\to0.108\to\mathbf{0.114}$
   \column{0.42\textwidth}
   \small
   \textbf{GENIE signal through the same chain}\\
-  GENIE \Szero\ QE sample (never trained on):\\
-  $S_{\mathrm{GENIE}}=13.32\pm0.11$ (15\,142 raw); the overlay's own \Szero: $13.1\pm1.0$
-  (187 raw). Efficiency $18.1\%$ against NuWro's $16.8\%$.\\[2pt]
-  $\Rightarrow$ the limit on the number of events is model-independent to $7\%$.\\[8pt]
-  \textbf{Detector variations} (Run~3 set, 9 variations)\\
-  None resolved: quadrature $5.2\%$ on $B$ (MC noise $6.8\%$), $21.7\%$ on $S$ (noise
-  $21.1\%$).\\
-  $\Rightarrow$ $\lesssim7\%$ on $B$; not measured on $S$.
+  QE sample: $S_{\mathrm{GENIE}}=13.47\pm0.11$ (15\,304 raw); overlay's own \Szero:
+  $13.2\pm1.0$ (187 raw). Efficiency $18.3\%$ vs NuWro $16.9\%$: event-count limit
+  model-independent to $8\%$.\\[6pt]
+  \textbf{Detector variations} (Run~3 set)\\
+  $B$: $9.6\%$ (noise $7.0\%$), recombination $-7.6\pm3.0\%$ $\Rightarrow$ $7$--$10\%$.\\
+  $S$: $20.2\%$ = noise: not measured.
   \end{columns}
 \end{frame}
 
@@ -339,9 +338,9 @@
   \end{itemize}
   \vspace{4pt}
   \begin{block}{Both chains under one model}
-  NuWro: PeLEE $S=2.11$, \Lam-style $S=0.142$. \quad GENIE (QE sample, PPFX-weighted): PeLEE
-  $13.3$, \Lam-style $0.84$.\\
-  Under the same model, purity favours the \Lam-style chain $\sim6\times$ ($3.1\%$ vs $0.55\%$, NuWro)
+  NuWro: PeLEE $S=2.12$, \Lam-style $S=0.142$. \quad GENIE (QE sample, PPFX-weighted): PeLEE
+  $13.5$, \Lam-style $0.84$.\\
+  Under the same model, purity favours the \Lam-style chain $\sim5\times$ ($3.1\%$ vs $0.62\%$, NuWro)
   and signal yield favours the PeLEE chain $15\times$.
   \end{block}
 \end{frame}
@@ -353,8 +352,8 @@
     \toprule
     median $\muUL$, NuWro / GENIE & $f=0$ & $f=15\%$ & $f=30\%$ \\
     \midrule
-    PeLEE, cut 0.759        & 18.1 / 2.86 & 48.2 / 7.63 & 82.3 / 13.0 \\
-    PeLEE, cut re-chosen    & 18.1 / 2.86 \;(0.750) & 31.0 / 4.91 \;(0.890) & 38.2 / 6.05 \;(0.925) \\
+    PeLEE, cut 0.779        & 17.2 / 2.71 & 43.4 / 6.84 & 73.6 / 11.6 \\
+    PeLEE, cut re-chosen    & 17.0 / 2.69 \;(0.735) & 28.3 / 4.47 \;(0.915) & 36.3 / 5.72 \;(0.945) \\
     \Lam-style              & 36.9 / 6.22 & 37.6 / 6.34 & 39.3 / 6.63 \\
     \bottomrule
   \end{tabular}
@@ -362,19 +361,19 @@
 
 \begin{frame}{What the sensitivity says}
   \begin{enumerate}
-    \item \textbf{A limit, not an observation.} Best median $Z = 0.63\sigma$ (GENIE).
-          The best limit is $\sim220$ in-FV \Szero\ events; GENIE predicts 73, NuWro 13.
+    \item \textbf{A limit, not an observation.} Best median $Z = 0.69\sigma$ (GENIE).
+          The best limit is $\sim210$ in-FV \Szero\ events; GENIE predicts 74, NuWro 13.
     \item \textbf{The PeLEE chain is better under both generators up to $f=30\%$}:
-          $2.0\times$ at $f=0$, $1.4\times$ at $10\%$, $1.2\times$ at $15\%$ (NuWro; GENIE
-          $2.2\times$, $1.5\times$, $1.3\times$). At $30\%$: 38.2 vs 39.3 and 6.05 vs 6.63.
+          $2.2\times$ at $f=0$, $1.5\times$ at $10\%$, $1.3\times$ at $15\%$ (NuWro; GENIE
+          $2.3\times$, $1.6\times$, $1.4\times$). At $30\%$: 36.3 vs 39.3 and 5.72 vs 6.63.
     \item \textbf{The \Lam-style limit is set by Poisson counting} at $B\approx4.4$:
           perfect knowledge of $B$ moves it by $3\%$, dirt at its bound by at most $16\%$.
           Hypana data and dirt would give a cross-check with different systematics, not a
           better limit.
     \item \textbf{The background systematic drives the PeLEE limit}: $\times1.7$ from
           $f=0$ to $15\%$ even with the cut re-chosen.
-    \item \textbf{Choose the BDT cut from the systematic budget}: at $f=10\%$, 0.875
-          instead of 0.759 is $25\%$ better. $S/\sqrt{S+B+(fB)^2}$ agrees up to $10\%$ and
+    \item \textbf{Choose the BDT cut from the systematic budget}: at $f=10\%$, 0.885
+          instead of 0.779 is $22\%$ better. $S/\sqrt{S+B+(fB)^2}$ agrees up to $10\%$ and
           then picks cuts with too few raw events.
   \end{enumerate}
 \end{frame}
@@ -387,7 +386,7 @@
     \item \textbf{Background systematics, PeLEE chain}: flux (\texttt{weightsPPFX}), cross
           section (\texttt{weightsGenie}) and reinteraction (\texttt{weightsReint})
           multisims at one bin -- the ntuples carry them, no framework port needed --
-          plus detector variations ($\lesssim7\%$).
+          plus detector variations ($7$--$10\%$).
     \item \textbf{Constrain $B$ from data}: fit the low-BDT-score region, where the
           signal is negligible, and extrapolate; the $\pi^0$ normalisation is the target.
     \item \textbf{Set the BDT cut} from the resulting $f$; redo the detector variations
@@ -425,7 +424,8 @@
     \textbf{EXT, 95\% of fold}  & \textbf{0.9000} & \textbf{0.0358} & \textbf{0.0215} & \textbf{0.0061} & \textbf{0.1077} & \textbf{0.759} \\
     EXT, 95\% (2 other seeds)   & 0.900--0.902 & 0.035 & 0.021 & 0.006 & 0.108--0.109 & \\
     \midrule
-    inputs clamped (2 seeds)    & 0.904 & 0.034 & 0.021 & 0.006 & 0.110 & \\
+    clamped, NuWro signal       & 0.906 & 0.034 & 0.020 & 0.006 & 0.110 & \\
+    \textbf{clamped + GENIE signal (30 Oct)} & \textbf{0.9086} & \textbf{0.0317} & \textbf{0.0186} & \textbf{0.0055} & \textbf{0.1146} & \textbf{0.779} \\
     \bottomrule
   \end{tabular}
   \end{center}
@@ -436,13 +436,13 @@
     \item Full fold: every full-fold seed beats every half-fold seed; reseeding moves the
           figure of merit by $\pm0.5\%$. The BDT still gains from more signal.
     \item Default seed adopted, not the best one; \texttt{TrainBDT.C} reproduces it exactly.
-    \item Not adopted yet: some inputs carry $\pm$FLT\_MAX or garbage, which defeats TMVA's
-          even cut grid. Clamping them gives $-4\%$ background at $50\%$ efficiency, $+1.6\%$
-          FoM; it goes in at the next retraining.
+    \item 30 Oct: inputs carrying $\pm$FLT\_MAX, $10^5$ or garbage defeated TMVA's even
+          cut grid; now clamped. 43k GENIE \Szero\ join the training signal. $-12\%$
+          background at 40--50\% efficiency on NuWro.
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Backup: detector variations at BDTG $>0.759$}
+\begin{frame}{Backup: detector variations at BDTG $>0.779$}
   \footnotesize
   \begin{columns}[T]
   \column{0.5\textwidth}
@@ -450,15 +450,15 @@
     \toprule
     variation & $S$ var/CV & $B$ var/CV \\
     \midrule
-    LY attenuation   & $1.000\pm0.000$ & $0.997\pm0.005$ \\
-    LY down          & $0.975\pm0.025$ & $0.985\pm0.006$ \\
-    LY Rayleigh      & $0.980\pm0.039$ & $0.987\pm0.008$ \\
-    recombination    & $1.062\pm0.088$ & $0.973\pm0.030$ \\
-    SCE              & $0.921\pm0.090$ & $0.998\pm0.034$ \\
-    WireMod $\theta_{XZ}$ & $0.907\pm0.076$ & $1.002\pm0.023$ \\
-    WireMod $\theta_{YZ}$ & $0.840\pm0.078$ & $1.026\pm0.026$ \\
-    WireMod $X$      & $0.975\pm0.075$ & $1.027\pm0.026$ \\
-    WireMod $YZ$     & $0.964\pm0.095$ & $0.986\pm0.023$ \\
+    LY attenuation     & $1.000\pm0.000$ & $1.005\pm0.005$ \\
+    LY down            & $0.974\pm0.026$ & $0.991\pm0.006$ \\
+    LY Rayleigh        & $0.974\pm0.039$ & $0.984\pm0.009$ \\
+    recombination      & $1.125\pm0.073$ & $0.924\pm0.030$ \\
+    SCE                & $0.904\pm0.107$ & $0.973\pm0.035$ \\
+    WireMod $\theta_{XZ}$ & $0.992\pm0.078$ & $0.970\pm0.025$ \\
+    WireMod $\theta_{YZ}$ & $0.902\pm0.088$ & $0.976\pm0.027$ \\
+    WireMod $X$        & $0.956\pm0.078$ & $0.972\pm0.027$ \\
+    WireMod $YZ$       & $0.947\pm0.082$ & $0.985\pm0.026$ \\
     \bottomrule
   \end{tabular}
   \column{0.46\textwidth}
@@ -466,10 +466,10 @@
   \begin{itemize}
     \item Same generated events, compared event by event with the CV weight on both sides;
           old-flux samples, so ratios only.
-    \item CV keeps 51 raw signal and 1\,260 raw background events at this cut.
-    \item Quadrature equals MC noise on both sides: nothing resolved.
-    \item WireMod $\theta_{YZ}$ ($2.0\sigma$) and $\theta_{XZ}$ ($1.2\sigma$) pull the
-          signal down, as at the previous cut.
+    \item CV keeps 51 raw signal and 1\,174 raw background events at this cut.
+    \item Signal: quadrature $20.2\%$ = MC noise $21.4\%$, not resolved.
+    \item Background: recombination $-7.6\pm3.0\%$ ($2.5\sigma$); quadrature $9.6\%$
+          against $7.0\%$ noise $\Rightarrow$ $7$--$10\%$ on $B$.
   \end{itemize}
   \end{columns}
 \end{frame}

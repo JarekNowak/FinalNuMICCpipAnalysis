@@ -25,14 +25,14 @@ charged-current interactions in the NuMI beam, $\Szero\to\Lam\gamma$,
 $\Lam\to p\pi^-$, with the full reverse-horn-current (RHC) exposure of
 $1.15\times10^{21}$~POT. Two selections are maintained. The main one runs on
 standard PeLEE ntuples, which carry data, beam-off (EXT) and dirt samples, and ends
-in a cross-validated gradient BDT: $S=2.11$ NuWro signal events on $B=382$
-($0.55\%$ purity). The second follows the \uboone\ \Lam\ CCQE analysis on
+in a cross-validated gradient BDT: $S=2.12$ NuWro signal events on $B=342$
+($0.62\%$ purity). The second follows the \uboone\ \Lam\ CCQE analysis on
 HyperonProduction ntuples, fitting the \Lam\ decay vertex and testing the
 connectedness of the raw wire activity: $S=0.90$ GENIE signal events on $B=4.4$
 ($17\%$ purity), with no data or dirt in that format yet. An expected-sensitivity
 calculation puts both under one signal model. Neither can observe \Szero\ at the
 predicted rate, so the result will be an upper limit. The best median expected
-90\%~CL limit is about $3\times$ the GENIE rate and $18\times$ the NuWro rate; the two
+90\%~CL limit is about $2.7\times$ the GENIE rate and $17\times$ the NuWro rate; the two
 generators differ by a factor of six, because NuWro includes hyperon final-state
 interactions. With its BDT cut set for the background systematic, the PeLEE chain
 gives the better limit under both generators at every systematic up to $30\%$.
@@ -84,12 +84,12 @@ limit on the rate in units of the model (Sec.~\ref{sec:sensitivity}).}
 \midrule
 ntuple format & PeLEE & HyperonProduction \\
 data, EXT, dirt & all three & EXT only (factorised) \\
-final discriminant & BDTG $>0.759$ & island test on $\geq2$ planes \\
-$S$, NuWro (with hyperon FSI) & $2.11$ & $0.142$ \\
-$S$, GENIE (no hyperon FSI) & $13.3$ & $0.84$ \\
-$B$ & $382$ & $4.40$ \\
-purity, NuWro / GENIE & $0.55\%$ / $3.4\%$ & $3.1\%$ / $16\%$ \\
-$\muUL$ at $f=15\%$, NuWro / GENIE & $48$ / $7.6$ (re-optimised $31$ / $4.9$) & $38$ / $6.3$ \\
+final discriminant & BDTG $>0.779$ & island test on $\geq2$ planes \\
+$S$, NuWro (with hyperon FSI) & $2.12$ & $0.142$ \\
+$S$, GENIE (no hyperon FSI) & $13.5$ & $0.84$ \\
+$B$ & $342$ & $4.40$ \\
+purity, NuWro / GENIE & $0.62\%$ / $3.8\%$ & $3.1\%$ / $16\%$ \\
+$\muUL$ at $f=15\%$, NuWro / GENIE & $43$ / $6.8$ (re-optimised $28$ / $4.5$) & $38$ / $6.3$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -101,8 +101,12 @@ $\muUL$ at $f=15\%$, NuWro / GENIE & $48$ / $7.6$ (re-optimised $31$ / $4.9$) & 
         overlay's own \Szero\ to $2\%$. It replaces the GENIE hyperon sample, which
         holds only 754 distinct \Szero\ interactions, each overlaid about 20 times, at
         $1.32\times$ the overlay's rate. The \Lam-style GENIE yield falls from 1.33 to
-        0.90, and the GENIE signal of the PeLEE chain now rests on 15\,142 raw events
+        0.90, and the GENIE signal of the PeLEE chain now rests on 15\,304 raw events
         instead of 187.
+  \item \textbf{PeLEE BDT retrained} with clamped inputs and the GENIE signal added to
+        the training (Sec.~\ref{sec:bdt}): $12\%$ less background at $40$--$50\%$ signal
+        efficiency; the operating point moves to 0.759 $\to$ 0.779, $S$ 2.11 $\to$ 2.12,
+        $B$ 382 $\to$ 342, and the expected limits improve by 5--10\%.
   \item \textbf{The chain comparison changes under GENIE.} With the PeLEE cut set for
         the systematic, the PeLEE chain is ahead of the \Lam-style chain under both
         generators up to $f=30\%$; before, GENIE put the \Lam-style chain ahead above
@@ -428,6 +432,33 @@ Gradient BDT over 57 inputs, evaluated with two-fold cross-validation: folds are
 trained on even and odd event numbers and each is applied only to the events it did
 not train on. Every BDT number in this note is out of sample.
 
+\paragraph{Retrained 2026-10-30 (current).} Two changes. (1) Every input is mapped into
+its bulk range (\texttt{BDTClamp.h}, applied in \texttt{SigmaSelection.C} to the training
+trees and the reader alike); besides the cases below, the five pair distances carry a
+$10^5$ ``missing'' value in 21--59\% of events and \texttt{ShrSubClusters} an INT\_MAX
+one in 29\%, now capped just above their real maxima. (2) The GENIE \Szero\ QE signal
+(43\,183 events) joins the NuWro signal in training, scaled to the same summed weight.
+Out of sample on NuWro:
+
+\begin{center}
+\small
+\begin{tabular}{lcccccc}
+\toprule
+training & AUC & \multicolumn{3}{c}{$B/B_0$ at signal efficiency} & \multicolumn{2}{c}{peak $S/\sqrt{S+B}$} \\
+ & & $50\%$ & $40\%$ & $20\%$ & value & cut \\
+\midrule
+2026-10-18 (NuWro signal)         & 0.9000 & 0.0358 & 0.0215 & 0.0061 & 0.1077 & 0.759 \\
+clamped, NuWro signal             & 0.9057 & 0.0336 & 0.0203 & 0.0063 & 0.1102 & \\
+\textbf{clamped + GENIE (adopted)} & \textbf{0.9086} & \textbf{0.0317} & \textbf{0.0186} & \textbf{0.0055} & \textbf{0.1146} & \textbf{0.779} \\
+clamped + GENIE, seed 1           & 0.9093 & 0.0312 & 0.0186 & 0.0055 & 0.1147 & \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent On the GENIE signal the AUC rises from 0.9107 to 0.9204. More distinct signal
+helps even when the BDT is judged only on NuWro, as it did for the hypana BDT
+(Sec.~\ref{sec:genieqe}).
+
 \paragraph{Retrained 2026-10-18.} Two changes, measured separately on the same
 events with EXT in $B$:
 \begin{enumerate}
@@ -460,7 +491,7 @@ every full-fold seed beats every half-fold seed; reseeding moves the figure of m
 by only $\pm0.5\%$. That the BDT still improves when it sees more signal is the
 signal-statistics limit again. The default seed is adopted, not the best one.
 
-\paragraph{Input ranges (measured 2026-10-19, not adopted).} Several inputs carry values
+\paragraph{Input ranges (measured 2026-10-19, adopted 2026-10-30).} Several inputs carry values
 far outside their physical range. \texttt{Shower1VtxDist} and \texttt{Shower1DeDxY}
 carry the $-$FLT\_MAX ``missing'' sentinel ($24\%$ and $40\%$ of background). The
 calorimetric energies of the pion and proton candidates have garbage up to $2\times10^{33}$
@@ -472,15 +503,14 @@ cannot cut on the masses. Mapping each input into its bulk range, with distinct 
 and overflow values (\texttt{ClampBDTInputs.C}), and retraining gives AUC $0.9042$ against
 $0.9006$ (two seeds against three), $-4\%$ background at $50\%$ signal efficiency, $-2\%$ at
 $40\%$, nothing at $20\%$, and $+1.6\%$ in the figure of merit. Every clamped seed beats every
-present seed, so the gain is real but small. It needs the clamp in
-\texttt{SigmaSelection.C} (which fills the tree and feeds the reader) and a retraining,
-so it waits for the next retraining.
+present seed, so the gain is real. That measurement missed the six sentinel variables
+named above, which the 2026-10-30 retraining also caps.
 
 \subsection{Results}
 \label{sec:peleeresults}
 
 \begin{table}[h]\centering
-\caption{PeLEE chain at the operating point $\mathrm{BDTG}>0.759$. Efficiency is raw
+\caption{PeLEE chain at the operating point $\mathrm{BDTG}>0.779$. Efficiency is raw
 signal against true \Szero\ in the FV. $B$ = other hyperons $+$ overlay $+$ dirt $+$
 EXT.}
 \label{tab:perf}
@@ -490,28 +520,28 @@ stage & raw signal & eff.\ [\%] & $S$ & $B$ & purity [\%] & $S/\sqrt{S+B}$ \\
 \midrule
 MuonCandidate & 11107 & 51.61 & 6.469 & 28978 & 0.022 & 0.0380 \\
 NTracksCut    & 10931 & 50.79 & 6.370 & 26549 & 0.024 & 0.0391 \\
-\textbf{BDTG} & \textbf{3644} & \textbf{16.93} & \textbf{2.110} & \textbf{382.4} & \textbf{0.549} & \textbf{0.1076} \\
+\textbf{BDTG} & \textbf{3686} & \textbf{17.13} & \textbf{2.122} & \textbf{342.0} & \textbf{0.617} & \textbf{0.1144} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \begin{center}
-\begin{tabular}{lrrr}
+\begin{tabular}{lrrrr}
 \toprule
-$B$ at the BDTG point & previous BDT, cut 0.616 & current BDT, cut 0.759 & raw events \\
+$B$ at the BDTG point & BDT 2026-10-15, 0.616 & 2026-10-18, 0.759 & current, 0.779 & raw \\
 \midrule
-other hyperons (NuWro) & 1.74 & 1.06 & 1841 \\
-overlay                & 715.7 & 367.9 & 5178 \\
-dirt                   & 13.8 & 2.26 & 7 \\
-EXT                    & 109.5 & 11.25 & 15 \\
+other hyperons (NuWro) & 1.74 & 1.06 & 1.08 & 1865 \\
+overlay                & 715.7 & 367.9 & 328.5 & 4642 \\
+dirt                   & 13.8 & 2.26 & 1.93 & 6 \\
+EXT                    & 109.5 & 11.25 & 10.50 & 14 \\
 \midrule
-total                  & 840.7 & 382.4 & \\
-$S$                    & 2.850 & 2.110 & 3644 \\
+total                  & 840.7 & 382.4 & 342.0 & \\
+$S$                    & 2.850 & 2.110 & 2.122 & 3686 \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-\noindent The previous column is the previous BDT with the completed samples, EXT
+\noindent The first column is the 2026-10-15 BDT with the completed samples, EXT
 included. At MuonCandidate EXT is $6\,844$ events against $20\,348$ from the overlay;
 after the BDT it is $3\%$ of the background. Figure~\ref{fig:bdt} shows the score.
 
@@ -522,18 +552,20 @@ sample and the NuWro signal scaled by 100. The dashed line is the operating poin
 \label{fig:bdt}
 \end{figure}
 
-\paragraph{The operating point should follow the systematic budget.} $0.759$ is the
-peak of $S/\sqrt{S+B}$. There a $2\%$ background systematic is $\pm7.6$ events against
+\paragraph{The operating point should follow the systematic budget.} $0.779$ is the
+peak of $S/\sqrt{S+B}$. There a $2\%$ background systematic is $\pm6.8$ events against
 $2.1$ signal, and the figure of merit cannot see it. Section~\ref{sec:sensitivity}
-chooses the cut by the expected limit instead: $0.750$ at $f=0$, $0.875$ at $10\%$,
-$0.890$ at $15\%$.
+chooses the cut by the expected limit instead: $0.735$ at $f=0$, $0.885$ at $10\%$,
+$0.915$ at $15\%$.
 
 \subsection{GENIE signal through the same selection}
 \label{sec:geniesig}
 The GENIE \Szero\ QE sample (Sec.~\ref{sec:genieqe}) and the overlay's own GENIE
 \Szero\ events are both run through the full selection and BDT and counted apart from
 every sample, so the PeLEE chain has a GENIE signal yield under the same definition.
-The BDT never trains on either.
+Since 2026-10-30 the BDT trains on the QE sample's signal, with the same two-fold
+parity split, so its yield is still out of sample; the overlay's \Szero\ are never
+trained on, and the two agree to $2.4\%$ after the BDT.
 
 \begin{center}
 \begin{tabular}{lrrrrrr}
@@ -544,14 +576,14 @@ stage & raw & $S_{\mathrm{GENIE}}$ & eff.\ [\%] & raw & $S$ & GENIE/NuWro \\
 AllEvents (true FV)  & 84089 & 73.61 & 100   & 1038 & 72.56 & 5.86 \\
 MuonCandidate        & 43760 & 38.39 & 52.2  &  553 & 38.67 & 5.93 \\
 NTracksCut           & 43183 & 37.88 & 51.5  &  544 & 38.08 & 5.95 \\
-BDTG                 & 15142 & $13.32\pm0.11$ & 18.1 & 187 & $13.09\pm1.01$ & 6.31 \\
+BDTG                 & 15304 & $13.47\pm0.11$ & 18.3 & 187 & $13.15\pm1.02$ & 6.34 \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-\noindent The two GENIE yields agree to $2\%$ at every cut. The efficiencies differ
-between generators: $18.1\%$ for GENIE against $16.8\%$ for NuWro (weighted). The
-limit on the number of signal events is therefore model-independent to $7\%$; what
+\noindent The two GENIE yields agree to $2.4\%$ or better at every cut. The efficiencies
+differ between generators: $18.3\%$ for GENIE against $16.9\%$ for NuWro (weighted). The
+limit on the number of signal events is therefore model-independent to $8\%$; what
 depends on the model is the rate it is compared with.
 
 \subsection{Detector variations}
@@ -567,26 +599,28 @@ used.
 \toprule
 variation & $S$ var/CV & $B$ var/CV \\
 \midrule
-LY attenuation   & $1.000\pm0.000$ & $0.997\pm0.005$ \\
-LY down          & $0.975\pm0.025$ & $0.985\pm0.006$ \\
-LY Rayleigh      & $0.980\pm0.039$ & $0.987\pm0.008$ \\
-recombination    & $1.062\pm0.088$ & $0.973\pm0.030$ \\
-SCE              & $0.921\pm0.090$ & $0.998\pm0.034$ \\
-WireMod $\theta_{XZ}$ & $0.907\pm0.076$ & $1.002\pm0.023$ \\
-WireMod $\theta_{YZ}$ & $0.840\pm0.078$ & $1.026\pm0.026$ \\
-WireMod $X$      & $0.975\pm0.075$ & $1.027\pm0.026$ \\
-WireMod $YZ$     & $0.964\pm0.095$ & $0.986\pm0.023$ \\
+LY attenuation         & $1.000\pm0.000$ & $1.005\pm0.005$ \\
+LY down                & $0.974\pm0.026$ & $0.991\pm0.006$ \\
+LY Rayleigh            & $0.974\pm0.039$ & $0.984\pm0.009$ \\
+recombination          & $1.125\pm0.073$ & $0.924\pm0.030$ \\
+SCE                    & $0.904\pm0.107$ & $0.973\pm0.035$ \\
+WireMod $\theta_{XZ}$  & $0.992\pm0.078$ & $0.970\pm0.025$ \\
+WireMod $\theta_{YZ}$  & $0.902\pm0.088$ & $0.976\pm0.027$ \\
+WireMod $X$            & $0.956\pm0.078$ & $0.972\pm0.027$ \\
+WireMod $YZ$           & $0.947\pm0.082$ & $0.985\pm0.026$ \\
 \midrule
-quadrature (MC noise alone) & $21.7\%$ ($21.1\%$) & $5.2\%$ ($6.8\%$) \\
+quadrature (MC noise alone) & $20.2\%$ ($21.4\%$) & $9.6\%$ ($7.0\%$) \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-\noindent No variation is resolved on either side: both quadrature sums equal their MC
-noise. The CV keeps 51 raw signal and 1\,260 raw background events at this cut, so the
-detector systematic is bounded at $\lesssim7\%$ on the background ($\pm27$ events) and is
-not measured on the signal. WireMod $\theta_{YZ}$ ($2.0\sigma$) and $\theta_{XZ}$
-($1.2\sigma$) pull the signal down, as they did at the previous operating point.
+\noindent At the operating point $0.779$. The signal is not resolved: its quadrature sum
+equals the MC noise. The background now is: recombination lowers it by
+$7.6\pm3.0\%$ ($2.5\sigma$), and the quadrature sum exceeds the noise by about $6.6\%$
+in quadrature. The CV keeps 51 raw signal and 1\,174 raw background events, so the
+background detector systematic is about $7$--$10\%$ ($\pm24$--$33$ events) and the signal
+one is not measured. At the previous point ($0.759$) the background sum was $5.2\%$ on
+$6.8\%$ noise.
 
 % =============================================================================
 \section{What limits the PeLEE purity}
@@ -1016,20 +1050,20 @@ cut that minimises it does not depend on the signal normalisation.
 \begin{table}[h]\centering
 \caption{Median expected 90\%~CL limit on $\mu$, $g=20\%$. ``Re-optimised'' scans the
 BDT cut from 0.50 to 0.95 for each $f$ (cut in brackets); its GENIE value is the
-NuWro value divided by the GENIE/NuWro ratio measured at 0.759.}
+NuWro value divided by the GENIE/NuWro ratio measured at 0.779. BDT of 2026-10-30.}
 \label{tab:limits}
 \small
 \begin{tabular}{rlrlrlr}
 \toprule
-$f$ & \multicolumn{2}{c}{PeLEE, BDTG $>0.759$} & \multicolumn{2}{c}{PeLEE, re-optimised} & \multicolumn{2}{c}{\Lam-style} \\
+$f$ & \multicolumn{2}{c}{PeLEE, BDTG $>0.779$} & \multicolumn{2}{c}{PeLEE, re-optimised} & \multicolumn{2}{c}{\Lam-style} \\
  & NuWro [16--84\%] & GENIE & NuWro (cut) & GENIE & NuWro [16--84\%] & GENIE \\
 \midrule
- 0\% & 18.1 [12.8, 26.2] & 2.86 & 18.1 (0.750) & 2.86 & 36.9 [25.6, 51.9] & 6.22 \\
- 5\% & 24.1 & 3.81 & 22.6 (0.850) & 3.59 & 37.0 & 6.24 \\
-10\% & 35.7 & 5.66 & 27.1 (0.875) & 4.29 & 37.2 & 6.28 \\
-15\% & 48.2 [41.4, 56.2] & 7.63 & 31.0 (0.890) & 4.91 & 37.6 [25.9, 52.7] & 6.34 \\
-20\% & 60.3 & 9.54 & 34.0 (0.905) & 5.39 & 38.1 & 6.42 \\
-30\% & 82.3 [74.4, 90.9] & 13.02 & 38.2 (0.925) & 6.05 & 39.3 [26.9, 54.8] & 6.63 \\
+ 0\% & 17.2 [12.2, 24.9] & 2.71 & 17.0 (0.735) & 2.69 & 36.9 [25.6, 51.9] & 6.22 \\
+ 5\% & 22.3 & 3.51 & 21.7 (0.855) & 3.42 & 37.0 & 6.24 \\
+10\% & 32.4 & 5.11 & 24.9 (0.885) & 3.92 & 37.2 & 6.28 \\
+15\% & 43.4 [37.0, 51.0] & 6.84 & 28.3 (0.915) & 4.47 & 37.6 [25.9, 52.7] & 6.34 \\
+20\% & 54.1 & 8.52 & 31.5 (0.915) & 4.97 & 38.1 & 6.42 \\
+30\% & 73.6 [66.2, 81.8] & 11.59 & 36.3 (0.945) & 5.72 & 39.3 [26.9, 54.8] & 6.63 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1044,19 +1078,19 @@ the right is the GENIE prediction itself.}
 
 \begin{enumerate}
   \item \textbf{The result will be a limit.} The best median significance at the model
-        rate is $0.63\sigma$ (GENIE, PeLEE, $f=0$) and $0.10\sigma$ under NuWro. The best
-        expected limit, about $3\times$ GENIE and $18\times$ NuWro, is about 220 in-FV
-        \Szero\ events in $1.15\times10^{21}$~POT, against 73 predicted by GENIE and 13
-        by NuWro. In events the two models agree to $7\%$ (227 and 211 at $f=0$),
+        rate is $0.69\sigma$ (GENIE, PeLEE, $f=0$) and $0.11\sigma$ under NuWro. The best
+        expected limit, about $2.7\times$ GENIE and $17\times$ NuWro, is about 210 in-FV
+        \Szero\ events in $1.15\times10^{21}$~POT, against 74 predicted by GENIE and 13
+        by NuWro. In events the two models agree to $8\%$ (216 and 199 at $f=0$),
         because the efficiencies do (Sec.~\ref{sec:geniesig}).
   \item \textbf{The PeLEE chain gives the better limit under both generators up to
-        $f=30\%$.} With its cut set for the systematic it is $2.0\times$ better than the
-        \Lam-style chain at $f=0$, $1.4\times$ at $10\%$ and $1.2\times$ at $15\%$
-        (NuWro; GENIE $2.2\times$, $1.5\times$, $1.3\times$). At $30\%$ the two are close:
-        38.2 against 39.3 (NuWro), 6.05 against 6.63 (GENIE). Before 2026-10-30, GENIE
+        $f=30\%$.} With its cut set for the systematic it is $2.2\times$ better than the
+        \Lam-style chain at $f=0$, $1.5\times$ at $10\%$ and $1.3\times$ at $15\%$
+        (NuWro; GENIE $2.3\times$, $1.6\times$, $1.4\times$). At $30\%$ the two are
+        closest: 36.3 against 39.3 (NuWro), 5.72 against 6.63 (GENIE). Before 2026-10-30, GENIE
         put the \Lam-style chain ahead above $f\approx20\%$; that came from the hyperon
         sample's higher efficiency at the \Lam-style point. The chains' GENIE/NuWro ratios
-        are now 6.31 (PeLEE) and 5.89 (\Lam-style). The \Lam-style chain's
+        are now 6.34 (PeLEE) and 5.89 (\Lam-style). The \Lam-style chain's
         purity is real, but its signal yield is $15\times$ lower, and at $B\approx4.4$ its
         limit is set by Poisson counting: removing all background uncertainty moves it
         by $3\%$. This reverses the conclusion of the earlier comparison by
@@ -1064,11 +1098,11 @@ the right is the GENIE prediction itself.}
         BDT, used the GENIE hyperon-sample normalisation, and kept each cut where it had
         been chosen at $f=0$.
   \item \textbf{The background systematic drives the PeLEE result.} From $f=0$ to
-        $15\%$ its limit grows $1.7\times$ with the cut re-optimised and $2.7\times$ at
-        0.759. At $f=10\%$ moving the cut from 0.759 to 0.875 improves the limit by
-        $25\%$. The counting figure of merit agrees with the limit up to $f=10\%$; beyond
-        it, it picks cuts whose $B$ rests on a few raw events (0.940, $B=6.3$) and is
-        $1.7\times$ worse.
+        $15\%$ its limit grows $1.7\times$ with the cut re-optimised and $2.5\times$ at
+        0.779. At $f=10\%$ moving the cut from 0.779 to 0.885 improves the limit by
+        $22\%$. The counting figure of merit agrees with the limit up to $f=10\%$; beyond
+        it, it picks cuts whose $B$ rests on a few raw events (0.945, $B=8.9$) and is
+        $12\%$ worse.
   \item \textbf{Nothing missing from the \Lam-style chain changes its limit by much.}
         At $f=15\%$ (NuWro, Poisson median): without the EXT estimate $39.8$ against
         $37.6$; with dirt at its bound ($+0.33\pm0.33$, the PeLEE dirt/overlay ratio at
@@ -1160,7 +1194,7 @@ sample, enters at its scale directly. A \texttt{throw\_sigma0.C} modelled on
 
 A throw from the same MC is a \emph{statistical} closure test, not a model test. A
 model test needs a signal from a different generator in PeLEE format, and one now
-exists: the GENIE \Szero\ QE sample, 15\,142 raw events at the operating point, ready
+exists: the GENIE \Szero\ QE sample, 15\,304 raw events at the operating point, ready
 to be injected into a throw of the NuWro-based prediction.
 
 % =============================================================================
@@ -1207,24 +1241,18 @@ are in hand.
         limit grows $1.7\times$ from $f=0$ to $15\%$, so this sets the result. Flux
         (\texttt{weightsPPFX}), cross section (\texttt{weightsGenie}) and reinteraction
         (\texttt{weightsReint}) multisims at the single bin, with the detector variations
-        ($\lesssim7\%$, Sec.~\ref{sec:detvar}). Then a constraint from data: a fit of the
+        ($7$--$10\%$, Sec.~\ref{sec:detvar}). Then a constraint from data: a fit of the
         BDT-score region where the signal is negligible, extrapolated to the signal
         region, which leaves only the shape uncertainty in $f$. The $\pi^0$
         normalisation is the obvious target (Sec.~\ref{sec:glee}).
   \item \textbf{Choose the BDT cut from that budget} with the \texttt{Sensitivity.C}
-        scan (0.875 at $f=10\%$, 0.890 at $15\%$), and re-measure the detector
+        scan (0.885 at $f=10\%$, 0.915 at $15\%$), and re-measure the detector
         variations there: the CV keeps fewer raw events at tighter cuts.
   \item \textbf{Signal-model systematic.} Hyperon FSI is a factor $\sim4$ between the
         generators; the GENIE normalisation is now settled by the QE sample
         (Sec.~\ref{sec:genieqe}). The limit is quoted under both models. The
         \Lam\ cross-check against the published GENIE prediction should be redone on
         the QE sample, and so should the island tuning of the \Lam-style chain.
-  \item \textbf{BDT training with GENIE signal.} The PeLEE BDT is signal-statistics
-        limited and trains on 10\,931 NuWro events; the QE sample adds 43\,183 at the
-        same stage. Training on both, evaluated on each, is the obvious test. The hypana
-        BDT shows what to expect: going from the old GENIE sample (754 distinct
-        interactions) to the QE sample (47\,033) raised its AUC from 0.834 to 0.855 and
-        its gain over the preselection figure of merit from $\times1.80$ to $\times2.02$.
   \item \textbf{Closure and fake data.} \texttt{throw\_sigma0.C}, all samples, with the
         GENIE \Szero\ QE sample as the injected alternative model (Sec.~\ref{sec:fakedata}).
   \item \textbf{Unblinding and the observed limit.} RHC beam-on data exist in PeLEE
