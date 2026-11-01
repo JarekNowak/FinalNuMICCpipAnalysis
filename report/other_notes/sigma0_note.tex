@@ -554,31 +554,57 @@ Details are in App.~\ref{app:ls}.
 
 \subsection{What the remaining background is}
 \label{sec:lsbkg}
-By the true identity of the candidates, before and after the proton PID cut:
+The 23 overlay events at the island stage were read back from the hypana files with their full
+truth (\texttt{BkgDump.C}: neutrino, interaction, primaries, the origin of every PFP).
+Table~\ref{tab:lsbkg} is the background at the operating point.
 
-\begin{center}
+\begin{table}[h]\centering
+\caption{\Lam-style background at the operating point by event truth, NuWro model. The real
+\Lam\ events carry GENIE's corrected \Lam\ cross section (weight $\approx1.25$ for QE).}
+\label{tab:lsbkg}
 \small
 \begin{tabular}{lrrr}
 \toprule
-category & raw before & raw after & $B$ after (weighted) \\
+component & raw & $B$ & share \\
 \midrule
-real \Lam\ $\to p\pi^-$ (GENIE $\numubar$ CC QE \Lam) & 4 & 4 & 0.81 \\
-real $p$ and $\pi^-$ from $\Delta$/N$^*$ or DIS, roles right & 4 & 4 & 0.65 \\
-real $p$ and $\pi^-$, roles swapped & 3 & 0 & -- \\
-$pp$, $p\pi^+$ (the pion candidate is not a $\pi^-$) & 4 & 3 & 0.49 \\
-$\pi^+\pi^+$, $\pi^+\pi^-$, $\mu\pi^+$ (not a proton) & 4 & 1 & 0.16 \\
-two showers reconstructed as the pair & 4 & 0 & -- \\
+real $\Lam\to p\pi^-$, $\numubar$ CC QE ($\numubar p\to\mu^+\Lam$) & 4 & 0.81 & $33\%$ \\
+real $\Lam\to p\pi^-$, associated production ($\nu_\mu$ CC DIS $\Lam K^0\pi^0$, $\nu$ NC RES $\Lam K^+$) & 2 & 0.33 & $13\%$ \\
+$\Sigma^+$ ($\nu_\mu$ CC DIS $\Sigma^+K^0$; muon candidate the $\pi^+$ of $\Sigma^+\to n\pi^+$) & 1 & 0.16 & $7\%$ \\
+no strange particle: $pp$ pair (pion candidate a proton) & 2 & 0.33 & $13\%$ \\
+\phantom{no strange particle:} $\pi^+\pi^-$ pair (NC DIS) & 1 & 0.16 & $7\%$ \\
+\phantom{no strange particle:} secondaries from $n$/$\pi^+$ reinteraction & 1 & 0.16 & $7\%$ \\
+\phantom{no strange particle:} $\nu_e$ NC, true vertex outside the FV & 1 & 0.16 & $7\%$ \\
+EXT (factorised, Sec.~\ref{sec:ext}) & -- & 0.34 & $14\%$ \\
+NuWro non-signal hyperons; \Szero\ outside the definition & -- & 0.03 & $1\%$ \\
 \midrule
-total & 23 & 12 & 2.12 \\
+total & 12 & 2.49 & \\
 \bottomrule
 \end{tabular}
-\end{center}
+\end{table}
 
-\noindent The real \Lam\ is now $38\%$ of the MC background. Its pair is a genuine \Lam\
-decay, so only the photon tells it apart: in these events the chain's ``photon'' is a
-Michel positron from the $\mu^+$ decay (starting $0.6$~cm from the muon's end), two
-$\delta$-ray electrons on the muon track, and an overlaid cosmic, at 66--452~cm from the
-vertex.
+\begin{itemize}
+  \item \textbf{Real \Lam\ is $46\%$ of the background.} The $\numubar p\to\mu^+\Lam$ events
+        are signal-like in everything but the photon: their ``photon'' is two $\delta$-ray
+        electrons on the muon, the Michel positron of the $\mu^+$ ($111$~cm out) and a cosmic
+        ($452$~cm). The photon handles were measured (Sec.~\ref{sec:lsopt}) and do not improve
+        the limit. In the associated-production events the photon is real, from a $\pi^0$ or
+        from secondaries.
+  \item \textbf{The muon candidate is not a $\mu^+$ in 7 of 12 events} (4 $\mu^-$, 3
+        $\pi^+$), the wrong-sign and NC part. Without a charge measurement the Michel tag is
+        the only handle; it was marginal on the full background (App.~\ref{app:ls}), and here 5
+        of the 12 have a contained muon with a PFP at its end.
+  \item \textbf{The two $pp$ pairs} have pion-candidate \texttt{llrPi} of $0.04$ and $-0.14$,
+        but $23\%$ of the signal has $\texttt{llrPi}<0$; a pion PID cut costs more than they
+        weigh.
+  \item \textbf{\Szero\ outside the definition} at the operating point: $62\%$ fail only
+        KE$_\pi>30$~MeV, $16\%$ KE$_p>60$~MeV, $15\%$ are $\Lam\to n\pi^0$; $0.008$ (NuWro) or
+        $0.041$ (GENIE) events.
+  \item \textbf{The PID cut removes} 11 events: 4 real \Lam\ with the proton and pion
+        candidates swapped by the pair assignment, the rest with an $e$, $\gamma$ or $\pi$ as
+        the proton candidate.
+\end{itemize}
+With 12 raw MC events ($\pm29\%$) and a factorised EXT, more background MC and a data-driven
+cosmic estimate are worth more than another cut.
 
 \subsection{Selection optimisation}
 \label{sec:lsopt}
@@ -710,40 +736,43 @@ the right is the GENIE prediction itself.}
 % =============================================================================
 
 \begin{enumerate}
-  \item \textbf{The \Lam-style chain as the primary analysis (priority).} Data and dirt
-        through reco2 and HyperonProduction; a larger EXT sample or a data-driven cosmic
-        estimate (its island step and the PID scaling are assumptions); its systematics (flux,
-        cross section, reinteraction, a hypana detector-variation set, hyperon cross section and
-        FSI); data/MC checks of the island test and the sidebands; the island retune on the QE
-        sample.
-  \item \textbf{Background systematics for the PeLEE chain (cross-check).} Flux
-        (\texttt{weightsPPFX}), cross section (\texttt{weightsGenie}) and reinteraction
-        (\texttt{weightsReint}) multisims at the single bin, with the detector variations
-        ($7$--$10\%$). Then a data constraint from the low-score BDT region, the $\pi^0$
-        normalisation being the obvious target. Choose the BDT cut from the resulting
-        budget and re-measure the detector variations there.
-  \item \textbf{Fixed GENIE signal samples.} \texttt{genie::HypQELTracePXSec}
-        (App.~\ref{app:hypfix}) is validated; RHC (3050 chunks) and then FHC (1200 chunks)
-        are being regenerated, at the lowest batch priority, on all nodes. They then go
-        through the overlay chain to PeLEE and hypana ntuples. With them the
-        cross-section weight is dropped for the signal samples; the polarisation weight
-        stays, and the overlay and dirt keep the cross-section weight. The GENIE problem
-        should be reported to the GENIE authors: it moves GENIE's \Lam\ prediction by
-        $\times1.26$, the model the \uboone\ \Lam\ measurement compared with.
-  \item \textbf{FHC} (Sec.~\ref{sec:fhc}): the FHC background through the PeLEE selection,
-        the FHC signal efficiency from the regenerated sample, possibly a separate FHC cut,
-        and a two-bin combined limit with correlated signal normalisation.
-  \item \textbf{\Lam\ cross-check.} Redo the comparison with the published \Lam\ CCQE result
-        on the QE sample with the corrected GENIE (App.~\ref{app:ls}). Re-measure the PeLEE
-        detector variations at the current cut and training.
-  \item \textbf{Signal model.} Hyperon FSI is the factor four between the generators, and
-        the NuWro build reproduces neither the published FSI reduction nor, so far, a
-        reason for the difference; the limit is quoted under both models.
-  \item \textbf{Closure and unblinding.} A Poisson-throw fake-data closure test
-        (App.~\ref{app:misc}) with the GENIE sample as the alternative model; then the
-        observed limit from the RHC beam-on data (\texttt{custom\_pelee\_ntuples}), and the
-        absolute cross-section limit from the integrated $\numubar$ flux and the argon
-        target count.
+  \item \textbf{Samples (running or next).}
+  \begin{itemize}
+    \item Fixed-GENIE (\texttt{genie::HypQELTracePXSec}, App.~\ref{app:hypfix}) signal: FHC
+          first, then RHC, at the lowest batch priority; then overlay, reco2, PeLEE and hypana
+          ntuples. With them the cross-section weight is dropped for the signal; the
+          polarisation weight stays, and the overlay and dirt keep the cross-section weight.
+    \item NuWro FHC signal overlay (generation complete; overlay to start).
+    \item NuWro hyperon background samples, per beam: QE \Lam\ and $\Sigma^-$ (S1) and
+          associated strangeness, filtered to events with a hyperon (S2), so that the NuWro
+          model has its own hyperon background (here $46\%$ of the \Lam-style background is
+          real \Lam\ from GENIE). Generator-level tests first.
+    \item A larger Run~1 EXT prestage (needed for FHC; done from a FNAL gpvm).
+  \end{itemize}
+  \item \textbf{\Lam-style chain as the primary analysis.}
+  \begin{itemize}
+    \item Data, dirt and a larger EXT sample through reco2 and HyperonProduction; replace the
+          factorised EXT ($0.34\pm0.15$, $14\%$ of $B$) by a direct or data-driven estimate.
+    \item More background MC: $B$ rests on 12 raw events ($\pm29\%$), the leading uncertainty
+          after Poisson.
+    \item Systematics: flux, cross section (with the hyperon cross section and FSI), reinteraction,
+          and a hypana detector-variation set; the island test's data/MC agreement and the
+          sidebands (\Lam\ mass, island fail, PID fail).
+    \item The island retune on the QE sample, with the preselection kept as it is.
+  \end{itemize}
+  \item \textbf{FHC} (Sec.~\ref{sec:fhc}): both chains on FHC, the FHC signal efficiency from the
+        regenerated samples, a combined two-bin limit with correlated signal normalisation.
+  \item \textbf{PeLEE chain as the cross-check.} The PPFX, GENIE and reinteraction multisims at
+        the single bin; detector variations re-measured at the current cut and training; a
+        data constraint from the low-score region (the $\pi^0$ normalisation).
+  \item \textbf{\Lam\ cross-check} against the published \Lam\ CCQE result with the corrected
+        GENIE (App.~\ref{app:ls}); report the GENIE hyperon cross-section problem to the GENIE
+        authors (it moves GENIE's \Lam\ by $\times1.26$).
+  \item \textbf{Signal model.} Hyperon FSI is the factor four between the generators; the NuWro
+        build does not reproduce the published FSI reduction. The limit is quoted under both.
+  \item \textbf{Closure and unblinding.} Fake-data closure (Poisson throws, GENIE as the
+        alternative model); then the observed limit from RHC (and FHC) beam-on data and the
+        absolute cross-section limit from the integrated $\numubar$ flux and the argon count.
 \end{enumerate}
 
 % =============================================================================
@@ -1237,6 +1266,8 @@ provides the limit.
         regeneration started. \Lam-style background weighted; background composition; FHC
         signal estimate; note restructured around the status (the dated
         version is archived in \texttt{report/archive}).
+  \item[2026-11-01] \Lam-style background re-analysed by event truth: real \Lam\ $46\%$ (QE
+        $33\%$, associated production $13\%$; previously counted as $\Delta$), plan rewritten.
   \item[2026-11-01] \Lam-style last three cuts and shower ceiling re-scanned with the full
         definition: operating point kept (on a plateau; App.~\ref{app:lslast}).
   \item[2026-11-01] One signal definition for both chains: $\Lam\to p\pi^-$, KE$_p>60$,
