@@ -562,9 +562,17 @@ parity cross-validation (\texttt{IslandOptimise.py}).
         ($9.32$ against $9.38$ GENIE); it is not used. Without the $20$~cm the veto would
         catch $23\%$ of true \Szero\ photons, those converting near the vertex in the
         muon's direction (App.~\ref{app:ls}).
-  \item \textbf{A full scan} of mass window, pointing, decay length, island planes, PID and
-        photon cuts finds $20\%$ on the full sample but about $6\%$ out of sample; the
-        background statistics do not support a finer optimisation.
+  \item \textbf{Loosening any single cut} (mass window, pointing, decay length, photon gap,
+        island planes, PID threshold) recovers signal only with proportionally more
+        background and does not improve the limit. A full scan finds $20\%$ on the full
+        sample but about $6\%$ out of sample; the background statistics do not support a
+        finer optimisation.
+  \item \textbf{Events without a reconstructed shower} (the soft \Szero\ photon missed, $20\%$
+        of the signal at that stage) were taken through the chain as a second bin: $S=0.213$
+        GENIE on $B=5.64$ (EXT $1.53\pm0.88$ measured with the hypana EXT sample), purity
+        $3.7\%$. Merged with the main bin they worsen the limit; as a separate bin they would
+        gain $7$--$8\%$, which is not worth a second category. They are not used
+        (App.~\ref{app:ls}).
 \end{itemize}
 
 % =============================================================================
@@ -975,6 +983,37 @@ $9.3$, $8.5$, $8.0\%$ of other background at the photon-gap stage. On top of the
 the $20$~cm veto gives $S=0.484$, $B=1.99$: median limit $9.03$ (the median $n$ stays 2 while
 $S$ drops), mean $9.32$ against $9.38$.
 
+\paragraph{The shower requirement.} The preselection requires $0<n_{\mathrm{shr}}<4$ and
+$n_{\mathrm{trk}}<5$ (\texttt{PreselFlow.C}). Of the in-FV GENIE signal (51.1 events) $84\%$
+has a flash-matched neutrino slice, $82\%$ a reconstructed vertex in the FV, $75\%$ passes
+the topological score, $57\%$ the shower/track requirement and $50\%$ has a muon candidate;
+the shower requirement removes $7.8$ events, almost all with no shower at all. Relaxing the
+shower maximum, the track maximum or the topological score is worth $2$--$5\%$ each. The
+events with no shower (\texttt{IslandProcess.C} \texttt{showerMode=1}) as a separate bin, at
+the PID operating point:
+\begin{center}
+\small
+\begin{tabular}{lrrrrr}
+\toprule
+stage & $S$ GENIE & $S$ NuWro & raw bkg & $B_{\mathrm{MC}}$ \\
+\midrule
+no shower, $n_{\mathrm{trk}}<5$ & 10.70 & 2.71 & 213\,731 & 34\,949 \\
+muon candidate & 9.38 & 2.40 & 174\,614 & 28\,538 \\
+pair & 3.31 & 0.867 & 51\,839 & 8\,472 \\
+\Lam\ mass & 1.84 & 0.479 & 17\,754 & 2\,902 \\
+pointing & 0.499 & 0.125 & 606 & 99.9 \\
+island $\geq2$ planes & 0.244 & 0.065 & 25 & 4.73 \\
+proton PID & 0.213 & 0.059 & 21 & 4.04 \\
+\bottomrule
+\end{tabular}
+\end{center}
+EXT, factorised as for the main bin from the hypana EXT run in the same mode (161 muon
+candidates against 76 with a shower), is $1.53\pm0.88$, so $B=5.64$. The bin's background
+passes the PID cut $84\%$ of the time (main bin $52\%$): it is mostly genuine $p\pi^-$
+pairs, and there is no photon gap to apply. Pooled with the main bin the mean expected
+limit worsens ($9.98$ against $9.39$ GENIE); as a second bin it would improve by $7\%$
+(GENIE) and $8\%$ (NuWro). Not used.
+
 \paragraph{Background photons.} The chain's photon in the real-\Lam\ background is never
 a \Szero\ photon. Of 10 real-\Lam\ events at the photon-gap stage, half have e$^\pm$
 (Michel positrons and muon $\delta$ rays), $30\%$ another photon, $10\%$ a cosmic. In
@@ -1053,7 +1092,8 @@ provides the limit.
         version is archived in \texttt{report/archive}).
   \item[2026-11-01] \Lam-style proton PID cut adopted ($B$ $4.56\to2.48$, limit
         $9.3\to8.1\times$ GENIE at $f=15\%$); the PeLEE/\Lam-style crossover moves to
-        $f\approx21\%$. Muon-track photon veto measured and not used.
+        $f\approx21\%$. Muon-track photon veto, loosened cuts and a no-shower second bin
+        measured and not used.
 \end{description}
 
 \end{document}
