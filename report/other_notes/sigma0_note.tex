@@ -485,9 +485,17 @@ proton, pion and muon seeds land in one cluster.}
 
 \subsection{Operating point and results}
 \label{sec:lsop}
+Preselection as the PeLEE chain (flash-matched neutrino slice, reco vertex in the FV,
+topological score $>0.20$, $0<n_{\mathrm{sh}}<4$, $n_{\mathrm{tr}}<5$, a muon candidate), then
 \Lam\ mass within $\pm20$~MeV, decay length $>0.5$~cm, $\cos\alpha>0.95$, photon start
 $>2$~cm from the vertex, island test passed on $\geq2$ planes, and a proton-like proton
 candidate ($\texttt{llrP}<0$, Sec.~\ref{sec:lsopt}).
+
+The preselection keeps $51.7\%$ of the defined signal (GENIE; NuWro $51.5\%$). By step: neutrino
+slice $-14.7\%$, reco FV $-2.6\%$, topological score $-6.2\%$, shower and track counts
+$-27.1\%$ (of the signal reaching that step; mostly events with no shower-like PFP, $19\%$ of
+all defined signal, where the \Szero\ photon was missed or reconstructed as a track), muon
+candidate $-9.0\%$ (\texttt{PreselFlow.C}). The two generators agree at every step to $1\%$.
 
 \begin{table}[h]\centering
 \caption{\Lam-style cut flow, signal as defined in Sec.~\ref{sec:sigdef}. $S$ is the GENIE
@@ -597,6 +605,14 @@ parity cross-validation (\texttt{IslandOptimise.py}).
         ($9.32$ against $9.38$ GENIE); it is not used. Without the $20$~cm the veto would
         catch $23\%$ of true \Szero\ photons, those converting near the vertex in the
         muon's direction (App.~\ref{app:ls}).
+  \item \textbf{The last three cuts and the shower ceiling, re-scanned with the full signal
+        definition} (photon gap, island planes, \texttt{llrP}, $n_{\mathrm{sh}}\leq1,2,3$;
+        \texttt{LastCutsScan.py}): the operating point is the best of the 672 combinations
+        under both models, and on the mean expected limit it sits on a plateau (gap $2$--$3$~cm,
+        $n_{\mathrm{sh}}\leq2$ or $3$, all within $1\%$). Cross-validated by parity, a choice
+        made on one half is worse than the operating point on the other, so the scan resolves
+        nothing finer than about $10\%$; the final background is 12 raw events and each step
+        moves 1--4 of them (App.~\ref{app:lslast}).
   \item \textbf{Loosening any single cut} (mass window, pointing, decay length, photon gap,
         island planes, PID threshold) recovers signal only with proportionally more
         background and does not improve the limit. A full scan finds $20\%$ on the full
@@ -1097,6 +1113,62 @@ collection plane, 54~MeV, 24~cm long); the real-\Lam\ ``photons'' are similar (7
 29~MeV, 14~cm) and the rest of the background larger (133 hits, 87~MeV, 28~cm).
 
 % -----------------------------------------------------------------------------
+\subsection{The last three cuts and the shower ceiling}
+\label{app:lslast}
+\texttt{LastCutsScan.py} varies the photon gap, the island planes, the proton \texttt{llrP} and
+the shower ceiling with the earlier cuts at the operating point, the signal of
+Sec.~\ref{sec:sigdef}, every weight, the out-of-definition \Szero\ of each model in its
+background, and EXT and NuWro non-signal hyperons scaled with the overlay MC. It reproduces the
+operating point of Table~\ref{tab:lscutflow}. Table~\ref{tab:lslast} varies one cut at a time;
+``mean'' is the expected limit averaged over $n\sim\mathrm{Pois}(B)$, steadier than the median
+at $B\approx2$--$3$.
+
+\begin{table}[h]\centering
+\caption{\Lam-style chain, one cut varied at a time from the operating point (bold), $f=15\%$,
+$g=20\%$. $B$ in the NuWro model; limits GENIE / NuWro.}
+\label{tab:lslast}
+\small
+\begin{tabular}{llrrrll}
+\toprule
+cut & value & $S_{\mathrm{G}}$ & $B$ & raw bkg & median $\muUL$ & mean $\muUL$ \\
+\midrule
+photon gap & none        & 0.497 & 4.59 & 23 & 10.46 / 42.9 & 12.14 / 49.5 \\
+           & $>1$~cm     & 0.486 & 3.25 & 16 &  9.95 / 40.4 & 10.95 / 44.2 \\
+           & $>1.5$~cm   & 0.483 & 3.06 & 15 & 10.18 / 41.2 & 10.77 / 43.3 \\
+           & $\mathbf{>2}$~cm & \textbf{0.475} & \textbf{2.49} & \textbf{12} & \textbf{8.73 / 35.2} & \textbf{10.22 / 40.8} \\
+           & $>3$~cm     & 0.463 & 2.29 & 11 &  9.14 / 37.5 & 10.22 / 41.7 \\
+           & $>4$~cm     & 0.444 & 2.10 & 10 &  9.72 / 40.3 & 10.38 / 42.7 \\
+           & $>6$~cm     & 0.404 & 1.72 &  8 & 11.11 / 45.4 & 10.71 / 43.4 \\
+\midrule
+island     & $\geq1$ plane  & 0.702 & 11.12 & 56 & 11.81 / 49.3 & 12.55 / 52.2 \\
+           & $\geq3$ planes & 0.209 & 0.86 &  4 & 17.62 / 69.3 & 17.19 / 67.4 \\
+           & all working planes & 0.221 & 1.25 & 6 & 15.99 / 62.7 & 17.81 / 69.6 \\
+\midrule
+\texttt{llrP} & none     & 0.514 & 4.59 & 23 & 10.12 / 39.8 & 11.75 / 46.0 \\
+           & $<0.5$      & 0.498 & 3.82 & 19 & 11.16 / 44.0 & 11.32 / 44.3 \\
+           & $<-0.25$    & 0.426 & 2.05 & 10 & 10.16 / 41.7 & 10.71 / 43.7 \\
+           & $<-0.5$     & 0.339 & 1.86 &  9 & 13.03 / 52.1 & 13.04 / 51.8 \\
+\midrule
+showers    & $n_{\mathrm{sh}}\leq2$ & 0.459 & 2.29 & 11 &  9.19 / 36.7 & 10.30 / 40.8 \\
+           & $n_{\mathrm{sh}}=1$    & 0.356 & 1.06 &  5 & 10.12 / 40.8 & 10.65 / 42.6 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Why up to three showers.} The ceiling $0<n_{\mathrm{sh}}<4$ was not chosen for this
+chain: it comes from the original cut-based selection (loosened there from $<3$), through the
+PeLEE chain. A truth match of every shower-like PFP (\texttt{ShowerOrigin.C}) shows the extra
+showers in signal are the signal event's own activity. Of the defined GENIE signal at the muon
+stage $61\%$ have one shower, $31\%$ two and $8\%$ three; their extra showers are secondaries
+($38\%$: fragments of the photon shower and the Michel e$^+$ of the $\mu^+$), the \Lam\ pion
+($25\%$) or proton ($16\%$) reconstructed as a shower, cosmics ($9\%$), a split piece of the
+\Szero\ photon ($7\%$) and the muon ($5\%$). The events whose \Lam\ daughter became a shower
+fail the pair requirement later; at the final selection $75\%$ have one shower, $22\%$ two and
+$3\%$ three, the extra ones now $64\%$ secondaries, $13\%$ cosmics, $8\%$ photon splits. NuWro
+gives the same. Requiring exactly one shower halves the background but loses a quarter of the
+signal and worsens the limit by $4\%$ (mean); $n_{\mathrm{sh}}\leq2$ changes nothing measurable.
+The ceiling is kept; $n_{\mathrm{sh}}\geq4$ is $0.7\%$ of the signal at preselection.
+
 \section{The hypana BDT chain}
 \label{app:hypbdt}
 A BDT on the hypana candidates (53 inputs, including the island variables), used for the
@@ -1165,6 +1237,8 @@ provides the limit.
         regeneration started. \Lam-style background weighted; background composition; FHC
         signal estimate; note restructured around the status (the dated
         version is archived in \texttt{report/archive}).
+  \item[2026-11-01] \Lam-style last three cuts and shower ceiling re-scanned with the full
+        definition: operating point kept (on a plateau; App.~\ref{app:lslast}).
   \item[2026-11-01] One signal definition for both chains: $\Lam\to p\pi^-$, KE$_p>60$,
         KE$_\pi>30$, $E_\gamma>30$~MeV (measured turn-ons), no other meson or strange particle;
         out-of-definition \Szero\ as background per model. PeLEE BDT retrained for it (cut
