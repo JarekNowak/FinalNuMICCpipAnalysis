@@ -284,7 +284,9 @@ $\Sigma^-$ & 194.9 & 129.3 & 115.0 & 0.89 \\
 The common $0.85$--$0.89$ is a nuclear and flux difference. \texttt{SigmaSelection.C}
 applies the weight to every hyperon-QE event of every GENIE sample (overlay, dirt,
 detector variations, the QE sample), the struck nucleon taken at rest ($1\%$ effect); the
-hypana chains apply it by event identifier. NuWro is not weighted.
+hypana chains apply it by event identifier. NuWro is not weighted. The regenerated samples with the fixed GENIE confirm the weight: the weighted old
+\Szero\ sample matches the regeneration to $0.4\%$ in rate and in every kinematic distribution
+(App.~\ref{app:hypfix}, Figs.~\ref{fig:gfix_xsec}--\ref{fig:gfix_ps}).
 
 \paragraph{\Szero\ polarisation.} The same traces give the \Szero\ polarisation,
 $P_L\approx P_T\approx-0.4$ to $-0.5$ (Fig.~\ref{fig:pais}, right). Both generator chains
@@ -806,8 +808,15 @@ argon's $N/Z$ ($2.44$). The NuWro/GENIE ratio rises the same way with $E_\nu$ fo
 
 \paragraph{Same couplings.} Both generators use $f_1^{\Lam}=-\sqrt{3/2}\,F_1^p$,
 $g_1^{\Lam}=-(1+2x)g_A/\sqrt6$, $f_1^{\Szero}=-(F_1^p+2F_1^n)/\sqrt2$,
-$g_1^{\Szero}=(1-2x)g_A/\sqrt2$, $\Sigma^-$ $\sqrt2\times\Szero$, $x=F/(F+D)=0.365$ and
-$M_A=0.99$--$1.0$~GeV (GENIE \texttt{LwlynSmithFF::Strange*}, NuWro \texttt{ff.cc}).
+$g_1^{\Szero}=(1-2x)g_A/\sqrt2$, $\Sigma^-$ $\sqrt2\times\Szero$, $x=F/(F+D)=0.365$
+($F=0.463$, $D=0.804$), $g_A=1.267$ and a dipole axial form factor (GENIE
+\texttt{LwlynSmithFF::Strange*}, NuWro \texttt{ff.cc}). The axial masses differ: $0.961$~GeV in
+GENIE (\texttt{QEL-Ma} of the tune G18\_10a\_02\_11a, used for the production and for the fixed
+splines) and $1.000$~GeV in NuWro (\texttt{hyp\_axial\_mass} of the signal configuration). With the
+trace calculation folded with the RHC $\numubar$ flux, $\sigma(1.000)/\sigma(0.961)$ is $1.004$ for
+\Szero\ and $\Sigma^-$ and $1.011$ for \Lam: the \Szero\ axial coupling $(D-F)/\sqrt2$ is small. The
+GENIE reweighting of the CCQE axial mass skips strange events, so the MicroBooNE tune weight does
+not act on hyperon production.
 NuWro contracts the full tensors (\texttt{Singh\_Model}); GENIE uses a closed form.
 
 \paragraph{Independent calculation.} \texttt{HypXsecWeights.py} evaluates $L_{\mu\nu}
@@ -868,11 +877,63 @@ $\bar\nu_e$, $\numubar$, $\bar\nu_\tau$ (250 knots to 1000~GeV), merged into a c
         ($G_E^n\neq0$ adds $\sim2\%$);
   \item a 360-event FHC \texttt{lar} generation: primary \Lam\ $59.2\pm2.6\%$, $\Sigma^-$
         $30.1\pm2.4\%$, \Szero\ $10.7\pm1.6\%$, against $42.8/40.4/16.7\%$ with Pais and
-        about $58/30/12\%$ expected. Its POT per event is $1.8\sigma$ below the $+9\%$
-        expected from the lower total cross section; to be checked on the production.
+        about $58/30/12\%$ expected;
+  \item the production (RHC run3b, 443 of the regenerated chunks, $1.98\times10^{23}$~POT,
+        against the 3050 old chunks, $1.25\times10^{24}$~POT): generated primary hyperons per POT,
+        fixed/old, \Lam\ $1.257$, \Szero\ $0.663$, $\Sigma^-$ $0.670$, as the splines predict.
+        This settles the POT-per-event question of the small test.
 \end{itemize}
 At the same chunk count the regenerated samples hold about $0.7\times$ the \Szero\
 statistics of the old ones.
+
+\paragraph{Before and after.} Figure~\ref{fig:gfix_xsec} compares the GENIE splines.
+\begin{figure}[h]\centering
+\includegraphics[width=\textwidth]{genie_fix_xsec_vs_E.png}
+\caption{$\numubar$ cross section per target nucleon on argon from GENIE's splines: production
+Pais (red) and the fixed algorithm (blue). Fixed/Pais at 1/2/5~GeV: \Lam\ 1.271/1.219/1.189,
+\Szero\ 0.672/0.686/0.698, $\Sigma^-$ 0.668/0.683/0.695; \Szero/\Lam\ at 1~GeV $0.447\to0.237$.}
+\label{fig:gfix_xsec}
+\end{figure}
+
+The error is in the shape as well as the normalisation (Fig.~\ref{fig:gfix_shape}). For \Szero\
+and $\Sigma^-$ the Pais expression is about $1.55\times$ the trace at low $Q^2$. It falls below
+the trace near $u=(Q^2-Q^2_{\min})/(Q^2_{\max}-Q^2_{\min})\approx0.85$, and becomes negative at
+$u>0.965$ (1~GeV) and $u>0.98$ (3~GeV). GENIE clips the negative values to zero, so the old samples
+have no events there. For \Lam\ the Pais expression is about $0.8\times$ the trace and negative at
+$u>0.90$ at 1~GeV. The clipped region holds $0.16\%$ (\Lam, 1~GeV) and $0.02\%$ (\Szero,
+$\Sigma^-$) of the correct cross section.
+\begin{figure}[h]\centering
+\includegraphics[width=\textwidth]{genie_fix_dxs_dq2_shape.png}
+\caption{Free-nucleon $d\sigma/dQ^2$ with identical form factors, Pais (red) and trace (blue), at 1
+and 3~GeV, and their ratio. Shaded: Pais negative, clipped to zero by GENIE.}
+\label{fig:gfix_shape}
+\end{figure}
+
+In the generated RHC samples (Fig.~\ref{fig:gfix_kin}), the old \Szero\ sample with the per-event
+cross-section weight (\texttt{HypXsecWeight.h}) reproduces the fixed generation in every
+kinematic distribution and in normalisation: $127.9$ against $127.4$ $\numubar$ CC \Szero\ per
+$10^{21}$~POT (old unweighted: $191.9$). This validates the weights that every GENIE sample
+carries until the regenerated samples replace them.
+
+Both generations cover the same phase space (Fig.~\ref{fig:gfix_ps}) except the band next to
+$Q^2_{\max}$ that only the fixed model fills: $0.46\%$ of its \Szero\ events have $u>0.8$, against
+$0.31\%$ of the old ones, and $0.040\%$ against $0.027\%$ above $u=0.9$. The fix acts through the
+normalisation and the softer $Q^2$ spectrum, not through new phase space.
+\begin{figure}[h]\centering
+\includegraphics[width=\textwidth]{genie_fix_kinematics.png}
+\caption{Generated $\numubar$ CC \Szero, NuMI RHC run3b, per POT: old GENIE (red), fixed (blue), and
+old with the cross-section weight (green dashed).}
+\label{fig:gfix_kin}
+\end{figure}
+\begin{figure}[h]\centering
+\includegraphics[width=\textwidth]{genie_fix_phase_space.png}
+\caption{Phase space of the generated \Szero, old and fixed. Top: lab $(E_{\bar\nu},Q^2)$ with the
+free-nucleon $Q^2_{\min}$ (solid) and $Q^2_{\max}$ (dashed). Bottom: $E_{\bar\nu}$ in the
+struck-nucleon rest frame against $u$. Right: fixed/old per POT, in coarse bins.}
+\label{fig:gfix_ps}
+\end{figure}
+The figures and numbers are produced by \texttt{Sigma/genie\_hypfix/doc/make\_figures.py}; a
+stand-alone version of this section is \texttt{Sigma/genie\_hypfix/doc/GENIE\_HYPERON\_BUG.md}.
 
 % -----------------------------------------------------------------------------
 \section{Signal-definition thresholds}
@@ -1266,6 +1327,10 @@ provides the limit.
         regeneration started. \Lam-style background weighted; background composition; FHC
         signal estimate; note restructured around the status (the dated
         version is archived in \texttt{report/archive}).
+  \item[2026-11-02] GENIE fix documented with before/after figures (App.~\ref{app:hypfix}):
+        production rates per POT confirm the splines; the weighted old \Szero\ sample matches the
+        regenerated one to $0.4\%$; axial masses compared (GENIE 0.961, NuWro 1.000~GeV, $0.4\%$
+        on \Szero).
   \item[2026-11-01] \Lam-style background re-analysed by event truth: real \Lam\ $46\%$ (QE
         $33\%$, associated production $13\%$; previously counted as $\Delta$), plan rewritten.
   \item[2026-11-01] \Lam-style last three cuts and shower ceiling re-scanned with the full
