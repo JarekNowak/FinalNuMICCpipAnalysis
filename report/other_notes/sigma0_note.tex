@@ -31,16 +31,18 @@ NuWro events in the fiducial volume. The PeLEE chain runs on standard PeLEE ntup
 a cross-validated gradient BDT: $S=0.57$ NuWro or $2.53$ GENIE on $B=128$. The \Lam-style chain
 follows the \uboone\ \Lam\ CCQE analysis on HyperonProduction ntuples, fitting the \Lam\ decay
 vertex, testing the connectedness of the raw wire activity and requiring a proton-like proton
-candidate: $S=0.118$ NuWro or $0.475$ GENIE on $B=2.5$. Neither can observe \Szero\ at the
-predicted rate; the deliverable is an upper limit. The best median expected 90\%~CL limit is
-$8.7\times$ the GENIE and $35\times$ the NuWro rate, about 140 defined-signal events, from the
-\Lam-style chain, which gives the better limit at every background systematic. The two generators differ
+candidate: $S=0.118$ NuWro or $0.475$ GENIE on $B=2.8$, whose hyperon part comes from a
+hyperon-enriched sample at $52\times$ the data exposure. Neither can observe \Szero\ at the
+predicted rate; the deliverable is an upper limit. At a $15\%$ background systematic the median
+expected 90\%~CL limit is $10.5\times$ the GENIE and $43\times$ the NuWro rate, about 170
+defined-signal events, from the \Lam-style chain, which gives the better limit for any background
+systematic above $5$--$7\%$. The two generators differ
 by a factor of four in the predicted rate, almost entirely because NuWro includes hyperon
 final-state interactions. GENIE's $\Delta S=1$ quasi-elastic cross section was found to be
 wrong in its hyperon-mass terms; every GENIE sample is corrected by event weights, and the
 GENIE signal samples are being regenerated with a fixed GENIE. The \Lam-style chain's open
-items, data and dirt in its ntuple format, its beam-off estimate and its systematics, are the
-next pieces of work.
+items, data in its ntuple format, its beam-off estimate and its systematics, are the next
+pieces of work.
 \end{abstract}
 
 \tableofcontents
@@ -64,8 +66,8 @@ Two selections exist, on two ntuple formats, and they are fully independent
 Sec.~\ref{sec:pelee}) is the analysis: it is the only one that can see data, EXT and
 dirt. The \Lam-style chain (\texttt{SigmaLambdaSel.C}, \texttt{IslandProcess.C},
 Sec.~\ref{sec:lambdastyle}) needs the raw wire activity, which only the
-HyperonProduction (``hypana'') format stores; that format exists for MC and EXT but not
-for data or dirt.
+HyperonProduction (``hypana'') format stores; that format exists for MC, EXT and (since
+2026-11-06) dirt, but not yet for data.
 
 \begin{table}[h]\centering
 \caption{The two selections at their operating points, RHC. Signal yields carry every
@@ -81,14 +83,14 @@ and the \Szero\ polarisation (Sec.~\ref{sec:signal}). $\muUL$ is the median expe
  & PeLEE BDT & \Lam-style \\
 \midrule
 ntuple format & PeLEE & HyperonProduction \\
-data, EXT, dirt & all three & EXT only (factorised) \\
+data, EXT, dirt & all three & EXT (factorised), dirt \\
 final discriminant & BDTG $>0.830$ & island test on $\geq2$ planes, proton PID \\
 defined signal in the FV, NuWro / GENIE & \multicolumn{2}{c}{$3.98$ / $16.05$} \\
 $S$, NuWro (with hyperon FSI) & $0.572$ & $0.118$ \\
 $S$, GENIE (no hyperon FSI) & $2.53$ & $0.475$ \\
-$B$ (NuWro / GENIE model) & $128.0$ / $129.4$ & $2.48$ / $2.52$ \\
-purity, NuWro / GENIE & $0.44\%$ / $1.9\%$ & $4.5\%$ / $16\%$ \\
-$\muUL$ ($f=15\%$), NuWro / GENIE & $69$ / $15.5$ (cut re-optimised: $52$ / $12.3$) & $36$ / $8.8$ \\
+$B$ (NuWro / GENIE model) & $128.0$ / $129.4$ & $2.80$ / $2.84$ \\
+purity, NuWro / GENIE & $0.44\%$ / $1.9\%$ & $4.0\%$ / $14\%$ \\
+$\muUL$ ($f=15\%$), NuWro / GENIE & $69$ / $15.5$ (cut re-optimised: $52$ / $12.3$) & $43$ / $10.5$ \\
 \bottomrule
 \end{tabular}}
 \end{table}
@@ -111,9 +113,13 @@ $\muUL$ ($f=15\%$), NuWro / GENIE & $69$ / $15.5$ (cut re-optimised: $52$ / $12.
   \item \textbf{One signal definition for both chains} requires the visible decay,
         $\Lam\to p\pi^-$ with the decay products above threshold (Sec.~\ref{sec:sigdef}).
         With it the \Lam-style chain, which reconstructs the $p\pi^-$ pair, gives the better
-        limit at every background systematic: at $f=0$ by $2\%$ (GENIE) and $12\%$ (NuWro) over
-        the PeLEE BDT retrained for this definition, at $f\geq10\%$ by $1.4\times$. Its limit is
-        Poisson-limited and almost flat in $f$.
+        limit for a background systematic above $f\approx5$--$7\%$, by $1.2\times$ at $f=15\%$
+        over the re-optimised PeLEE BDT; below that the PeLEE BDT is better by up to $17\%$
+        (Sec.~\ref{sec:sensitivity}). Its limit is Poisson-limited and almost flat in $f$.
+  \item \textbf{The \Lam-style hyperon background comes from a sample at $52\times$ the data}
+        (the hyperon-enriched detector-variation CV), which matches the overlay's own hyperon
+        events at every stage; with it and the measured dirt, $B=2.80$ with $15\%$ MC
+        statistics, against $29\%$ from the overlay alone (Sec.~\ref{sec:lscv}).
   \item \textbf{FHC adds almost as much signal as RHC} ($0.90\times$ per POT, 47
         expected GENIE \Szero\ in $1.10\times10^{21}$ FHC POT against 54 in RHC); its
         background per POT will be higher (Sec.~\ref{sec:fhc}).
@@ -503,8 +509,9 @@ candidate $-9.0\%$ (\texttt{PreselFlow.C}). The two generators agree at every st
 \caption{\Lam-style cut flow, signal as defined in Sec.~\ref{sec:sigdef}. $S$ is the GENIE
 \Szero\ QE sample with the cross-section, polarisation and PPFX weights, $S_{\mathrm{N}}$ the
 NuWro sample. ``Out'' is \Szero\ outside the definition (GENIE / NuWro), background in its own
-model. $B$ is the hypana overlay, with the cross-section weight at the last stages. Errors are
-MC statistics.}
+model. $B$ is the hypana overlay, with the cross-section weight at the last stages. With the
+hyperon-enriched CV sample in place of the overlay's own hyperon events, the background MC at
+the last row is $2.33\pm0.40$ (Sec.~\ref{sec:lscv}). Errors are MC statistics.}
 \label{tab:lscutflow}
 \small
 \begin{tabular}{lrrrrrr}
@@ -522,10 +529,12 @@ island, $\geq2$ planes    &   875 & 0.514 & 0.131 & 0.047 / 0.010 &     23 & $3.
 \end{tabular}
 \end{table}
 
-\noindent With the NuWro signal $S=0.118\pm0.009$ (207 raw). NuWro's own non-signal
-events (\Szero\ that FSI turned into something else) add $0.020$, EXT $0.34\pm0.15$
-(Sec.~\ref{sec:ext}) and the out-of-definition \Szero\ $0.008$ (NuWro) or $0.041$ (GENIE), so
-$B=2.49$ (NuWro model) or $2.52$ (GENIE model). The pair and pointing steps separate defined
+\noindent With the NuWro signal $S=0.118\pm0.009$ (207 raw). The background MC is
+$2.33\pm0.40$ (overlay non-hyperon events plus the CV hyperon sample, Sec.~\ref{sec:lscv}).
+NuWro's own non-signal events (\Szero\ that FSI turned into something else) add $0.020$, EXT
+$0.37\pm0.16$ (Sec.~\ref{sec:ext}), dirt $0.073\pm0.023$ (Sec.~\ref{sec:lscv}) and the
+out-of-definition \Szero\ $0.008$ (NuWro) or $0.041$ (GENIE), so $B=2.80$ (NuWro model) or
+$2.84$ (GENIE model). The pair and pointing steps separate defined
 from undefined \Szero: 2:1 against the signal at the muon stage, 1:12 at the end. The
 efficiency for the defined signal is $3.0\%$ for both generators.
 
@@ -546,8 +555,9 @@ operating point (none of 76 MuonCandidate events reaches the pointing cut).
 \texttt{ExtFactor.C} factorises: EXT at MuonCandidate times the pass fraction of the
 overlay's cosmic-dominated candidates as far as the pointing cut, and the
 neutrino-background rate ($3.3\%$) for the island and gap steps. EXT is $0.62\pm0.27$
-events before the PID cut and, scaled by the MC background's PID pass fraction ($0.54$),
-\textbf{$0.34\pm0.15$ at the operating point}. Without the neutrino-rate assumption for
+events before the PID cut and, scaled by the MC background's PID pass fraction ($0.60$ with the
+CV hyperon sample; $0.54$ with the overlay alone), \textbf{$0.37\pm0.16$ at the operating
+point}. Without the neutrino-rate assumption for
 the island step the bound is $<6.2$ at $90\%$~CL; that, and the PID scaling, are the open
 part of this estimate. The real cosmic data agree
 with the factorisation wherever they still have events (8 of 76 EXT candidates have a
@@ -606,7 +616,58 @@ total & 12 & 2.49 & \\
         the proton candidate.
 \end{itemize}
 With 12 raw MC events ($\pm29\%$) and a factorised EXT, more background MC and a data-driven
-cosmic estimate are worth more than another cut.
+cosmic estimate are worth more than another cut. The hyperon part of that background MC now
+comes from a sample at $52\times$ the data exposure (next section).
+
+\subsection{Hyperon background from the hyperon-enriched CV sample, and dirt}
+\label{sec:lscv}
+The \uboone\ \Lam\ analysis produced detector-variation samples that contain only events with a
+hyperon (\texttt{cthorpe\_make\_hyperon\_events\_numi\_rhc\_run3b\_detvar\_reco2\_<V>\_reco2}).
+Their central-value set (4,908 reco2 files, $5.99\times10^{22}$~POT, $52\times$ the data) was
+taken through HyperonProduction and the \Lam-style chain (\texttt{IslandProcess.C},
+\texttt{CvWeights.C}, \texttt{DirtCvCheck.py}). It is old GENIE on the old flux: every event gets
+the old$\to$new flux weight ($\langle w\rangle=0.60$) and the GENIE hyperon-QE cross-section
+weight. The flux weight is capped at 3: the ratio map has sparsely filled bins $14$--$19^\circ$
+off axis with $w\approx12.4$, one of which carried $17\%$ of the CV yield at the operating point;
+the cap touches $0.12\%$ of events and moves the normalisation by $0.6\%$.
+
+Its hyperon events agree with the overlay's own hyperon events (identified from the hypana
+truth, \texttt{HypTruthDump.py}) at every stage (Table~\ref{tab:lscv}), in rate and in
+composition (after the mass cut \Lam\ DIS $31$ / $33\%$, $\Sigma^+$ DIS $24$ / $21\%$, \Lam\
+QE $18$ / $15\%$, \Lam\ RES $14$ / $12\%$, overlay / CV). The CV therefore replaces the
+overlay's hyperon events: $B_{\mathrm{MC}}=0.82\pm0.37$ (overlay, non-hyperon, 5 raw)
+$+\,1.51\pm0.16$ (CV, 102 raw) $=2.33\pm0.40$, against $2.12\pm0.62$ from the overlay alone.
+At the operating point the CV background is $72\%$ \numubar\ CC QE \Lam\ and $20\%$ \Lam\ from
+DIS. The largest MC-statistics term is now the overlay's five non-hyperon events.
+
+\begin{table}[h]\centering
+\caption{\Lam-style chain on the hyperon events of the overlay and of the hyperon-enriched CV
+sample, per data exposure (raw events), and on the dirt. Same cuts and weights as
+Table~\ref{tab:lscutflow}; CV and dirt flux weights capped at 3.}
+\label{tab:lscv}
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrr}
+\toprule
+stage & overlay hyperons & CV hyperons & CV / overlay & dirt & dirt / overlay (all) \\
+\midrule
+MuonCandidate          & 389 (2371) & 387 (33791) & $0.994\pm0.021$ & 2772 (3770) & $0.138$ \\
+PairCandidate          & 178 (1096) & 181 (16437) & $1.02\pm0.03$   & 371 (499)   & $0.044$ \\
+\Lam\ mass $\pm20$~MeV & 50.1 (304) & 54.1 (4794) & $1.08\pm0.07$   & 92.8 (121)  & $0.035$ \\
+pointing               & 6.58 (38)  & 6.67 (532)  & $1.01\pm0.17$   & 4.6 (3)     & $0.040$ \\
+photon gap $>2$~cm     & 5.44 (31)  & 5.62 (444)  & $1.03\pm0.20$   & 4.6 (3)     & $0.051$ \\
+island, $\geq2$ planes & 1.96 (11)  & 1.94 (139)  & $0.99\pm0.31$   & 0 (0)       & -- \\
+proton PID             & 1.31 (7)   & 1.51 (102)  & $1.16\pm0.46$   & 0 (0)       & -- \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\paragraph{Dirt.} The RHC run3b dirt (8,294 hypana files, $1.04\times10^{21}$~POT, old flux,
+$\langle w\rangle=0.666$) is $13.8\%$ of the overlay background at MuonCandidate, more than in
+the PeLEE chain ($8.7\%$), but the vertex-detached $p\pi$ pair removes it fastest. No dirt event
+passes the island test (3 reach it). Factorised from the mass cut with the overlay's pass fraction
+from there to the end ($2.12/2681$), the dirt is $0.073\pm0.023$ at the operating point
+($0.08\pm0.06$ from the pointing stage); the earlier bound was $0.18$.
 
 \subsection{Selection optimisation}
 \label{sec:lsopt}
@@ -691,12 +752,12 @@ cut from 0.50 to 0.95 separately for each $f$ and model (cut in brackets, NuWro 
 $f$ & \multicolumn{2}{c}{PeLEE, BDTG $>0.830$} & \multicolumn{3}{c}{PeLEE, re-optimised} & \multicolumn{2}{c}{\Lam-style} \\
  & NuWro & GENIE & NuWro & GENIE & cut & NuWro & GENIE \\
 \midrule
- 0\% & 39.7 & 8.87 & 39.7 & 8.87 & 0.83 / 0.83 & \textbf{35.3} & \textbf{8.69} \\
- 5\% & 44.4 & 9.94 & 44.4 & 9.94 & 0.83 / 0.83 & \textbf{35.4} & \textbf{8.70} \\
-10\% & 55.3 & 12.45 & 50.8 & 11.92 & 0.89 / 0.885 & \textbf{35.5} & \textbf{8.72} \\
-15\% & 68.6 & 15.47 & 51.6 & 12.29 & 0.91 / 0.95 & \textbf{35.6} & \textbf{8.76} \\
-20\% & 82.2 & 18.58 & 53.6 & 12.30 & 0.93 / 0.95 & \textbf{35.8} & \textbf{8.81} \\
-30\% & 107.9 & 24.45 & 55.8 & 12.32 & 0.95 / 0.95 & \textbf{36.3} & \textbf{8.94} \\
+ 0\% & \textbf{39.7} & \textbf{8.87} & 39.7 & 8.87 & 0.83 / 0.83 & 42.2 & 10.38 \\
+ 5\% & 44.4 & \textbf{9.94} & 44.4 & 9.94 & 0.83 / 0.83 & \textbf{42.3} & 10.39 \\
+10\% & 55.3 & 12.45 & 50.8 & 11.92 & 0.89 / 0.885 & \textbf{42.5} & \textbf{10.43} \\
+15\% & 68.6 & 15.47 & 51.6 & 12.29 & 0.91 / 0.95 & \textbf{42.7} & \textbf{10.50} \\
+20\% & 82.2 & 18.58 & 53.6 & 12.30 & 0.93 / 0.95 & \textbf{43.0} & \textbf{10.58} \\
+30\% & 107.9 & 24.45 & 55.8 & 12.32 & 0.95 / 0.95 & \textbf{43.9} & \textbf{10.79} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -710,12 +771,17 @@ the right is the GENIE prediction itself.}
 \end{figure}
 
 \begin{enumerate}
-  \item \textbf{The best expected limit}, $8.7\times$ GENIE and $35\times$ NuWro, is about
-        140 defined-signal events in $1.15\times10^{21}$~POT, against 16 predicted by GENIE
-        and 4.0 by NuWro.
-  \item \textbf{The \Lam-style chain gives the better limit at every $f$}, under both
-        models: at $f=0$ by $2\%$ (GENIE) and $12\%$ (NuWro) over the PeLEE BDT retrained for
-        this definition, at $f\geq10\%$ by about $1.4\times$. It requires the reconstructed
+  \item \textbf{The expected limit} at $f=15\%$, $10.5\times$ GENIE and $43\times$ NuWro
+        (mean over $n$: $10.5$ / $42.0$), is about 170 defined-signal events in
+        $1.15\times10^{21}$~POT, against 16 predicted by GENIE and 4.0 by NuWro.
+  \item \textbf{The \Lam-style chain gives the better limit above $f\approx5\%$ (NuWro) and
+        $7\%$ (GENIE)}, by $1.2\times$ at $f=15\%$ over the re-optimised PeLEE BDT. Below that the
+        PeLEE BDT is better by up to $6\%$ (NuWro) and $17\%$ (GENIE). Until 2026-11-06 the
+        \Lam-style chain led at every $f$; the change is the median step: with the CV hyperon
+        sample and the dirt, $B$ rose $2.48\to2.80$ and the median $n$ of $\mathrm{Pois}(B)$ from
+        2 to 3 (median limit $35.4\to42.7$, NuWro, $f=15\%$), while the Asimov limit ($n=B$)
+        moved only $40.3\to40.9$. Both chains therefore stay; the systematic on the PeLEE
+        background decides between them. It requires the reconstructed
         $p\pi^-$ pair, so its efficiency for the defined signal ($3.0\%$) is three times its
         efficiency for all \Szero; the PeLEE BDT, retrained, still accepts out-of-definition
         \Szero\ ($1.9$ GENIE events at the cut). At $B\approx2.5$ the \Lam-style limit is
@@ -724,12 +790,15 @@ the right is the GENIE prediction itself.}
         $1.3$--$1.4\times$ from $f=0$ to $15\%$ with the cut re-optimised and $1.7\times$ at
         0.830. The tightest re-optimised cuts (0.91--0.95) rest on few background MC events
         and are fragile.
-  \item \textbf{Nothing missing from the \Lam-style chain changes its limit much}
-        ($f=15\%$, NuWro): without EXT $36.9$ against $35.6$; with dirt at its bound
-        ($8.7\%$ of $B_{\mathrm{MC}}$) $35.1$; with $g=0$ $32.6$; with $B$ known exactly
-        $34.8$. The median $n$ is an integer (2 here), so small changes in $B$ move the median
-        limit in steps, either way. Since it carries the result, hypana data and dirt are
-        needed rather than optional.
+  \item \textbf{Variants of the \Lam-style background} ($f=15\%$, NuWro / GENIE, median;
+        Asimov in brackets): nominal $42.7$ / $10.50$ ($40.9$ / $10.14$); overlay alone, no CV,
+        $35.4$ / $8.70$ ($40.3$ / $9.98$); without dirt $43.1$ / $10.59$; without EXT $35.6$ /
+        $8.75$; with $g=0$ $39.0$ / $9.59$; with $B$ known exactly $42.2$ / $10.38$. The median
+        $n$ is an integer (3 now, 2 before), so small changes in $B$ move the median limit in
+        steps, either way; the mean over $n$ and the Asimov limit are smooth and should be
+        quoted with it. The last three cuts re-scanned with this background
+        (\texttt{LastCutsScan.py}) stay at the operating point: it is the minimum of the mean
+        limit along every cut, and the parity cross-validation keeps it.
 \end{enumerate}
 
 % =============================================================================
@@ -753,10 +822,15 @@ the right is the GENIE prediction itself.}
   \end{itemize}
   \item \textbf{\Lam-style chain as the primary analysis.}
   \begin{itemize}
-    \item Data, dirt and a larger EXT sample through reco2 and HyperonProduction; replace the
-          factorised EXT ($0.34\pm0.15$, $14\%$ of $B$) by a direct or data-driven estimate.
-    \item More background MC: $B$ rests on 12 raw events ($\pm29\%$), the leading uncertainty
-          after Poisson.
+    \item Data and a larger EXT sample through reco2 and HyperonProduction; replace the
+          factorised EXT ($0.37\pm0.16$, $13\%$ of $B$) by a direct or data-driven estimate.
+          Dirt done ($0.073$, Sec.~\ref{sec:lscv}).
+    \item More inclusive background MC for the non-hyperon part (5 raw events, $\pm45\%$, now the
+          leading MC term; the hyperon part is from the CV sample, $\pm11\%$): the run3 inclusive
+          detector-variation CV ($2.5\times10^{21}$~POT) and the v28 run3b overlay
+          ($1.9\times10^{21}$~POT), both old flux.
+    \item The nine other hyperon detector variations: the detector systematic of the dominant
+          background component, on the same footing as the CV.
     \item Systematics: flux, cross section (with the hyperon cross section and FSI), reinteraction,
           and a hypana detector-variation set; the island test's data/MC agreement and the
           sidebands (\Lam\ mass, island fail, PID fail).
@@ -1343,6 +1417,11 @@ provides the limit.
         $9.3\to8.1\times$ GENIE at $f=15\%$); the PeLEE/\Lam-style crossover moves to
         $f\approx21\%$. Muon-track photon veto, loosened cuts and a no-shower second bin
         measured and not used.
+  \item[2026-11-06] Hyperon-enriched detvar CV ($52\times$ data) through the \Lam-style chain:
+        matches the overlay's hyperon events at every stage and replaces them ($B_{\mathrm{MC}}$
+        $2.12\pm0.62\to2.33\pm0.40$). RHC dirt measured ($0.073$, was a $0.18$ bound). $B$
+        $2.48\to2.80$; median limit at $f=15\%$ $35.4\to42.7$ (NuWro), Asimov $40.3\to40.9$;
+        the PeLEE BDT is now better below $f\approx5$--$7\%$. Old-flux weights capped at 3.
 \end{description}
 
 \end{document}
